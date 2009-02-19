@@ -61,7 +61,7 @@
 					<div class="SeparatorLine"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<a href="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
+							<div onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
 								<div class="LeftOverButton">
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
@@ -77,7 +77,7 @@
 										</div>
 									</div>
 								</div>
-							</a>
+							</div>
 						</div>
 					</div>
 					<div class="SeparatorLine"><span></span></div>
@@ -88,7 +88,7 @@
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
 											<div class="StatusIcon EditPollIcon">
-											<a href="<%=uicomponent.event("EditPoll")%>">	<%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
+												<a href="<%=uicomponent.event("EditPoll")%>">	<%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
 											</div>
 										</div>
 									</div>
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				<% } %>
-					<div style="clear: both"><span></span></div>
+					<div style="clear:both"><span></span></div>
 				</div>
 			</div>
 		</div>
@@ -122,7 +122,6 @@
 										<div class="UIForm">
 											<div class="HorizontalLayout">
 												<div class="FormContainer">
-													
 													<table class="UIFormGrid">
 														<tr>
 															<td class="FieldComponent">
@@ -132,24 +131,21 @@
 															</td>
 														</tr>
 													</table>
-
 													<div class="UIAction">
-														<table class="ActionContainer" align="center">
+														<table class="ActionContainer">
 															<tr>
 																<td align="center">
 																<div class="ActionButton LightBlueStyle">
-																	
-																		<div class="ButtonLeft">
-																			<div class="ButtonRight">
-																				<div class="ButtonMiddle">
+																	<div class="ButtonLeft">
+																		<div class="ButtonRight">
+																			<div class="ButtonMiddle">
 																				<a href="<%=uicomponent.event("Vote")%>">
-																					<%=_ctx.appRes("UITopicPoll.label.Votenow"); %>
-																					</a>
-																				</div>
+																						<%=_ctx.appRes("UITopicPoll.label.Votenow"); %>
+																				</a>
 																			</div>
 																		</div>
-																	
 																	</div>
+																</div>
 																</td>
 															</tr>
 														</table>
@@ -167,8 +163,8 @@
 											<thead>
 												<tr>
 													<th><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>
-													<th width="35%"><%=_ctx.appRes("UITopicPoll.label.Percentage"); %></th>
-													<th width="100px;"><%=_ctx.appRes("UITopicPoll.label.Votes"); %></th>
+													<th style="width:35%"><%=_ctx.appRes("UITopicPoll.label.Percentage"); %></th>
+													<th style="width:100px;"><%=_ctx.appRes("UITopicPoll.label.Votes"); %></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -194,7 +190,7 @@
 																<tbody>
 																	<tr>
 																		<td class="BackgroudColor">
-																			<div class="Chart" style="background-color: $color; width: ${percent}%;"><span></span></div>
+																			<div class="Chart" style="background-color:$color; width:${percent}%;"><span></span></div>
 																		</td>
 																		<td class="Percentage">
 																			<div>${percent}%</div>
@@ -216,15 +212,15 @@
 										<div class="TotalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
 										<% if(isAgain && !isAnonim && !poll.getIsClosed() && !uicomponent.userIsBanned) { %>
 					 						<div class="UIAction">
-												<table class="ActionContainer" align="center">
+												<table class="ActionContainer">
 													<tr>
 														<td align="center">
-														<div onclick="$link" class="ActionButton LightBlueStyle">
+															<div onclick="$link" class="ActionButton LightBlueStyle">
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
-																		<a href="<%=uicomponent.event("VoteAgainPoll")%>">
-																			<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
+																			<a href="<%=uicomponent.event("VoteAgainPoll")%>">
+																				<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
 																			</a>
 																		</div>
 																	</div>

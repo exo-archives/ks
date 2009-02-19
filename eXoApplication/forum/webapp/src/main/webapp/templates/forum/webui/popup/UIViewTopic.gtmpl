@@ -30,7 +30,7 @@
 			if(uicomponent.getIsRenderIter()) {
 				uicomponent.renderChild(UIForumPageIterator.class) ;
 			%>
-				<div style="clear: right;"><span></span></div>
+				<div style="clear:right;"><span></span></div>
 			<%} %>
 		</div>
 	  <div class="ImageContentContainer">
@@ -92,7 +92,7 @@
 			if(isAnd) alert = alert + "!</span>) "
 			else alert = " " ;
 	%>
-		<div class="ContentContainer" id="<%=post.getId();%>" style="margin: 2px 0px 0px 0px;">
+		<div class="ContentContainer" id="<%=post.getId();%>" style="margin:2px 0px 0px 0px;">
 			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 				<tbody>
 					<tr>
@@ -110,7 +110,7 @@
 								<div class="MemberName">
 									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
 									<div class="Name">$owner</div>
-									<div style="clear: left;"><span></span></div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
@@ -145,11 +145,10 @@
 								</div>
 							</div>
 						</td>
-					</div>
+				
 	<!-- End MemberContainer -->
 	<!-- Start PostViewContainer -->
 						<td class="PostViewContainer">
-							
 							<div class="PostViewHeader">
 								<div class="PostViewTitle">
 									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
@@ -167,7 +166,7 @@
 						<% } else { %>
 							<div class="PostContentNote">
 						<% } %>
-								<div style="padding-top: 8px" id="$idMessage">$message</div>
+								<div style="padding-top:8px" id="$idMessage">$message</div>
 							</div>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
@@ -186,40 +185,42 @@
 										<% if(typeFile.indexOf("image") >= 0) {
 										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
 										%>
-											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;"/></div> 
+											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
-						 						<div style="clear: left;"><span></span></div>
+						 						<div style="clear:left;"><span></span></div>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						 						<div class="Action">
-						 							<div class="Icon MaxView"  onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></div>
-						 							<div class="Icon Download"><a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a></div>
+						 							<div class="Icon MaxView" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></div>
+						 							<div class="Icon Download">
+						 								<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
+						 							</div>
 						 						</div>
 						 					</div>
-							 				<div style="clear: left;"><span></span></div>
+							 				<div style="clear:left;"><span></span></div>
 									<% }else { 
 												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
 									%>
 										<div class="LabelBox">
-											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+											<div class="AttachmentIcon ${typeFileIcon}Icon"><span></span></div>
 											<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
 												$fileName
 											</a>
-											<div style="clear: left;"><span/></div>
+											<div style="clear:left;"><span></span></div>
 											<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 										</div>
 									<% } %>
 									</div>
 								<% } %>
-									<div style="clear: left;"><span/></div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 							</div>
 							<% } %>
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
 									String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
 							%>
-									<div class="Signature">__________________<br><%=signature;%></div>
+									<div class="Signature">__________________<br/><%=signature;%></div>
 							<%} %>	
 								
 						</td>
@@ -235,15 +236,15 @@
 			if(uicomponent.getIsRenderIter()) {
 				uicomponent.renderChild(UIForumPageIterator.class) ;
 			%>
-				<div style="clear: right;"><span></span></div>
+				<div style="clear:right;"><span></span></div>
 			<%} %>
 		</div>
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
-					<div style="width: 300px;">
+					<div style="width:300px;">
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;

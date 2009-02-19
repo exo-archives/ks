@@ -11,7 +11,7 @@
 		<div class="IconPost ForumNewPostIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryNewPosts")%></div>
 		<div class="IconPost ForumLockedIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryLockedPosts")%></div>
 		<div class="IconPost ForumCloseIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryClosedPosts")%></div>
-		<div style="clear: left;"><span></span></div>
+		<div style="clear:left;"><span></span></div>
 	<% } else { %>
  		<div class="IconForum HotThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNoNewPost")%></div>
 		<div class="IconForum HotThreadNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumHotNewPost")%></div>
@@ -19,7 +19,7 @@
 		<div class="IconForum ThreadNoNewPost"><%=_ctx.appRes("UIForumIconState.label.ForumNoNewPost")%></div>
 		<div class="IconForum ThreadNoNewLockPost"><%=_ctx.appRes("UIForumIconState.label.ForumCloseLock")%></div>
 		<div class="IconForum ThreadNoNewClosePost"><%=_ctx.appRes("UIForumIconState.label.ForumClosePost")%></div>
-		<div style="clear: left;"><span></span></div>
+		<div style="clear:left;"><span></span></div>
 	<% } %>
   </div>
 </div>

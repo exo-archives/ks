@@ -74,9 +74,9 @@
 							%>
 								<div class="Node">
 									<div class="Icon $classForumIcon"><span></span></div>
-									<div class="NodeLabel"> 
-										<a href="$link" title="$titlePost">$topicName</a>
-									</div>
+										<div class="NodeLabel"> 
+											<a href="$link" title="$titlePost">$topicName</a>
+										</div>
 								</div>
 							 <% } %>
 						</div>

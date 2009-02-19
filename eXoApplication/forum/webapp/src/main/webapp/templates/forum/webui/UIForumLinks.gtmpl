@@ -9,7 +9,7 @@
 	 %>
 		<div class="HorizontalLayout" >
 			<div class="FormContainer">
-				<table class="UIFormGrid">
+				<table class="UIFormGrid" style="float:right">
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_FORUMLINK_SELECTBOX)%>:</td>
@@ -22,8 +22,9 @@
 										<div class="ButtonLeft">
 											<div class="ButtonRight">
 												<div class="ButtonMiddle">
-												 <div style="padding: 0px 10px;"><a href="<%=uicomponent.event("Select")%>">
-												 <%=_ctx.appRes("UIForumPortlet.label.Go");%></a></div>
+												 <div style="padding:0px 10px;">
+												 	<a href="<%=uicomponent.event("Select")%>"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -34,7 +35,6 @@
 					</tbody>
 				</table>
 			</div>
-
 		</div>
 	<%uiform.end()%>
 </div>

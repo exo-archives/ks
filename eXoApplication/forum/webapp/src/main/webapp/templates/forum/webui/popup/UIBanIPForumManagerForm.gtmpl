@@ -10,7 +10,6 @@
 		String forumId = uicomponent.forumId.replaceAll("/",".") ;
 	%>
 	<div id="UITabContent"  forumId="$forumId" class="UITabContent">
-	<center>
 		<div style="width:400px; margin:auto;">
 			<div class="UIQuickSearchForm" style="padding:10px 0px;">
 				<div style="float:left;">
@@ -25,7 +24,7 @@
 						<th align="center">IP</th>
 						<th><span></span></th>
 					</tr>	
-					<tr background="#edf3ee">
+					<tr style="background:#edf3ee">
 						<td class="FieldLabel" style="padding-left:20px;">
 							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT1) ;%>*&nbsp;
 							<% uiform.renderField(uiform.NEW_IP_BAN_INPUT2) ;%>*&nbsp;
@@ -47,7 +46,7 @@
 						String ip = ips[i];
 						String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
 				%>
-					<tr background="$color" class="IpBanItem">
+					<tr style="background:$color" class="IpBanItem">
 						<td class="FieldLabel">$ip</td>
 						<td class="FieldLabel" align="center">
 								[<a href="<%=uicomponent.event("OpenPosts", ip)%>">
@@ -68,10 +67,10 @@
 		%>
 			<div style="clear:right;"><span></span></div>
 		</div>
-	</center>
+
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 

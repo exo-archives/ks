@@ -38,7 +38,7 @@
 									<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
 								</div>
 							</td>
-							<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%> </td>
+							<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%></td>
 						</tr>
 						<tr>
 							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
@@ -58,7 +58,7 @@
 		</div>
 	
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 
@@ -67,16 +67,16 @@
 					 actionLabel.trim();
 				%>
 				<div onclick="$link" class="ActionButton LightBlueStyle">
-						<div class="ButtonLeft">
-							<div class="ButtonRight">
-								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$actionLabel
-									</a>
-								</div>
+					<div class="ButtonLeft">
+						<div class="ButtonRight">
+							<div class="ButtonMiddle">
+								<a href="javascript:void(0);">
+									$actionLabel
+								</a>
 							</div>
 						</div>
 					</div>
+				</div>
 			<%}%>
 			</td>
 			</tr>

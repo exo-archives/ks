@@ -7,14 +7,14 @@
 	rcontext.getJavascriptManager().addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
 	//rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.loadScroll();") ;
 %>
-<div class="UIForumActionBar" style="height: auto" id="UIForumActionBar">
+<div class="UIForumActionBar" style="height:auto" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
 		<div class="RightForumActionBar">
 			<div class="CenterForumActionBar">
-				<div class="ControlbarCotainer" style="height: auto">
+				<div class="ControlbarCotainer" style="height:auto">
 					<table>
 						<tr>
-							<td  style="width: 85%;" class="ControlButtonContainer">
+							<td style="width:85%;" class="ControlButtonContainer">
 								<div style="height:22px;overflow-y:hidden;">								
 								<%String[] actions = [""];
 									if(isAdmin) { 
@@ -32,7 +32,7 @@
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="Icon $action">
-														<a href="<%=uicomponent.event(action)%>" style="display: block;">
+														<a href="<%=uicomponent.event(action)%>" style="display:block;">
 															<%= _ctx.appRes("UIForumActionBar.label." + action); %>
 															</a>
 														</div>
@@ -48,7 +48,7 @@
 				      			<div title="Next"><span></span></div>
 				      		</div>
 				      	</div>
-								<div style="clear: both;"><span></span></div>
+								<div style="clear:both;"><span></span></div>
 							</div>	
 							</td>
 							<td>

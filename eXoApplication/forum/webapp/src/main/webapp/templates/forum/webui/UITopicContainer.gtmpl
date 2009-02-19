@@ -78,10 +78,10 @@
 		</div>
 		
 		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
-			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width: 20px; height: 16px;"><span></span></div>
+			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
-			<div style="position: relative;">
-				<div class="UIPopupCategory" style="display: none; ">
+			<div style="position:relative;">
+				<div class="UIPopupCategory" style="display:none; ">
 					<div class="UIRightClickPopupMenu" style="display:block; left:-75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
@@ -149,7 +149,7 @@
 								</div>
 								<div style="position:relative; width:1px;">
 								<% /*Begin Popup Menu*/ %>
-									<div class="UIPopupCategory" style="display: none;">
+									<div class="UIPopupCategory" style="display:none;">
 										<div class="UIRightClickPopupMenu" style="display:block; left:-48px;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">
@@ -169,27 +169,21 @@
 														 		if(action.length() < 11) classIcon = action + "Icon";
 														 		else classIcon = action.replaceFirst("Topic", "Icon");
 														 		if(!isApproveTopic && action.indexOf("Approve") > -1) {	
-														 			classMenu = " DisableMenuItem";
+														 			classMenu = "DisableMenuItem";
 														 			link = "javaScript: void(0)" ;
 														 		}
 														 		if(!action.equals("SetDeleteTopic")){
 														 %> 
-																		 
 																		<div class="ItemIcon $classIcon">
-																		<a class="MenuItem $classMenu" href="$link" style="height:100%; width:100%">
-																			$itemLabel
-																			</a>
+																			<a class="MenuItem $classMenu" href="$link" style="height:100%; width:100%">$itemLabel</a>
 																		</div>
-																	
 														 <% 
 														 		} else {%>
-														 			
 																		<div class="ItemIcon $classIcon">
-																		<a class="MenuItem $classMenu" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
-																			$itemLabel
+																			<a class="MenuItem $classMenu" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicContainer', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteTopic")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){$link;}">	 
+																				$itemLabel
 																			</a>
 																		</div>
-																	
 														 	<%}
 														 } %>
 														</div>
@@ -223,7 +217,7 @@
 									</div>
 								<% /*Begin Popup Menu*/ %>
 								<div style="position:relative;">
-									<div class="UIPopupCategory SearchPopup" style="display:none; ">
+									<div class="UIPopupCategory SearchPopup" style="display:none;">
 										<div class="UIRightClickPopupMenu" style="display:block;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">
@@ -233,7 +227,7 @@
 												</div>
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer">
+														<div class="UIRightPopupMenuContainer" style="width:165px;">
 															<div class="InputPage" style="float:left;">
 																<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 															</div>
@@ -248,12 +242,10 @@
 																	</div>
 																</div>
 															</div>
-															<div style="clear: left;"><span></span></div>
+															<div style="clear:left;"><span></span></div>
 															<div class="LineMenu"><span></span></div>	 
 																<div class="ItemIcon AdvancedSearchIcon">
-																	<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>" >
-																	<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>
-																	</a>
+																	<a class="MenuItem" href="<%=uicomponent.event("AdvancedSearch")%>"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
 																</div>
 														</div>
 													</div>
@@ -285,8 +277,8 @@
 										</div>
 									</div>
 								<% /*Begin Popup Menu*/ %>
-								<div style="position: relative;">
-									<div class="UIPopupCategory" style="display:none; ">
+								<div style="position:relative;">
+									<div class="UIPopupCategory" style="display:none;">
 										<div class="UIRightClickPopupMenu" style="display:block;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">
@@ -378,7 +370,7 @@
 							</div>
 						<% } %>	
 				
-							<div style="clear: both;"><span></span></div>
+							<div style="clear:both;"><span></span></div>
 						</div>
 					</div>
 				</div>
@@ -411,7 +403,7 @@
 										<a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
 									</div>
 								</th>
-								<th style="width: 60px;">
+								<th style="width:60px;">
 									<div class="DownArrow1Icon">
 										<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
 									</div>
@@ -477,10 +469,10 @@
 									}
 									String approved = "" ;
 									if(canEdit){
-										if(topic.getIsWaiting()) approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)</span>" ;
+										if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)</span>" ;
 										if(isApproveTopic && !topic.getIsApproved()) { 
-											if(approved.length() > 0) approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)</span>" ;
-											else approved = "<span style='white-space: nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)</span>" ;
+											if(approved.length() > 0) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)</span>" ;
+											else approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)</span>" ;
 										}
 									}
 									
@@ -508,7 +500,7 @@
 												<a actions="$link;" href="$url" title="$titlePost" class="ActionLink $title">$topicTitle</a>
 												<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
 													<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-														<div action="$actionBookmark" class="ClickPopupContent"></div>
+														<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 													</div>
 												</div>
 											</div>
@@ -551,7 +543,7 @@
 												if(className.equals("halfStar")) className = "HalfVoted" ;
 												if(className.equals(classNames[5])) break ;
 										%>
-								 				<div class="VoteIcon $className"><span/></div>
+								 				<div class="VoteIcon $className"><span></span></div>
 										 <% } %>
 							 					<div style="clear:left;"><span></span></div>
 				 							</div>
@@ -565,9 +557,9 @@
 											<% /*Begin Popup Menu*/ 
 											if(sizeTag> 0) {
 											%>
-											<div style="position: relative;" class="FixLeftPopup">
-												<div class="UIPopupCategory" style="display: none; ">
-													<div class="UIRightClickPopupMenu" style="display: block;">
+											<div style="position:relative;" class="FixLeftPopup">
+												<div class="UIPopupCategory" style="display:none; ">
+													<div class="UIRightClickPopupMenu" style="display:block;">
 														<div class="UIContextMenuContainer">
 															<div class="TopLeftRightClickPopupMenu">
 																<div class="TopRightRightClickPopupMenu">
@@ -611,7 +603,7 @@
 										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>
 										<div style="clear:right;"><span></span></div>
 									</td>
-								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
+								 	<td class="Tdbox" align="center">$postCount</td>
 									<td class="Tdbox" align="center">$postView</td>
 									<% if(canEdit) { 
 									  String checked = "";
@@ -659,7 +651,7 @@
 		<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
 			<div class="LockActionForum UIActionForum" style="float:left;">
 		<% } else { %>
-			<div class="UIActionForum" style="float: left;">
+			<div class="UIActionForum" style="float:left;">
 		<% } %>
 			<div class="ActionButton">
 				<div class="NormalStyle">
@@ -686,9 +678,9 @@
 		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
-			<div style="position: relative;">
-				<div class="UIPopupCategory" style="display: none; ">
-					<div class="UIRightClickPopupMenu" style="display: block; left: -75px;">
+			<div style="position:relative;">
+				<div class="UIPopupCategory" style="display:none;">
+					<div class="UIRightClickPopupMenu" style="display:block; left:-75px;">
 						<div class="UIContextMenuContainer">
 							<div class="TopLeftRightClickPopupMenu">
 								<div class="TopRightRightClickPopupMenu">
@@ -738,24 +730,24 @@
  		<div class="TopLeftRightClickPopupMenu">
      <div class="TopRightRightClickPopupMenu">
        <div class="TopCenterRightClickPopupMenu"><span></span></div>
-      	<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
-                </div>
-	                </div>
-	                <div class="MiddleLeftRightClickPopupMenu">
-                        <div class="MiddleRightRightClickPopupMenu">
-	                                <div class="UIRightPopupMenuContainer">
-                                       <div class="ItemIcon AddLinkToBookIcon">
-                                          <a class="MenuItem AddBookmark" href="">
-                                            <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-                                          </a>
-	                                     </div>
-	                                     <div class="ItemIcon AddWatchingIcon">
-                                          <a href="" class="MenuItem AddWatching">
-                                             <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-	                                        </a>
-                                       </div>
-	                                </div>
-	                        </div>
+      		<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
+    </div>
+        </div>
+        <div class="MiddleLeftRightClickPopupMenu">
+	        <div class="MiddleRightRightClickPopupMenu">
+            <div class="UIRightPopupMenuContainer">
+               <div class="ItemIcon AddLinkToBookIcon">
+                  <a class="MenuItem AddBookmark" href="">
+                    <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+                  </a>
+                 </div>
+                 <div class="ItemIcon AddWatchingIcon">
+                  <a href="" class="MenuItem AddWatching">
+                     <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+                    </a>
+       			</div>
+    			</div>
+        </div>
  	                </div>
               <div class="BottomLeftRightClickPopupMenu">
 	                        <div class="BottomRightRightClickPopupMenu">

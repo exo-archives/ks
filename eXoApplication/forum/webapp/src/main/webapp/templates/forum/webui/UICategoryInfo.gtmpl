@@ -17,7 +17,7 @@
 				<div class="CenterBar">
 					<div class="Title"><%=_ctx.appRes("UICategoryInfo.label.What")%></div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-					<div style="clear: both;"><span></span></div>
+					<div style="clear:both;"><span></span></div>
 				</div>
 			</div>
 		</div>
@@ -34,22 +34,24 @@
 						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
 					 	<td >
 							<div class="text"><%=_ctx.appRes("UICategoryInfo.label.MostUsers");%> : $mostUserOnline</div>
-							<div class="text" style="padding-bottom: 5px;"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> : 
+							<div class="text" style="padding-bottom:5px;"><%=_ctx.appRes("UICategoryInfo.label.OnlineUsers");%> : 
 							<% int t = 0 ;
 							for(user in userOnlines) {
 							 ++t;
 							%>
 							<% if(t != size){ %>
-							<span>&nbsp;<a>${user}</a>,</span>
+							&nbsp;<a>${user}</a>
 							<% } else {%>
-							<span>&nbsp;<a>${user}</a></span>
+							&nbsp;<a>${user}</a>
 							<% }
 							} %>
 							</div>
 						</td>
 		 			</tr>
 					<tr>
-						<td style="width:40px; border-right:1px solid #ffffff;"><div class="ChartIcon"><span></span></div></td>
+						<td style="width:40px; border-right:1px solid #ffffff;">
+							<div class="ChartIcon"><span></span></div>
+						</td>
 					 	<td class="text"><%=_ctx.appRes("UICategoryInfo.label.ForumStatistics");%></td>
 		 			</tr>
 					<tr class="OddRow">

@@ -28,9 +28,17 @@
 							<thead>
 								<tr>
 									<th><span></span></th>
-									<th width="40px"></th>
-									<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div></a></th>
-									<th style="width:120px"><a href="<%=uicomponent.event("SetOrderBy","createdDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div></a></th>
+									<th style="width:40px"></th>
+									<th>
+										<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.PostName");%></div>
+										</div>
+									</th>
+									<th style="width:120px">
+										<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
+											<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%></div>
+										</div>
+									</th>
 									<th style="width:40px"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								</tr>
 							</thead>
@@ -74,14 +82,14 @@
 										<%
 										String link_ = "";
 										if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())){
-											link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+											link_ = "javaScript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOneThread") + "'))" + uicomponent.event("DeletePostLink", post.getId());
 										} else {
-											link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+											link_ = "javaScript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
 										}
 										%>
-										<td class="Tdbox" align="center" style="padding-left:5px;">
+										<td class="Tdbox" align="center">
 											<div onclick="$link_">
-												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;"><span></span></div>
+												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer; margin:0px auto"><span></span></div>
 											</div>
 										</td>
 						 			</tr>
@@ -108,7 +116,7 @@
 		</div>
 		
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
 	        <% for(action in uicomponent.getActions()) { 
@@ -119,9 +127,7 @@
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
 		          	  	<div class="ButtonMiddle">
-			          	  	<a href="javascript:void(0);">
-			          	  		$actionLabel
-			          	  	</a>
+			          	  	<a href="javascript:void(0);">$actionLabel</a>
 		          	  	</div>
 		            	</div>
 		          	</div>

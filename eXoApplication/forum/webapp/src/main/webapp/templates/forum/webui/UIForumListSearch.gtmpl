@@ -11,8 +11,8 @@
 				<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 					<thead>
 						<tr>
-							<th style="width: 80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
-							<th style="width: 40px;">&nbsp;</th>
+							<th style="width:80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
+							<th style="width:40px;">&nbsp;</th>
 							<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
 						</tr>
 					</thead>
@@ -38,7 +38,7 @@
 						} 
 					} else {%>
 						<tr class="$classRow">
-							<td class="Tdbox" colspan="3"><div class="" ><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></div></td>
+							<td class="Tdbox" colspan="3"><%=_ctx.appRes("UIForumListSearch.label.NoMatches");%></td>
 						</tr>
 					<% } %> 
 					</tbody>
@@ -47,9 +47,9 @@
 		</div>
 	</div>
 <% if(uicomponent.getIsShowIter()){ %>
-<div style="overflow: auto;">
+<div style="overflow:auto;">
   <% uicomponent.renderChild(uicomponent.SEARCH_ITERATOR); %>
-	<div style="clear: right; height: 0px;"><span></span></div>
+	<div style="clear:right; height:0px;"><span></span></div>
 </div>
 <% } %>
 </div>

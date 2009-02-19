@@ -10,11 +10,11 @@
 	<div class="PageIteratorContainer">
 		<div class="RightPageIteratorBlock">
 		<% if(pageSelected == 1) {%>
-			<div class="Icon DisableLastTopPageIcon"></div>				
+			<div class="Icon DisableLastTopPageIcon"><span></span></div>				
 			<div class="Icon DisableLastPageIcon"><span></span></div>
 		<% } else { %>
 			<a title="<%=_ctx.appRes("UIForumPageIterator.label.BackFirstPage");%>" class="Icon LastTopPageIcon" href="<%=uicomponent.event("GoPage","first")%>"></a>				
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.PreviousPage");%>" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"><span></span></a>
+			<a title="<%=_ctx.appRes("UIForumPageIterator.label.PreviousPage");%>" class="Icon LastPageIcon" href="<%=uicomponent.event("GoPage","previous")%>"></a>
 		<% } %>
 		<% 
 			for(number in uicomponent.getTotalpage()) {
@@ -30,19 +30,19 @@
 			<% } %>
 		<%} %>
 		<% if(pageSelected != max_page) {%>	
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"><span></span></a>
-			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"><span></span></a>
+			<a title="<%=_ctx.appRes("UIForumPageIterator.label.NextPage");%>" class="Icon NextPageIcon" href="<%=uicomponent.event("GoPage","next")%>"></a>
+			<a title="<%=_ctx.appRes("UIForumPageIterator.label.ReturnLastPage");%>" class="Icon NextTopPageIcon" href="<%=uicomponent.event("GoPage","last")%>"></a>
 		<% } else { %>	
 			<div class="Icon DisableNextPageIcon"><span></span></div>
 			<div class="Icon DisableNextTopPageIcon"><span></span></div>
 		<% } %>
-			<div style="clear: left;"><span></span></div>
+			<div style="clear:left;"><span></span></div>
 		</div>
 		<div class="LeftPageIteratorBlock">
 			<div class="TotalPages"><%=_ctx.appRes("UIForumPageIterator.label.Totalpages");%>:</div>
 			<div class="PagesTotalNumber"><%=max_page%></div>
-			<div style="clear: left;"><span></span></div>
+			<div style="clear:left;"><span></span></div>
 		</div>
 	</div>
-	<div style="clear: right;"><span></span></div>
+	<div style="clear:right;"><span></span></div>
 </div>

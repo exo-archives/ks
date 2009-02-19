@@ -17,7 +17,7 @@
 		
 			<div class="ManagementContent">
 				<div style="overflow:auto;">
-					<div style="margin:2px 0px ;float:right; padding:0px 0px 0px 14px;">
+					<div style="margin:2px 0px; float:right; padding:0px 0px 0px 14px;">
 						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
 						<div class="Input" style="float:right;">
 						<%	

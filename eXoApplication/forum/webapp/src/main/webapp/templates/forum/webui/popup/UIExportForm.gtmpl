@@ -10,11 +10,11 @@ import org.exoplatform.forum.service.Category;
 						<fieldset style="color:rgb(51, 51, 51); margin:10px; width:100%; height:110px;">
 							<legend class="StyleLegend" style="cursor:pointer;">Select categories</legend>
 							<div style="height:100%; width:100%; overflow:auto;">
-								<table class="UIGrid" align="left" style="margin:2px; width:auto;">
+								<table class="UIGrid" style="margin:2px; width:auto;">
 									<tbody>	
 										<tr>
 											<th style="width:10px;"><!-- input style="width:5px;" type="checkbox" id="checkAllCategories" --></th>
-											<th align="center" width="100%">Categories</th>
+											<th align="center" style="width:100%">Categories</th>
 										</tr>
 										<%
 										child = uiform.getChildById(uicomponent.LIST_CATEGORIES);
@@ -22,7 +22,7 @@ import org.exoplatform.forum.service.Category;
 										for(Category cate : uiform.listCategories){%>
 											<tr>
 												<td><% child.renderChild(i) %></td>
-												<td width="100%" style="padding-left:10px;"><%=cate.getCategoryName();%></td>
+												<td style="padding-left:10px; width:100%"><%=cate.getCategoryName();%></td>
 											</tr>
 									<%	i ++;
 										}%>
@@ -55,7 +55,7 @@ import org.exoplatform.forum.service.Category;
 		</div>
 		
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
 	        <% for(action in uicomponent.getActions()) { 

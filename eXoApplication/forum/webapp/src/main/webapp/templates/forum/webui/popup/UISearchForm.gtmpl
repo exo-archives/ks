@@ -36,7 +36,7 @@
 										<div style="float:left">
 									  	<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 									  </div>
-									  <div onclick="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float: left; cursor:pointer; width:16px;">
+									  <div onclick="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
 									    <img alt="" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 									  </div>
 									  <div style="clear:left;"><span></span></div>

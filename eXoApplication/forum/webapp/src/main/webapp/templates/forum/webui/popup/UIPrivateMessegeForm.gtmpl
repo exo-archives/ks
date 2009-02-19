@@ -97,7 +97,7 @@
 												</div>
 											</div>
 											<div class="UIAction"> 
-												<table align="center" class="ActionContainer">
+												<table class="ActionContainer">
 													<tbody>
 														<tr>
 															<td align="center">
@@ -154,7 +154,7 @@
 	</div>
 	<% } %>
 	<div class="UIAction"> 
-		<table align="center" class="ActionContainer">
+		<table class="ActionContainer">
 			<tbody>
 				<tr>
 					<td align="center">

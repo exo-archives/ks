@@ -61,17 +61,17 @@
 					t = t + 1 ;
 					} 
 				 %>
-					<div style="clear: left"><span></span></div>
+					<div style="clear:left"><span></span></div>
 				</div>
 				<div class="RSSBar">
 				  <%String toolTip = uicomponent.getToolTip();
 				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) || !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 				  %>
-					<div class="SeparatorLine" style="float: right;">
+					<div class="SeparatorLine" style="float:right;">
 						<div class="ShareLink">
-						
-						<a onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a></div>
+							<a onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
+						</div>
 					</div>	
 					<%}%>
 					<%
@@ -86,18 +86,18 @@
 						if(uicomponent.userProfile.getUserRole() <= 1) {
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
-					<div class="SeparatorLine"  style="float: right;">
-						<a style="line-height: 24px;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
+					<div class="SeparatorLine" style="float:right;">
+						<a style="line-height:24px;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
 					</div>
 					<%}%>
-					<div class="SeparatorLine" style="float: right;">
-						<div style="line-height: 24px; cursor: pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+					<div class="SeparatorLine" style="float:right;">
+						<div style="line-height:24px; cursor:pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
 							 $newMessage<div action="<%=uicomponent.event("Moderation");%>"></div>
 						</div>
 					</div>
 					<% } %>
 				</div>
-				<div style="clear: both"><span></span></div>
+				<div style="clear:both"><span></span></div>
 			</div>
 		</div>
 	</div>

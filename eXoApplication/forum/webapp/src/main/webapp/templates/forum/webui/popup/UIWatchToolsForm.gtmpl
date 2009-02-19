@@ -4,17 +4,17 @@
 	 	<div class="UIForumContainer">
 			<div class="ContentContainer">
 				<div class="UITopicList">
-					<div style="overflow: auto; padding-bottom: 2px;">
+					<div style="overflow:auto; padding-bottom:2px;">
 					<% 
 					  uiform.renderChild(uiform.WATCHTOOLS_ITERATOR);
 					%>
-					<div style="clear: right;"><span></span></div>
+					<div style="clear:right;"><span></span></div>
 					</div>
 					<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 						<thead>
 							<tr>
 								<th><%=_ctx.appRes("UIWatchToolsForm.label.Emails");%></th>
-								<th width="120px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
+								<th style="width:120px"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -32,15 +32,17 @@
 										<div>$email</div>
 									</td>
 									<td class="Tdbox">
-										<a href="<%=uicomponent.event("DeleteEmail", email);%>">
-											<div class="DeleteIcon" style="width: 24px; margin: auto;"><span></span></div>
-										</a>
+										<div onclick="<%=uicomponent.event("DeleteEmail", email);%>" style="cursor:pointer;">
+											<div class="DeleteIcon" style="width:24px; margin:auto;"><span></span></div>
+										</div>
 									</td>
 					 			</tr>
 						 	<%  }
 						 		} else { %>
 						 	<tr>
-								<td colspan="2"><div align="center"><b><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></b></div></td>
+								<td colspan="2" align="center">
+									<b><%=_ctx.appRes("UIWatchToolsForm.label.NoEmails");%></b>
+								</td>
 							</tr>
 						 <% } %>
 						</tbody>
@@ -50,16 +52,18 @@
 		</div>
 	</div>
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
-						<a href="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle">
+						<div onclick="<%=uicomponent.event("Close")%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					</td>
 				</tr>
 	 		</table> 

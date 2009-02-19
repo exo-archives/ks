@@ -44,13 +44,13 @@
 							 		 String size =ForumUtils.getSizeFile(sizeNumber) ;
 							%>
 								<div class="AttachmentBox">
-									<div class="AttachmentIcon WordIcon"><span/></div>
+									<div class="AttachmentIcon WordIcon"><span></span></div>
 									<a class="AttachmentLabel" title="$titleFile" href="#">$fileName</a>
-									<div style="clear: left;"><span/></div>
+									<div style="clear:left;"><span></span></div>
 									<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 								</div>
 							<% } %>
-								<div style="clear: left;"><span/></div>
+								<div style="clear:left;"><span></span></div>
 							</div>
 						</div>
 				<% 
@@ -74,31 +74,35 @@
 										<% if(typeFile.indexOf("image") >= 0) {
 										  String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath() ;
 										%>
-											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;"/></div>
+											<div class="Image">
+												<img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt=""/>
+											</div>
 						 					<div class="LabelBox">
 						 						<div class="AttachmentIcon JPGIcon"><span></span></div>
 						 						<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)" class="AttachmentLabel" title="$titleFile">$fileName</a>
-						 						<div style="clear: left;"><span></span></div>
+						 						<div style="clear:left;"><span></span></div>
 						 						<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 						 						<div class="Action">
 						 							<div class="Icon View" onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');"><%=_ctx.appRes("UITopicDetail.action.View");%></div>
-						 							<div class="Icon Download"><a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a></div>
+						 							<div class="Icon Download">
+						 								<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)"><%=_ctx.appRes("UITopicDetail.action.Download");%></a>
+					 								</div>
 						 						</div>
 						 					</div>
-							 				<div style="clear: left;"><span></span></div>
+							 				<div style="clear:left;"><span></span></div>
 									<% } else {
 												String typeFileIcon = typeFile.substring((typeFile.indexOf("/")+1));
 									%>
 										<div class="LabelBox">
-											<div class="AttachmentIcon ${typeFileIcon}Icon"><span/></div>
+											<div class="AttachmentIcon ${typeFileIcon}Icon"><span></span></div>
 											<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
-											<div style="clear: left;"><span/></div>
+											<div style="clear:left;"><span></span></div>
 											<div class="Size"><%=_ctx.appRes("UITopicDetail.label.Size");%>: ${size}</div>
 										</div>
 									<% }%>
 									</div>
 								<% } %>
-									<div style="clear: left;"><span/></div>
+									<div style="clear:left;"><span></span></div>
 								</div>
 							</div>
 				<%
@@ -108,21 +112,23 @@
 		</div>
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
-					<div style="width: 300px;">
+					<div style="width:300px;">
 				<% for(action in uicomponent.getActions()) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
-						<a href="$link" class="ActionButton LightBlueStyle">
+						<div onclick="$link" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle">$actionLabel</div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					<%}%>
 					</div>
 				</td>

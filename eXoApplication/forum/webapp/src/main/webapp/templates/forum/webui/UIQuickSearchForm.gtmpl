@@ -1,8 +1,8 @@
-<div class="UIQuickSearchForm" style="width: 260px;">
+<div class="UIQuickSearchForm" style="width:260px;">
   <% uiform.begin() %>  
 	<div class="SearchForm">
-		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"><span></span></a>
-		<a class="Search" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"><span></span></a>
+		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
+		<a class="Search" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
 		<div class="Input">
 		<%  
 			uiform.renderChildren() ;

@@ -226,6 +226,7 @@
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu {
+
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .LineMenu {
@@ -440,7 +441,7 @@
 	line-height:16px;
 	white-space:nowrap;
 	cursor:none;
-	filter:alpha(opacity:50);
+	
 	-moz-opacity:0.5;
 }
 

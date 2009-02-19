@@ -28,8 +28,8 @@
 				<div class="RightBar">
 					<div class="CenterBar">
 						<div class="Title"><%=_ctx.appRes("UIPostRules.label.PostRules")%></div>
-						<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-						<div style="clear: both;"><span></span></div>
+						<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+						<div style="clear:both;"><span></span></div>
 					</div>
 				</div>
 			</div>

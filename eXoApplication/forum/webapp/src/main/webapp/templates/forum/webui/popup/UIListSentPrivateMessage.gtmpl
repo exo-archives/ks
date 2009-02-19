@@ -64,7 +64,9 @@
 		 <%  }
 		   } else {%>
 		  <tr>
-				<td colspan="4"><div align="center"><b><%=_ctx.appRes("UIPrivateMessageForm.label.NoMessages");%></b></div></td>
+				<td colspan="4">
+					<div style="text-align:center"><b><%=_ctx.appRes("UIPrivateMessageForm.label.NoMessages");%></b></div>
+				</td>
 			</tr>
 		 <% } %>
 		</tbody>

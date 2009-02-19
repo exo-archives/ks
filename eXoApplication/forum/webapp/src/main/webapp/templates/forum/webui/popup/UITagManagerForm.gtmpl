@@ -9,10 +9,10 @@
 			<table class="UIGrid">
 				<thead>
 					<th style="width:35px;">Color</th>
-					<th >Tag Name</th>
+					<th>Tag Name</th>
 					<th style="width:100px;"><%=_ctx.appRes("UIShowBookMarkForm.label.Action")%></th>
 				</thead>
-				<body>
+				<tbody>
 					<% 
 						String color = "";
 						String tagId = "";
@@ -26,8 +26,12 @@
 						  tagId = tag.getId();
 					%>
 					<tr class="$classRow">
-						<td><div class="StatusIcon ${color}TagIcon"><span></span></div></td>
-						<td><a href="<%=uiform.event("OpenTag",tagId);%>" title="<%=tag.getDescription();%>"><%=tag.getName();%></a></td>
+						<td>
+							<div class="StatusIcon ${color}TagIcon"><span></span></div>
+						</td>
+						<td>
+							<a href="<%=uiform.event("OpenTag",tagId);%>" title="<%=tag.getDescription();%>"><%=tag.getName();%></a>
+						</td>
 						<td>
 							<div style="float:left; margin:0px 10px 0px 15px;" onclick="<%=uiform.event("DeleteTag",tagId);%>">
 								<div class="DeleteIcon"><span></span></div>
@@ -39,11 +43,11 @@
 						</td>
 					</tr>
 					<% ++i;}%>
-				</body>
+				</tbody>
 			</table>
 		</div>
 		<div class="UIAction"> 
-			<table class="ActionContainer" align="center">
+			<table class="ActionContainer">
 				<tr>
 					<td align="center">
 						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
@@ -51,7 +55,7 @@
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
 										<a href="javascript:void(0);">
-										<%=_ctx.appRes("UIShowBookMarkForm.label.Cancel")%>
+											<%=_ctx.appRes("UIShowBookMarkForm.label.Cancel")%>
 										</a>
 									</div>
 								</div>

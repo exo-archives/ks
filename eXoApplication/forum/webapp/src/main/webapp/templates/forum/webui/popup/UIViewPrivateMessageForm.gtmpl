@@ -17,25 +17,27 @@
 			<div class="PlainTextMessage">
 				<div class="TitleBar">Title: <span class="UserLabel">$title</span></div>
 				<div class="MessageContent">
-					<div class="Content" style="padding:5px 0px; margin: auto;">$message</div>
+					<div class="Content" style="padding:5px 0px; margin:auto;">$message</div>
 					<div class="line"><span></span></div>
-					<div class="MessageInfo"></div>
+					<div class="MessageInfo"><span></span></div>
 				</div>
 			</div>
 		</div>
  	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
-					<div style="width: 100px; margin: auto;">
-						<a href="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+					<div style="width:100px; margin:auto;">
+						<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
-									<div class="ButtonMiddle"><%=_ctx.appRes("UIForumPortlet.label.Close");%></div>
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+									</div>
 								</div>
 							</div>
-						</a>
+						</div>
 					</div>
 				</td>
 			</tr>

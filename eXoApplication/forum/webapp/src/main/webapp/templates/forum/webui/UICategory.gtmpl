@@ -32,9 +32,9 @@
 	String actionBookmark = "";
 	
 %>
-<div class="UIForumCategory UICategory" style="padding: 2px 10px;">
+<div class="UIForumCategory UICategory" style="padding:2px 10px;">
 <%uiform.begin()%>
-  <div style="display: none;" id="divChecked" checked="0"><span></span></div>
+  <div style="display:none;" id="divChecked" checked="0"><span></span></div>
 	<div class="ForumToolbar">
 		<div class="LeftBar">
 			<div class="RightBar">
@@ -55,7 +55,7 @@
 								</div>
 							</div>
 						</div>
-						<div style="position: relative;">
+						<div style="position:relative;">
 						<% /*Begin Popup Menu*/ %>
 							<div class="UIPopupCategory" style="display:none; top:auto">
 								<div class="PopupCategoryDecorator">
@@ -87,9 +87,8 @@
 														<%	} else {%>
 																	
 																		<div class="ItemIcon $classIconItem">
-																			<a class="MenuItem" style="display:block"  href="javaScript: void(0)"
-																		onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
-																			<%=nameItem%>	</a>
+																			<a class="MenuItem" style="display:block" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
+																			<%=nameItem%></a>
 																		</div>
 															 	
 															<%}
@@ -117,7 +116,7 @@
 						</div>
 					</div>
 					<% } %>
-					<div class="ContentAction" style="float:right; margin: 2px 0px 0px 0px; width: 155px;">
+					<div class="ContentAction" style="float:right; margin:2px 0px 0px 0px; width:155px;">
 						<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 							<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 								<div class="LeftOverButton" title="<%=_ctx.appRes("UICategory.title.SearchInThisCategory");%>">
@@ -130,10 +129,10 @@
 									</div>
 								</div>
 							</div>
-							<div style="position: relative;">
+							<div style="position:relative;">
 							<% /*Begin Popup Menu*/ %>
-								<div class="UIPopupCategory SearchPopup" style="display: none; top: auto;">
-									<div class="UIRightClickPopupMenu" style="display: block;">
+								<div class="UIPopupCategory SearchPopup" style="display:none; top:auto;">
+									<div class="UIRightClickPopupMenu" style="display:block;">
 										<div class="UIContextMenuContainer">
 											<div class="TopLeftRightClickPopupMenu">
 												<div class="TopRightRightClickPopupMenu">
@@ -142,7 +141,7 @@
 											</div>
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer" style="min-width:175px;">
+													<div class="UIRightPopupMenuContainer" style="min-width:165px; width:165px">
 														<div class="InputPage" style="float:left;">
 															<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
 														</div>
@@ -151,13 +150,13 @@
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
-																		 <a href="<%=uicomponent.event("SearchForm")%>" style="display:block"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+																		 <a href="<%=uicomponent.event("SearchForm")%>" style="display:block;"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
 																		</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-														<div style="clear: left;"><span></span></div>
+														<div style="clear:left;"><span></span></div>
 														<div class="LineMenu"><span></span></div>
 															 
 															<div class="ItemIcon AdvancedSearchIcon">
@@ -182,7 +181,7 @@
 						</div>
 					</div>
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
-					<div class="UIActionForum" style="float:right; padding: 4px 5px 0px 0px">
+					<div class="UIActionForum" style="float:right; padding:4px 5px 0px 0px">
 						<div class="NormalButtom">
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
@@ -195,23 +194,23 @@
 					</div>
 				<% } %>	
 					
-					<div style="clear: both;"><span></span></div>
+					<div style="clear:both;"><span></span></div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="ContentContainer">
 		<div class="ForumList">
-			<table cellspacing="0" cellpadding="0" border="0"  class="UIGrid">
+			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 				<thead>
 					<tr>
-						<th style="width: 40px;">&nbsp;</th>
+						<th style="width:40px;">&nbsp;</th>
 						<th>Forums</th>
-						<th style="width: 30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
-						<th style="width: 50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+						<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
+						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<% if(isShowMenu){ %>
-						<th style="width: 30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
+						<th style="width:30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
 					</tr>
 				</thead>
@@ -319,9 +318,9 @@
 							} else {
 								actionBookmark = uicomponent.event("ShareLink","forum//"+path);
 							}
-							String lineHeight = "line-height: 12px;";
+							String lineHeight = "line-height:12px;";
 							if(!ForumUtils.isEmpty(forumDescription)) {
-								lineHeight = "line-height: 28px;";
+								lineHeight = "line-height:28px;";
 							}
 							String link = uicomponent.event("OpenForumLink", forumId);
 							String url = uicomponent.url("OpenForumLink", forumId);
@@ -332,13 +331,13 @@
 									<td >
 										<div style="float:left" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 											<a style="$lineHeight" actions="$link;" href="$url" class="ActionLink ForumTitle">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
-											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
-													<div action="$actionBookmark" class="ClickPopupContent"></div>
+											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 												</div>
 											</div>
 										</div>
-										<div style="clear: left;"><span></span></div>
+										<div style="clear:left;"><span></span></div>
 											<% ++rCNB; %>
 										<div class="ForumDescription">$forumDescription</div>
 									</td>
@@ -351,19 +350,19 @@
 						 %>
 									<td >
 								 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
-								 		<div style="float: left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+								 		<div style="float:left;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
 								 			<a actions="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
-											<div id="UIPopupCategory${rCNB}" style="display: none; left: 80px;" onmousedown="event.cancelBubble=true;">
-												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display: block;">
-													<div action="$actionBookmark" class="ClickPopupContent"></div>
+											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 												</div>
 											</div>
 										</div>
 											<% ++rCNB; %>
-										<div style="clear: left;"><span></span></div>
-										<div class="LastPostInfos">by&nbsp;<a style="color: #058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
+										<div style="clear:left;"><span></span></div>
+										<div class="LastPostInfos">by&nbsp;<a style="color:#058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 								<%} else { %>	
-									<td class="Tdbox" style="height: 40px;">
+									<td class="Tdbox" style="height:40px;">
 										 <%= _ctx.appRes("UICategory.label.availableTheard"); %>
 								<% } %>	
 									</td>
@@ -382,25 +381,22 @@
 		</div>
 	</div>
 	<% //Begin RightClick Bookmark	%>
-	<div id="RightClickContainer" style="display: none;">
+	<div id="RightClickContainer" style="display:none;">
 		<%if(uicomponent.userProfile.getUserRole() < 3){%>
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
 				<div class="TopCenterRightClickPopupMenu"><span></span></div>
-				<div class="RightClickCustomItem" style="display: none; height: 0px"><span></span></div>
+				<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
 			</div>
 		</div>
 		<div class="MiddleLeftRightClickPopupMenu" >
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
 						<div class="ItemIcon AddLinkToBookIcon">
-							<a href="" class="MenuItem AddBookmark"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-							</a>
+							<a href="#" class="MenuItem AddBookmark"><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 						</div>
-					
 						<div class="ItemIcon AddWatchingIcon">
-							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-							</a>
+							<a href="#" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
 						</div>
 					
 				</div>

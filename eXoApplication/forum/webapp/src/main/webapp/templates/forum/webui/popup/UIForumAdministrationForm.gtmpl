@@ -77,7 +77,7 @@
 															<th style="text-align:center">IP</th>
 															<th><span></span></th>
 														</tr>	
-														<tr background="#edf3ee">
+														<tr style="background:#edf3ee">
 															<td class="FieldLabel">
 																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT1)) ;%>*
 																<% uiform.renderField(tabconten.getChildById(uicomponent.NEW_IP_BAN_INPUT2)) ;%>*
@@ -98,7 +98,7 @@
 															else color = "#edf3ee";
 															String unBanLink = "javascript:if(confirm('" + _ctx.appRes("UIBanIPForumManagerForm.confirm.UnBanIP") + "'))" + uicomponent.event("UnBan", ip);
 													%>
-														<tr background="$color" class="IpBanItem">
+														<tr style="background:$color" class="IpBanItem">
 															<td class="FieldLabel">$ip</td>
 															<td class="FieldLabel" align="center">
 																	[<a href="<%=uicomponent.event("Posts", ip)%>">

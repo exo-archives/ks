@@ -5,7 +5,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('CanView','CanPost');");
 %>
-<div class="UITopicForm">
+<div class="UITopicForm" style="width:auto;">
 	
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
@@ -35,7 +35,9 @@
 											<div class="$classCss">
 												<div class="LeftTab">
 													<div class="RightTab">														
-															<div class="MiddleTab"><a href="$href"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></a></div>														
+														<div class="MiddleTab">
+															<a href="$href"><%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %></a>
+														</div>														
 													</div>
 												</div>
 											</div>
@@ -58,7 +60,7 @@
 									if(uiform.getIsSelected(j))display =	"block";
 									else {display = "none";}
 						%>
-							<div style="display: $display;" id="UITabContent" class="UITabContent">
+							<div style="display:$display;" id="UITabContent" class="UITabContent">
 								<% 
 									//uiform.renderChild(tabconten.id) ; 
 									tabconten.setRendered(true);
@@ -79,7 +81,7 @@
 		</div>	
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
 		<% for(action in uicomponent.getActions()) { 
@@ -89,7 +91,9 @@
 					<div class="ActionButton LightBlueStyle">
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
-								<div class="ButtonMiddle"><a href="$link">$actionLabel</a></div>
+								<div class="ButtonMiddle">
+									<a href="$link">$actionLabel</a>
+								</div>
 							</div>
 						</div>
 					</div>

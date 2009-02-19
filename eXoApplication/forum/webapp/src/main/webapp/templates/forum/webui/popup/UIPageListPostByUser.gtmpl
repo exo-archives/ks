@@ -27,13 +27,13 @@
 							<tr>
 								<th style="width:40px"></th>
 								<th>
-									<div href="<%=uicomponent.event("SetOrderBy","name");%>">
+									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
 										<div class="DownArrow1Icon"  style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.PostName");%>
 									</div>
 									</div>
 								</th>
-								<th width="120px">
+								<th style="width:120px">
 									<div onclick="<%=uicomponent.event("SetOrderBy","createdDate");%>">
 										<div class="DownArrow1Icon" style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.CreateDate");%>
@@ -70,7 +70,7 @@
 										<div class="ThreadStatusIcon $iconPost"><span></span></div>
 									</td>
 									<td >
-										<div >
+										<div>
 											<a href="<%=uicomponent.event("OpenPostLink", post.getId());%>" title="$titlePost" class="title">$postTitle</a>
 										</div>
 									</td>

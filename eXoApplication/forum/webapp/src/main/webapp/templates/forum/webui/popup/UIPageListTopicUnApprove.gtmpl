@@ -100,7 +100,7 @@
 		</div>
 	</div>
 	<div class="UIAction"> 
-		<table class="ActionContainer" align="center">
+		<table class="ActionContainer">
 			<tr>
 				<td align="center">
 				<% for(action in uicomponent.getActions()) { 
@@ -114,7 +114,7 @@
 										<a href="javascript:void(0);">
 											$actionLabel
 										</a>
-										</div>
+									</div>
 								</div>
 							</div>
 						</div>

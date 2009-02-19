@@ -22,7 +22,7 @@
 		</div>
 			
 		<div class="UIAction"> 								
-			<table align="center" class="ActionContainer">											 
+			<table class="ActionContainer">											 
 				<tr>
 					<td align="center">
 						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
