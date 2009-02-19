@@ -411,8 +411,9 @@ public class JCRDataStorage {
 						}
 						if(emailsList != null && emailsList.size() > 0) {
 							Message message = new Message();
+							message.setFrom(question.getAuthor() + "<email@gmail.com>");
 							message.setMimeType(MIMETYPE_TEXTHTML) ;
-							message.setSubject(faqSetting.getEmailSettingSubject());
+							message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 							message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
 																																 .replaceAll("&questionContent_", question.getDetail())
 																																 .replaceAll("&questionLink_", question.getLink()));
@@ -448,7 +449,8 @@ public class JCRDataStorage {
 					if(emailsList != null && emailsList.size() > 0) {
 						Message message = new Message();
 						message.setMimeType(MIMETYPE_TEXTHTML) ;
-						message.setSubject(faqSetting.getEmailSettingSubject());
+						message.setFrom(question.getAuthor() + "<email@gmail.com>");
+						message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 						message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
 																															 .replaceAll("&questionResponse_", getAnswers(questionNode)[0].getResponses())
 																															 .replaceAll("&questionLink_", question.getLink()));
@@ -476,8 +478,9 @@ public class JCRDataStorage {
 							}
 							if(emailsList != null && emailsList.size() > 0) {
 								Message message = new Message();
+								message.setFrom(question.getAuthor() + "<email@gmail.com>");
 								message.setMimeType(MIMETYPE_TEXTHTML) ;
-								message.setSubject(faqSetting.getEmailSettingSubject());
+								message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 								message.setBody(faqSetting.getEmailSettingContent().replaceAll("&categoryName_", cate.getProperty("exo:name").getString())
 										.replaceAll("&questionContent_", question.getQuestion())
 										.replaceAll("&questionLink_", question.getLink()));
@@ -509,7 +512,8 @@ public class JCRDataStorage {
 						if(emailsList != null && emailsList.size() > 0) {
 							Message message = new Message();
 							message.setMimeType(MIMETYPE_TEXTHTML) ;
-							message.setSubject(faqSetting.getEmailSettingSubject());
+							message.setFrom(question.getAuthor() + "<email@gmail.com>");
+							message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 							String contentMail = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getQuestion());
 							if(questionHasAnswer(questionNode)){
 								contentMail = contentMail.replaceAll("&questionResponse_", getAnswers(questionNode)[0].getResponses());
@@ -2163,7 +2167,6 @@ public class JCRDataStorage {
 		return breadcums;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
 //		Common common = new Common() ;
 //		String gruopName = "KnowledgeSuite-faq" ;
