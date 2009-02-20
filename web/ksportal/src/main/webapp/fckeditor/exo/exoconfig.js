@@ -15,7 +15,8 @@ FCKConfig.ToolbarSets["eXoForum"] = [
 FCKConfig.ToolbarSets["eXoFAQ"] = [
 	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
-	['Image','Flash','Table','-','TextColor']
+	['Image','Flash','Table','-','TextColor'],
+	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 ] ;
 
 FCKConfig.eXoPath = FCKConfig.BasePath.substr(0, FCKConfig.BasePath.length - 7) + "exo/" ;
