@@ -777,10 +777,11 @@
 								</div>
 								<div style="clear:both;"><span></span></div>
 								<% } else { %>
-								<div class="PostViewTitle">
-									<div class="PostViewIcon $classIconPost">$namePost $alert</div>
-									<div class="PostTime"><%=_ctx.appRes(uiformId + ".label.Posted");%>:$createdDate</div>
+								<div class="PostViewTitle" style="float:left; width:100%;">
+									<div class="PostViewIcon $classIconPost" style="float:left;">$namePost $alert</div>
+									<div class="PostTime" style="float:right; font-size:11px; color:gray;"><%=_ctx.appRes(uiformId + ".label.Posted");%>:$createdDate</div>
 								</div>
+								<div style="clear:left;"><span></span></div>
 								<% } %>
 							</div>
 						<div class="PostContentContainer">
