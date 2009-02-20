@@ -1,8 +1,8 @@
 <div class="UIQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout" >
+		<div class="HorizontalLayout" style="padding:10px 0px;">
 			<div class="UIFormInput">
-				<table class="UIFormGrid">
+				<table class="UIFormGrid" style="width:95%">
 					<tbody>				
 					<% 
 					String url = uicomponent.url("Attachment", "OBJECTID") ;
@@ -16,8 +16,8 @@
 					    if(field.getName().equals( uicomponent.QUESTION_DETAIL)){
 					%>
 							  <tr>
-							    <td class="FieldLabel" style="width:16%; text-align:right">
-							      <%=uicomponent.getLabel(field.getName()) %> : 
+							    <td class="FieldLabel" style="width:100px; text-align:right">
+							      <%=uicomponent.getLabel(field.getName()) %> :
 							    </td>
 							    <td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<% uiform.renderField(field) %>
@@ -28,7 +28,7 @@
 								String link = uicomponent.event("DeleteLanguage", "delete question");
 						%>
 								<tr>
-									<td class="FieldLabel" style="width:16%; text-align:right"><%=uicomponent.getLabel(field.getName()) %> : </td>
+									<td class="FieldLabel" style="width:100px; text-align:right"><%=uicomponent.getLabel(field.getName()) %> :</td>
 									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<div style="float:left;">
 											<div style="float:left;"><% uiform.renderField(field) %></div>
@@ -43,10 +43,10 @@
 								<tr>
 									<%fieldName = uicomponent.getLabel(field.getName());
 										if(!fieldName.equals(uicomponent.getId())) {%>												
-											<td class="FieldLabel" style="width:16%">
-												<%=uicomponent.getLabel(field.getName()) %> : 
+											<td class="FieldLabel" style="width:100px">
+												<%=uicomponent.getLabel(field.getName()) %> :
 											</td>
-											<td class="FieldComponent" style="white-space:normal; width:85%;">
+											<td class="FieldComponent" style="white-space:normal;">
 													<% uiform.renderField(field) %>
 													<%if(field.getName().equals("Author") || field.getName().equals("EmailAddress") || field.getName().equals("QuestionTitle")) {%> * <%}%><br/>
 											</td>
@@ -61,7 +61,7 @@
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
 						<tr>
-							<td class="FieldLabel" style="width:16%;">
+							<td class="FieldLabel" style="width:100px">
 								<%=_ctx.appRes("UIQuestionForm.label.Validation")%> :
 							</td>
 							<td class="FieldComponent" style="white-space:normal;">
@@ -80,7 +80,7 @@
 					<%}%>
 					<!-- ======================= Attachment =========================== -->
 					<tr>
-						<td class="FieldLabel" style="white-space:nowrap; width:16%;">
+						<td class="FieldLabel" style="white-space:nowrap; width:100px">
 							<%=_ctx.appRes("UIQuestionForm.label.Attachment")%> :
 						</td>
 						<td class="FieldComponent" style="white-space:normal;">

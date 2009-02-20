@@ -813,7 +813,7 @@ public class UIQuestions extends UIContainer {
 			questionForm.setCategoryId(categoryId) ;
 			questionForm.refresh() ;
 			popupContainer.setId("AddQuestion") ;
-			popupAction.activate(popupContainer, 600, 420) ;
+			popupAction.activate(popupContainer, 900, 420) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1326,7 +1326,7 @@ public class UIQuestions extends UIContainer {
 			}
 			responseForm.setFAQSetting(question.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
-			popupAction.activate(popupContainer, 720, 1070) ;
+			popupAction.activate(popupContainer, 900, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1382,7 +1382,7 @@ public class UIQuestions extends UIContainer {
 			questionForm.setQuestionId(question) ;
 			questionForm.setFAQSetting(questions.faqSetting_);
 			popupContainer.setId("EditQuestion") ;
-			popupAction.activate(popupContainer, 600, 450) ;
+			popupAction.activate(popupContainer, 900, 450) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1578,7 +1578,7 @@ public class UIQuestions extends UIContainer {
 			UICommentForm commentForm = popupContainer.addChild(UICommentForm.class, null, null) ;
 			commentForm.setInfor(question, commentId, questions.faqSetting_, language_) ;
 			popupContainer.setId("FAQCommentForm") ;
-			popupAction.activate(popupContainer, 720, 1000) ;
+			popupAction.activate(popupContainer, 850, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

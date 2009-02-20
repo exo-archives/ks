@@ -9,7 +9,7 @@
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
-				<table class="UIFormGrid">
+				<table class="UIFormGrid" style="width:100%">
 					<tbody>						
 					<% 
 					String url = uicomponent.url("Attachment", "OBJECTID") ;
