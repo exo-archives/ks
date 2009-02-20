@@ -1177,6 +1177,16 @@ public class JCRDataStorage {
 
 	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
+		long topicCount = 0;
+		long postCount = 0;
+		Node forumNode = null;
+		try {
+			String topicPath = topics.get(0).getPath();
+			forumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+			topicCount = forumNode.getProperty("exo:topicCount").getLong();
+			postCount = forumNode.getProperty("exo:postCount").getLong();
+    } catch (PathNotFoundException e) {
+    }
 		for (Topic topic : topics) {
 			try {
 				String topicPath = topic.getPath();
@@ -1227,16 +1237,26 @@ public class JCRDataStorage {
 				default:
 					break;
 				}
-				if(topicNode.isNew()){
-					topicNode.getSession().save();
-				} else {
-					topicNode.save();
+				if(type == 3 || type == 5) {
+					if(!topic.getIsWaiting() && topic.getIsApproved()) {
+						topicCount = topicCount + 1;
+						postCount = postCount + (topicNode.getProperty("exo:postCount").getLong()+1);
+					}
 				}
 				if (type != 2 && type != 4 && type < 7) {
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
 				}
 			} catch (PathNotFoundException e) {
 			}
+		}
+		if(type == 3 || type == 5) {
+			forumNode.setProperty("exo:topicCount", topicCount);
+			forumNode.setProperty("exo:postCount", postCount);
+		}
+		if(forumNode.isNew()){
+			forumNode.getSession().save();
+		} else {
+			forumNode.save();
 		}
 	}
 
@@ -1260,8 +1280,10 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:isPoll", topic.getIsPoll());
 			topicNode.setProperty("exo:link", topic.getLink());
 			// setTopicCount for Forum
-			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
-			forumNode.setProperty("exo:topicCount", newTopicCount);
+			if(!forumNode.getProperty("exo:isModerateTopic").getBoolean() && !topic.getIsWaiting()) {
+				long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() + 1;
+				forumNode.setProperty("exo:topicCount", newTopicCount);
+			}
 			Node forumStatisticNode ;
 			try {
 				forumStatisticNode = forumHomeNode.getNode(Utils.FORUM_STATISTIC);
@@ -1760,59 +1782,64 @@ public class JCRDataStorage {
 			}
 			// set InfoPost for Forum
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
-			boolean isSetLastPost = !topicNode.getProperty("exo:isClosed").getBoolean();
-			if (isSetLastPost)
-				isSetLastPost = !topicNode.getProperty("exo:isWaiting").getBoolean();
-			if (isSetLastPost)
-				isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
-			if (isSetLastPost) {
-				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-					// set InfoPost for Topic
-					if (!post.getIsHidden()) {
-						forumNode.setProperty("exo:postCount", forumPostCount);
-
-						topicNode.setProperty("exo:postCount", topicPostCount);
-						topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-						topicNode.setProperty("exo:lastPostDate", calendar);
-						topicNode.setProperty("exo:lastPostBy", post.getOwner());
-						forumNode.setProperty("exo:postCount", forumPostCount);
-					}
-					if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-					} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-						forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-					}
-				} else {
-					if (post.getIsApproved()) {
+			boolean isSetLastPost = true;
+			boolean isFistPost = false;
+			if(topicNode.getProperty("exo:isClosed").getBoolean()) {
+				postNode.setProperty("exo:isActiveByTopic", false);
+			} else {
+				if (isSetLastPost && topicNode.getProperty("exo:isWaiting").getBoolean()) isSetLastPost = false;
+				if (isSetLastPost) isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
+				if (isSetLastPost) {
+					if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+						isFistPost = true;
 						// set InfoPost for Topic
 						if (!post.getIsHidden()) {
-							forumNode.setProperty("exo:postCount", forumPostCount);
-
-							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 							topicNode.setProperty("exo:postCount", topicPostCount);
+							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
 							topicNode.setProperty("exo:lastPostDate", calendar);
 							topicNode.setProperty("exo:lastPostBy", post.getOwner());
 						}
-					}
-					if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-						if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-							if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-							}
+						if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+							forumNode.setProperty("exo:postCount", forumPostCount);
+							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+						} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
+							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 						}
 					} else {
-						if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-						} else if (post.getIsApproved()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+						if (post.getIsApproved()) {
+							// set InfoPost for Topic
+							if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
+								forumNode.setProperty("exo:postCount", forumPostCount);	
+								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+								topicNode.setProperty("exo:postCount", topicPostCount);
+								topicNode.setProperty("exo:lastPostDate", calendar);
+								topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							}
+						} 
+						if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+							if (topicNode.getProperty("exo:isApproved").getBoolean()) {
+								if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								} 
+							} 
+						} else {
+							if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+							} else if (post.getIsApproved()) {
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+							} 
 						}
 					}
-					//saveUserReadTopic(sProvider, post.getOwner(), topicId, false);
+				} else {
+					postNode.setProperty("exo:isActiveByTopic", false);
 				}
-			} else {
-				postNode.setProperty("exo:isActiveByTopic", false);
 			}
-			sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+			try {
+				if(!isFistPost) {
+					sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+				}
+      } catch (Exception e) {
+      }
 		} else {
 			long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
