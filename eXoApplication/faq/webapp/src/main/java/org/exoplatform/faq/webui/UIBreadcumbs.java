@@ -108,17 +108,18 @@ public class UIBreadcumbs extends UIContainer {
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+			SessionProvider sProvider = FAQUtils.getSystemProvider();
+			String categoryId = null;
 			if(paths.equals("FAQService")){
 				UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-				String categoryId = null;
 				uiContainer.updateIsRender(true) ;
 				uiQuestions.setCategories(categoryId) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				sProvider.close();
 			} else {
 				uiQuestions.setPath(paths) ;
-				String cate = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+				categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				try {
-					uiQuestions.setCategories(cate) ;
+					uiQuestions.setCategories(categoryId) ;
 				} catch (Exception e) {
 					UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -130,11 +131,11 @@ public class UIBreadcumbs extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 					return ;
 				}
-				uiQuestions.setCategories(cate) ;
+				//uiQuestions.setCategories(categoryId) ;
 				uiQuestions.backPath_ = "" ;
 				uiQuestions.language_ = "";
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
+			uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
 			uiBreadcums.setUpdataPath(paths);
 			categories.setPathCategory(paths);
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
