@@ -1374,8 +1374,10 @@ public class JCRDataStorage {
 					break;
 				}
 				if(type == 3 || type == 5) {
-					topicCount = topicCount + 1;
-					postCount = postCount + (topicNode.getProperty("exo:postCount").getLong()+1);
+					if(!topic.getIsWaiting() && topic.getIsApproved()) {
+						topicCount = topicCount + 1;
+						postCount = postCount + (topicNode.getProperty("exo:postCount").getLong()+1);
+					}
 				}
 				if (type != 2 && type != 4 && type < 7) {
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
@@ -1888,6 +1890,7 @@ public class JCRDataStorage {
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
 			boolean isSetLastPost = true;
 			boolean sendAlertJob = true;
+			boolean isFistPost = false;
 			if(topicNode.getProperty("exo:isClosed").getBoolean()) {
 				sendAlertJob = false;
 				postNode.setProperty("exo:isActiveByTopic", false);
@@ -1896,6 +1899,7 @@ public class JCRDataStorage {
 				if (isSetLastPost) isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
 				if (isSetLastPost) {
 					if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+						isFistPost = true;
 						// set InfoPost for Topic
 						if (!post.getIsHidden()) {
 							topicNode.setProperty("exo:postCount", topicPostCount);
@@ -1945,7 +1949,9 @@ public class JCRDataStorage {
 				}
 			}
 			try {
-				sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+				if(!isFistPost) {
+					sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
+				}
       } catch (Exception e) {
       }
 			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
