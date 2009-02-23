@@ -115,9 +115,17 @@
 										      } else {
 										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
 										      }
+										      if(name.length() < 80){
 										     %>
 										     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
 									     			$name &nbsp;&nbsp;&nbsp;
+									     	<%} else {%>
+										     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
+										     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
+									     				<%=FAQUtils.getSubString(name, 80)%>
+									     			</a>
+									     			 &nbsp;&nbsp;&nbsp;
+									     	<%}%>
 														[&nbsp;<a href="$link" style="color:#058EE6; font-size:12px">
 															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
 														</a>&nbsp;]
