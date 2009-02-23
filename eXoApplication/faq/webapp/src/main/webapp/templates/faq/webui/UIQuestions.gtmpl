@@ -652,6 +652,9 @@
 																											</div>
 																										</div>
 																								<%}%>
+																								<%
+																									if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+																								%>
 																										<div onclick="<%=uicomponent.event("CommentQuestion", question.getId())%>" class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
@@ -661,6 +664,7 @@
 																												</div>
 																											</div>
 																										</div>
+																									<%}%>
 																									</td>
 																								</tr>
 																							</table> 
