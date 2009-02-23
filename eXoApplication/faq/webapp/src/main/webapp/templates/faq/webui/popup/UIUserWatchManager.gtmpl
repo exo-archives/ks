@@ -9,7 +9,7 @@
 		<div class="UITabPane">
 			<div style="padding:2px;">
 	    	<div class="WorkingArea">
-					
+					<%/*%>
 		     	<div class="UIHorizontalTabs" >
 		     	  <div class="LeftHorizontalTabs">
 		     	    <div class="RightHorizontalTabs">
@@ -40,11 +40,12 @@
 					    </div>
 					  </div>
 		      </div>
-		      
+		      <%*/%>
 		      <% uiform.begin() %>
 	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
 					<div style="background-color:#F3F3F3;">
-	        	<div class="UITabContentContainer">
+	        	<!-- div class="UITabContentContainer" -->
+	        	<div class="UITabContentContainer" style="border: 1px solid #C7C7C7;">
 	        		<%
 	            String display1 = "none" ;
 	            String display2 = "none" ;
@@ -125,6 +126,9 @@
  							</div>
  							
  							<!-- manager for watch question -->
+ 							<%
+ 							/*
+ 							%>
  							<div class="UITabContent"  style="display:$display2;">
  								<div class="UIForm">
 						 			<div class="UIHorizontalLayout">
@@ -184,7 +188,7 @@
 						 			</div>
 					 			</div>
  							</div>
- 							
+ 							<%*/%>
  						</div>
 					</div>
 					
