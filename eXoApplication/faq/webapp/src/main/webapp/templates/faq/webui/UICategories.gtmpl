@@ -23,7 +23,9 @@
 	  	<div class="LeftBar">
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left:10px;font-size:12px; text-align:center;">
-						<span class="TextTitle"><%=FAQUtils.getSubString(uicomponent.getCurrentName(), 50)%></span>
+						<span class="TextTitle">
+							<%=FAQUtils.getSubString(uicomponent.getCurrentName(), 20)%>
+						</span>
 					</div>
 				</div>
 			</div>
