@@ -1155,6 +1155,18 @@ public class UIQuestions extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
+	
+	private boolean checkQuestionToView(Question question, UIApplication uiApplication, Event<UIQuestions> event, SessionProvider sessionProvider){
+		if(!question.isActivated() || (!question.isApproved() && faqSetting_.getDisplayMode().equals(FAQUtils.DISPLAYAPPROVED))){
+			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.WARNING)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(this.getAncestorOfType(UIFAQContainer.class)) ;
+			sessionProvider.close();
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
@@ -1173,6 +1185,7 @@ public class UIQuestions extends UIContainer {
 					language_ = "" ;
 					questionId = strId ;
 					question = faqService_.getQuestionById(questionId, sessionProvider) ;
+					if(uiQuestions.checkQuestionToView(question, uiApplication, event, sessionProvider)) return;
 					uiQuestions.backPath_ = "" ;
 					for(int i = 0; i < uiQuestions.listQuestion_.size(); i ++) {
 						if(uiQuestions.listQuestion_.get(i).getId().equals(uiQuestions.questionView_)) {
@@ -1200,6 +1213,7 @@ public class UIQuestions extends UIContainer {
 					}
 					questionId = strArr[1] ;
 					question = faqService_.getQuestionById(questionId, sessionProvider) ;
+					if(uiQuestions.checkQuestionToView(question, uiApplication, event, sessionProvider)) return;
 					String categoryId = question.getCategoryId();
 					FAQSetting faqSetting = uiQuestions.faqSetting_ ;
 					String currentUser = FAQUtils.getCurrentUser() ;
