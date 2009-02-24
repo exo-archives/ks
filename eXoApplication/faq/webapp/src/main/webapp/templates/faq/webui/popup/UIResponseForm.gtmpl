@@ -10,7 +10,20 @@
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
 				<table class="UIFormGrid" style="width:100%">
-					<tbody>						
+					<tbody>
+						<tr>
+							<td class="FieldLabel" style="white-space:nowrap; width:15%">
+								<%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :
+							</td>
+							<td class="FieldComponent" style="width:85%"><%=uicomponent.questionContent%></td>
+						</tr>
+						
+						<tr>
+							<td class="FieldLabel" style="white-space:nowrap; width:15%">
+								<%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :
+							</td>
+							<td class="FieldComponent" style="width:85%"><%=uicomponent.questionDetail%></td>
+						</tr>
 					<% 
 					String url = uicomponent.url("Attachment", "OBJECTID") ;
 					uicomponent.setLink(url);
@@ -23,139 +36,22 @@
 								<td class="FieldLabel" style="white-space:nowrap; width:15%">
 									<%=uicomponent.getLabel(field.getName()) %> :
 								</td>
-								<td class="FieldComponent" style="width:86%">
+								<td class="FieldComponent" style="width:85%">
 									<%if(field.getName().equals("QuestionRelation")){ 
 											String link = uicomponent.event("AddRelation") ;
 									%>
-											<div style="float:left">
+											<div style="float:left" style="border:1px solid red;">
 												<% uiform.renderField(field) %>
 											</div>
-											<div onclick="$link" style="float:left; cursor:pointer;"><div class="Icon AddRelation"><span></span></div></div>
-									<%} else if (field.getName().equals("QuestionRespone")){
-											String link = "";
-									%>
-											<div style="float:left; width:94%;">
-												<% uiform.renderField(field) %>
-											</div>
-											<div class="ContentAction" style="float:left; cursor:pointer" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-												<div onclick="javaScript:void(0);" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "MultiAnswer")%>">
-													<div class="Icon MultiAnswerIcon"><span></span></div>
-													</div>
-												<!-- action of this question -->
-												<div style="position:relative;">
-													<div class="UIPopupCategory" style="display:none;top:-2px; ">
-														<div class="UIRightClickPopupMenu" style="display:block; height:auto; width:120px; z-index:10;">
-															<div class="UIContextMenuContainer">			
-																							
-																<div class="TopLeftRightClickPopupMenu">
-																	<div class="TopRightRightClickPopupMenu">
-																		<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																	</div>
-																</div>
-																
-																<div class="MiddleLeftRightClickPopupMenu">
-																	<div class="MiddleRightRightClickPopupMenu">
-																		<div class="UIRightPopupMenuContainer">
-																			<%
-																				int pos = 0;
-																				for(int i = 0; i < uicomponent.numberOfAnswer(); i ++) {
-																					link = uicomponent.event("AddNewAnswer", "" + i) ;
-																					pos ++;
-																					if(uicomponent.posOfResponse != i){
-																				%>
-																						<div onclick="javaScript:void(0)" onmousedown="$link">
-																							<div class="ItemIcon QuestionSearch" style="padding:3px 0px 5px 5px; margin-left:5px;">
-																									<div style="padding-left:20px;">
-																										<%=_ctx.appRes(uicomponent.getName() + ".label." + "IndexOfAnswer")%> $pos
-																									</div>
-																							</div>
-																						</div>
-																			<%	} else {%>
-																						<div class="ItemIcon QuestionSearch" style="padding:3px 0px 5px 5px; margin-left:5px;">
-																								<div style="padding-left:20px; color:darkred;">
-																									<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "IndexOfAnswer")%> $pos</b>
-																								</div>
-																						</div>
-																				<%}
-																				}
-																				link = uicomponent.event("AddNewAnswer", "New");
-																			%>
-																				<div onclick="$link">
-																					<div class="ItemIcon AddRelation" style="margin-left:5px; padding:0px 0px 5px 25px;">
-																						<a href="javaScript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".label." + "AddNewAnswer")%></a>
-																					</div>
-																				</div>
-																			<div style="clear:left"><span></span></div>
-																			</div>
-																		</div>
-																</div>
-																	
-																<div class="BottomLeftRightClickPopupMenu">
-																	<div class="BottomRightRightClickPopupMenu">
-																		<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-																	</div>
-																</div>
-																
-																</div>
-															</div>
-														</div>
-													</div>
-												<!-- finish action of this question -->
-												<div style="clear:left;"><span></span></div>					
-											</div>
-											
-									<%} else if(field.getName().equals("QuestionAttach")){
-											if(!uicomponent.getListFile().isEmpty()) {
-												String name = "" ;
-												String link = "" ;
-												for(attachment in uicomponent.getListFile()) {
-										      name = attachment.getName() ;
-										      if(attachment.getId() != null) {
-										      	link = uicomponent.event("RemoveAttachment", attachment.getId()) ;
-										      } else {
-										      	link = uicomponent.event("RemoveAttachment", attachment.getPath()) ;
-										      }
-										      if(name.length() < 80){
-										     %>
-										     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
-									     			$name &nbsp;&nbsp;&nbsp;
-									     	<%} else {%>
-										     	<div class="ViewAttachFile AttachmentIcon FileAttachmentIcon">
-										     		<a href="javaScript:void(0);" title="$name" style="color:black;" title="">
-									     				<%=FAQUtils.getSubString(name, 80)%>
-									     			</a>
-									     			 &nbsp;&nbsp;&nbsp;
-									     	<%}%>
-														[&nbsp;<a href="$link" style="color:#058EE6; font-size:12px">
-															<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-														</a>&nbsp;]
-													</div>
-									    <%}
-											}
-										}else if(field.getName().equals("QuestionContent") || field.getName().equals("QuestionTitle")){
-											String display = "none";
-											if(uicomponent.isViewEditQuestion_){
-												display="block";
-											} else {
-												String isEditQuestion = uicomponent.event("ViewEditQuestion", "");
-												String questionDetail = uicomponent.getValue(field.getName()) ;
-												questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
-											%>
-												<div style="float:left; width:100%">
-													<div class="ViewQuestionNotApproved" style="white-space:normal; float:left;">
-														<span>$questionDetail</span>
-													</div>
-													<%
-													if(field.getName().equals("QuestionTitle")){
-													%>
-														<div onclick="$isEditQuestion" style="cursor:pointer">
-															<div class="EditQuestionContent"><span></span></div>
-														</div>
-													<%}%>
+											<div onclick="$link" style="float:left; cursor:pointer; border:1px solid red;"><div class="Icon AddRelation"><span></span></div></div>
+									<%}else if(field.getName().equals("QuestionContent") || field.getName().equals("QuestionTitle")){
+											String questionDetail = uicomponent.getValue(field.getName()) ;
+											questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
+										%>
+											<div style="float:left; width:100%">
+												<div class="ViewQuestionNotApproved" style="white-space:normal; float:left;">
+													<span>$questionDetail</span>
 												</div>
-										<%}%>
-											<div style="display:$display">
-												<% uiform.renderField(field) %>
 											</div>
 									<%} else {%>
 											<% uiform.renderField(field) %><br/>
@@ -171,23 +67,26 @@
 						<tr>
 							<td style="text-align:right"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Relation")%>  :&nbsp;</td>
 							<td>
-							<%
-							int i = 0 ;
-							String viewString = "" ;
-							for(String questionContent in uicomponent.getListRelationQuestion()) {
-								String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
-								viewString = questionContent.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br/>","") ;
-								if(viewString.length() > 85) {
-				          viewString = FAQUtils.getSubString(viewString, 85) ;
-				        }
-							%>
-								<div style="margin:0px 0px 3px 2px;">
-									&nbsp; - $viewString  &nbsp;&nbsp;&nbsp;&nbsp;
-									[<a href="$action" style="color:#058EE6; font-size:12px">
-										<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-									</a>]
+								<div class="ItemIcon AddRelation" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" title="<%=_ctx.appRes(uicomponent.getName() + ".action.AddRelation")%>"><span></span></div><br/>
+								<div style="width:100%; margin-top:10px;">
+									<%
+									int i = 0 ;
+									String viewString = "" ;
+									for(String questionContent in uicomponent.getListRelationQuestion()) {
+										String action = uicomponent.event("RemoveRelation",uicomponent.getListIdQuesRela().get(i ++)) ;
+										viewString = questionContent.replaceAll("<p>","").replaceAll("</p>","").replaceAll("<br/>","") ;
+										if(viewString.length() > 85) {
+						          viewString = FAQUtils.getSubString(viewString, 85) ;
+						        }
+									%>
+										<div style="margin:0px 0px 3px 2px;">
+											<a href="$action" style="color:blue; font-size:12px; font-weight:bold;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>">
+												[ X ]
+											</a>
+											&nbsp;$viewString  &nbsp;&nbsp;&nbsp;&nbsp;
+										</div>
+								<%}%>
 								</div>
-						<%}%>
 							</td>
 						</tr>
 					</tbody>

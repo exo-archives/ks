@@ -614,7 +614,7 @@
 	color: #2e7b05;
 }
 
-.UIFAQPortlet .ViewQuestionNotApproved .QuestionDateTime {
+.UIFAQPortlet .QuestionDateTime {
 	white-space: nowrap; 
 	color:#721d95 ;
 }
@@ -1379,11 +1379,12 @@
 .UIFAQPortlet .Send {
 	background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
-.AddRelation {
-	background: url('background/AddIcon.gif') no-repeat left top;
+.UIFAQPortlet .AddRelation {
+	background: url('background/add_16x16.gif') no-repeat left top;
 	height:16px;
 	width:16px;
 	float: left;
+	cursor:pointer;
 }
 
 .UIFAQPortlet .UIQuestionManagerForm .ItemIcon {

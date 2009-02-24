@@ -1200,6 +1200,9 @@ public class UIQuestions extends UIContainer {
 					}
 				} else {
 					String[] strArr = strId.split("/");
+					questionId = strArr[1] ;
+					question = faqService_.getQuestionById(questionId, sessionProvider) ;
+					if(uiQuestions.checkQuestionToView(question, uiApplication, event, sessionProvider)) return;
 					if(strArr.length == 3 || (uiQuestions.backPath_ != null && 
 							uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId))) {
 						uiQuestions.backPath_ = "" ;
@@ -1211,9 +1214,6 @@ public class UIQuestions extends UIContainer {
 						uiQuestions.backPath_ = uiQuestions.categoryId_ + "/" + uiQuestions.questionView_ + "/" + language_ ;
 						language_ = "" ;
 					}
-					questionId = strArr[1] ;
-					question = faqService_.getQuestionById(questionId, sessionProvider) ;
-					if(uiQuestions.checkQuestionToView(question, uiApplication, event, sessionProvider)) return;
 					String categoryId = question.getCategoryId();
 					FAQSetting faqSetting = uiQuestions.faqSetting_ ;
 					String currentUser = FAQUtils.getCurrentUser() ;

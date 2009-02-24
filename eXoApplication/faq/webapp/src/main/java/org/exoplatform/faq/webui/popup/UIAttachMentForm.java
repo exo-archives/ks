@@ -57,7 +57,6 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 )
 
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
-  private boolean response_ = false ;
   private static int numberUpload = 5 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
   private boolean isChangeAvatar = false;
@@ -79,10 +78,6 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   public UIAttachMentForm() {
     this.setRendered(false) ;
   }
-  
-  public void setResponse(boolean response){ this.response_ = response ;}
-  
-  private boolean getResponse(){ return this.response_ ; }
   
   static public class SaveActionListener extends EventListener<UIAttachMentForm> {
     @SuppressWarnings("static-access")
@@ -122,17 +117,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       }
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
-      if(attachMentForm.getResponse()) {
-        UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
-        if(responseForm == null) {
-          UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
-          UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
-          responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
-        }
-        responseForm.setListFileAttach(listFileAttachment) ;
-        responseForm.refreshUploadFileList() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
-      } else if(attachMentForm.isChangeAvatar) {
+      if(attachMentForm.isChangeAvatar) {
       	if(listFileAttachment.get(0).getMimeType().indexOf("image") < 0){
       		UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
           uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.fileIsNotImage", null, ApplicationMessage.WARNING)) ;

@@ -53,6 +53,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UIAddRelationForm extends UIForm implements UIPopupComponent {
+	private String homeCategoryName = "";
   private List<Question> listQuestion = new ArrayList<Question>() ;
   private List<String> quesIdsSelect = new ArrayList<String>() ;
   private String questionId_ ;
