@@ -654,6 +654,7 @@ public class JCRDataStorage {
 			forumNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
 			forumNode.setProperty("exo:description", forum.getDescription());
 
+			forumNode.setProperty("exo:isAutoAddEmailNotify", forum.getIsAutoAddEmailNotify());
 			forumNode.setProperty("exo:notifyWhenAddPost", forum.getNotifyWhenAddPost());
 			forumNode.setProperty("exo:notifyWhenAddTopic", forum.getNotifyWhenAddTopic());
 			forumNode.setProperty("exo:isModerateTopic", isNewModerateTopic);
@@ -869,6 +870,8 @@ public class JCRDataStorage {
 			forum.setIsModeratePost(forumNode.getProperty("exo:isModeratePost").getBoolean());
 		forum.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
 		forum.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
+		if (forumNode.hasProperty("exo:isAutoAddEmailNotify"))
+			forum.setIsAutoAddEmailNotify(forumNode.getProperty("exo:isAutoAddEmailNotify").getBoolean());
 		if (forumNode.hasProperty("exo:notifyWhenAddPost"))
 			forum.setNotifyWhenAddPost(ValuesToArray(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 		if (forumNode.hasProperty("exo:notifyWhenAddTopic"))

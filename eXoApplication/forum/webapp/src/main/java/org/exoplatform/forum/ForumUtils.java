@@ -33,6 +33,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
@@ -190,6 +191,7 @@ public class ForumUtils {
 	
 	public static String[] splitForForum (String str) throws Exception {
 		if(!isEmpty(str)) {
+			str = StringUtils.remove(str, " ");
 			if(str.contains(",")){ 
 				str.replaceAll(";", ",") ;
 				return str.trim().split(",") ;

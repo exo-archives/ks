@@ -19,6 +19,8 @@ package org.exoplatform.forum.service ;
 import java.util.Date;
 import java.util.List;
 
+import javax.jcr.Value;
+
 import org.exoplatform.services.jcr.util.IdGenerator;
 /**
  * March 2, 2007	
@@ -39,6 +41,7 @@ public class Forum {
 	
 	private String[] notifyWhenAddTopic ;
 	private String[] notifyWhenAddPost ;
+	private boolean isAutoAddEmailNotify = true ;
 	private boolean isModerateTopic = false ;
 	private boolean isModeratePost = false ;
 	private boolean isClosed = false ;
@@ -143,4 +146,7 @@ public class Forum {
 
 	public List<String> getBanIP() { return banIPs;}
 	public void setBanIP(List<String> banIPs) { this.banIPs = banIPs;}
+
+	public boolean getIsAutoAddEmailNotify() { return isAutoAddEmailNotify;}
+	public void setIsAutoAddEmailNotify(boolean isAutoAddEmailNotify) {this.isAutoAddEmailNotify = isAutoAddEmailNotify;}
 }

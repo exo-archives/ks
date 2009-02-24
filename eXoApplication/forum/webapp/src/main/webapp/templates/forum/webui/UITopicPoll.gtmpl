@@ -83,13 +83,11 @@
 					<div class="SeparatorLine"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-							<div onclick="$link">
-								<div class="LeftOverButton">
-									<div class="RightOverButton">
-										<div class="CenterOverButton">
-											<div class="StatusIcon EditPollIcon">
-												<a href="<%=uicomponent.event("EditPoll")%>">	<%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
-											</div>
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="StatusIcon EditPollIcon">
+											<a href="<%=uicomponent.event("EditPoll")%>"><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
 										</div>
 									</div>
 								</div>
@@ -135,17 +133,15 @@
 														<table class="ActionContainer">
 															<tr>
 																<td align="center">
-																<div class="ActionButton LightBlueStyle">
-																	<div class="ButtonLeft">
-																		<div class="ButtonRight">
-																			<div class="ButtonMiddle">
-																				<a href="<%=uicomponent.event("Vote")%>">
-																						<%=_ctx.appRes("UITopicPoll.label.Votenow"); %>
-																				</a>
+																	<div class="ActionButton LightBlueStyle">
+																		<div class="ButtonLeft">
+																			<div class="ButtonRight">
+																				<div class="ButtonMiddle">
+																					<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
+																				</div>
 																			</div>
 																		</div>
 																	</div>
-																</div>
 																</td>
 															</tr>
 														</table>
@@ -215,7 +211,7 @@
 												<table class="ActionContainer">
 													<tr>
 														<td align="center">
-															<div onclick="$link" class="ActionButton LightBlueStyle">
+															<div class="ActionButton LightBlueStyle">
 																<div class="ButtonLeft">
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">

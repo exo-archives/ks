@@ -281,6 +281,9 @@
 			<propertyDefinition name="exo:topicCount" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:isAutoAddEmailNotify" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
 			<propertyDefinition name="exo:notifyWhenAddTopic" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>
@@ -658,6 +661,9 @@
 	
 	<nodeType name="exo:forumWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
 		<propertyDefinitions>
+			<propertyDefinition name="exo:headerSubject" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
 			<propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>

@@ -5,7 +5,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	//jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable');");
-	//jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('Postable','Topicable');");
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableTexarea();");
 %>
 <div class="UIForumForm">	
 	<% uiform.begin() %>	

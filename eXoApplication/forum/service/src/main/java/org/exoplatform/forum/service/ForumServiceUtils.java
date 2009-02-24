@@ -50,6 +50,7 @@ public class ForumServiceUtils {
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		for(String str : userGroupMembership) {
+			str = str.trim();
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
@@ -78,7 +79,6 @@ public class ForumServiceUtils {
 				}else { //group
 					List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
 					for(User user: userList) {
-						System.out.println("\t~~~~~~>user in group:" + user);
 						if(!users.contains(user.getUserName())){
 							users.add(user.getUserName()) ;
 						}

@@ -410,6 +410,33 @@ UIForumPortlet.prototype.showFullScreen = function(imageNode,containerNode){
 	}
 };
 
+UIForumPortlet.prototype.setDisableTexarea = function() {
+	var objCmdElm = document.getElementById('moderationOptions');
+	var input = eXo.core.DOMUtil.findFirstDescendantByClass(objCmdElm, "input", "checkbox");
+	if(input) {
+		if(input.name === "autoAddEmailNotify") {
+	 		input.onclick = eXo.forum.UIForumPortlet.onClickDisableTexarea;
+		}
+	}
+};
+
+UIForumPortlet.prototype.onClickDisableTexarea = function() {
+	var objCmdElm = document.getElementById('moderationOptions');
+	var input = eXo.core.DOMUtil.findFirstDescendantByClass(objCmdElm, "input", "checkbox");
+	if(objCmdElm) {
+		var texares = objCmdElm.getElementsByTagName("textarea");
+		for(var i = 0; i < texares.length; ++i) {
+			if(texares[i].name === "NotifyWhenAddTopic" ||  texares[i].name === "NotifyWhenAddPost") {
+				if(!input.checked) {
+					texares[i].readOnly = false;
+				} else {
+					texares[i].readOnly = true;
+				}
+			}
+		}
+	}
+};
+
 UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 	var objCmdElm = document.getElementById(cmdElm);
 	var objElm = document.getElementById(elm) ;
