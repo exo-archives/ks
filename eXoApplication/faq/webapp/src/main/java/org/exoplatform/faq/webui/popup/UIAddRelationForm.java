@@ -18,6 +18,9 @@ package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
@@ -28,6 +31,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -93,6 +97,13 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     FAQUtils.getPorletPreference(faqSetting_);
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     faqService.getUserSetting(sessionProvider, FAQUtils.getCurrentUser(), faqSetting_);
+		Node homeNode = faqService.getCategoryNodeById(null, sessionProvider);
+		if(homeNode.hasProperty("exo:name")) homeCategoryName = homeNode.getProperty("exo:name").getString();
+		else{
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			homeCategoryName = res.getString("UIAddRelationForm.title.RootCategory");
+		}
     sessionProvider.close();
     setListCate() ;
   }

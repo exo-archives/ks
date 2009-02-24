@@ -19,7 +19,7 @@
    %>
    	<div class="FAQCategoryTreeView" id="FAQCate$i">
 			<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
-				<%=_ctx.appRes("UIAddRelationForm.title.RootCategory")%>
+				<%=uicomponent.homeCategoryName%>
 			</a>
 		</div>
 		<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
