@@ -76,7 +76,7 @@ import org.exoplatform.webui.event.EventListener;
 )
 
 public class UICategories extends UIContainer{
-	private String parentCateID_ = null;
+	public String parentCateID_ = null;
 	private String categoryId_ = null;
 	private boolean isSwap = false;
 	private String currentName = "";

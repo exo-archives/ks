@@ -19,6 +19,25 @@
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
+	
+	
+	String url = uicomponent.url("Setting", "OBJECTID");
+	uicomponent.setLink(url);
+	String cateId = uicomponent.getCategoryId();
+	uicomponent.getQuestions(); 
+	/*
+	if(cateId == null || cateId.trim().length() < 1) {
+		uicomponent.setIsModerators();
+	}*/
+	boolean canEditQuestion = uicomponent.getCanEditQuestion();
+	String[] categoryAction = null ;
+	String[] moderatorAction = null ;
+	
+	if(cateId != null && cateId.trim().length() > 0){
+		moderatorAction = uicomponent.getSecondActionCategory();
+	} else {
+		moderatorAction = uicomponent.getActionCategory();
+	}
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="FAQToolbar" style="float:left; width:100%;">
@@ -44,6 +63,7 @@
 										</div>
 									</div>
 									<div class="SeparatorLine ControlButton"><span></span></div>
+									
 									<%
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									 	String linkRss = uicomponent.event("RSS", uicomponent.getRSSLink());
@@ -62,44 +82,78 @@
 											</div>
 										</div>
 										<div class="SeparatorLine ControlButton"><span></span></div>
-									
 								<%
 								}
-								if(uicomponent.faqSetting_.isAdmin() && uicomponent.categoryId_ == null){
+								if(canEditQuestion) {
 								%>
-								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-									<div onclick="<%=uicomponent.event("EditCategory")%>">
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this); eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this);"	class="DefaultStyle FAQBar ControlButton">
+									
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
-													<div class="Icon EditCategory">
-														<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.label.editRootCategory")%></a>														
+													<div class="Icon CategoryManager">
+														<div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
+															<a href="javascript:void(0);">Manage Category</a>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
+										
+										<!-- ================================================= Begin popup menu ================================ -->
+										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none; left:50px;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
+											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
+												<div class="UIContextMenuContainer">
+	
+													<div class="TopLeftRightClickPopupMenu">
+														<div class="TopRightRightClickPopupMenu">
+															<div class="TopCenterRightClickPopupMenu"><span></span></div>
+															<div class="RightClickCustomItem" style="display:none; height:0px;"><span></span></div>
+														</div>
+													</div>
+													
+													<%
+														String[] actionTollbar ;
+														actionTollbar = uicomponent.getMenuCateManager();
+														String linkAction = "" ;
+														String opacity ;
+														for(String action in actionTollbar) {
+															linkAction = uicomponent.event(action, cateId);
+															String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+													%>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																
+																		<div onmousedown="$linkAction" class="MenuItem">
+																			<div class="ItemIcon $action" style="padding:0px 0px 5px 5px;">
+																				<div style="padding-left:20px;">
+																					<a href="javascript:void(0);" onclick="$linkAction">$itemLabelView</a>
+																				</div>
+																			</div>
+																		</div>
+																	
+																	</div>
+																</div>
+															</div>
+													<%
+														}%>
+																
+													<div class="BottomLeftRightClickPopupMenu">
+														<div class="BottomRightRightClickPopupMenu">
+															<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+														</div>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+										<!-- ================================================= End popup menu ================================ -->
+									
 									</div>
-								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
+									<div class="SeparatorLine ControlButton"><span></span></div>
 								<%
 								}
-								String url = uicomponent.url("Setting", "OBJECTID");
-								uicomponent.setLink(url);
-								String cateId = uicomponent.getCategoryId();
-								uicomponent.getQuestions(); 
-								/*
-								if(cateId == null || cateId.trim().length() < 1) {
-									uicomponent.setIsModerators();
-								}*/
-								boolean canEditQuestion = uicomponent.getCanEditQuestion();
-								String[] categoryAction = null ;
-								String[] moderatorAction = null ;
-								if(cateId != null && cateId.trim().length() > 0){
-									moderatorAction = uicomponent.getSecondActionCategory();
-								} else {
-									moderatorAction = uicomponent.getActionCategory();
-								}
-								
 								if(canEditQuestion) {
 									String[] actionTollbar ;
 									actionTollbar = uicomponent.getActionTollbar();
@@ -146,7 +200,7 @@
 							<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
 									String actionSetting = uicomponent.event("Setting");
 							%>
-								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
+									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
 										<div onclick="$actionSetting" >
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
@@ -1110,111 +1164,113 @@
 												
 												<!-- ============================== View question's commnets ============================================== -->
 												<%
+												if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 													boolean canEditComment = false;
 													List comments = uicomponent.getPageListComment(question.getId());
 													String classComment = "";
 													if(comments.size() > 0) {
 														classComment = "CommentExternal";
 												%>
-												<div class="TitleCommentContent">
-													<div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
-												</div>
+														<div class="TitleCommentContent">
+															<div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
+														</div>
 												<% } %>
-												<div class="Response $classComment">
-												<%
-													int commentCount = 0;
-													for(Comment comment in comments){
-														if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
-														else canEditComment = false;
-												%>
-													<div >
-														<div class="ResponseItemContainer" style="background:#F0F0F0;">
-														<table style="width:100%">
-															<tr>
-																<td>
-																
-																		<div class="ResponseItemContainerLeft">
-																		<!-- ============================= View user who comment for quesetion ============================ -->
-																			<div style="padding:10px 0px">
-																				<div class="ProfileContainer">
-																					<%
-																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																					%>				
-																					<div class="AvatarContainer" style="margin-top:0px;">
-																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
-																					</div>
-																					<%}%>
-																					<div class="AuthorInfor" style="text-align:center">
-																						<div title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" onclick="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
-																							<span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
+													
+													<div class="Response $classComment">
+													<%
+														int commentCount = 0;
+														for(Comment comment in comments){
+															if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
+															else canEditComment = false;
+													%>
+															<div >
+																<div class="ResponseItemContainer" style="background:#F0F0F0;">
+																<table style="width:100%">
+																	<tr>
+																		<td>
+																		
+																				<div class="ResponseItemContainerLeft">
+																				<!-- ============================= View user who comment for quesetion ============================ -->
+																					<div style="padding:10px 0px">
+																						<div class="ProfileContainer">
+																							<%
+																							if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																							%>				
+																							<div class="AvatarContainer" style="margin-top:0px;">
+																								<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
+																							</div>
+																							<%}%>
+																							<div class="AuthorInfor" style="text-align:center">
+																								<div title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" onclick="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
+																									<span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
+																								</div>
+																							</div>
 																						</div>
 																					</div>
 																				</div>
-																			</div>
-																		</div>
-																		<div class="ResponseItemContainerRight">
-																			<%
-																				String commentDetail =comment.getComments() ;
-																				commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
-																			%>
-																			<span>$commentDetail</span>
-																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
-																		</div>
-																		<div style="clear:left;"><span></span></div>
-	
-																</td>
-																<%
-																if(canEditComment){
-																	if (uicomponent.faqSetting_.isCanEdit()){%>
-																		<td style="width:20px;">
-																			<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
-																				<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
-																						<span></span>
+																				<div class="ResponseItemContainerRight">
+																					<%
+																						String commentDetail =comment.getComments() ;
+																						commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
+																					%>
+																					<span>$commentDetail</span>
+																					<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
 																				</div>
-																			</div>
+																				<div style="clear:left;"><span></span></div>
+			
 																		</td>
-																<%}%>
-																	<td style="width:20px">
-																		<div title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" onclick="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
-																			<div class="ItemIcon Edit" style="height:24px;width:16px;">
-																					<span></span>
-																			</div>
-																		</div>
-																	</td>
-																	<td style="width:20px">
-																		<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
-																			<div class="ItemIcon Delete" style="height:24px;width:16px;">
-																					<span></span>
-																			</div>
-																		</div>
-																	</td>
-															<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
-																	<td style="width:20px">
-																		<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
-																			<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
-																					<span></span>
-																			</div>
-																		</div>
-																	</td>
-																	<td style="width:20px">
-																		<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
-																			<div class="ItemIcon Delete" style="height:24px;width:16px;">
-																					<span></span>
-																			</div>
-																		</div>
-																	</td>
-															<%}%>
-															</tr>
-														</table>
-														</div>
+																		<%
+																		if(canEditComment){
+																			if (uicomponent.faqSetting_.isCanEdit()){%>
+																				<td style="width:20px;">
+																					<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
+																						<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+																								<span></span>
+																						</div>
+																					</div>
+																				</td>
+																		<%}%>
+																			<td style="width:20px">
+																				<div title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" onclick="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
+																					<div class="ItemIcon Edit" style="height:24px;width:16px;">
+																							<span></span>
+																					</div>
+																				</div>
+																			</td>
+																			<td style="width:20px">
+																				<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
+																							<span></span>
+																					</div>
+																				</div>
+																			</td>
+																	<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
+																			<td style="width:20px">
+																				<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
+																					<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+																							<span></span>
+																					</div>
+																				</div>
+																			</td>
+																			<td style="width:20px">
+																				<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
+																							<span></span>
+																					</div>
+																				</div>
+																			</td>
+																	<%}%>
+																	</tr>
+																</table>
+																</div>
+															</div>
+													<%}%>
+														<div>
+															<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
+															<div style="clear:right;"><span></span></div>
+														</div>	
 													</div>
 												<%}%>
-													<div>
-														<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
-														<div style="clear:right;"><span></span></div>
-													</div>	
-												</div>
-													
 													<div class="UIAction">
 														<div style="float:right">
 															<div class="PrintAction" style="display:none ;">

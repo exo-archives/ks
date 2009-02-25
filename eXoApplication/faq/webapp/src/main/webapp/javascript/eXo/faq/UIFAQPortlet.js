@@ -1,6 +1,37 @@
 function UIFAQPortlet() {
 	this.scrollManagerLoaded = false;
+	this.hiddentMenu = true;
 };
+
+UIFAQPortlet.prototype.setCheckEvent = function(isCheck){
+	this.hiddentMenu = isCheck;
+}
+
+UIFAQPortlet.prototype.viewTitle = function(id) {
+	var obj = document.getElementById(id) ;
+	obj.style.display = "block" ;
+	this.hiddentMenu = false;
+};
+
+UIFAQPortlet.prototype.hiddenTitle = function(id) {
+	var obj = document.getElementById(id) ;
+	obj.style.display = "none" ;
+	this.hiddentMenu = true;
+};
+
+UIFAQPortlet.prototype.hiddenMenu = function() {
+	if(this.hiddentMenu){
+		eXo.faq.UIFAQPortlet.hiddenTitle('FAQCategroManager');
+		this.hiddentMenu = false;
+	}
+};
+
+UIFAQPortlet.prototype.checkAction = function() {
+	if(this.hiddentMenu){
+		setTimeout('eXo.faq.UIFAQPortlet.hiddenMenu()', 1500);
+		setTimeout('eXo.faq.UIFAQPortlet.checkAction()', 1500);
+	}
+} ;
 
 UIFAQPortlet.prototype.checkCustomView = function(hileTitle, showTitle){
 	var cookie = eXo.core.Browser.getCookie("FAQCustomView");
@@ -100,15 +131,6 @@ UIFAQPortlet.prototype.FAQViewAllBranch = function(ids) {
 			obj.style.display = "block" ;
 		}
 	}
-};
-
-UIFAQPortlet.prototype.viewTitle = function(id) {
-	var obj = document.getElementById(id) ;
-	obj.style.display = "block" ;
-};
-UIFAQPortlet.prototype.hiddenTitle = function(id) {
-	var obj = document.getElementById(id) ;
-	obj.style.display = "none" ;
 };
 
 UIFAQPortlet.prototype.hidePicture = function() {

@@ -1214,6 +1214,10 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 
+.UIFAQPortlet .CategoryManager {
+	background: url('background/FAQPortlet.gif') no-repeat left -370px;
+}
+
 .UIFAQPortlet .FAQToolbar .SubCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -58px;
 }
@@ -1253,7 +1257,7 @@
 }
 
 .UIFAQPortlet .DeleteCategory {
-	background: url('background/FAQPortlet.gif') no-repeat left -279px;
+	background: url('background/FAQPortlet.gif') no-repeat left -282px;
 }
 
 .UIFAQPortlet .MoveCategory {

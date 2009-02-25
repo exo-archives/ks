@@ -85,6 +85,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/faq/webui/UIQuestions.gtmpl" ,
 		events = {
 				@EventConfig(listeners = UIQuestions.DownloadAttachActionListener.class),
+				@EventConfig(listeners = UIQuestions.DeleteCategoryActionListener.class, confirm= "UIQuestions.msg.confirm-delete-category"),
 				@EventConfig(listeners = UIQuestions.ChangeStatusAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.AddCategoryActionListener.class),
 				@EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
@@ -144,7 +145,8 @@ public class UIQuestions extends UIContainer {
 	public static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
 
-	private String[] firstTollbar_ = new String[]{"AddCategory", "AddNewQuestion", "QuestionManagament"} ;
+	private String[] firstTollbar_ = new String[]{"AddNewQuestion", "QuestionManagament"} ;
+	private String[] menuCateManager = new String[]{"EditCategory", "AddCategory", "DeleteCategory", "Export", "Import",} ;
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -291,6 +293,10 @@ public class UIQuestions extends UIContainer {
 	
 	public String[] getActionTollbar() {
 		return firstTollbar_;
+	}
+	
+	public String[] getMenuCateManager() {
+		return menuCateManager;
 	}
 
 	public FAQSetting getFAQSetting(){
@@ -633,8 +639,9 @@ public class UIQuestions extends UIContainer {
 		List<Category> listResult = new ArrayList<Category>() ;
 		Stack<Category> stackCate = new Stack<Category>() ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-		Category cate = null ;
-		listResult.add(faqService_.getCategoryById(categoryId, sessionProvider)) ;
+		Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
+		if(categoryId == null || categoryId.equals("null")) cate.setId(null);
+		listResult.add(cate) ;
 		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
 			stackCate.push(category) ;
 		}
@@ -1033,21 +1040,22 @@ public class UIQuestions extends UIContainer {
 	static  public class EditCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			System.out.println("\n\n\n\n----------->categoryId: " + categoryId);
 			UIFAQPortlet uiPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			
 			try {
-				//Category cate = questions.faqService_.getCategoryById(null, sessionProvider) ;
+				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				if(questions.faqSetting_.isAdmin()) {
+				if(questions.faqSetting_.isAdmin() || questions.canEditQuestion) {
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 					uiCategoryForm.init(false);
-					uiCategoryForm.setCategoryValue(null, true) ;
+					uiCategoryForm.setCategoryValue(categoryId, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
@@ -1869,6 +1877,80 @@ public class UIQuestions extends UIContainer {
 				uiQuestions.setIsNotChangeLanguage() ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class));
+		}
+	}
+	
+	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ; 			
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIFAQPortlet uiPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class);
+			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+			try {
+				Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
+				if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
+					List<Category> listCate = uiQuestions.getAllSubCategory(categoryId) ;
+					FAQSetting faqSetting = new FAQSetting();
+					faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
+					faqSetting.setOrderBy("alphabet");
+					faqSetting.setOrderType("asc");
+					for(Category category : listCate) {
+						String id = category.getId() ;
+						List<Question> listQuestion = faqService_.getAllQuestionsByCatetory(id, sessionProvider, faqSetting).getAll() ;
+						for(Question ques: listQuestion) {
+							String questionId = ques.getId() ;
+							faqService_.removeQuestion(questionId, sessionProvider) ;
+						}
+					}
+					if(categoryId != null && !categoryId.equals("null")){
+						faqService_.removeCategory(categoryId, sessionProvider) ;
+						
+						UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
+						categoryId = categories.parentCateID_;
+						cate = faqService_.getCategoryById(categories.parentCateID_, sessionProvider) ;
+						uiQuestions.setCategoryId(categoryId) ;
+						if(cate != null)uiQuestions.viewAuthorInfor = cate.isViewAuthorInfor();
+						else uiQuestions.viewAuthorInfor = false;
+						UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+						breadcumbs.setUpdataPath(null) ;
+						String oldPath = "" ;
+						if(categoryId != null && !categoryId.equals("null")){
+							List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
+							for(int i = listPath.size() -1 ; i >= 0; i --) {
+								oldPath = oldPath + "/" + listPath.get(i);
+							} 
+						}
+						newPath_ = "FAQService"+oldPath ;
+						breadcumbs.setUpdataPath(newPath_);
+						categories.setPathCategory(breadcumbs.getPaths());					
+					} else {
+						listCate = faqService_.getSubCategories(null, sessionProvider, faqSetting);
+						for(Category category : listCate) {
+							faqService_.removeCategory(category.getId(), sessionProvider) ;
+						}
+					}
+					uiQuestions.setIsNotChangeLanguage() ;
+					uiQuestions.listCateId_.clear() ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+				} else {
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					//question.setIsNotChangeLanguage();
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+					sessionProvider.close();
+					return ;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				//question.setIsNotChangeLanguage();
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+				sessionProvider.close();
+				return ;
+			}
+			sessionProvider.close();
 		}
 	}
 }
