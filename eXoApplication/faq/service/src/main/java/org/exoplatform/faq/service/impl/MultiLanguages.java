@@ -212,7 +212,7 @@ public class MultiLanguages {
   
   /**
    * Adds the language node, when question have multi language, 
-   * eache language is a child node of question node.
+   * each language is a child node of question node.
    * 
    * @param questionNode  the question node which have multi language
    * @param language the  language which is added in to questionNode
@@ -379,7 +379,7 @@ public class MultiLanguages {
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
-    if(answer.isNew()) questionNode.getSession().save();
+    if(answer.isNew() || answerNode.isNew()) questionNode.getSession().save();
     else questionNode.save();
   }
   

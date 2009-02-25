@@ -409,7 +409,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         }
         if(questionManagerForm.isResponseQuestion) {
           UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
-          if(responseForm.getQuestionId().equals(questionId)) {
+          if(responseForm.questionId_.equals(questionId)) {
             questionManagerForm.isResponseQuestion = false ;
           }
         }
