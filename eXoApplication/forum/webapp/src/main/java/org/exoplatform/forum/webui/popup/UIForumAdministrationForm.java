@@ -40,6 +40,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -91,6 +92,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	public static final String FIELD_CENSOREDKEYWORD_TEXTAREA = "censorKeyword" ;
 	
+	public static final String FIELD_ENABLEHEADERSUBJECT_CHECKBOX = "enableHeaderSubject" ;
+	public static final String FIELD_HEADERSUBJECT_INPUT = "headerSubject" ;
 	public static final String FIELD_NOTIFYEMAIL_TEXTAREA = "notifyEmail" ;
 	
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
@@ -159,17 +162,25 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
 		setActive.setValue("false") ;
 		
-		//UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, null);
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
 		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, null, "", true);
 		notifyEmail.setValue(value);
+		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
+		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
+		UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
+		headerSubject.setValue(administration.getHeaderSubject());
+		//headerSubject.setEditable(administration.getEnableHeaderSubject());
+		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;
 		forumSortTab.addUIFormInput(topicSortByType) ;
 		
+		notifyEmailTab.addUIFormInput(enableHeaderSubject);
+		notifyEmailTab.addUIFormInput(headerSubject);
 		notifyEmailTab.addUIFormInput(notifyEmail) ;
+		
 		forumCensorTab.addUIFormInput(censorKeyword) ;
 		
 		addUIFormInput(activeAbout);

@@ -27,7 +27,9 @@ public class ForumAdministration {
 	private String topicSortBy ;//Name, isLock, lastPostDate, postCount,  numberAttachments.
 	private String topicSortByType; 
 	private String censoredKeyword ;
+	private String headerSubject = "";
 	private String notifyEmailContent;
+	private boolean enableHeaderSubject;
 	
 
 	public ForumAdministration() {
@@ -35,6 +37,7 @@ public class ForumAdministration {
 		forumSortByType = "ascending" ;
 		topicSortBy = "lastPostDate" ;
 		topicSortByType = "descending";
+		enableHeaderSubject = true;
   }
 	
 	public String getForumSortBy() {
@@ -73,4 +76,20 @@ public class ForumAdministration {
 	public void setNotifyEmailContent(String notifyEmailContent) {
 		this.notifyEmailContent = notifyEmailContent;
 	}
+
+	public String getHeaderSubject() {
+  	return headerSubject;
+  }
+
+	public void setHeaderSubject(String headerSubject) {
+  	this.headerSubject = headerSubject;
+  }
+
+	public boolean getEnableHeaderSubject() {
+  	return enableHeaderSubject;
+  }
+
+	public void setEnableHeaderSubject(boolean enableHeaderSubject) {
+  	this.enableHeaderSubject = enableHeaderSubject;
+  }
 }

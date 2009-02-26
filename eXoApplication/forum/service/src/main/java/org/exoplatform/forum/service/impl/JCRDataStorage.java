@@ -313,6 +313,8 @@ public class JCRDataStorage {
 		forumAdminNode.setProperty("exo:topicSortBy", forumAdministration.getTopicSortBy());
 		forumAdminNode.setProperty("exo:topicSortByType", forumAdministration.getTopicSortByType());
 		forumAdminNode.setProperty("exo:censoredKeyword", forumAdministration.getCensoredKeyword());
+		forumAdminNode.setProperty("exo:enableHeaderSubject", forumAdministration.getEnableHeaderSubject());
+		forumAdminNode.setProperty("exo:headerSubject", forumAdministration.getHeaderSubject());
 		forumAdminNode.setProperty("exo:notifyEmailContent", forumAdministration.getNotifyEmailContent());
 		if(forumAdminNode.isNew()) {
 			forumAdminNode.getSession().save();
@@ -337,6 +339,10 @@ public class JCRDataStorage {
 				forumAdministration.setTopicSortByType(forumAdminNode.getProperty("exo:topicSortByType").getString());
 			if (forumAdminNode.hasProperty("exo:censoredKeyword"))
 				forumAdministration.setCensoredKeyword(forumAdminNode.getProperty("exo:censoredKeyword").getString());
+			if (forumAdminNode.hasProperty("exo:enableHeaderSubject"))
+				forumAdministration.setEnableHeaderSubject(forumAdminNode.getProperty("exo:enableHeaderSubject").getBoolean());
+			if (forumAdminNode.hasProperty("exo:headerSubject"))
+				forumAdministration.setHeaderSubject(forumAdminNode.getProperty("exo:headerSubject").getString());
 			if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
 				forumAdministration.setNotifyEmailContent(forumAdminNode.getProperty("exo:notifyEmailContent").getString());
 			return forumAdministration;
@@ -1980,6 +1986,8 @@ public class JCRDataStorage {
 
 	private void sendNotification(Node forumHomeNode, Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
 		Node forumAdminNode = null;
+		String headerSubject = "";
+		String objectName = "";
 		try {
 			forumAdminNode = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
 		} catch (Exception e) {
@@ -1988,6 +1996,13 @@ public class JCRDataStorage {
 		if (forumAdminNode != null) {
 			if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
 				content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
+			if (forumAdminNode.hasProperty("exo:enableHeaderSubject")) {
+				if(forumAdminNode.getProperty("exo:enableHeaderSubject").getBoolean()){
+					if (forumAdminNode.hasProperty("exo:headerSubject")) {
+						headerSubject = forumAdminNode.getProperty("exo:headerSubject").getString() + " ";
+					}
+				}
+			}
 		} else if(defaultEmailContent != null && defaultEmailContent.length() > 0) {
 			content = defaultEmailContent;
 		} else {
@@ -1999,12 +2014,16 @@ public class JCRDataStorage {
 		Node userProfileHome = getUserProfileHome(sProvider);
 		int count = 0;
 		if(post == null) {
+			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "]: " + topic.getTopicName();
 			while (true) {
 				if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
 					// set Category Private
-					Node categoryNode ;
-					if(node.isNodeType("exo:forum")) categoryNode =  node;
-					else categoryNode = node.getParent() ;
+					Node categoryNode = null ;
+					if(node.isNodeType("exo:forumCategory")) {
+						categoryNode =  node;
+					} else {
+						categoryNode = node.getParent() ;
+					}
 					if(categoryNode.hasProperty("exo:userPrivate"))
 						listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
 	
@@ -2033,17 +2052,17 @@ public class JCRDataStorage {
 						String email = userNode.getProperty("exo:email").getString();
 						String fullName = userNode.getProperty("exo:fullName").getString();
 		        if(email != null && email.length() > 0) {
-		        	message.setFrom(fullName + " <" + email + ">");
+		        	message.setFrom(fullName + "<" + email + ">");
 		        }
 	        } catch (Exception e) {
 	        }
 					String content_ = node.getProperty("exo:name").getString();
 					if(node.isNodeType("exo:forum")){
-						message.setSubject("eXo Forum Watching Notification in Forum: " + content_);
+						message.setSubject(headerSubject + objectName);
 						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
 						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 					} else {
-						message.setSubject("eXo Forum Watching Notification in Category: " + content_);
+						message.setSubject(headerSubject + objectName);
 						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
 						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 					}
@@ -2071,6 +2090,7 @@ public class JCRDataStorage {
 				 */
 				Node forumNode = node.getParent();
 				Node categoryNode = forumNode.getParent() ;
+				objectName = "["+categoryNode.getProperty("exo:name").getString() + "][" + forumNode.getProperty("exo:name").getString() + "] :" ;
 				boolean isSend = false;
 				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 					isSend = true;
@@ -2183,7 +2203,7 @@ public class JCRDataStorage {
 					}
 					message.setMimeType("text/html");
 					content_ = node.getProperty("exo:name").getString();
-					message.setSubject("eXo Forum Watching Notification in Topic: " +  content_);
+					message.setSubject(headerSubject + objectName +  content_);
 					content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
 					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
@@ -2206,7 +2226,8 @@ public class JCRDataStorage {
 					}
 					message.setMimeType("text/html");
 					String forumName = forumNode.getProperty("exo:name").getString();
-					message.setSubject("eXo Forum Watching Notification in Forum: " +  forumName);
+					content_ = node.getProperty("exo:name").getString();
+					message.setSubject(headerSubject + objectName +  content_);
 					content_ =  StringUtils.replace(content, "$OBJECT_NAME", forumName);
 					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
@@ -2227,10 +2248,10 @@ public class JCRDataStorage {
 					if(email != null && email.length() > 0) {
 						message.setFrom(fullName + " <" + email + ">");
 					}
-					System.out.println("\n send email Category: " + emailListCategory.size());
 					message.setMimeType("text/html");
 					String categoryName = categoryNode.getProperty("exo:name").getString();
-					message.setSubject("eXo Forum Watching Notification in Category: " +  categoryName);
+					content_ = node.getProperty("exo:name").getString();
+					message.setSubject(headerSubject + objectName +  content_);
 					content =  StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 					content =  StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
 					content =  StringUtils.replace(content, "$ADD_TYPE", "Post");

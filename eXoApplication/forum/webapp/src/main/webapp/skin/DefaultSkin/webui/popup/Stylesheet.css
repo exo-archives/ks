@@ -30,9 +30,12 @@
   width: 430px;
 }
 
-.UIForumAdministrationForm #notifyEmail___Frame{
-  width: 430px;
-  height: 250px;
+.UIForumAdministrationForm #notifyEmailTab{
+	padding: 10px 0px;
+}
+
+.UIForumAdministrationForm #notifyEmailTab .UIFormGrid {
+	width: 100%;
 }
 
 #notifyEmail {

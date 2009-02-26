@@ -569,11 +569,11 @@
 }
 
 .UIForumPortlet .Refresh {
-  background:transparent url(background/refresh.png) no-repeat scroll left center;
+  background:transparent url(background/refresh.png) no-repeat center bottom;
 	float:left;
+	margin-top: 80px;
 	height:16px;
 	width:16px;
-	padding-top:30px;
 }
 
 .UIForumPortlet .UIGrid input.checkbox {
