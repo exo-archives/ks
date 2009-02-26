@@ -16,7 +16,6 @@ UIFAQPortlet.prototype.viewTitle = function(id) {
 UIFAQPortlet.prototype.hiddenTitle = function(id) {
 	var obj = document.getElementById(id) ;
 	obj.style.display = "none" ;
-	this.hiddentMenu = true;
 };
 
 UIFAQPortlet.prototype.hiddenMenu = function() {
@@ -24,12 +23,12 @@ UIFAQPortlet.prototype.hiddenMenu = function() {
 		eXo.faq.UIFAQPortlet.hiddenTitle('FAQCategroManager');
 		this.hiddentMenu = false;
 	}
+	setTimeout('eXo.faq.UIFAQPortlet.checkAction()', 1000);
 };
 
 UIFAQPortlet.prototype.checkAction = function() {
 	if(this.hiddentMenu){
 		setTimeout('eXo.faq.UIFAQPortlet.hiddenMenu()', 1500);
-		setTimeout('eXo.faq.UIFAQPortlet.checkAction()', 1500);
 	}
 } ;
 
