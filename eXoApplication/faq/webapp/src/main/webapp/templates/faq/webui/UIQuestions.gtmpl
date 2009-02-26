@@ -456,7 +456,7 @@
 																<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
 															</div>
 														<%}%>
-														<!-- view author's infor -->
+														<!-- ========================================= view author's infor ================================ -->
 														<%
 															if(uicomponent.viewAuthorInfor){
 														%>
@@ -560,7 +560,7 @@
 																		<%
 																		if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 																		%>
-																			<!-- =========== Vote result ========== -->
+																			<!-- =========================== Vote result ========================== -->
 																			<table  style="width:150px; float:right;">
 																				<tr>
 																					<td>
@@ -948,7 +948,23 @@
 											<!-- ===================================== Question's answers ==================================================== -->
 											<div class="ResponseContainer">
 												<div class="TitleResponseContent">
-													<div class="IconResponse"><%=_ctx.appRes("UIQuestions.label.Answers")%></div>
+													<div class="IconResponse">
+														<table align="center" width="100%">
+															<tr>
+																<td>
+																	<%=_ctx.appRes("UIQuestions.label.Answers")%>
+																</td>
+																<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
+																		<!-- action Sort answer by vote -->
+																	<td style="width:70px">
+																		<div onclick="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
+																			<div class="SortAnswer"><span></span></div>
+																		</div>
+																	</td>
+																<%}%>
+															</tr>
+														</table>
+													</div>
 												</div>
 												<div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;">
 													<%
@@ -1102,14 +1118,7 @@
 																			<div style="clear:left;"><span></span></div>
 																
 																		</td>
-																	<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
-																			<!-- action Sort answer by vote -->
-																		<td style="width:20px">
-																			<div onclick="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer;">
-																				<div class="SortAnswer"><span></span></div>
-																			</div>
-																		</td>
-																	<%}%>
+																	
 																	<% if(uicomponent.canEditQuestion){%>
 																		<td style="width:20px;">
 																		<%

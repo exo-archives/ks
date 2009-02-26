@@ -458,7 +458,7 @@
 	cursor: pointer;
 }
 
-.UIFAQPortlet .QuestionSelect .ResponseItemContainer .SortAnswer {
+.UIFAQPortlet .QuestionSelect .SortAnswer {
 	background: url('background/SortByVote.gif') no-repeat center;
 	width: 20px; height: 20px;
 	cursor: pointer;
