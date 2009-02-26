@@ -60,7 +60,11 @@ import org.exoplatform.faq.webui.popup.UIViewUserProfile;
 import org.exoplatform.faq.webui.popup.UIVoteQuestion;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -144,7 +148,8 @@ public class UIQuestions extends UIContainer {
 	public String backPath_ = "" ;
 	public static String language_ = "" ;
 	private List<Watch> watchList_ = new ArrayList<Watch>() ;
-
+	private Topic topic = new Topic();
+	
 	private String[] firstTollbar_ = new String[]{"AddNewQuestion", "QuestionManagament"} ;
 	private String[] menuCateManager = new String[]{"EditCategory", "AddCategory", "DeleteCategory", "Export", "Import",} ;
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "MoveDown", "MoveUp", "Watch"} ;
@@ -174,7 +179,36 @@ public class UIQuestions extends UIContainer {
 		rssLink = "/faq/iFAQRss/" + getPortalName() + "/" + categoryId_ + "/faq.rss" ;
 		return rssLink;
 	}
-
+	
+	private String getLinkDiscuss() {
+		// set url for Topic link.
+		FAQSetting faqSetting = new FAQSetting();
+		FAQUtils.getPorletPreference(faqSetting);
+		String categoryId = faqSetting.getIdNameCategoryForum();
+		categoryId = categoryId.substring(0, categoryId.indexOf(";"));
+		String forumId = faqSetting.getIdNameForum();
+		forumId = forumId.substring(0, forumId.indexOf(";"));
+		String link = getLink(); 
+    String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+    String portalName = "/" + Util.getUIPortal().getName() ;
+    if(link.indexOf(portalName) > 0) {
+	    if(link.indexOf(selectedNode) < 0){
+	      link = link.replaceFirst(portalName, selectedNode) ;
+	    }									
+		}	
+    link = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("Setting", "ChangePath").replaceAll("&amp;", "&");
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String url = portalContext.getRequest().getRequestURL().toString();
+		url = url.replaceFirst("http://", "") ;
+		url = url.substring(0, url.indexOf("/")) ;
+		url = "http://" + url;
+		topic = new Topic();
+		String path = categoryId+"/"+forumId+"/"+topic.getId() ;
+		link = link.replaceFirst("OBJECTID", path);
+		link = url + link;
+		return link;
+	}
+	
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
@@ -1834,15 +1868,84 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	static  public class DiscussForumActionListener extends EventListener<UIQuestions> {
-		public void execute(Event<UIQuestions> event) throws Exception {
-			UIQuestions uiQuestions = event.getSource() ; 
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiForm = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UISelectForumForm selectForumForm = popupAction.createUIComponent(UISelectForumForm.class, null, null);
-			selectForumForm.setQuestionId(questionId);
-			popupAction.activate(selectForumForm, 380, 400) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
+			FAQUtils.getPorletPreference(uiForm.faqSetting_);
+			String categoryId = uiForm.faqSetting_.getIdNameCategoryForum();
+			categoryId = categoryId.substring(0, categoryId.indexOf(";"));
+			String forumId = uiForm.faqSetting_.getIdNameForum();
+			forumId = forumId.substring(0, forumId.indexOf(";"));
+			
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				Topic topic = uiForm.topic;
+				String link = uiForm.getLinkDiscuss(); 
+				link = link.replaceFirst("private", "public");
+				String path = categoryId+"/"+forumId+"/"+topic.getId() ;
+				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+				Question question = faqService.getQuestionById(questionId, sProvider);
+				topic.setOwner(question.getAuthor());
+				topic.setTopicName(question.getQuestion());
+				topic.setDescription(question.getDetail());
+				topic.setIcon("IconsView");
+				topic.setIsModeratePost(true);
+				topic.setLink(link);
+				topic.setIsWaiting(true);
+				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+				forumService.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
+				faqService.savePathDiscussQuestion(questionId, path, sProvider);
+				Post post = new Post();
+				JCRPageList pageList = faqService.getPageListAnswer(sProvider, questionId, false);
+				List<Answer> listAnswer ;
+				if(pageList != null) {
+					listAnswer = pageList.getPageItem(0);
+				} else listAnswer = null;
+				if(listAnswer != null && listAnswer.size() > 0) {
+					Answer[] AllAnswer = new Answer[listAnswer.size()];;
+					int i = 0;
+					for (Answer answer : listAnswer) {
+		        post = new Post();
+		        post.setIcon("IconsView");
+		        post.setName("Re: " + question.getQuestion());
+		        post.setMessage(answer.getResponses());
+		        post.setOwner(answer.getResponseBy());
+		        post.setLink(link);
+		        post.setIsApproved(false);
+		        forumService.savePost(sProvider, categoryId, forumId, topic.getId(), post, true, "");
+		        answer.setPostId(post.getId());
+		        AllAnswer[i] = answer;
+		        ++i;
+	        }
+					if(AllAnswer != null && AllAnswer.length > 0) {
+						faqService.saveAnswer(questionId, AllAnswer, sProvider);
+					}
+				}
+				pageList = faqService.getPageListComment(sProvider, questionId);
+				List<Comment> listComment ;
+				if(pageList != null) {
+					listComment = pageList.getPageItem(0);
+				} else listComment = new ArrayList<Comment>();
+				for (Comment comment : listComment) {
+					post = new Post();
+					post.setIcon("IconsView");
+					post.setName("Re: " + question.getQuestion());
+					post.setMessage(comment.getComments());
+					post.setOwner(comment.getCommentBy());
+					post.setLink(link);
+					post.setIsApproved(false);
+					forumService.savePost(sProvider, categoryId, forumId, topic.getId(), post, true, "");
+					comment.setPostId(post.getId());
+					faqService.saveComment(questionId, comment, false, sProvider);
+				}
+      } catch (Exception e) {
+	      e.printStackTrace();
+      } finally {
+      	sProvider.close();
+      }
+			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 		}
 	}
 	

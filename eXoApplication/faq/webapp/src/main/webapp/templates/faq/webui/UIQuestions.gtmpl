@@ -374,11 +374,12 @@
 																	if(uicomponent.isDiscussForum()) {
 																		String pathDiscuss = question.getPathTopicDiscuss();
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
+																			String link = uicomponent.getLinkDiscuss();
 															%>
 																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																				<div style="padding-left:20px;white-space:nowrap;">
-																					<a href="javascript:void(0);"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																					<a href="$link" onmousedown="window.open('$link'); return false;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																				</div>
 																			</div>
 																		</div>
@@ -537,9 +538,10 @@
 																				if(uicomponent.isDiscussForum()) {
 																					String pathDiscuss = question.getPathTopicDiscuss();
 																					if(pathDiscuss == null || pathDiscuss.length() <= 0){
+																						String link = uicomponent.getLinkDiscuss();
 																			%>
 																				<td style="width:25px">
-																					<div onclick="<%=uicomponent.event("DiscussForum", question.getId())%>" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<div onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
 																					</div>
 																				</td>

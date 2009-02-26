@@ -74,7 +74,12 @@
         <read-only>false</read-only>
       </preference>
       <preference>
-        <name>pathNameCategoryForum</name>
+        <name>idNameCategoryForum</name>
+        <value> </value>
+        <read-only>false</read-only>
+      </preference>
+      <preference>
+        <name>idNameForum</name>
         <value> </value>
         <read-only>false</read-only>
       </preference>

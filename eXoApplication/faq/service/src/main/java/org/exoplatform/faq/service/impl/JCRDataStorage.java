@@ -38,7 +38,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
-import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;

@@ -56,7 +56,9 @@ public class FAQSetting {
 	/** The is admin. */
 	private String isAdmin = null;
 	
-	private String pathNameCategoryForum ;
+	private String idNameCategoryForum ;
+
+	private String idNameForum ;
 	
 	private boolean isDiscussForum = false;
 	
@@ -240,13 +242,21 @@ public class FAQSetting {
 		this.isDiscussForum = b;
 	}
 	
-	public String getPathNameCategoryForum() {
-  	return pathNameCategoryForum;
+	public String getIdNameCategoryForum() {
+  	return idNameCategoryForum;
   }
 
-	public void setPathNameCategoryForum(String str) {
-  	this.pathNameCategoryForum = str;
+	public void setIdNameCategoryForum(String str) {
+  	this.idNameCategoryForum = str;
   }
+
+	public String getIdNameForum() {
+		return idNameForum;
+	}
+	
+	public void setIdNameForum(String str) {
+		this.idNameForum = str;
+	}
 
 	public boolean isEnableAutomaticRSS() {
 		return enableAutomaticRSS;

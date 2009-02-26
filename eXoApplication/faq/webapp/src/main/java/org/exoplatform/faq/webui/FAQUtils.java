@@ -368,7 +368,8 @@ public class FAQUtils {
 		faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
 		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
 		faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", ""))) ;
-		faqSetting.setPathNameCategoryForum(portletPref.getValue("pathNameCategoryForum", "")) ;
+		faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", "")) ;
+		faqSetting.setIdNameForum(portletPref.getValue("idNameForum", "")) ;
 	}
 
 	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
@@ -403,7 +404,8 @@ public class FAQUtils {
 			portletPref.setValue("orderBy", setting.getOrderBy());
 			portletPref.setValue("orderType", setting.getOrderType());
 			portletPref.setValue("isDiscussForum", String.valueOf(setting.getIsDiscussForum()));
-			portletPref.setValue("pathNameCategoryForum", setting.getPathNameCategoryForum());
+			portletPref.setValue("idNameForum", setting.getIdNameForum());
+			portletPref.setValue("idNameCategoryForum", setting.getIdNameCategoryForum());
 			portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
 			portletPref.setValue("enableViewAvatar", setting.isEnableViewAvatar() + "");
 			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");

@@ -1798,6 +1798,12 @@
 	width:215px;
 	float:left;
 }
+
+.UIFAQPortlet .Discussion #ForumId {
+	font-size:11px;
+	width:215px;
+	float:left;
+}
 /************************** UIListCategoryForumForm *****************************/
 .UIFAQPortlet .UIListCategoryForumForm {
 }

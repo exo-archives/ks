@@ -91,7 +91,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public static final String FIELD_FORUMSTATE_SELECTBOX = "ForumState" ;
 	public static final String FIELD_DESCRIPTION_TEXTAREA = "Description" ;
 
-	public static final String FIELD_AUTOADDEMAILNOTIFY_CHECKBOX = "autoAddEmailNotify" ;
+	public static final String FIELD_AUTOADDEMAILNOTIFY_CHECKBOX = "AutoAddEmailNotify" ;
 	public static final String FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE = "NotifyWhenAddTopic" ;
 	public static final String FIELD_NOTIFYWHENADDPOST_MULTIVALUE = "NotifyWhenAddPost" ;
 	public static final String FIELD_MODERATETHREAD_CHECKBOX = "ModerateThread" ;

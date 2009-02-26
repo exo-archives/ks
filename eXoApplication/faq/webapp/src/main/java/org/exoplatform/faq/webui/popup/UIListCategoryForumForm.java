@@ -65,7 +65,7 @@ public class UIListCategoryForumForm extends UIForm implements UIPopupComponent{
 	
   private String[] getPathName(String id) throws Exception {
 		for (Category cate : listcate) {
-	    if(cate.getId().equals(id)) return new String[]{cate.getPath(),cate.getCategoryName()};
+	    if(cate.getId().equals(id)) return new String[]{cate.getId(),cate.getCategoryName()};
     }
 		return null;
 	}

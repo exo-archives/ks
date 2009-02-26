@@ -9,13 +9,11 @@
 			<div class="ContentList">
 			<%  
 				List list = uicomponent.getListForum();
-				String url = uicomponent.url("SelectForum", "OBJECTID") ;
-				uicomponent.setLink(url);
 				for(forum in list) {
 				 String forumName = forum.getForumName();
 			%>
 			<div class="ItemCategory">
-				<div onclick="<%=uicomponent.event("SelectForum", forum.getId());%>" style="cursor:pointer;">
+				<div onclick="<%=uicomponent.event("AddForum", forum.getId());%>" style="cursor:pointer;">
 					<div class="ForumIcon IconCategory">$forumName</div>
 				</div>
 			</div>
