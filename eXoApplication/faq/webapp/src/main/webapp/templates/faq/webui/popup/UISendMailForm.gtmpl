@@ -55,8 +55,13 @@
 										}
 											 %>
 										</div>
-										<div class="FieldComponent" style="width:auto; float:left;">
-											<div style="float:left">
+										<%
+										String width = "auto";
+										if(input.getName().equals("Message")) width = "500px"
+										else width = "auto";
+										%>
+										<div class="FieldComponent" style="width:$width; float:left;">
+											<div style="float:left; width:100%;">
 												<% uiform.renderField(input) %>
 												<%if(input.getName().equals("To")){%>
 													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
@@ -76,29 +81,30 @@
 				</table>
 			</div>
 		</div>	
-			<div class="UIAction"> 
-				<table class="ActionContainer" style="text-align:center">
-					<tr>
-						<td>
-		        <%for(action in uicomponent.getActions()) { 
-        		 		if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
-		        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-		           	String link = uicomponent.event(action) ;
-		        %>
-		        		<div onclick="$link" class="ActionButton LightBlueStyle">
-			      	  	<div class="ButtonLeft">
-			        	  	<div class="ButtonRight">
-			          	  	<div class="ButtonMiddle">
-			          	  		<a href="javascript:void(0);">$actionLabel</a>
-			          	  	</div>
-			            	</div>
-			          	</div>
-			        	</div>
-		          <%}%>
-		      	</td>
-					</tr>
-			  </table> 
-			</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+	        <%for(action in uicomponent.getActions()) { 
+    		 		if(action.indexOf("Attachment") >= 0 || action.indexOf("AddRelation") >= 0) continue ; 
+	        	 	String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+	           	String link = uicomponent.event(action) ;
+	        %>
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
+		            	</div>
+		          	</div>
+		        	</div>
+	          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
 			
 	<%uiform.end()%>
 </div>

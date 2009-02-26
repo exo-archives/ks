@@ -189,23 +189,25 @@ if(!uicomponent.isEditPortlet_){
 															i ++;
 													%>
 															<div class="UITabContent"	style="display:$displayChild; padding:5px;">
-																<table>
-																<%//uicomponent.renderUIComponent(uiFormInput);
-																	for(childForm in uiFormInput.getChildren()) {%>
-																		<tr>
-																			<td>
-																				<%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%>
-																			</td>
-																			<td>
-																				<div style="float:left;">
-																					<%uicomponent.renderUIComponent(childForm);%>
-																				</div>
-																				<div onclick="$actionReset" style="cursor:pointer;" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
-																					<div class="refreshMail"><span></span></div>
-																				</div>
-																			</td>
-																		</tr>
-																<%}%>
+																<table class="UIFormGrid" style="width:100%;">
+																	<tbody>
+																		<%//uicomponent.renderUIComponent(uiFormInput);
+																			for(childForm in uiFormInput.getChildren()) {%>
+																				<tr>
+																					<td class="FieldLabel" style="white-space:nowrap; width:120px;">
+																						<%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%>
+																					</td>
+																					<td class="FieldComponent">
+																						<div style="float:left; width:90%;">
+																							<%uicomponent.renderUIComponent(childForm);%>
+																						</div>
+																						<div onclick="$actionReset" style="cursor:pointer;" title="<%=_ctx.appRes("UISettingForm.label.resetMailContent")%>">
+																							<div class="refreshMail"><span></span></div>
+																						</div>
+																					</td>
+																				</tr>
+																		<%}%>
+																	</tbody>
 																</table>
 															</div>
 													<%}%>
