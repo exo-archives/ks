@@ -348,24 +348,28 @@
 						<% } %>	
 						
 							
-							<%if(uicomponent.userProfile.getUserRole() < 3){%>
-							<div class="UIActionForum" style="float:right; padding:4px 5px 0px 0px">
-								<div class="NormalButtom">
-									<div class="ButtonLeft">
-										<div class="ButtonRight">
-											<div class="ButtonMiddle">
-											 <a style="display:block;" href="<%=uicomponent.event("AddBookMark","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>&nbsp;</a>
+						<%if(uicomponent.userProfile.getUserRole() < 3){%>
+							<div style="width:85px; float:right; text-align:left; margin-top:2px;">
+								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="AddLinkToBookIcon" style="padding-left:16px;">
+													<a style="display:block;" href="<%=uicomponent.event("AddBookMark","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>&nbsp;</a>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="UIActionForum" style="float:right; padding:4px 5px 0px 0px">
-								<div class="NormalButtom">
-									<div class="ButtonLeft">
-										<div class="ButtonRight">
-											<div class="ButtonMiddle">
-											 <a style="display:block;" href="<%=uicomponent.event("AddWatching","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>&nbsp;</a>
+							<div style="width:85px; float:right; text-align:left; margin-top:2px;">
+								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+									<div class="LeftOverButton">
+										<div class="RightOverButton">
+											<div class="CenterOverButton">
+												<div class="AddWatchingIcon" style="padding-left:16px;">
+													<a style="display:block;" href="<%=uicomponent.event("AddWatching","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>&nbsp;</a>
+												</div>
 											</div>
 										</div>
 									</div>
