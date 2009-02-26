@@ -546,7 +546,7 @@ public class JCRDataStorage {
 							} else {
 								contentMail = contentMail.replaceAll("&questionResponse_", "");
 							}
-							contentMail.replaceAll("&questionLink_", question.getLink());
+							contentMail = contentMail.replaceAll("&questionLink_", question.getLink());
 							message.setBody(contentMail);
 							sendEmailNotification(emailsList, message) ;
 						}
@@ -592,41 +592,6 @@ public class JCRDataStorage {
     return listQuestionLanguage ;
   }
   
-  public void voteQuestionLanguage(String questionId, QuestionLanguage questionLanguage, Answer answer, SessionProvider sProvider) throws Exception {
-  	Node questionHome = getQuestionHome(sProvider, null);
-  	StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-
-		QueryResult result = query.execute();
-    NodeIterator iterator = result.getNodes();
-    Node questionNode = null;
-    Node languages = null;
-    Node questionLanguageNode = null;
-    while(iterator.hasNext()){
-    	questionNode = iterator.nextNode();
-    }
-    languages = questionNode.getNode("languages");
-    iterator = languages.getNodes();
-    while(iterator.hasNext()){
-    	questionLanguageNode = iterator.nextNode();
-    	if(questionLanguageNode.getName().equals(questionLanguage.getLanguage())) break;
-    }
-    Node answerNode = null;
-    iterator = questionLanguageNode.getNodes();
-    while(iterator.hasNext()){
-    	answerNode = iterator.nextNode();
-    	if(answerNode.getProperty("exo:id").getString().equals(answer.getId())){
-    		answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-    		answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer()) ;
-    		break;
-    	}
-    }
-    questionNode.save();
-    questionHome.save();
-  }
-	
 	private boolean ArrayContentValue(String[] array, String value){
 		value = value.toLowerCase();
 		for(String str : array){
@@ -674,8 +639,7 @@ public class JCRDataStorage {
     if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
     if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
     if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
-    if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
-    if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
+    if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong()) ;
     if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
     if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
     if(answerNode.hasProperty("exo:postId")) answer.setPostId(answerNode.getProperty("exo:postId").getString()) ;
@@ -690,8 +654,8 @@ public class JCRDataStorage {
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
 																	append("//element(*,exo:answer)");
 			if(isSortByVote == null) queryString.append("order by @exo:dateResponse ascending");
-			else if(isSortByVote) queryString.append("order by @exo:marksVoteAnswer ascending");
-			else  queryString.append("order by @exo:marksVoteAnswer descending");
+			else if(isSortByVote) queryString.append("order by @exo:MarkVotes ascending");
+			else  queryString.append("order by @exo:MarkVotes descending");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
@@ -701,20 +665,6 @@ public class JCRDataStorage {
 		}
 	}
 
-    
-  private Value[] longToValues(Node answerNode, long[] marks){
-  	if(marks == null || marks.length < 1) return null;
-  	Value[] values = new Value[marks.length];
-  	try{
-	  	for(int i = 0; i < marks.length; i ++){
-	  		values[i] = answerNode.getSession().getValueFactory().createValue(marks[i]);
-	  	}
-  	} catch (Exception e){
-  		return null;
-  	}
-  	return values;
-  }
-  
   public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception{
   	Node quesNode = getQuestionNodeById(questionId, sProvider);
   	if(!quesNode.isNodeType("mix:faqi18n")) {
@@ -746,8 +696,7 @@ public class JCRDataStorage {
   	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
   	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
-  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
+  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
   	
   	if(isNew) quesNode.getSession().save();
   	else quesNode.save();
@@ -800,8 +749,7 @@ public class JCRDataStorage {
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
 	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-	  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
-	  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
+	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}
@@ -863,7 +811,6 @@ public class JCRDataStorage {
   	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
   	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
   }
   
   public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew, SessionProvider sProvider) throws Exception{
@@ -1718,33 +1665,6 @@ public class JCRDataStorage {
 		}
 		return Str;
 	}
-  
-  private long [] ValuesToLong(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new long[]{0} ;
-  	long[] d = new long[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		d[i] = Val[i].getLong() ;
-  	}
-  	return d;
-  }
-  
-  private Date[] ValuesToDate(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new Date[]{} ;
-  	Date[] dates = new Date[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		dates[i] = Val[i].getDate().getTime() ;
-  	}
-  	return dates;
-  }
-  
-  private Boolean[] ValuesToBoolean(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new Boolean[]{} ;
-  	Boolean[] bools = new Boolean[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		bools[i] = Val[i].getBoolean();
-  	}
-  	return bools;
-  }
   
 	public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
 		Node watchingNode = null;

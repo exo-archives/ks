@@ -1055,6 +1055,8 @@ public class UIQuestions extends UIContainer {
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 					uiCategoryForm.init(false);
+					if(categoryId != null && !categoryId.equals("null"))
+						uiCategoryForm.setParentId(uiPortlet.findFirstComponentOfType(UICategories.class).parentCateID_);
 					uiCategoryForm.setCategoryValue(categoryId, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
@@ -1097,7 +1099,7 @@ public class UIQuestions extends UIContainer {
 					questionNode = faqService_.getQuestionNodeById(questions.questionView_, sProvider);
 					answer = multiLanguages.getAnswerById(questionNode, answerId, language_);
 				}
-				long markVotes[] = answer.getMarkVotes();
+				long markVotes = answer.getMarkVotes();
 				List<String> listUserVoteAnswer = new ArrayList<String>();
 				if(answer.getUsersVoteAnswer() != null)listUserVoteAnswer.addAll(Arrays.asList(answer.getUsersVoteAnswer()));
 				String currentUser = FAQUtils.getCurrentUser() + "/";
@@ -1105,14 +1107,14 @@ public class UIQuestions extends UIContainer {
 					for(String str : listUserVoteAnswer){
 						if(str.contains(currentUser)){
 							long oldMark = Long.parseLong(str.split("/")[1].trim());
-							if(oldMark > 0) markVotes[0] --;
-							else markVotes[1] --;
+							if(oldMark > 0) markVotes --;
+							else markVotes ++;
 							listUserVoteAnswer.remove(str);
 							break;
 						}
 					}
-					if(mark > 0) markVotes[0] ++;
-					else markVotes[1] ++;
+					if(mark > 0) markVotes ++;
+					else markVotes --;
 					listUserVoteAnswer.add(currentUser + mark);
 					
 					answer.setMarkVotes(markVotes);

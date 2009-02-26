@@ -1019,73 +1019,17 @@
 																					<%} %>
 																					<div style="float:left; color:#721d95">$date</div>
 																				</div>
-																				<div style="overflow:auto">
+																				<div style="overflow:auto; margin-top:5px;">
 																					<!-- ============================= View mark vote answr ======================================== -->
 																					<!-- ================= Question author vote =================== -->
 																					<%
 																					if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																						if(question.getAuthor().equals(uicomponent.currentUser_)){
-																							if(answer.getMarksVoteAnswer() == null || answer.getMarksVoteAnswer() == 0){
-																					%>
-																								<div style="width:20px; float:left;">
-																									<div onclick="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
-																											title="<%=_ctx.appRes("UIQuestions.action.VoteAnser")%>">
-																										<div class="VoteFAQ"><span></span></div>
-																									</div>
-																								</div>
-																							<%
-																							} else {
-																							%>
-																								<div style="float:left; filter:alpha(opacity:50); -moz-opacity:0.5;">
-																									<div onclick="<%=uicomponent.event("VoteQuestion",question.getId() + "/" + answer.getId())%>"
-																											title="<%=_ctx.appRes("UIQuestions.action.VoteAnserAgain")%>">
-																										<div class="VoteFAQ"><span></span></div>
-																									</div>
-																								</div>
-																						
-																						<% 
-																							}
-																						}
-																						markVote =(Integer) answer.getMarksVoteAnswer();
-																						%>
-																							<div style="width:130px; float:left;">
-																								<div class="RatingInfoContainer">
-																									<div class="OptionsContainer">
-																									<%
-																									for(int mark = 0; mark < 5; mark ++){
-																										if(mark < markVote){%>
-																											<div class="OverVote"><span></span></div>
-																									<%} else if (mark > markVote){%>
-																											<div class="RatedVote"><span></span></div>
-																									<%} else{
-																											sodu = answer.getMarksVoteAnswer() - markVote;
-																											if(sodu < 0.3){%>
-																												<div class="RatedVote"><span></span></div>
-																										<%} else if (sodu > 0.7){%>
-																												<div class="OverVote"><span></span></div>
-																										<%} else {%>
-																												<div class="HaftVote"><span></span></div>
-																										<%}
-																										}
-																									}
-																									%>
-																									</div>
-																								</div>
-																							</div>
-																							
-																						<!-- ============================= user vote ================================ -->
-																						<%
 																						//if(!question.getAuthor().equals(uicomponent.currentUser_)){
 																							String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
 																							String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
 																							if(uicomponent.currentUser_ != null){
-																								if(!question.getAuthor().equals(uicomponent.currentUser_)){
-																									userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/1");
-																									userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
-																								} else {
-																									userVoteUpAnswer = "javaScript:void(0);";
-																									userVotedownAnswer = "javaScript:void(0);";
-																								}
+																								userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/1");
+																								userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
 																							}
 																							String idVote = "FAQVoteAnswerUp" + i;
 																						%>
@@ -1105,7 +1049,7 @@
 																									</div>
 																								</div>
 																								<div style="float:left; line-height:18px; margin-left:4px;">
-																									<%=answer.getMarkVotes()[0] - answer.getMarkVotes()[1]%>
+																									<%=answer.getMarkVotes()%>
 																								</div>
 																								<div style="clear:left;"><span></span></div>
 																							</div>

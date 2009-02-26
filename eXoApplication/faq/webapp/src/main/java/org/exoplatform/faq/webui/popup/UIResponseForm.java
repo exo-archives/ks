@@ -277,6 +277,24 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 		return markVoteResponse;
 	}
+	
+	public String getPathService(String categoryId) throws Exception {
+		String oldPath = "";
+		String path = "FAQService";
+		if(categoryId != null && !categoryId.equals("null")){
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			List<String> listPath = FAQUtils.getFAQService().getCategoryPath(sessionProvider, categoryId) ;
+			sessionProvider.close();
+			for(int i = listPath.size() -1 ; i >= 0; i --) {
+				oldPath = oldPath + "/" + listPath.get(i);
+			}
+			path += oldPath ;
+			oldPath = path.substring(0, path.lastIndexOf("/")) ;
+		} else {
+			oldPath = path;
+		}
+		return oldPath ;
+	}
 
 	// action :
 		static public class SaveActionListener extends EventListener<UIResponseForm> {
@@ -325,25 +343,28 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				//link
 				UIFAQPortlet portlet = responseForm.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-				String link = responseForm.getLink().replaceFirst("UIResponseForm", "UIQuestions").replaceFirst("Attachment", "ViewQuestion").replaceAll("&amp;", "&");
-				String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-				String portalName = "/" + Util.getUIPortal().getName() ;
-				if(link.indexOf(portalName) > 0) {
-					if(link.indexOf(portalName + "/" + selectedNode) < 0){
-						link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-					}									
+				
+				//Link Question to send mail 
+				String link = responseForm.getLink().replaceFirst("UIResponseForm", "UIQuestions").replaceFirst("AddRelation", "ViewQuestion").replaceAll("&amp;", "&");
+	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+	      String portalName = "/" + Util.getUIPortal().getName() ;
+	      if(link.indexOf(portalName) > 0) {
+			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
+			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+			    }									
 				}	
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
-				String path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+				String path = "" ;
+				path = responseForm.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", path);
 				link = url + link;
 				question_.setLink(link) ;
-
+				
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				List<Answer> listAnswers = new ArrayList<Answer>();
 

@@ -1383,8 +1383,17 @@
 .UIFAQPortlet .Send {
 	background: url('background/FAQPortlet.gif') no-repeat left -706px;
 }
+
 .UIFAQPortlet .AddRelation {
-	background: url('background/add_16x16.gif') no-repeat left top;
+	background: url('background/IconAdd.gif') no-repeat left top;
+	height:16px;
+	width:16px;
+	float: left;
+	cursor:pointer;
+}
+
+.UIFAQPortlet .RemoveRelation {
+	background: url('background/IconTick.gif') no-repeat left center;
 	height:16px;
 	width:16px;
 	float: left;
@@ -1776,11 +1785,11 @@
 	width:65%;
 }
 
-.UIFAQPortlet .AddIcon16x16 {
+.UIFAQPortlet .AddIcon {
 	float: left ;
 	width: 16px;	height: 16px;
-	margin: 0px 0px 0px 6px;
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif') no-repeat center;
+	margin: 0px 5px;
+	background: url('background/AddIcon.gif') no-repeat center;
 	cursor: pointer;
 }
 

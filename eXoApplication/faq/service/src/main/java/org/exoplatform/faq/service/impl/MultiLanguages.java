@@ -294,8 +294,7 @@ public class MultiLanguages {
       if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;  	
       if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
       if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
-      if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(ValuesToLong(answerNode.getProperty("exo:MarkVotes").getValues())) ;
-      if(answerNode.hasProperty("exo:marksVoteAnswer")) answer.setMarksVoteAnswer((answerNode.getProperty("exo:marksVoteAnswer").getValue().getDouble())) ;
+      if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong()) ;
       if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
       if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
       return answer;
@@ -368,8 +367,7 @@ public class MultiLanguages {
   	answerNode.setProperty("exo:responses", answer.getResponses()) ;
   	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-  	answerNode.setProperty("exo:MarkVotes", longToValues(questionNode, answer.getMarkVotes())) ;
-  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer()) ;
+  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
     if(answer.isNew()){
     	java.util.Calendar calendar = null ;
     	calendar = GregorianCalendar.getInstance() ;
@@ -433,8 +431,7 @@ public class MultiLanguages {
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
 	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-	  	answerNode.setProperty("exo:MarkVotes", longToValues(quesNode, answer.getMarkVotes())) ;
-	  	answerNode.setProperty("exo:marksVoteAnswer", answer.getMarksVoteAnswer());
+	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}

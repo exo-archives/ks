@@ -52,7 +52,7 @@ public class Answer {
   private String[] usersVoteAnswer;
   
   /** The users vote answer. */
-  private long[] markVotes;
+  private long markVotes = 0;
   
   /** The marks vote answer. */
   private double marksVoteAnswer;
@@ -240,13 +240,11 @@ public class Answer {
   	this.postId = postId;
   }
 
-	public long[] getMarkVotes() {
-		if(markVotes != null && markVotes.length > 0)
-			return markVotes;
-		else return new long[]{0, 0};
+	public long getMarkVotes() {
+		return markVotes;
 	}
 
-	public void setMarkVotes(long[] markVotes) {
+	public void setMarkVotes(long markVotes) {
 		this.markVotes = markVotes;
 	}
 }
