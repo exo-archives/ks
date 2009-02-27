@@ -59,6 +59,7 @@ public class UserProfile {
 	private long maxTopic = 10 ;
 	private long maxPost = 10;
 	private boolean isShowForumJump = true ;
+	private boolean isAutoSendNotify = false;
 	//UserBan
 	private boolean isBanned = false ;
 	private long banUntil = 0 ;
@@ -144,6 +145,10 @@ public class UserProfile {
 	
 	public void setIsShowForumJump(boolean isShowForumJump) {this.isShowForumJump = isShowForumJump;}
 	public boolean getIsShowForumJump() {return this.isShowForumJump ;}
+	
+	public boolean getIsAutoSendNotify() {return isAutoSendNotify;}
+	public void setisAutoSendNotify(boolean isAutoSendNotify) { this.isAutoSendNotify = isAutoSendNotify;}
+
 	//Ban
 	public void setIsBanned(boolean isBanned) {this.isBanned = isBanned; }
 	public boolean getIsBanned() {return isBanned; }

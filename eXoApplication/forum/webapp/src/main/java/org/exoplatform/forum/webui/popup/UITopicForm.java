@@ -424,6 +424,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
 				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
 				link = url + link;
+				link = link.replaceFirst("private", "public");
 				//
 				UserProfile userProfile = forumPortlet.getUserProfile();
 				String userName = userProfile.getUserId() ;
@@ -437,7 +438,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
 				topicNew.setLink(link);
-				if(whenNewPost){
+				if(whenNewPost || userProfile.getIsAutoSendNotify()){
 					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
 				} else {

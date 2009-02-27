@@ -19,8 +19,6 @@ package org.exoplatform.forum.service ;
 import java.util.Date;
 import java.util.List;
 
-import javax.jcr.Value;
-
 import org.exoplatform.services.jcr.util.IdGenerator;
 /**
  * March 2, 2007	

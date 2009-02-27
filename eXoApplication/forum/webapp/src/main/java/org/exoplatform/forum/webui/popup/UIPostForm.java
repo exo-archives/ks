@@ -353,6 +353,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewPost");	
 				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
 				link = url + link;
+				link = link.replaceFirst("private", "public");
 				//
 				if(uiForm.isQuote || uiForm.isMP) post = new Post();
 				post.setName(postTitle) ;
@@ -376,12 +377,14 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				boolean isParentDelete = false;
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				boolean isNew = false;
 				try {
 					if(!ForumUtils.isEmpty(uiForm.postId)) {
 						if(uiForm.isQuote || uiForm.isMP) {
 							post.setRemoteAddr(remoteAddr) ;
 							try {
 								uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+								isNew = true;
 							} catch (PathNotFoundException e) {
 								isParentDelete = true;
 							}
@@ -402,10 +405,19 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						post.setRemoteAddr(remoteAddr) ;
 						try {
 							uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+							isNew = true;
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
 						}
 						topicDetail.setIdPostView("lastpost");
+					}
+					if(isNew) {
+						if(userProfile.getIsAutoSendNotify()) {
+							List<String> values = new ArrayList<String>();
+							values.add(userProfile.getEmail());
+							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;
+							uiForm.forumService.addWatch(sProvider, 1, path, values, userProfile.getUserId()) ;
+						}
 					}
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} finally {

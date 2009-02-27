@@ -1337,6 +1337,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					topicDetail.getUserInfo(userName).setTotalPost(postCount);
 					topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+					if(topicDetail.userProfile.getIsAutoSendNotify()) {
+						List<String> values = new ArrayList<String>();
+						values.add(topicDetail.userProfile.getEmail());
+						String path = topicDetail.categoryId + "/" + topicDetail.forumId + "/" + topicDetail.topicId;
+						topicDetail.forumService.addWatch(sProvider, 1, path, values, topicDetail.userProfile.getUserId()) ;
+					}
 				} catch (PathNotFoundException e) {e.printStackTrace();
 					sProvider.close();
 					String[] args = new String[] { } ;

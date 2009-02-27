@@ -2958,6 +2958,7 @@ public class JCRDataStorage {
 		userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
 		userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
 		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
+		userProfile.setisAutoSendNotify(profileNode.getProperty("exo:isAutoSendNotify").getBoolean());
 		
 		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
 		
@@ -3013,8 +3014,6 @@ public class JCRDataStorage {
 	public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
 		profileNode.setProperty("exo:userTitle", userProfile.getUserTitle());
-//		if(userProfile.getUserRole()== 0 && userProfile.getUserTitle().equals(Utils.USER))
-//			userProfile.setUserTitle(Utils.ADMIN);
 		profileNode.setProperty("exo:signature",userProfile.getSignature());
 		profileNode.setProperty("exo:isDisplaySignature", userProfile.getIsDisplaySignature()) ;
 		profileNode.setProperty("exo:isDisplayAvatar",userProfile.getIsDisplayAvatar()) ;
@@ -3026,6 +3025,7 @@ public class JCRDataStorage {
 		profileNode.setProperty("exo:maxPost", userProfile.getMaxPostInPage());
 		profileNode.setProperty("exo:maxTopic", userProfile.getMaxTopicInPage());
 		profileNode.setProperty("exo:isShowForumJump", userProfile.getIsShowForumJump());
+		profileNode.setProperty("exo:isAutoSendNotify", userProfile.getIsAutoSendNotify());
 		profileNode.save();
 	}
 	
@@ -3162,6 +3162,7 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
 			newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
 			newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
+			newProfileNode.setProperty("exo:isAutoSendNotify", newUserProfile.getIsAutoSendNotify());
 
 			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
 			Calendar calendar = getGreenwichMeanTime();
