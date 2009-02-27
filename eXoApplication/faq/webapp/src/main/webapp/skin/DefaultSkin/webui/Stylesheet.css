@@ -703,7 +703,7 @@
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseExternal {
 	padding: 5px 10px 10px 0px; 
 	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
-	width: 98.6% !important;
+	width: 98.4% !important;
 }
 
 .UIFAQPortlet .FAQContainer .ResponseContainer .TitleCommentContent{

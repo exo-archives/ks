@@ -102,8 +102,8 @@
 										
 										<!-- ================================================= Begin popup menu ================================ -->
 										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none; left:50px;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
-											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px; border:0px solid #7E7E7F;">
-												<div class="UIContextMenuContainer">
+											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
+												<div>
 	
 													<div class="TopLeftRightClickPopupMenu">
 														<div class="TopRightRightClickPopupMenu">
@@ -122,7 +122,7 @@
 													%>
 															<div class="MiddleLeftRightClickPopupMenu">
 																<div class="MiddleRightRightClickPopupMenu">
-																	<div class="UIRightPopupMenuContainer">
+																	<div class="UIRightPopupMenuContainer" style="margin:0px; padding:3px 0;">
 																
 																		<div onmousedown="$linkAction" class="MenuItem">
 																			<div class="ItemIcon $action" style="padding:0px 0px 5px 5px;">
@@ -309,7 +309,7 @@
 									<!-- action of this question -->
 									<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
 										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-											<div class="UIContextMenuContainer">
+											<div>
 
 												<div class="TopLeftRightClickPopupMenu">
 													<div class="TopRightRightClickPopupMenu">
@@ -320,7 +320,7 @@
 												
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer">
+														<div class="UIRightPopupMenuContainer"  style="margin:0px;">
 															<%
 																String iconView = "" ;
 																for(viewAction in questionActions) {
@@ -728,7 +728,7 @@
 																					<!-- action of this question -->
 																					<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
 																						<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-																							<div class="UIContextMenuContainer">
+																							<div>
 												
 																								<div class="TopLeftRightClickPopupMenu">
 																									<div class="TopRightRightClickPopupMenu">
@@ -739,7 +739,7 @@
 																								
 																								<div class="MiddleLeftRightClickPopupMenu">
 																									<div class="MiddleRightRightClickPopupMenu">
-																										<div class="UIRightPopupMenuContainer">
+																										<div class="UIRightPopupMenuContainer" style="margin:0px;">
 																											<%
 																												String iconView = "" ;
 																												for(viewAction in questionActions) {

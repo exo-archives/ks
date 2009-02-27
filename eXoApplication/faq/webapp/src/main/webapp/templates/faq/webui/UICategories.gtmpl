@@ -103,7 +103,7 @@
 								<!-- action of this category -->
 								<div class="UIFAQPopupCategory" id="UIFAQPopupCategories$i" style="display:none;">
 									<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-										<div class="UIContextMenuContainer">
+										<div>
 																		
 											<div class="TopLeftRightClickPopupMenu">
 												<div class="TopRightRightClickPopupMenu">
@@ -114,7 +114,7 @@
 											
 											<div class="MiddleLeftRightClickPopupMenu">
 												<div class="MiddleRightRightClickPopupMenu">
-													<div class="UIRightPopupMenuContainer">
+													<div class="UIRightPopupMenuContainer" style="margin:0px;">
 														<%
 															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
 																categoryAction = uicomponent.getActionCategory() ;
