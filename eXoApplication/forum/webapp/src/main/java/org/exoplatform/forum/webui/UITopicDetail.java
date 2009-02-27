@@ -1329,7 +1329,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					topicDetail.getUserInfo(userName).setTotalPost(postCount);
 					topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-					if(topicDetail.userProfile.getIsAutoSendNotify()) {
+					if(topicDetail.userProfile.getIsAutoWatchTopicIPost()) {
 						List<String> values = new ArrayList<String>();
 						values.add(topicDetail.userProfile.getEmail());
 						String path = topicDetail.categoryId + "/" + topicDetail.forumId + "/" + topicDetail.topicId;

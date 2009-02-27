@@ -412,7 +412,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 						topicDetail.setIdPostView("lastpost");
 					}
 					if(isNew) {
-						if(userProfile.getIsAutoSendNotify()) {
+						if(userProfile.getIsAutoWatchTopicIPost()) {
 							List<String> values = new ArrayList<String>();
 							values.add(userProfile.getEmail());
 							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;

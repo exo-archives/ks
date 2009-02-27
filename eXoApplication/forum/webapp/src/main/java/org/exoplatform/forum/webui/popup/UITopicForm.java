@@ -438,7 +438,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLastPostDate(new Date());
 				topicNew.setDescription(message);
 				topicNew.setLink(link);
-				if(whenNewPost || userProfile.getIsAutoSendNotify()){
+				if(whenNewPost){
 					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
 					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
 				} else {
@@ -507,6 +507,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						}
 						topicNew.setRemoteAddr(remoteAddr);
 						forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+						if(userProfile.getIsAutoWatchMyTopics()) {
+							List<String> values = new ArrayList<String>();
+							values.add(userProfile.getEmail());
+							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
+							forumService.addWatch(sProvider, 1, path, values, userName) ;
+						}
 					} catch (PathNotFoundException e) {
 						e.printStackTrace();
 						sProvider.close();

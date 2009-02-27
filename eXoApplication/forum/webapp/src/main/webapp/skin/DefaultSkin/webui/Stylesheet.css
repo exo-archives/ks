@@ -526,7 +526,6 @@
 	float:left;
 	height:15px;
 	margin:0px 2px;
-
 	width:13px;
 }
 
@@ -579,4 +578,16 @@
 .UIForumPortlet .UIGrid input.checkbox {
 	height:13px;
 	margin: 3px 0px 0px 0px;
+}
+
+.UIForumPortlet .ButtonHeadBar {
+	min-width:90px; 
+	float:right; 
+	text-align:left; 
+	margin-top:2px;
+	white-space:nowrap;
+}
+
+*html .UIForumPortlet .ButtonHeadBar {
+	width:90px; 
 }

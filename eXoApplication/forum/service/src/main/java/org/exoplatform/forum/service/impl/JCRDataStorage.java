@@ -2970,7 +2970,8 @@ public class JCRDataStorage {
 		userProfile.setMaxPostInPage(profileNode.getProperty("exo:maxPost").getLong());
 		userProfile.setMaxTopicInPage(profileNode.getProperty("exo:maxTopic").getLong());
 		userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
-		userProfile.setisAutoSendNotify(profileNode.getProperty("exo:isAutoSendNotify").getBoolean());
+		userProfile.setIsAutoWatchMyTopics(profileNode.getProperty("exo:isAutoWatchMyTopics").getBoolean());
+		userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
 		
 		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
 		
@@ -3012,6 +3013,8 @@ public class JCRDataStorage {
 		userProfile.setSignature(profileNode.getProperty("exo:signature").getString());
 		userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
 		userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
+		userProfile.setIsAutoWatchMyTopics(profileNode.getProperty("exo:isAutoWatchMyTopics").getBoolean());
+		userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
 		userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 		userProfile.setTimeZone(profileNode.getProperty("exo:timeZone").getDouble());
 		userProfile.setShortDateFormat(profileNode.getProperty("exo:shortDateformat").getString());
@@ -3037,7 +3040,8 @@ public class JCRDataStorage {
 		profileNode.setProperty("exo:maxPost", userProfile.getMaxPostInPage());
 		profileNode.setProperty("exo:maxTopic", userProfile.getMaxTopicInPage());
 		profileNode.setProperty("exo:isShowForumJump", userProfile.getIsShowForumJump());
-		profileNode.setProperty("exo:isAutoSendNotify", userProfile.getIsAutoSendNotify());
+		profileNode.setProperty("exo:isAutoWatchMyTopics", userProfile.getIsAutoWatchMyTopics());
+		profileNode.setProperty("exo:isAutoWatchTopicIPost", userProfile.getIsAutoWatchTopicIPost());
 		profileNode.save();
 	}
 	
@@ -3174,7 +3178,8 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
 			newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
 			newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
-			newProfileNode.setProperty("exo:isAutoSendNotify", newUserProfile.getIsAutoSendNotify());
+			newProfileNode.setProperty("exo:isAutoWatchMyTopics", newUserProfile.getIsAutoWatchMyTopics());
+			newProfileNode.setProperty("exo:isAutoWatchTopicIPost", newUserProfile.getIsAutoWatchTopicIPost());
 
 			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
 			Calendar calendar = getGreenwichMeanTime();

@@ -503,7 +503,13 @@
 					<defaultValue> </defaultValue>
 				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:isAutoSendNotify" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<propertyDefinition name="exo:isAutoWatchMyTopics" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:isAutoWatchTopicIPost" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 				<defaultValues>
 					<defaultValue>false</defaultValue>

@@ -111,7 +111,6 @@
 															<div class="RightClickCustomItem" style="display:none; height:0px;"><span></span></div>
 														</div>
 													</div>
-													
 													<%
 														String[] actionTollbar ;
 														actionTollbar = uicomponent.getMenuCateManager();
@@ -376,10 +375,10 @@
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																			String link = uicomponent.getLinkDiscuss();
 															%>
-																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>">
+																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link'); return false;">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																				<div style="padding-left:20px;white-space:nowrap;">
-																					<a href="$link" onmousedown="window.open('$link'); return false;"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																					<a href="$link"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																				</div>
 																			</div>
 																		</div>

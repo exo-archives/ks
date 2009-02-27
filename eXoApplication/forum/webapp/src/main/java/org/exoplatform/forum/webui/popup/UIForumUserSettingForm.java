@@ -77,7 +77,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_MAXTOPICS_SELECTBOX = "MaximumThreads" ;
 	public static final String FIELD_MAXPOSTS_SELECTBOX = "MaximumPosts" ;
 	public static final String FIELD_FORUMJUMP_CHECKBOX = "ShowForumJump" ;
-	public static final String FIELD_AUTOSENDNOTIFY_CHECKBOX = "AutoSendNotify" ;
+	public static final String FIELD_AUTOWATCHMYTOPICS_CHECKBOX = "AutoWatchMyTopics" ;
+	public static final String FIELD_AUTOWATCHTOPICIPOST_CHECKBOX = "AutoWatchTopicIPost" ;
 	public static final String FIELD_TIMEZONE = "timeZone" ;
 	
 	public static final String FIELD_USERID_INPUT = "ForumUserName" ;
@@ -189,8 +190,10 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 
-		UIFormCheckBoxInput isAutoSendNotify = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOSENDNOTIFY_CHECKBOX, FIELD_AUTOSENDNOTIFY_CHECKBOX, false);
-		isAutoSendNotify.setChecked(userProfile.getIsAutoSendNotify()) ;
+		UIFormCheckBoxInput isAutoWatchMyTopics = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOWATCHMYTOPICS_CHECKBOX, FIELD_AUTOWATCHMYTOPICS_CHECKBOX, false);
+		isAutoWatchMyTopics.setChecked(userProfile.getIsAutoWatchMyTopics()) ;
+		UIFormCheckBoxInput isAutoWatchTopicIPost = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, FIELD_AUTOWATCHTOPICIPOST_CHECKBOX, false);
+		isAutoWatchTopicIPost.setChecked(userProfile.getIsAutoWatchTopicIPost()) ;
 		
 		UIFormCheckBoxInput isDisplayAvatar = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYAVATAR_CHECKBOX, FIELD_ISDISPLAYAVATAR_CHECKBOX, false);
 		isDisplayAvatar.setChecked(this.userProfile.getIsDisplayAvatar()) ;
@@ -201,7 +204,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		inputSetProfile.addUIFormInput(signature) ;
 		inputSetProfile.addUIFormInput(isDisplaySignature) ;
 		inputSetProfile.addUIFormInput(isDisplayAvatar) ;
-		inputSetProfile.addUIFormInput(isAutoSendNotify) ;
+		inputSetProfile.addUIFormInput(isAutoWatchMyTopics) ;
+		inputSetProfile.addUIFormInput(isAutoWatchTopicIPost) ;
 		
 		UIFormInputWithActions inputSetOption = new UIFormInputWithActions(FIELD_USEROPTION_FORM); 
 		inputSetOption.addUIFormInput(timeZone) ;
@@ -276,7 +280,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			signature = ForumTransformHTML.enCodeHTML(signature);
 			boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
 			Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
-			boolean isAutoSendNotify = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOSENDNOTIFY_CHECKBOX).getValue() ;
+			boolean isAutoWatchMyTopics = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOWATCHMYTOPICS_CHECKBOX).getValue() ;
+			boolean isAutoWatchTopicIPost = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_AUTOWATCHTOPICIPOST_CHECKBOX).getValue() ;
 			
 			UIFormInputWithActions inputSetOption = uiForm.getChildById(FIELD_USEROPTION_FORM) ;
 			long maxTopic = Long.parseLong(inputSetOption.getUIFormSelectBox(FIELD_MAXTOPICS_SELECTBOX).getValue().substring(2)) ;
@@ -299,7 +304,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setMaxPostInPage(maxPost);
 			userProfile.setMaxTopicInPage(maxTopic);
 			userProfile.setIsShowForumJump(isJump);
-			userProfile.setisAutoSendNotify(isAutoSendNotify);
+			userProfile.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
+			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiForm.forumService.saveUserSettingProfile(sProvider, userProfile);
