@@ -1804,6 +1804,14 @@
 	width:215px;
 	float:left;
 }
+
+.UIFAQPortlet .AddIcon16x16 {
+	float: left ;
+	width: 16px;	height: 16px;
+	margin: 0px 5px;
+	background: url('background/AddIcon.gif') no-repeat center;
+	cursor: pointer;
+}
 /************************** UIListCategoryForumForm *****************************/
 .UIFAQPortlet .UIListCategoryForumForm {
 }

@@ -191,7 +191,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			
 			String idNameForum_ = faqSetting_.getIdNameForum() ;
 			if(idNameForum_.indexOf(";") > 0) {
-				this.idNameForum = new String[]{idNameForum_.substring(0,pathCate.indexOf(";")), idNameForum_.substring(pathCate.indexOf(";")+1)};
+				this.idNameForum = new String[]{idNameForum_.substring(0,idNameForum_.indexOf(";")), idNameForum_.substring(idNameForum_.indexOf(";")+1)};
 			}
 			UIFormStringInput idNameForums = new UIFormStringInput(FIELD_FORUM_ID_INPUT, FIELD_FORUM_ID_INPUT, null) ;
 			idNameForums.setValue(this.idNameForum[1]);
