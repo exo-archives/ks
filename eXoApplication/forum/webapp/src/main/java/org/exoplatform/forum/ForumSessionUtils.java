@@ -75,11 +75,20 @@ public class ForumSessionUtils {
   
   public static String getUserAvatarURL(String userName, ForumService forumService, SessionProvider sessionProvider, 
   																			DownloadService dservice){
+  	String url = null;
   	try{
 	  	ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
-	  	return ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
+	  	url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
+	  	if(url == null || url.trim().length() < 1){
+	  		ForumContact contact = getPersonalContact(userName) ;
+	  		if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0)
+	  			url = contact.getAvatarUrl();
+	  		else
+	  			url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+	  	}
+	  	return url;
   	} catch (Exception e){
-  		return null;
+  		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
   	}
   }
   

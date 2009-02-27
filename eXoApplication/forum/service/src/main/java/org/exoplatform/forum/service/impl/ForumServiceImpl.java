@@ -641,4 +641,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
 		storage_.saveUserAvatar(userId, fileAttachment, sessionProvider);
 	}
+	
+	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
+		storage_.setDefaultAvatar(userName, sessionProvider);
+	}
 }

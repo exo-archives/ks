@@ -915,4 +915,6 @@ public interface ForumService {
   public void unRegisterListenerForCategory(String path) throws Exception ;
   public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
+  
+  public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
 }

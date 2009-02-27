@@ -2263,6 +2263,8 @@ public class JCRDataStorage {
 	
 	public void generateRSS(String path, int typeEvent) throws Exception	{
 		
+		System.out.println("\n\n\n\n----------->path:" + path);
+		
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String feedType = "rss_2.0";
 		boolean isNew = false;

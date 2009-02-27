@@ -385,15 +385,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 //			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //		}
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		String url = ForumSessionUtils.getUserAvatarURL(userId, this.forumService, sessionProvider, dservice);
-		if(url == null || url.trim().length() < 1){
-			if (contact.getAvatarUrl() == null ) {
-				url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-			} else {
-				url = contact.getAvatarUrl();
-			}
-		}
-		return url;
+		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, sessionProvider, dservice);
 	}
 
 	@SuppressWarnings("unused")

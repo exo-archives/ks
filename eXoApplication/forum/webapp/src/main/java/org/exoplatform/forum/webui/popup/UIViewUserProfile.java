@@ -115,13 +115,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, sessionProvider, dservice);
-		if(url == null || url.trim().length() < 1){
-			if (contact.getAvatarUrl() == null ) {
-				url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-			} else {
-				url = contact.getAvatarUrl();
-			}
-		}
+		sessionProvider.close();
 		return url;
 	}
 	

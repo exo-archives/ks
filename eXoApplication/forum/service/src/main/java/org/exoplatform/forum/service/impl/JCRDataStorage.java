@@ -244,6 +244,18 @@ public class JCRDataStorage {
 		}
 	}
 	
+	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
+		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
+		if(ksAvatarHomnode.hasNode(userName)){
+			Node node = ksAvatarHomnode.getNode(userName);
+			Node nodeFile = null;
+			String workspace = "";
+			if(node.isNodeType("nt:file")) {
+				node.remove();
+				ksAvatarHomnode.save();
+			}
+		}
+	}
 
 	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
 		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
