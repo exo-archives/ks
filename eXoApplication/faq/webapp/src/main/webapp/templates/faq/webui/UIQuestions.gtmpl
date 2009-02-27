@@ -375,10 +375,10 @@
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																			String link = uicomponent.getLinkDiscuss();
 															%>
-																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link'); return false;">
+																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>; setTimeOut(window.open('$link'), 1000); return false;">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																				<div style="padding-left:20px;white-space:nowrap;">
-																					<a href="$link"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																					<a href="#"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																				</div>
 																			</div>
 																		</div>

@@ -248,8 +248,8 @@ public class JCRDataStorage {
 		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
 		if(ksAvatarHomnode.hasNode(userName)){
 			Node node = ksAvatarHomnode.getNode(userName);
-			Node nodeFile = null;
-			String workspace = "";
+//			Node nodeFile = null;
+//			String workspace = "";
 			if(node.isNodeType("nt:file")) {
 				node.remove();
 				ksAvatarHomnode.save();
@@ -1428,7 +1428,7 @@ public class JCRDataStorage {
 			Calendar calendar = getGreenwichMeanTime();
 			topic.setCreatedDate(calendar.getTime());
 			topicNode.setProperty("exo:createdDate", calendar);
-			topicNode.setProperty("exo:lastPostBy", topic.getLastPostBy());
+			topicNode.setProperty("exo:lastPostBy", topic.getOwner());
 			topicNode.setProperty("exo:lastPostDate", calendar);
 			topicNode.setProperty("exo:postCount", -1);
 			topicNode.setProperty("exo:viewCount", 0);

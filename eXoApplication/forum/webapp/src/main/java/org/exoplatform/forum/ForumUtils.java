@@ -120,6 +120,8 @@ public class ForumUtils {
 	
 	public static boolean isValidEmailAddresses(String addressList) throws Exception {
 		if (isEmpty(addressList))	return true ;
+		addressList = StringUtils.remove(addressList, " ");
+		addressList = StringUtils.replace(addressList, ";", ",");
 		try {
 			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
 			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;

@@ -77,6 +77,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
 	private boolean isMode = false;
+	private boolean isAddValue = true;
 	private String forumId = "";
 	private String listEmailAutoUpdate = "";
 	private int id = 0 ;
@@ -111,7 +112,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setMode(boolean isMode) {this.isMode = isMode;}
 	
 	public void initForm() throws Exception {
-		String email = ForumSessionUtils.getUserByUserId(ForumSessionUtils.getCurrentUser()).getEmail();
 		List<Category> categorys = forumService.getCategories(ForumSessionUtils.getSystemProvider());
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		for (Category category :categorys) {
@@ -139,8 +139,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormCheckBoxInput<Boolean> checkWhenAddTopic = new UIFormCheckBoxInput<Boolean>(FIELD_MODERATETHREAD_CHECKBOX, FIELD_MODERATETHREAD_CHECKBOX, false);
 		UIFormTextAreaInput notifyWhenAddPost = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE, FIELD_NOTIFYWHENADDPOST_MULTIVALUE, null);
 		UIFormTextAreaInput notifyWhenAddTopic = new UIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE, null);
-		notifyWhenAddPost.setDefaultValue(email);
-		notifyWhenAddTopic.setDefaultValue(email);
 		
 		UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE, FIELD_MODERATOR_MULTIVALUE, null);
 		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;
@@ -307,11 +305,12 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			description = ForumTransformHTML.enCodeHTML(description) ;
 			UIFormInputWithActions moderationOptions = uiForm.getChildById(FIELD_MODERATOROPTION_FORM);
 			Boolean	isAutoAddEmail = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).getValue();
-			if(isAutoAddEmail) {
+			if(isAutoAddEmail && uiForm.isAddValue) {
 				uiForm.setDefaultEmail();
 			}
 			String notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue() ;
 			String notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue() ;
+			System.out.println("\n\n " + notifyWhenAddTopics + "\n\n " + notifyWhenAddPosts);
 			if(!ForumUtils.isValidEmailAddresses(notifyWhenAddPosts) || !ForumUtils.isValidEmailAddresses(notifyWhenAddTopics)) {
 				Object[] args = {""};
 				uiApp.addMessage(new ApplicationMessage("UIAddMultiValueForm.msg.invalid-field", args, ApplicationMessage.WARNING)) ;
@@ -475,85 +474,83 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	}
 
 	private void setDefaultEmail() throws Exception {
-		if(ForumUtils.isEmpty(this.forumId))	{
-			UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
-			String moderators = forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue() ;
-			UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
-			UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE) ;
-			UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE) ;
-			String emailTopic = notifyWhenAddTopics.getValue();
-			String emailPost = notifyWhenAddPosts.getValue();
-			notifyWhenAddTopics.setEditable(false);
-			notifyWhenAddPosts.setEditable(false);
-			if(!ForumUtils.isEmpty(moderators)) {
-				String []moderators_ = ForumUtils.splitForForum(moderators);
-				List<String> listModerator  = new ArrayList<String>();
-				String email = ""; this.listEmailAutoUpdate = "";
-				for (int i = 0; i < moderators_.length; i++) {
-					User user = ForumSessionUtils.getUserByUserId(moderators_[i].trim()) ;
-					if(user != null){
-						email = user.getEmail();
-						if(i == 0){
-							this.listEmailAutoUpdate = email;
+		UIFormInputWithActions forumPermission = this.getChildById(FIELD_FORUMPERMISSION_FORM);
+		String moderators = forumPermission.getUIFormTextAreaInput(FIELD_MODERATOR_MULTIVALUE).getValue() ;
+		UIFormInputWithActions moderationOptions = this.getChildById(FIELD_MODERATOROPTION_FORM);
+		UIFormTextAreaInput notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE) ;
+		UIFormTextAreaInput notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE) ;
+		String emailTopic = notifyWhenAddTopics.getValue();
+		String emailPost = notifyWhenAddPosts.getValue();
+		notifyWhenAddTopics.setEditable(false);
+		notifyWhenAddPosts.setEditable(false);
+		if(!ForumUtils.isEmpty(moderators)) {
+			String []moderators_ = ForumUtils.splitForForum(moderators);
+			List<String> listModerator  = new ArrayList<String>();
+			String email = ""; this.listEmailAutoUpdate = "";
+			for (int i = 0; i < moderators_.length; i++) {
+				User user = ForumSessionUtils.getUserByUserId(moderators_[i].trim()) ;
+				if(user != null){
+					email = user.getEmail();
+					if(i == 0){
+						this.listEmailAutoUpdate = email;
+						listModerator.add(email);
+					}
+					else {
+						if(!listModerator.contains(email)){
+							this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +  email;
 							listModerator.add(email);
 						}
-						else {
-							if(!listModerator.contains(email)){
-								this.listEmailAutoUpdate = this.listEmailAutoUpdate + "; " +  email;
+					}
+				} else {
+					List<String> list = ForumServiceUtils.getUserPermission(moderators_);
+					for (String string : list) {
+						user = ForumSessionUtils.getUserByUserId(string) ;
+						if(user != null){
+							email = user.getEmail();
+							if(i == 0){
+								this.listEmailAutoUpdate = email;
 								listModerator.add(email);
-							}
-						}
-					} else {
-						List<String> list = ForumServiceUtils.getUserPermission(moderators_);
-						for (String string : list) {
-							user = ForumSessionUtils.getUserByUserId(string) ;
-							if(user != null){
-								email = user.getEmail();
-								if(i == 0){
-									this.listEmailAutoUpdate = email;
+							} else {
+								if(!listModerator.contains(email)){
+									this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +  email;
 									listModerator.add(email);
-								} else {
-									if(!listModerator.contains(email)){
-										this.listEmailAutoUpdate = this.listEmailAutoUpdate + "; " +  email;
-										listModerator.add(email);
-									}
 								}
 							}
-            }
-					}
+						}
+          }
+				}
+      }
+			if(ForumUtils.isEmpty(emailTopic)) {
+				notifyWhenAddTopics.setValue(this.listEmailAutoUpdate);
+			} else {
+				String []strs = ForumUtils.splitForForum(emailTopic);
+				String emailTopics = "";
+				for (int i = 0; i < strs.length; i++) {
+          if(!listModerator.contains(strs[i].trim())) {
+          	if(emailTopics.length() == 0) emailTopics = strs[i];
+          	else emailTopics = emailTopics + ", " + strs[i];
+          }
         }
-				if(ForumUtils.isEmpty(emailTopic)) {
-					notifyWhenAddTopics.setValue(this.listEmailAutoUpdate);
-				} else {
-					String []strs = ForumUtils.splitForForum(emailTopic);
-					String emailTopics = "";
-					for (int i = 0; i < strs.length; i++) {
-	          if(!listModerator.contains(strs[i].trim())) {
-	          	if(emailTopics.length() == 0) emailTopics = strs[i];
-	          	else emailTopics = emailTopics + "; " + strs[i];
-	          }
+				if(emailTopics.trim().length() == 0) emailTopics = this.listEmailAutoUpdate;
+      	else emailTopics = emailTopics + ", " + this.listEmailAutoUpdate;
+				notifyWhenAddTopics.setValue(emailTopics);
+			}
+			if(ForumUtils.isEmpty(emailPost)) {
+				notifyWhenAddPosts.setValue(this.listEmailAutoUpdate);
+			} else {
+				String []strs = ForumUtils.splitForForum(emailPost);
+				String emailPosts = "";
+				for (int i = 0; i < strs.length; i++) {
+          if(!listModerator.contains(strs[i].trim())) {
+          	if(emailPosts.length() == 0) emailPosts = strs[i];
+          	else emailPosts = emailPosts + ", " + strs[i];
           }
-					if(emailTopics.trim().length() == 0) emailTopics = this.listEmailAutoUpdate;
-        	else emailTopics = emailTopics + "; " + this.listEmailAutoUpdate;
-					notifyWhenAddTopics.setValue(emailTopics);
-				}
-				if(ForumUtils.isEmpty(emailPost)) {
-					notifyWhenAddPosts.setValue(this.listEmailAutoUpdate);
-				} else {
-					String []strs = ForumUtils.splitForForum(emailPost);
-					String emailPosts = "";
-					for (int i = 0; i < strs.length; i++) {
-	          if(!listModerator.contains(strs[i].trim())) {
-	          	if(emailPosts.length() == 0) emailPosts = strs[i];
-	          	else emailPosts = emailPosts + "; " + strs[i];
-	          }
-          }
-					if(emailPosts.trim().length() == 0) emailPosts = this.listEmailAutoUpdate;
-        	else emailPosts = emailPosts + "; " + this.listEmailAutoUpdate;
-					notifyWhenAddPosts.setValue(emailPosts);
-				}
-			} else {}
-		}
+        }
+				if(emailPosts.trim().length() == 0) emailPosts = this.listEmailAutoUpdate;
+      	else emailPosts = emailPosts + ", " + this.listEmailAutoUpdate;
+				notifyWhenAddPosts.setValue(emailPosts);
+			}
+		} else {}
 	}
 	
 	static	public class SelectTabActionListener extends EventListener<UIForumForm> {
@@ -565,11 +562,14 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				UIFormInputWithActions moderationOptions = forumForm.getChildById(FIELD_MODERATOROPTION_FORM);
 				Boolean	isAutoAddEmail = (Boolean) moderationOptions.getUIFormCheckBoxInput(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX).getValue();
 				if(isAutoAddEmail) {
-					//forumForm.setDefaultEmail();
+					forumForm.setDefaultEmail();
 				} else {
 					moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).setEditable(true);;
 					moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).setEditable(true);
 				}
+				forumForm.isAddValue = false;
+			} else {
+				forumForm.isAddValue = true;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumForm) ;
 		}
