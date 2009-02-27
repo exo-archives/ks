@@ -4,6 +4,10 @@
   width:75px;
 }
 
+.UIPrivateMessageForm .MessageTab .UIFormGrid {
+	width: 98%;
+}
+
 .UIPrivateMessageForm .ForumMail .MessageContent {
   border: 1px solid #c7c7c7;
   padding: 10px;
