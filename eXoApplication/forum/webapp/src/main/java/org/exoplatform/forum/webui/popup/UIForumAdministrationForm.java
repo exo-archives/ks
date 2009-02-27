@@ -62,7 +62,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UIForumAdministrationForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.AddIpActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.PostsActionListener.class), 
-			@EventConfig(listeners = UIForumAdministrationForm.UnBanActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.UnBanActionListener.class, confirm= "UIForumAdministrationForm.msg.confirm-delete-ipban"), 
 			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
@@ -358,6 +358,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT3)).getValue(),
 																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT4)).getValue(),
 																	};
+			for(int i = 1; i <= 4; i ++){
+				((UIFormStringInput)inputWithActions.getChildById("newIpBan" + i)).setValue("");
+			}
 			UIForumAdministrationForm uiForm = event.getSource();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			String ipAdd = uiForm.checkIpAddress(ip);
