@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -68,6 +69,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
     events = {
+    	@EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class, confirm= "UIModeratorManagementForm.msg.setDefaultAvartar"), 
     	@EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
@@ -117,6 +119,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
 	public static final String FIELD_SEARCH_USER = "SearchUser";
 	private String valueSearch = null;
+	private String userAvartarUrl = null;
   
 	public UIModeratorManagementForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -439,6 +442,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  return this.forumLinks ;
   }
 	
+	public void setUserAvatarURL(String userId){
+		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService, sessionProvider, 
+																												getApplicationComponent(DownloadService.class));
+		sessionProvider.close();
+	}
+	
   static  public class ViewProfileActionListener extends EventListener<UIModeratorManagementForm> {
     public void execute(Event<UIModeratorManagementForm> event) throws Exception {
     	UIModeratorManagementForm uiForm = event.getSource() ;
@@ -459,6 +469,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   		UIModeratorManagementForm uiForm = event.getSource() ;
   		String userId = event.getRequestContext().getRequestParameter(OBJECTID);
   		uiForm.userProfile = uiForm.getUserProfile(userId) ;
+  		uiForm.setUserAvatarURL(userId);
 	    uiForm.removeChildById("ForumUserProfile") ;
 	    uiForm.removeChildById("ForumUserOption") ;
 	    uiForm.removeChildById("ForumUserBan") ;
@@ -627,7 +638,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
       }
       uiForm.isEdit = false ;
       uiForm.setPageListUserProfile();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+      UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+      popupWindow.setWindowSize(760, 350) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
     }
   }
   
@@ -639,6 +653,20 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			UISelectItemForum selectItemForum = popupAction.activate(UISelectItemForum.class, 400) ;
 			selectItemForum.setForumLinks(uiForm.setListForumIds()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+  	}
+  }
+  
+  static  public class SetDeaultAvatarActionListener extends EventListener<UIModeratorManagementForm> {
+  	public void execute(Event<UIModeratorManagementForm> event) throws Exception {
+  		UIModeratorManagementForm uiForm = event.getSource() ;
+  		if(uiForm.userAvartarUrl.equals("/forum/skin/DefaultSkin/webui/background/Avatar1.gif")) return;
+  		String userId = ((UIFormStringInput)uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
+  		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+  		uiForm.forumService.setDefaultAvatar(userId, sessionProvider);
+  		uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService, sessionProvider, 
+  																							uiForm.getApplicationComponent(DownloadService.class));
+  		sessionProvider.close();
+  		event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
   	}
   }
 
