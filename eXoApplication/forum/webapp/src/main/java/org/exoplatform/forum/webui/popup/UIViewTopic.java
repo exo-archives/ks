@@ -190,7 +190,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(ForumContact contact) throws Exception {
+	private String getAvatarUrl(String userId) throws Exception {
 //	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 //	try {
 //		ContactAttachment attachment = contact.getAttachment() ; 
@@ -200,11 +200,11 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
-	if (contact.getAvatarUrl() == null ) {
-		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-	} else {
-		return contact.getAvatarUrl();
-	}
+		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, sessionProvider, 
+																				getApplicationComponent(DownloadService.class));
+		sessionProvider.close();
+		return url;
 	}
 	@SuppressWarnings("unused")
 	private boolean isOnline(String userId) throws Exception {

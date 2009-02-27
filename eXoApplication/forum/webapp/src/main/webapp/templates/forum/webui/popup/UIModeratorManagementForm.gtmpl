@@ -131,7 +131,7 @@
 													<%if(tabconten.id.equals("ForumUserProfile")){%>
 															<div style="float:left; width:150px; text-align:center;">
 																<img id="ImgAvatar" src="<%=uicomponent.userAvartarUrl%>" class="Img" alt="Avatar" width="70px" onload="eXo.forum.UIForumPortlet.reSizeAvatar(this);"/>
-																<div style="color:blue; cursor:pointer;" onclick="<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
+																<div style="color:blue; cursor:pointer;" onclick="javaScirpt:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>'))<%=uicomponent.event("SetDeaultAvatar")%>">[<%=_ctx.appRes("UIModeratorManagementForm.label.SetDefaultAvatar")%>]</div>
 															</div>
 															<div style="float:left;"><%uiform.renderChild(tabconten.id);%></div>
 															<div style="clear:left;"><span></span></div>

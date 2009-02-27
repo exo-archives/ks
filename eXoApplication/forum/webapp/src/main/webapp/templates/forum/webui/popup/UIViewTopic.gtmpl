@@ -42,7 +42,7 @@
 		for(post in posts) {
 			String owner = post.getOwner() ;
 			ForumContact contact = uiform.getPersonalContact(owner) ;
-			String avatarUrl = uiform.getAvatarUrl(contact) ;
+			String avatarUrl = uiform.getAvatarUrl(owner) ;
 			String location = "" ;
 			boolean isCity = false;
 			if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
@@ -115,12 +115,12 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(contact) ;
+									avatarUrl = uiform.getAvatarUrl(owner) ;
 									String idAv = "avatar" + nb;
 									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
 									 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload" alt=""/>
+								<img style="width:70px;" src="$avatarUrl" class="ImgAvatar" id="$idAv" onload="$onload" alt=""/>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>

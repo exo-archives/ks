@@ -69,7 +69,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     lifecycle = UIFormLifecycle.class,
     template = "app:/templates/forum/webui/popup/UIModeratorManagementForm.gtmpl",
     events = {
-    	@EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class, confirm= "UIModeratorManagementForm.msg.setDefaultAvartar"), 
+    	@EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class), 
     	@EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
