@@ -1330,6 +1330,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1 ;
 					topicDetail.getUserInfo(userName).setTotalPost(postCount);
 					topicDetail.getUserInfo(userName).setLastPostDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
+					topicDetail.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 					if(topicDetail.userProfile.getIsAutoWatchTopicIPost()) {
 						List<String> values = new ArrayList<String>();

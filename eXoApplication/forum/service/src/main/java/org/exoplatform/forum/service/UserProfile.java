@@ -37,7 +37,7 @@ public class UserProfile {
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
 	
-	private String[] readTopic ;
+	private String[] readTopic ; // for check read/unread topic
 	private Map<String, Long> lastAccessTopics = new HashMap<String, Long>() ;
 	private String[] bookmark ;
 	

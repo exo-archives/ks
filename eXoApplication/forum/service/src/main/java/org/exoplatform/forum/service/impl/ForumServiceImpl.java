@@ -99,11 +99,9 @@ public class ForumServiceImpl implements ForumService, Startable{
 
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage_.addInitialDataPlugin(plugin) ;
-  	System.out.println("\n\n====> Data plugin") ;
   }
   
   public void start() {
-  	System.out.println("\n\n====> Service started") ;
   	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
   		storage_.initCategoryListener() ;
@@ -548,8 +546,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   	storage_.evaluateActiveUsers(sysProvider, query) ;
   }
   
-  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
-	  storage_.updateTopicAccess(sysSession, userId, topicId) ;
+  public void updateTopicAccess (String userId, String topicId) throws Exception {
+	  storage_.updateTopicAccess(userId, topicId) ;
   }
   
  /* public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{

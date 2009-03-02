@@ -419,6 +419,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							uiForm.forumService.addWatch(sProvider, 1, path, values, userProfile.getUserId()) ;
 						}
 					}
+					uiForm.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  uiForm.topicId) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} finally {
 					sProvider.close();

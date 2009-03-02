@@ -888,7 +888,7 @@ public interface ForumService {
   public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
   public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
 
-  public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception ;
+  public void updateTopicAccess (String userId, String topicId) throws Exception ;
   //public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   

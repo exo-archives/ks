@@ -234,7 +234,7 @@ public class UIBreadcumbs extends UIContainer {
 							uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
-								forumService.updateTopicAccess(sysSession, forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+								forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 								forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 							}
 						}						

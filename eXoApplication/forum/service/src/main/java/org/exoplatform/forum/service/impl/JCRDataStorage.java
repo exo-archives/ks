@@ -1125,7 +1125,7 @@ public class JCRDataStorage {
 			if (userRead != null &&  userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
-				updateTopicAccess(sProvider, userRead, topicId) ;
+				updateTopicAccess(userRead, topicId) ;
 				if(topicNode.isNew()){
 					topicNode.getSession().save();
 				} else {
@@ -2834,124 +2834,6 @@ public class JCRDataStorage {
 		return pagelist;
 	}
 
-	/*public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
-		UserProfile userProfile = new UserProfile();
-		if (userName == null || userName.length() <= 0)
-			return userProfile;
-		Node userProfileNode = getUserProfileHome(sProvider);
-		Node newProfileNode;
-		String title = "";
-		try {
-			newProfileNode = userProfileNode.getNode(userName);
-			userProfile.setUserId(userName);
-			if (newProfileNode.hasProperty("exo:userTitle"))
-				title = newProfileNode.getProperty("exo:userTitle").getString();
-			if (userProfileNode.hasProperty("exo:fullName"))
-				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
-			if (userProfileNode.hasProperty("exo:firstName"))
-				userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
-			if (userProfileNode.hasProperty("exo:lastName"))
-				userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
-			if (userProfileNode.hasProperty("exo:email"))
-				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
-			if(isAdminRole(userName)) {
-				userProfile.setUserRole((long)0);
-			} else {
-				if (newProfileNode.hasProperty("exo:userRole"))
-					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
-			}
-			userProfile.setUserTitle(title);
-			if (newProfileNode.hasProperty("exo:signature"))
-				userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
-			if (newProfileNode.hasProperty("exo:totalPost"))
-				userProfile.setTotalPost(newProfileNode.getProperty("exo:totalPost").getLong());
-			if (newProfileNode.hasProperty("exo:totalTopic"))
-				userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
-			if (newProfileNode.hasProperty("exo:moderateForums"))
-				userProfile.setModerateForums(ValuesToArray(newProfileNode.getProperty("exo:moderateForums").getValues()));
-
-			if (newProfileNode.hasProperty("exo:readTopic")){
-				Value[] values = newProfileNode.getProperty("exo:readTopic").getValues() ;
-				for(Value vl : values) {
-					String str = vl.getString() ;
-					if(str.indexOf(":") > 0) {
-						String[] array = str.split(":") ;
-						userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
-					}
-				}
-			}
-
-			if (newProfileNode.hasProperty("exo:bookmark"))
-				userProfile.setBookmark(ValuesToArray(newProfileNode.getProperty("exo:bookmark").getValues()));
-			if (newProfileNode.hasProperty("exo:lastLoginDate"))
-				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:joinedDate"))
-				userProfile.setJoinedDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:lastPostDate"))
-				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:isDisplaySignature"))
-				userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
-			if (newProfileNode.hasProperty("exo:isDisplayAvatar"))
-				userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
-			if (newProfileNode.hasProperty("exo:newMessage"))
-				userProfile.setNewMessage(newProfileNode.getProperty("exo:newMessage").getLong());
-			if (isGetOption) {
-				if (newProfileNode.hasProperty("exo:timeZone"))
-					userProfile.setTimeZone(newProfileNode.getProperty("exo:timeZone").getDouble());
-				if (newProfileNode.hasProperty("exo:shortDateformat"))
-					userProfile.setShortDateFormat(newProfileNode.getProperty("exo:shortDateformat").getString());
-				if (newProfileNode.hasProperty("exo:longDateformat"))
-					userProfile.setLongDateFormat(newProfileNode.getProperty("exo:longDateformat").getString());
-				if (newProfileNode.hasProperty("exo:timeFormat"))
-					userProfile.setTimeFormat(newProfileNode.getProperty("exo:timeFormat").getString());
-				if (newProfileNode.hasProperty("exo:maxPost"))
-					userProfile.setMaxPostInPage(newProfileNode.getProperty("exo:maxPost").getLong());
-				if (newProfileNode.hasProperty("exo:maxTopic"))
-					userProfile.setMaxTopicInPage(newProfileNode.getProperty("exo:maxTopic").getLong());
-				if (newProfileNode.hasProperty("exo:isShowForumJump"))
-					userProfile.setIsShowForumJump(newProfileNode.getProperty("exo:isShowForumJump").getBoolean());
-			}
-			if (isGetBan) {
-				if (newProfileNode.hasProperty("exo:isBanned"))
-					userProfile.setIsBanned(newProfileNode.getProperty("exo:isBanned").getBoolean());
-				if (newProfileNode.hasProperty("exo:banUntil"))
-					userProfile.setBanUntil(newProfileNode.getProperty("exo:banUntil").getLong());
-				if (newProfileNode.hasProperty("exo:banReason"))
-					userProfile.setBanReason(newProfileNode.getProperty("exo:banReason").getString());
-				if (newProfileNode.hasProperty("exo:banCounter"))
-					userProfile.setBanCounter(Integer.parseInt(newProfileNode.getProperty("exo:banCounter").getString()));
-				if (newProfileNode.hasProperty("exo:banReasonSummary"))
-					userProfile.setBanReasonSummary(ValuesToArray(newProfileNode.getProperty("exo:banReasonSummary").getValues()));
-				if (newProfileNode.hasProperty("exo:createdDateBan"))
-					userProfile.setCreatedDateBan(newProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
-			}
-//			if (isLogin) {
-//				if (userProfile.getIsBanned()) {
-//					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
-//						newProfileNode.setProperty("exo:isBanned", false);
-//					}
-//				}
-//				if(newProfileNode.isNew()) {
-//					newProfileNode.getSession().save() ;
-//				}else {
-//					newProfileNode.save() ;
-//				}
-//			}
-			return userProfile;
-		} catch (PathNotFoundException e) {
-			userProfile.setUserId(userName);
-			userProfile.setUserTitle(Utils.USER);
-			userProfile.setUserRole((long)2);
-			// default Administration
-			if(isAdminRole(userName)) {
-				userProfile.setUserRole((long) 0);
-				userProfile.setUserTitle(Utils.ADMIN);
-			}
-			saveUserProfile(sProvider, userProfile, false, false);
-			return userProfile;
-		}
-	}*/
-	
 	public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)	return userProfile;
@@ -4293,14 +4175,14 @@ public class JCRDataStorage {
     session.logout();
 	}
 
-	public void updateTopicAccess (SessionProvider sysSession, String userId, String topicId) throws Exception {
+	public void updateTopicAccess (String userId, String topicId) throws Exception {
+		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try {
 			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
 			List<String> values = new ArrayList<String>() ;
 			if(profile.hasProperty("exo:readTopic")) {
 				values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
 			}
-			
 			int i = 0 ;
 			boolean isUpdated = false ;
 			for(String vl : values) {
@@ -4309,13 +4191,18 @@ public class JCRDataStorage {
 					isUpdated = true ;
 					break ;
 				}
+				i++ ;
 			}
 			if(!isUpdated) {
-				values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+				values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;				
 			}
+			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
 			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
 			profile.save() ;
-    } catch (PathNotFoundException e) {
+    } catch (Exception e) {
+    	e.printStackTrace() ;
+    }finally{
+    	sysSession.close() ;
     }
 	}
 	
