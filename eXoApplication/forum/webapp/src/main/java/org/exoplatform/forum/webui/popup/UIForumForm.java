@@ -307,7 +307,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			}
 			String notifyWhenAddTopics = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDTOPIC_MULTIVALUE).getValue() ;
 			String notifyWhenAddPosts = moderationOptions.getUIFormTextAreaInput(FIELD_NOTIFYWHENADDPOST_MULTIVALUE).getValue() ;
-			System.out.println("\n\n " + notifyWhenAddTopics + "\n\n " + notifyWhenAddPosts);
+			
 			if(!ForumUtils.isValidEmailAddresses(notifyWhenAddPosts) || !ForumUtils.isValidEmailAddresses(notifyWhenAddTopics)) {
 				Object[] args = {""};
 				uiApp.addMessage(new ApplicationMessage("UIAddMultiValueForm.msg.invalid-field", args, ApplicationMessage.WARNING)) ;
