@@ -1308,6 +1308,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
 				link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
 				link = url + link;
+				link = link.replaceFirst("private", "public");
+				System.out.println("\n\nlink: " + link);
 				//
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 				String userName = topicDetail.userProfile.getUserId() ;

@@ -22,7 +22,6 @@
 	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
 	String userLogin ;
-	String url = "";
 	boolean isNull = false ;
 	boolean isShowMenu;
 	boolean canEdit = false ;
@@ -69,6 +68,8 @@
 		  isShowMenu = false;
 		  isNull = true;
 		}
+		String urlTopic = uicomponent.url("ViewThreadByUser", "pathId");
+		uicomponent.setLink(urlTopic);
 	}
 %>
 <div class="UITopicDetail">
