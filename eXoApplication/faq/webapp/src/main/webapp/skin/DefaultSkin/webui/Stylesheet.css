@@ -50,9 +50,11 @@
 
 .UIFAQPortlet .UIBreadcumbs .BreadcumbsInfoBar .RightArrowIcon {
 	float: left;
-	background: url('background/IconBreadcumbs15x12.gif') no-repeat ;
-	width: 15px; height: 12px;	
-	margin: 8px 0px 0px 0px;
+	/*background: url('background/IconBreadcumbs15x12.gif') no-repeat ;*/
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueNextArrow.gif') no-repeat ;
+	width: 16px; 
+	height: 16px;	
+	margin: 6px 0px 0px 0px;
 }
 
 .UIFAQPortlet .UICategoriesSummary {

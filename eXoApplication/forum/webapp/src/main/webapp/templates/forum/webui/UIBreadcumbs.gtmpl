@@ -18,7 +18,7 @@
 		<div class="RightBreadcumbs"> 
 			<div class="CenterBreadcumbs">
 				<div class="BreadcumbsInfoBar">
-					<div class="OpenIcon"><span></span></div>
+					<!-- <div class="OpenIcon" style="border:1px solid red;"><span></span></div> -->
 				<% int t = 0 ;
 					uicomponent.setUserProfile();
 					String link = "";
