@@ -415,6 +415,7 @@ UIForumPortlet.prototype.setDisableTexarea = function() {
 	var input = eXo.core.DOMUtil.findFirstDescendantByClass(objCmdElm, "input", "checkbox");
 	if(input) {
 		if(input.name === "AutoAddEmailNotify") {
+			eXo.forum.UIForumPortlet.onClickDisableTexarea();
 	 		input.onclick = eXo.forum.UIForumPortlet.onClickDisableTexarea;
 		}
 	}
