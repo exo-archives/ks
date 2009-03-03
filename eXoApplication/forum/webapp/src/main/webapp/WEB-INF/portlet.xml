@@ -30,7 +30,7 @@
 		<portlet-preferences>
 			<preference>
 				<name>useAjax</name>
-				<value>true</value> <!--true/false -->
+				<value>false</value> <!--true/false -->
 				<read-only>false</read-only>
 			</preference>
 			

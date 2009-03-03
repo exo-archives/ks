@@ -749,6 +749,15 @@ UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
 	}
 } ;
 
+UIForumPortlet.prototype.initContextMenu = function(id){
+	var cont = document.getElementById(id);
+	var uiContextMenu = eXo.ks.UIContextMenu;
+	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("Title","whileRow","OddRow");
+	else uiContextMenu.classNames.pushAll("Title","whileRow","OddRow");
+	uiContextMenu.container = cont;
+	uiContextMenu.setup();
+};
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 
 eXo.forum.CheckBox = {
@@ -796,3 +805,68 @@ eXo.forum.CheckBox = {
 		}
 	}
 } ;
+//if(!eXo.ks) eXo.ks = {};
+//eXo.ks.UIContextMenu = {
+//	menus : [],
+//	init: function(id){
+//		var cont = document.getElementById(id);
+//		this.classNames = new Array("Title","whileRow","OddRow");
+//		this.container = cont;
+//		eXo.core.EventManager.addEvent(cont,"contextmenu",this.show);
+//	},
+//	getMenu : function(evt) {
+//		var element = this.getMenuElement(evt);
+//		if(!element) return;
+//		var menuId = element.getAttribute("ctxMenuId");
+//		var menu = eXo.core.DOMUtil.findDescendantById(this.container,menuId);
+//		if(!menu) return;
+//		if(element.tagName != "TR") element.parentNode.appendChild(menu);
+//		return menu;
+//	},
+//	getMenuElement : function(evt) {
+//		var target = eXo.core.EventManager.getEventTarget(evt);
+//		while(target){
+//			var className = target.className;
+//			if(!className) {
+//				target = target.parentNode;
+//				continue;
+//			}
+//			className = className.replace(/^\s+/g, "").replace(/\s+$/g, "");
+//			var classArray = className.split(/[ ]+/g);
+//			for (i = 0; i < classArray.length; i++) {
+//				if (this.classNames.contains(classArray[i])) {
+//					return target;
+//				}
+//			}
+//			target = target.parentNode;
+//		}
+//		return null;
+//	},
+//	hideElement: function(){
+//		var ln = eXo.core.DOMUtil.hideElementList.length ;
+//		if (ln > 0) {
+//			for (var i = 0; i < ln; i++) {
+//				eXo.core.DOMUtil.hideElementList[i].style.display = "none" ;
+//			}
+//			eXo.core.DOMUtil.hideElementList.clear() ;
+//		}
+//	},
+//	setPosition : function(obj,evt){		
+//		var x  = eXo.core.Browser.getBrowserWidth() - eXo.core.Browser.findMouseXInPage(evt) - obj.offsetWidth;
+//		var y = eXo.core.Browser.findMouseYInPage(evt);
+//		obj.style.position = "absolute";
+//		obj.style.display = "block";
+//		obj.style.top =  y + "px";
+//		obj.style.right = x + "px";
+//	},
+//	show: function(evt){
+//		eXo.core.EventManager.cancelEvent(evt);
+//		var ctx = eXo.ks.UIContextMenu;
+//		var menu = ctx.getMenu(evt);
+//		ctx.hideElement();
+//		if(!menu) return;
+//		ctx.setPosition(menu,evt);
+//		eXo.core.DOMUtil.listHideElements(menu);
+//		return false;
+//	}
+//};

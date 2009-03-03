@@ -5,6 +5,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.setMaskLayer');
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.initContextMenu('"+ uicomponent.id +"') ;") ;
 %>
 
 <div class="UIForumPortlet" id="$uicomponent.id">

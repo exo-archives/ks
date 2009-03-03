@@ -341,9 +341,6 @@
 }
 
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
-	left: 40px;
-	position: absolute;
-	top: 15px;
 	width: auto;
 	z-index: 100;
 }

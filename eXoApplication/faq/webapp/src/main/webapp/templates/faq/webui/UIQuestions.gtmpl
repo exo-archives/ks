@@ -16,7 +16,8 @@
 	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
-	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
+	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
+	jsmanager.addJavascript('eXo.faq.UIFAQPortlet.initContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
 	
@@ -101,7 +102,7 @@
 										</div>
 										
 										<!-- ================================================= Begin popup menu ================================ -->
-										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none; left:50px;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
+										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
 											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
 												<div>
 	
@@ -275,9 +276,9 @@
 					if(!uicomponent.getQuestionView().equals(qId)){
 					questionContent = question.getQuestion();
 			%>
-						<div class="QuestionContainer" id="$qId">
+						<div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionId" oncontextmenu="return false;">
 							<div class="$questionIcon" style="float:left"><span></span></div>
-								<div style="width:85%; _width:80%;" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+								<div style="width:85%; _width:80%;">
 									<!-- question content -->
 										<%
 										String titleQuestion = "" ;
@@ -307,7 +308,7 @@
 											</div>
 									<%}%>
 									<!-- action of this question -->
-									<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
+									<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none;">
 										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 											<div>
 
@@ -337,20 +338,20 @@
 																	}
 																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 															%>
-																	<div onmousedown="$linkView" class="MenuItem $lockFunction">
+																	<div class="MenuItem $lockFunction">
 																		<div class="ItemIcon $iconView" style="padding:3px 0px 5px 5px;">
 																			<div style="padding-left:20px;">
-																				<a href="javascript:void(0);">$itemLabelView</a>
+																				<a href="$linkView">$itemLabelView</a>
 																			</div>
 																		</div>
 																	</div>
 															<%}%>
 															<!-- action unwatch question -->
 															<%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
-																	<div onmousedown="<%=uicomponent.event("UnWatchQuestion", qId)%>" class="MenuItem">
+																	<div class="MenuItem">
 																		<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left:20px;">
-																					<a href="javascript:void(0);"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a>
+																					<a href="<%=uicomponent.event("UnWatchQuestion", qId)%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a>
 																				</div>
 																		</div>
 																	</div>
@@ -360,10 +361,10 @@
 															<%if(uicomponent.canEditQuestion) {
 																	if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
 															%>
-																		<div class="MenuItem" href="javascript:void(0);" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
+																		<div class="MenuItem" href="javascript:void(0);" >
 																			<div class="ItemIcon WatchQuestionManager" style="padding:3px 0px 5px 5px;">
 																				<div style="padding-left:20px;white-space:nowrap;">
-																					<a href="javascript:void(0);"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
+																					<a href="<%=uicomponent.event("WatchManager", question.getId())%>"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
 																				</div>
 																			</div>
 																		</div>
@@ -375,10 +376,10 @@
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																			String link = uicomponent.getLinkDiscuss();
 															%>
-																		<div class="MenuItem" onmousedown="<%=uicomponent.event("DiscussForum", question.getId())%>; setTimeOut(window.open('$link'), 1000); return false;">
+																		<div class="MenuItem">
 																			<div class="ItemIcon DiscussForum" style="padding:3px 0px 5px 5px;" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																				<div style="padding-left:20px;white-space:nowrap;">
-																					<a href="#"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																				</div>
 																			</div>
 																		</div>

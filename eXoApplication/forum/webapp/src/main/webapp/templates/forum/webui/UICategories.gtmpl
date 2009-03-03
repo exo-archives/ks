@@ -54,24 +54,24 @@
 					<div class="LeftBar">
 						<div class="RightBar">
 							<div class="CenterBar">
-								<div class="Title" title="$title">
-									<div  oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+								<div class="Title" title="$title" ctxMenuId="UIPopupCategory${rCNB}" oncontextmenu="return false;">
+									<div>
 										<%if(uicomponent.useAjax){%>
 												<a actions="<%=uicomponent.event("OpenCategory", categoryId)%>;" href="$url" class="ActionLink UICategoryTitle">$title</a>
 										<%} else {%>
 												<a href="$url" class="ActionLink UICategoryTitle">$title</a>
 										<%}%>
-										<div style="position:relative;">
-											<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+										
+											<div id="UIPopupCategory${rCNB}" style="display:none;">
 												<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; font-weight:normal;">
 													<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 												</div>
 											</div>
 										</div>
-									</div>
+
 									 <% ++rCNB; %>
 								</div>
-								<div class="CollapseButton" title="Collapse"	onclick="eXo.forum.UIForumPortlet.expandCollapse(this);"><span></span></div>
+								<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this);"><span></span></div>
 								<div style="clear:both;"><span></span></div>
 							</div>
 						</div>
@@ -191,10 +191,10 @@
 										url = uicomponent.url("OpenForumLink", ids);
 										url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenForumLink" );
 								%>
-										<tr class="$classRow">
+										<tr class="$classRow" ctxMenuId="UIPopupCategory${rCNB}" oncontextmenu="return false;">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td>
-												<div style="float:left" oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+												<div style="float:left">
 													
 													<%if(uicomponent.useAjax){%>
 															<a actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
@@ -202,7 +202,7 @@
 															<a href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<%}%>
 													
-													<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+													<div id="UIPopupCategory${rCNB}" style="display:none;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
@@ -221,7 +221,7 @@
 											%>
 										 	<td>
 										 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
-										 		<div style="float:left;" oncontextmenu="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupCategory${rCNB}', '', null, null)">
+										 		<div style="float:left;">
 										 			
 										 			<%if(uicomponent.useAjax){%>
 												 			<a actions="$openLinkLastPost;" href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
@@ -229,7 +229,7 @@
 												 			<a href="$urlLastPost" title="$titleTopic" class="LastPostTitle ActionLink" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
 													<%}%>
 													
-													<div id="UIPopupCategory${rCNB}" style="display:none; left:80px;" onmousedown="event.cancelBubble=true;">
+													<div id="UIPopupCategory${rCNB}" style="display:none">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
