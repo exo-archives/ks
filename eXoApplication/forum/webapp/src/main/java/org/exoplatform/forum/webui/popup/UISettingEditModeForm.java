@@ -43,8 +43,10 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
- * Created by The eXo Platform SAS Author : Vu Duy Tu tu.duy@exoplatform.com 12
- * Feb 2009 - 03:59:49
+ * Created by The eXo Platform SAS 
+ * Author : Vu Duy Tu 
+ * 					tu.duy@exoplatform.com 
+ * 12 Feb 2009 - 03:59:49
  */
 
 @ComponentConfig(
@@ -104,7 +106,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		for (Category category : categoryList) {
 			String categoryId = category.getId();
 			boolean isCheck = false;
-			if(listCategoryinv.contains(categoryId)) isCheck = true;
+			if(listCategoryinv.isEmpty() || listCategoryinv.contains(categoryId)) isCheck = true;
 			if (getUIFormCheckBoxInput(categoryId) != null) {
 				getUIFormCheckBoxInput(categoryId).setChecked(isCheck);
 			} else {
@@ -135,7 +137,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		for (Forum forum : forumList) {
 			String forumId = forum.getId();
 			boolean isCheck = false;
-			if(listforuminv.contains(forumId)) isCheck = true;
+			if(listforuminv.isEmpty() || listforuminv.contains(forumId)) isCheck = true;
 			if (getUIFormCheckBoxInput(forumId) != null) {
 				getUIFormCheckBoxInput(forumId).setChecked(isCheck);
 			} else {
@@ -154,6 +156,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			List<UIComponent> children = editModeForm.getChildren() ;
 			String listCategoryId = "";
 			String listForumId = "";
+			int i = 0;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
@@ -164,9 +167,11 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 							if(ForumUtils.isEmpty(listForumId)) listForumId = child.getId();
 							else listForumId = listForumId + "," + child.getId();
 						}
+						++i;
 					}
 				}
 			}
+			if(i == children.size()) {listCategoryId = ""; listForumId = "" ;}
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
 			try {
 				ForumUtils.savePortletPreference(listCategoryId, listForumId);
@@ -185,32 +190,4 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       }
 		}
 	}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

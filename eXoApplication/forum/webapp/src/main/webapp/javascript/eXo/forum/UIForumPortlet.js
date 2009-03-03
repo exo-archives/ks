@@ -250,6 +250,33 @@ UIForumPortlet.prototype.showTreeNode = function(obj, isShow) {
 	}	
 };
 
+UIForumPortlet.prototype.checkedNode = function(elm) {
+  var input = elm.getElementsByTagName("input")[0];
+  var DOMUtil = eXo.core.DOMUtil;
+  var parentNode = DOMUtil.findAncestorByClass(input,"Node") ;
+  var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "ChildNodeContainer");
+  if(containerChild) {
+  	var checkboxes = containerChild.getElementsByTagName("input");
+  	for(var i = 0; i < checkboxes.length; ++i){
+  		if(input.checked)checkboxes[i].checked = true;
+  		else checkboxes[i].checked = false;
+  	}
+  }
+} ;
+
+UIForumPortlet.prototype.checkedChildNode = function(elm) {
+  var input = elm.getElementsByTagName("input")[0]; 
+  if(input){
+  	if(input.checked){
+  		var DOMUtil = eXo.core.DOMUtil;
+	  	var parentCheckBoxNode = elm.parentNode.parentNode.parentNode;
+	  	var parentCheckBox = DOMUtil.findFirstDescendantByClass(parentCheckBoxNode, "div", "ParentCheckBox");
+	  	var parentInput = parentCheckBox.getElementsByTagName("input")[0];
+	  	if(!parentInput.checked) parentInput.checked = true;
+  	}
+  }
+} ;
+
 UIForumPortlet.prototype.OverButton = function(oject) {
 	if(oject.className.indexOf("Action") > 0){
 		var Srt = "";
@@ -720,33 +747,6 @@ UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
 	while(i--){
 		uiCategoryTitle[i].onclick = this.executeLink ;
 	}
-} ;
-
-UIForumPortlet.prototype.checkedNode = function(elm) {
-  var input = elm.getElementsByTagName("input")[0];
-  var DOMUtil = eXo.core.DOMUtil;
-  var parentNode = DOMUtil.findAncestorByClass(input,"Node") ;
-  var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "ChildNodeContainer");
-  if(containerChild) {
-  	var checkboxes = containerChild.getElementsByTagName("input");
-  	for(var i = 0; i < checkboxes.length; ++i){
-  		if(input.checked)checkboxes[i].checked = true;
-  		else checkboxes[i].checked = false;
-  	}
-  }
-} ;
-
-UIForumPortlet.prototype.checkedChildNode = function(elm) {
-  var input = elm.getElementsByTagName("input")[0]; 
-  if(input){
-  	if(input.checked == false){
-  		var DOMUtil = eXo.core.DOMUtil;
-	  	var parentCheckBoxNode = elm.parentNode.parentNode.parentNode;
-	  	var parentCheckBox = DOMUtil.findFirstDescendantByClass(parentCheckBoxNode, "div", "ParentCheckBox");
-	  	var parentInput = parentCheckBox.getElementsByTagName("input")[0];
-	  	if(parentInput.checked) parentInput.checked = false;
-  	}
-  }
 } ;
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;

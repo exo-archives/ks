@@ -41,6 +41,7 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.ws.frameworks.json.value.impl.ArrayValue;
 
 /**
  * Created by The eXo Platform SARL
@@ -112,13 +113,23 @@ public class UICategories extends UIContainer	{
 	
 	@SuppressWarnings("unused")
   private boolean isShowCategory(String id) {
-		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().contains(id)) return false;
-		else return true;
+		List<String> list = new ArrayList<String>();
+		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories());
+		if(list.isEmpty()) return true;
+		else {
+			if(list.contains(id)) return true;
+			else return false;
+		}
 	}
 
 	private boolean isShowForum(String id) {
-		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums().contains(id)) return false;
-		else return true;
+		List<String> list = new ArrayList<String>();
+		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
+		if(list.isEmpty()) return true;
+		else {
+			if(list.contains(id)) return true;
+			else return false;
+		}
 	}
 	
 	private List<Category> getCategoryList() throws Exception {

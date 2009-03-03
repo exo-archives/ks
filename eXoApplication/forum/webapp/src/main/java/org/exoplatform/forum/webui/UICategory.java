@@ -146,8 +146,13 @@ public class UICategory extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private boolean isShowForum(String id) {
-		if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums().contains(id)) return false;
-		else return true;
+		List<String> list = new ArrayList<String>();
+		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
+		if(list.isEmpty()) return true;
+		else {
+			if(list.contains(id)) return true;
+			else return false;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
