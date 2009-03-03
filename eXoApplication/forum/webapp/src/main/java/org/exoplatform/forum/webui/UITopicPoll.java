@@ -169,26 +169,30 @@ public class UITopicPoll extends UIForm	{
 	private String[] getInfoVote() throws Exception {
 		Poll poll = poll_ ;
 		String[] voteNumber = poll.getVote() ;
+		String[] userVotes = poll.getUserVote();
 		long size = 0 ;
 		if(!poll.getIsMultiCheck()) {
-			size = poll.getUserVote().length	;
+			size = userVotes.length	;
 		} else {
-			for(String user : poll.getUserVote()) {
-				size += user.split(":").length -1 ;
-			}
+			for (int i = 0; i < userVotes.length; i++) {
+				size += userVotes[i].split(":").length -1 ;
+      }
 		}
 		if(size == 0) size = 1;
-		String[] infoVote = new String[(voteNumber.length + 1)] ;
-		int i = 0;
-		for (String string : voteNumber) {
+		int l = voteNumber.length;
+		String[] infoVote = new String[(l + 1)] ;
+		for (int j = 0; j < l; j++) {
+			String string = voteNumber[j];
 			double tmp = Double.parseDouble(string) ;
 			double k = (tmp*size)/100 ;
 			int t = (int)Math.round(k) ;
 			string = "" + (double) t*100/size ;
-			infoVote[i] = string + ":" + t ;
-			i = i + 1 ;
+			infoVote[j] = string + ":" + t ;
+    }
+		infoVote[l] = "" + size ;
+		if(poll.getIsMultiCheck()) {
+			infoVote[l] = String.valueOf(userVotes.length) ;
 		}
-		infoVote[i] = "" + size ;
 		return infoVote ;
 	}
 	
