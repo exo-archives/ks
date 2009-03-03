@@ -39,6 +39,7 @@ import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -67,6 +68,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 				@EventConfig(listeners = UICategory.SearchFormActionListener.class),
 				@EventConfig(listeners = UICategory.EditCategoryActionListener.class),
+				@EventConfig(listeners = UICategory.WatchOptionActionListener.class),
 				@EventConfig(listeners = UICategory.ExportCategoryActionListener.class),
 				@EventConfig(listeners = UICategory.ImportForumActionListener.class),
 				@EventConfig(listeners = UICategory.DeleteCategoryActionListener.class,confirm="UICategory.confirm.DeleteCategory"),
@@ -98,7 +100,7 @@ public class UICategory extends UIForm	{
 	public UICategory() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
-		setActions(new String[]{"EditCategory","ExportCategory","ImportForum","DeleteCategory","AddForum","EditForum","SetLocked",
+		setActions(new String[]{"EditCategory","ExportCategory","ImportForum","DeleteCategory", "WatchOption","AddForum","EditForum","SetLocked",
 				"SetUnLock","SetOpen","SetClose","MoveForum","RemoveForum"});
 	}
 	
@@ -680,6 +682,21 @@ public class UICategory extends UIForm	{
 			UIImportForm importForm = popupAction.createUIComponent(UIImportForm.class, null, null) ;
 			importForm.setPath(category.getCategory().getPath());
 			popupAction.activate(importForm, 400, 150) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class WatchOptionActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiCategory = event.getSource();
+			Category category = uiCategory.category ;
+			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
+			watchToolsForm.setPath(category.getPath());
+			watchToolsForm.setEmails(category.getEmailNotification()) ;
+			watchToolsForm.setIsTopic(true);
+			popupAction.activate(watchToolsForm, 500, 365) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
