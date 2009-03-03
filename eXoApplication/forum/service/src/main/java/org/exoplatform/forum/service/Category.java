@@ -35,6 +35,7 @@ public class Category {
 	 private String description;	 
 	 private String[] userPrivate ;
 	 private long forumCount = 0;
+	 private String[] emailNotification;
 	 public Category(){
 		 id = Utils.CATEGORY + IdGenerator.generate() ;
 		 userPrivate = new String[] {" "};
@@ -72,4 +73,7 @@ public class Category {
 
 	 public long getForumCount() {return forumCount;}
 	 public void setForumCount(long forumCount) {this.forumCount = forumCount;}
+
+	 public String[] getEmailNotification() { return emailNotification; }
+	 public void setEmailNotification(String[] emailNotification) { this.emailNotification = emailNotification; }
 }

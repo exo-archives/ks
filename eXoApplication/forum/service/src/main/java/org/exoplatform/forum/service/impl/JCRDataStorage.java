@@ -80,6 +80,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
@@ -103,6 +104,8 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
@@ -487,6 +490,8 @@ public class JCRDataStorage {
 			cat.setUserPrivate(ValuesToArray(cateNode.getProperty("exo:userPrivate").getValues()));
 		if (cateNode.hasProperty("exo:forumCount"))
 			cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong());
+		if(cateNode.isNodeType("exo:forumWatching")) 
+			cat.setEmailNotification(ValuesToArray(cateNode.getProperty("exo:emailWatching").getValues()));
 		return cat;
 	}
 
@@ -3717,6 +3722,56 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception{
+		Node forumHome = getForumHomeNode(sessionProvider) ;	
+		String rootPath = forumHome.getPath();
+		Session sess = forumHome.getSession();
+		QueryManager qm = sess.getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer();
+		queryString.append("/jcr:root").append(rootPath).append("//element(*,exo:forumWatching)[@exo:userWatching='").
+								append(userId).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iterator = result.getNodes();
+		List<Watch> listWaches = new ArrayList<Watch>();
+		Watch watch = new Watch();
+		Node node = null;
+		String users[] = null;
+		String emails[] = null;
+		String path = null;
+		String pathName = "";
+		String typeNode = null;
+		while(iterator.hasNext()){
+			rootPath = forumHome.getPath();
+			pathName = "";
+			node = iterator.nextNode();
+			users = ValuesToArray(node.getProperty("exo:userWatching").getValues());
+			emails = ValuesToArray(node.getProperty("exo:emailWatching").getValues());
+			path = node.getPath();
+			if(node.isNodeType(Utils.TYPE_CATEGORY)) typeNode = Utils.TYPE_CATEGORY;
+			else if(node.isNodeType(Utils.TYPE_FORUM)) typeNode = Utils.TYPE_FORUM;
+			else typeNode = Utils.TYPE_TOPIC;
+			for(String str : (path.replace(rootPath + "/", "")).split("/")){
+				rootPath += "/" + str;
+				if(pathName.trim().length() > 0) pathName += " > ";
+				pathName += ((Node)sess.getItem(rootPath)).getProperty("exo:name").getString() ;
+			}
+			for(int i = 0; i < users.length; i ++){
+				if(users[i].equals(userId)){
+					watch = new Watch();
+					watch.setId(node.getName());
+					watch.setNodePath(path);
+					watch.setUserId(userId);
+					watch.setEmail(emails[i]);
+					watch.setPath(pathName);
+					watch.setTypeNode(typeNode);
+					listWaches.add(watch);
+				}
+			}
+		}
+		return listWaches;
 	}
 
 	@SuppressWarnings("unchecked")

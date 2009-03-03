@@ -140,7 +140,7 @@ public class ForumPageList extends JCRPageList {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPageSearch(long page, List list) throws Exception {
+	protected void populateCurrentPageSearch(long page, List list, boolean isWatch) throws Exception {
 		long pageSize = getPageSize();
 		long position = 0;
 		if(page == 1) position = 0;
@@ -148,7 +148,8 @@ public class ForumPageList extends JCRPageList {
 			position = (page - 1) * pageSize;
 		}
 		pageSize *= page ;
-		currentListPage_ = new ArrayList<ForumSearch>();
+		if(!isWatch) currentListPage_ = new ArrayList<ForumSearch>();
+		else currentListPage_ = new ArrayList<Watch>();
 		for(int i = (int)position; i < pageSize && i < list.size(); i ++){
 			currentListPage_.add(list.get(i));
 		}

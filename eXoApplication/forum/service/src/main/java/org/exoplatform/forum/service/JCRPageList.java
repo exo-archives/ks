@@ -76,11 +76,17 @@ abstract public class JCRPageList {
 		return currentListPage_ ;
 	}
 	
-	abstract protected void populateCurrentPageSearch(long page, List list) throws Exception	 ;
+	abstract protected void populateCurrentPageSearch(long page, List list, boolean isWatch) throws Exception	 ;
 	
 	public List getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list) ;
+		populateCurrentPageSearch(page, list, false) ;
+		return currentListPage_ ;
+	}
+
+	public List getPageWatch(long page, List<Watch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, list, true) ;
 		return currentListPage_ ;
 	}
 

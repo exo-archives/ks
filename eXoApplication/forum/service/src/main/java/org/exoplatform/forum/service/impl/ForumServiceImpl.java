@@ -56,6 +56,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -642,5 +643,9 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
 		storage_.setDefaultAvatar(userName, sessionProvider);
+	}
+	
+	public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception{
+		return storage_.getWatchByUser(userId, sessionProvider);
 	}
 }

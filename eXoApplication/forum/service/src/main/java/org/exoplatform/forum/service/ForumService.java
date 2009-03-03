@@ -917,4 +917,6 @@ public interface ForumService {
   public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
   
   public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+  
+  public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception;
 }

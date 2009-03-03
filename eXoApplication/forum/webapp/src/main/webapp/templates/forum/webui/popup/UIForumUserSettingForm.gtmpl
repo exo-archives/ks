@@ -1,0 +1,174 @@
+<%
+import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.Utils;
+%>
+<div class="UIFormInputWithActions">	
+	<% uiform.begin() %>	
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">
+				
+				<div class="WorkingArea">
+					<div class="UIHorizontalTabs">
+						<div class="LeftHorizontalTabs">
+							<div class="RightHorizontalTabs">
+								<div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+									<%String classCss = "SelectedTab" ; 
+										for(tabconten in uiform.getChildren()){ 
+											if(!"WatchChesPageIterator".equals(tabconten.id)){
+											if(uicomponent.tabId.equals(tabconten.id)) classCss = "SelectedTab" ;
+											else classCss = "NormalTab" ;	
+									%>	
+												<div class="UITab NormalTabStyle">
+													<div class="$classCss">
+														<div class="LeftTab">
+															<div class="RightTab">
+																<div onclick="<%=uiform.event("OpenTab",tabconten.id)%>" class="MiddleTab">
+																	<%= _ctx.appRes(uiform.id + ".label." + tabconten.id); %>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+									<% 		
+										 }
+									} %>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="UIForm">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+								<% 
+									String display =	"block";
+									for(tabconten in uiform.getChildren()){
+										if(uicomponent.tabId.equals(tabconten.id)) display = "block" ;
+										else display = "none" ;	
+								%>
+										<div style="display:$display;" id="UITabContent" class="UITabContent">
+											<%
+											if(tabconten.id.equals("ForumUserProfile")){
+											%>
+												<table>
+													<%
+													for(tabChildConten in tabconten.getChildren()){
+														if(tabChildConten.id.equals("IsDisplayAvatar")){%>
+															<tr>
+																<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
+														      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> :
+														    </td>
+														    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
+														    	<div>
+																		<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt=""/>
+																	</div>
+																	<div style="text-align:left">
+																		<a href="<%=uiform.event("Attachment")%>" style="color:blue;">
+																			[ <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%> ]
+																		</a>
+																	</div>
+																</td>
+															</tr>
+														<%
+														}%>
+														<tr>
+															<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
+													      <%=uicomponent.getLabel(tabChildConten.getName()) %> :
+													    </td>
+													    <td class="FieldComponent" style="padding:2px 0px 3px 4px;">
+																<% uiform.renderField(tabChildConten) %>
+													    </td>
+												    </tr>
+													<%
+													}
+													%>
+												</table>
+											<%
+											} else if(tabconten.id.equals("ForumUserWatches")){%>
+												<table class="UIGrid">
+													<tbody>
+														<tr>
+															<th width="30"><span></span></th>
+															<th><%=_ctx.appRes("UIForumUserSettingForm.label.Path")%></th>
+															<th><%=_ctx.appRes("UIViewUserProfile.label.email")%></th>
+															<th width="30"><span></span></th>
+														</tr>
+														<%
+														for(Watch watch : uicomponent.getListWatch()){%>
+															<tr>
+																<td class="text" style="text-align:left">
+																<%
+																if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
+																	<div class="CategoryIcon" style="height:24px; width:24px;"><span></span></div>
+																<%	
+																} else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
+																	<div class="ForumNormalIcon" style="height:24px; width:24px;"><span></span></div>
+																<%
+																} else {%>
+																	<div class="ThreadNoNewPost" style="height:24px; width:24px;"><span></span></div>
+																<%
+																}%>
+																</td>
+																<td class="text" style="text-align:left">
+																	<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>"><%=watch.getPath()%></a>
+																</td>
+																<td class="text" style="text-align:left"><%=watch.getEmail()%></td>
+																<td class="text" style="text-align:left">
+																	<div class="DeleteIcon" style="cursor:pointer;" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getNodePath() + "/" + watch.getEmail())%>}">
+																		<span></span>
+																	</div>
+																</td>
+															</tr>
+														<%	
+														}%>
+														<tr>
+															<td colspan="4" align="right"><%uiform.renderChild(uiform.WATCHES_ITERATOR);%></td>
+														</tr>
+													</tbody>
+												</table>
+											<%
+											} else if(!tabconten.id.equals("WatchChesPageIterator")){%>
+												<% uiform.renderChild(tabconten.id) ; %>
+											<%
+											}
+											%>
+										</div>
+							<% } %>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>	
+		</div>	
+	</div>
+	
+	<!-- =============================================== Action of this form ====================================================== -->
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uiform.getActions()) { 
+					 String actionLabel = _ctx.appRes(uiform.getName() + ".action." + action); 
+					 String link = uiform.event(action) ;
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>		
+	<%uiform.end()%>
+</div>

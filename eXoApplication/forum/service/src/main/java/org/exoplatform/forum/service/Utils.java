@@ -29,7 +29,11 @@ import org.exoplatform.services.organization.User;
  * Jun 2, 2008 - 3:33:33 AM	
  */
 public class Utils {
-
+	
+	public final static String TYPE_CATEGORY = "exo:forumCategory";
+	public final static String TYPE_FORUM = "exo:forum";
+	public final static String TYPE_TOPIC = "exo:topic";
+	
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
 	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
 	public final static String USER_PROFILE_HOME = "UserAdministration".intern() ;
