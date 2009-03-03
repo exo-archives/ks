@@ -2031,7 +2031,7 @@ public class JCRDataStorage {
 		Node userProfileHome = getUserProfileHome(sProvider);
 		int count = 0;
 		if(post == null) {
-			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "]: " + topic.getTopicName();
+			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "] " + topic.getTopicName();
 			while (true) {
 				if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
 					// set Category Private

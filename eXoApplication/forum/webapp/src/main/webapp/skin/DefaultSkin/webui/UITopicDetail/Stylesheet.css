@@ -238,13 +238,13 @@
 }
 
 .UITopicDetail .PostViewContainer .PostInfo {
-	float: left;
-	line-height: 18px;
+	line-height: 16px;
+	height: 16px;
 }
 
 .UITopicDetail .PostViewContainer .ButtonContainer {
 	float: right;
-	padding: 10px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
 }
 
 /***************************************** Quote ****************************************/

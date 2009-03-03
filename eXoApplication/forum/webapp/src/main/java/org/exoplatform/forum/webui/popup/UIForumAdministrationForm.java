@@ -275,6 +275,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(!ForumUtils.isEmpty(censoredKeyword)) {
 				censoredKeyword = censoredKeyword.toLowerCase();
 			}
+			boolean enableHeaderSubject = (Boolean)notifyEmailTab.getUIFormCheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
+			String headerSubject = notifyEmailTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
 			String notifyEmail = ((UIFormWYSIWYGInput)notifyEmailTab.getChildById(FIELD_NOTIFYEMAIL_TEXTAREA)).getValue() ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
@@ -290,6 +292,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumAdministration.setTopicSortBy(topicSortBy) ;
 			forumAdministration.setTopicSortByType(topicSortByType) ;
 			forumAdministration.setCensoredKeyword(censoredKeyword) ;
+			forumAdministration.setEnableHeaderSubject(enableHeaderSubject) ;
+			forumAdministration.setHeaderSubject(headerSubject);
 			forumAdministration.setNotifyEmailContent(notifyEmail) ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
