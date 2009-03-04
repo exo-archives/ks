@@ -472,7 +472,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			List<String> list = ForumServiceUtils.getUserPermission(moderators_);
 			boolean isFist = true;
 			for (String string : list) {
-				System.out.println("\n\n UserId: " + string);
 				user = ForumSessionUtils.getUserByUserId(string) ;
 				if(user != null){
 					email = user.getEmail();
