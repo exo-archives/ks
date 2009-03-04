@@ -194,7 +194,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		editReason.setRendered(false) ;
 		if(!ForumUtils.isEmpty(this.postId) && post != null) {
 			String message = post.getMessage();
-			System.out.println("\n\n mes1: " + message);
 			//message = ForumTransformHTML.enCodeHTML(message) ;
 			//System.out.println("\n\n mes2: " + message);
 			if(isQuote) {//quote

@@ -8,14 +8,14 @@ FCKConfig.ToolbarSets["eXoBar"] = [
 FCKConfig.ToolbarSets["eXoForum"] = [
 	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
-	['Flash','Table','-','TextColor'],
+	['Flash','-','TextColor'],
 	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 ] ;
 
 FCKConfig.ToolbarSets["eXoFAQ"] = [
 	['FitWindow','-','Cut','Copy','Paste','-','Undo','Redo','-','Bold','Italic','Underline'],
 	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],['OrderedList','UnorderedList','Outdent','Indent'],
-	['Flash','Table','-','TextColor'],
+	['Flash','-','TextColor'],
 	['Wrap [QUOTE] tags around selected text', 'Wrap [CODE] tags around selected text', 'Help BB Code']
 ] ;
 
