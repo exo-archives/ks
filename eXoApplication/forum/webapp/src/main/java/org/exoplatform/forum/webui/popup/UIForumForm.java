@@ -468,39 +468,26 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			String []moderators_ = ForumUtils.splitForForum(moderators);
 			List<String> listModerator  = new ArrayList<String>();
 			String email = ""; this.listEmailAutoUpdate = "";
-			for (int i = 0; i < moderators_.length; i++) {
-				User user = ForumSessionUtils.getUserByUserId(moderators_[i].trim()) ;
+			User user = null;
+			List<String> list = ForumServiceUtils.getUserPermission(moderators_);
+			boolean isFist = true;
+			for (String string : list) {
+				System.out.println("\n\n UserId: " + string);
+				user = ForumSessionUtils.getUserByUserId(string) ;
 				if(user != null){
 					email = user.getEmail();
-					if(i == 0){
+					if(isFist){
 						this.listEmailAutoUpdate = email;
 						listModerator.add(email);
-					}
-					else {
+						isFist = false;
+					} else {
 						if(!listModerator.contains(email)){
 							this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +  email;
 							listModerator.add(email);
 						}
 					}
-				} else {
-					List<String> list = ForumServiceUtils.getUserPermission(moderators_);
-					for (String string : list) {
-						user = ForumSessionUtils.getUserByUserId(string) ;
-						if(user != null){
-							email = user.getEmail();
-							if(i == 0){
-								this.listEmailAutoUpdate = email;
-								listModerator.add(email);
-							} else {
-								if(!listModerator.contains(email)){
-									this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +  email;
-									listModerator.add(email);
-								}
-							}
-						}
-          }
 				}
-      }
+			}
 			if(ForumUtils.isEmpty(emailTopic)) {
 				notifyWhenAddTopics.setValue(this.listEmailAutoUpdate);
 			} else {
