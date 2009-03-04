@@ -2033,6 +2033,7 @@ public class JCRDataStorage {
 		if(post == null) {
 			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "] " + topic.getTopicName();
 			while (true) {
+				emailList = new ArrayList<String>();
 				if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
 					// set Category Private
 					Node categoryNode = null ;
