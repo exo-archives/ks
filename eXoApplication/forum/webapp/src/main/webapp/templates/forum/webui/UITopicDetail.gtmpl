@@ -876,19 +876,28 @@
 									<%
 									if(isShowMenu) {
 										String[] actions = ["Edit", "Delete", "PrivatePost", "Quote"] ; 
+										boolean isShowAction = true;
 										for(action in actions) {
+											isShowAction = true;
 											String title = _ctx.appRes(uicomponent.getName() + ".title." + action);
 											String label = _ctx.appRes(uicomponent.getName() + ".action." + action);
 											if(!(userLogin.equals(owner))) {
 												if(!canEdit){
-													if(action.equals("Edit")||action.equals("Delete"))continue ;
+													if(action.equals("Edit")||action.equals("Delete")){
+														isShowAction = false;
+													}
 												}
 											}
-											if(checked == 0){ 
-												if(action.equals("Edit")||action.equals("Delete"))continue ;
+											if(isShowAction && checked == 0){ 
+												if(action.equals("Edit")||action.equals("Delete")){
+													isShowAction = false;
+												}
 											}
-											if(!isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) continue ;
+											if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
+												isShowAction = false;
+											}
 											String actionLink = uicomponent.event(action,uiformId,postId);
+											if(isShowAction) {
 									%>
 										<div class="ActionButton">
 											<div class="NormalStyle">
@@ -903,9 +912,13 @@
 												</div>
 											</div>
 										</div>
-										<% } 
-										checked = 1; 
-										 } %>
+										<%} else {%>
+										<div style="float:left; width:70px; height:1px;"><span></span></div>
+									<%	}
+										} 
+									checked = 1; 
+									} %>
+										<div style="clear:left"><span></span></div>
 									</div>
 								</div>
 								<div style="clear:both"><span></span></div>
