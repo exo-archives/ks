@@ -54,13 +54,17 @@ public class RecountActiveUserJob implements Job{
 	    			currentDay = currentDay - (days * oneDay) ;
 	    			calendar.setTimeInMillis(currentDay) ;
 	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
+	    			try {
 	    			StringBuilder stringBuilder = new StringBuilder();
 	    			stringBuilder.append("//element(*,exo:userProfile)[");
 	    			stringBuilder.append("@exo:lastPostDate >= xs:dateTime('"+ISO8601.format(calendar)+"')]") ;
 	    			forumService.evaluateActiveUsers(sysProvider, stringBuilder.toString()) ;
 	    			if (log_.isDebugEnabled()) {
     		  		log_.debug("\n\n The RecoundActiveUserJob have been done");
-    		  	}
+	    			}
+	    			} finally {
+	    				if (sysProvider != null) sysProvider.close();
+	    			}
 	    		}
 		    }
 	    }	    

@@ -38,10 +38,15 @@ public class BufferAttachment extends ForumAttachment {
   public InputStream getInputStream() throws Exception { 
   	if(bytes != null )return new ByteArrayInputStream(bytes) ; 
   	Node attachment ;
+  	Session session = null;
 		try{
-			attachment = (Node)getSesison().getItem(getPathNode()) ;			
+			session = getSesison();
+			attachment = (Node)session.getItem(getPathNode()) ;			
 		}catch (Exception e) {
 			return null ;
+		}
+		finally {
+			if (session != null) session.logout();
 		}
 		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
   }

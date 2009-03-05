@@ -169,8 +169,12 @@ public class UICategories extends UIContainer	{
 		topic = this.maptopicLast.get(topicId) ;
 		if(topic == null) {
 			SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
+			try {
 			String forumHomePath = forumService.getForumHomePath(sysSession) ;
 			topic = forumService.getTopicByPath(sysSession, forumHomePath + "/" + path, false) ;
+			} finally {
+				if (sysSession != null) sysSession.close();
+			}
 		}
 		return topic ;
 	}

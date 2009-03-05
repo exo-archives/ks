@@ -1068,7 +1068,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					topicContainer.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateUserProfileInfo() ;
-				} catch (Exception e) {
+				} finally {
 					sProvider.close();
 				}
 			}

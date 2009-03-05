@@ -37,8 +37,8 @@ public class NewUserListener extends UserEventListener {
 
   public void postSave(User user, boolean isNew) throws Exception {
     if(!isNew) return ;
-    SessionProvider sysSession = SessionProvider.createSystemProvider();
     ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+    SessionProvider sysSession = SessionProvider.createSystemProvider();
     //Update forum statistic
     try{    	    	
     	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
@@ -64,8 +64,8 @@ public class NewUserListener extends UserEventListener {
 
   @Override
   public void postDelete(User user) throws Exception {
-    SessionProvider sysSession = SessionProvider.createSystemProvider(); 
     ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+    SessionProvider sysSession = SessionProvider.createSystemProvider(); 
     try{
     	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
       if(user.getUserName().equals(statistic.getNewMembers())) {

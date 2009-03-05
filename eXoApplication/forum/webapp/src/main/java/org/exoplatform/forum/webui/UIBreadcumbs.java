@@ -233,7 +233,7 @@ public class UIBreadcumbs extends UIContainer {
 						Topic topic = forumService.getTopicByPath(sysSession, path, false) ;
 						if(topic != null) {
 							forumPortlet.updateIsRendered(ForumUtils.FORUM);
-							Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+							Forum forum = forumService.getForum(sysSession,id[0] , id[1] ) ;
 							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 							UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 							uiForumContainer.setIsRenderChild(false) ;

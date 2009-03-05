@@ -58,6 +58,7 @@ public class DeactiveJob implements Job{
 	    			currentDay = currentDay - (days * oneDay) ;
 	    			calendar.setTimeInMillis(currentDay) ;
 	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
+	    			try {
 	    			String path = forumService.getForumHomePath(sysProvider) ;
 	    			StringBuilder stringBuffer = new StringBuilder();
 	    			stringBuffer.append("/jcr:root").append(path).append("//element(*,exo:topic)[");
@@ -77,7 +78,9 @@ public class DeactiveJob implements Job{
 	    				if (log_.isDebugEnabled()) {
 	    		  		log_.debug("\n\n The DeactiveJob have been running: The topic '" + topic.getProperty("exo:name").getString() + "' deactived");
 	    		  	}
-	    			}	    			
+	    			}	
+	    			} finally { if (sysProvider != null) sysProvider.close();}
+	    			
 	    		}
 		    }
 	    }	    
