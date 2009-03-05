@@ -156,7 +156,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			List<UIComponent> children = editModeForm.getChildren() ;
 			String listCategoryId = "";
 			String listForumId = "";
-			int i = 0;
+		//	int i = 0;
 			for(UIComponent child : children) {
 				if(child instanceof UIFormCheckBoxInput) {
 					if(((UIFormCheckBoxInput)child).isChecked()) {
@@ -167,11 +167,11 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 							if(ForumUtils.isEmpty(listForumId)) listForumId = child.getId();
 							else listForumId = listForumId + "," + child.getId();
 						}
-						++i;
+						//++i;
 					}
 				}
 			}
-			if(i == children.size()) {listCategoryId = ""; listForumId = "" ;}
+			//if(i == children.size()) {listCategoryId = ""; listForumId = "" ;}
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
 			try {
 				ForumUtils.savePortletPreference(listCategoryId, listForumId);

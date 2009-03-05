@@ -239,7 +239,8 @@ public class UIBreadcumbs extends UIContainer {
 							}
 						}						
 					}catch(Exception e) {
-						throw e ;
+						System.out.println("\n\n not pound !!!\n\n");
+						e.printStackTrace();
 					}finally {
 						sysSession.close() ;
 					}
