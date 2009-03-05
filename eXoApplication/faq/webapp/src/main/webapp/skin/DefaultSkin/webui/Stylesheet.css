@@ -338,6 +338,7 @@
 .UIFAQPortlet .UIQuestions .FAQContainer {
 	min-height: 400px;
 	width: 99.7% !importan;
+	height: 380px;
 }
 
 .UIFAQPortlet .UIQuestions .FAQContainer .UIFAQPopupCategory {
