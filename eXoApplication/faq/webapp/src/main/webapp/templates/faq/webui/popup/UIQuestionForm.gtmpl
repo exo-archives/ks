@@ -33,10 +33,10 @@
 									<td class="FieldComponent" style="padding-left:4px; white-space:nowrap;">
 										<div style="float:left;">
 											<div style="float:left;"><% uiform.renderField(field) %></div>
-												<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage") + uicomponent.lastLanguage_)%> ?')){$link}" style="float:left">
-													<div class="DustBinIcon"><span></span></div>
-												</div>
+											<div onclick="javaScript:if(confirm('<%=(_ctx.appRes("UIQuestionForm.msg.DeleteQuestionInLanguage") + uicomponent.lastLanguage_)%> ?')){$link}" style="float:left; width:24px;">
+												<div class="DustBinIcon"><span></span></div>
 											</div>
+										</div>
 										<div style="clear:left;"><span></span></div>
 									</td>
 								</tr>
