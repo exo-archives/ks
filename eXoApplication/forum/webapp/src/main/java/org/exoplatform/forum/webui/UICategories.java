@@ -349,7 +349,7 @@ public class UICategories extends UIContainer	{
 			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
 			addWatchingForm.initForm() ;
 			addWatchingForm.setPathNode(path);
-			popupAction.activate(addWatchingForm, 425, 250) ;
+			popupAction.activate(addWatchingForm, 425, 180) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
