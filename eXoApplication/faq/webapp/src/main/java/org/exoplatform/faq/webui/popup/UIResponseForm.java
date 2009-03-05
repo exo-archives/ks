@@ -375,11 +375,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
-					questionNode = faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
+					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
+					MultiLanguages multiLanguages = new MultiLanguages() ;
+					String[] languages = responseForm.mapAnswers.keySet().toArray(new String[]{});
+					questionNode = faqService.getQuestionNodeById(question_.getId(), sessionProvider);
+					for(String lang : languages){
+						if(!lang.equals(question_.getLanguage())){
+							multiLanguages.saveAnswer(questionNode, responseForm.mapAnswers.get(lang), lang, sessionProvider);
+						}
+					}
+					faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
+					
 					// Vu Duy Tu Save post Discuss Forum.
-					FAQSetting faqSetting = new FAQSetting();
-					FAQUtils.getPorletPreference(faqSetting);
-					if(faqSetting.getIsDiscussForum()) {
+					if(responseForm.faqSetting_.getIsDiscussForum()) {
 						String pathTopic = question_.getPathTopicDiscuss();
 						if(pathTopic != null && pathTopic.length() > 0) {
 							linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
@@ -423,15 +431,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 									e.printStackTrace();
 								}
 	            }
-						}
-					}
-					
-					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
-					MultiLanguages multiLanguages = new MultiLanguages() ;
-					String[] languages = responseForm.mapAnswers.keySet().toArray(new String[]{});
-					for(String lang : languages){
-						if(!lang.equals(question_.getLanguage())){
-							multiLanguages.saveAnswer(questionNode, responseForm.mapAnswers.get(lang), lang, sessionProvider);
 						}
 					}
 					/*for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {

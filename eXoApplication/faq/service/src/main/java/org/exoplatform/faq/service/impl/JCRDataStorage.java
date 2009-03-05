@@ -17,8 +17,15 @@
 
 package org.exoplatform.faq.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -2262,9 +2269,6 @@ public class JCRDataStorage {
 	}
 	
 	public void generateRSS(String path, int typeEvent) throws Exception	{
-		
-		System.out.println("\n\n\n\n----------->path:" + path);
-		
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String feedType = "rss_2.0";
 		boolean isNew = false;
@@ -2280,11 +2284,13 @@ public class JCRDataStorage {
 			
 			if(typeEvent != EVENT_REMOVE) {
 				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
-				int lop = 0;
-				while(!addedQuestion.isNodeType("exo:faqQuestion") && lop < 6){
+				//int lop = 0;
+				if(!addedQuestion.isNodeType("exo:faqQuestion")) return;
+				/*while(!addedQuestion.isNodeType("exo:faqQuestion") && lop < 6){
 					addedQuestion = addedQuestion.getParent();
 					lop ++;
-				}
+				}*/
+				
 				Question question = getQuestion(addedQuestion);
 				if(!question.isActivated() || !question.isApproved()) return;
 				categoryNode = getCategoryNodeById(question.getCategoryId(), sProvider);
@@ -2341,6 +2347,12 @@ public class JCRDataStorage {
 					SyndFeedOutput output = new SyndFeedOutput();
 					data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
 					addNodeRSS(categoryNode, RSSNode, data, isNew);
+					
+					/*// test file xml 
+					Writer writer = new FileWriter("maivanha.xml");
+					output.output(feed,writer);
+					writer.close();
+			    System.out.println("\n\n\n\n---------->finish write");*/
 				} catch (Exception ex) {
 						ex.printStackTrace();
 				}
