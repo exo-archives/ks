@@ -752,8 +752,8 @@ UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
 UIForumPortlet.prototype.initContextMenu = function(id){
 	var cont = document.getElementById(id);
 	var uiContextMenu = eXo.ks.UIContextMenu;
-	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("Title","whileRow","OddRow");
-	else uiContextMenu.classNames.pushAll("Title","whileRow","OddRow");
+	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("ActionLink");
+	else uiContextMenu.classNames.pushAll("ActionLink");
 	uiContextMenu.container = cont;
 	uiContextMenu.setup();
 };
