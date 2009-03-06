@@ -88,6 +88,15 @@ public class FAQServiceImpl implements FAQService, Startable{
 	}
 	
 	/**
+	 * This method get all admin in FAQ
+	 * @return userName list
+	 * @throws Exception the exception
+	 */
+	public List<String> getAllFAQAdmin() throws Exception {
+		return jcrData_.getAllFAQAdmin() ;
+	}
+	
+	/**
 	 * This method get all the category
 	 * @param	 sProvider is session provider
 	 * @return Category list

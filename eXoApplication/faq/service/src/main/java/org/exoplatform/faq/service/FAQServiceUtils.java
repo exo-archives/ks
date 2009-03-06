@@ -49,46 +49,51 @@ public class FAQServiceUtils {
   @SuppressWarnings("unchecked")
   public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
   	List<String> users = new ArrayList<String> () ;
-  	if(userGroupMembership == null || userGroupMembership.length <= 0) return users ; 
-  	for(String str : userGroupMembership) {
+		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
+				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(String str : userGroupMembership) {
+			str = str.trim();
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
-					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(array[1]).getAll() ;
-					if(array[0].equals("*")) {
+					List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+					if(array[0].length() > 1){
 						for(User user: userList) {
 							if(!users.contains(user.getUserName())){
-								users.add(user.getUserName()) ;
+								Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+								for(Membership member : memberships){
+									if(member.getMembershipType().equals(array[0])) {
+										users.add(user.getUserName()) ;
+										break ;
+									}
+								}						
 							}
 						}
-					} else {
-						for(User user: userList) {
-							Collection<Membership> memberships = organizationService_.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
-							for(Membership member : memberships){
-								if(member.getMembershipType().equals(array[0])) {
-									if(!users.contains(user.getUserName())){
-										users.add(user.getUserName()) ;
-									}
-									break ;
+					}else {
+						if(array[0].charAt(0)== 42) {
+							for(User user: userList) {
+								if(!users.contains(user.getUserName())){
+									users.add(user.getUserName()) ;
 								}
-							}  					
+							}
 						}
 					}
-				} else { //group
-					List<User> userList = organizationService_.getUserHandler().findUsersByGroup(str).getAll() ;
+				}else { //group
+					List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
 					for(User user: userList) {
 						if(!users.contains(user.getUserName())){
 							users.add(user.getUserName()) ;
 						}
 					}
 				}
-			} else {
+			}else {//user
 				if(!users.contains(str)){
 					users.add(str) ;
 				}
 			}
 		}
-  	return users ;
+		return users ;
   }
   
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{

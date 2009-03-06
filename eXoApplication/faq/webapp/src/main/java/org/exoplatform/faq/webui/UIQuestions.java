@@ -1887,7 +1887,28 @@ public class UIQuestions extends UIContainer {
 				String path = categoryId+"/"+forumId+"/"+topic.getId() ;
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				Question question = faqService.getQuestionById(questionId, sProvider);
-				topic.setOwner(question.getAuthor());
+				String userName = question.getAuthor();
+				if(FAQUtils.getUserByUserId(userName) == null) {
+					String temp = userName;
+					Category category = faqService_.getCategoryById(question.getCategoryId(), sProvider);
+					String listMode[] = category.getModerators();
+					if(listMode != null && listMode.length > 0){
+						List <String> modes = FAQServiceUtils.getUserPermission(listMode);
+						if(modes.size() > 0) {
+							userName = modes.get(0);
+						} else {
+							List<String> listAdmin = faqService_.getAllFAQAdmin();
+							userName = listAdmin.get(0);
+						}
+					} else {
+						List<String> listAdmin = faqService_.getAllFAQAdmin();
+						userName = listAdmin.get(0);
+					}
+					if(userName.equals(temp)) {
+						userName = "user";
+					}
+				}
+				topic.setOwner(userName);
 				topic.setTopicName(question.getQuestion());
 				topic.setDescription(question.getDetail());
 				topic.setIcon("IconsView");

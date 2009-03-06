@@ -618,6 +618,13 @@ public interface FAQService {
   public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception ;
   
   /**
+   * Get all user is admin.
+ 	* 
+ 	* @throws Exception the exception
+ 	*/
+  public List<String> getAllFAQAdmin() throws Exception;
+
+  /**
    * Adds the plugin.
  	* 
  	* @param plugin the plugin

@@ -465,16 +465,12 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		String emailPost = notifyWhenAddPosts.getValue();
 		if(!ForumUtils.isEmpty(moderators)) {
 			String []moderators_ = ForumUtils.splitForForum(moderators);
-			for (String string : moderators_) {
-				System.out.println("\n\n new: " + string);
-			}
 			List<String> listModerator	= new ArrayList<String>();
 			String email = ""; this.listEmailAutoUpdate = "";
 			User user = null;
 			List<String> list = ForumServiceUtils.getUserPermission(moderators_);
 			boolean isFist = true;
 			for (String string : list) {
-				System.out.println("\n\n User: " +	string);
 				user = ForumSessionUtils.getUserByUserId(string) ;
 				if(user != null){
 					email = user.getEmail();

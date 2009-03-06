@@ -504,17 +504,18 @@
 																				</td>
 																				<!-- action Discuss -->
 																			<%
-																				if(uicomponent.isDiscussForum()) {
-																					String pathDiscuss = question.getPathTopicDiscuss();
-																					if(pathDiscuss == null || pathDiscuss.length() <= 0){
-																						String link = uicomponent.getLinkDiscuss();
+																				if(uicomponent.currentUser_ != null) {
+																					if(uicomponent.isDiscussForum()) {
+																						String pathDiscuss = question.getPathTopicDiscuss();
+																						if(pathDiscuss == null || pathDiscuss.length() <= 0){
+																							String link = uicomponent.getLinkDiscuss();
 																			%>
 																				<td style="width:25px">
 																					<div onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
 																					</div>
 																				</td>
-																			<%	} else {
+																			<%		} else {
 																						String link = uicomponent.url("DiscussForum", pathDiscuss);
 																						link = FAQUtils.convertLinkToForum(link);
 																			%>
@@ -523,7 +524,8 @@
 																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
 																					</div>
 																				</td>
-																			<%	}
+																			<%		}
+																					}
 																				} %>
 																			</tr>
 																		</table>
