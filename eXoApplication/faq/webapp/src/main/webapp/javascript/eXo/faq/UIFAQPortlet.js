@@ -189,10 +189,10 @@ UIFAQPortlet.prototype.showMenu = function(obj, evt){
 UIFAQPortlet.prototype.printPreview = function(obj) {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication") ;
-	var tmp = DOMUtil.findAncestorByClass(obj, "FAQContainer")
-	var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div","ResponseContent") ;
-	var previousElement = DOMUtil.findPreviousElementByTagName(printArea, 'div') ;
-  previousElement = previousElement.cloneNode(true) ;
+	var tmp = DOMUtil.findAncestorByClass(obj, "FAQContainer");
+	var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div","QuestionSelect") ;
+//	var previousElement = DOMUtil.findPreviousElementByTagName(printArea, 'div') ;
+//  previousElement = previousElement.cloneNode(true) ;
 	printArea = printArea.cloneNode(true) ;
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
@@ -208,7 +208,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	//printArea.style.overflow = "hidden" ;
 	//defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
-	FAQContent.appendChild(previousElement) ;
+	//FAQContent.appendChild(previousElement) ;
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
 	dummyPortlet.appendChild(FAQContainer) ;
