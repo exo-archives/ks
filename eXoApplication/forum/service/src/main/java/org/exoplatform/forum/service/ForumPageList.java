@@ -27,8 +27,11 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -38,7 +41,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 public class ForumPageList extends JCRPageList {
 	private boolean isQuery_ = false ;
 	private String value_ ;
-	private SessionProvider sProvider_ ;
+	//private SessionProvider sProvider_ ;
 	private NodeIterator iter_ = null;
 	
 	
@@ -51,9 +54,9 @@ public class ForumPageList extends JCRPageList {
 		super(pageSize) ;
 		value_ = value ;
 		isQuery_ = isQuery ;
-		sProvider_ = sProvider ;
+		//sProvider_ = sProvider ;
 		if(iter == null) {
-			iter = setQuery(sProvider, isQuery_, value_) ;
+			iter = setQuery(isQuery_, value_) ;
 		}
 		if(iter != null){
 			iter_ = iter ;
@@ -64,7 +67,7 @@ public class ForumPageList extends JCRPageList {
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(long page) throws Exception	{
 		if(iter_ == null) {
-			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+			iter_ = setQuery(isQuery_, value_) ;
 		}
 		if(iter_ != null)setAvailablePage(iter_.getSize()) ;
 		Node currentNode ;
@@ -103,9 +106,9 @@ public class ForumPageList extends JCRPageList {
 	
 	@SuppressWarnings("unchecked")
   protected void populateCurrentPage(String valueString) throws Exception	{
-		NodeIterator nodeIterator = setQuery(sProvider_, isQuery_, value_) ;
+		NodeIterator nodeIterator = setQuery(isQuery_, value_) ;
 		if(iter_ == null) {
-			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+			iter_ = setQuery(isQuery_, value_) ;
 		}
 		int pos = 0;
 		for(int i = 0; i < nodeIterator.getSize(); i ++){
@@ -167,9 +170,11 @@ public class ForumPageList extends JCRPageList {
 	  }
 	}
 	
-	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
+	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
-		Session session = getJCRSession(sProvider);
+		SessionProvider sysp = createSystemProvider();
+		Session session = getJCRSession(sysp);
+		try {
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);
@@ -180,6 +185,10 @@ public class ForumPageList extends JCRPageList {
 			iter = node.getNodes() ;
 		}
 		return iter ;
+		} finally {
+			if (session!= null) session.logout();
+			if (sysp != null) sysp.close();
+		}
 	}
 	
 	private Post getPost(Node postNode) throws Exception {
@@ -371,5 +380,10 @@ public class ForumPageList extends JCRPageList {
     return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
   }
 
-
+	private SessionProvider createSystemProvider() {
+		ExoContainer container = ExoContainerContext.getCurrentContainer();
+		SessionProviderService service = (SessionProviderService) container
+				.getComponentInstanceOfType(SessionProviderService.class);
+		return service.getSystemSessionProvider(null);
+	}
 }
