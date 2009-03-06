@@ -23,7 +23,9 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.user.ForumContact;
+import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -59,6 +61,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	public static final String USER_NAME = "userName" ; 
 	private String path = "";
 	private String type = "";
+	private boolean isCategory = false;
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(EMAIL_ADDRESS,EMAIL_ADDRESS) ;
 	public UIAddWatchingForm() throws Exception {
 		UIFormStringInput userName = new UIFormStringInput(USER_NAME, USER_NAME, null);
@@ -82,6 +85,14 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	}
 
 	public void activate() throws Exception {}
+	public boolean isCategory() {
+  	return isCategory;
+  }
+
+	public void setIsCategory(boolean isCategory) {
+  	this.isCategory = isCategory;
+  }
+
 	public void deActivate() throws Exception {}
 	
 	public void setPathNode(String path) {
@@ -149,6 +160,10 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			if(uiForm.isCategory()) {
+				UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
+				category.setIsEditCategory(true);
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}
 	}

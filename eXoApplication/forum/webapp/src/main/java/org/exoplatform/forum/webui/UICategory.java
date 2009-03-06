@@ -632,6 +632,7 @@ public class UICategory extends UIForm	{
 			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
 			addWatchingForm.initForm() ;
 			addWatchingForm.setPathNode(path);
+			addWatchingForm.setIsCategory(true);
 			popupAction.activate(addWatchingForm, 425, 180) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
