@@ -2106,7 +2106,7 @@ public class JCRDataStorage {
 				 */
 				Node forumNode = node.getParent();
 				Node categoryNode = forumNode.getParent() ;
-				objectName = "["+categoryNode.getProperty("exo:name").getString() + "][" + forumNode.getProperty("exo:name").getString() + "] :" ;
+				objectName = "["+categoryNode.getProperty("exo:name").getString() + "][" + forumNode.getProperty("exo:name").getString() + "] " ;
 				boolean isSend = false;
 				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 					isSend = true;
