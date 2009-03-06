@@ -19,7 +19,7 @@
 	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
 	jsmanager.addJavascript('eXo.faq.UIFAQPortlet.initContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
-	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadScroll');
+	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadActionScroll');
 	
 	
 	String url = uicomponent.url("Setting", "OBJECTID");

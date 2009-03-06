@@ -1,6 +1,7 @@
 function UIFAQPortlet() {
 	this.scrollManagerLoaded = false;
 	this.hiddentMenu = true;
+	this.scrollMgr = [];
 };
 
 UIFAQPortlet.prototype.setCheckEvent = function(isCheck){
@@ -60,7 +61,8 @@ UIFAQPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle)
 	}
 	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
 	var uiNav = eXo.faq.UIFAQPortlet ;
-	uiNav.initScroll();
+	uiNav.initActionScroll();
+	uiNav.initBreadCumbScroll();
 };
 
 UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i, id){
@@ -197,16 +199,10 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
 	var FAQContent = document.createElement("div") ;
-	//var defaultAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "DefaultAction") ;
 	var printAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "PrintAction") ;
-	//dummyPortlet.style.height = eXo.core.Browser.getBrowserHeight() + "px";
-	//FAQContainer.style.overflow = "visible";
 	dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
-	//printArea.style.overflow = "visible" ;
-	//printArea.style.overflow = "hidden" ;
-	//defaultAction.style.display = "none" ;
 	printAction.style.display = "block" ;
 	//FAQContent.appendChild(previousElement) ;
 	FAQContent.appendChild(printArea) ;
@@ -217,9 +213,6 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	dummyPortlet.style.width ="100%";
 	dummyPortlet.style.zIndex = 1;
 	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
-	//uiPortalApplication.style.visibility = "hidden" ;
-	//uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
-	//uiPortalApplication.style.overflow =  "hidden";
 	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
 };
@@ -235,15 +228,11 @@ UIFAQPortlet.prototype.printAll = function(obj) {
   var uiAction = DOMUtil.findFirstChildByClass(faqContent, "div", "UIAction") ;
   dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
   uiAction.style.display = "block" ;
-  //faqContainer.style.overflow = "visible" ;
   dummyPortlet.appendChild(this.removeLink(faqContainer)) ;
 	dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="100%";
 	dummyPortlet.style.zIndex = 1;
   document.body.insertBefore(dummyPortlet,uiPortalApplication) ;
-//  uiPortalApplication.style.visibility = "hidden" ;
-//	uiPortalApplication.style.height =  dummyPortlet.offsetHeight + "px";
-//	uiPortalApplication.style.overflow =  "hidden";
 	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
 };
@@ -278,10 +267,6 @@ UIFAQPortlet.prototype.closePrint = function() {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var uiPortalApplication = document.getElementById("UIPortalApplication");
 	uiPortalApplication.style.display = "block" ;
-//	uiPortalApplication.style.height =  "auto";
-//	uiPortalApplication.style.overflow =  "auto";
-//	uiPortalApplication.style.visibility = "visible" ;
-//	uiPortalApplication.style.display = "block";
 	for(var i = 0 ; i < document.body.childNodes.length ; i++) {
 		if(DOMUtil.hasClass(document.body.childNodes[i], "UIFAQPortlet")) {
 			DOMUtil.removeElement(document.body.childNodes[i]) ;
@@ -291,36 +276,77 @@ UIFAQPortlet.prototype.closePrint = function() {
 	window.scroll(0,0);
 } ;
 
-UIFAQPortlet.prototype.loadScroll = function(e) {
+DOMUtil.prototype.getElemementsByClass = function(root,clazz){
+	var list = [];
+	var elements = root.getElementsByTagName("*");
+	var i = elements.length;
+	while(i--){
+		if(eXo.core.DOMUtil.hasClass(elements[i],clazz)) list.push(elements[i]);
+	}
+	return list;
+}
+
+ScrollManager.prototype.loadItems = function(elementClass, clean) {
+	if (clean) this.cleanElements();
+	this.elements.clear();
+	this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass));
+};
+
+UIFAQPortlet.prototype.loadActionScroll = function(){
+	var uiNav = eXo.faq.UIFAQPortlet ;
+	var container = document.getElementById("UIQuestions");
+	var callback = uiNav.initActionScroll;
+	uiNav.loadScroll("UIQuestions",container,callback);
+};
+
+UIFAQPortlet.prototype.loadBreadcumbScroll = function(){
+	var uiNav = eXo.faq.UIFAQPortlet ;
+	var container = document.getElementById("UIBreadcumbs");
+	var callback = uiNav.initBreadcumbScroll;
+	uiNav.loadScroll("UIBreadcumbs",container,callback);
+};
+
+UIFAQPortlet.prototype.initBreadcumbScroll = function(){
+	if(document.getElementById("UIPortalApplication").style.display == "none") return ;
+	var uiNav = eXo.faq.UIFAQPortlet ;
+	if(!uiNav.scrollManagerLoaded) uiNav.loadBreadcumbScroll() ;
+	uiNav.scrollMgr["UIBreadcumbs"].init() ;
+	uiNav.scrollMgr["UIBreadcumbs"].checkAvailableSpace() ;
+	if(uiNav.scrollMgr["UIBreadcumbs"].arrowsContainer) uiNav.scrollMgr["UIBreadcumbs"].renderElements() ;
+};
+
+UIFAQPortlet.prototype.loadScroll = function(scrollname,container, callback) {
   var uiNav = eXo.faq.UIFAQPortlet ;
-  var container = document.getElementById("UIQuestions") ;
   if(container) {
-    uiNav.scrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIQuestions") ;
-    uiNav.scrollMgr.initFunction = uiNav.initScroll ;
-    uiNav.scrollMgr.mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
-    uiNav.scrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.scrollMgr.mainContainer, "div", "ScrollButtons") ;
-    uiNav.scrollMgr.loadElements("ControlButton") ;
-    var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr.arrowsContainer, "div");
+    uiNav.scrollMgr[scrollname] = eXo.portal.UIPortalControl.newScrollManager(scrollname) ;
+    uiNav.scrollMgr[scrollname].initFunction = callback ;
+    uiNav.scrollMgr[scrollname].mainContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "td", "ControlButtonContainer") ;
+    uiNav.scrollMgr[scrollname].loadItems("ControlButton") ;
+	if(uiNav.scrollMgr[scrollname].elements.length <= 0 ) return ;
+    uiNav.scrollMgr[scrollname].arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.scrollMgr[scrollname].mainContainer, "div", "ScrollButtons") ;
+    var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.scrollMgr[scrollname].arrowsContainer, "div");
 		
     if(button.length >= 2) {    
-      uiNav.scrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
-      uiNav.scrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
+      uiNav.scrollMgr[scrollname].initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
+      uiNav.scrollMgr[scrollname].initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
     }
-	uiNav.scrollMgr.callback = uiNav.scrollCallback;
+	
+	uiNav.scrollMgr[scrollname].callback = uiNav.scrollCallback;
     uiNav.scrollManagerLoaded = true;	
-    uiNav.initScroll() ;
+    callback() ;
   }
 } ;
+
 UIFAQPortlet.prototype.scrollCallback = function(){
 };
 
-UIFAQPortlet.prototype.initScroll = function() {
-	if(document.getElementById("UIPortalApplication").style.display == "none") return ;
+UIFAQPortlet.prototype.initActionScroll = function() {
+  if(document.getElementById("UIPortalApplication").style.display == "none") return ;
   var uiNav = eXo.faq.UIFAQPortlet ;
-  if(!uiNav.scrollManagerLoaded) uiNav.loadScroll() ;
-  uiNav.scrollMgr.init() ;
-  uiNav.scrollMgr.checkAvailableSpace() ;
-  uiNav.scrollMgr.renderElements() ;
+  if(!uiNav.scrollManagerLoaded) uiNav.loadActionScroll() ;
+  uiNav.scrollMgr["UIQuestions"].init() ;
+  uiNav.scrollMgr["UIQuestions"].checkAvailableSpace() ;
+  uiNav.scrollMgr["UIQuestions"].renderElements() ;
 } ;
 
 
@@ -543,70 +569,6 @@ eXo.faq.DragDrop = {
 		return actionLink;
 	}
 };
-
-//eXo.faq.UIContextMenu = {
-//	menus : [],
-//	init: function(id){
-//		var cont = document.getElementById(id);
-//		cont = eXo.core.DOMUtil.findAncestorByClass(cont,"UIFAQPortlet");
-//		this.classNames = new Array("FAQCategory","QuestionContainer");
-//		eXo.core.EventManager.addEvent(cont,"contextmenu",this.show);
-//	},
-//	getMenu : function(evt) {
-//		var element = this.getMenuElement(evt);
-//		if(!element) return;
-//		var menuId = element.getAttribute("ctxMenuId");
-//		var menu = document.getElementById(menuId);
-//		element.parentNode.appendChild(menu);
-//		return menu;
-//	},
-//	getMenuElement : function(evt) {
-//		var target = eXo.core.EventManager.getEventTarget(evt);
-//		while(target){
-//			var className = target.className;
-//			if(!className) {
-//				target = target.parentNode;
-//				continue;
-//			}
-//			className = className.replace(/^\s+/g, "").replace(/\s+$/g, "");
-//			var classArray = className.split(/[ ]+/g);
-//			for (i = 0; i < classArray.length; i++) {
-//				if (this.classNames.contains(classArray[i])) {
-//					return target;
-//				}
-//			}
-//			target = target.parentNode;
-//		}
-//		return null;
-//	},
-//	hideElement: function(){
-//		var ln = eXo.core.DOMUtil.hideElementList.length ;
-//		if (ln > 0) {
-//			for (var i = 0; i < ln; i++) {
-//				eXo.core.DOMUtil.hideElementList[i].style.display = "none" ;
-//			}
-//			eXo.core.DOMUtil.hideElementList.clear() ;
-//		}
-//	},
-//	setPosition : function(obj,evt){		
-//		var x  = eXo.core.Browser.getBrowserWidth() - eXo.core.Browser.findMouseXInPage(evt);
-//		var y = eXo.core.Browser.findMouseYInPage(evt);
-//		obj.style.position = "absolute";
-//		obj.style.display = "block";
-//		obj.style.top =  y + "px";
-//		obj.style.right = x + "px";
-//	},
-//	show: function(evt){
-//		eXo.core.EventManager.cancelEvent(evt);
-//		var ctx = eXo.faq.UIContextMenu;
-//		var menu = ctx.getMenu(evt);
-//		ctx.hideElement();
-//		if(!menu) return;
-//		ctx.setPosition(menu,evt);
-//		eXo.core.DOMUtil.listHideElements(menu);
-//		return false;
-//	}
-//};
 
 UIFAQPortlet.prototype.setSelectboxOnchange = function(fid) {
 	if(!eXo.core.Browser.isFF()) return;

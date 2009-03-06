@@ -346,6 +346,10 @@
 	z-index: 100;
 }
 
+.UIFAQPopupCategory{
+	position:absolute;
+}
+
 .UIFAQPortlet .FAQContainer .FAQContent .FAQCategory .UIContextMenuContainer .LineMenu {
 	width: 150px;
 	margin: 4px auto;
@@ -1672,13 +1676,13 @@
 	min-width: 600px;
 }
 
-.UIFAQPortlet .FAQToolbar .ScrollButtons {
+.UIFAQPortlet .ScrollButtons {
 	display:none;
 	float:right;
 	padding:5px 1px 5px 1px;
 }
 
-.UIFAQPortlet .FAQToolbar .DisableScrollLeftButton {
+.UIFAQPortlet .DisableScrollLeftButton {
 	background: url('background/DisableScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -1688,7 +1692,7 @@
 	width:13px;
 }
 
-.UIFAQPortlet .FAQToolbar .DisableScrollRightButton {
+.UIFAQPortlet .DisableScrollRightButton {
 	background: url('background/DisableScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -1697,7 +1701,7 @@
 	width:13px;
 }
 
-.UIFAQPortlet .FAQToolbar .ScrollRightButton {
+.UIFAQPortlet .ScrollRightButton {
 	background: url('background/ScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -1706,7 +1710,7 @@
 	width:13px;
 }
 
-.UIFAQPortlet .FAQToolbar .ScrollLeftButton {
+.UIFAQPortlet .ScrollLeftButton {
 	background: url('background/ScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -1716,7 +1720,7 @@
 	width:13px;
 }
 
-.UIFAQPortlet .FAQToolbar .HighlightScrollRightButton {
+.UIFAQPortlet .HighlightScrollRightButton {
 	background: url('background/HighlightScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -1726,7 +1730,7 @@
 	width:13px;
 }
 
-.UIFAQPortlet .FAQToolbar .HighlightScrollLeftButton {
+.UIFAQPortlet .HighlightScrollLeftButton {
 	background: url('background/HighlightScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
