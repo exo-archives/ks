@@ -105,6 +105,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		    	listQuestionPath.addAll(service.getListPathQuestionByCategory(null, sessionProvider));
 		    	while(nodeIterator.hasNext()){
 		    		node = nodeIterator.nextNode();
+		    		if(!node.isNodeType("exo:faqQuestion") && !node.isNodeType("exo:faqCategory")) continue;
 		    		bos = new ByteArrayOutputStream();
 		    		session.exportSystemView(node.getPath(), bos, false, false ) ;
 				    file = new File(node.getName() + ".xml");
@@ -156,6 +157,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
         event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
 			
 			} catch (Exception e){
+				e.printStackTrace();
 				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
