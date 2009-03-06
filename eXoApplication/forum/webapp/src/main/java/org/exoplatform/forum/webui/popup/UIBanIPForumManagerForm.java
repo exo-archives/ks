@@ -52,7 +52,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		events = {
 			@EventConfig(listeners = UIBanIPForumManagerForm.AddIpActionListener.class), 
 			@EventConfig(listeners = UIBanIPForumManagerForm.OpenPostsActionListener.class), 
-			@EventConfig(listeners = UIBanIPForumManagerForm.UnBanActionListener.class), 
+			@EventConfig(listeners = UIBanIPForumManagerForm.UnBanActionListener.class, confirm="UIBanIPForumManagerForm.confirm.UnBanIP"), 
 			@EventConfig(listeners = UIBanIPForumManagerForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
@@ -131,6 +131,9 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 																	((UIFormStringInput)ipManagerForm.getChildById(NEW_IP_BAN_INPUT3)).getValue(),
 																	((UIFormStringInput)ipManagerForm.getChildById(NEW_IP_BAN_INPUT4)).getValue(),
 																	};
+			for(int i = 1; i <= 4; i ++){
+				((UIFormStringInput)ipManagerForm.getChildById("newIpBan" + i)).setValue("");
+			}
 			UIApplication uiApp = ipManagerForm.getAncestorOfType(UIApplication.class) ;
 			String ipAdd = ipManagerForm.checkIpAddress(ip);
 			if(ipAdd == null){
