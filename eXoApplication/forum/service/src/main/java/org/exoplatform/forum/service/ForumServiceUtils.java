@@ -1,5 +1,5 @@
 /***************************************************************************
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2009 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -31,6 +31,12 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+
+/**
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *					tu.duy@exoplatform.com
+ */
 
 public class ForumServiceUtils {
 	
@@ -67,7 +73,7 @@ public class ForumServiceUtils {
 								}						
 							}
 						}
-					} else {
+					}else {
 						if(array[0].charAt(0)== 42) {
 							for(User user: userList) {
 								if(!users.contains(user.getUserName())){
@@ -95,16 +101,16 @@ public class ForumServiceUtils {
 	
 	public static void reparePermissions(Node node, String owner) throws Exception {
 		ExtendedNode extNode = (ExtendedNode)node ;
-    if (extNode.canAddMixin("exo:privilegeable")) extNode.addMixin("exo:privilegeable");
-    String[] arrayPers = {PermissionType.READ, PermissionType.ADD_NODE, PermissionType.SET_PROPERTY, PermissionType.REMOVE} ;
-    extNode.setPermission(owner, arrayPers) ;
-    List<AccessControlEntry> permsList = extNode.getACL().getPermissionEntries() ;    
-    for(AccessControlEntry accessControlEntry : permsList) {
-      extNode.setPermission(accessControlEntry.getIdentity(), arrayPers) ;      
-    } 
+		if (extNode.canAddMixin("exo:privilegeable")) extNode.addMixin("exo:privilegeable");
+		String[] arrayPers = {PermissionType.READ, PermissionType.ADD_NODE, PermissionType.SET_PROPERTY, PermissionType.REMOVE};
+		extNode.setPermission(owner, arrayPers) ;
+		List<AccessControlEntry> permsList = extNode.getACL().getPermissionEntries() ;		
+		for(AccessControlEntry accessControlEntry : permsList) {
+			extNode.setPermission(accessControlEntry.getIdentity(), arrayPers) ;			
+		}
 	}
 
 	public static SessionProvider getSessionProvider() {
 		return SessionProvider.createSystemProvider();
-  }
+	}
 }

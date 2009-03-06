@@ -465,12 +465,16 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		String emailPost = notifyWhenAddPosts.getValue();
 		if(!ForumUtils.isEmpty(moderators)) {
 			String []moderators_ = ForumUtils.splitForForum(moderators);
-			List<String> listModerator  = new ArrayList<String>();
+			for (String string : moderators_) {
+				System.out.println("\n\n new: " + string);
+			}
+			List<String> listModerator	= new ArrayList<String>();
 			String email = ""; this.listEmailAutoUpdate = "";
 			User user = null;
 			List<String> list = ForumServiceUtils.getUserPermission(moderators_);
 			boolean isFist = true;
 			for (String string : list) {
+				System.out.println("\n\n User: " +	string);
 				user = ForumSessionUtils.getUserByUserId(string) ;
 				if(user != null){
 					email = user.getEmail();
@@ -480,7 +484,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 						isFist = false;
 					} else {
 						if(!listModerator.contains(email)){
-							this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +  email;
+							this.listEmailAutoUpdate = this.listEmailAutoUpdate + ", " +	email;
 							listModerator.add(email);
 						}
 					}
@@ -492,13 +496,13 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				String []strs = ForumUtils.splitForForum(emailTopic);
 				String emailTopics = "";
 				for (int i = 0; i < strs.length; i++) {
-          if(!listModerator.contains(strs[i].trim())) {
-          	if(emailTopics.length() == 0) emailTopics = strs[i];
-          	else emailTopics = emailTopics + ", " + strs[i];
-          }
-        }
+					if(!listModerator.contains(strs[i].trim())) {
+						if(emailTopics.length() == 0) emailTopics = strs[i];
+						else emailTopics = emailTopics + ", " + strs[i];
+					}
+				}
 				if(emailTopics.trim().length() == 0) emailTopics = this.listEmailAutoUpdate;
-      	else emailTopics = emailTopics + ", " + this.listEmailAutoUpdate;
+				else emailTopics = emailTopics + ", " + this.listEmailAutoUpdate;
 				notifyWhenAddTopics.setValue(emailTopics);
 			}
 			if(ForumUtils.isEmpty(emailPost)) {
@@ -507,13 +511,13 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				String []strs = ForumUtils.splitForForum(emailPost);
 				String emailPosts = "";
 				for (int i = 0; i < strs.length; i++) {
-          if(!listModerator.contains(strs[i].trim())) {
-          	if(emailPosts.length() == 0) emailPosts = strs[i];
-          	else emailPosts = emailPosts + ", " + strs[i];
-          }
-        }
+					if(!listModerator.contains(strs[i].trim())) {
+						if(emailPosts.length() == 0) emailPosts = strs[i];
+						else emailPosts = emailPosts + ", " + strs[i];
+					}
+				}
 				if(emailPosts.trim().length() == 0) emailPosts = this.listEmailAutoUpdate;
-      	else emailPosts = emailPosts + ", " + this.listEmailAutoUpdate;
+				else emailPosts = emailPosts + ", " + this.listEmailAutoUpdate;
 				notifyWhenAddPosts.setValue(emailPosts);
 			}
 		} else {}

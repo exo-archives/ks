@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -37,14 +37,20 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.GroupImpl;
 
+/**
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *					tu.duy@exoplatform.com
+ */
+
 public class ForumSessionUtils {
-  
-  static public String getCurrentUser() throws Exception {
-    return Util.getPortalRequestContext().getRemoteUser();
-  }
-  
-  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-  	List<String> listOfUser = new ArrayList<String>();
+	
+	static public String getCurrentUser() throws Exception {
+		return Util.getPortalRequestContext().getRemoteUser();
+	}
+	
+	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+		List<String> listOfUser = new ArrayList<String>();
 		listOfUser.add(userId);
 		String value = "";
 		String id = "";
@@ -60,39 +66,39 @@ public class ForumSessionUtils {
 			listOfUser.add(value);
 		}
 		return listOfUser;
-  }
-  
-  public static boolean isAnonim() throws Exception {
-    String userId = getCurrentUser();
-    if (userId == null)
-      return true;
-    return false;
-  }
-  
-  public static SessionProvider getSystemProvider() {
-    return SessionProviderFactory.createSystemProvider();
-  }
-  
-  public static String getUserAvatarURL(String userName, ForumService forumService, SessionProvider sessionProvider, 
-  																			DownloadService dservice){
-  	String url = null;
-  	try{
-	  	ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
-	  	url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
-	  	if(url == null || url.trim().length() < 1){
-	  		ForumContact contact = getPersonalContact(userName) ;
-	  		if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0)
-	  			url = contact.getAvatarUrl();
-	  		else
-	  			url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-	  	}
-	  	return url;
-  	} catch (Exception e){
-  		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-  	}
-  }
-  
-  public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+	}
+	
+	public static boolean isAnonim() throws Exception {
+		String userId = getCurrentUser();
+		if (userId == null)
+			return true;
+		return false;
+	}
+	
+	public static SessionProvider getSystemProvider() {
+		return SessionProviderFactory.createSystemProvider();
+	}
+	
+	public static String getUserAvatarURL(String userName, ForumService forumService, SessionProvider sessionProvider, 
+																				DownloadService dservice){
+		String url = null;
+		try{
+			ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
+			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
+			if(url == null || url.trim().length() < 1){
+				ForumContact contact = getPersonalContact(userName) ;
+				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0)
+					url = contact.getAvatarUrl();
+				else
+					url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+			}
+			return url;
+		}catch (Exception e){
+			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		}
+	}
+	
+	public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
 		byte[] imageBytes = null;
 		if (input != null) {
 			imageBytes = new byte[input.available()];
@@ -103,131 +109,130 @@ public class ForumSessionUtils {
 			dresource.setDownloadName(fileName);
 			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
 		}
-  	return null;
-  }
-  
-  public static String[] getUserGroups() throws Exception {
-    OrganizationService organizationService = (OrganizationService) PortalContainer
-        .getComponent(OrganizationService.class);
-    Object[] objGroupIds = organizationService.getGroupHandler()
-        .findGroupsOfUser(getCurrentUser()).toArray();
-    String[] groupIds = new String[objGroupIds.length];
-    for (int i = 0; i < groupIds.length; i++) {
-      groupIds[i] = ((GroupImpl) objGroupIds[i]).getId();
-    }
-    return groupIds;
-  }
-  
-  @SuppressWarnings("unchecked")
-  public static PageList getPageListUser() throws Exception {
-    OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-    return organizationService.getUserHandler().getUserPageList(0);
-  }
+		return null;
+	}
+	
+	public static String[] getUserGroups() throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer
+				.getComponent(OrganizationService.class);
+		Object[] objGroupIds = organizationService.getGroupHandler()
+				.findGroupsOfUser(getCurrentUser()).toArray();
+		String[] groupIds = new String[objGroupIds.length];
+		for (int i = 0; i < groupIds.length; i++) {
+			groupIds[i] = ((GroupImpl) objGroupIds[i]).getId();
+		}
+		return groupIds;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static PageList getPageListUser() throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		return organizationService.getUserHandler().getUserPageList(0);
+	}
 
-  @SuppressWarnings("unchecked")
-  public static List<User> getAllUser() throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-  	List<User>list = pageList.getAll() ;
-  	return list;
-  }
-  
-  public static User getUserByUserId(String userId) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	return organizationService.getUserHandler().findUserByName(userId) ;
-  }
+	@SuppressWarnings("unchecked")
+	public static List<User> getAllUser() throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+		List<User>list = pageList.getAll() ;
+		return list;
+	}
+	
+	public static User getUserByUserId(String userId) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		return organizationService.getUserHandler().findUserByName(userId) ;
+	}
 
-  @SuppressWarnings("unchecked")
-  public static List<User> getUserByGroupId(String groupId) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	return organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
-  }
+	@SuppressWarnings("unchecked")
+	public static List<User> getUserByGroupId(String groupId) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		return organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
+	}
 
-  @SuppressWarnings("unchecked")
-  public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
-  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	List<User> users = organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
-  	for (User user : users) {
-	    if(user.getUserName().equals(userId)) return true ;
-    }
-  	return false ;
-  }
+	@SuppressWarnings("unchecked")
+	public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		List<User> users = organizationService.getUserHandler().findUsersByGroup(groupId).getAll() ;
+		for (User user : users) {
+			if(user.getUserName().equals(userId)) return true ;
+		}
+		return false ;
+	}
 
-  @SuppressWarnings("unchecked")
-  public static boolean hasGroupIdAndMembershipId(String str, OrganizationService organizationService) throws Exception {
-	  if(str.indexOf(":") >= 0) { //membership
-  		String[] array = str.split(":") ;
-  		try {
-  			organizationService.getGroupHandler().findGroupById(array[1]).getId() ;
-  		} catch (Exception e) {
-  			return false ;
-  		}
-  		if(array[0].length() == 1 && array[0].charAt(0) == '*') {
-  			return true ;
-  		} else if(array[0].length() > 0){
-  			if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
-  		} else return false ;
-		} else { //group
+	@SuppressWarnings("unchecked")
+	public static boolean hasGroupIdAndMembershipId(String str, OrganizationService organizationService) throws Exception {
+		if(str.indexOf(":") >= 0) { //membership
+			String[] array = str.split(":") ;
+			try {
+				organizationService.getGroupHandler().findGroupById(array[1]).getId() ;
+			}catch (Exception e) {
+				return false ;
+			}
+			if(array[0].length() == 1 && array[0].charAt(0) == '*') {
+				return true ;
+			}else if(array[0].length() > 0){
+				if(organizationService.getMembershipTypeHandler().findMembershipType(array[0])== null) return false ;
+			}else return false ;
+		}else { //group
 			try {
 				organizationService.getGroupHandler().findGroupById(str).getId() ;
-			} catch (Exception e) {
+			}catch (Exception e) {
 				return false ;
 			}
 		}
-    return true ;
-  }
-  
-  public static String checkValueUser(String values) throws Exception {
-  	String erroUser = null;
-  	if(values != null && values.trim().length() > 0) {
-  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  		String[] userIds = values.split(",");
-  		boolean isUser = false ;
-  		List<User> users = ForumSessionUtils.getAllUser() ;
-  		for (String str : userIds) {
-  			str = str.trim() ;
-  			if(str.indexOf("/") >= 0) {
+		return true ;
+	}
+	
+	public static String checkValueUser(String values) throws Exception {
+		String erroUser = null;
+		if(values != null && values.trim().length() > 0) {
+			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+			String[] userIds = values.split(",");
+			boolean isUser = false ;
+			List<User> users = ForumSessionUtils.getAllUser() ;
+			for (String str : userIds) {
+				str = str.trim() ;
+				if(str.indexOf("/") >= 0) {
 					if(!hasGroupIdAndMembershipId(str, organizationService)){
 						if(erroUser == null) erroUser = str ;
 						else erroUser = erroUser + ", " + str;
-  				}
-  			} else {//user
-  				isUser = false ;
-  				for (User user : users) {
-	          if(user.getUserName().equals(str)) {
-	          	isUser = true ;
-	          	break;
-	          }
-          }
-  				if(!isUser) {
-  					if(erroUser == null) erroUser = str ;
-  					else erroUser = erroUser + ", " + str;
-  				}
-  			}
-      }
-  	}
-  	return erroUser;
-  }
-  
-  public static ForumContact getPersonalContact(String userId) throws Exception {
-    try {
-    	ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
-    	return provider.getForumContact(userId);
-    } catch (Exception e) {
-	    return new ForumContact();
-    }
-  }
-  
-  public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {
-  	String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+					}
+				}else {//user
+					isUser = false ;
+					for (User user : users) {
+						if(user.getUserName().equals(str)) {
+							isUser = true ;
+							break;
+						}
+					}
+					if(!isUser) {
+						if(erroUser == null) erroUser = str ;
+						else erroUser = erroUser + ", " + str;
+					}
+				}
+			}
+		}
+		return erroUser;
+	}
+	
+	public static ForumContact getPersonalContact(String userId) throws Exception {
+		try {
+			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+			return provider.getForumContact(userId);
+		}catch (Exception e) {
+			return new ForumContact();
+		}
+	}
+	
+	public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {
+		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 		String portalName = "/" + Util.getUIPortal().getName() ;
 		link = link.replaceFirst(componentName,"UIBreadcumbs").replaceFirst(actionName,"ChangePath").replaceAll("&amp;", "&");							
 		if(link.indexOf(portalName) > 0) {
-	    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-	      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-	    }									
+			if(link.indexOf(portalName + "/" + selectedNode) < 0){
+				link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+			}									
 		}	
-  	return link;
-  }
-  
+		return link;
+	}
 }

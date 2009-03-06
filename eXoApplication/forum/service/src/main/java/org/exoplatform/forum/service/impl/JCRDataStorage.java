@@ -105,8 +105,6 @@ import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
-
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
  * hung.nguyen@exoplatform.com Jul 10, 2007 Edited by Vu Duy Tu
@@ -162,7 +160,7 @@ public class JCRDataStorage {
 			if(!listeners_.containsKey(forumHome.getPath())) {
 				CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName) ;
 				observation.addEventListener(categoryListener, Event.NODE_ADDED + Event.NODE_REMOVED ,forumHome.getPath(), false, null, null, false) ;
-	    	listeners_.put(forumHome.getPath(), categoryListener) ;
+				listeners_.put(forumHome.getPath(), categoryListener) ;
 			}
 			NodeIterator iter = forumHome.getNodes();
 			while(iter.hasNext()) {
@@ -527,12 +525,12 @@ public class JCRDataStorage {
 		if(catNode.isNodeType("exo:forumCategory")) {
 			if(!listeners_.containsKey(catNode.getPath())) {
 				String wsName = catNode.getSession().getWorkspace().getName() ;
-		  	RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
-		  	ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
-		  	StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName()) ;
-		  	observation.addEventListener(statisticEventListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
-		  	listeners_.put(catNode.getPath(), statisticEventListener); 
-	  	}
+				RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
+				ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
+				StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName()) ;
+				observation.addEventListener(statisticEventListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+				listeners_.put(catNode.getPath(), statisticEventListener); 
+			}
 		}		
 	}
  	
@@ -1127,7 +1125,7 @@ public class JCRDataStorage {
 			Topic topicNew = new Topic();
 			topicNew = getTopicNode(topicNode);
 			// setViewCount for Topic
-			if (userRead != null &&  userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
+			if (userRead != null &&	userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
 				updateTopicAccess(userRead, topicId) ;
@@ -1344,8 +1342,8 @@ public class JCRDataStorage {
 				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
 			}
 			userIdsp.addAll(getAllAdministrator(sProvider));
-    } catch (PathNotFoundException e) {
-    }
+		} catch (PathNotFoundException e) {
+		}
 		for (Topic topic : topics) {
 			try {
 				String topicPath = topic.getPath();
@@ -1978,8 +1976,8 @@ public class JCRDataStorage {
 				if(!isFistPost) {
 					sendNotification(forumHomeNode, topicNode, null, post, defaultEmailContent, true);
 				}
-      } catch (Exception e) {
-      }
+			} catch (Exception e) {
+			}
 			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
 			if(sendAlertJob) {
 				List<String>userIdsp = new ArrayList<String>();
@@ -2038,7 +2036,7 @@ public class JCRDataStorage {
 					// set Category Private
 					Node categoryNode = null ;
 					if(node.isNodeType("exo:forumCategory")) {
-						categoryNode =  node;
+						categoryNode =	node;
 					} else {
 						categoryNode = node.getParent() ;
 					}
@@ -2069,30 +2067,30 @@ public class JCRDataStorage {
 						Node userNode = userProfileHome.getNode(owner);
 						String email = userNode.getProperty("exo:email").getString();
 						String fullName = userNode.getProperty("exo:fullName").getString();
-		        if(email != null && email.length() > 0) {
-		        	message.setFrom(fullName + "<" + email + ">");
-		        }
-	        } catch (Exception e) {
-	        }
+						if(email != null && email.length() > 0) {
+							message.setFrom(fullName + "<" + email + ">");
+						}
+					} catch (Exception e) {
+					}
 					String content_ = node.getProperty("exo:name").getString();
 					if(node.isNodeType("exo:forum")){
 						message.setSubject(headerSubject + objectName);
-						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
-						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+						content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 					} else {
 						message.setSubject(headerSubject + objectName);
-						content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
-						content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+						content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 					}
-					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
 					Date createdDate = topic.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =  StringUtils.replace(content_, "$POSTER", topic.getOwner());
-					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =	StringUtils.replace(content_, "$POSTER", topic.getOwner());
+					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2221,18 +2219,18 @@ public class JCRDataStorage {
 					}
 					message.setMimeType("text/html");
 					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +  content_);
-					content_ =  StringUtils.replace(content, "$OBJECT_NAME", content_);
-					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
-					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					message.setSubject(headerSubject + objectName +	content_);
+					content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
+					content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =  StringUtils.replace(content_, "$POSTER", owner);
-					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =	StringUtils.replace(content_, "$POSTER", owner);
+					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2245,18 +2243,18 @@ public class JCRDataStorage {
 					message.setMimeType("text/html");
 					String forumName = forumNode.getProperty("exo:name").getString();
 					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +  content_);
-					content_ =  StringUtils.replace(content, "$OBJECT_NAME", forumName);
-					content_ =  StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-					content_ =  StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ =  StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					message.setSubject(headerSubject + objectName +	content_);
+					content_ =	StringUtils.replace(content, "$OBJECT_NAME", forumName);
+					content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =  StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =  StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =  StringUtils.replace(content_, "$POSTER", post.getOwner());
-					content_ =  StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ =	StringUtils.replace(content_, "$POSTER", post.getOwner());
+					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailListForum, message);
@@ -2269,18 +2267,18 @@ public class JCRDataStorage {
 					message.setMimeType("text/html");
 					String categoryName = categoryNode.getProperty("exo:name").getString();
 					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +  content_);
-					content =  StringUtils.replace(content, "$OBJECT_NAME", categoryName);
-					content =  StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
-					content =  StringUtils.replace(content, "$ADD_TYPE", "Post");
-					content =  StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					message.setSubject(headerSubject + objectName +	content_);
+					content =	StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+					content =	StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
+					content =	StringUtils.replace(content, "$ADD_TYPE", "Post");
+					content =	StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content =  StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content =	StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content =  StringUtils.replace(content, "$DATE", formatter.format(createdDate));
-					content =  StringUtils.replace(content, "$POSTER", post.getOwner());
-					content =  StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content =	StringUtils.replace(content, "$DATE", formatter.format(createdDate));
+					content =	StringUtils.replace(content, "$POSTER", post.getOwner());
+					content =	StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content);
 					sendEmailNotification(emailListCategory, message);
@@ -2311,8 +2309,8 @@ public class JCRDataStorage {
 						userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
 					}
 					userIdsp.addAll(getAllAdministrator(sProvider));
-		    } catch (Exception e) {
-		    }
+				} catch (Exception e) {
+				}
 				switch (type) {
 				case 1: {
 					postNode.setProperty("exo:isApproved", true);
@@ -3228,8 +3226,8 @@ public class JCRDataStorage {
 		} finally {
 			sProvider.close();
 		}
-	  return -1;
-  }
+		return -1;
+	}
 	
 	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -3793,7 +3791,7 @@ public class JCRDataStorage {
 	
 	
 	@SuppressWarnings("unchecked")
-  private void updateImportedData(String path) throws Exception {
+	private void updateImportedData(String path) throws Exception {
 		try {
 			Calendar cal = new GregorianCalendar();
 			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
@@ -3871,10 +3869,10 @@ public class JCRDataStorage {
 				}else {
 					profile = profileHome.addNode(userId, "exo:userProfile") ;
 					Calendar cal = getGreenwichMeanTime() ;
-		  		profile.setProperty("exo:userId", userId) ;
-		  		profile.setProperty("exo:lastLoginDate", cal) ;
-		  		profile.setProperty("exo:joinedDate", cal) ; 
-		  		profile.setProperty("exo:lastPostDate", cal) ; 
+					profile.setProperty("exo:userId", userId) ;
+					profile.setProperty("exo:lastLoginDate", cal) ;
+					profile.setProperty("exo:joinedDate", cal) ; 
+					profile.setProperty("exo:lastPostDate", cal) ; 
 				}
 				long l = profile.getProperty("exo:totalTopic").getLong() + topicMap.get(userId) ;
 				profile.setProperty("exo:totalTopic", l) ;
@@ -3894,10 +3892,10 @@ public class JCRDataStorage {
 				}else {
 					profile = profileHome.addNode(userId, "exo:userProfile") ;
 					Calendar cal = getGreenwichMeanTime() ;
-		  		profile.setProperty("exo:userId", userId) ;
-		  		profile.setProperty("exo:lastLoginDate", cal) ;
-		  		profile.setProperty("exo:joinedDate", cal) ; 
-		  		profile.setProperty("exo:lastPostDate", cal) ; 
+					profile.setProperty("exo:userId", userId) ;
+					profile.setProperty("exo:lastLoginDate", cal) ;
+					profile.setProperty("exo:joinedDate", cal) ; 
+					profile.setProperty("exo:lastPostDate", cal) ; 
 				}
 				long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
 				profile.setProperty("exo:totalPost", t) ;
@@ -3949,22 +3947,22 @@ public class JCRDataStorage {
 		QueryResult result;
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
 			.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery =  stringBuffer.toString();
+		pathQuery =	stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
 		ForumSearch forumSearch ;
 		while (iter.hasNext()) {
 			forumSearch = new ForumSearch();
-	    Node node = (Node) iter.next();
-	    forumSearch.setId(node.getName());
-	    forumSearch.setPath(node.getPath());
-	    forumSearch.setType(Utils.TOPIC);
-	    forumSearch.setName(node.getProperty("exo:name").getString());
-	    forumSearch.setContent(node.getProperty("exo:description").getString());
-	    forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
-	    list.add(forumSearch);
-    }
+			Node node = (Node) iter.next();
+			forumSearch.setId(node.getName());
+			forumSearch.setPath(node.getPath());
+			forumSearch.setType(Utils.TOPIC);
+			forumSearch.setName(node.getProperty("exo:name").getString());
+			forumSearch.setContent(node.getProperty("exo:description").getString());
+			forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
+			list.add(forumSearch);
+		}
 		stringBuffer = new StringBuffer();
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
 			.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending");
@@ -4057,17 +4055,17 @@ public class JCRDataStorage {
 					continuation.sendMessage(userId, "/eXo/Application/Forum/messages", json, cat.toString());
 				}
 			}
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-    	sProvider.close();
-    }
-  }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sProvider.close();
+		}
+	}
 
 	
 	protected ContinuationService getContinuationService() {
-	  ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
-	  return continuation;
+		ContinuationService continuation = (ContinuationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
+		return continuation;
 	}
 	 
 	public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
@@ -4124,7 +4122,7 @@ public class JCRDataStorage {
 			for(Category category : getCategories(sessionProvider)){
 				outputStream = new ByteArrayOutputStream() ;
 				session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-				file =  new File(category.getId() + ".xml");
+				file =	new File(category.getId() + ".xml");
 				file.deleteOnExit();
 				file.createNewFile();
 				writer = new BufferedWriter(new FileWriter(file));
@@ -4132,25 +4130,25 @@ public class JCRDataStorage {
 				writer.close();
 				listFiles.add(file);
 			}
-		  // tao file zip:
-	    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-	    int byteReads;
-	    byte[] buffer = new byte[4096]; // Create a buffer for copying
-	    FileInputStream inputStream = null;
-	    ZipEntry zipEntry = null;
-	    for(File f : listFiles){
-	    	inputStream = new FileInputStream(f);
-	    	zipEntry = new ZipEntry(f.getPath());
-	    	zipOutputStream.putNextEntry(zipEntry);
-	    	while((byteReads = inputStream.read(buffer)) != -1)
-	    		zipOutputStream.write(buffer, 0, byteReads);
-	    	inputStream.close();
-	    }
-	    zipOutputStream.close();
-	    file = new File("exportCategory.zip");
-	    session.logout();
-	    for(File f : listFiles) f.deleteOnExit();
-	    return file;
+			// tao file zip:
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+			int byteReads;
+			byte[] buffer = new byte[4096]; // Create a buffer for copying
+			FileInputStream inputStream = null;
+			ZipEntry zipEntry = null;
+			for(File f : listFiles){
+				inputStream = new FileInputStream(f);
+				zipEntry = new ZipEntry(f.getPath());
+				zipOutputStream.putNextEntry(zipEntry);
+				while((byteReads = inputStream.read(buffer)) != -1)
+					zipOutputStream.write(buffer, 0, byteReads);
+				inputStream.close();
+			}
+			zipOutputStream.close();
+			file = new File("exportCategory.zip");
+			session.logout();
+			for(File f : listFiles) f.deleteOnExit();
+			return file;
 			//outputStream.toString().writeTo(bos);
 		}
 	}
@@ -4177,7 +4175,7 @@ public class JCRDataStorage {
 				if(listCategoriesId.contains(category.getId())){
 					outputStream = new ByteArrayOutputStream() ;
 					session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-					file =  new File(category.getId() + ".xml");
+					file =	new File(category.getId() + ".xml");
 					file.deleteOnExit();
 					file.createNewFile();
 					writer = new BufferedWriter(new FileWriter(file));
@@ -4186,31 +4184,31 @@ public class JCRDataStorage {
 					listFiles.add(file);
 				}
 			}
-		  // tao file zip:
-	    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-	    int byteReads;
-	    byte[] buffer = new byte[4096]; // Create a buffer for copying
-	    FileInputStream inputStream = null;
-	    ZipEntry zipEntry = null;
-	    for(File f : listFiles){
-	    	inputStream = new FileInputStream(f);
-	    	zipEntry = new ZipEntry(f.getPath());
-	    	zipOutputStream.putNextEntry(zipEntry);
-	    	while((byteReads = inputStream.read(buffer)) != -1)
-	    		zipOutputStream.write(buffer, 0, byteReads);
-	    	inputStream.close();
-	    }
-	    zipOutputStream.close();
-	    file = new File("exportCategory.zip");
-	    session.logout();
-	    for(File f : listFiles) f.deleteOnExit();
-	    return file;
+			// tao file zip:
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+			int byteReads;
+			byte[] buffer = new byte[4096]; // Create a buffer for copying
+			FileInputStream inputStream = null;
+			ZipEntry zipEntry = null;
+			for(File f : listFiles){
+				inputStream = new FileInputStream(f);
+				zipEntry = new ZipEntry(f.getPath());
+				zipOutputStream.putNextEntry(zipEntry);
+				while((byteReads = inputStream.read(buffer)) != -1)
+					zipOutputStream.write(buffer, 0, byteReads);
+				inputStream.close();
+			}
+			zipOutputStream.close();
+			file = new File("exportCategory.zip");
+			session.logout();
+			for(File f : listFiles) f.deleteOnExit();
+			return file;
 			//outputStream.toString().writeTo(bos);
 		}
 	}*/
 
 	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
-		byte[] bdata  = new byte[bis.available()];
+		byte[] bdata	= new byte[bis.available()];
 		bis.read(bdata) ;
 		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
 		Session session = getForumHomeNode(sessionProvider).getSession();
@@ -4221,14 +4219,14 @@ public class JCRDataStorage {
 		
 		if(parentNode.isNodeType("exo:forumHome")){
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	    is = new ByteArrayInputStream(bdata) ;
-	    Document doc = docBuilder.parse(is);
-	    NodeList list = doc.getChildNodes() ;
-	    String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
-	    updateImportedData(nodePath + "/" + name);
+			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+			is = new ByteArrayInputStream(bdata) ;
+			Document doc = docBuilder.parse(is);
+			NodeList list = doc.getChildNodes() ;
+			String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
+			updateImportedData(nodePath + "/" + name);
 		}
-    session.logout();
+		session.logout();
 	}
 
 	public void updateTopicAccess (String userId, String topicId) throws Exception {
@@ -4255,11 +4253,11 @@ public class JCRDataStorage {
 			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
 			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
 			profile.save() ;
-    } catch (Exception e) {
-    	e.printStackTrace() ;
-    }finally{
-    	sysSession.close() ;
-    }
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}finally{
+			sysSession.close() ;
+		}
 	}
 	
 	public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
@@ -4393,9 +4391,9 @@ public class JCRDataStorage {
 		NodeIterator iter = result.getNodes();
 		List<String>list = new ArrayList<String>();
 		while (iter.hasNext()) {
-	    Node userNode = (Node) iter.next();
-	    list.add(userNode.getName());
-    }
+			Node userNode = (Node) iter.next();
+			list.add(userNode.getName());
+		}
 		return list;
 	}
 	
