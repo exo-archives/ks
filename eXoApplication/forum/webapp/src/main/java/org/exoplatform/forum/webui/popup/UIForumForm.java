@@ -340,6 +340,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			newForum.setModifiedDate(new Date());
 			newForum.setPostCount(0);
 			newForum.setTopicCount(0);
+			newForum.setIsAutoAddEmailNotify(isAutoAddEmail);
 			newForum.setNotifyWhenAddPost(notifyWhenAddPost);
 			newForum.setNotifyWhenAddTopic(notifyWhenAddTopic);
 			newForum.setIsModeratePost(false);

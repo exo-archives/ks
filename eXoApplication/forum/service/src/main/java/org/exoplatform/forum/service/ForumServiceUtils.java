@@ -61,7 +61,7 @@ public class ForumServiceUtils {
 								Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
 								for(Membership member : memberships){
 									if(member.getMembershipType().equals(array[0])) {
-											users.add(user.getUserName()) ;
+										users.add(user.getUserName()) ;
 										break ;
 									}
 								}						
