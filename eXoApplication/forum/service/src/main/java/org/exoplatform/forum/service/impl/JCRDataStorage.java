@@ -260,7 +260,7 @@ public class JCRDataStorage {
 
 	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
 		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
-		List<ForumAttachment> attachments =	new ArrayList<ForumAttachment>();
+		List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
 		if(ksAvatarHomnode.hasNode(userName)){
 			Node node = ksAvatarHomnode.getNode(userName);
 			Node nodeFile = null;
@@ -2036,7 +2036,7 @@ public class JCRDataStorage {
 					// set Category Private
 					Node categoryNode = null ;
 					if(node.isNodeType("exo:forumCategory")) {
-						categoryNode =	node;
+						categoryNode = node;
 					} else {
 						categoryNode = node.getParent() ;
 					}
@@ -2075,22 +2075,22 @@ public class JCRDataStorage {
 					String content_ = node.getProperty("exo:name").getString();
 					if(node.isNodeType("exo:forum")){
 						message.setSubject(headerSubject + objectName);
-						content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
-						content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+						content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 					} else {
 						message.setSubject(headerSubject + objectName);
-						content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
-						content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+						content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 					}
-					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
 					Date createdDate = topic.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =	StringUtils.replace(content_, "$POSTER", topic.getOwner());
-					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
+					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2220,17 +2220,17 @@ public class JCRDataStorage {
 					message.setMimeType("text/html");
 					content_ = node.getProperty("exo:name").getString();
 					message.setSubject(headerSubject + objectName +	content_);
-					content_ =	StringUtils.replace(content, "$OBJECT_NAME", content_);
-					content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
-					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+					content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =	StringUtils.replace(content_, "$POSTER", owner);
-					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ = StringUtils.replace(content_, "$POSTER", owner);
+					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2244,17 +2244,17 @@ public class JCRDataStorage {
 					String forumName = forumNode.getProperty("exo:name").getString();
 					content_ = node.getProperty("exo:name").getString();
 					message.setSubject(headerSubject + objectName +	content_);
-					content_ =	StringUtils.replace(content, "$OBJECT_NAME", forumName);
-					content_ =	StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-					content_ =	StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ =	StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					content_ = StringUtils.replace(content, "$OBJECT_NAME", forumName);
+					content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ =	StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ =	StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ =	StringUtils.replace(content_, "$POSTER", post.getOwner());
-					content_ =	StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+					content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
+					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailListForum, message);
@@ -2268,17 +2268,17 @@ public class JCRDataStorage {
 					String categoryName = categoryNode.getProperty("exo:name").getString();
 					content_ = node.getProperty("exo:name").getString();
 					message.setSubject(headerSubject + objectName +	content_);
-					content =	StringUtils.replace(content, "$OBJECT_NAME", categoryName);
-					content =	StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
-					content =	StringUtils.replace(content, "$ADD_TYPE", "Post");
-					content =	StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+					content = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+					content = StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
+					content = StringUtils.replace(content, "$ADD_TYPE", "Post");
+					content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 					Date createdDate = post.getCreatedDate();
 					Format formatter = new SimpleDateFormat("HH:mm");
-					content =	StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
+					content = StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content =	StringUtils.replace(content, "$DATE", formatter.format(createdDate));
-					content =	StringUtils.replace(content, "$POSTER", post.getOwner());
-					content =	StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
+					content = StringUtils.replace(content, "$POSTER", post.getOwner());
+					content = StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content);
 					sendEmailNotification(emailListCategory, message);
@@ -3947,7 +3947,7 @@ public class JCRDataStorage {
 		QueryResult result;
 		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
 			.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery =	stringBuffer.toString();
+		pathQuery = stringBuffer.toString();
 		query = qm.createQuery(pathQuery, Query.XPATH);
 		result = query.execute();
 		iter = result.getNodes();
@@ -4122,7 +4122,7 @@ public class JCRDataStorage {
 			for(Category category : getCategories(sessionProvider)){
 				outputStream = new ByteArrayOutputStream() ;
 				session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-				file =	new File(category.getId() + ".xml");
+				file = new File(category.getId() + ".xml");
 				file.deleteOnExit();
 				file.createNewFile();
 				writer = new BufferedWriter(new FileWriter(file));
@@ -4175,7 +4175,7 @@ public class JCRDataStorage {
 				if(listCategoriesId.contains(category.getId())){
 					outputStream = new ByteArrayOutputStream() ;
 					session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-					file =	new File(category.getId() + ".xml");
+					file = new File(category.getId() + ".xml");
 					file.deleteOnExit();
 					file.createNewFile();
 					writer = new BufferedWriter(new FileWriter(file));
