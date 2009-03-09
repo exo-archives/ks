@@ -5,6 +5,7 @@
 
 .UITopicForm .UIFormInputSet .UIFormGrid td.FieldLabel {
 	text-align: left ;
+	white-space: nowrap;
 }
 
 .UITopicForm .UIForm .HorizontalLayout .ThreadContent input {
@@ -55,18 +56,20 @@
 	padding-top: 5px;
 }
 
-.UITopicForm .HorizontalLayout .ThreadPermission td.FieldLabel {
-	width: 000px;
+.UITopicForm .HorizontalLayout .ThreadOption .UIFormGrid {
+	width: 100px;
+	*width: 420px;
+}
+
+.UITopicForm .HorizontalLayout .ThreadPermission .UIFormGrid {
+	width: 100px;
+	*width: 420px;
 }
 
 .UITopicForm .ThreadPermission input {
 	float: left ;
 }
 
-.UITopicForm #messageContent___Frame {
-	height: 200px ;	width: 457px; 
-}
-
-.UIForumPortlet .UITopicForm .UIForm .UIFormGrid td.FieldComponent {
+.UITopicForm .UIForm .UIFormGrid td.FieldComponent {
 	width: 700px;
 }

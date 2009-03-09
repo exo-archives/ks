@@ -150,7 +150,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
 	
 
-	private void setIsUseAjax(){
+	@SuppressWarnings("unused")
+  private void setIsUseAjax(){
 		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
 	}
 	
