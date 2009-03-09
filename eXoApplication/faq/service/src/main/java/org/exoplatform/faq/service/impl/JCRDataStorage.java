@@ -1979,9 +1979,9 @@ public class JCRDataStorage {
 					formSearch.setName(node.getProperty("exo:title").getString()) ;
 					Node questionNode = getQuestionNodeById(id, sProvider);
 					if(questionHasAnswer(questionNode)) {
-						formSearch.setIcon("NotResponseSearch") ;
-					} else {
 						formSearch.setIcon("QuestionSearch") ;
+					} else {
+						formSearch.setIcon("NotResponseSearch") ;
 					}
 				} else {
 					formSearch.setName(node.getProperty("exo:name").getString()) ;

@@ -1080,12 +1080,16 @@
 														</div>
 														
 													<%} %>
-													<div style="overflow:auto">
-														<% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
-														<div style="clear:right;"><span></span></div>
-													</div>	
+														<div style="overflow:auto">
+															<% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
+															<div style="clear:right;"><span></span></div>
+														</div>	
 												<%} else { %>
-														<div style="text-align:center; font-weight:bold;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%></div>
+													<div align="center" style="width:100%;">
+														<div class="NotResponse" style="margin:auto; width:300px; padding-left:20px; font-weight:bold; text-align:left;">
+															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%>
+														</div>
+													</div>
 												<%}%>
 												</div>
 												
