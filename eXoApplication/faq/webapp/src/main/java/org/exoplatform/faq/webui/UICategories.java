@@ -87,13 +87,15 @@ public class UICategories extends UIContainer{
 	private boolean canEditQuestion = false ;
 	private boolean isModeratorSubCate = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
-	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory"} ;
+	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	FAQService faqService_;
 	private String portalName = null;
+	private String currentUser = null;
 	public UICategories () throws Exception{ 
 		portalName = getPortalName();
+		currentUser = FAQUtils.getCurrentUser();
 	}
 	
 	public void setFAQService(FAQService service){
@@ -206,6 +208,18 @@ public class UICategories extends UIContainer{
 	  return currentName;
   }
 	
+	private boolean isWatched(String cateId){
+		try{
+			SessionProvider sProvider = FAQUtils.getSystemProvider();
+			boolean isWatched = faqService_.getWatchByUser(currentUser, cateId, sProvider);
+			sProvider.close();
+			return isWatched;
+				
+		} catch (Exception e){
+			return false;
+		}
+	}
+	
 	@SuppressWarnings("unused")
 	private void setListCate() throws Exception {
 		if(!isSwap){
@@ -255,7 +269,7 @@ public class UICategories extends UIContainer{
 		return watchList_ ;
 	}
 	
-	public Boolean checkUserWatch(String categoryId) throws Exception {
+	/*public Boolean checkUserWatch(String categoryId) throws Exception {
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 		if(!FAQUtils.isFieldEmpty(FAQUtils.getCurrentUser())){
 			List<Watch> listWatch = faqService_.getListMailInWatch(categoryId, sessionProvider).getAllWatch() ;
@@ -269,7 +283,7 @@ public class UICategories extends UIContainer{
 		}
 		sessionProvider.close();
 		return false ;
-	}
+	}*/
 	
 	private List<Category> getAllSubCategory(String categoryId) throws Exception {
 		List<Category> listResult = new ArrayList<Category>() ;

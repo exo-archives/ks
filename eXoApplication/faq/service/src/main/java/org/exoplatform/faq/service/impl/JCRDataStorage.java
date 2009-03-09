@@ -1792,6 +1792,24 @@ public class JCRDataStorage {
 		return pageList ;
 	}
 	
+	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
+		Node categoryHome = getCategoryHome(sessionProvider, null);
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = null;
+		queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+											append("//element(*,exo:faqCategory)[(@exo:id='").append(cateId).
+											append("') and (@exo:userWatching='").append(userId).append("')]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		
+		NodeIterator iterator = result.getNodes();
+		if(iterator.hasNext()){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
@@ -1923,6 +1941,7 @@ public class JCRDataStorage {
 		String types[] = new String[] {"faqCategory", "faqQuestion", "answer", "comment"} ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
 		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
+		List<String> ids = new ArrayList<String>();
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
 			StringBuffer stringBuffer = new StringBuffer() ;
@@ -1944,22 +1963,19 @@ public class JCRDataStorage {
 			Node node ;
 			FAQFormSearch formSearch ;
 			String id;
-			List<String> ids = new ArrayList<String>();
 			while(iter.hasNext()) {
 				formSearch = new FAQFormSearch() ;
 				node = (Node)iter.nextNode();
-				if(type.equals("comment") || type.equals("answer")){
-					node = (node.getParent()).getParent();
-					if(ids.contains(node.getName())) continue;
-					ids.add(node.getName());
-				}
 				id = node.getName() ;
-				formSearch.setId(id) ;
-				formSearch.setType(type) ;
-				if(type.equals("faqCategory")) {
-					formSearch.setName(node.getProperty("exo:name").getString()) ;
-					formSearch.setIcon("FAQCategorySearch") ;
-				} else {
+				if(!type.equals("faqCategory")) {
+					if(type.equals("comment") || type.equals("answer")){
+						node = (node.getParent()).getParent();
+						if(ids.contains(node.getName())){
+							continue;
+						}
+					}
+					ids.add(node.getName());
+					
 					formSearch.setName(node.getProperty("exo:title").getString()) ;
 					Node questionNode = getQuestionNodeById(id, sProvider);
 					if(questionHasAnswer(questionNode)) {
@@ -1967,7 +1983,12 @@ public class JCRDataStorage {
 					} else {
 						formSearch.setIcon("QuestionSearch") ;
 					}
+				} else {
+					formSearch.setName(node.getProperty("exo:name").getString()) ;
+					formSearch.setIcon("FAQCategorySearch") ;
 				}
+				formSearch.setId(id) ;
+				formSearch.setType(type) ;
 				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
 				FormSearchs.add(formSearch) ;
 			}

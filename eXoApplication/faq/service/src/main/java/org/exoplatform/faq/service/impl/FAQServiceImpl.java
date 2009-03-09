@@ -755,7 +755,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	}
 	
 	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
-	jcrData_.saveUserAvatar(userId, fileAttachment, sessionProvider);
+		jcrData_.saveUserAvatar(userId, fileAttachment, sessionProvider);
+	}
+	
+	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
+		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
 	}
 
 	public void start() {

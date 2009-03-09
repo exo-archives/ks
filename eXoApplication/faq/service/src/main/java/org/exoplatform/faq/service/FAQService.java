@@ -682,4 +682,6 @@ public interface FAQService {
 	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
 	
 	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
+	
+	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception;
 }

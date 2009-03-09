@@ -102,9 +102,9 @@
 								<%
 									}
 								}
-								if(uicomponent.checkUserWatch(category.getId())) {
-									addWatched = true;
-								}
+								
+								addWatched = uicomponent.isWatched(category.getId());
+								//System.out.println("\n\n\n\n-------------->uicomponent.isWatched(category.getId()):" + uicomponent.isWatched(category.getId()));
 								%>
 								
 								<!-- action of this category -->
@@ -127,23 +127,32 @@
 																		viewAction.equals("EditCategory") || viewAction.equals("MoveCategory")))
 																	continue;
 														%>
-															<div class="MenuItem">
-																	<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
-																			<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a></div>
-																	</div>
-															</div>
+																<div class="MenuItem">
+																		<div class="ItemIcon $viewAction" style="padding:3px 0px 5px 5px;">
+																				<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a></div>
+																		</div>
+																</div>
 																
 														<%
 															}
 															if(addWatched) {
 														%>
-															<div class="MenuItem">
-																<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
-																		<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatch", category.getId());%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a></div>
+																<div class="MenuItem">
+																	<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatch", category.getId());%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a></div>
+																	</div>
 																</div>
-															</div>
 															
-														<%}
+														<%} else {%>
+																<div class="MenuItem">
+																	<div class="ItemIcon Watch" style="padding:3px 0px 5px 5px;">
+																			<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("Watch", category.getId());%>">
+																				<%=_ctx.appRes(uicomponent.getName() + ".action.Watch")%>
+																			</a></div>
+																	</div>
+																</div>
+														<%
+														}
 															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
 															<div class="MenuItem">
 																<div class="ItemIcon FAQRSS" style="padding:3px 0px 5px 5px;">
