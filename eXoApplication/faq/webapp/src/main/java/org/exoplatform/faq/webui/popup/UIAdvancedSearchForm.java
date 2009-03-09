@@ -273,8 +273,10 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			} else if(!FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response)){
 				listQuestionSearchByLanguage = faqService.searchQuestionByLangageOfText(listResultQuesiton, language, text, sProvider) ;
 			} else {
-				List<Question> listQuestionSearchByLanguageTemp = faqService.searchQuestionByLangageOfText(listResultQuesiton, language, text, sProvider) ;
-				listQuestionSearchByLanguage = faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language, question, response, sProvider) ;
+				List<Question> listQuestionSearchByLanguageTemp = 
+																										faqService.searchQuestionByLangageOfText(listResultQuesiton, language, text, sProvider) ;
+				listQuestionSearchByLanguage = 
+															faqService.searchQuestionByLangage(listQuestionSearchByLanguageTemp, language, question, response, sProvider) ;
 			}
 			if(faqSetting_.getDisplayMode().equals("both")) {
 				if(faqSetting_.isAdmin()) {
@@ -408,7 +410,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				eventQuery.setResponse(response) ;
 			} else {
 				if(type.equals("faqQuestion")) eventQuery.setText("") ;
-				if(!FAQUtils.isFieldEmpty(question) && !FAQUtils.isFieldEmpty(response) && !FAQUtils.isFieldEmpty(text)) isEmptyMulti = true;
+				if(!FAQUtils.isFieldEmpty(question) || !FAQUtils.isFieldEmpty(response) || !FAQUtils.isFieldEmpty(text)) isEmptyMulti = true;
 				else isEmptyMulti = false ;
 			}
 			eventQuery.getPathQuery() ;

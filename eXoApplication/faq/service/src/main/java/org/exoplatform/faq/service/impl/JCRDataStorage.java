@@ -914,13 +914,24 @@ public class JCRDataStorage {
 		}
 	}
 	
+	private Node getLanguageNodeByLanguage(Node questionNode, String languge) throws Exception{
+  	NodeIterator nodeIterator = questionNode.getNode(Utils.LANGUAGE_HOME).getNodes();
+  	Node languageNode = null;
+  	while(nodeIterator.hasNext()){
+  		languageNode = nodeIterator.nextNode();
+  		if(languageNode.getProperty("exo:language").getString().equals(languge)){
+  			return languageNode;
+  		}
+  	}
+  	return null;
+  }
+	
 	public List<Question> searchQuestionByLangageOfText( List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception {
 		List<Question> listResult = new ArrayList<Question>();
 		Node questionHome = getQuestionHome(sProvider, null);
 		Node questionNode = null;
 		Node languageNode = null;
-		Node node = null;
-		String languages = "languages";
+		String languages = Utils.LANGUAGE_HOME;
 		text = text.toLowerCase();
 		String authorContent = new String();
 		String emailContent = new String();
@@ -929,18 +940,18 @@ public class JCRDataStorage {
 		for (Question question : listQuestion) {
 			questionNode = questionHome.getNode(question.getId());
 			if (questionNode.hasNode(languages)) {
-				languageNode = questionNode.getNode(languages);
-				if (languageNode.hasNode(languageSearch)) {
+				//languageNode = questionNode.getNode(languages);
+				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+				if (languageNode != null) {
 					boolean isAdd = false;
-					node = languageNode.getNode(languageSearch);
 					if (questionNode.hasProperty("exo:author"))
 						authorContent = questionNode.getProperty("exo:author").getValue().getString();
 					if (questionNode.hasProperty("exo:email"))
 						emailContent = questionNode.getProperty("exo:email").getValue().getString();
-					if (node.hasProperty("exo:name"))
-						questionContent = node.getProperty("exo:name").getValue().getString();
-					if (node.hasProperty("exo:responses"))
-						responseContent = ValuesToStrings(node.getProperty("exo:responses").getValues());
+					if (languageNode.hasProperty("exo:name"))
+						questionContent = languageNode.getProperty("exo:name").getValue().getString();
+					if (languageNode.hasProperty("exo:responses"))
+						responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
 					if ((questionContent.toLowerCase().indexOf(text) >= 0)
 					    || ArrayContentValue(responseContent, text)
 					    || (authorContent.toLowerCase().indexOf(text) >= 0)
@@ -966,21 +977,19 @@ public class JCRDataStorage {
 		Node questionHome = getQuestionHome(sProvider, null);
 		Node questionNode = null;
 		Node languageNode = null;
-		Node node = null;
-		String languages = "languages";
+		String languages = Utils.LANGUAGE_HOME;
 		String questionContent = new String();
 		Answer[] answers = null;
 		String[] responseContent = null;
 		for (Question question : listQuestion) {
 			questionNode = questionHome.getNode(question.getId());
 			if (questionNode.hasNode(languages)) {
-				languageNode = questionNode.getNode(languages);
-				if (languageNode.hasNode(languageSearch)) {
+				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+				if (languageNode != null) {
 					boolean isAdd = false;
-					node = languageNode.getNode(languageSearch);
-					if (node.hasProperty("exo:name"))
-						questionContent = node.getProperty("exo:name").getValue().getString();
-					answers = getAnswers(node);
+					if (languageNode.hasProperty("exo:name"))
+						questionContent = languageNode.getProperty("exo:name").getValue().getString();
+					answers = getAnswers(languageNode);
 					responseContent = new String[answers.length];
 					for (int i = 0; i < answers.length; i++) {
 						responseContent[i] = answers[i].getResponses();
