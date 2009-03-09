@@ -75,7 +75,8 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
-		public void execute(Event<UIImportForm> event) throws Exception {
+		@SuppressWarnings("deprecation")
+    public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 
 			UIForumPortlet portlet = importForm.getAncestorOfType(UIForumPortlet.class) ;

@@ -60,7 +60,8 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 		}
 )
 public class UIBreadcumbs extends UIContainer {
-	private boolean useAjax = true;
+	@SuppressWarnings("unused")
+  private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
@@ -77,7 +78,8 @@ public class UIBreadcumbs extends UIContainer {
 		path_.add(FORUM_SERVICE) ;
 	}
 
-	private void setIsUseAjax(){
+	@SuppressWarnings("unused")
+  private void setIsUseAjax(){
 		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
 	}
 

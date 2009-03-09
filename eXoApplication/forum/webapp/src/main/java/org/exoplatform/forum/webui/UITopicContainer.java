@@ -104,7 +104,8 @@ import org.exoplatform.webui.form.UIFormStringInput;
 	}
 )
 public class UITopicContainer extends UIForumKeepStickPageIterator {
-	private boolean useAjax = true;
+	@SuppressWarnings("unused")
+  private boolean useAjax = true;
 	private ForumService forumService ;
 	private String forumId = "";
 	private String categoryId = "";

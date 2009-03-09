@@ -113,7 +113,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	public final String WATCHES_ITERATOR = "WatchChesPageIterator";
 	
-	private String tabId = "ForumUserProfile";
+	@SuppressWarnings("unused")
+  private String tabId = "ForumUserProfile";
 	private ForumService forumService ;
 	private UserProfile userProfile = null ;
 	private String[] permissionUser = null;
@@ -426,7 +427,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			uiForm.tabId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+//			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 		}
 	}
 	
