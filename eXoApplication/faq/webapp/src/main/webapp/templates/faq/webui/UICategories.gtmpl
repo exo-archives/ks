@@ -80,7 +80,6 @@
 					List listCateModerator = uicomponent.categoryModerators ;
 					String classCss = "";
 					int i = 0;
-					boolean addWatched = false;
 					for(category in listCate){
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
@@ -102,9 +101,6 @@
 								<%
 									}
 								}
-								
-								addWatched = uicomponent.isWatched(category.getId());
-								//System.out.println("\n\n\n\n-------------->uicomponent.isWatched(category.getId()):" + uicomponent.isWatched(category.getId()));
 								%>
 								
 								<!-- action of this category -->
@@ -115,9 +111,9 @@
 													<div class="UIRightPopupMenuContainer" style="margin:0px;">
 														<%
 															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
-																categoryAction = uicomponent.getActionCategory() ;
+																categoryAction = uicomponent.getActionCategory(category.getId()) ;
 															} else {
-																categoryAction = uicomponent.getActionCategoryWithUser() ;
+																categoryAction = uicomponent.getActionCategoryWithUser(category.getId()) ;
 															}
 															
 															for(viewAction in categoryAction) {
@@ -135,24 +131,6 @@
 																
 														<%
 															}
-															if(addWatched) {
-														%>
-																<div class="MenuItem">
-																	<div class="ItemIcon UnWatch" style="padding:3px 0px 5px 5px;">
-																			<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("UnWatch", category.getId());%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a></div>
-																	</div>
-																</div>
-															
-														<%} else {%>
-																<div class="MenuItem">
-																	<div class="ItemIcon Watch" style="padding:3px 0px 5px 5px;">
-																			<div style="padding-left:20px;"><a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("Watch", category.getId());%>">
-																				<%=_ctx.appRes(uicomponent.getName() + ".action.Watch")%>
-																			</a></div>
-																	</div>
-																</div>
-														<%
-														}
 															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
 															<div class="MenuItem">
 																<div class="ItemIcon FAQRSS" style="padding:3px 0px 5px 5px;">

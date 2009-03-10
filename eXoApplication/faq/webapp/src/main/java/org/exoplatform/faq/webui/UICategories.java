@@ -87,9 +87,12 @@ public class UICategories extends UIContainer{
 	private boolean canEditQuestion = false ;
 	private boolean isModeratorSubCate = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory"} ;
-	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory"} ;
+	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] firstActionCateUnWatch_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
+	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] secondActionCateUnWatch_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
+	private String[] userActionsCateUnWatch_ = new String[]{"AddNewQuestion", "UnWatch"} ;
 	FAQService faqService_;
 	private String portalName = null;
 	private String currentUser = null;
@@ -335,15 +338,23 @@ public class UICategories extends UIContainer{
 	}
 	
 	@SuppressWarnings("unused")
-	private String[] getActionCategory(){
-		if(categoryId_ == null)return firstActionCate_ ;
-		else return secondActionCate_;
+	private String[] getActionCategory(String cateId){
+		if(categoryId_ == null){
+			if(isWatched(cateId)) return firstActionCateUnWatch_;
+			else return firstActionCate_ ;
+		}else{
+			if(isWatched(cateId))return secondActionCateUnWatch_;
+			else return secondActionCate_;
+		}
 	}
 	
 	@SuppressWarnings("unused")
-	private String[] getActionCategoryWithUser() {
+	private String[] getActionCategoryWithUser(String cateId) {
 		try {
-			if(FAQUtils.getCurrentUser() != null) return userActionsCate_ ;
+			if(FAQUtils.getCurrentUser() != null){
+				if(!isWatched(cateId)) return userActionsCate_ ;
+				else return userActionsCateUnWatch_;
+			}
 			else return new String[]{userActionsCate_[0]};
 		} catch (Exception e) {
 			e.printStackTrace();
