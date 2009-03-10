@@ -26,6 +26,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -71,6 +72,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 				@EventConfig(listeners = UISettingForm.SelectCategoryForumActionListener.class),
 				@EventConfig(listeners = UISettingForm.SelectForumActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChangeAvatarActionListener.class),
+				@EventConfig(listeners = UISettingForm.SetDefaultAvatarActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
@@ -234,7 +236,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 																													.getUserAvatar(FAQUtils.getCurrentUser(), sessionProvider), 
 																					getApplicationComponent(DownloadService.class)) ;
 			if(avatarUrl == null || avatarUrl.trim().length() < 1)
-				avatarUrl = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+				avatarUrl = Utils.DEFAULT_AVATAR_URL;
 			sessionProvider.close();
 		}
 	}
@@ -360,6 +362,19 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			attachMentForm.setNumberUpload(1);
 			attachMentForm.setIsChangeAvatar(true);
 		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class SetDefaultAvatarActionListener extends EventListener<UISettingForm> {
+		public void execute(Event<UISettingForm> event) throws Exception {
+			UISettingForm settingForm = event.getSource() ;
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			FAQService service = FAQUtils.getFAQService() ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			service.setDefaultAvatar(FAQUtils.getCurrentUser(), sessionProvider);
+			sessionProvider.close();
+			settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 		}
 	}
 	

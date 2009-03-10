@@ -64,9 +64,13 @@ import org.exoplatform.forum.service.Utils;
 														    	<div>
 																		<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt=""/>
 																	</div>
-																	<div style="text-align:left">
-																		<a href="<%=uiform.event("Attachment")%>" style="color:blue;">
-																			[ <%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%> ]
+																	<div style="text-align:left; color:blue;">
+																		<a href="javaScript:void(0);" onclick="<%=uiform.event("Attachment")%>" style="color:blue;">
+																			<%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
+																		</a>
+																		|
+																		<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
+																			<%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
 																		</a>
 																	</div>
 																</td>

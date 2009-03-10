@@ -82,6 +82,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		template = "app:/templates/forum/webui/popup/UIForumUserSettingForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UIForumUserSettingForm.AttachmentActionListener.class), 
+			@EventConfig(listeners = UIForumUserSettingForm.SetDefaultAvatarActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.OpenTabActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.OpentContentActionListener.class), 
@@ -442,6 +443,16 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			attachFileForm.setIsChangeAvatar(true);
 			attachFileForm.setMaxField(1);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+		}
+	}
+	
+	static public class SetDefaultAvatarActionListener extends EventListener<UIForumUserSettingForm> {
+		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
+			UIForumUserSettingForm uiForm = event.getSource() ;
+			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+			uiForm.forumService.setDefaultAvatar(uiForm.userProfile.getUserId(), sessionProvider);
+			sessionProvider.close();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
