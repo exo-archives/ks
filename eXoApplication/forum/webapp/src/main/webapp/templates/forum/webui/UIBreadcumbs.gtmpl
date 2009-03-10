@@ -25,10 +25,13 @@
 					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;
 					String checkPath = ""; 
+					String id = "";
 					for(namePath in uicomponent.getBreadcumbs()) {
 					  checkPath = namePath;
 					  oncl = "";
-						link = uicomponent.url("ChangePath", uicomponent.getPath(t)) ;
+					  id = uicomponent.getPath(t);
+					  id = id.substring(id.lastIndexOf("/")+1);
+						link = uicomponent.url("ChangePath", id) ;
 						if(link.indexOf(portalName) > 0) {
 							if(link.indexOf(portalName + "/" + selectedNode) < 0){
 								link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;

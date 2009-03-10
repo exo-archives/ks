@@ -307,14 +307,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	}
 	
 	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider){
-	// Vu Duy Tu Save post Discuss Forum.
+	// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String pathTopic = question_.getPathTopicDiscuss();
 			if(pathTopic != null && pathTopic.length() > 0) {
-				linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
+				String []ids = pathTopic.split("/");
+				linkForum = linkForum.replaceFirst("OBJECTID", ids[2]);
 				linkForum = url + linkForum;
 				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-				String []ids = pathTopic.split("/");
 				Post post;
 				int l = question_.getAnswers().length;
 				for (int i = 0; i < l; ++i) {

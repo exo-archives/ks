@@ -498,7 +498,6 @@ public class JCRDataStorage {
 			catNode = forumHomeNode.addNode(category.getId(), "exo:forumCategory");
 			catNode.setProperty("exo:id", category.getId());
 			catNode.setProperty("exo:owner", category.getOwner());
-//			catNode.setProperty("exo:path", "");// catNode.getPath()) ;
 			catNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 		} else {
 			catNode = forumHomeNode.getNode(category.getId());
@@ -652,7 +651,6 @@ public class JCRDataStorage {
 				forumNode = catNode.addNode(forum.getId(), "exo:forum");
 				forumNode.setProperty("exo:id", forum.getId());
 				forumNode.setProperty("exo:owner", forum.getOwner());
-//				forumNode.setProperty("exo:path", "");// forumNode.getPath()) ;
 				forumNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 				forumNode.setProperty("exo:lastTopicPath", forum.getLastTopicPath());
 				forumNode.setProperty("exo:postCount", 0);
@@ -3444,6 +3442,35 @@ public class JCRDataStorage {
 			return null;
 		}
 	}
+	
+	public Object getObjectNameById(SessionProvider sProvider, String id, String type) throws Exception {
+		Object object = new Object();
+		Node forumHomeNode = getForumHomeNode(sProvider);
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:").append(type).append(")[exo:id='").append(id).append("']");
+		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		while (iter.hasNext()) {
+			Node node = (Node) iter.next();
+			if(type.equals(Utils.CATEGORY)) {
+				Category category = getCategory(node);
+				object = category;
+			} else if(type.equals(Utils.FORUM)) {
+				Forum forum = getForum(node);
+				object = forum;
+			} else if(type.equals(Utils.TOPIC)) {
+				Topic topic = getTopicNode(node);
+				object = topic;
+			} else {
+				Post post = getPost(node);
+				object = post;
+			}
+			break;
+		}
+		return object;
+	}
 
 	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum) throws Exception {
 		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>();
@@ -4150,60 +4177,6 @@ public class JCRDataStorage {
 			//outputStream.toString().writeTo(bos);
 		}
 	}
-
-	/*public Object exportXML(List<String> listCategoriesId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
-		Session session = null;
-		Node homeNode = getForumHomeNode(sessionProvider);
-		if(listCategoriesId.size() == 1){
-			if(forumId != null){
-				session = homeNode.getNode(listCategoriesId.get(0)).getNode(forumId).getSession();
-			} else {
-				session = homeNode.getNode(listCategoriesId.get(0)).getSession();
-			}
-			session.exportSystemView(nodePath, bos, false, false ) ;
-			session.logout();
-			return null;
-		} else {
-			List<File> listFiles = new ArrayList<File>();
-			File file = null;
-			Writer writer = null;
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
-			session = homeNode.getSession();
-			for(Category category : getCategories(sessionProvider)){
-				if(listCategoriesId.contains(category.getId())){
-					outputStream = new ByteArrayOutputStream() ;
-					session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-					file = new File(category.getId() + ".xml");
-					file.deleteOnExit();
-					file.createNewFile();
-					writer = new BufferedWriter(new FileWriter(file));
-					writer.write(outputStream.toString());
-					writer.close();
-					listFiles.add(file);
-				}
-			}
-			// tao file zip:
-			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-			int byteReads;
-			byte[] buffer = new byte[4096]; // Create a buffer for copying
-			FileInputStream inputStream = null;
-			ZipEntry zipEntry = null;
-			for(File f : listFiles){
-				inputStream = new FileInputStream(f);
-				zipEntry = new ZipEntry(f.getPath());
-				zipOutputStream.putNextEntry(zipEntry);
-				while((byteReads = inputStream.read(buffer)) != -1)
-					zipOutputStream.write(buffer, 0, byteReads);
-				inputStream.close();
-			}
-			zipOutputStream.close();
-			file = new File("exportCategory.zip");
-			session.logout();
-			for(File f : listFiles) f.deleteOnExit();
-			return file;
-			//outputStream.toString().writeTo(bos);
-		}
-	}*/
 
 	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
 		byte[] bdata	= new byte[bis.available()];

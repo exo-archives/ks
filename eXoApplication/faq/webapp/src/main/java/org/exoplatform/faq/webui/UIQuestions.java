@@ -204,8 +204,7 @@ public class UIQuestions extends UIContainer {
 		url = url.substring(0, url.indexOf("/")) ;
 		url = "http://" + url;
 		topic = new Topic();
-		String path = categoryId+"/"+forumId+"/"+topic.getId() ;
-		link = link.replaceFirst("OBJECTID", path);
+		link = link.replaceFirst("OBJECTID", topic.getId());
 		link = url + link;
 		return link;
 	}
@@ -1926,7 +1925,7 @@ public class UIQuestions extends UIContainer {
 				Topic topic = uiForm.topic;
 				String link = uiForm.getLinkDiscuss(); 
 				link = link.replaceFirst("private", "public");
-				String path = categoryId+"/"+forumId+"/"+topic.getId() ;
+				String path = topic.getId() ;
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				Question question = faqService.getQuestionById(questionId, sProvider);
 				String userName = question.getAuthor();

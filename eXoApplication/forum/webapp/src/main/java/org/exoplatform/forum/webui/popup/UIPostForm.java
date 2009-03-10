@@ -350,7 +350,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				url = "http://" + url;
 				String link = uiForm.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewPost");	
-				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topicId)) ;
+				link = link.replaceFirst("pathId", uiForm.topicId) ;
 				link = url + link;
 				link = link.replaceFirst("private", "public");
 				//

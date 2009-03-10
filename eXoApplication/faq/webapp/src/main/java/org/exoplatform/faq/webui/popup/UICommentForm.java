@@ -188,12 +188,12 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 					commentForm.comment.setComments(comment);
 					String pathTopic = commentForm.question_.getPathTopicDiscuss();
 					if(pathTopic != null && pathTopic.length() > 0) {
-						linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
+						String []ids = pathTopic.split("/");
+						linkForum = linkForum.replaceFirst("OBJECTID", ids[2]);
 						linkForum = url + linkForum;
 						if(commentForm.isAddNew) {
 							Post post = new Post();
 							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-							String []ids = pathTopic.split("/");
 							post.setOwner(commentForm.currentUser_);
 							post.setIcon("ViewIcon");
 							post.setName("Re: " + commentForm.question_.getQuestion());
@@ -211,7 +211,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							if(postId != null && postId.length() > 0) {
 								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 								try {
-									String []ids = pathTopic.split("/");
 									Post post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
 									boolean isNew = false;
 									if(post == null){

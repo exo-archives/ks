@@ -299,6 +299,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getObjectNameByPath(sProvider, path);
   }
 
+  public Object getObjectNameById(SessionProvider sProvider, String path, String type) throws Exception {
+  	return storage_.getObjectNameById(sProvider, path, type);
+  }
+
   public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum)throws Exception {
     return storage_.getAllLink(sProvider, strQueryCate, strQueryForum) ;
   }

@@ -1306,7 +1306,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				url = "http://" + url;
 				String link = topicDetail.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
-				link = link.replaceFirst("pathId", (topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId)) ;
+				link = link.replaceFirst("pathId", topicDetail.topicId) ;
 				link = url + link;
 				link = link.replaceFirst("private", "public");
 				//

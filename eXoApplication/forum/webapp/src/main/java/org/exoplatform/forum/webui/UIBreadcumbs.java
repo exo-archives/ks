@@ -206,7 +206,7 @@ public class UIBreadcumbs extends UIContainer {
 			if(uiBreadcums.isOpen()) {
 				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 				UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
-				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) > 0) {
+				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0) {
 					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
@@ -216,15 +216,22 @@ public class UIBreadcumbs extends UIContainer {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-				}else	if(path.lastIndexOf(Utils.TOPIC) > 0) {
+				}else	if(path.lastIndexOf(Utils.TOPIC) >= 0) {
 					String []id = path.split("/") ;
-					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					SessionProvider sysSession = SessionProviderFactory.createSystemProvider() ;
+					SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
 					try{
-						Topic topic = forumService.getTopicByPath(sysSession, path, false) ;
+						Topic topic ;
+						if(id.length > 1) {
+							topic = uiBreadcums.forumService.getTopicByPath(sProvider, path, false) ;
+						} else {
+							topic = (Topic)uiBreadcums.forumService.getObjectNameById(sProvider, path, Utils.TOPIC);
+							path = topic.getPath();
+							path = path.substring(path.indexOf(Utils.CATEGORY));
+							id = path.split("/") ;
+						}
 						if(topic != null) {
 							forumPortlet.updateIsRendered(ForumUtils.FORUM);
-							Forum forum = forumService.getForum(ForumSessionUtils.getSystemProvider(),id[0] , id[1] ) ;
+							Forum forum = uiBreadcums.forumService.getForum(sProvider, id[0], id[1]) ;
 							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 							UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 							uiForumContainer.setIsRenderChild(false) ;
@@ -236,23 +243,38 @@ public class UIBreadcumbs extends UIContainer {
 							uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
-								forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+								uiBreadcums.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 								forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 							}
 						}						
 					}catch(Exception e) {
-						System.out.println("\n\n not pound !!!\n\n");
 						e.printStackTrace();
 					}finally {
-						sysSession.close() ;
+						sProvider.close() ;
 					}
-				}else	if(path.lastIndexOf(Utils.FORUM) > 0) {
+				}else	if((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
 					String id[] = path.split("/");
 					forumPortlet.updateIsRendered(ForumUtils.FORUM);
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 					forumContainer.setIsRenderChild(true) ;
-					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+					if(id.length > 1) {
+						forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
+						forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+					} else {
+						SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
+						try {
+							Forum forum = (Forum)uiBreadcums.forumService.getObjectNameById(sProvider, path, Utils.FORUM);
+							path = forum.getPath();
+							path = path.substring(path.indexOf(Utils.CATEGORY));
+							id = path.split("/");
+							forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
+							forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum) ;
+						}catch(Exception e) {
+							e.printStackTrace();
+						}finally {
+							sProvider.close() ;
+						}
+					}
 				}else {
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.getChild(UICategory.class).updateByBreadcumbs(path) ;

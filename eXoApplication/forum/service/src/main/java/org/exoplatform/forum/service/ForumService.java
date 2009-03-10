@@ -506,6 +506,18 @@ public interface ForumService {
 	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception;
 
 	/**
+	 * Gets the object name by path.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param path the path
+	 * 
+	 * @return the object name by path
+	 * 
+	 * @throws Exception the exception
+	 */
+	public Object getObjectNameById(SessionProvider sProvider, String id, String type) throws Exception;
+
+	/**
 	 * Gets the all link.
 	 * 
 	 * @param sProvider is the SessionProvider

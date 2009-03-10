@@ -422,7 +422,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				url = "http://" + url;
 				String link = uiForm.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
-				link = link.replaceFirst("pathId", (uiForm.categoryId+"/"+uiForm.forumId+"/"+uiForm.topic.getId())) ;
+				link = link.replaceFirst("pathId", uiForm.topic.getId()) ;
 				link = url + link;
 				link = link.replaceFirst("private", "public");
 				//
