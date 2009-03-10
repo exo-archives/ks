@@ -102,6 +102,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.ViewUserProfileActionListener.class),
 				@EventConfig(listeners = UIQuestions.ResponseQuestionActionListener.class),
+				@EventConfig(listeners = UIQuestions.EditAnswerActionListener.class),
 				@EventConfig(listeners = UIQuestions.EditQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.DeleteQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.MoveQuestionActionListener.class),
@@ -1383,6 +1384,47 @@ public class UIQuestions extends UIContainer {
 				responseForm.setQuestionId(question2, "", cateIsApprovedAnswers) ;
 			}
 			responseForm.setFAQSetting(question.faqSetting_);
+			popupContainer.setId("FAQResponseQuestion") ;
+			popupAction.activate(popupContainer, 900, 500) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class EditAnswerActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions uiQuestions = event.getSource() ; 
+			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			Question question = null ;
+			Answer answer = null;
+			String answerId = event.getRequestContext().getRequestParameter(OBJECTID);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			try{
+				question = faqService_.getQuestionById(uiQuestions.questionView_, sessionProvider);
+				if(language_.equals(question.getLanguage()))
+					answer = faqService_.getAnswerById(uiQuestions.questionView_, answerId, sessionProvider);
+				else {
+					MultiLanguages multiLanguages = new MultiLanguages();
+					answer = multiLanguages.getAnswerById(faqService_.getQuestionNodeById(uiQuestions.questionView_, sessionProvider),
+																								answerId, language_);
+				}
+			} catch(javax.jcr.PathNotFoundException e) {
+				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				uiQuestions.setIsNotChangeLanguage() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				sessionProvider.close();
+				return ;
+			} catch (Exception e) { 
+				e.printStackTrace() ;
+			} 
+			sessionProvider.close();
+			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
+			responseForm.setAnswerInfor(question, answer, language_) ;
+			responseForm.setFAQSetting(uiQuestions.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
 			popupAction.activate(popupContainer, 900, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

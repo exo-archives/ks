@@ -267,6 +267,17 @@ public class JCRDataStorage {
 		else ksAvatarHomeNode.save();
 	}
 	
+	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
+		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
+		if(ksAvatarHomnode.hasNode(userName)){
+			Node node = ksAvatarHomnode.getNode(userName);
+			if(node.isNodeType("nt:file")) {
+				node.remove();
+				ksAvatarHomnode.save();
+			}
+		}
+	}
+	
 	private Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
 		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
 		try {

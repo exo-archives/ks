@@ -84,6 +84,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
 	private static final String IS_APPROVED = "IsApproved" ;
 	private static Question question_ = null ;
+	private Answer answer_ = null;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	@SuppressWarnings("unused")
@@ -92,6 +93,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	// form input :
 	private UIFormSelectBox questionLanguages_ ;
+	@SuppressWarnings("deprecation")
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
 	@SuppressWarnings("unchecked")
 	private UIFormCheckBoxInput checkShowAnswer_ ;
@@ -144,6 +146,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
       }
       sessionProvider.close();
     }
+  }
+  
+  public void setAnswerInfor(Question question, Answer answer, String language){
+  	setQuestionId(question, language, answer.getApprovedAnswers());
+  	this.answer_ = answer;
+  	inputResponseQuestion_.setValue(answer.getResponses());
+  	questionLanguages_.setDisabled(true);
+  	questionLanguages_.setOnChange("");
   }
 
 	@SuppressWarnings("unchecked")
@@ -295,6 +305,59 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 		return oldPath ;
 	}
+	
+	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider){
+	// Vu Duy Tu Save post Discuss Forum.
+		if(faqSetting_.getIsDiscussForum()) {
+			String pathTopic = question_.getPathTopicDiscuss();
+			if(pathTopic != null && pathTopic.length() > 0) {
+				linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
+				linkForum = url + linkForum;
+				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+				String []ids = pathTopic.split("/");
+				Post post;
+				int l = question_.getAnswers().length;
+				for (int i = 0; i < l; ++i) {
+					String postId = question_.getAnswers()[i].getPostId();
+					try {
+						if(postId != null && postId.length() > 0){
+							post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
+							if(post == null) {
+								post = new Post();
+								post.setOwner(question_.getAnswers()[i].getResponseBy());
+								post.setName("Re: " + question_.getQuestion());
+								post.setIcon("ViewIcon");
+								question_.getAnswers()[i].setPostId(post.getId());
+								post.setMessage(question_.getAnswers()[i].getResponses());
+								post.setLink(linkForum);
+								post.setIsApproved(false);
+								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+							}else {
+								//post.setIsApproved(false);
+								post.setMessage(question_.getAnswers()[i].getResponses());
+								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
+							}
+						} else {
+							post = new Post();
+							post.setOwner(question_.getAnswers()[i].getResponseBy());
+							post.setName("Re: " + question_.getQuestion());
+							post.setIcon("ViewIcon");
+							post.setMessage(question_.getAnswers()[i].getResponses());
+							post.setLink(linkForum);
+							post.setIsApproved(false);
+							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
+							question_.getAnswers()[i].setPostId(post.getId());
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+        }
+			}
+		}
+		/*for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
+			multiLanguages.saveAnswer(questionNode, responseForm.listQuestionLanguage.get(i));
+		}*/
+	}
 
 	// action :
 		static public class SaveActionListener extends EventListener<UIResponseForm> {
@@ -310,12 +373,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 							answer = responseForm.mapAnswers.get(responseForm.languageIsResponsed);
 							answer.setResponses(responseQuestionContent);
 						} else {
-							answer = new Answer();
-							answer.setNew(true);
+							if(responseForm.answer_ == null) {
+								answer = new Answer();
+								answer.setDateResponse(new Date());
+								answer.setResponseBy(FAQUtils.getCurrentUser());
+								answer.setNew(true);
+							}	else {
+								answer = responseForm.answer_;
+								answer.setNew(false);
+							}
 							answer.setActivateAnswers(true);
 							answer.setApprovedAnswers(responseForm.cateIsApprovedAnswer_);
-							answer.setDateResponse(new Date());
-							answer.setResponseBy(FAQUtils.getCurrentUser());
 							answer.setResponses(responseQuestionContent);
 						}
 						responseForm.mapAnswers.put(responseForm.languageIsResponsed, answer);
@@ -370,7 +438,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
 					listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
-					listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
+					if(responseForm.answer_ == null)listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
+					else {
+						for(Answer ans : listAnswers){
+							if(ans.getId().equals(responseForm.answer_.getId())){
+								int ind = listAnswers.indexOf(ans);
+								listAnswers.remove(ind);
+								listAnswers.add(ind, responseForm.mapAnswers.get(question_.getLanguage()));
+								break;
+							}
+						}
+					}
 					question_.setAnswers(listAnswers.toArray(new Answer[]{}));
 				}
 				try{
@@ -386,56 +464,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					}
 					faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
 					
-					// Vu Duy Tu Save post Discuss Forum.
-					if(responseForm.faqSetting_.getIsDiscussForum()) {
-						String pathTopic = question_.getPathTopicDiscuss();
-						if(pathTopic != null && pathTopic.length() > 0) {
-							linkForum = linkForum.replaceFirst("OBJECTID", pathTopic);
-							linkForum = url + linkForum;
-							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-							String []ids = pathTopic.split("/");
-							Post post;
-							int l = question_.getAnswers().length;
-							for (int i = 0; i < l; ++i) {
-								String postId = question_.getAnswers()[i].getPostId();
-								try {
-									if(postId != null && postId.length() > 0){
-										post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
-										if(post == null) {
-											post = new Post();
-											post.setOwner(question_.getAnswers()[i].getResponseBy());
-											post.setName("Re: " + question_.getQuestion());
-											post.setIcon("ViewIcon");
-											question_.getAnswers()[i].setPostId(post.getId());
-											post.setMessage(question_.getAnswers()[i].getResponses());
-											post.setLink(linkForum);
-											post.setIsApproved(false);
-											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-										}else {
-											//post.setIsApproved(false);
-											post.setMessage(question_.getAnswers()[i].getResponses());
-											forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
-										}
-									} else {
-										post = new Post();
-										post.setOwner(question_.getAnswers()[i].getResponseBy());
-										post.setName("Re: " + question_.getQuestion());
-										post.setIcon("ViewIcon");
-										post.setMessage(question_.getAnswers()[i].getResponses());
-										post.setLink(linkForum);
-										post.setIsApproved(false);
-										forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-										question_.getAnswers()[i].setPostId(post.getId());
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-	            }
-						}
-					}
-					/*for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
-						multiLanguages.saveAnswer(questionNode, responseForm.listQuestionLanguage.get(i));
-					}*/
+					// author: Vu Duy Tu. Make discuss forum
+					responseForm.updateDiscussForum(linkForum, url, sessionProvider);
 				} catch (PathNotFoundException e) {
 					e.printStackTrace();
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;

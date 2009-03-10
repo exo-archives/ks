@@ -1038,6 +1038,13 @@
 																		</td>
 																	
 																	<% if(uicomponent.canEditQuestion){%>
+																		<td style="width:20px">
+																			<div title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" onclick="<%=uicomponent.event("EditAnswer", answer.getId())%>">
+																				<div class="ItemIcon Edit" style="height:20px;width:16px;">
+																						<span></span>
+																				</div>
+																			</div>
+																		</td>
 																		<td style="width:20px;">
 																		<%
 																			actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");

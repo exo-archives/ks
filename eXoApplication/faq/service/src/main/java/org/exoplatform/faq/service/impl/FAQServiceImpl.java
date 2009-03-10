@@ -758,6 +758,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 		jcrData_.saveUserAvatar(userId, fileAttachment, sessionProvider);
 	}
 	
+	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
+		jcrData_.setDefaultAvatar(userName, sessionProvider);
+	}
+	
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
 		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
 	}

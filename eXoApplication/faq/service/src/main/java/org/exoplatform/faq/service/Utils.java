@@ -31,7 +31,7 @@ import javax.jcr.Value;
  * Apr 10, 2008, 4:40:22 PM
  */
 public class Utils {
-	
+	final public static String DEFAULT_AVATAR_URL = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
 	final public static String QUESTION_HOME = "questions".intern() ;
 	final public static String CATEGORY_HOME = "catetories".intern() ;
 	final public static String ANSWER_HOME = "faqAnswerHome".intern();
