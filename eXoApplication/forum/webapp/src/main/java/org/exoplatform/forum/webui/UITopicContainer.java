@@ -1067,13 +1067,25 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			} else {
 				path = topicContainer.categoryId+"/"+topicContainer.forumId+"/"+path ;
 			}
-			UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
-			addWatchingForm.initForm() ;
-			addWatchingForm.setPathNode(path);
-			popupAction.activate(addWatchingForm, 425, 180) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			List<String> values = new ArrayList<String>();
+			String userName = topicContainer.userProfile.getUserId();
+			try {
+				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
+				topicContainer.forumService.addWatch(sProvider, 1, path, values, ForumSessionUtils.getCurrentUser()) ;
+				Object[] args = { };
+				UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Object[] args = { };
+				UIApplication uiApp = topicContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}finally {
+				sProvider.close();
+			}
 		}
 	}
 	

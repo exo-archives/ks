@@ -1496,13 +1496,26 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			topicDetail.isEditTopic = true;
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
-			addWatchingForm.initForm() ;
-			addWatchingForm.setPathNode(buffer.toString());
-			popupAction.activate(addWatchingForm, 425, 250) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			List<String> values = new ArrayList<String>();
+			String userName = topicDetail.userProfile.getUserId();
+			try {
+				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
+				topicDetail.forumService.addWatch(sProvider, 1, buffer.toString(), values, ForumSessionUtils.getCurrentUser()) ;
+				Object[] args = { };
+				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Object[] args = { };
+				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}finally {
+				sProvider.close();
+			}
 		}
 	}
 }

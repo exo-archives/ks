@@ -627,14 +627,27 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory category = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIForumPortlet forumPortlet = category.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
-			addWatchingForm.initForm() ;
-			addWatchingForm.setPathNode(path);
-			addWatchingForm.setIsCategory(true);
-			popupAction.activate(addWatchingForm, 425, 180) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			List<String> values = new ArrayList<String>();
+			String userName = category.userProfile.getUserId();
+			try {
+				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
+				category.forumService.addWatch(sProvider, 1, path, values, ForumSessionUtils.getCurrentUser()) ;
+				category.isEditCategory = true;
+				Object[] args = { };
+				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(category) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Object[] args = { };
+				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}finally {
+				sProvider.close();
+			}
 		}
 	}
 	
