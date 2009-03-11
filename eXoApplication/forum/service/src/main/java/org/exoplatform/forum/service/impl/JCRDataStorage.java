@@ -3103,6 +3103,47 @@ public class JCRDataStorage {
 		}
 	}
 
+	public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception {
+		Node userProfileHome = getUserProfileHome(sProvider);
+		Node userProfileNode = userProfileHome.getNode(userName);
+		return getUserProfile(userProfileNode);
+	}
+	
+	private UserProfile getUserProfile(Node userProfileNode) throws Exception {
+		UserProfile userProfile = new UserProfile() ;
+		userProfile.setUserId(userProfileNode.getName());
+		userProfile.setUserTitle(userProfileNode.getProperty("exo:userTitle").getString());
+		userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
+		userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
+		userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
+		userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
+		userProfile.setUserRole(userProfileNode.getProperty("exo:userRole").getLong());
+		userProfile.setSignature(userProfileNode.getProperty("exo:signature").getString());
+		userProfile.setTotalPost(userProfileNode.getProperty("exo:totalPost").getLong());
+		userProfile.setTotalTopic(userProfileNode.getProperty("exo:totalTopic").getLong());
+		userProfile.setModerateForums(ValuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues()));
+//		if(userProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(userProfileNode.getProperty("exo:bookmark").getValues()));
+		if(userProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(userProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
+		if(userProfileNode.hasProperty("exo:joinedDate"))userProfile.setJoinedDate(userProfileNode.getProperty("exo:joinedDate").getDate().getTime());
+		if(userProfileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(userProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
+		userProfile.setIsDisplaySignature(userProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
+		userProfile.setIsDisplayAvatar(userProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());
+		userProfile.setNewMessage(userProfileNode.getProperty("exo:newMessage").getLong());
+		userProfile.setTimeZone(userProfileNode.getProperty("exo:timeZone").getDouble());
+		userProfile.setShortDateFormat(userProfileNode.getProperty("exo:shortDateformat").getString());
+		userProfile.setLongDateFormat(userProfileNode.getProperty("exo:longDateformat").getString());
+		userProfile.setTimeFormat(userProfileNode.getProperty("exo:timeFormat").getString());
+		userProfile.setMaxPostInPage(userProfileNode.getProperty("exo:maxPost").getLong());
+		userProfile.setMaxTopicInPage(userProfileNode.getProperty("exo:maxTopic").getLong());
+		userProfile.setIsShowForumJump(userProfileNode.getProperty("exo:isShowForumJump").getBoolean());
+		userProfile.setIsBanned(userProfileNode.getProperty("exo:isBanned").getBoolean());
+		if(userProfileNode.hasProperty("exo:banUntil"))userProfile.setBanUntil(userProfileNode.getProperty("exo:banUntil").getLong());
+		if(userProfileNode.hasProperty("exo:banReason"))userProfile.setBanReason(userProfileNode.getProperty("exo:banReason").getString());
+		if(userProfileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(userProfileNode.getProperty("exo:banCounter").getString()));
+		if(userProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToArray(userProfileNode.getProperty("exo:banReasonSummary").getValues()));
+		if(userProfileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(userProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
+		return userProfile;
+	}
 	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;

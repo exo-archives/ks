@@ -17,6 +17,7 @@
 package org.exoplatform.forum.service;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 //import org.exoplatform.commons.exception.ExoMessageException;
 /**
@@ -76,17 +77,23 @@ abstract public class JCRPageList {
 		return currentListPage_ ;
 	}
 	
-	abstract protected void populateCurrentPageSearch(long page, List list, boolean isWatch) throws Exception	 ;
+	abstract protected void populateCurrentPageSearch(long page, List list, boolean isWatch, boolean isSearchUser) throws Exception	 ;
 	
 	public List getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, false) ;
+		populateCurrentPageSearch(page, list, false, false) ;
 		return currentListPage_ ;
 	}
 
 	public List getPageWatch(long page, List<Watch> list) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, true) ;
+		populateCurrentPageSearch(page, list, true, false) ;
+		return currentListPage_ ;
+	}
+	
+	public List getPageUser(long page) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, new CopyOnWriteArrayList(), true, true) ;
 		return currentListPage_ ;
 	}
 

@@ -140,6 +140,7 @@ public interface DataStorage {
   public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
   public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName) throws Exception ;
   public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
+  public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception ;
   public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
   public void updateForum(String path) throws Exception ;

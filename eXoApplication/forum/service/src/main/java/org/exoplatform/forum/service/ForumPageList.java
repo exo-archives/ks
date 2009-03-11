@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -40,7 +41,7 @@ public class ForumPageList extends JCRPageList {
 	private String value_ ;
 	private SessionProvider sProvider_ ;
 	private NodeIterator iter_ = null;
-	
+	private List listValue_ = null;
 	
 	public ForumPageList(long pageSize, int size) {
 		super(pageSize) ;
@@ -59,6 +60,16 @@ public class ForumPageList extends JCRPageList {
 			iter_ = iter ;
 			setAvailablePage(iter.getSize()) ;
 		}
+	}
+	
+	/**
+	 * Set ForumPageList for search user.
+	 * @param listResult	result which is returned from search proccessing.
+	 */
+	public ForumPageList(List listResult){
+		super(listResult.size()) ;
+		isQuery_ = false;
+		listValue_ = listResult;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -140,7 +151,7 @@ public class ForumPageList extends JCRPageList {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPageSearch(long page, List list, boolean isWatch) throws Exception {
+	protected void populateCurrentPageSearch(long page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
 		long pageSize = getPageSize();
 		long position = 0;
 		if(page == 1) position = 0;
@@ -148,8 +159,13 @@ public class ForumPageList extends JCRPageList {
 			position = (page - 1) * pageSize;
 		}
 		pageSize *= page ;
-		if(!isWatch) currentListPage_ = new ArrayList<ForumSearch>();
-		else currentListPage_ = new ArrayList<Watch>();
+		if(!isSearchUser){
+			if(!isWatch) currentListPage_ = new ArrayList<ForumSearch>();
+			else currentListPage_ = new ArrayList<Watch>();
+		}else{
+			currentListPage_ = new CopyOnWriteArrayList() ;
+			list = listValue_;
+		}
 		for(int i = (int)position; i < pageSize && i < list.size(); i ++){
 			currentListPage_.add(list.get(i));
 		}

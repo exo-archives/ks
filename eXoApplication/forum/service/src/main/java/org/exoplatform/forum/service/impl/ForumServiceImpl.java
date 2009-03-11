@@ -370,10 +370,15 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
     storage_.saveUserProfile(sProvider, userProfile, isOption, isBan) ;
   }
+  
   public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception {
     return storage_.getUserInfo(sProvider, userName);
   }
-
+  
+  public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception {
+  	return storage_.getUserProfileManagement(sProvider, userName);
+  }
+  
   public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
     storage_.saveUserBookmark(sProvider, userName, bookMark, isNew);
   }

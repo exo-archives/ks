@@ -18,6 +18,11 @@
 			<div class="ManagementContent">
 				<div style="overflow:auto;">
 					<div style="margin:2px 0px; float:right; padding:0px 0px 0px 14px;">
+						<%if(uicomponent.isViewSearchUser){%>
+								<a class="Refresh" style="float:right; margin-top:0px; margin-right: 5px;" title="<%=_ctx.appRes("UIQuickSearchForm.label.GetAllUser")%>" href="<%=uicomponent.event("GetAllUser");%>">
+									<span></span>
+								</a>
+						<%}%>
 						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
 						<div class="Input" style="float:right;">
 						<%	

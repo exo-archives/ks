@@ -21,8 +21,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -30,6 +33,7 @@ import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumLinkData;
+import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
@@ -39,6 +43,10 @@ import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.MembershipHandler;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.Query;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -71,6 +79,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
     events = {
     	@EventConfig(listeners = UIModeratorManagementForm.SetDeaultAvatarActionListener.class), 
     	@EventConfig(listeners = UIModeratorManagementForm.SearchUserActionListener.class), 
+    	@EventConfig(listeners = UIModeratorManagementForm.GetAllUserActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.ViewProfileActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.EditProfileActionListener.class), 
       @EventConfig(listeners = UIModeratorManagementForm.SaveActionListener.class), 
@@ -120,6 +129,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_SEARCH_USER = "SearchUser";
 	private String valueSearch = null;
 	private String userAvartarUrl = null;
+	private boolean isViewSearchUser = false;
   
 	public UIModeratorManagementForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -150,15 +160,25 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   
   @SuppressWarnings({ "unused", "unchecked" })
   private List<UserProfile> getListProFileUser() throws Exception {
-  	if(valueSearch == null || valueSearch.trim().length() < 1){
+  	if(!isViewSearchUser){
+	  	if(valueSearch == null || valueSearch.trim().length() < 1){
+	  		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+		  	long page = pageIterator.getPageSelected() ;
+		  	this.userProfiles = this.userPageList.getPage(page) ;
+		  	pageIterator.setSelectPage(userPageList.getCurrentPage());
+	  	} else {
+	  		this.userProfiles = this.userPageList.getpage(this.valueSearch);
+	  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
+	  		valueSearch = null;
+	  	}
+  	} else {
   		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
 	  	long page = pageIterator.getPageSelected() ;
-	  	this.userProfiles = this.userPageList.getPage(page) ;
-	  	pageIterator.setSelectPage(userPageList.getCurrentPage());
-  	} else {
-  		this.userProfiles = this.userPageList.getpage(this.valueSearch);
-  		this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
-  		valueSearch = null;
+	  	this.userProfiles = new ArrayList<UserProfile>();
+	  	SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+  		for(Object obj : this.userPageList.getPageUser(page)){
+  			this.userProfiles.add(forumService.getUserProfileManagement(sessionProvider, ((User)obj).getUserName()));
+  		}
   	}
   	return this.userProfiles ;
   }
@@ -678,24 +698,58 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	}
   }
   
-  static  public class SearchUserActionListener extends EventListener<UIModeratorManagementForm> {
+  static  public class GetAllUserActionListener extends EventListener<UIModeratorManagementForm> {
   	public void execute(Event<UIModeratorManagementForm> event) throws Exception {
+  		UIModeratorManagementForm uiForm = event.getSource();
+			uiForm.isViewSearchUser = false;
+			uiForm.setPageListUserProfile();
+  		event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+  	}
+  }
+  
+  static  public class SearchUserActionListener extends EventListener<UIModeratorManagementForm> {
+  	@SuppressWarnings("unchecked")
+		public void execute(Event<UIModeratorManagementForm> event) throws Exception {
   		UIModeratorManagementForm uiForm = event.getSource() ;
-  		String userSearch = ((UIFormStringInput)uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
-  		if(userSearch != null && userSearch.trim().length() > 0){
-  			JCRPageList pageList = null;
-  			try{
-  				pageList = uiForm.forumService.searchUserProfile(ForumSessionUtils.getSystemProvider(), userSearch);
-  			} catch (Exception e){
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
-					return ;
-  			}
-  			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
-  			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true);
-  			UIViewResultSearchUser resultSearchUser = popupAction.activate(UIViewResultSearchUser.class, 600);
-	  		resultSearchUser.setPageListSearch(pageList);
-	  		event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+  		String keyword = ((UIFormStringInput)uiForm.getChildById(FIELD_SEARCH_USER)).getValue();
+  		if(keyword != null && keyword.trim().length() > 0){
+  			Map<String, Object> mapObject = new HashMap<String, Object>();
+  		  OrganizationService service = uiForm.getApplicationComponent(OrganizationService.class) ;
+        keyword = "*" + keyword + "*" ;
+        List results = new CopyOnWriteArrayList() ;
+        Query q; 
+        q = new Query() ;
+        q.setUserName(keyword) ;
+        for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+        	mapObject.put(((User)obj).getUserName(), obj);
+        }
+        
+        q = new Query() ;
+        q.setLastName(keyword) ;
+        for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+        	mapObject.put(((User)obj).getUserName(), obj);
+        }
+        
+        q = new Query() ;
+        q.setFirstName(keyword) ;
+        for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+        	mapObject.put(((User)obj).getUserName(), obj);
+        }
+        
+        q = new Query() ;
+        q.setEmail(keyword) ;
+        for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+        	mapObject.put(((User)obj).getUserName(), obj);
+        }
+        
+        results.addAll(Arrays.asList(mapObject.values().toArray()));
+        
+        uiForm.userPageList = new ForumPageList(results);
+        uiForm.userPageList.setPageSize(5);
+        uiForm.getChild(UIForumPageIterator.class).updatePageList(uiForm.userPageList) ;  
+        uiForm.isViewSearchUser = true;
+        
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
   		} else {
   			throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", null, ApplicationMessage.WARNING)) ;
   		}
