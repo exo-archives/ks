@@ -674,7 +674,7 @@ public class JCRDataStorage {
 			Node answerHome = questionHome.getNode(questionId).getNode(Utils.ANSWER_HOME);
 			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
-																	append("//element(*,exo:answer)");
+																															append("//element(*,exo:answer)");
 			if(isSortByVote == null) queryString.append("order by @exo:dateResponse ascending");
 			else if(isSortByVote) queryString.append("order by @exo:MarkVotes ascending");
 			else  queryString.append("order by @exo:MarkVotes descending");

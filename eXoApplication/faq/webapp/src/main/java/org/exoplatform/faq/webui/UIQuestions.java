@@ -1075,7 +1075,6 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			System.out.println("\n\n\n\n----------->categoryId: " + categoryId);
 			UIFAQPortlet uiPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1310,7 +1309,8 @@ public class UIQuestions extends UIContainer {
 						return ;
 					}
 				}
-
+				
+				uiQuestions.pathParentNode = "";
 				List<String> listRelaId = new ArrayList<String>() ;
 				for(String quesRelaId : question.getRelations()) {
 					try {
@@ -1401,9 +1401,9 @@ public class UIQuestions extends UIContainer {
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				question = faqService_.getQuestionById(uiQuestions.questionView_, sessionProvider);
-				if(language_.equals(question.getLanguage()))
+				if(language_ == null || language_.trim().length() < 1 || language_.equals(question.getLanguage())){
 					answer = faqService_.getAnswerById(uiQuestions.questionView_, answerId, sessionProvider);
-				else {
+				}else {
 					MultiLanguages multiLanguages = new MultiLanguages();
 					answer = multiLanguages.getAnswerById(faqService_.getQuestionNodeById(uiQuestions.questionView_, sessionProvider),
 																								answerId, language_);
@@ -1840,7 +1840,7 @@ public class UIQuestions extends UIContainer {
 					question.setLanguage(questionLanguage.getLanguage());
 					String qsId = question.getId();
 					String dflg = faqService_.getQuestionById(qsId, sProvider).getLanguage();
-					if(!language_.equals(dflg)) {
+					if(!language_.equals(dflg) && language_ != null && language_.trim().length() >= 0) {
 						uiQuestions.pathParentNode = Utils.LANGUAGE_HOME+"/"+questionLanguage.getId();
 					} else {
 						uiQuestions.pathParentNode = "";
