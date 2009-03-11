@@ -289,7 +289,8 @@
 .UIForumPortlet .ForumBarAction {
 	float:left;
 	line-height:23px;
-	margin:3px 3px 0px 3px; 
+	margin:3px 3px 0px 3px;
+	cursor: pointer;
 }
 
 .UIForumPortlet .ForumBarAction .LeftOverButton {
