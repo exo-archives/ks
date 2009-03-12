@@ -960,8 +960,8 @@
 																<tbody>
 																	<tr>
 																		<td>
-																			<div class="ResponseItemContainerLeft">
 																			<!-- ============================= View user who answered quesetion ============================ -->
+																			<div class="ResponseItemContainerLeft">
 																				<div style="padding-bottom:10px">
 																					<div class="ProfileContainer">
 																						<%
@@ -978,10 +978,10 @@
 																						</div>
 																					</div>
 																				</div>
-																				
 																			</div>
+																			
 																			<div class="ResponseItemContainerRight">
-																				<div style="overflow:auto">
+																				<div style="overflow:auto;_padding-bottom:15px;">
 																					<%
 																					if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
 																					%>
@@ -991,14 +991,13 @@
 																					%>
 																						<div style="color:gray;padding:3px;">$res</div>
 																					<%} %>
-																					<div style="float:left; color:#721d95">$date</div>
+																					<div style="float:left; color:#721d95;">$date</div>
 																				</div>
+																				
+																				<!-- ============================= View mark vote answer ======================================== -->
 																				<div style="overflow:auto; margin-top:5px;">
-																					<!-- ============================= View mark vote answr ======================================== -->
-																					<!-- ================= Question author vote =================== -->
 																					<%
 																					if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																						//if(!question.getAuthor().equals(uicomponent.currentUser_)){
 																							String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
 																							String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
 																							if(uicomponent.currentUser_ != null){
@@ -1027,7 +1026,7 @@
 																								</div>
 																								<div style="clear:left;"><span></span></div>
 																							</div>
-																						<%//}
+																						<%
 																						}%>
 																						<div style="clear:left;"><span></span></div>
 																				</div>
