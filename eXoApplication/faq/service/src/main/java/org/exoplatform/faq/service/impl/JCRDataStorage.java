@@ -2010,10 +2010,12 @@ public class JCRDataStorage {
 				id = node.getName() ;
 				if(!type.equals("faqCategory")) {
 					if(type.equals("comment") || type.equals("answer")){
-						node = (node.getParent()).getParent();
+						while(!node.isNodeType("exo:faqQuestion"))
+							node = node.getParent();
 						if(ids.contains(node.getName())){
 							continue;
 						}
+						id = node.getName();
 					}
 					ids.add(node.getName());
 					
