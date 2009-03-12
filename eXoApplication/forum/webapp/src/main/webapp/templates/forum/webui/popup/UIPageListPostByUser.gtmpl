@@ -26,7 +26,7 @@
 						<thead>
 							<tr>
 								<th style="width:40px"></th>
-								<th>
+								<th style="width:100%;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
 										<div class="DownArrow1Icon"  style="cursor:pointer">
 											<%=_ctx.appRes("UIPageListPostByUser.label.PostName");%>
