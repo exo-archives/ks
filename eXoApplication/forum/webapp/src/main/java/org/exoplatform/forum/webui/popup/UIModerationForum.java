@@ -157,7 +157,7 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 					viewPost.setPostView(post) ;
 					viewPost.setViewUserInfo(false) ;
-					viewPost.setActionForm(new String[] {"Close", "Approve", "DeletePost"});
+					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
 					e.printStackTrace();
