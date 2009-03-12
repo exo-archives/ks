@@ -857,19 +857,19 @@
 							<%} %>
 						</div>
 							<div class="FootPost" style="margin-bottom:2px;">
-								<div class="ButtonContainer">
-									<div class="PostInfo" style="font-size:11px; color:gray;">
+								<div class="ButtonContainer" style="float:right;">
+									<div style="font-size:11px; color:gray;">
 										<%	
 											if(!ForumUtils.isEmpty(editBy)) {
 										%>
-											<div><%=_ctx.appRes(uiformId + ".label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes(uiformId + ".label.on");%> $editDate</div>
-											<%
-												String reason = post.getEditReason() ;
-												if(!ForumUtils.isEmpty(reason)) { 
-												reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
-											%>
-											<div>$reason</div>
-											<% } %>
+												<div><%=_ctx.appRes(uiformId + ".label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes(uiformId + ".label.on");%> $editDate</div>
+												<%
+													String reason = post.getEditReason() ;
+													if(!ForumUtils.isEmpty(reason)) { 
+														reason = _ctx.appRes("UIPostForm.label.editReason") + ": "+reason ;
+												%>
+														<div>$reason</div>
+												<% } %>
 										<%} %>
 									</div>
 									<div class="UIActionForum">
@@ -913,7 +913,7 @@
 											</div>
 										</div>
 										<%} else {%>
-										<div style="float:left; width:70px; height:1px;"><span></span></div>
+										<div style="float:left; width:60px; height:1px;"><span></span></div>
 									<%	}
 										} 
 									checked = 1; 
