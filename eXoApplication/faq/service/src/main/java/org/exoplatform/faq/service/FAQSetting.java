@@ -74,6 +74,7 @@ public class FAQSetting {
 	/** The ORDERB y_ typ e_ desc. */
 	public static String ORDERBY_TYPE_DESC = "desc" ;
 	
+	private String emailMoveQuestion = null;
 	
 	/**
 	 * This method get one value is Alphabet or Post Date.
@@ -273,4 +274,13 @@ public class FAQSetting {
 	public void setEnableViewAvatar(boolean enableViewAvatar) {
 		this.enableViewAvatar = enableViewAvatar;
 	}
+
+	public String getEmailMoveQuestion() {
+		return emailMoveQuestion;
+	}
+
+	public void setEmailMoveQuestion(String emailMoveQuestion) {
+		this.emailMoveQuestion = emailMoveQuestion;
+	}
+	
 }

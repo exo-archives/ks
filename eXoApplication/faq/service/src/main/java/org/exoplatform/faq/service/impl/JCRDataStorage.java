@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.ResourceBundle;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -378,6 +379,8 @@ public class JCRDataStorage {
 	
 	@SuppressWarnings("static-access")
 	private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+		boolean isMoveQuestion = false;
+		
 		questionNode.setProperty("exo:language", question.getLanguage()) ;
 		questionNode.setProperty("exo:name", question.getDetail()) ;
 		questionNode.setProperty("exo:author", question.getAuthor()) ;
@@ -387,6 +390,8 @@ public class JCRDataStorage {
 			GregorianCalendar cal = new GregorianCalendar() ;
 			cal.setTime(question.getCreatedDate()) ;
 			questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+		} else {
+			if(!question.getCategoryId().equals(questionNode.getProperty("exo:categoryId").getString())) isMoveQuestion = true;
 		}
 		questionNode.setProperty("exo:categoryId", "" + question.getCategoryId()) ;
 		questionNode.setProperty("exo:isActivated", question.isActivated()) ;
@@ -577,6 +582,22 @@ public class JCRDataStorage {
 					}
 				}
 			}
+		}
+		
+		// Send mail for author question when question is moved to another category
+		if(isMoveQuestion){
+			Message message = new Message();
+			message.setMimeType(MIMETYPE_TEXTHTML) ;
+			message.setFrom(question.getAuthor() + "<email@gmail.com>");
+			message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
+			String contentMail = faqSetting.getEmailMoveQuestion();
+			String categoryName = getCategoryById(question.getCategoryId(), sProvider).getName();
+			if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
+			contentMail = contentMail.replace("&questionContent_", question.getQuestion()).
+																replace("&categoryName_", categoryName).
+																replace("&questionLink_", question.getLink());
+			message.setBody(contentMail);
+			sendEmailNotification(Arrays.asList(new String[]{question.getEmail()}), message) ;
 		}
 		
 		this.linkQuestion = question.getLink();

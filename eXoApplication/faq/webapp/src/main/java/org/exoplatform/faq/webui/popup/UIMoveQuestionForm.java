@@ -242,6 +242,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					link = url + link;
 					question.setLink(link);
 					FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
+					FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);
 					faqService_.saveQuestion(question, false, sessionProvider,moveQuestionForm.faqSetting_) ;
 				}catch (Exception e) {
 					e.printStackTrace();

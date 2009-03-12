@@ -395,6 +395,12 @@ public class FAQUtils {
 		faqSetting.setEmailSettingSubject(res.getString("SendEmail.Default.Subject"));
 		faqSetting.setEmailSettingContent(emailContent) ;
 	}
+	
+	public static void getEmailMoveQuestion(FAQSetting faqSetting){
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+		ResourceBundle res = context.getApplicationResourceBundle() ;
+		faqSetting.setEmailMoveQuestion(res.getString("SendEmail.MoveQuetstion.Default"));
+	}
 
 	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
