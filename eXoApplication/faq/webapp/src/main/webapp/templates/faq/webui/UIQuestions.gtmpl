@@ -264,7 +264,7 @@
 			%>
 						<div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionId" oncontextmenu="return false;">
 							<div class="$questionIcon" style="float:left"><span></span></div>
-								<div style="width:85%; _width:80%;">
+							<div style="width:85%; _width:80%; float:left;">
 									<!-- question content -->
 										<%
 										String titleQuestion = "" ;
@@ -272,19 +272,19 @@
 											titleQuestion = questionContent ;
 											questionContent = FAQUtils.getSubString(questionContent, 140);
 										%>
-											<a class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left;" href="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">$questionContent &nbsp;&nbsp;</a>
-												<span style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</span>
-												<%if(!question.isApproved()) {%>
-														<span style="color:red">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</span>
-												<%}%>
+											<div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">$questionContent &nbsp;&nbsp;</div>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+											<%if(!question.isApproved()) {%>
+													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
+											<%}%>
 											
 									<%} else {
 											titleQuestion = "";
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
-											<span style="color:#721d95">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</span>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
 											<%if(!question.isApproved()) {%>
-													<span style="color:red">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</span>
+													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
 											<%}%>
 									<%}%>
 											<div style="clear:left;"><span></span></div>

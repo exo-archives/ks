@@ -15,14 +15,14 @@
 							<td class="FieldLabel" style="white-space:nowrap; width:15%">
 								<%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :
 							</td>
-							<td class="FieldComponent" style="width:85%"><%=uicomponent.questionContent%></td>
+							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.questionContent%></td>
 						</tr>
 						
 						<tr>
 							<td class="FieldLabel" style="white-space:nowrap; width:15%">
 								<%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :
 							</td>
-							<td class="FieldComponent" style="width:85%"><%=uicomponent.questionDetail%></td>
+							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.questionDetail%></td>
 						</tr>
 					<% 
 					String url = uicomponent.url("AddRelation", "OBJECTID") ;

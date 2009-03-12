@@ -585,7 +585,7 @@ public class JCRDataStorage {
 		}
 		
 		// Send mail for author question when question is moved to another category
-		if(isMoveQuestion){
+		if(!isNew && isMoveQuestion){
 			Message message = new Message();
 			message.setMimeType(MIMETYPE_TEXTHTML) ;
 			message.setFrom(question.getAuthor() + "<email@gmail.com>");
