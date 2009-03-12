@@ -1,11 +1,11 @@
 @import url('/eXoResources/skin/DefaultSkin/webui/component/UIGrid/Stylesheet.css') ;
-@import url('ss/forum/skin/DefaultSkin/webui/Stylesheet.css');
+@import url('/forum/skin/DefaultSkin/webui/Stylesheet.css');
 div {
 	padding:	0px ; margin: 0px ;
 }
 
 table {
-  width: 100% ;
+	width: 100% ;
 	padding: 0px ; margin: 0px ;
 	border-spacing:	0px ;
 	border-collapse: collapse ;
@@ -43,6 +43,14 @@ body {
 .Content {
 	padding: 10px 25px;
 }
+.UIGrid {
+	border:1px solid #B7B7B7;
+	border-collapse:collapse;
+	margin:auto;
+	padding-left:1px;
+	table-layout:fixed;
+}
+
 .UIGrid .tcat {
 	background:#F9F9FD url(background/ForumToolBarCenter1x26.gif) repeat-x center top;
 	line-height: 24px;
@@ -58,8 +66,14 @@ body {
 	line-height: 16px;
 	background:#F9F9FD url(background/ForumTitleBar1x19.gif) repeat-x center top;
 }
+.UIGrid td {
+	border-left:1px solid #CCCCCC;
+	border-right:1px solid #CCCCCC;
+	border-top:1px solid white;
+}
 .UIGrid .alt2 {
 	background: #E1E4FF;
+	padding: 6px;
 }
 .UIGrid .alt1 {
 	padding: 6px;
