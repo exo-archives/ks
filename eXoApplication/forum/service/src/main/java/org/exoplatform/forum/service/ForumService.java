@@ -339,7 +339,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
+	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 	
 	/**
 	 * Gets the posts.

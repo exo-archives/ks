@@ -73,7 +73,7 @@ public interface DataStorage {
 	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception;
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception;
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
-	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception;
+	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent) throws Exception;
 	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 	public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod) throws Exception;

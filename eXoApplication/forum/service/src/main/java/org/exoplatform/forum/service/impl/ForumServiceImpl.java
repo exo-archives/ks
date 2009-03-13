@@ -259,8 +259,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getTopics(sProvider, categoryId, forumId);
   }
 
-  public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception {
-    storage_.moveTopic(sProvider, topics, destForumPath);
+  public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
+    storage_.moveTopic(sProvider, topics, destForumPath, mailContent, link);
   }
 
   public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {

@@ -144,7 +144,7 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 					Topic topic = moderationForum.forumService.getTopicByPath(sProvider, forumSearch.getPath(), false);
 					UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 					viewTopic.setTopic(topic) ;
-					viewTopic.setActionForm(new String[] {"Close", "Approve", "DeleteTopic"});
+					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
 					e.printStackTrace();

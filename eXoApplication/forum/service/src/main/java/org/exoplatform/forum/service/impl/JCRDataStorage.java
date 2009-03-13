@@ -1554,9 +1554,35 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath) throws Exception {
+	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		long tmp = 0;
+		/*
+		 * modified by Mai Van Ha
+		 */
+		Node node = null;
+		String forumName = null;
+		node = (Node)forumHomeNode.getSession().getItem(destForumPath);
+		forumName = node.getProperty("exo:name").getString();
+		UserProfile forumOwner = getUserProfileManagement(sProvider, node.getProperty("exo:owner").getString());
+		Message message = new Message();
+		message.setMimeType("text/html");
+		String headerSubject = "";
+		String objectName = "[" + node.getParent().getProperty("exo:name").getString() + 
+												"][" + node.getProperty("exo:name").getString() + "] ";
+		try {
+			node = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
+			if (node.hasProperty("exo:enableHeaderSubject")) {
+				if(node.getProperty("exo:enableHeaderSubject").getBoolean()){
+					if (node.hasProperty("exo:headerSubject")) {
+						headerSubject = node.getProperty("exo:headerSubject").getString() + " ";
+					}
+				}
+			}
+		} catch (Exception e) {		}
+		message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
+		// ----------------------- finish ----------------------
+		
 		for (Topic topic : topics) {
 			String topicPath = topic.getPath();
 			String newTopicPath = destForumPath + "/" + topic.getId();
@@ -1590,6 +1616,11 @@ public class JCRDataStorage {
 				tmp = 0;
 			srcForumNode.setProperty("exo:postCount", tmp);
 			destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + topicPostCount);
+			
+			// send mail to author topic after move topic:
+			message.setSubject(headerSubject + objectName + topic.getTopicName());
+			message.setBody(mailContent.replace("$topicName_", topic.getTopicName()).replace("$forumName_", forumName).replace("$link_", link.replaceFirst("pathId", topic.getId())));
+			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, topic.getOwner()).getEmail()}), message);
 		}
 		if(forumHomeNode.isNew()) {
 			forumHomeNode.getSession().save();

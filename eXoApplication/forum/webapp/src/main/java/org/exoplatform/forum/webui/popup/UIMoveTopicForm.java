@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
@@ -34,8 +35,11 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -67,6 +71,11 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	private boolean isFormTopic = false ;
 	private boolean isAdmin = false;
 	private UserProfile userProfile ;
+	private String link = "";
+	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
+	
 	public boolean isAdmin() {
   	return isAdmin;
   }
@@ -147,7 +156,20 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 			if(!ForumUtils.isEmpty(forumPath)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uiForm.forumService.moveTopic(sProvider , uiForm.topics , forumPath) ;
+					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+					ResourceBundle res = context.getApplicationResourceBundle() ;
+				// set link
+					PortalRequestContext portalContext = Util.getPortalRequestContext();
+					String url = portalContext.getRequest().getRequestURL().toString();
+					url = url.replaceFirst("http://", "") ;
+					url = url.substring(0, url.indexOf("/")) ;
+					url = "http://" + url;
+					String link = uiForm.getLink();
+					link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
+					link = url + link;
+					link = link.replaceFirst("private", "public");
+					//
+					uiForm.forumService.moveTopic(sProvider , uiForm.topics , forumPath, res.getString("UIMoveTopicForm.msg.EmailToAuthorTopic"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					if(uiForm.isFormTopic) {
@@ -162,10 +184,14 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
         } catch (ItemExistsException e) {
+        	e.printStackTrace();
+        	
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
         	return;
         } catch (Exception e) {
+        	e.printStackTrace();
+        	
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMoveTopicForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return;
