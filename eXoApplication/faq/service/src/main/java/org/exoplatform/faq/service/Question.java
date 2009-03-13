@@ -95,7 +95,7 @@ public class Question {
   private String[] emailsWatch = null;
   
   /** The path topic discuss. */
-  private String pathTopicDiscuss;
+  private String topicIdDiscuss;
   
   /**
    * Class constructor specifying id of object is created.
@@ -419,8 +419,8 @@ public class Question {
 	 * 
 	 * @return the path topic discuss
 	 */
-	public String getPathTopicDiscuss() {
-  	return pathTopicDiscuss;
+	public String getTopicIdDiscuss() {
+  	return topicIdDiscuss;
   }
 
 	/**
@@ -428,8 +428,8 @@ public class Question {
 	 * 
 	 * @param pathTopicDiscus the new path topic discuss
 	 */
-	public void setPathTopicDiscuss(String pathTopicDiscus) {
-  	this.pathTopicDiscuss = pathTopicDiscus;
+	public void setTopicIdDiscuss(String topicIdDiscuss) {
+  	this.topicIdDiscuss = topicIdDiscuss;
   }
 
 	/**

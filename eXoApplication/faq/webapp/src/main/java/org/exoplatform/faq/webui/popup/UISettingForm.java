@@ -70,7 +70,6 @@ import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
 				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SelectCategoryForumActionListener.class),
-				@EventConfig(listeners = UISettingForm.SelectForumActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChangeAvatarActionListener.class),
 				@EventConfig(listeners = UISettingForm.SetDefaultAvatarActionListener.class),
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
@@ -99,13 +98,11 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private static final String EMAIL_DEFAULT_EDIT_QUESTION = "EmailEditQuestion";
 	private static final String DISCUSSION_TAB = "Discussion";
 	private static final String FIELD_CATEGORY_PATH_INPUT = "CategoryPath";
-	private static final String FIELD_FORUM_ID_INPUT = "ForumId";
 	private static final String ENABLE_DISCUSSION = "EnableDiscuss";
 	
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private boolean isEditPortlet_ = false;
-	private String []idPath = new String[]{"",""};
-	private String []idNameForum = new String[]{"",""};
+	private List<String> idForumName = new ArrayList<String>();
 	private boolean isResetMail = false;
 	private int indexOfTab = 0;
 	private String avatarUrl ;
@@ -122,16 +119,11 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		}
 	}
 	
-	public void setPathCatygory(String []namePath) {
-		this.idPath =  namePath;
-		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_CATEGORY_PATH_INPUT).setValue(namePath[1]);
-  }
-
-	public void setIdForum(String []nameIdForum) {
-		this.idNameForum =  nameIdForum;
-		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_FORUM_ID_INPUT).setValue(nameIdForum[1]);
+	public void setPathCatygory(List<String> idForumName) {
+		this.idForumName =  idForumName;
+		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_CATEGORY_PATH_INPUT).setValue(idForumName.get(1));
 	}
-  
+
 	public void init() throws Exception {
 		if(isEditPortlet_){
 			UIFormInputWithActions DisplayTab = new UIFormInputWithActions(DISPLAY_TAB);
@@ -176,10 +168,15 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			Discussion.addUIFormInput(enableDiscus);
 			UIFormStringInput categoryPath = new UIFormStringInput(FIELD_CATEGORY_PATH_INPUT, FIELD_CATEGORY_PATH_INPUT, null) ;
 			String pathCate = faqSetting_.getIdNameCategoryForum();
+			idForumName.clear();
 			if(pathCate.indexOf(";") > 0) {
-				this.idPath = new String[]{pathCate.substring(0,pathCate.indexOf(";")), pathCate.substring(pathCate.indexOf(";")+1)};
+				this.idForumName.add(pathCate.substring(0,pathCate.indexOf(";")));
+				this.idForumName.add(pathCate.substring(pathCate.indexOf(";")+1));
+			}else {
+				this.idForumName.add("");
+				this.idForumName.add("");
 			}
-			categoryPath.setValue(idPath[1]);
+			categoryPath.setValue(idForumName.get(1));
 			categoryPath.setEditable(false);
 			Discussion.addUIFormInput(categoryPath);
 			List<ActionData> actionData = new ArrayList<ActionData>() ;
@@ -191,23 +188,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			ad.setCssIconClass("AddIcon16x16") ;
 			actionData.add(ad) ;
 			Discussion.setActionField(FIELD_CATEGORY_PATH_INPUT, actionData) ; 
-			
-			String idNameForum_ = faqSetting_.getIdNameForum() ;
-			if(idNameForum_.indexOf(";") > 0) {
-				this.idNameForum = new String[]{idNameForum_.substring(0,idNameForum_.indexOf(";")), idNameForum_.substring(idNameForum_.indexOf(";")+1)};
-			}
-			UIFormStringInput idNameForums = new UIFormStringInput(FIELD_FORUM_ID_INPUT, FIELD_FORUM_ID_INPUT, null) ;
-			idNameForums.setValue(this.idNameForum[1]);
-			idNameForums.setEditable(false);
-			Discussion.addUIFormInput(idNameForums);
-			ad = new ActionData() ;
-			actionData = new ArrayList<ActionData>() ;
-			ad.setActionListener("SelectForum") ;
-			ad.setActionName("SelectForum");
-			ad.setActionType(ActionData.TYPE_ICON) ;
-			ad.setCssIconClass("AddIcon16x16") ;
-			actionData.add(ad) ;
-			Discussion.setActionField(FIELD_FORUM_ID_INPUT, actionData); 
 			
 			this.addChild(DisplayTab);
 			this.addChild(EmailTab);
@@ -295,26 +275,18 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				UIFormInputWithActions Discussion = settingForm.getChildById(DISCUSSION_TAB);
 				boolean isDiscus = (Boolean)Discussion.getUIFormCheckBoxInput(ENABLE_DISCUSSION).getValue();
 				if(isDiscus) {
-					if(settingForm.idPath[0].length() > 0) {
-						faqSetting.setIdNameCategoryForum(settingForm.idPath[0]+";"+settingForm.idPath[1]);
+					if(!settingForm.idForumName.isEmpty()) {
+						faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0)+";"+settingForm.idForumName.get(1));
 					}else {
 						 uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING)) ;
 			       event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			       return ;
 					}
-					if(settingForm.idNameForum[0].length() > 0) {
-						faqSetting.setIdNameForum(settingForm.idNameForum[0]+";"+settingForm.idNameForum[1]);
-					}else {
-						uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.idForum-empty", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						return ;
-					}
 				}else{
 					faqSetting.setIdNameCategoryForum("");
-					faqSetting.setIdNameForum("");
 				}
 				faqSetting.setIsDiscussForum(isDiscus);
-				settingForm.idPath = new String[]{"",""};
+				settingForm.idForumName.clear();
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -437,39 +409,17 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			try {
 				UIWatchContainer pupupContainer = settingForm.getParent() ;
 				UIPopupAction popupAction = pupupContainer.getChild(UIPopupAction.class) ;
-				UIListCategoryForumForm listCateForm = popupAction.activate(UIListCategoryForumForm.class, 400) ;
+				UISelectCategoryForumForm listCateForm = popupAction.activate(UISelectCategoryForumForm.class, 400) ;
+				listCateForm.setListCategory();
 				event.getRequestContext().addUIComponentToUpdateByAjax(pupupContainer) ;
       } catch (ClassCastException e) {
       	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
-      	UIListCategoryForumForm listCateForm = popupAction.createUIComponent(UIListCategoryForumForm.class, null, null) ;
+      	UISelectCategoryForumForm listCateForm = popupAction.createUIComponent(UISelectCategoryForumForm.class, null, null) ;
+      	listCateForm.setListCategory();
       	popupAction.activate(listCateForm, 400, 400);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
       	e.printStackTrace();
-			}
-		}
-	}
-
-	static public class SelectForumActionListener extends EventListener<UISettingForm> {
-		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;		
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
-			String categoryId = settingForm.idPath[0];
-			categoryId = categoryId.substring(categoryId.lastIndexOf("/")+1);
-			try {
-				UIWatchContainer pupupContainer = settingForm.getParent() ;
-				UIPopupAction popupAction = pupupContainer.getChild(UIPopupAction.class) ;
-				UISelectForumForm listForm = popupAction.activate(UISelectForumForm.class, 400) ;
-				listForm.setCategoryId(categoryId);
-				event.getRequestContext().addUIComponentToUpdateByAjax(pupupContainer) ;
-			} catch (ClassCastException e) {
-				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
-				UISelectForumForm listForm = popupAction.createUIComponent(UISelectForumForm.class, null, null) ;
-				listForm.setCategoryId(categoryId);
-				popupAction.activate(listForm, 400, 400);
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}

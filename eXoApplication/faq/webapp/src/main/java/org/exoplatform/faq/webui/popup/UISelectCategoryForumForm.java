@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -36,39 +35,42 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Vu Duy Tu 
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * 14-01-2009 - 04:20:05
+ * 12-01-2009 - 10:30:08  
  */
 @ComponentConfig(
-		lifecycle = UIFormLifecycle.class, 
-		template = "app:/templates/faq/webui/popup/UISelectForumForm.gtmpl", 
+		lifecycle = UIFormLifecycle.class,
+		template = "app:/templates/faq/webui/popup/UISelectCategoryForumForm.gtmpl",
 		events = {
-	    @EventConfig(listeners = UISelectForumForm.CloseActionListener.class, phase = Phase.DECODE),
-	    @EventConfig(listeners = UISelectForumForm.AddForumActionListener.class, phase = Phase.DECODE) 
+			@EventConfig(listeners = UISelectCategoryForumForm.CloseActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UISelectCategoryForumForm.AddCategoryActionListener.class, phase = Phase.DECODE)
 		}
 )
-    
-public class UISelectForumForm extends UIForm implements UIPopupComponent {
-	private String categoryId;
-	private List<Forum> listForum;
-	public UISelectForumForm() {
+public class UISelectCategoryForumForm extends UIForm implements UIPopupComponent{
+	private List<Category> listcate = new ArrayList<Category>();
+	private ForumService forumService ;
+	public UISelectCategoryForumForm() {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  }
+	
+  public void setListCategory() throws Exception {
+	  SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+	  try {
+	  	listcate = forumService.getCategories(sProvider);
+	  } catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sProvider.close();
+		}
 	}
 	
-	public void activate() throws Exception {	}
-	public void deActivate() throws Exception {	}
-
-	public void setCategoryId(String categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	public List<Forum> getListForum() {
-		listForum = new ArrayList<Forum>();
+  List<Forum> getForums(String categoryId) {
+  	List<Forum>listForum = new ArrayList<Forum>();
 		if (categoryId != null && categoryId.trim().length() > 0) {
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
 				listForum = forumService.getForums(sProvider, categoryId, strQuery);
 			} catch (Exception e) {
@@ -79,36 +81,47 @@ public class UISelectForumForm extends UIForm implements UIPopupComponent {
 		}
 		return listForum;
 	}
-	
-	private String[] getPathName(String id) throws Exception {
-		for (Forum forum : listForum) {
-	    if(forum.getId().equals(id)) return new String[]{forum.getId(),forum.getForumName()};
-    }
-		return null;
+  
+	@SuppressWarnings("unused")
+	private List<Category> getCategories() throws Exception {
+		return  this.listcate;
 	}
 	
-	static public class CloseActionListener extends EventListener<UISelectForumForm> {
-		public void execute(Event<UISelectForumForm> event) throws Exception {
-			UISelectForumForm uiForm = event.getSource();
-			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
+	
+  private List<String> getPathName(String allPath) throws Exception {
+		int t = allPath.indexOf(";");
+		List<String> list = new ArrayList<String>();
+		if(t > 0){
+			list.add(allPath.substring(0, t));
+			list.add(allPath.substring(t+1));
+		}
+		return list;
+	}
+	
+	static	public class CloseActionListener extends EventListener<UISelectCategoryForumForm> {
+		public void execute(Event<UISelectCategoryForumForm> event) throws Exception {
+			UISelectCategoryForumForm uiForm = event.getSource() ;
 			try {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 				popupAction.deActivate();
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
+	      UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 	      portlet.cancelAction();
       }
 		}
 	}
-
-	static public class AddForumActionListener extends EventListener<UISelectForumForm> {
-    public void execute(Event<UISelectForumForm> event) throws Exception {
-			UISelectForumForm uiForm = event.getSource();
-			String forumId = event.getRequestContext().getRequestParameter(OBJECTID);
+	
+	static	public class AddCategoryActionListener extends EventListener<UISelectCategoryForumForm> {
+		public void execute(Event<UISelectCategoryForumForm> event) throws Exception {
+			UISelectCategoryForumForm uiForm = event.getSource() ;
+			String allPath = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
 			UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
-			settingForm.setIdForum(uiForm.getPathName(forumId));
+			settingForm.setPathCatygory(uiForm.getPathName(allPath));
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 			try {
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;

@@ -41,6 +41,7 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -574,20 +575,24 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         	FAQSetting faqSetting = new FAQSetting();
  					FAQUtils.getPorletPreference(faqSetting);
  					if(faqSetting.getIsDiscussForum()) {
- 						String pathTopic = question_.getPathTopicDiscuss();
- 						if(pathTopic != null && pathTopic.length() > 0) {
+ 						String topicId = question_.getTopicIdDiscuss();
+ 						if(topicId != null && topicId.length() > 0) {
  							try {
  								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
- 								String []ids = pathTopic.split("/");
- 								Topic topic = forumService.getTopic(sessionProvider, ids[0], ids[1], ids[2], "");
- 								if(topic == null){
- 									System.out.println("\n\n ==========> Topic is removed or deleted");
- 								} else {
- 									topic.setModifiedBy(FAQUtils.getCurrentUser());
- 									topic.setTopicName(question_.getQuestion());
- 									topic.setDescription(question_.getDetail());
- 									topic.setIsWaiting(true);
- 									forumService.saveTopic(sessionProvider, ids[0], ids[1], topic, false, false, "");
+ 								Topic topic = (Topic)forumService.getObjectNameById(sessionProvider, topicId, Utils.TOPIC);
+ 								if(topic != null) {
+ 									String[] ids = topic.getPath().split("/");
+									int t = ids.length;
+									if (topic == null) {
+										System.out.println("\n\n ==========> Topic is removed or deleted");
+									} else {
+										topic.setModifiedBy(FAQUtils.getCurrentUser());
+										topic.setTopicName(question_.getQuestion());
+										topic.setDescription(question_.getDetail());
+										topic.setIsWaiting(true);
+										forumService.saveTopic(sessionProvider, ids[t - 3], ids[t - 2], topic, false, false, "");
+										System.out.println("\n\n ==========>" + ids[t - 3] + " / " + ids[t - 2]);
+									}
  								}
               } catch (Exception e) {
 	              e.printStackTrace();

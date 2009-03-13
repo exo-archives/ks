@@ -53,13 +53,13 @@ import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIResponseForm;
-import org.exoplatform.faq.webui.popup.UISelectForumForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIViewUserProfile;
 import org.exoplatform.faq.webui.popup.UIVoteQuestion;
 import org.exoplatform.faq.webui.popup.UIWatchForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -84,7 +84,7 @@ import org.exoplatform.webui.event.EventListener;
  *					hung.nguyen@exoplatform.com
  * Aus 01, 2007 2:48:18 PM 
  */
-@SuppressWarnings("unused")
+
 @ComponentConfig(
 		template =	"app:/templates/faq/webui/UIQuestions.gtmpl" ,
 		events = {
@@ -185,10 +185,6 @@ public class UIQuestions extends UIContainer {
 		// set url for Topic link.
 		FAQSetting faqSetting = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting);
-		String categoryId = faqSetting.getIdNameCategoryForum();
-		categoryId = categoryId.substring(0, categoryId.indexOf(";"));
-		String forumId = faqSetting.getIdNameForum();
-		forumId = forumId.substring(0, forumId.indexOf(";"));
 		String link = getLink(); 
     String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
     String portalName = "/" + Util.getUIPortal().getName() ;
@@ -1915,17 +1911,21 @@ public class UIQuestions extends UIContainer {
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
 			FAQUtils.getPorletPreference(uiForm.faqSetting_);
-			String categoryId = uiForm.faqSetting_.getIdNameCategoryForum();
-			categoryId = categoryId.substring(0, categoryId.indexOf(";"));
-			String forumId = uiForm.faqSetting_.getIdNameForum();
+			String forumId = uiForm.faqSetting_.getIdNameCategoryForum();
 			forumId = forumId.substring(0, forumId.indexOf(";"));
+			ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+			String categoryId ;
 			
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
+				Forum forum = (Forum)forumService.getObjectNameById(sProvider, forumId, org.exoplatform.forum.service.Utils.FORUM);
+				String []paths = forum.getPath().split("/");
+				categoryId = paths[paths.length - 2];
 				Topic topic = uiForm.topic;
 				String link = uiForm.getLinkDiscuss(); 
 				link = link.replaceFirst("private", "public");
-				String path = topic.getId() ;
+				String topicId = topic.getId() ;
+				System.out.println("\n\n ==========>" + categoryId+" / "+ forumId + " / " + topicId);
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				Question question = faqService.getQuestionById(questionId, sProvider);
 				String userName = question.getAuthor();
@@ -1956,9 +1956,8 @@ public class UIQuestions extends UIContainer {
 				topic.setIsModeratePost(true);
 				topic.setLink(link);
 				topic.setIsWaiting(true);
-				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				forumService.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
-				faqService.savePathDiscussQuestion(questionId, path, sProvider);
+				faqService.saveTopicIdDiscussQuestion(questionId, topicId, sProvider);
 				Post post = new Post();
 				JCRPageList pageList = faqService.getPageListAnswer(sProvider, questionId, false);
 				List<Answer> listAnswer ;
@@ -1976,7 +1975,7 @@ public class UIQuestions extends UIContainer {
 		        post.setOwner(answer.getResponseBy());
 		        post.setLink(link);
 		        post.setIsApproved(false);
-		        forumService.savePost(sProvider, categoryId, forumId, topic.getId(), post, true, "");
+		        forumService.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
 		        answer.setPostId(post.getId());
 		        AllAnswer[i] = answer;
 		        ++i;
@@ -1998,7 +1997,7 @@ public class UIQuestions extends UIContainer {
 					post.setOwner(comment.getCommentBy());
 					post.setLink(link);
 					post.setIsApproved(false);
-					forumService.savePost(sProvider, categoryId, forumId, topic.getId(), post, true, "");
+					forumService.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
 					comment.setPostId(post.getId());
 					faqService.saveComment(questionId, comment, false, sProvider);
 				}

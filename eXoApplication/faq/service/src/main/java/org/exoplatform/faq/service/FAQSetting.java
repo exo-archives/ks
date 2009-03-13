@@ -58,8 +58,6 @@ public class FAQSetting {
 	
 	private String idNameCategoryForum ;
 
-	private String idNameForum ;
-	
 	private boolean isDiscussForum = false;
 	
 	/** The DISPLA y_ typ e_ alphabet. */
@@ -250,14 +248,6 @@ public class FAQSetting {
 	public void setIdNameCategoryForum(String str) {
   	this.idNameCategoryForum = str;
   }
-
-	public String getIdNameForum() {
-		return idNameForum;
-	}
-	
-	public void setIdNameForum(String str) {
-		this.idNameForum = str;
-	}
 
 	public boolean isEnableAutomaticRSS() {
 		return enableAutomaticRSS;

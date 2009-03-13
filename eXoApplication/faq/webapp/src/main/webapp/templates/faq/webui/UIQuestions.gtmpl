@@ -349,7 +349,7 @@
 																} 
 																if(uicomponent.currentUser_ != null) {
 																	if(uicomponent.isDiscussForum()) {
-																		String pathDiscuss = question.getPathTopicDiscuss();
+																		String pathDiscuss = question.getTopicIdDiscuss();
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																			String link = uicomponent.getLinkDiscuss();
 															%>
@@ -365,7 +365,7 @@
 																	}
 																} 
 																if(uicomponent.isDiscussForum()) {
-																	String pathDiscuss = question.getPathTopicDiscuss();
+																	String pathDiscuss = question.getTopicIdDiscuss();
 																	if(pathDiscuss != null && pathDiscuss.length() > 0){
 																		String link = uicomponent.url("DiscussForum", pathDiscuss);
 																		link = FAQUtils.convertLinkToForum(link);
@@ -506,7 +506,7 @@
 																			<%
 																				if(uicomponent.currentUser_ != null) {
 																					if(uicomponent.isDiscussForum()) {
-																						String pathDiscuss = question.getPathTopicDiscuss();
+																						String pathDiscuss = question.getTopicIdDiscuss();
 																						if(pathDiscuss == null || pathDiscuss.length() <= 0){
 																							String link = uicomponent.getLinkDiscuss();
 																			%>

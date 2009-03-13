@@ -1,0 +1,74 @@
+<%	
+	import org.exoplatform.forum.service.Category ;
+	import org.exoplatform.forum.service.Forum ;
+%>
+
+<div class="UISelectCategoryForumForm">
+	<% uiform.begin() %>
+	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
+	<div class="UITree ScrollArea">
+		<div class="TreeContainer ParentNode">
+		<% 
+			boolean isFist = true;
+			List categories = uicomponent.getCategories(); 
+			for(category in categories) {
+				String categoryName = category.getCategoryName() ;
+				String display = "display:none;";
+				String iconClass = "SmallGrayMinus" ;
+				String isShow = "true";
+				List forums =	uicomponent.getForums(category.getId());
+				if(isFist) {
+					display = "display:block;" ;
+					iconClass = "SmallGrayPlus" ;
+					isFist = false;
+				}
+				if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+		%>
+			<div class="Node $iconClass">
+			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
+				 	<div class="NodeLabel" onclick ='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+				 		<div class="NodeSelected">
+				 			<a>$categoryName</a>
+				 		</div> 
+					</div> 			
+				<div style="clear:left;"><span></span></div>
+				<div class="ChildNodeContainer" style="$display">
+				<% 
+					for(forum in forums) {
+						String forumName = forum.getForumName() ;
+						String objectId = forum.getId() + ";" + categoryName + "/" + forumName;
+						String link = uicomponent.event("AddCategory",objectId ) ;
+						String classForumIcon = "ThreadsIcon";
+				%>
+					<div class="Node">
+						<div class="Icon $classForumIcon"><span></span></div>
+							<div class="NodeLabel"> 
+								<a href="$link">$forumName</a>	
+							</div>
+						<div style="clear:left;"><span></span></div>
+					</div>
+				<% } %>		
+				</div>
+			</div>
+		<% } %>	
+		 </div>	
+	</div>
+	<div class="UIAction">
+	  <table class="ActionContainer" style="text-align:center">
+	  	<tr>
+	 	 		<td align="center">
+					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+					  <div class="ButtonLeft">
+						  <div class="ButtonRight">
+						    <div class="ButtonMiddle">
+					       <a href="javascript:void(0);">Close</a>
+						    </div>
+					    </div>
+						</div>
+					</div>
+	   		</td>
+	  	</tr>
+	  </table>
+	</div>
+	<%uiform.end()%>
+</div>

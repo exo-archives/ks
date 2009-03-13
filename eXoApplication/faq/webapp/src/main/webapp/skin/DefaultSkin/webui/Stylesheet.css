@@ -1369,10 +1369,14 @@
 }
 
 .FAQCategoryTreeView {
-	background: url('background/categoryIcon.PNG') no-repeat left 0px;
+	background: url('background/CategoryIcon.png') no-repeat left 0px;
 	line-height:18px;
 	margin: 5px 0px 5px 8px;
 	padding-left: 25px;
+}
+
+.CategoryNormalIcon {
+	background: url('background/CategoryIcon.png') no-repeat left 0px;
 }
 
 .FAQQuestionView {
@@ -1816,33 +1820,33 @@
 	background: url('background/AddIcon.gif') no-repeat center;
 	cursor: pointer;
 }
-/************************** UIListCategoryForumForm *****************************/
-.UIFAQPortlet .UIListCategoryForumForm {
+/************************** UISelectCategoryForumForm *****************************/
+.UIFAQPortlet .UISelectCategoryForumForm {
 }
 
-.UIFAQPortlet .UIListCategoryForumForm .CategoryContainer {
+.UIFAQPortlet .UISelectCategoryForumForm .CategoryContainer {
 	padding-top: 40px;
 	width: 350px; 
 	margin:auto;
 }
 
-.UIFAQPortlet .UIListCategoryForumForm .ContentLabel {
+.UIFAQPortlet .UISelectCategoryForumForm .ContentLabel {
 	font-weight: bold;
 }
 
-.UIFAQPortlet .UIListCategoryForumForm .ListCategory {
+.UIFAQPortlet .UISelectCategoryForumForm .ListCategory {
 	margin-top: 2px;
 	border: solid 1px #b7b7b7;
 	background: #F7F7F7;
 }
 
-.UIFAQPortlet .UIListCategoryForumForm .ContentList {
+.UIFAQPortlet .UISelectCategoryForumForm .ContentList {
 	padding: 10px 0px 0px 10px;
 	border: solid 1px #ffffff;
 	min-height: 200px;
 }
 
-.UIFAQPortlet .UIListCategoryForumForm .IconCategory {
+.UIFAQPortlet .UISelectCategoryForumForm .IconCategory {
 	float: none;
 	padding-left: 26px;
 	width: auto;
@@ -1912,4 +1916,63 @@
   text-decoration: none;
 }
 
+/*********************UISelectCategoryForumForm***************************/
+.UISelectCategoryForumForm {
+	padding: 10px;
+	background: #ffffff;
+}
 
+.UISelectCategoryForumForm .TitleMoveThreads {
+	padding-left: 10px;
+	line-height: 20px;
+}
+
+.UISelectCategoryForumForm .UITree {
+	border: 1px solid #a5a5a5;
+	padding: 3px 1px;
+	overflow-y: auto;
+	height: 235px;
+}
+
+.UISelectCategoryForumForm .UITree .TreeContainer {
+	background: none;
+}
+
+.UISelectCategoryForumForm .TreeContainer .Node {
+	width: auto;
+	padding: 0px 0px 0px 20px;
+}
+
+.UISelectCategoryForumForm .TreeContainer .Node .NodeLabel a {
+	font-weight: normal;
+	color: #272727;
+	margin: 0px;
+	line-height: 22px;
+}
+
+.UISelectCategoryForumForm .TreeContainer .Node .Icon {
+	height: 22px; width: 22px;
+	margin: 0px; float: left ;
+}
+
+.UISelectCategoryForumForm .TreeContainer .Node .NodeLabel a:hover {
+	color: #058ee6;
+}
+
+.UISelectCategoryForumForm .TreeContainer .Selected {
+	background: #d8d9ee;
+	margin: 0px;
+	height: 22px;
+}
+
+.UIFAQPortlet .SmallGrayPlus {
+	background: url('background/SmallGrayPlus.gif') no-repeat left top;
+}
+
+.UIFAQPortlet .SmallGrayMinus {
+	background: url('background/SmallGrayMinus.gif') no-repeat left top;
+}
+
+.UIFAQPortlet .ThreadsIcon {
+	background: url('background/ThreadIcon.gif') no-repeat left top;
+}

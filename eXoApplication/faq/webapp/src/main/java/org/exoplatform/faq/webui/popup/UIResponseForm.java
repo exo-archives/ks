@@ -33,7 +33,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
@@ -42,6 +41,7 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -56,7 +56,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
-import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 
 /**
@@ -306,57 +305,59 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		return oldPath ;
 	}
 	
-	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider){
+	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider) throws Exception{
 	// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
-			String pathTopic = question_.getPathTopicDiscuss();
-			if(pathTopic != null && pathTopic.length() > 0) {
-				String []ids = pathTopic.split("/");
-				linkForum = linkForum.replaceFirst("OBJECTID", ids[2]);
-				linkForum = url + linkForum;
+			String topicId = question_.getTopicIdDiscuss();
+			if(topicId != null && topicId.length() > 0) {
 				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-				Post post;
-				int l = question_.getAnswers().length;
-				for (int i = 0; i < l; ++i) {
-					String postId = question_.getAnswers()[i].getPostId();
-					try {
-						if(postId != null && postId.length() > 0){
-							post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
-							if(post == null) {
+				Topic topic = (Topic)forumService.getObjectNameById(sessionProvider, topicId, org.exoplatform.forum.service.Utils.TOPIC);
+				if(topic != null) {
+					String []ids = topic.getPath().split("/");
+					int t = ids.length;
+					System.out.println("\n\n ======> " + ids[t-3]+" / "+ids[t-2]+" / "+topicId);
+					linkForum = linkForum.replaceFirst("OBJECTID", topicId);
+					linkForum = url + linkForum;
+					Post post;
+					int l = question_.getAnswers().length;
+					for (int i = 0; i < l; ++i) {
+						String postId = question_.getAnswers()[i].getPostId();
+						try {
+							if(postId != null && postId.length() > 0){
+								post = forumService.getPost(sessionProvider, ids[t-3], ids[t-2], topicId, postId);
+								if(post == null) {
+									post = new Post();
+									post.setOwner(question_.getAnswers()[i].getResponseBy());
+									post.setName("Re: " + question_.getQuestion());
+									post.setIcon("ViewIcon");
+									question_.getAnswers()[i].setPostId(post.getId());
+									post.setMessage(question_.getAnswers()[i].getResponses());
+									post.setLink(linkForum);
+									post.setIsApproved(false);
+									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
+								}else {
+									//post.setIsApproved(false);
+									post.setMessage(question_.getAnswers()[i].getResponses());
+									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, false, "");
+								}
+							} else {
 								post = new Post();
 								post.setOwner(question_.getAnswers()[i].getResponseBy());
 								post.setName("Re: " + question_.getQuestion());
 								post.setIcon("ViewIcon");
-								question_.getAnswers()[i].setPostId(post.getId());
 								post.setMessage(question_.getAnswers()[i].getResponses());
 								post.setLink(linkForum);
 								post.setIsApproved(false);
-								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-							}else {
-								//post.setIsApproved(false);
-								post.setMessage(question_.getAnswers()[i].getResponses());
-								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, false, "");
+								forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
+								question_.getAnswers()[i].setPostId(post.getId());
 							}
-						} else {
-							post = new Post();
-							post.setOwner(question_.getAnswers()[i].getResponseBy());
-							post.setName("Re: " + question_.getQuestion());
-							post.setIcon("ViewIcon");
-							post.setMessage(question_.getAnswers()[i].getResponses());
-							post.setLink(linkForum);
-							post.setIsApproved(false);
-							forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-							question_.getAnswers()[i].setPostId(post.getId());
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-        }
+	        }
+				}
 			}
 		}
-		/*for(int i = 1; i < responseForm.listQuestionLanguage.size(); i ++) {
-			multiLanguages.saveAnswer(questionNode, responseForm.listQuestionLanguage.get(i));
-		}*/
 	}
 
 	// action :

@@ -32,6 +32,8 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -186,50 +188,54 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
 					commentForm.comment.setComments(comment);
-					String pathTopic = commentForm.question_.getPathTopicDiscuss();
-					if(pathTopic != null && pathTopic.length() > 0) {
-						String []ids = pathTopic.split("/");
-						linkForum = linkForum.replaceFirst("OBJECTID", ids[2]);
-						linkForum = url + linkForum;
-						if(commentForm.isAddNew) {
-							Post post = new Post();
-							ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-							post.setOwner(commentForm.currentUser_);
-							post.setIcon("ViewIcon");
-							post.setName("Re: " + commentForm.question_.getQuestion());
-							post.setMessage(comment);
-							post.setLink(linkForum);
-							post.setIsApproved(false);
-							try {
-								forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, true, "");
-	            } catch (Exception e) {
-	              e.printStackTrace();
-	            }
-							commentForm.comment.setPostId(post.getId());
-						} else {
-							String postId = commentForm.comment.getPostId();
-							if(postId != null && postId.length() > 0) {
-								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+					String topicId = commentForm.question_.getTopicIdDiscuss();
+					if(topicId != null && topicId.length() > 0) {
+						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+						Topic topic = (Topic)forumService.getObjectNameById(sessionProvider, topicId, Utils.TOPIC);
+						if(topic != null) {
+							String []ids = topic.getPath().split("/");
+							int t = ids.length;
+							linkForum = linkForum.replaceFirst("OBJECTID", topicId);
+							linkForum = url + linkForum;
+							if(commentForm.isAddNew) {
+								Post post = new Post();
+								post.setOwner(commentForm.currentUser_);
+								post.setIcon("ViewIcon");
+								post.setName("Re: " + commentForm.question_.getQuestion());
+								post.setMessage(comment);
+								post.setLink(linkForum);
+								post.setIsApproved(false);
 								try {
-									Post post = forumService.getPost(sessionProvider, ids[0], ids[1], ids[2], postId);
-									boolean isNew = false;
-									if(post == null){
-										post = new Post();
-										isNew = true;
-										post.setOwner(commentForm.currentUser_);
-										post.setIcon("ViewIcon");
-										post.setName("Re: " + commentForm.question_.getQuestion());
-										commentForm.comment.setPostId(post.getId());
-										post.setLink(linkForum);
-									}else{
-										post.setModifiedBy(commentForm.currentUser_);
-									}
-									post.setIsApproved(false);
-									post.setMessage(comment);
-									forumService.savePost(sessionProvider, ids[0], ids[1], ids[2], post, isNew, "");
-	              } catch (Exception e) {
+									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
+									System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
+		            } catch (Exception e) {
 		              e.printStackTrace();
-	              }
+		            }
+								commentForm.comment.setPostId(post.getId());
+							} else {
+								String postId = commentForm.comment.getPostId();
+								if(postId != null && postId.length() > 0) {
+									try {
+										Post post = forumService.getPost(sessionProvider, ids[t-3], ids[t-2], topicId, postId);
+										boolean isNew = false;
+										if(post == null){
+											post = new Post();
+											isNew = true;
+											post.setOwner(commentForm.currentUser_);
+											post.setIcon("ViewIcon");
+											post.setName("Re: " + commentForm.question_.getQuestion());
+											commentForm.comment.setPostId(post.getId());
+											post.setLink(linkForum);
+										}else{
+											post.setModifiedBy(commentForm.currentUser_);
+										}
+										post.setIsApproved(false);
+										post.setMessage(comment);
+										forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, isNew, "");
+		              } catch (Exception e) {
+			              e.printStackTrace();
+		              }
+								}
 							}
 						}
 					}

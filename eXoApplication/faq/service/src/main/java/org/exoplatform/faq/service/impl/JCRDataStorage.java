@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.ResourceBundle;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -1121,7 +1120,7 @@ public class JCRDataStorage {
 		if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
 		if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
 		if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
-		if(questionNode.hasProperty("exo:pathTopicDiscuss")) question.setPathTopicDiscuss(questionNode.getProperty("exo:pathTopicDiscuss").getString()) ;
+		if(questionNode.hasProperty("exo:topicIdDiscuss")) question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString()) ;
 		List<FileAttachment> listFile = new ArrayList<FileAttachment>() ;
 		NodeIterator nodeIterator = questionNode.getNodes() ;
 		Node nodeFile ;
@@ -2462,12 +2461,12 @@ public class JCRDataStorage {
 		linkQuestion = null;
 	}
 	
-	public void savePathDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sProvider) throws Exception{
+	public void saveTopicIdDiscussQuestion(String questionId, String topicId, SessionProvider sProvider) throws Exception{
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		Node questionNode ;
 		try {
 			questionNode = questionHome.getNode(questionId);
-			questionNode.setProperty("exo:pathTopicDiscuss", pathDiscuss);
+			questionNode.setProperty("exo:topicIdDiscuss", topicId);
 			questionHome.save() ;
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();

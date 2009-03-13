@@ -75,12 +75,7 @@
       </preference>
       <preference>
         <name>idNameCategoryForum</name>
-        <value> </value>
-        <read-only>false</read-only>
-      </preference>
-      <preference>
-        <name>idNameForum</name>
-        <value> </value>
+        <value> </value>	<!-- id of forum;CategoryName/ForumName -->
         <read-only>false</read-only>
       </preference>
     </portlet-preferences>  
