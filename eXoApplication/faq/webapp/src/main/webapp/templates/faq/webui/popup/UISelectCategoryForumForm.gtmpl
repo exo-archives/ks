@@ -2,10 +2,9 @@
 	import org.exoplatform.forum.service.Category ;
 	import org.exoplatform.forum.service.Forum ;
 %>
-
 <div class="UISelectCategoryForumForm">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
+	<div class="TitleMoveThreads"><%=_ctx.appRes("FAQPortletSetting.label.ChooseForum");%>:</div>
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
 		<% 
@@ -61,7 +60,7 @@
 					  <div class="ButtonLeft">
 						  <div class="ButtonRight">
 						    <div class="ButtonMiddle">
-					       <a href="javascript:void(0);">Close</a>
+					       <a href="javascript:void(0);"><%=_ctx.appRes("UIFAQPortlet.action.Close");%></a>
 						    </div>
 					    </div>
 						</div>
