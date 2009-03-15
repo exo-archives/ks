@@ -39,6 +39,8 @@ public class UserProfile {
 	
 	private String[] readTopic ; // for check read/unread topic
 	private Map<String, Long> lastAccessTopics = new HashMap<String, Long>() ;
+	private String[] readForum ; // for check read/unread forum
+	private Map<String, Long> lastAccessForums = new HashMap<String, Long>() ;
 	private String[] bookmark ;
 	
 	private Date joinedDate = null;
@@ -110,6 +112,9 @@ public class UserProfile {
 	
 	public String[] getReadTopic(){return readTopic;}
 	public void setReadTopic(String[] readTopic){this.readTopic = readTopic;}
+
+	public String[] getReadForum(){return readForum;}
+	public void setReadForum(String[] readForum){this.readForum = readForum;}
 
 	public void setLastLoginDate(Date lastLoginDate) {this.lastLoginDate = lastLoginDate; }
 	public Date getLastLoginDate() {return lastLoginDate; }
@@ -201,6 +206,13 @@ public class UserProfile {
 	}
 	public long getLastTimeAccessTopic(String topicId) throws Exception {
 		if(lastAccessTopics.get(topicId) != null) return lastAccessTopics.get(topicId);
+		return 0 ; 
+	}
+	public void setLastTimeAccessForum(String forumId, long lastTime)throws Exception {
+		lastAccessForums.put(forumId, lastTime) ;
+	}
+	public long getLastTimeAccessForum(String forumId) throws Exception {
+		if(lastAccessForums.get(forumId) != null) return lastAccessForums.get(forumId);
 		return 0 ; 
 	}
 }

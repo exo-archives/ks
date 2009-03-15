@@ -87,12 +87,13 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UICategory extends UIForm	{
-	private boolean useAjax = true;
-	private UserProfile userProfile ;
+	private UserProfile userProfile = null;
 	private String categoryId ;
 	private Category category ;
 	private boolean	isEditCategory = false ;
 	private boolean	isEditForum = false ;
+	private boolean useAjax = true;
+  private int dayForumNewPost = 0;
 	private	ForumService forumService ;
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
@@ -103,16 +104,19 @@ public class UICategory extends UIForm	{
 				"SetUnLock","SetOpen","SetClose","MoveForum","RemoveForum"});
 	}
 	
-	private UserProfile getUserProfile() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+  private UserProfile getUserProfile() throws Exception {
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
+		useAjax = forumPortlet.isUseAjax();
+		dayForumNewPost = forumPortlet.getDayForumNewPost();
+		userProfile = forumPortlet.getUserProfile() ;
 		return this.userProfile ;
 	}
 	
-
-	private void setIsUseAjax(){
-		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
+  @SuppressWarnings("unused")
+  private int getDayForumNewPost() {
+		return dayForumNewPost;
 	}
-	
+  
 	public void update(Category category, List<Forum> forums) throws Exception {
 		this.category = category ;
 		if(forums == null) {
@@ -517,6 +521,15 @@ public class UICategory extends UIForm	{
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
+			String userId = ForumSessionUtils.getCurrentUser() ;
+			if(userId != null && userId.length() > 0) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try{
+					uiCategory.forumService.updateForumAccess(userId, forumId);
+				} finally {
+					sProvider.close();
+				}
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
@@ -561,7 +574,7 @@ public class UICategory extends UIForm	{
 					}
 				}
 				StringBuffer type = new StringBuffer();
-				if(uiCategory.getUserProfile().getUserRole() == 0){ 
+				if(uiCategory.userProfile.getUserRole() == 0){ 
 					type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
 				} else {
 					type.append("false,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
@@ -573,7 +586,7 @@ public class UICategory extends UIForm	{
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiCategory.getUserProfile().getUserId()));
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiCategory.userProfile.getUserId()));
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;

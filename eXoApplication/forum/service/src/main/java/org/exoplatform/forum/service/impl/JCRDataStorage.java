@@ -2897,6 +2897,14 @@ public class JCRDataStorage {
 				userProfile.setLastTimeAccessTopic(array[0], Long.parseLong(array[1])) ;
 			}
 		}
+		values = profileNode.getProperty("exo:readForum").getValues() ;
+		for(Value vl : values) {
+			String str = vl.getString() ;
+			if(str.indexOf(":") > 0) {
+				String[] array = str.split(":") ;
+				userProfile.setLastTimeAccessForum(array[0], Long.parseLong(array[1])) ;
+			}
+		}
 		if (userProfile.getIsBanned()) {
 			if(profileNode.hasProperty("exo:banUntil")) {
 				userProfile.setBanUntil(profileNode.getProperty("exo:banUntil").getLong());
@@ -3081,6 +3089,7 @@ public class JCRDataStorage {
 				newProfileNode.setProperty("exo:totalPost", 0);
 				newProfileNode.setProperty("exo:totalTopic", 0);
 				newProfileNode.setProperty("exo:readTopic", new String[] {});
+				newProfileNode.setProperty("exo:readForum", new String[] {});
 				if (newUserProfile.getUserRole() >= 2) {
 					newUserProfile.setUserRole((long) 2);
 				}
@@ -4295,6 +4304,37 @@ public class JCRDataStorage {
 			}
 			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
 			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
+			profile.save() ;
+		} catch (Exception e) {
+			e.printStackTrace() ;
+		}finally{
+			sysSession.close() ;
+		}
+	}
+	
+	public void updateForumAccess (String userId, String forumId) throws Exception {
+		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
+		try {
+			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
+			List<String> values = new ArrayList<String>() ;
+			if(profile.hasProperty("exo:readForum")) {
+				values = ValuesToList(profile.getProperty("exo:readForum").getValues()) ;
+			}
+			int i = 0 ;
+			boolean isUpdated = false ;
+			for(String vl : values) {
+				if(vl.indexOf(forumId) == 0) {
+					values.set(i, forumId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;
+					isUpdated = true ;
+					break ;
+				}
+				i++ ;
+			}
+			if(!isUpdated) {
+				values.add(forumId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;				
+			}
+			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
+			profile.setProperty("exo:readForum", values.toArray(new String[]{})) ;
 			profile.save() ;
 		} catch (Exception e) {
 			e.printStackTrace() ;

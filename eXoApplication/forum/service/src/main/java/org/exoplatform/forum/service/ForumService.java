@@ -901,6 +901,7 @@ public interface ForumService {
   public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
 
   public void updateTopicAccess (String userId, String topicId) throws Exception ;
+  public void updateForumAccess (String userId, String forumId) throws Exception ;
   //public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
   

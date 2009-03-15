@@ -9,8 +9,6 @@
 	import org.exoplatform.forum.webui.UITopicContainer ;	
 	import org.exoplatform.web.application.JavascriptManager;
 	
-	uicomponent.setIsUseAjax();
-	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;

@@ -140,19 +140,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-		this.userProfile = forumPortlet.getUserProfile() ;
+		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
+		forumPortlet.getUserProfile().setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+		this.userProfile = forumPortlet.getUserProfile() ;
 		cleanCheckedList();
 	}
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
-	
-
-	@SuppressWarnings("unused")
-  private void setIsUseAjax(){
-		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
-	}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
 		this.forumId = forumId ;
@@ -160,7 +156,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.isUpdate = true ;
 		this.pageSelect = 1 ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
+		forumPortlet.getUserProfile().setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;

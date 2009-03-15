@@ -209,12 +209,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
-		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
+		userProfile = forumPortlet.getUserProfile() ;
 	}
 	
 	public void hasPoll(boolean hasPoll) {
@@ -229,12 +229,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
-		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
+		userProfile = forumPortlet.getUserProfile() ;
 	}
 	
 	public void setUpdateForum(Forum forum) throws Exception {

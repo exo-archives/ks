@@ -16,7 +16,6 @@
 <% 
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;") ;
-	uicomponent.setIsUseAjax();
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
 	String categoryId = category.getId();
 	UserProfile userProfile = uicomponent.getUserProfile();
@@ -221,7 +220,8 @@
 				<thead>
 					<tr>
 						<th style="width:40px;">&nbsp;</th>
-						<th>Forums</th>
+						<th style="width:30px;">&nbsp;</th>
+						<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
 						<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
 						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
 						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
@@ -236,6 +236,7 @@
 					if(forums.size() == 0) {
 				%>
 					<tr>
+						<td></td>
 						<td></td>
 						<td><%=_ctx.appRes("UICategory.label.noForum");%></td>
 						<td><%=_ctx.appRes("UICategory.label.noPost");%></td>
@@ -259,6 +260,7 @@
 						String titleTopic = "" ;
 					 	String topicId = "";
 					 	String path = "";
+					 	int dayForumNewPost = uicomponent.getDayForumNewPost();
 						 for(forum in forums) {
 							if(i%2 == 0) classRow = "whileRow";
 							else classRow = "OddRow";
@@ -270,6 +272,7 @@
 							String forumDescription = forum.getDescription();
 							String topicCount = (String)forum.getTopicCount();
 							String postCount = (String)forum.getPostCount();
+						 	String classIconReadForum = "ThreadNoNewPost";
 							List forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 							long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 							path = categoryId+"/"+forumId ;
@@ -285,10 +288,16 @@
 								postDate.setTime(postDate.getTime() - setTime);
 								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
-								if((toDay-createdDate)/86400000 < 4){
+								if((toDay-createdDate)/86400000 <= dayForumNewPost){
 									classIconForum = "ForumNewPostIcon";
 									titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 								}
+								long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
+								if(createdDate > lastAccess) {
+									classIconReadForum = "ThreadNewPost";
+									titleNoNewPostForum = "Forum New Post";
+								}
+											
 								titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
 									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
@@ -344,6 +353,7 @@
 					%>
 								<tr class="$classRow" oncontextmenu="return false;">
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
+									<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleIconForum"><span></span></div></td>
 									<td >
 										<div style="float:left">
 												<% ++rCNB; %>

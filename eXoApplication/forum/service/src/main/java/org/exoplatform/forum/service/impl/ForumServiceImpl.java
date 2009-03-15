@@ -560,6 +560,9 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  storage_.updateTopicAccess(userId, topicId) ;
   }
   
+  public void updateForumAccess (String userId, String forumId) throws Exception {
+  	storage_.updateForumAccess(userId, forumId);
+  }
  /* public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
 	  return storage_.exportXML(listCategoryIds, forumId, nodePath, bos, sessionProvider);
   }*/

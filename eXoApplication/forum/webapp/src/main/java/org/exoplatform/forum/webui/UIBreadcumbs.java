@@ -260,6 +260,17 @@ public class UIBreadcumbs extends UIContainer {
 					if(id.length > 1) {
 						forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
 						forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+						String userId = ForumSessionUtils.getCurrentUser() ;
+						if(userId != null && userId.length() > 0) {
+							SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
+							try{
+								uiBreadcums.forumService.updateForumAccess(userId, id[1]);
+							} catch (Exception e) {
+								e.printStackTrace() ;
+							}finally {
+								sProvider.close();
+							}
+						}
 					} else {
 						SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
 						try {
@@ -269,6 +280,10 @@ public class UIBreadcumbs extends UIContainer {
 							id = path.split("/");
 							forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
 							forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum) ;
+							String userId = ForumSessionUtils.getCurrentUser() ;
+							if(userId != null && userId.length() > 0) {
+								uiBreadcums.forumService.updateForumAccess(userId, id[1]);
+							}
 						}catch(Exception e) {
 							e.printStackTrace();
 						}finally {

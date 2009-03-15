@@ -29,6 +29,12 @@
 	
 		<portlet-preferences>
 			<preference>
+				<name>forumNewPost</name>
+				<value>3</value> <!-- day number -->
+				<read-only>false</read-only>
+			</preference>
+
+			<preference>
 				<name>useAjax</name>
 				<value>true</value> <!--true/false -->
 				<read-only>false</read-only>

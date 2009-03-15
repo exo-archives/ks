@@ -67,17 +67,12 @@ public class UICategories extends UIContainer	{
 	public final String FORUM_LIST_SEARCH = "forumListSearch";
 	private boolean isGetForumList = false ;
 	private boolean isRenderChild = false ;
-	@SuppressWarnings("unused")
   private boolean useAjax = true;
+  private int dayForumNewPost = 0;
 	private UserProfile userProfile ;
 	public UICategories() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
-	}
-	
-	@SuppressWarnings("unused")
-  private void setIsUseAjax(){
-		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
 	}
 	
 	public void setIsRenderChild(boolean isRenderChild) {
@@ -88,13 +83,20 @@ public class UICategories extends UIContainer	{
 		return isRenderChild ;
 	}
 	
-	@SuppressWarnings({ "deprecation", "unused" })
-	private UserProfile getUserProfile() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+	@SuppressWarnings("unused")
+  private UserProfile getUserProfile() throws Exception {
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
+		useAjax = forumPortlet.isUseAjax();
+		dayForumNewPost = forumPortlet.getDayForumNewPost();
+		userProfile = forumPortlet.getUserProfile() ;
 		return this.userProfile ;
 	}
 	
-	//Function Public getObject 
+	@SuppressWarnings("unused")
+  private int getDayForumNewPost() {
+		return dayForumNewPost;
+	}
+	 
 	public List<Category> getCategorys() { return this.categoryList ; }
 	public List<Category> getPrivateCategories() {
 		List<Category> list = new ArrayList<Category>() ;
@@ -268,6 +270,15 @@ public class UICategories extends UIContainer	{
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
+			String userId = ForumSessionUtils.getCurrentUser() ;
+			if(userId != null && userId.length() > 0) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try{
+					categories.forumService.updateForumAccess(userId, id[1]);
+				} finally {
+					sProvider.close();
+				}
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			categories.maptopicLast.clear();
 		}
