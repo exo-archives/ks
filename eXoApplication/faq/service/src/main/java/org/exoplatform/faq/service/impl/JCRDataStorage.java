@@ -966,6 +966,7 @@ public class JCRDataStorage {
 		text = text.toLowerCase();
 		String authorContent = new String();
 		String emailContent = new String();
+		String questionDetail = new String();
 		String questionContent = new String();
 		String responseContent[] = null;
 		for (Question question : listQuestion) {
@@ -980,20 +981,23 @@ public class JCRDataStorage {
 					if (questionNode.hasProperty("exo:email"))
 						emailContent = questionNode.getProperty("exo:email").getValue().getString();
 					if (languageNode.hasProperty("exo:name"))
-						questionContent = languageNode.getProperty("exo:name").getValue().getString();
+						questionDetail = languageNode.getProperty("exo:name").getValue().getString();
 					if (languageNode.hasProperty("exo:responses"))
 						responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
-					if ((questionContent.toLowerCase().indexOf(text) >= 0)
+					if (languageNode.hasProperty("exo:title")) 
+						questionContent = languageNode.getProperty("exo:title").getString();
+					if ((questionDetail.toLowerCase().indexOf(text) >= 0)
 					    || ArrayContentValue(responseContent, text)
 					    || (authorContent.toLowerCase().indexOf(text) >= 0)
 					    || (emailContent.toLowerCase().indexOf(text) >= 0)) {
 						isAdd = true;
 					}
 					if (isAdd) {
+						question.setQuestion(questionContent);
 						question.setAuthor(authorContent);
 						question.setEmail(emailContent);
 						question.setLanguage(languageSearch);
-						question.setDetail(questionContent);
+						question.setDetail(questionDetail);
 						question.setAnswers(getAnswers(questionNode));
 						listResult.add(question);
 					}
@@ -1009,6 +1013,7 @@ public class JCRDataStorage {
 		Node questionNode = null;
 		Node languageNode = null;
 		String languages = Utils.LANGUAGE_HOME;
+		String questionDetail = new String();
 		String questionContent = new String();
 		Answer[] answers = null;
 		String[] responseContent = null;
@@ -1018,8 +1023,8 @@ public class JCRDataStorage {
 				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
 				if (languageNode != null) {
 					boolean isAdd = false;
-					if (languageNode.hasProperty("exo:name"))
-						questionContent = languageNode.getProperty("exo:name").getValue().getString();
+					if (languageNode.hasProperty("exo:name")) questionDetail = languageNode.getProperty("exo:name").getString();
+					if (languageNode.hasProperty("exo:title")) questionContent = languageNode.getProperty("exo:title").getString();
 					answers = getAnswers(languageNode);
 					responseContent = new String[answers.length];
 					for (int i = 0; i < answers.length; i++) {
@@ -1029,21 +1034,22 @@ public class JCRDataStorage {
 					    && (responseSearch == null || responseSearch.trim().length() < 1)) {
 						isAdd = true;
 					} else {
-						if ((questionSearch != null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
+						if ((questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
 						    && (responseSearch == null || responseSearch.trim().length() < 1)) {
 							isAdd = true;
 						} else if (answers != null
 						    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))
 						    && (questionSearch == null || questionSearch.trim().length() < 1)) {
 							isAdd = true;
-						} else if (answers != null && (questionSearch != null && questionSearch.trim().length() > 0 && questionContent.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
+						} else if (answers != null && (questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
 						    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))) {
 							isAdd = true;
 						}
 					}
 					if (isAdd) {
 						question.setLanguage(languageSearch);
-						question.setDetail(questionContent);
+						question.setQuestion(questionContent);
+						question.setDetail(questionDetail);
 						question.setAnswers(answers);
 						listResult.add(question);
 					}
