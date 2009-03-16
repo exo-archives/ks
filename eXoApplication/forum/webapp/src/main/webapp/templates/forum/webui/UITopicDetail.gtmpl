@@ -610,9 +610,8 @@
 						%>
 								<div class="MemberName">
 									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
-									<div class="Name">$owner</div>
 									<div class="ContentAction" style="float:left;" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
-										<div class="Action" style="float:none;"><span></span></div>
+										<div class="Name" style="float:none; cursor:pointer;">$owner</div>
 										<div style="position:relative;">
 											<div class="UIPopupCategory" style="display:none; left:2px; top:-2px; ">
 												<div class="UIRightClickPopupMenu" style="display:block;">
@@ -663,12 +662,57 @@
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
 								<% boolean isDisplayAvatar = userInfo.getIsDisplayAvatar();	
 									if(isDisplayAvatar) {
-									avatarUrl = uiform.getAvatarUrl(contact, post.getOwner(), sessionProvider) ;
-									String idAv = "avatar" + nb;
-									onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
-									 ++nb;
+										avatarUrl = uiform.getAvatarUrl(contact, post.getOwner(), sessionProvider) ;
+										String idAv = "avatar" + nb;
+										onload = "eXo.forum.UIForumPortlet.onloadReSizeAvatar('"+idAv+"');";
+										 ++nb;
 								%>
-								<img src="$avatarUrl" class="ImgAvatar" id="$idAv" width="70px" onload="$onload" alt=""/>
+										<div class="ContentAction" style="float:left;" onmouseover="eXo.forum.UIForumPortlet.mouseOnUserMenu(this, event,true)" onmouseout="eXo.forum.UIForumPortlet.mouseOnUserMenu(this, event, false)">
+											<img src="$avatarUrl" class="ImgAvatar" id="$idAv" width="70px" onload="$onload" style="float:left; cursor:pointer;" alt=""/>
+											<div style="position:relative; float:left;">
+												<div class="UIPopupCategory" style="display:none; left:2px; top:-2px; ">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">											
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																		<%
+																			for(viewAction in menuViewInfos) {
+																			  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
+																				String linkView = uicomponent.event(viewAction, owner) ;
+																				String classIcon = "" ;
+																				String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + owner ;
+																				if(viewAction.equals("ViewPublicUserInfo")) classIcon = "ViewProfileIcon" ;
+																				else classIcon = "IconsView" ;
+																		%>
+																				<div class="MenuItem" onclick="$linkView">
+																					<div class="ItemIcon $classIcon" style="padding-left:30px;">
+																						<a href="javaScript:void(0)">$itemLabelView</a>
+																					</div>
+																				</div>
+																		<%
+																			}
+																		%>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div style="clear:left;"><span></span></div>
 								<% } %>
 								<div class="InfoMember">
 									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>:$joinDate</div>

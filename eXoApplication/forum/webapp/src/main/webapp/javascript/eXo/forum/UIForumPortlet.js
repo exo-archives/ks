@@ -1,4 +1,26 @@
-function UIForumPortlet() {};
+function UIForumPortlet() {
+	this.obj = null;
+	this.event = null;
+	this.wait = false;
+};
+
+UIForumPortlet.prototype.mouseOnUserMenu = function(obj, event, wait) {
+	this.wait = wait;
+	if(this.wait){
+		this.obj = obj;
+		this.event = event;
+		setTimeout('eXo.forum.UIForumPortlet.viewUserMenu()', 300);
+	}
+}
+
+UIForumPortlet.prototype.viewUserMenu = function(){
+	if(this.wait){
+		var evObj = document.createEvent('MouseEvents');
+		evObj.initEvent( 'click', true, true );
+		eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.dispatchEvent(evObj));
+	}
+}
+
 UIForumPortlet.prototype.selectItem = function(obj) {
 	var DOMUtil = eXo.core.DOMUtil ;
 	var tr = DOMUtil.findAncestorByTagName(obj, "tr") ;
