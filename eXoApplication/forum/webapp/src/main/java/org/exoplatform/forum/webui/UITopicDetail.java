@@ -196,6 +196,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topicId ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
+		forumPortlet.getUserProfile().setLastTimeAccessTopic(topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -209,12 +210,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
-		userName = userProfile.getUserId() ;
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
+		userName = userProfile.getUserId() ;
 	}
 	
 	public void hasPoll(boolean hasPoll) {
@@ -229,12 +230,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
-		userName = userProfile.getUserId() ;
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
+		userName = userProfile.getUserId() ;
 	}
 	
 	public void setUpdateForum(Forum forum) throws Exception {
@@ -389,10 +390,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-		String userLogin = this.userProfile.getUserId();
 		isMod = false;
 		if(this.userProfile.getUserRole() == 0) isMod = true;
-		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userLogin) ;
+		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 				String isApprove = "";
@@ -400,10 +400,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				if(!isMod) isHidden = "false"; 
 				if (this.forum.getIsModeratePost() || this.topic.getIsModeratePost()) {
 					isModeratePost = true;
-					if (!isMod && !(this.topic.getOwner().equals(userLogin)))
+					if (!isMod && !(this.topic.getOwner().equals(userName)))
 						isApprove = "true";
 				}
-				pageList = this.forumService.getPosts(sProvider, this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userLogin);
+				pageList = this.forumService.getPosts(sProvider, this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userName);
 			long maxPost = this.userProfile.getMaxPostInPage();
 			if (maxPost <= 0) maxPost = 10;
 			pageList.setPageSize(maxPost);
