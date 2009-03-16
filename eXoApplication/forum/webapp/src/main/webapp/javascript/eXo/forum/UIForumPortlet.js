@@ -15,9 +15,13 @@ UIForumPortlet.prototype.mouseOnUserMenu = function(obj, event, wait) {
 
 UIForumPortlet.prototype.viewUserMenu = function(){
 	if(this.wait){
-		var evObj = document.createEvent('MouseEvents');
-		evObj.initEvent( 'click', true, true );
-		eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.dispatchEvent(evObj));
+		try{
+			var evObj = document.createEvent('MouseEvents');
+			evObj.initEvent( 'click', true, true );
+			eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.dispatchEvent(evObj));
+		} catch(e){
+			eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.fireEvent("onclick"));
+		}
 	}
 }
 
