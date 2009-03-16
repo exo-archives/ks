@@ -1124,7 +1124,7 @@ public class JCRDataStorage {
 			if (userRead != null &&	userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
-				updateTopicAccess(userRead, topicId) ;
+				//updateTopicAccess(userRead, topicId) ;
 				if(topicNode.isNew()){
 					topicNode.getSession().save();
 				} else {
@@ -1133,7 +1133,7 @@ public class JCRDataStorage {
 			}
 			return topicNew;
 		} catch (PathNotFoundException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			return null;
 		}
 	}

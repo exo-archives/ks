@@ -273,6 +273,7 @@
 							String topicCount = (String)forum.getTopicCount();
 							String postCount = (String)forum.getPostCount();
 						 	String classIconReadForum = "ThreadNoNewPost";
+						 	String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
 							List forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 							long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 							path = categoryId+"/"+forumId ;
@@ -292,12 +293,13 @@
 									classIconForum = "ForumNewPostIcon";
 									titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNoNewPosts");
 								}
-								long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
-								if(createdDate > lastAccess) {
-									classIconReadForum = "ThreadNewPost";
-									titleNoNewPostForum = "Forum New Post";
-								}
-											
+								if(!lastPostBy.equals(userLogin)){
+									long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
+									if(createdDate > lastAccess) {
+										classIconReadForum = "ThreadNewPost";
+										titleNoNewPostForum =  _ctx.appRes("UIForumIconState.label.ForumNewPost");
+									}
+								}	
 								titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle) ;
 								if(topicNewPost.getIsClosed()) {
 									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
@@ -353,7 +355,7 @@
 					%>
 								<tr class="$classRow" oncontextmenu="return false;">
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
-									<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleIconForum"><span></span></div></td>
+									<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleNoNewPostForum"><span></span></div></td>
 									<td >
 										<div style="float:left">
 												<% ++rCNB; %>

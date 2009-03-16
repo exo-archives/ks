@@ -131,7 +131,7 @@
 										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 										String classIconReadForum = "ThreadNoNewPost";
-										String titleNoNewPostForum = "Forum No New Post";
+										String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
 				 						if(topicNewPost != null) {
 				 							topicPath = categoryId+'/'+forumId+'/'+topicNewPost.getId() ;
 											topicNewPostIcon = topicNewPost.getIcon();
@@ -147,11 +147,12 @@
 												classIconForum = "ForumNewPostIcon";
 												titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryNewPosts");
 											}
-											
-											long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
-											if(createdDate > lastAccess) {
-												classIconReadForum = "ThreadNewPost";
-												titleNoNewPostForum = "Forum New Post";
+											if(!lastPostBy.equals(userLogin)){
+												long lastAccess = userProfile.getLastTimeAccessForum(forumId) ;
+												if(createdDate > lastAccess) {
+													classIconReadForum = "ThreadNewPost";
+													titleNoNewPostForum =  _ctx.appRes("UIForumIconState.label.ForumNewPost");
+												}
 											}
 											
 											titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.GotoFirstNewPost"),topicNewPostTitle);

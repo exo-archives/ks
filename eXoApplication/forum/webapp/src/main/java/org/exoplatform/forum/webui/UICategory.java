@@ -521,15 +521,6 @@ public class UICategory extends UIForm	{
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
-			String userId = ForumSessionUtils.getCurrentUser() ;
-			if(userId != null && userId.length() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-				try{
-					uiCategory.forumService.updateForumAccess(userId, forumId);
-				} finally {
-					sProvider.close();
-				}
-			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

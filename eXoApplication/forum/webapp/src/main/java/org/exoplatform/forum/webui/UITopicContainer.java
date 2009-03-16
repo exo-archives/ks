@@ -143,7 +143,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
-		forumPortlet.getUserProfile().setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+		forumPortlet.updateAccessForum(forumId);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		cleanCheckedList();
 	}
@@ -158,7 +158,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
-		forumPortlet.getUserProfile().setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+		forumPortlet.updateAccessForum(forumId);
 		this.userProfile = forumPortlet.getUserProfile() ;
 		if(!isBreadcumbs) {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;

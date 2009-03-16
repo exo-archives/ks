@@ -30,7 +30,7 @@
 		<portlet-preferences>
 			<preference>
 				<name>forumNewPost</name>
-				<value>3</value> <!-- day number -->
+				<value>1</value> <!-- day number -->
 				<read-only>false</read-only>
 			</preference>
 

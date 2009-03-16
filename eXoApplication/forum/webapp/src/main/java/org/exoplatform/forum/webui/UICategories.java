@@ -270,15 +270,15 @@ public class UICategories extends UIContainer	{
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
-			String userId = ForumSessionUtils.getCurrentUser() ;
-			if(userId != null && userId.length() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-				try{
-					categories.forumService.updateForumAccess(userId, id[1]);
-				} finally {
-					sProvider.close();
-				}
-			}
+//			String userId = ForumSessionUtils.getCurrentUser() ;
+//			if(userId != null && userId.length() > 0) {
+//				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+//				try{
+//					categories.forumService.updateForumAccess(userId, id[1]);
+//				} finally {
+//					sProvider.close();
+//				}
+//			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			categories.maptopicLast.clear();
 		}

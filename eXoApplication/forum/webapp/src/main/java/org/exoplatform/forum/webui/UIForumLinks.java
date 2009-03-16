@@ -152,17 +152,6 @@ public class UIForumLinks extends UIForm {
 						forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
 						forumContainer.setIsRenderChild(true) ;
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						String userId = ForumSessionUtils.getCurrentUser() ;
-						if(userId != null && userId.length() > 0) {
-							SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
-							try{
-								uiForm.forumService.updateForumAccess(userId, id[1]);
-							} catch (Exception e) {
-								e.printStackTrace() ;
-							}finally {
-								sProvider.close();
-							}
-						}
 					} else isErro = true ;
 				} else if(path.indexOf(Utils.CATEGORY) >= 0) {
 					Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), path.trim()) ;

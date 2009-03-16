@@ -196,7 +196,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topicId ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
-		forumPortlet.getUserProfile().setLastTimeAccessTopic(topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+		forumPortlet.updateAccessTopic(topicId);
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
@@ -212,7 +212,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
-		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;

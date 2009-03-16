@@ -50,6 +50,7 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl"
 )
 public class UIForumPortlet extends UIPortletApplication {
+	private ForumService forumService;
 	private boolean isCategoryRendered = true;
 	private boolean isForumRendered = false;
 	private boolean isTagRendered = false;
@@ -63,6 +64,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private List<String>invisibleForums = new ArrayList<String>();
 	private List<String>invisibleCategories = new ArrayList<String>();
 	public UIForumPortlet() throws Exception {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIBreadcumbs.class, null, null) ;
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
@@ -204,6 +206,32 @@ public class UIForumPortlet extends UIPortletApplication {
 	public UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) updateUserProfileInfo() ;
 		return this.userProfile ;
+	}
+	
+	public void updateAccessTopic(String topicId) throws Exception {
+		String userId = ForumSessionUtils.getCurrentUser() ;
+		if(userId != null && userId.length() > 0) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				forumService.updateTopicAccess(userId, topicId);
+			} finally {
+				sProvider.close();
+			}
+		}
+		userProfile.setLastTimeAccessTopic(topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
+  }
+
+	public void updateAccessForum(String forumId) throws Exception {
+		String userId = ForumSessionUtils.getCurrentUser() ;
+		if(userId != null && userId.length() > 0) {
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try{
+				forumService.updateForumAccess(userId, forumId);
+			} finally {
+				sProvider.close();
+			}
+		}
+		userProfile.setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
 	}
 	
 	@SuppressWarnings("deprecation")
