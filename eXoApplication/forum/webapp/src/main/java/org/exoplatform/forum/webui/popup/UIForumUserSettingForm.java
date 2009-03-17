@@ -122,6 +122,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private JCRPageList pageList ;
 	UIForumPageIterator pageIterator ;
+	private final String defaultAvatar = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 	
 	public UIForumUserSettingForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -292,15 +293,15 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String getAvatarUrl(){
-		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		String url = defaultAvatar;
 		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 		try {
 			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 			url = ForumSessionUtils.getUserAvatarURL(ForumSessionUtils.getCurrentUser(), this.forumService, sessionProvider, dservice);
 		} catch (Exception e) {
-			url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+			url = defaultAvatar;
 		}
-		if(url == null || url.trim().length() < 1) url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		if(url == null || url.trim().length() < 1) url = defaultAvatar;
 		sessionProvider.close();
 		return url;
 	}

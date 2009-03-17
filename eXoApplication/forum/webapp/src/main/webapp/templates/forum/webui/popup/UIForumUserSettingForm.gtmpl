@@ -60,18 +60,22 @@ import org.exoplatform.forum.service.Utils;
 																<td class="FieldLabel" align="right" style="padding:2px 0px 3px 4px;">
 														      <%=_ctx.appRes("UIForumUserSettingForm.label.Avatar")%> :
 														    </td>
-														    <td class="FieldComponent" style="padding:2px 0px 3px 0px;">
-														    	<div>
+														    <td class="FieldComponent" style="padding:2px 0px 3px 0px;" align="left;">
+																	<div style="text-align:center; color:blue; float:left; text-align:center;">
 																		<img src="<%=uicomponent.getAvatarUrl()%>" width="70px" style="margin:5px;" alt=""/>
-																	</div>
-																	<div style="text-align:left; color:blue;">
+																		<br>
 																		<a href="javaScript:void(0);" onclick="<%=uiform.event("Attachment")%>" style="color:blue;">
 																			<%=_ctx.appRes("UIForumUserSettingForm.label.ChangeAvatar")%>
 																		</a>
-																		|
-																		<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
-																			<%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
-																		</a>
+																		<%
+																		if(!uicomponent.defaultAvatar.equals(uicomponent.getAvatarUrl())){
+																		%>
+																			|
+																			<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIModeratorManagementForm.msg.setDefaultAvartar")%>')){<%=uiform.event("SetDefaultAvatar")%>};" style="color:blue;">
+																				<%=_ctx.appRes("UIForumUserSettingForm.label.SetDefaultAvatar")%>
+																			</a>
+																		<%
+																		}%>
 																	</div>
 																</td>
 															</tr>

@@ -1,4 +1,7 @@
 <%
+import org.exoplatform.faq.service.Utils;
+
+
 if(!uicomponent.isEditPortlet_){
 %>
 <div class="UISettingForm $uicomponent.id">
@@ -44,16 +47,20 @@ if(!uicomponent.isEditPortlet_){
 										<tr>
 											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
 											<td>
-													<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" alt="" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin:5px;"/>
-													<br/>
-													<div style="float:left; color:blue; width: 100%; white-space:nowrap; padding:2px 5px;">
+													<div style="float:left; color:blue; white-space:nowrap; padding:2px 5px; text-align:center;">
+														<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" alt="" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin:5px;"/>
+														<br/>
 														<a href="javaScript:void(0);" onclick="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue; cursor:pointer;">
 															<%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%>
 														</a>
-														|
-														<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UISettingForm.msg.SetDeFaultAvatar")%>')){<%=uicomponent.event("SetDefaultAvatar")%>};" style="cursor:pointer; color:blue;">
-															<%=_ctx.appRes("UISettingForm.label.resetAvatar")%>
-														</a>
+														<%
+														if(!uicomponent.avatarUrl.equals(Utils.DEFAULT_AVATAR_URL)){%>
+															|
+															<a href="javaScript:void(0);" onclick="javaScript:if(confirm('<%=_ctx.appRes("UISettingForm.msg.SetDeFaultAvatar")%>')){<%=uicomponent.event("SetDefaultAvatar")%>};" style="cursor:pointer; color:blue;">
+																<%=_ctx.appRes("UISettingForm.label.resetAvatar")%>
+															</a>
+														<%
+														}%>
 													</div>
 											</td>
 										</tr>
