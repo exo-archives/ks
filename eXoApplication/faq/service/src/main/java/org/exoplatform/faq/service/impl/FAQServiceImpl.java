@@ -66,17 +66,17 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
-		PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
-		if (proParams != null) {
-			String maximum = proParams.getProperty("maximum.upload");
-			if (maximum != null && maximum.length() > 0) {
-				try {
-					maxUploadSize_ = Long.parseLong(maximum)*1048576;
-				} catch (Exception e) {
-					maxUploadSize_ = 0;
-    		}
-    	}
-    }
+		try {
+			PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
+			if (proParams != null) {
+				String maximum = proParams.getProperty("maximum.upload");
+				if (maximum != null && maximum.length() > 0) {
+						maxUploadSize_ = Long.parseLong(maximum)*1048576;
+	    	}
+	    }
+		} catch (Exception e) {
+			maxUploadSize_ = 0;
+		}
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
