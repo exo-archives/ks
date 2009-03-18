@@ -117,7 +117,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question.setTopicIdDiscuss(null);
 		return question ;
 	}
-	
+
 	private QuestionLanguage createQuestionLanguage(String language){
 		QuestionLanguage questionLanguage = new QuestionLanguage();
 		questionLanguage.setAnswers(null);
@@ -127,7 +127,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		questionLanguage.setQuestion("question for language " + language);
 		return questionLanguage;
 	}
-	
+
 	private Answer createAnswer(String user, String content){
 		Answer answer = new Answer();
 		answer.setActivateAnswers(true);
@@ -142,7 +142,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		answer.setUsersVoteAnswer(null);
 		return answer;
 	}
-	
+
 	private Comment createComment(String user, String content){
 		Comment comment = new Comment();
 		comment.setCommentBy(user);
@@ -152,43 +152,43 @@ public class TestFAQService extends FAQServiceTestCase{
 		comment.setPostId(null);
 		return comment;
 	}
-	
+
 	private InputStream createQuestionToImport(String questionId){
 		InputStream is = null;
 		String data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-				"<sv:node xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:rep=\"internal\" xmlns:sv=\"http://www.jcp.org/jcr/sv/1.0\" " +
-				"xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\" xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" " +
-				"xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:fn_old=\"http://www.w3.org/2004/10/xpath-functions\" " +
-				"xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" " +
-				"xmlns:webdav=\"http://www.exoplatform.org/jcr/webdav\" xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\" " +
-				"sv:name=\""+questionId+"\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\">" +
-				"<sv:value>exo:faqQuestion</sv:value></sv:property><sv:property sv:name=\"jcr:mixinTypes\" sv:type=\"Name\">" +
-				"<sv:value>mix:faqi18n</sv:value></sv:property><sv:property sv:name=\"exo:author\" sv:type=\"String\"><sv:value>root</sv:value>" +
-				"</sv:property><sv:property sv:name=\"exo:categoryId\" sv:type=\"String\"><sv:value>null</sv:value></sv:property>" +
-				"<sv:property sv:name=\"exo:createdDate\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:25.843+07:00</sv:value>" +
-				"</sv:property><sv:property sv:name=\"exo:email\" sv:type=\"String\"><sv:value>root@localhost.com</sv:value></sv:property>" +
-				"<sv:property sv:name=\"exo:isActivated\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property " +
-				"sv:name=\"exo:isApproved\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property sv:name=\"exo:language\" " +
-				"sv:type=\"String\"><sv:value>English</sv:value></sv:property><sv:property sv:name=\"exo:markVote\" sv:type=\"Double\">" +
-				"<sv:value>0.0</sv:value></sv:property><sv:property sv:name=\"exo:name\" sv:type=\"String\"><sv:value>&lt;p&gt;detail " +
-				"for this question&lt;/p&gt;</sv:value></sv:property><sv:property sv:name=\"exo:relatives\" sv:type=\"String\"></sv:property>" +
-				"<sv:property sv:name=\"exo:title\" sv:type=\"String\"><sv:value>new question 1</sv:value></sv:property><sv:node " +
-				"sv:name=\"faqAnswerHome\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\"><sv:value>nt:unstructured</sv:value>" +
-				"</sv:property><sv:node sv:name=\"Answer0e1a8845c0a8013100c543662af2545d\"><sv:property sv:name=\"jcr:primaryType\" " +
-				"sv:type=\"Name\"><sv:value>exo:answer</sv:value></sv:property><sv:property sv:name=\"exo:MarkVotes\" sv:type=\"Long\">" +
-				"<sv:value>0</sv:value></sv:property><sv:property sv:name=\"exo:activateResponses\" sv:type=\"Boolean\"><sv:value>true" +
-				"</sv:value></sv:property><sv:property sv:name=\"exo:approveResponses\" sv:type=\"Boolean\"><sv:value>true</sv:value>" +
-				"</sv:property><sv:property sv:name=\"exo:dateResponse\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:41.109+07:00</sv:value>" +
-				"</sv:property><sv:property sv:name=\"exo:id\" sv:type=\"String\"><sv:value>Answer0e1a8845c0a8013100c543662af2545d</sv:value>" +
-				"</sv:property><sv:property sv:name=\"exo:responseBy\" sv:type=\"String\"><sv:value>root</sv:value></sv:property>" +
-				"<sv:property sv:name=\"exo:responses\" sv:type=\"String\"><sv:value>&lt;p&gt;new answer 1&lt;/p&gt;</sv:value>" +
-				"</sv:property></sv:node></sv:node></sv:node>";
+		"<sv:node xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:rep=\"internal\" xmlns:sv=\"http://www.jcp.org/jcr/sv/1.0\" " +
+		"xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\" xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" " +
+		"xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:fn_old=\"http://www.w3.org/2004/10/xpath-functions\" " +
+		"xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" " +
+		"xmlns:webdav=\"http://www.exoplatform.org/jcr/webdav\" xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\" " +
+		"sv:name=\""+questionId+"\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\">" +
+		"<sv:value>exo:faqQuestion</sv:value></sv:property><sv:property sv:name=\"jcr:mixinTypes\" sv:type=\"Name\">" +
+		"<sv:value>mix:faqi18n</sv:value></sv:property><sv:property sv:name=\"exo:author\" sv:type=\"String\"><sv:value>root</sv:value>" +
+		"</sv:property><sv:property sv:name=\"exo:categoryId\" sv:type=\"String\"><sv:value>null</sv:value></sv:property>" +
+		"<sv:property sv:name=\"exo:createdDate\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:25.843+07:00</sv:value>" +
+		"</sv:property><sv:property sv:name=\"exo:email\" sv:type=\"String\"><sv:value>root@localhost.com</sv:value></sv:property>" +
+		"<sv:property sv:name=\"exo:isActivated\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property " +
+		"sv:name=\"exo:isApproved\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property sv:name=\"exo:language\" " +
+		"sv:type=\"String\"><sv:value>English</sv:value></sv:property><sv:property sv:name=\"exo:markVote\" sv:type=\"Double\">" +
+		"<sv:value>0.0</sv:value></sv:property><sv:property sv:name=\"exo:name\" sv:type=\"String\"><sv:value>&lt;p&gt;detail " +
+		"for this question&lt;/p&gt;</sv:value></sv:property><sv:property sv:name=\"exo:relatives\" sv:type=\"String\"></sv:property>" +
+		"<sv:property sv:name=\"exo:title\" sv:type=\"String\"><sv:value>new question 1</sv:value></sv:property><sv:node " +
+		"sv:name=\"faqAnswerHome\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\"><sv:value>nt:unstructured</sv:value>" +
+		"</sv:property><sv:node sv:name=\"Answer0e1a8845c0a8013100c543662af2545d\"><sv:property sv:name=\"jcr:primaryType\" " +
+		"sv:type=\"Name\"><sv:value>exo:answer</sv:value></sv:property><sv:property sv:name=\"exo:MarkVotes\" sv:type=\"Long\">" +
+		"<sv:value>0</sv:value></sv:property><sv:property sv:name=\"exo:activateResponses\" sv:type=\"Boolean\"><sv:value>true" +
+		"</sv:value></sv:property><sv:property sv:name=\"exo:approveResponses\" sv:type=\"Boolean\"><sv:value>true</sv:value>" +
+		"</sv:property><sv:property sv:name=\"exo:dateResponse\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:41.109+07:00</sv:value>" +
+		"</sv:property><sv:property sv:name=\"exo:id\" sv:type=\"String\"><sv:value>Answer0e1a8845c0a8013100c543662af2545d</sv:value>" +
+		"</sv:property><sv:property sv:name=\"exo:responseBy\" sv:type=\"String\"><sv:value>root</sv:value></sv:property>" +
+		"<sv:property sv:name=\"exo:responses\" sv:type=\"String\"><sv:value>&lt;p&gt;new answer 1&lt;/p&gt;</sv:value>" +
+		"</sv:property></sv:node></sv:node></sv:node>";
 		try {
-	      is = new ByteArrayInputStream(data.getBytes("UTF-8"));
-	  } catch (Exception e) {
-	      e.printStackTrace();
-	  }
-	  return is;
+			is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return is;
 	}
 
 	private Watch createNewWatch(String user, String mail){
@@ -202,30 +202,30 @@ public class TestFAQService extends FAQServiceTestCase{
 //		add category Id	
 		Category cate1 = createCategory("Cate 1") ;
 		faqService_.saveCategory(null, cate1, true, sProvider_) ;
-		
+
 		Category cate2 = createCategory("Cate 2") ;
 		cate2.setName("Nguyen van truong test category222222") ;
 		cate2.setModerators(new String[]{"Demo"}) ;
 		faqService_.saveCategory(null, cate2, true, sProvider_) ;
-		
+
 		assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
-//	get infor of root category:
+//		get infor of root category:
 		assertEquals(faqService_.getCategoryInfo(null, sProvider_)[0], 2);
-		
-//	Check category is already exist
+
+//		Check category is already exist
 		assertEquals(faqService_.categoryAlreadyExist(cate1.getId(), sProvider_), true);
-		
-//	Get path of category
+
+//		Get path of category
 		assertNotNull(faqService_.getCategoryPath(sProvider_, cate1.getId()));
-		
-//	Swap 2 category
+
+//		Swap 2 category
 		assertEquals(faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex(), 2);
 		assertEquals(faqService_.getCategoryById(cate2.getId(), sessionProvider).getIndex(), 1);
 		faqService_.swapCategories(null, cate1.getId(), cate2.getId(), sessionProvider);
 		assertEquals(faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex(), 1);
 		assertEquals(faqService_.getCategoryById(cate2.getId(), sessionProvider).getIndex(), 2);
-		
-//	add sub category 1
+
+//		add sub category 1
 		Category subCate1 = createCategory("Sub Cate 1") ;
 		subCate1.setName("Nguyen van truong test Sub category 1") ;
 		subCate1.setModerators(new String[]{"marry","Demo"}) ;
@@ -238,10 +238,10 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertNotNull(cate1) ;
 		assertEquals("Nguyen van truong test category111111", cate1.getName());
 
-//	get Categories
+//		get Categories
 		List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_) ;
 		assertEquals(listCate.size(), 2) ;
-		
+
 		assertEquals(faqService_.getMaxindexCategory(null, sessionProvider), 2);
 
 //		get sub category
@@ -275,7 +275,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(listCateByModerator.size(), 1);
 
 	}
-	
+
 	public void testQuestion() throws Exception {
 		Category cate = createCategory("Category to test question") ;
 		try{
@@ -283,7 +283,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		Question question1 = createQuestion(cate) ;
 //		save question 1
 		faqService_.saveQuestion(question1, true, sProvider_,faqSetting_) ;
@@ -361,7 +361,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setCreatedDate(new Date()) ;
 		faqService_.saveQuestion(question5, true, sProvider_,faqSetting_) ;
 
-/*//	Get question by list category
+		/*//	Get question by list category
 		JCRPageList pageList = faqService_.getQuestionsByListCatetory(Arrays.asList(new String[]{cate.getId()}), false, sProvider_);
 		pageList.setPageSize(10);
 		assertEquals(pageList.getPage(1, null).size(), 5);*/
@@ -373,12 +373,12 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get list question by category of question 1
 		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, faqSetting_).getAll() ;
 		assertEquals(listQuestionByCategory.size(), 5) ;
-		
-//	Get list paths of all question in category
+
+//		Get list paths of all question in category
 		List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId(), sessionProvider);
 		assertEquals(listPaths.size(), 5);
-		
-//	Get question node by id
+
+//		Get question node by id
 		assertNotNull(faqService_.getQuestionNodeById(question1.getId(), sessionProvider));
 
 //		remove question
@@ -386,45 +386,45 @@ public class TestFAQService extends FAQServiceTestCase{
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions(sProvider_).getAll();
 		assertEquals(listAllQuestionAfterRemove.size(), 4) ;
 	}
-	
+
 	public void testSearch() throws Exception {
-	
-//	quick search with text = "test"
+
+//		quick search with text = "test"
 		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
 		assertEquals(listQuickSearch.size(), 6) ;
-	
-//	search all category and question in database
+
+//		search all category and question in database
 		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
 		assertEquals(listSearchAll.size(), 7) ;
-	
-//	advance search all category in database
+
+//		advance search all category in database
 		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
 		eventQueryCategory.setType("faqCategory");
 		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
 		assertEquals(listAllCategroy.size(), 3) ;
-	
-//advance search with category name = "Sub"
+
+//		advance search with category name = "Sub"
 		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
 		eventQuerySub.setType("faqCategory");
 		eventQuerySub.setName("Sub") ;
 		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
 		assertEquals(listAllSub.size(), 1) ;
-	
-//	advance search all question in database
+
+//		advance search all question in database
 		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
 		eventQueryQuestion.setType("faqQuestion");
 		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
 		assertEquals(listAllQuestion.size(), 0) ;
-	
-	
-//	advance search with category name = "Sub"
+
+
+//		advance search with category name = "Sub"
 		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
 		eventQueryAdvanceQuestion.setType("faqQuestion");
 		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
 		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
 		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
 	}
-	
+
 	public void testAnswerComment() throws Exception{
 		Category cate = createCategory("category to test answer");
 		faqService_.saveCategory(null, cate, true, sProvider_);
@@ -432,60 +432,60 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
 		Answer answer1 = createAnswer(USER_ROOT, "Root answer 1 for question");
 		Answer answer2 = createAnswer(USER_DEMO, "Demo answer 2 for question");
-		
+
 		Comment comment1 = createComment(USER_ROOT, "Root comment 1 for question");
 		Comment comment2 = createComment(USER_DEMO, "Demo comment 2 for question");
-		
-//	Save answer:
+
+//		Save answer:
 		faqService_.saveAnswer(question.getId(), new Answer[]{answer1, answer2}, sProvider_);
-		
-//	Get answer by id:
+
+//		Get answer by id:
 		assertNotNull(faqService_.getAnswerById(question.getId(), answer2.getId(), sProvider_));
-		
-//	Update answers:
+
+//		Update answers:
 		assertEquals(answer1.getResponses(), "Root answer 1 for question");
 		answer1.setResponses("Root answer 1 for question edit");
 		faqService_.saveAnswer(question.getId(), answer1, false, sProvider_);
 		assertEquals(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_).getResponses(), 
-									"Root answer 1 for question edit");
-		
-//	Get all answers of question:
+		"Root answer 1 for question edit");
+
+//		Get all answers of question:
 		JCRPageList pageList = faqService_.getPageListAnswer(sProvider_, question.getId(), null);
 		pageList.setPageSize(10);
 		assertEquals(pageList.getPageItem(0).size(), 2);
-		
-//	Delete answer
+
+//		Delete answer
 		faqService_.deleteAnswer(question.getId(), answer1.getId(), sProvider_);
 		pageList = faqService_.getPageListAnswer(sProvider_, question.getId(), null);
 		pageList.setPageSize(10);
 		assertEquals(pageList.getPageItem(0).size(), 1);
-		
-//	Save comment
+
+//		Save comment
 		faqService_.saveComment(question.getId(), comment1, true, sProvider_);
 		faqService_.saveComment(question.getId(), comment2, true, sProvider_);
-		
-//	Get comment by Id:
+
+//		Get comment by Id:
 		assertNotNull(faqService_.getCommentById(sProvider_, question.getId(), comment1.getId()));
 		assertNotNull(faqService_.getCommentById(sProvider_, question.getId(), comment2.getId()));
-		
-//	Get all comment of question
+
+//		Get all comment of question
 		pageList = faqService_.getPageListComment(sProvider_, question.getId());
 		pageList.setPageSize(10);
 		assertEquals(pageList.getPageItem(0).size(), 2);
-		
-//	Delete comment by id
+
+//		Delete comment by id
 		faqService_.deleteComment(question.getId(), comment1.getId(), sProvider_);
 		pageList = faqService_.getPageListComment(sProvider_, question.getId());
 		pageList.setPageSize(10);
 		assertEquals(pageList.getPageItem(0).size(), 1);
-		
-//  Generate RSS
+
+//		Generate RSS
 		faqService_.generateRSS(faqService_.getQuestionNodeById(question.getId(), sProvider_).getPath(), 1);
-		
-//	Get RSS node
+
+//		Get RSS node
 		assertNotNull(faqService_.getRSSNode(sProvider_, cate.getId()));
 	}
-	
+
 	public void testImportExport() throws Exception{
 		Question question = new Question();
 		faqService_.importData(null, faqService_.getCategoryNodeById(null, sProvider_).getSession(), createQuestionToImport(question.getId()), false, sProvider_);
@@ -498,53 +498,53 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.saveCategory(null, cateWatch, true, sProvider_) ;
 
 		List<Watch> listWatchs = new ArrayList<Watch>();
-//	add  watch
+//		add  watch
 		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_ROOT, "maivanha1610@gmail.com"), sProvider_) ;
 		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_DEMO, "maivanha1610@yahoo.com"), sProvider_) ;
 		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_JOHN, "john@localhost.com"), sProvider_) ;
-		
+
 //		get email watch		
 		JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
 		assertEquals(listWatchs.size(), 3) ;
-		
-//	Delete email watch
+
+//		Delete email watch
 		faqService_.deleteMailInWatch(cateWatch.getId(), sProvider_, "john@localhost.com");
 		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		assertEquals(pageList.getPageListWatch(1, USER_ROOT).size(), 2) ;
-		
-//	Check category is watched by user
+
+//		Check category is watched by user
 		assertEquals(faqService_.getWatchByUser(USER_ROOT, cateWatch.getId(), sProvider_), true);
-		
-//	get all categories are watched by user
+
+//		get all categories are watched by user
 		assertNotNull(faqService_.getListCategoriesWatch(USER_ROOT, sProvider_));
-		
-//	UnWatch category
+
+//		UnWatch category
 		faqService_.UnWatch(cateWatch.getId(), sProvider_, USER_DEMO);
 		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		assertEquals(pageList.getPageListWatch(1, USER_ROOT).size(), 1) ;
 	}
-	
+
 	public void testMultilanguage() throws Exception{
 		Category category = createCategory("Cateogry to test multilanguage");
 		faqService_.saveCategory(null, category, true, sProvider_);
 		Question question = createQuestion(category);
 		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
-		
-//	Add question language for question
+
+//		Add question language for question
 		MultiLanguages multiLanguages = new MultiLanguages();
 		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
 		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
-		
-// 	Get all question language :
+
+//		Get all question language :
 		assertEquals(faqService_.getQuestionLanguages(question.getId(), sProvider_).size(), 2);
 	}
 
 	public void testUserSetting() throws Exception {
-//	set userSetting information into user node
+//		set userSetting information into user node
 		faqSetting_.setDisplayMode("both");
 		faqSetting_.setOrderBy("created");
 		faqSetting_.setOrderType("asc") ;
@@ -552,7 +552,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(faqSetting_.getOrderType(), "asc");
 		faqService_.getUserSetting(sessionProvider, USER_ROOT, faqSetting_);
 
-//	get all userSetting information from user node and set for FAQSetting object
+//		get all userSetting information from user node and set for FAQSetting object
 		FAQSetting setting = new FAQSetting();
 		setting.setOrderBy(null);
 		setting.setOrderType(null);
@@ -561,8 +561,8 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.getUserSetting(sessionProvider, USER_ROOT, setting);
 		assertEquals(setting.getOrderBy(), "created");
 		assertEquals(setting.getOrderType(), "asc");
-		
-//	update userSetting information in to user node
+
+//		update userSetting information in to user node
 		setting.setSortQuestionByVote(false);
 		setting.setOrderBy("alpha");
 		setting.setOrderType("des");
@@ -572,12 +572,12 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.getUserSetting(sessionProvider, USER_ROOT, faqSetting_);
 		assertEquals(faqSetting_.getOrderBy(), "alpha");
 		assertEquals(faqSetting_.getOrderType(), "des");
-		
+
 		/*
 //	Get all admins of FAQ
 		List<String> list = faqService_.getAllFAQAdmin();
 		assertEquals(faqService_.isAdminRole(USER_ROOT, sessionProvider), true);
-		
+
 //	Test send mail for user:
 		Message  message = new Message(); 
     message.setMimeType("text/htm") ;
