@@ -367,6 +367,13 @@ public class TestFAQService extends FAQServiceTestCase{
 //	Get answer by id:
 		assertNotNull(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_));
 		
+//	Update answers:
+		assertEquals(answer1.getResponses(), "Root answer 1 for question");
+		answer1.setResponses("Root answer 1 for question edit");
+		faqService_.saveAnswer(question.getId(), new Answer[]{answer1}, sProvider_);
+		assertEquals(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_).getResponses(), 
+									"Root answer 1 for question edit");
+		
 //	Get all answers of question:
 	}
 
@@ -391,6 +398,9 @@ public class TestFAQService extends FAQServiceTestCase{
 		
 //	Check category is watched by user
 		assertEquals(faqService_.getWatchByUser(USER_ROOT, cateWatch.getId(), sProvider_), true);
+		
+//	get all categories are watched by user
+		assertNotNull(faqService_.getListCategoriesWatch(USER_ROOT, sProvider_));
 	}
 
 	public void testUserSetting() throws Exception {
