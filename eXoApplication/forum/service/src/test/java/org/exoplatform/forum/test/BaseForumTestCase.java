@@ -4,16 +4,19 @@
  **************************************************************************/
 package org.exoplatform.forum.test;
 
+import java.util.List;
+
 import javax.jcr.Node;
 import javax.jcr.Session;
 
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.exoplatform.test.BasicTestCase;
 
 
@@ -25,50 +28,101 @@ import org.exoplatform.test.BasicTestCase;
  */
 public class BaseForumTestCase extends BasicTestCase {
   
-  final protected static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
-  final protected static String NT_FOLDER = "nt:folder".intern() ;
-  final protected static String NT_FILE = "nt:file".intern() ;    
-  final protected static String ADMIN = "admin".intern() ;
-    
-  final protected static String DEFAULT_WS = "production".intern() ;
-  final protected static String MAIL_HOME = "mailHome".intern() ;
-  
-  protected static Log          log = ExoLogger.getLogger("sample.services.test");  
-  protected RepositoryService   repositoryService;
-  protected StandaloneContainer container;
-  
-  protected final String REPO_NAME = "repository".intern();
-  protected final String SYSTEM_WS = "system".intern();
-  protected final String COLLABORATION_WS = "collaboration".intern();
-  protected Node root_ ;
-  
-  protected ForumService forumService_ ;
-  protected SessionProvider sProvider_ ;
-  public void setUp() throws Exception{
-    
-  	String containerConf = getClass().getResource("/conf/portal/test-configuration.xml").toString();
-    String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
+	protected static Log          log = ExoLogger.getLogger("sample.services.test");  
 
-    StandaloneContainer.addConfigurationURL(containerConf);
-    container = StandaloneContainer.getInstance();
-    
-    if (System.getProperty("java.security.auth.login.config") == null)
-      System.setProperty("java.security.auth.login.config", loginConf);
+  protected static RepositoryService   repositoryService;
+  protected static StandaloneContainer container;
+  
+  protected final static String REPO_NAME = "repository".intern();
+  protected final static String SYSTEM_WS = "system".intern();
+  protected final static String COLLABORATION_WS = "collaboration".intern();
+  protected static Node root_ = null;
+  protected SessionProvider sProvider_;
+  private static SessionProviderService sessionProviderService = null;
+  
+  static {
+    // we do this in static to save a few cycles
+    initContainer();
+    initJCR();
+  }
 
+
+  
+  public BaseForumTestCase() throws Exception {    
+  }
+  
+  public void setUp() throws Exception {
+    startSystemSession();
+  }
+  
+  public void tearDown() throws Exception {
+
+  }
+  protected void startSystemSession() {
+  	sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
+  }
+  protected void startSessionAs(String user) {
+    Identity identity = new Identity(user);
+    ConversationState state = new ConversationState(identity);
+    sessionProviderService.setSessionProvider(null, new SessionProvider(state));
+    sProvider_ = sessionProviderService.getSessionProvider(null);
+  }
+  protected void endSession() {
+    sessionProviderService.removeSessionProvider(null);
+    startSystemSession();
+  }
+  
+  
+  /**
+   * All elements of a list should be contained in the expected array of String
+   * @param message
+   * @param expected
+   * @param actual
+   */
+  public static void assertContainsAll(String message, List<String> expected, List<String> actual) {
+    assertEquals(message, expected.size(), actual.size());
+    assertTrue(message,expected.containsAll(actual));
+  } 
+  
+  /**
+   * Assertion method on string arrays
+   * @param message
+   * @param expected
+   * @param actual
+   */
+  public static void assertEquals(String message, String []expected, String []actual) {
+    assertEquals(message, expected.length, actual.length);
+    for (int i = 0; i < expected.length; i++) {
+      assertEquals(message, expected[i], actual[i]);
+    }
+  }
+  private static void initContainer() {
+    try {
+      String containerConf = BaseForumTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
+      StandaloneContainer.addConfigurationURL(containerConf);
+      container = StandaloneContainer.getInstance();      
+      String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
+      
+      if (System.getProperty("java.security.auth.login.config") == null)
+        System.setProperty("java.security.auth.login.config", loginConf);
+    }
+    catch (Exception e) {
+    	e.printStackTrace();
+      throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(),e);
+    }
+  }
+
+  private static void initJCR() {
+    try {
     repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
     
     // Initialize datas
-    SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
-    sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
-    
-    forumService_ = (ForumService) container.getComponentInstanceOfType(ForumService.class) ;
-
     Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
-    root_ = session.getRootNode();
-  }
-	  
-  
-  public void tearDown() throws Exception {
-  	//Remove datas  	
+    root_ = session.getRootNode();   
+    sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
+    }
+    catch (Exception e) {
+      throw new RuntimeException("Failed to initialize JCR: " + e.getMessage(),e);
+    }
   }
 }
