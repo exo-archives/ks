@@ -24,7 +24,7 @@ UIDateTimePicker.prototype.create = function() {
 	clndr.id = this.calendarId ;
 	clndr.style.position = "absolute" ;
 	if (document.all) {
-		clndr.innerHTML = "<div class='UICalendarComponent'><iframe id='" + this.calendarId + "IFrame' frameBorder='0' style='height: 256px;' scrolling='no'></iframe><div style='position: absolute'></div></div>" ;
+		clndr.innerHTML = "<div class='UICalendarComponent'><iframe id='" + this.calendarId + "IFrame' frameBorder='0' scrolling='no'></iframe><div style='position: absolute'></div></div>" ;
 	} else {
 		clndr.innerHTML = "<div class='UICalendarComponent'><div style='position: absolute; width: 100%;'></div></div>" ;
 	}
@@ -76,6 +76,7 @@ UIDateTimePicker.prototype.show = function() {
 		drag.style.width = innerWidth + "px";
 		eXo.core.DragDrop.init(null, drag, component, event);
 	}
+	if(eXo.core.Browser.isIE6()) clndr.getElementsByTagName("iframe")[0].style.height=drag.parentNode.offsetHeight + "px";
 };
 
 UIDateTimePicker.prototype.hide = function() {
