@@ -1629,7 +1629,7 @@ public class JCRDataStorage {
 			JCRPageList pagelist;
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
-			stringBuffer.append(getPathQuery(categoryId, forumId, topicId, isApproved, isHidden, userLogin));
+			stringBuffer.append(getPathQuery(isApproved, isHidden, userLogin));
 			stringBuffer.append(" order by @exo:createdDate ascending");
 			pagelist = new ForumPageList(sProvider, null, 10, stringBuffer.toString(), true);
 			return pagelist;				
@@ -1638,7 +1638,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	private StringBuilder getPathQuery (String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
+	private StringBuilder getPathQuery (String isApproved, String isHidden, String userLogin) throws Exception {
 		StringBuilder strBuilder = new StringBuilder();
 		boolean isAnd = false;
 		if (userLogin != null && userLogin.length() > 0) {
@@ -1686,7 +1686,7 @@ public class JCRDataStorage {
 			topicNode = forumHomeNode.getNode(strBuilder.toString());
 			strBuilder = new StringBuilder();
 			strBuilder.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
-			strBuilder.append(getPathQuery(categoryId, forumId, topicId, isApproved, isHidden, userLogin));
+			strBuilder.append(getPathQuery(isApproved, isHidden, userLogin));
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
 			QueryResult result = query.execute();

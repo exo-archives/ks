@@ -60,7 +60,8 @@ public class TestForumService extends BaseForumTestCase{
     assertNotNull(updatedCat) ;
     assertEquals("ReName Category", updatedCat.getCategoryName()) ;
     // test removeCategory
-    category = forumService_.removeCategory(sProvider_, cat.getId());
+    System.out.println("\n\n" + updatedCat.getId());
+    category = forumService_.removeCategory(sProvider_, updatedCat.getId());
     assertNotNull(category);
     category = forumService_.getCategory(sProvider_, cat.getId()); 
     assertNull(category);
@@ -141,8 +142,8 @@ public class TestForumService extends BaseForumTestCase{
 		assertEquals(pagelist.getAvailable(), 20);
 		pagelist.setPageSize(5);
     List <Topic> listTopic = pagelist.getPage(1) ;
-    assertEquals(listTopic.size(), 5);    
-    assertEquals(pagelist.getCurrentPage(), 4);
+    assertEquals(listTopic.size(), 5);
+    assertEquals(pagelist.getAvailablePage(), 4);
 //	move Topic
 //	move topic from forum to forum 1
 		Forum forum1 = createdForum();
@@ -163,16 +164,19 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveForum(sProvider_, cat.getId(), forum, true);
 		Topic topic = createdTopic();
 		forumService_.saveTopic(sProvider_, cat.getId(), forum.getId(), topic, true, false, "");
+		String cateId = cat.getId();
+		String forumId = forum.getId();
+		String topicId = topic.getId();
 		List<Post> posts = new ArrayList<Post>();
 		for (int i = 0; i < 25; ++i) {
 		  Post post = createdPost();
 		  posts.add(post);
-		  forumService_.savePost(sProvider_, cat.getId(), forum.getId(), topic.getId(), post, true, "");
+		  forumService_.savePost(sProvider_, cateId, forumId, topicId, post, true, "");
 		}
 		// getPost
-		assertNotNull(forumService_.getPost(sProvider_, cat.getId(), forum.getId(), topic.getId(), posts.get(0).getId()));
+		assertNotNull(forumService_.getPost(sProvider_, cateId, forumId, topicId, posts.get(0).getId()));
 		//get ListPost
-		JCRPageList pagePosts = forumService_.getPosts(sProvider_, cat.getId(), forum.getId(), topic.getId(), "", "", "", "root");
+		JCRPageList pagePosts = forumService_.getPosts(sProvider_, cateId, forumId, topicId, "", "", "", "root");
 		assertEquals(pagePosts.getAvailable(), posts.size() + 1);// size = 26 (first post and new postList)
     List page1 = pagePosts.getPage(1) ;
     assertEquals(page1.size(), 10);  
@@ -181,20 +185,19 @@ public class TestForumService extends BaseForumTestCase{
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
-		forumService_.savePost(sProvider_, cat.getId(), forum.getId(), topic.getId(), newPost, false, "");
-		assertEquals("New message", forumService_.getPost(sProvider_, cat.getId(), forum.getId(), topic.getId(), newPost.getId()).getMessage());
+		forumService_.savePost(sProvider_, cateId, forumId, topicId, newPost, false, "");
+		assertEquals("New message", forumService_.getPost(sProvider_, cateId, forumId, topicId, newPost.getId()).getMessage());
 		//test movePost
 		Topic topicnew = createdTopic();
-		forumService_.saveTopic(sProvider_, cat.getId(), forum.getId(), topicnew, true, false, "");
-		topicnew = forumService_.getTopic(sProvider_, cat.getId(), forum.getId(), topicnew.getId(), "");
+		forumService_.saveTopic(sProvider_, cat.getId(), forumId, topicnew, true, false, "");
+		topicnew = forumService_.getTopic(sProvider_, cateId, forumId, topicnew.getId(), "root");
 		List<Post> listPost = new ArrayList<Post>();
 		listPost.add(newPost);
 		forumService_.movePost(sProvider_, listPost, topicnew.getPath(), false);
-		assertNotNull(forumService_.getPost(sProvider_, cat.getId(), forum.getId(), topicnew.getId(), newPost.getId()));
+		assertNotNull(forumService_.getPost(sProvider_, cateId, forumId, topicnew.getId(), newPost.getId()));
 		//test remove Post return post
-		assertNotNull(forumService_.removePost(sProvider_, cat.getId(), forum.getId(), topicnew.getId(), newPost.getId()));
+		assertNotNull(forumService_.removePost(sProvider_, cateId, forumId, topicnew.getId(), newPost.getId()));
 		//getViewPost
-		System.out.print("\n\n" + topicnew.getViewCount() + "\n\n");
   }
   
   

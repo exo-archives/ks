@@ -108,7 +108,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   		storage_.initCategoryListener() ;
   		updateForumStatistic(systemSession);  		
   	}catch (Exception e) {
-  		e.printStackTrace() ;  		
+  		//e.printStackTrace() ;  		
   	}finally{
   		systemSession.close() ;
   	}
@@ -116,14 +116,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   	try{
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
-  		e.printStackTrace() ;  		
+  	//	e.printStackTrace() ;  		
   	}finally{
   		systemSession.close() ;
   	}
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  	//	e.printStackTrace() ;
   	}  	
   	systemSession = SessionProvider.createSystemProvider() ;
   	try{
