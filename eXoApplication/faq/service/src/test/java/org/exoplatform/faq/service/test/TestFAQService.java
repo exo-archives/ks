@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.service.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,8 +33,10 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
+import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.mail.Message;
@@ -114,6 +118,16 @@ public class TestFAQService extends FAQServiceTestCase{
 		return question ;
 	}
 	
+	private QuestionLanguage createQuestionLanguage(String language){
+		QuestionLanguage questionLanguage = new QuestionLanguage();
+		questionLanguage.setAnswers(null);
+		questionLanguage.setComments(null);
+		questionLanguage.setDetail("detail for language " + language);
+		questionLanguage.setLanguage(language);
+		questionLanguage.setQuestion("question for language " + language);
+		return questionLanguage;
+	}
+	
 	private Answer createAnswer(String user, String content){
 		Answer answer = new Answer();
 		answer.setActivateAnswers(true);
@@ -127,6 +141,54 @@ public class TestFAQService extends FAQServiceTestCase{
 		answer.setResponses(content);
 		answer.setUsersVoteAnswer(null);
 		return answer;
+	}
+	
+	private Comment createComment(String user, String content){
+		Comment comment = new Comment();
+		comment.setCommentBy(user);
+		comment.setComments(content);
+		comment.setDateComment(new Date());
+		comment.setNew(true);
+		comment.setPostId(null);
+		return comment;
+	}
+	
+	private InputStream createQuestionToImport(String questionId){
+		InputStream is = null;
+		String data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+				"<sv:node xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:rep=\"internal\" xmlns:sv=\"http://www.jcp.org/jcr/sv/1.0\" " +
+				"xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\" xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" " +
+				"xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:fn_old=\"http://www.w3.org/2004/10/xpath-functions\" " +
+				"xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" " +
+				"xmlns:webdav=\"http://www.exoplatform.org/jcr/webdav\" xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\" " +
+				"sv:name=\""+questionId+"\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\">" +
+				"<sv:value>exo:faqQuestion</sv:value></sv:property><sv:property sv:name=\"jcr:mixinTypes\" sv:type=\"Name\">" +
+				"<sv:value>mix:faqi18n</sv:value></sv:property><sv:property sv:name=\"exo:author\" sv:type=\"String\"><sv:value>root</sv:value>" +
+				"</sv:property><sv:property sv:name=\"exo:categoryId\" sv:type=\"String\"><sv:value>null</sv:value></sv:property>" +
+				"<sv:property sv:name=\"exo:createdDate\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:25.843+07:00</sv:value>" +
+				"</sv:property><sv:property sv:name=\"exo:email\" sv:type=\"String\"><sv:value>root@localhost.com</sv:value></sv:property>" +
+				"<sv:property sv:name=\"exo:isActivated\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property " +
+				"sv:name=\"exo:isApproved\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property sv:name=\"exo:language\" " +
+				"sv:type=\"String\"><sv:value>English</sv:value></sv:property><sv:property sv:name=\"exo:markVote\" sv:type=\"Double\">" +
+				"<sv:value>0.0</sv:value></sv:property><sv:property sv:name=\"exo:name\" sv:type=\"String\"><sv:value>&lt;p&gt;detail " +
+				"for this question&lt;/p&gt;</sv:value></sv:property><sv:property sv:name=\"exo:relatives\" sv:type=\"String\"></sv:property>" +
+				"<sv:property sv:name=\"exo:title\" sv:type=\"String\"><sv:value>new question 1</sv:value></sv:property><sv:node " +
+				"sv:name=\"faqAnswerHome\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\"><sv:value>nt:unstructured</sv:value>" +
+				"</sv:property><sv:node sv:name=\"Answer0e1a8845c0a8013100c543662af2545d\"><sv:property sv:name=\"jcr:primaryType\" " +
+				"sv:type=\"Name\"><sv:value>exo:answer</sv:value></sv:property><sv:property sv:name=\"exo:MarkVotes\" sv:type=\"Long\">" +
+				"<sv:value>0</sv:value></sv:property><sv:property sv:name=\"exo:activateResponses\" sv:type=\"Boolean\"><sv:value>true" +
+				"</sv:value></sv:property><sv:property sv:name=\"exo:approveResponses\" sv:type=\"Boolean\"><sv:value>true</sv:value>" +
+				"</sv:property><sv:property sv:name=\"exo:dateResponse\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:41.109+07:00</sv:value>" +
+				"</sv:property><sv:property sv:name=\"exo:id\" sv:type=\"String\"><sv:value>Answer0e1a8845c0a8013100c543662af2545d</sv:value>" +
+				"</sv:property><sv:property sv:name=\"exo:responseBy\" sv:type=\"String\"><sv:value>root</sv:value></sv:property>" +
+				"<sv:property sv:name=\"exo:responses\" sv:type=\"String\"><sv:value>&lt;p&gt;new answer 1&lt;/p&gt;</sv:value>" +
+				"</sv:property></sv:node></sv:node></sv:node>";
+		try {
+	      is = new ByteArrayInputStream(data.getBytes("UTF-8"));
+	  } catch (Exception e) {
+	      e.printStackTrace();
+	  }
+	  return is;
 	}
 
 	private Watch createNewWatch(String user, String mail){
@@ -147,9 +209,16 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.saveCategory(null, cate2, true, sProvider_) ;
 		
 		assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
+//	get infor of root category:
+		assertEquals(faqService_.getCategoryInfo(null, sProvider_)[0], 2);
+		
+//	Check category is already exist
+		assertEquals(faqService_.categoryAlreadyExist(cate1.getId(), sProvider_), true);
+		
+//	Get path of category
+		assertNotNull(faqService_.getCategoryPath(sProvider_, cate1.getId()));
 		
 //	Swap 2 category
-		System.out.println("\n\n\n\n------------------>index of category 1:" + faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex() + "\n\n\n\n");
 		assertEquals(faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex(), 2);
 		assertEquals(faqService_.getCategoryById(cate2.getId(), sessionProvider).getIndex(), 1);
 		faqService_.swapCategories(null, cate1.getId(), cate2.getId(), sessionProvider);
@@ -202,7 +271,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(listAllAfterRemove.size(), 2) ;
 
 //		get list category by moderator
-		List<String> listCateByModerator = faqService_.getListCateIdByModerator("root", sProvider_);
+		List<String> listCateByModerator = faqService_.getListCateIdByModerator(USER_ROOT, sProvider_);
 		assertEquals(listCateByModerator.size(), 1);
 
 	}
@@ -292,6 +361,11 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setCreatedDate(new Date()) ;
 		faqService_.saveQuestion(question5, true, sProvider_,faqSetting_) ;
 
+/*//	Get question by list category
+		JCRPageList pageList = faqService_.getQuestionsByListCatetory(Arrays.asList(new String[]{cate.getId()}), false, sProvider_);
+		pageList.setPageSize(10);
+		assertEquals(pageList.getPage(1, null).size(), 5);*/
+
 //		get list all question
 		List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll();
 		assertEquals(listAllQuestion.size(), 5) ;
@@ -351,8 +425,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
 	}
 	
-	public void testAnswer() throws Exception{
-		List<Answer> listAnswers = new ArrayList<Answer>();
+	public void testAnswerComment() throws Exception{
 		Category cate = createCategory("category to test answer");
 		faqService_.saveCategory(null, cate, true, sProvider_);
 		Question question = createQuestion(cate);
@@ -360,21 +433,63 @@ public class TestFAQService extends FAQServiceTestCase{
 		Answer answer1 = createAnswer(USER_ROOT, "Root answer 1 for question");
 		Answer answer2 = createAnswer(USER_DEMO, "Demo answer 2 for question");
 		
+		Comment comment1 = createComment(USER_ROOT, "Root comment 1 for question");
+		Comment comment2 = createComment(USER_DEMO, "Demo comment 2 for question");
+		
 //	Save answer:
-		faqService_.saveAnswer(question.getId(), answer1, true, sProvider_);
-		faqService_.saveAnswer(question.getId(), answer2, true, sProvider_);
+		faqService_.saveAnswer(question.getId(), new Answer[]{answer1, answer2}, sProvider_);
 		
 //	Get answer by id:
-		assertNotNull(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_));
+		assertNotNull(faqService_.getAnswerById(question.getId(), answer2.getId(), sProvider_));
 		
 //	Update answers:
 		assertEquals(answer1.getResponses(), "Root answer 1 for question");
 		answer1.setResponses("Root answer 1 for question edit");
-		faqService_.saveAnswer(question.getId(), new Answer[]{answer1}, sProvider_);
+		faqService_.saveAnswer(question.getId(), answer1, false, sProvider_);
 		assertEquals(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_).getResponses(), 
 									"Root answer 1 for question edit");
 		
 //	Get all answers of question:
+		JCRPageList pageList = faqService_.getPageListAnswer(sProvider_, question.getId(), null);
+		pageList.setPageSize(10);
+		assertEquals(pageList.getPageItem(0).size(), 2);
+		
+//	Delete answer
+		faqService_.deleteAnswer(question.getId(), answer1.getId(), sProvider_);
+		pageList = faqService_.getPageListAnswer(sProvider_, question.getId(), null);
+		pageList.setPageSize(10);
+		assertEquals(pageList.getPageItem(0).size(), 1);
+		
+//	Save comment
+		faqService_.saveComment(question.getId(), comment1, true, sProvider_);
+		faqService_.saveComment(question.getId(), comment2, true, sProvider_);
+		
+//	Get comment by Id:
+		assertNotNull(faqService_.getCommentById(sProvider_, question.getId(), comment1.getId()));
+		assertNotNull(faqService_.getCommentById(sProvider_, question.getId(), comment2.getId()));
+		
+//	Get all comment of question
+		pageList = faqService_.getPageListComment(sProvider_, question.getId());
+		pageList.setPageSize(10);
+		assertEquals(pageList.getPageItem(0).size(), 2);
+		
+//	Delete comment by id
+		faqService_.deleteComment(question.getId(), comment1.getId(), sProvider_);
+		pageList = faqService_.getPageListComment(sProvider_, question.getId());
+		pageList.setPageSize(10);
+		assertEquals(pageList.getPageItem(0).size(), 1);
+		
+//  Generate RSS
+		faqService_.generateRSS(faqService_.getQuestionNodeById(question.getId(), sProvider_).getPath(), 1);
+		
+//	Get RSS node
+		assertNotNull(faqService_.getRSSNode(sProvider_, cate.getId()));
+	}
+	
+	public void testImportExport() throws Exception{
+		Question question = new Question();
+		faqService_.importData(null, faqService_.getCategoryNodeById(null, sProvider_).getSession(), createQuestionToImport(question.getId()), false, sProvider_);
+		assertNotNull(faqService_.getQuestionById(question.getId(), sProvider_));
 	}
 
 	public void testWatch() throws Exception {
@@ -382,25 +497,50 @@ public class TestFAQService extends FAQServiceTestCase{
 		cateWatch.setName("test cate add watch") ;
 		faqService_.saveCategory(null, cateWatch, true, sProvider_) ;
 
-		Watch watch = createNewWatch("root", "maivanha1610@gmail.com");
 		List<Watch> listWatchs = new ArrayList<Watch>();
 //	add  watch
-		faqService_.addWatch(cateWatch.getId(), watch, sProvider_) ;
+		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_ROOT, "maivanha1610@gmail.com"), sProvider_) ;
+		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_DEMO, "maivanha1610@yahoo.com"), sProvider_) ;
+		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_JOHN, "john@localhost.com"), sProvider_) ;
+		
+//		get email watch		
 		JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
-		assertEquals(listWatchs.size(), 1) ;
+		assertEquals(listWatchs.size(), 3) ;
 		
-//		get email watch		
-		for(Watch wat : listWatchs) {
-			assertEquals(wat.getEmails(), "maivanha1610@gmail.com");
-		}
+//	Delete email watch
+		faqService_.deleteMailInWatch(cateWatch.getId(), sProvider_, "john@localhost.com");
+		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
+		pageList.setPageSize(5);
+		assertEquals(pageList.getPageListWatch(1, USER_ROOT).size(), 2) ;
 		
 //	Check category is watched by user
 		assertEquals(faqService_.getWatchByUser(USER_ROOT, cateWatch.getId(), sProvider_), true);
 		
 //	get all categories are watched by user
 		assertNotNull(faqService_.getListCategoriesWatch(USER_ROOT, sProvider_));
+		
+//	UnWatch category
+		faqService_.UnWatch(cateWatch.getId(), sProvider_, USER_DEMO);
+		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
+		pageList.setPageSize(5);
+		assertEquals(pageList.getPageListWatch(1, USER_ROOT).size(), 1) ;
+	}
+	
+	public void testMultilanguage() throws Exception{
+		Category category = createCategory("Cateogry to test multilanguage");
+		faqService_.saveCategory(null, category, true, sProvider_);
+		Question question = createQuestion(category);
+		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
+		
+//	Add question language for question
+		MultiLanguages multiLanguages = new MultiLanguages();
+		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
+		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
+		
+// 	Get all question language :
+		assertEquals(faqService_.getQuestionLanguages(question.getId(), sProvider_).size(), 2);
 	}
 
 	public void testUserSetting() throws Exception {
