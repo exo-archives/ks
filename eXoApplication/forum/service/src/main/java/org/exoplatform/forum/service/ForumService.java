@@ -276,21 +276,7 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
-	
-	/**
-	 * Gets the topic view.
-	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param categoryId the category id
-	 * @param forumId the forum id
-	 * @param topicId the topic id
-	 * 
-	 * @return the topic view
-	 * 
-	 * @throws Exception the exception
-	 */
-	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
-	
+
 	/**
 	 * Modify topic.
 	 * 

@@ -77,7 +77,6 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -1270,13 +1269,6 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			return topicNew;
 		}
-	}
-
-	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
-		TopicView topicview = new TopicView();
-		topicview.setTopicView(getTopic(sProvider, categoryId, forumId, topicId, ""));
-		topicview.setPageList(getPosts(sProvider, categoryId, forumId, topicId, "", "false", "", ""));
-		return topicview;
 	}
 
 	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {

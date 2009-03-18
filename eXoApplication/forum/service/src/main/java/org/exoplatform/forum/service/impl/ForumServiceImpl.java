@@ -34,7 +34,8 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
@@ -53,7 +54,6 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -78,16 +78,16 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
     storage_ = new JCRDataStorage(nodeHierarchyCreator);
-		PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
-		if (proParams != null) {
-			String maximum = proParams.getProperty("maximum.upload");
-			if (maximum != null && maximum.length() > 0) {
-				try {
-					maxUploadSize_ = Long.parseLong(maximum)*1048576;
-				} catch (Exception e) {
-					maxUploadSize_ = 0;
-    		}
-    	}
+    try {
+			PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
+			if (proParams != null) {
+				String maximum = proParams.getProperty("maximum.upload");
+				if (maximum != null && maximum.length() > 0) {
+						maxUploadSize_ = Long.parseLong(maximum)*1048576;
+	    	}
+	    }
+    } catch (Exception e) {
+    	maxUploadSize_ = 0;
     }
   }
   public void addPlugin(ComponentPlugin plugin) throws Exception {
@@ -141,7 +141,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void updateForumStatistic(SessionProvider systemSession) throws Exception{
 		ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
 		if(forumStatistic.getActiveUsers() == 0 ) {
-			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+			ExoContainer container = ExoContainerContext.getCurrentContainer();
+			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
 	  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
 	  	List<User> userList = pageList.getAll() ;
 	  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
@@ -155,7 +156,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   private void initUserProfile (SessionProvider sysSession) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;
 		if(profileHome.getNodes().getSize() == 0) {
-  		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+			ExoContainer container = ExoContainerContext.getCurrentContainer();
+  		OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
     	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
     	List<User> userList = pageList.getAll() ;
     	for(User user : userList) {
@@ -245,10 +247,6 @@ public class ForumServiceImpl implements ForumService, Startable{
 
   public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception{
     return storage_.getTopicByPath(sProvider, topicPath, isLastPost) ;
-  }
-
-  public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
-    return storage_.getTopicView(sProvider, categoryId, forumId, topicId);
   }
 
   public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {

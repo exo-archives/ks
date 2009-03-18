@@ -36,7 +36,6 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.TopicView;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -69,7 +68,6 @@ public interface DataStorage {
 	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
 	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;
 	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
-	public TopicView getTopicView(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
 	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception;
 	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception;
 	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
