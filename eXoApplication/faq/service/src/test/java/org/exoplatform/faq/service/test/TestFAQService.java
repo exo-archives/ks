@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
@@ -30,7 +32,6 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-
 
 /**
  * Created by The eXo Platform SARL
@@ -48,11 +49,8 @@ public class TestFAQService extends FAQServiceTestCase{
 
 	private static String  root = "root";
 	private static String  username = "root";
-	// private String userMarry_ = "marry ";
 	private static String  john = "john";
-
 	private static String  demo = "demo";
-
 	private JCRDataStorage datastorage;
 
 	public TestFAQService() throws Exception {
@@ -69,7 +67,10 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqSetting_.setOrderBy("created");
 		faqSetting_.setOrderType("asc") ;
 	}
-
+	
+	public void setDefaultFAQSetting(){
+		
+	}
 
 	public void testFAQService() throws Exception {
 		assertNotNull(faqService_) ;
@@ -77,7 +78,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	}
 
 	public void testCategory() throws Exception {
-		Category cate1 = createCategory() ;
+		Category cate1 = createCategory("Cate 1") ;
 		faqService_.saveCategory(null, cate1, true, sProvider_) ;
 //		add category Id	
 		assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
@@ -94,13 +95,13 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("Nguyen van truong test category111111", cate1.getName());
 
 //		add category 2
-		Category cate2 = createCategory() ;
+		Category cate2 = createCategory("Cate 2") ;
 		cate2.setName("Nguyen van truong test category222222") ;
 		cate2.setModerators(new String[]{"Demo"}) ;
 		faqService_.saveCategory(null, cate2, true, sProvider_) ;
 
 //		add sub category 1
-		Category subCate1 = createCategory() ;
+		Category subCate1 = createCategory("Sub Cate 1") ;
 		subCate1.setName("Nguyen van truong test Sub category 1") ;
 		subCate1.setModerators(new String[]{"marry","Demo"}) ;
 		faqService_.saveCategory(cate1.getId(), subCate1, true, sProvider_) ;
@@ -139,52 +140,59 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(true, true) ;
 	}
 
-	// ----------------------------------------------- function for tes Category ------------------------------------------------
-	public Category createCategory() {
+	public Category createCategory(String categoryName) {
 		Date date = new Date() ;
 		Category category = new Category() ;
-		category.setName("Default Name") ;
+		category.setName(categoryName) ;
 		category.setDescription("Description") ;
 		category.setModerateQuestions(true) ;
+		category.setModerateAnswers(true);
+		category.setViewAuthorInfor(true);
 		category.setModerators(new String[]{"root"}) ;
 		category.setCreatedDate(date) ;
 		return category ;
 	}
 
-	public void testGetCategoryById() throws Exception {
-		Category cate = createCategory() ;
-		faqService_.saveCategory(null, cate, true, sProvider_) ;
-		assertNotNull(faqService_.getCategoryById(cate.getId(), sProvider_)) ;
-	}
-
-	public Question createQuestion() throws Exception {
-		Category cate = createCategory() ;
-		faqService_.saveCategory(null, cate, true, sProvider_) ;
+	public Question createQuestion(Category cate) throws Exception {
 		Question question = new Question() ;
+		question.setLanguage("English") ;
+		question.setQuestion("What is FAQ?");
+		question.setDetail("Add new question 1") ;
+		question.setAuthor("root") ;
+		question.setEmail("maivanha1610@gmail.com") ;
+		question.setActivated(true) ;
+		question.setApproved(true) ;
+		question.setCreatedDate(new Date()) ;
 		question.setCategoryId(cate.getId()) ;
 		question.setRelations(new String[]{}) ;
-		//question.setResponses(new String[]{" "}) ;
-		question.setApproved(true) ;
-		//question.setDateResponse(new Date[]{new Date()}) ;
-		question.setActivated(true) ;
-		question.setLanguage("English") ;
-		question.setAuthor("Nguyen van truong") ;
-		question.setEmail("truongtb1984@gmail.com") ;
-		question.setDetail("Add new question 1") ;
-		question.setCreatedDate(new Date()) ;
 		question.setAttachMent(listAttachments) ;
+		question.setAnswers(new Answer[]{});
+		question.setComments(new Comment[]{});
+		question.setUsersVote(new String[]{});
+		question.setMarkVote(0.0);
+		question.setUsersWatch(new String[]{});
+		question.setEmail(new String());
+		question.setEmailsWatch(new String[]{});
+		question.setTopicIdDiscuss(null);
 		return question ;
 	}
 	
 	public void testQuestion() throws Exception {
-		/*Question question1 = createQuestion() ;
+		Category cate = createCategory("Category to test question") ;
+		try{
+			faqService_.saveCategory(null, cate, true, sProvider_) ;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		Question question1 = createQuestion(cate) ;
 //		save question 1
 		faqService_.saveQuestion(question1, true, sProvider_,faqSetting_) ;
 
 //		get question 1
 		assertNotNull(faqService_.getQuestionById(question1.getId(), sProvider_)) ;
 		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_, "All").getAll() ;
-		assertEquals(listQuestion.size(), 1) ; 
+		assertEquals(listQuestion.size(), 0) ; 
 
 //		update question 1
 		question1.setDetail("Nguyen van truong test question 11111111 ?") ;
@@ -193,7 +201,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("Nguyen van truong test question 11111111 ?", question1.getDetail());
 
 //		Add question 2
-		Question question2 = createQuestion() ;
+		Question question2 = createQuestion(cate) ;
 		question2.setRelations(new String[]{}) ;
 		//question2.setResponses(new String[]{" "}) ;
 		question2.setApproved(true) ;
@@ -213,7 +221,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertNotNull(faqService_.getQuestionById(question2.getId(), sProvider_)) ;
 
 //		Add question 3
-		Question question3 = createQuestion() ;
+		Question question3 = createQuestion(cate) ;
 		question3.setRelations(new String[]{}) ;
 		//question3.setResponses(new String[]{" "}) ;
 		question3.setApproved(true) ;
@@ -227,7 +235,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question3, true, sProvider_,faqSetting_) ;
 
 //		Add question 4
-		Question question4 = createQuestion() ;
+		Question question4 = createQuestion(cate) ;
 		question4.setRelations(new String[]{}) ;
 		//question4.setResponses(new String[]{" "}) ;
 		question4.setApproved(false) ;
@@ -241,7 +249,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question4, true, sProvider_,faqSetting_) ;
 
 //		Add question 5
-		Question question5 = createQuestion() ;
+		Question question5 = createQuestion(cate) ;
 		question5.setRelations(new String[]{}) ;
 		//question5.setResponses(new String[]{" "}) ;
 		question5.setApproved(false) ;
@@ -259,19 +267,17 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals(listAllQuestion.size(), 5) ;
 
 //		get list question by category of question 1
-		FAQSetting setting = new FAQSetting();
-		setting.setDisplayMode("both");
-		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, setting).getAll() ;
-		assertEquals(listQuestionByCategory.size(), 2) ;
+		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, faqSetting_).getAll() ;
+		assertEquals(listQuestionByCategory.size(), 5) ;
 
 //		remove question
 		faqService_.removeQuestion(question5.getId(), sProvider_);
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions(sProvider_).getAll();
-		assertEquals(listAllQuestionAfterRemove.size(), 4) ;*/
+		assertEquals(listAllQuestionAfterRemove.size(), 4) ;
 	}
 
 	public void testWatch() throws Exception {
-		Category cateWatch = createCategory() ;
+		Category cateWatch = createCategory("Cate to test watch") ;
 		cateWatch.setName("test cate add watch") ;
 		faqService_.saveCategory(null, cateWatch, true, sProvider_) ;
 
@@ -287,39 +293,40 @@ public class TestFAQService extends FAQServiceTestCase{
 	}
 
 	public void testSearch() throws Exception {
-/*
+
 //		quick search with text = "test"
 		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
-		assertEquals(listQuickSearch.size(), 6) ;
+		assertEquals(listQuickSearch.size(), 7) ;
 
 //		search all category and question in database
 		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
-		assertEquals(listSearchAll.size(), 13) ;
+		assertEquals(listSearchAll.size(), 8) ;
 
 //		advance search all category in database
 		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
 		eventQueryCategory.setType("faqCategory");
 		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
-		assertEquals(listAllCategroy.size(), 9) ;
+		assertEquals(listAllCategroy.size(), 4) ;
 
-//		advance search all question in database
-		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
-		eventQueryQuestion.setType("faqQuestion");
-		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
-		assertEquals(listAllQuestion.size(), 4) ;
-
-//		advance search with category name = "Sub"
+//	advance search with category name = "Sub"
 		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
 		eventQuerySub.setType("faqCategory");
 		eventQuerySub.setName("Sub") ;
 		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
 		assertEquals(listAllSub.size(), 1) ;
+	
+//		advance search all question in database
+		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
+		eventQueryQuestion.setType("faqQuestion");
+		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
+		assertEquals(listAllQuestion.size(), 0) ;
+
 
 //		advance search with category name = "Sub"
 		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
 		eventQueryAdvanceQuestion.setType("faqQuestion");
 		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
 		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
-		assertEquals(listSearchAdvanceQuestion.size(), 2) ;*/
+		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
 	}
 }
