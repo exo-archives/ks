@@ -194,6 +194,7 @@ public class JCRDataStorage {
 			}
 			list =  FAQServiceUtils.getUserPermission(list.toArray(new String[]{}));
     } catch (Exception e) {
+    	e.printStackTrace();
     }
 	  return list;
   }
@@ -1552,52 +1553,6 @@ public class JCRDataStorage {
 			catList.add(getCategory(iter.nextNode())) ;
 		}
 		return catList ;
-	}
-	
-	public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		
-		Node parentCategory ;
-		if(categoryId != null && categoryId.trim().length() > 0) {
-			parentCategory = getCategoryNodeById(categoryId, sProvider) ;
-		}else {
-			parentCategory = categoryHome ;
-		}
-		
-		if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
-		
-		StringBuffer questionQuerry = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-																			append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
-		//	order by and ascending or deascending
-		if(faqSetting.getDisplayMode().equals("approved")){
-			questionQuerry.append(" and (@exo:isApproved='true')");
-		}
-		if(!faqSetting.isCanEdit()){
-			questionQuerry.append(" and (@exo:isActivated='true')");
-		}
-		questionQuerry.append("]");
-		
-		questionQuerry.append("order by ");
-		
-		if(faqSetting.isSortQuestionByVote()){
-			questionQuerry.append("@exo:markVote descending, ");
-		}
-		
-		if(faqSetting.getOrderBy().equals("created")){
-			questionQuerry.append("@exo:createdDate ");
-		} else {
-			questionQuerry.append("@exo:name ");
-		}
-		if(faqSetting.getOrderType().equals("asc")){
-			questionQuerry.append("ascending");
-		} else {
-			questionQuerry.append("descending");
-		}
-
-		List<Object> listObject = new ArrayList<Object>();
-		QuestionPageList pageList = new QuestionPageList(parentCategory, questionQuerry.toString(), listObject, faqSetting);
-		return pageList;
 	}
 	
 	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {

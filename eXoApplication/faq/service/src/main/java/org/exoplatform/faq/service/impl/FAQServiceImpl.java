@@ -646,10 +646,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 		jcrData_.getUserSetting(sProvider, userName, faqSetting);
 	}
 	
-	public QuestionPageList getListCatesAndQuesByCateId(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		return jcrData_.getListCatesAndQuesByCateId(categoryId, sProvider, faqSetting);
-	}
-	
 	public NotifyInfo getMessageInfo(String name) throws Exception {
 		return jcrData_.getMessageInfo(name) ;
 	}

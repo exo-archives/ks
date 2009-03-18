@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service.test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,10 +29,13 @@ import org.exoplatform.faq.service.FAQFormSearch;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.mail.Message;
 
 /**
  * Created by The eXo Platform SARL
@@ -47,10 +51,9 @@ public class TestFAQService extends FAQServiceTestCase{
 	private SessionProvider sProvider_ ;
 	private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
 
-	private static String  root = "root";
-	private static String  username = "root";
-	private static String  john = "john";
-	private static String  demo = "demo";
+	private static String  USER_ROOT = "root";
+	private static String  USER_JOHN = "john";
+	private static String  USER_DEMO = "demo";
 	private JCRDataStorage datastorage;
 
 	public TestFAQService() throws Exception {
@@ -66,78 +69,12 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqSetting_.setDisplayMode("both");
 		faqSetting_.setOrderBy("created");
 		faqSetting_.setOrderType("asc") ;
-	}
-	
-	public void setDefaultFAQSetting(){
-		
+		faqSetting_.setSortQuestionByVote(true);
 	}
 
 	public void testFAQService() throws Exception {
 		assertNotNull(faqService_) ;
 		assertNotNull(sProvider_) ;
-	}
-
-	public void testCategory() throws Exception {
-		Category cate1 = createCategory("Cate 1") ;
-		faqService_.saveCategory(null, cate1, true, sProvider_) ;
-//		add category Id	
-		assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
-
-//		get Categories
-		List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_) ;
-		assertEquals(listCate.size(), 1) ;
-
-//		update category 
-		cate1.setName("Nguyen van truong test category111111") ;
-		cate1.setCreatedDate(new Date()) ;
-		faqService_.saveCategory(null, cate1, false, sProvider_);
-		assertNotNull(cate1) ;
-		assertEquals("Nguyen van truong test category111111", cate1.getName());
-
-//		add category 2
-		Category cate2 = createCategory("Cate 2") ;
-		cate2.setName("Nguyen van truong test category222222") ;
-		cate2.setModerators(new String[]{"Demo"}) ;
-		faqService_.saveCategory(null, cate2, true, sProvider_) ;
-
-//		add sub category 1
-		Category subCate1 = createCategory("Sub Cate 1") ;
-		subCate1.setName("Nguyen van truong test Sub category 1") ;
-		subCate1.setModerators(new String[]{"marry","Demo"}) ;
-		faqService_.saveCategory(cate1.getId(), subCate1, true, sProvider_) ;
-
-//		get sub category
-		List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_, faqSetting_) ;
-		assertEquals(listSubCate.size(), 1) ;
-
-//		update sub category 
-		subCate1.setName("Sub category 1") ;
-		subCate1.setCreatedDate(new Date()) ;
-		faqService_.saveCategory(cate1.getId(), subCate1, false, sProvider_);
-		assertNotNull(subCate1) ;
-		assertEquals("Sub category 1", subCate1.getName());
-
-//		get all Category 
-		List<Category> listAll = faqService_.getAllCategories(sProvider_) ;
-		assertEquals(listAll.size(), 3) ;
-
-//		move category 
-		faqService_.moveCategory(cate2.getId(), cate1.getId(), sProvider_) ;
-		assertNotNull(faqService_.getCategoryById(cate2.getId(), sProvider_)) ;
-
-//		Delete category 2
-		faqService_.removeCategory(cate2.getId(), sProvider_) ;
-
-//		get all Category 
-		List<Category> listAllAfterRemove = faqService_.getAllCategories(sProvider_) ;
-		assertEquals(listAllAfterRemove.size(), 2) ;
-
-//		get list category by moderator
-		List<String> listCateByModerator = faqService_.getListCateIdByModerator("root", sProvider_);
-		assertEquals(listCateByModerator.size(), 1);
-
-
-		assertEquals(true, true) ;
 	}
 
 	public Category createCategory(String categoryName) {
@@ -175,6 +112,99 @@ public class TestFAQService extends FAQServiceTestCase{
 		question.setEmailsWatch(new String[]{});
 		question.setTopicIdDiscuss(null);
 		return question ;
+	}
+	
+	private Answer createAnswer(String user, String content){
+		Answer answer = new Answer();
+		answer.setActivateAnswers(true);
+		answer.setApprovedAnswers(true);
+		answer.setDateResponse(new Date());
+		answer.setMarksVoteAnswer(0);
+		answer.setMarkVotes(0);
+		answer.setNew(true);
+		answer.setPostId(null);
+		answer.setResponseBy(user);
+		answer.setResponses(content);
+		answer.setUsersVoteAnswer(null);
+		return answer;
+	}
+
+	private Watch createNewWatch(String user, String mail){
+		Watch watch = new Watch();
+		watch.setUser(user);
+		watch.setEmails(mail);
+		return watch;
+	}
+
+	public void testCategory() throws Exception {
+//		add category Id	
+		Category cate1 = createCategory("Cate 1") ;
+		faqService_.saveCategory(null, cate1, true, sProvider_) ;
+		
+		Category cate2 = createCategory("Cate 2") ;
+		cate2.setName("Nguyen van truong test category222222") ;
+		cate2.setModerators(new String[]{"Demo"}) ;
+		faqService_.saveCategory(null, cate2, true, sProvider_) ;
+		
+		assertNotNull(faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
+		
+//	Swap 2 category
+		System.out.println("\n\n\n\n------------------>index of category 1:" + faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex() + "\n\n\n\n");
+		assertEquals(faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex(), 2);
+		assertEquals(faqService_.getCategoryById(cate2.getId(), sessionProvider).getIndex(), 1);
+		faqService_.swapCategories(null, cate1.getId(), cate2.getId(), sessionProvider);
+		assertEquals(faqService_.getCategoryById(cate1.getId(), sessionProvider).getIndex(), 1);
+		assertEquals(faqService_.getCategoryById(cate2.getId(), sessionProvider).getIndex(), 2);
+		
+//	add sub category 1
+		Category subCate1 = createCategory("Sub Cate 1") ;
+		subCate1.setName("Nguyen van truong test Sub category 1") ;
+		subCate1.setModerators(new String[]{"marry","Demo"}) ;
+		faqService_.saveCategory(cate1.getId(), subCate1, true, sProvider_) ;
+
+//		update category 
+		cate1.setName("Nguyen van truong test category111111") ;
+		cate1.setCreatedDate(new Date()) ;
+		faqService_.saveCategory(null, cate1, false, sProvider_);
+		assertNotNull(cate1) ;
+		assertEquals("Nguyen van truong test category111111", cate1.getName());
+
+//	get Categories
+		List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_) ;
+		assertEquals(listCate.size(), 2) ;
+		
+		assertEquals(faqService_.getMaxindexCategory(null, sessionProvider), 2);
+
+//		get sub category
+		List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_, faqSetting_) ;
+		assertEquals(listSubCate.size(), 1) ;
+
+//		update sub category 
+		subCate1.setName("Sub category 1") ;
+		subCate1.setCreatedDate(new Date()) ;
+		faqService_.saveCategory(cate1.getId(), subCate1, false, sProvider_);
+		assertNotNull(subCate1) ;
+		assertEquals("Sub category 1", subCate1.getName());
+
+//		get all Category 
+		List<Category> listAll = faqService_.getAllCategories(sProvider_) ;
+		assertEquals(listAll.size(), 3) ;
+
+//		move category 
+		faqService_.moveCategory(cate2.getId(), cate1.getId(), sProvider_) ;
+		assertNotNull(faqService_.getCategoryById(cate2.getId(), sProvider_)) ;
+
+//		Delete category 2
+		faqService_.removeCategory(cate2.getId(), sProvider_) ;
+
+//		get all Category 
+		List<Category> listAllAfterRemove = faqService_.getAllCategories(sProvider_) ;
+		assertEquals(listAllAfterRemove.size(), 2) ;
+
+//		get list category by moderator
+		List<String> listCateByModerator = faqService_.getListCateIdByModerator("root", sProvider_);
+		assertEquals(listCateByModerator.size(), 1);
+
 	}
 	
 	public void testQuestion() throws Exception {
@@ -269,11 +299,75 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get list question by category of question 1
 		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, faqSetting_).getAll() ;
 		assertEquals(listQuestionByCategory.size(), 5) ;
+		
+//	Get list paths of all question in category
+		List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId(), sessionProvider);
+		assertEquals(listPaths.size(), 5);
+		
+//	Get question node by id
+		assertNotNull(faqService_.getQuestionNodeById(question1.getId(), sessionProvider));
 
 //		remove question
 		faqService_.removeQuestion(question5.getId(), sProvider_);
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions(sProvider_).getAll();
 		assertEquals(listAllQuestionAfterRemove.size(), 4) ;
+	}
+	
+	public void testSearch() throws Exception {
+	
+//	quick search with text = "test"
+		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
+		assertEquals(listQuickSearch.size(), 6) ;
+	
+//	search all category and question in database
+		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
+		assertEquals(listSearchAll.size(), 7) ;
+	
+//	advance search all category in database
+		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
+		eventQueryCategory.setType("faqCategory");
+		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
+		assertEquals(listAllCategroy.size(), 3) ;
+	
+//advance search with category name = "Sub"
+		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
+		eventQuerySub.setType("faqCategory");
+		eventQuerySub.setName("Sub") ;
+		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
+		assertEquals(listAllSub.size(), 1) ;
+	
+//	advance search all question in database
+		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
+		eventQueryQuestion.setType("faqQuestion");
+		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
+		assertEquals(listAllQuestion.size(), 0) ;
+	
+	
+//	advance search with category name = "Sub"
+		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
+		eventQueryAdvanceQuestion.setType("faqQuestion");
+		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
+		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
+		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
+	}
+	
+	public void testAnswer() throws Exception{
+		List<Answer> listAnswers = new ArrayList<Answer>();
+		Category cate = createCategory("category to test answer");
+		faqService_.saveCategory(null, cate, true, sProvider_);
+		Question question = createQuestion(cate);
+		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
+		Answer answer1 = createAnswer(USER_ROOT, "Root answer 1 for question");
+		Answer answer2 = createAnswer(USER_DEMO, "Demo answer 2 for question");
+		
+//	Save answer:
+		faqService_.saveAnswer(question.getId(), answer1, true, sProvider_);
+		faqService_.saveAnswer(question.getId(), answer2, true, sProvider_);
+		
+//	Get answer by id:
+		assertNotNull(faqService_.getAnswerById(question.getId(), answer1.getId(), sProvider_));
+		
+//	Get all answers of question:
 	}
 
 	public void testWatch() throws Exception {
@@ -281,52 +375,70 @@ public class TestFAQService extends FAQServiceTestCase{
 		cateWatch.setName("test cate add watch") ;
 		faqService_.saveCategory(null, cateWatch, true, sProvider_) ;
 
-//		add  watch
-//		faqService_.addWatch(cateWatch.getId(),"root", "truongtb19@gmail.com", sProvider_) ;
-//		List<String> emailList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
-
+		Watch watch = createNewWatch("root", "maivanha1610@gmail.com");
+		List<Watch> listWatchs = new ArrayList<Watch>();
+//	add  watch
+		faqService_.addWatch(cateWatch.getId(), watch, sProvider_) ;
+		JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
+		pageList.setPageSize(5);
+		listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
+		assertEquals(listWatchs.size(), 1) ;
+		
 //		get email watch		
-//		assertEquals(emailList.size(), 1) ;
-//		for(String email : emailList) {
-//		assertEquals(email, "truongtb19@gmail.com");
-//		}
+		for(Watch wat : listWatchs) {
+			assertEquals(wat.getEmails(), "maivanha1610@gmail.com");
+		}
+		
+//	Check category is watched by user
+		assertEquals(faqService_.getWatchByUser(USER_ROOT, cateWatch.getId(), sProvider_), true);
 	}
 
-	public void testSearch() throws Exception {
+	public void testUserSetting() throws Exception {
+//	set userSetting information into user node
+		faqSetting_.setDisplayMode("both");
+		faqSetting_.setOrderBy("created");
+		faqSetting_.setOrderType("asc") ;
+		assertEquals(faqSetting_.getOrderBy(), "created");
+		assertEquals(faqSetting_.getOrderType(), "asc");
+		faqService_.getUserSetting(sessionProvider, USER_ROOT, faqSetting_);
 
-//		quick search with text = "test"
-		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
-		assertEquals(listQuickSearch.size(), 7) ;
-
-//		search all category and question in database
-		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
-		assertEquals(listSearchAll.size(), 8) ;
-
-//		advance search all category in database
-		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
-		eventQueryCategory.setType("faqCategory");
-		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
-		assertEquals(listAllCategroy.size(), 4) ;
-
-//	advance search with category name = "Sub"
-		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
-		eventQuerySub.setType("faqCategory");
-		eventQuerySub.setName("Sub") ;
-		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
-		assertEquals(listAllSub.size(), 1) ;
-	
-//		advance search all question in database
-		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
-		eventQueryQuestion.setType("faqQuestion");
-		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
-		assertEquals(listAllQuestion.size(), 0) ;
-
-
-//		advance search with category name = "Sub"
-		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
-		eventQueryAdvanceQuestion.setType("faqQuestion");
-		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
-		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
-		assertEquals(listSearchAdvanceQuestion.size(), 2) ;
+//	get all userSetting information from user node and set for FAQSetting object
+		FAQSetting setting = new FAQSetting();
+		setting.setOrderBy(null);
+		setting.setOrderType(null);
+		assertNull(setting.getOrderBy());
+		assertNull(setting.getOrderType());
+		faqService_.getUserSetting(sessionProvider, USER_ROOT, setting);
+		assertEquals(setting.getOrderBy(), "created");
+		assertEquals(setting.getOrderType(), "asc");
+		
+//	update userSetting information in to user node
+		setting.setSortQuestionByVote(false);
+		setting.setOrderBy("alpha");
+		setting.setOrderType("des");
+		faqService_.saveFAQSetting(setting, USER_ROOT, sessionProvider);
+		assertEquals(faqSetting_.getOrderBy(), "created");
+		assertEquals(faqSetting_.getOrderType(), "asc");
+		faqService_.getUserSetting(sessionProvider, USER_ROOT, faqSetting_);
+		assertEquals(faqSetting_.getOrderBy(), "alpha");
+		assertEquals(faqSetting_.getOrderType(), "des");
+		
+		/*
+//	Get all admins of FAQ
+		List<String> list = faqService_.getAllFAQAdmin();
+		assertEquals(faqService_.isAdminRole(USER_ROOT, sessionProvider), true);
+		
+//	Test send mail for user:
+		Message  message = new Message(); 
+    message.setMimeType("text/htm") ;
+    message.setFrom("maivanha1610@yahoo.com") ;
+    message.setTo("maivanha1610@gmail.com") ;
+    message.setSubject("Test send mail") ;
+    message.setBody("run JUnit test") ;
+    try {
+    	faqService_.sendMessage(message) ;
+    } catch(Exception e) {
+    	e.printStackTrace();
+    }*/
 	}
 }

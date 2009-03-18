@@ -37,7 +37,7 @@ import org.exoplatform.services.organization.User;
  * May 10, 2008, 4:26:37 PM
  */
 public class FAQServiceUtils {
-  private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  //private static OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
   
   /**
    * Get moderator in user,group,membership become list user
