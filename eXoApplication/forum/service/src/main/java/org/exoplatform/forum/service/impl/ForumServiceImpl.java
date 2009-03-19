@@ -36,6 +36,7 @@ import javax.jcr.query.QueryResult;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
@@ -116,14 +117,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   	try{
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
-  	//	e.printStackTrace() ;  		
+  		//e.printStackTrace() ;  		
   	}finally{
   		systemSession.close() ;
   	}
   	try{
   		storage_.initDefaultData() ;
   	}catch(Exception e) {
-  	//	e.printStackTrace() ;
+  		e.printStackTrace() ;
   	}  	
   	systemSession = SessionProvider.createSystemProvider() ;
   	try{
@@ -157,7 +158,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;
 		if(profileHome.getNodes().getSize() == 0) {
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
-  		OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
+			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
     	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
     	List<User> userList = pageList.getAll() ;
     	for(User user : userList) {

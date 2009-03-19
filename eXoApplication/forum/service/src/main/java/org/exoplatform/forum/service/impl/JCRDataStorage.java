@@ -438,11 +438,12 @@ public class JCRDataStorage {
 	public List<Category> getCategories(SessionProvider sProvider) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root" + forumHomeNode.getPath() + "//element(*,exo:forumCategory) order by @exo:categoryOrder ascending");
-		queryString.append(", @exo:createdDate ascending");
+		StringBuffer queryString = new StringBuffer("/jcr:root" + forumHomeNode.getPath() + "/element(*,exo:forumCategory) order by @exo:categoryOrder ascending, @exo:createdDate ascending");
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
+		System.out.println("\n\n queryString:  " + queryString.toString());
+		System.out.println("\nddd---> " + iter.getSize());
 		List<Category> categories = new ArrayList<Category>();
 		while (iter.hasNext()) {
 			Node cateNode = iter.nextNode();
@@ -455,9 +456,7 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
 			Node cateNode = forumHomeNode.getNode(categoryId);
-			Category cat = new Category();
-			cat = getCategory(cateNode);
-			return cat;
+			return getCategory(cateNode);
 		} catch (PathNotFoundException e) {
 			return null;
 		}
@@ -548,16 +547,16 @@ public class JCRDataStorage {
 	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		try {
-			Category category = new Category();
-			category = getCategory(sProvider, categoryId);
 			Node categoryNode = forumHomeNode.getNode(categoryId);
-
-			categoryNode.remove();
-			forumHomeNode.save();
-			
+			Category category = getCategory(categoryNode);
+			try{
+				categoryNode.remove();
+				forumHomeNode.getSession().save();
+			}catch (Exception e) {
+				//e.printStackTrace();
+			}
 			return category;
-		} catch(Exception e) {
-			e.printStackTrace() ;
+		} catch(PathNotFoundException e) {
 		}
 		return null ;
 	}
@@ -571,7 +570,7 @@ public class JCRDataStorage {
 			Node catNode = forumHomeNode.getNode(categoryId);
 			QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryBuffer = new StringBuffer();
-			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("//element(*,exo:forum)");
+			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("/element(*,exo:forum)");
 			if (strQuery != null && strQuery.trim().length() > 0) {
 				queryBuffer.append("[").append(strQuery).append("]");
 			}
@@ -1304,9 +1303,11 @@ public class JCRDataStorage {
 			}
 			stringBuffer.append(",exo:createdDate");
 			String pathQuery = stringBuffer.toString();
+			System.out.println("\n\n===========pathQuery:" + pathQuery);
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
+			System.out.println("\n\n===========pathQuery:" + iter.getSize());
 			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 			return pagelist;
 		} catch (Exception e) {

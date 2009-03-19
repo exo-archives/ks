@@ -366,6 +366,12 @@
 			<propertyDefinition name="exo:forumCount" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
 				<valueConstraints/>
 			</propertyDefinition>		
+			<propertyDefinition name="exo:type" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue>category</defaultValue>
+				</defaultValues>
+			</propertyDefinition>		
 		</propertyDefinitions>
 		
 		<childNodeDefinitions>

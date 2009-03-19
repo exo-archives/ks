@@ -173,12 +173,12 @@
       </properties-param>
     </init-params>
   </component>
-
+<!--
 	<component>
 	  <key>org.exoplatform.services.organization.OrganizationService</key>
-	  <type>org.exoplatform.services.organization.OrganizationDatabaseInitializer</type>
+	  <type>org.exoplatform.services.organization.jdbc.OrganizationServiceImpl</type>
  	</component>
-
+-->
   <external-component-plugins>
     <target-component>org.exoplatform.services.database.HibernateService</target-component>
     <component-plugin> 

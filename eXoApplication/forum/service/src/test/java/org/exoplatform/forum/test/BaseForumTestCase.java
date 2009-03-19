@@ -37,7 +37,7 @@ public class BaseForumTestCase extends BasicTestCase {
   protected final static String SYSTEM_WS = "system".intern();
   protected final static String COLLABORATION_WS = "collaboration".intern();
   protected static Node root_ = null;
-  protected SessionProvider sProvider_;
+  protected SessionProvider sProvider;
   private static SessionProviderService sessionProviderService = null;
   
   static {
@@ -59,13 +59,13 @@ public class BaseForumTestCase extends BasicTestCase {
 
   }
   protected void startSystemSession() {
-  	sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
+  	sProvider = sessionProviderService.getSystemSessionProvider(null) ;
   }
   protected void startSessionAs(String user) {
     Identity identity = new Identity(user);
     ConversationState state = new ConversationState(identity);
     sessionProviderService.setSessionProvider(null, new SessionProvider(state));
-    sProvider_ = sessionProviderService.getSessionProvider(null);
+    sProvider = sessionProviderService.getSessionProvider(null);
   }
   protected void endSession() {
     sessionProviderService.removeSessionProvider(null);
