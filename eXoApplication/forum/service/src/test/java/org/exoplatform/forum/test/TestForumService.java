@@ -17,6 +17,7 @@ import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -327,6 +328,32 @@ public class TestForumService extends BaseForumTestCase{
   	assertEquals(forum.getForumName(), ((Forum)forumService_.getObjectNameById(sProvider, forum.getId(), Utils.FORUM)).getForumName());
   }
   
+  public void testTab() throws Exception{
+  	Category cat = createCategory();
+		forumService_.saveCategory(sProvider, cat, true);
+		Forum forum = createdForum();
+		forumService_.saveForum(sProvider, cat.getId(), forum, true);
+		Topic topic = createdTopic();
+		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
+		Tag tag = createTag("new Tag 1");
+		//	Test save tag:
+		forumService_.saveTag(sProvider, tag, true);
+		forumService_.saveTag(sProvider, createTag("new Tag 2"), true);
+		forumService_.saveTag(sProvider, createTag("new Tag 3"), true);
+		
+		//	Test get tag
+		assertNotNull(forumService_.getTag(sProvider, tag.getId()));
+		
+		//	Get all tag
+		assertEquals(3, forumService_.getTags(sProvider).size());
+		
+		//	Get tags by user:
+		assertEquals(3, forumService_.getTagsByUser(sProvider, "root").size());
+		
+		//	add topic in tag:
+		
+  }
+  
   private UserProfile createdUserProfile(String userName) {
   	UserProfile userProfile = new UserProfile();
   	userProfile.setUserId(userName);
@@ -432,5 +459,14 @@ public class TestForumService extends BaseForumTestCase{
   	poll.setVote(new String[]{});
   	
   	return poll;
+  }
+  
+  private Tag createTag(String name){
+  	Tag tag = new Tag();
+  	tag.setColor("red");
+  	tag.setDescription("description for tag");
+  	tag.setName(name);
+  	tag.setOwner("root");
+  	return tag;
   }
 }
