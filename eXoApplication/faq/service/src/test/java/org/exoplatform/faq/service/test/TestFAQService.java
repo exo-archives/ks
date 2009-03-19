@@ -361,10 +361,10 @@ public class TestFAQService extends FAQServiceTestCase{
 		question5.setCreatedDate(new Date()) ;
 		faqService_.saveQuestion(question5, true, sProvider_,faqSetting_) ;
 
-		/*//	Get question by list category
+//	Get question by list category
 		JCRPageList pageList = faqService_.getQuestionsByListCatetory(Arrays.asList(new String[]{cate.getId()}), false, sProvider_);
 		pageList.setPageSize(10);
-		assertEquals(pageList.getPage(1, null).size(), 5);*/
+		assertEquals(pageList.getPage(1, null).size(), 5);
 
 //		get list all question
 		List<Question> listAllQuestion = faqService_.getAllQuestions(sProvider_).getAll();
@@ -541,6 +541,14 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //		Get all question language :
 		assertEquals(faqService_.getQuestionLanguages(question.getId(), sProvider_).size(), 2);
+		
+//		Search question language 
+		assertEquals(faqService_.searchQuestionByLangageOfText(faqService_.getQuestionsByCatetory(category.getId(), 
+																																							sProvider_, faqSetting_).getAll(),
+																													"Viet Nam", "Viet Nam", sProvider_).size(),1);
+		assertEquals(faqService_.searchQuestionByLangage(faqService_.getQuestionsByCatetory(category.getId(), 
+				sProvider_, faqSetting_).getAll(),
+				"Viet Nam", "Viet Nam", null, sProvider_).size(),1);
 	}
 
 	public void testUserSetting() throws Exception {
@@ -572,12 +580,12 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.getUserSetting(sessionProvider, USER_ROOT, faqSetting_);
 		assertEquals(faqSetting_.getOrderBy(), "alpha");
 		assertEquals(faqSetting_.getOrderType(), "des");
-
-		/*
+		
 //	Get all admins of FAQ
 		List<String> list = faqService_.getAllFAQAdmin();
-		assertEquals(faqService_.isAdminRole(USER_ROOT, sessionProvider), true);
-
+		assertNotNull(list);
+		assertEquals(faqService_.isAdminRole(USER_DEMO, sessionProvider), false);
+/*
 //	Test send mail for user:
 		Message  message = new Message(); 
     message.setMimeType("text/htm") ;

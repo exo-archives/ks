@@ -50,6 +50,7 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
@@ -605,8 +606,14 @@ public class JCRDataStorage {
 
 	
 	public void sendMessage(Message message) throws Exception {
-		MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-		mService.sendMessage(message) ;		
+		
+	  try{
+	  	MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+	  	mService.sendMessage(message) ;		
+	  }catch(NullPointerException e) {
+	  	MailService mService = (MailService)StandaloneContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
+	  	mService.sendMessage(message) ;		
+	  }
   }
   
   public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {

@@ -28,7 +28,10 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
@@ -808,7 +811,10 @@ public class QuestionPageList extends JCRPageList {
    * @see             Session
    */
   private Session getJCRSession() throws Exception {
-    RepositoryService  repositoryService = (RepositoryService)PortalContainer.getComponent(RepositoryService.class) ;
+    RepositoryService  repositoryService ;
+    ExoContainer container = ExoContainerContext.getCurrentContainer();
+  	repositoryService = (RepositoryService)container.getComponentInstance(RepositoryService.class) ;
+    
     SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
     String defaultWS = 
       repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
