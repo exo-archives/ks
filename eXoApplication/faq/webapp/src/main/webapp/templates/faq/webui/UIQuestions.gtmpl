@@ -202,7 +202,8 @@
 									<div class="SeparatorLine ControlButton"><span></span></div>
 								<% } %>
 								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-									<div onclick="eXo.faq.UIFAQPortlet.printAll(this)">
+									<!--<div onclick="eXo.faq.UIFAQPortlet.printAll(this)">-->
+									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">

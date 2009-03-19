@@ -1,0 +1,495 @@
+<%
+	import org.exoplatform.services.jcr.ext.common.SessionProvider;
+	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.Answer;
+	import org.exoplatform.faq.service.Comment;
+	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.faq.service.FileAttachment;
+	import org.exoplatform.faq.webui.ValidatorDataInput;
+	import org.exoplatform.faq.webui.ForumTransformHTML;
+%>
+
+<div class="UIPrintAllQuestions $uicomponent.id">
+	<% uiform.begin() %>
+		<div style="padding:5px; border: 1px solid gray; margin:10px 5px;">		
+			<%
+			java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			for(Question question : uicomponent.getListQuestion(sessionProvider)){
+				questionContent = question.getQuestion();
+				String responseBy = "..." ;
+				String date = "..." ;
+			%>
+				<div class="QuestionSelect" style="_width:97%;">
+					<div class="DecoratorTL">
+						<div class="DecoratorTR">
+							<div class="DecoratorTC"><span></span></div>
+						</div>
+					</div>
+					<div class="DecoratorML">
+						<div class="DecoratorMR">
+							<div class="DecoratorMC" style="background-color:white;">
+							
+								<div class="QuestionContainer" id="<%=question.getId()%>">
+									<table style="_width:98%;">
+										<tr>
+										<% if(uicomponent.faqSetting_.isEnableViewAvatar()){ %>
+											<td style="width:140px; height:100px;">
+												<div class="ProfileContainer">
+												<%
+													if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+												%>				
+													<div class="AvatarContainer">
+														<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
+													</div>
+												<%}%>
+												<!-- ========================================= view author's infor ================================ -->
+												<%
+													if(uicomponent.viewAuthorInfor){
+												%>
+													<div class="AuthorInfor" style="text-align:center;">
+														<a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>">
+															<span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
+														</a>
+														<%=question.getEmail()%>
+													</div>
+												<%}%>
+												</div>
+											</td>
+										<%}%>
+											<td>
+												<table>
+													<tbody>
+														<tr>
+															<td>
+																<%
+																if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+																%>
+																	<!-- =========================== Vote result ========================== -->
+																	<table  style="width:150px; float:right;">
+																		<tr>
+																			<td>
+																				<% 
+																				int markVote =(Integer) question.getMarkVote();
+																				double sodu = question.getMarkVote() - markVote;
+																				%>
+																				<div class="RatingInfoContainer">
+																					<%
+																					for(int mark = 0; mark < 5; mark ++){
+																						if(mark < markVote){%>
+																							<div class="OverVote"><span></span></div>
+																					<%} else if (mark > markVote){%>
+																							<div class="RatedVote"><span></span></div>
+																					<%} else{
+																							if(sodu < 0.3){%>
+																								<div class="RatedVote"><span></span></div>
+																						<%} else if (sodu > 0.7){%>
+																								<div class="OverVote"><span></span></div>
+																						<%} else {%>
+																								<div class="HaftVote"><span></span></div>
+																						<%}
+																						}
+																					}%>
+																				</div>
+																			</td>
+																			<td>
+																				<%
+																				String markView = question.getMarkVote() + "";
+																				if(markView.length() <= 4){
+																				%>
+																					<div style="line-height:22px;"><b>$markView</b></div>
+																				<%
+																				} else {
+																				%>
+																					<div style="line-height:22px;"><b><%=markView.substring(0, 4)%></b></div>
+																				<%}%>
+																			</td>
+																		</tr>
+																	</table>
+																	<div style="clear:right;"><span></span></div>
+																<%
+																}
+																%>
+																
+															</td>
+														</tr>
+														<tr>
+															<td>
+																<div class="LeftQuestionContainer" style="width:99%;">
+																	<div>
+																		
+																		<!-- ==================================== question content =========================== -->
+																		<div class="ViewQuestionNotApproved">
+																			<a style="cursor:pointer">
+																				<span class="QuestionName">$questionContent</span>
+																			</a>
+																		</div>
+																		
+																		<!-- ===================================== view Detail =============================== -->
+																		<div class="UIDetailContainer">
+																			<%
+																				if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
+																				String detailQuestion = ForumTransformHTML.convertCodeHTML(question.getDetail());
+																			%>
+																					$detailQuestion
+																			<%}%>
+																		</div>
+																		<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
+																		
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</div>
+								<div class="ButtomQuestion"><span></span></div>
+								
+								<!-- ===================================== View response content ==================================================== -->
+								<% 
+								List answers = uicomponent.getListAnswers(question.getId(), sessionProvider);
+								String classResponsse = "";
+								if(answers.size() > 0)classResponsse = "ResponseExternal";
+								%>
+								<div class="ResponseContent">
+								
+									<!-- ============================== View attachment files ============================================== -->
+									<%if(!question.getAttachMent().isEmpty()) {%>
+											<div class="AttachmentContent" style="background:white;">
+												<%
+													for(FileAttachment fileAttachment :question.getAttachMent()){
+														String fileName = fileAttachment.getName();
+														long fileSize = fileAttachment.getSize();
+														if(fileSize > 0){
+															String size = uicomponent.convertSize(fileSize);
+															String dataPath = "" ;
+															String fileStream = "" ;
+															try{
+																dataPath = fileAttachment.getDataPath();
+																fileStream = fileAttachment.getInputStream();
+															} catch(Exception e) {
+																dataPath = "null" ;
+																fileStream = "null" ;
+															}
+															String fileType = fileAttachment.getMimeType();
+															String fileWorkSpace = fileAttachment.getWorkspace();
+															ValidatorDataInput validate = new ValidatorDataInput();
+															String linkImage = uicomponent.getFileSource(fileAttachment);
+															String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+															if(validate.isImage(fileName)) {
+																String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
+														%>
+																<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
+																	<div class="Image">
+																		<div onclick="eXo.faq.UIFAQPortlet.showPicture(this);">
+																			<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
+																		</div>
+																	</div>
+																	<div style="clear:left;"><span></span></div>
+											 						<div class="LabelBox">
+												 						<div style="line-height:20px; white-space:nowrap;">
+													 						<div class="Size AttachmentLabel">
+													 							<%
+													 							if(fileName.length() > 60){
+													 							%>
+				 																	<div class="AttachmentLabel">
+					 																	<%=FAQUtils.getSubString(fileName, 60);%>
+					 																</div>
+				 																<%}else{%>
+				 																	<div class="AttachmentLabel">
+					 																	$fileName
+					 																</div>
+				 																<%}%>
+													 						</div>
+													 						<div style="color:#1052b5; float:left;">
+													 							&nbsp;- <span style="color:gray;font-size:11px;">$size</span>
+													 						</div>
+													 					</div>
+												 						<div style="clear:left;"><span></span></div>
+												 					</div>
+											 					</div>
+														<%} else { %>
+																<div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
+																	<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
+																		<%
+																		if(fileName.length() > 60){
+											 							%>
+		 																	<a class="AttachmentLabel">
+			 																	<%=FAQUtils.getSubString(fileName, 60);%>
+			 																</a>
+		 																<%}else{%>
+																			<a class="AttachmentLabel">
+																				$fileName
+																			</a>
+		 																<%}%>
+																	</div>
+																	<div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+														<%}
+														} else {
+														%>
+															<div class="LabelBox" style="margin:10px 10px 0px 12px;">
+																<div class="FalseIcon" style="padding-left:15px;">
+																	<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%></a>
+																</div>
+																<div style="clear:left;"><span></span></div>
+															</div>
+														<%
+														}
+													}%>
+												<div style="clear:left;"><span></span></div>
+											</div>
+									<%}%>
+									
+									<!-- ======================================= view relation question ========================================= -->
+									<%
+										List questionRelation = question.getRelations();
+										if(!questionRelation.isEmpty()) {
+											String questionRelationById = "" ;
+											String cateRelaId = "" ;
+											String quesRelaId = "" ;
+											String quesRelaCont = "" ;
+											String linkRelaQues = "" ;
+									%>
+										<div class="RelationContent">
+											<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
+									<%
+											for(String relationId : questionRelation) { 
+												quesRelaCont = "" ;
+												questionRelationById = uicomponent.getQuestionRelationById(relationId);
+												if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+													cateRelaId = questionRelationById.split("/")[0] ;
+													quesRelaId = questionRelationById.split("/")[1] ;
+													quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "");
+												}
+												if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+									%>
+													<div style="padding:0px 0px 5px 10px;">
+														<a style="text-decoration:yes; color:#1555B5;">$quesRelaCont</a><br/>
+													</div>
+									<% 		}
+											}
+									%>
+											</div>
+									<%}%>
+									
+									<!-- ===================================== Question's answers ==================================================== -->
+									<div class="ResponseContainer" style="margin:10px 5px 0px 10px; border:1px solid gray; padding:1px;">
+										<div class="TitleResponseContent">
+											<div class="IconResponse" style="background-color:#e6e5e5;color:#5C5C5C;font-size:18px;line-height:26px;padding-left:20px;">
+												<%=_ctx.appRes("UIQuestions.label.Answers")%>
+											</div>
+										</div>
+										<div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;background-color:white;">
+											<%
+											if(answers != null && !answers.isEmpty()){
+												String actionAnswer = "";
+												int i = 0;
+												for(Answer answer in answers) {
+													res = answer.getResponses();
+													res = ForumTransformHTML.convertCodeHTML(res);
+													if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
+														continue;
+													}
+													date = dateFormatter.format(answer.getDateResponse());
+													responseBy = FAQUtils.getFullName(answer.getResponseBy());
+													String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
+												%>
+												<div class="ResponseItemContainer" style="padding-top: 10px;">
+													<table width="100%">
+														<tbody>
+															<tr>
+																<td>
+																	<!-- ============================= View user who answered quesetion ============================ -->
+																	<div class="ResponseItemContainerLeft">
+																		<div style="padding-bottom:10px">
+																			<div class="ProfileContainer">
+																				<%
+																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																				%>				
+																				<div class="AvatarContainer" style="margin-top:0px;">
+																					<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy(), sessionProvider)%>" width="63px" alt="Avatar"/></div>
+																				</div>
+																				<%}%>
+																				<div class="AuthorInfor" style="text-align:center">
+																					<a style="color:gray; cursor:pointer;">
+																						<span class="UserName">$responseBy</span>
+																					</a>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																	
+																	<div class="ResponseItemContainerRight">
+																		<div style="overflow:auto;_padding-bottom:15px;">
+																			<%
+																			if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
+																			%>
+																				<div style="padding:3px;">$res</div>
+																			<%
+																			} else {
+																			%>
+																				<div style="color:gray;padding:3px;">$res</div>
+																			<%} %>
+																			<div style="float:left; color:#721d95;">$date</div>
+																		</div>
+																		
+																		<!-- ============================= View mark vote answer ======================================== -->
+																		<div style="overflow:auto; margin-top:5px;">
+																			<%
+																			if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+																				%>
+																					<div style="float:left;">
+																						<div style="float:left;" title="+1">
+																							<div class="VoteAnswerUp">
+																								<a style="width:16px; height:16px; display:block"></a>
+																							</div>
+																						</div>
+																					<%
+																						++i;
+																					%>
+																						<div style="float:left;" title="-1">
+																							<div class="VoteAnswerDown">
+																								<a style="width:16px; height:16px; display:block"></a>
+																							</div>
+																						</div>
+																						<div style="float:left; line-height:18px; margin-left:4px;">
+																							<%=answer.getMarkVotes()%>
+																						</div>
+																						<div style="clear:left;"><span></span></div>
+																					</div>
+																				<%
+																				}%>
+																				<div style="clear:left;"><span></span></div>
+																		</div>
+																		
+																	</div>
+																	<div style="clear:left;"><span></span></div>
+														
+																</td>
+															
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												
+											<%} %>
+										<%} else { %>
+											<div align="center" style="width:100%;text-align:center;">
+												<div class="NotResponse" style="margin:auto; width:300px; padding:10px; font-weight:bold;">
+													<%=_ctx.appRes("UIQuestions.label.QuestionNotYetAnswered")%>
+												</div>
+											</div>
+										<%}%>
+										</div>
+										
+										<!-- ============================== View question's commnets ============================================== -->
+										<%
+										if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+											List comments = uicomponent.getListComments(question.getId(), sessionProvider);
+											String classComment = "";
+											if(comments.size() > 0) {
+												classComment = "CommentExternal";
+										%>
+												<div class="TitleCommentContent">
+													<div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
+												</div>
+										<% } %>
+											
+											<div class="Response $classComment">
+											<%
+												int commentCount = 0;
+												for(Comment comment in comments){
+											%>
+													<div >
+														<div class="ResponseItemContainer" style="background:#F0F0F0;">
+														<table style="width:100%">
+															<tr>
+																<td>
+																
+																		<div class="ResponseItemContainerLeft">
+																		<!-- ============================= View user who comment for quesetion ============================ -->
+																			<div style="padding:10px 0px">
+																				<div class="ProfileContainer">
+																					<%
+																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																					%>				
+																					<div class="AvatarContainer" style="margin-top:0px;">
+																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
+																					</div>
+																					<%}%>
+																					<div class="AuthorInfor" style="text-align:center">
+																						<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
+																							<span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
+																						</a>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="ResponseItemContainerRight">
+																			<%
+																				String commentDetail =comment.getComments() ;
+																				commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
+																			%>
+																			<span>$commentDetail</span>
+																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+																		</div>
+																		<div style="clear:left;"><span></span></div>
+		
+																</td>
+															</tr>
+														</table>
+														</div>
+													</div>
+											<%}%>
+											</div>
+										<%}%>
+										
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="DecoratorBL">
+							<div class="DecoratorBR">
+								<div class="DecoratorBC"><span></span></div>
+							</div>
+						</div>
+					
+				</div>
+			<%
+			}
+			sessionProvider.close();
+			%>
+		</div>
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+	        <% for(action in uicomponent.getActions()) { 
+	        	 String actionLabel = _ctx.appRes("UIFAQPortlet.action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);">$actionLabel</a>
+		          	  	</div>
+		            	</div>
+		          	</div>
+		        	</div>
+          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+	
+	<%uiform.end()%>
+</div>

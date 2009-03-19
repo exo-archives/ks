@@ -49,6 +49,7 @@ import org.exoplatform.faq.webui.popup.UIImportForm;
 import org.exoplatform.faq.webui.popup.UIMoveQuestionForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
+import org.exoplatform.faq.webui.popup.UIPrintAllQuestions;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIQuestionManagerForm;
 import org.exoplatform.faq.webui.popup.UIRSSForm;
@@ -120,6 +121,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.RSSActionListener.class),
 				@EventConfig(listeners = UIQuestions.EditCategoryActionListener.class),
 				@EventConfig(listeners = UIQuestions.VoteAnswerActionListener.class),
+				@EventConfig(listeners = UIQuestions.PrintAllQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.DiscussForumActionListener.class)
 		}
 )
@@ -1510,6 +1512,38 @@ public class UIQuestions extends UIContainer {
 			deleteQuestion.setQuestionId(question) ;
 			popupContainer.setId("FAQDeleteQuestion") ;
 			popupAction.activate(popupContainer, 450, 250) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static  public class PrintAllQuestionActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ; 
+			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			Category category = null ;
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			try{
+				category = faqService_.getCategoryById(questions.categoryId_, sessionProvider) ;
+			} catch (javax.jcr.PathNotFoundException e) {
+				e.printStackTrace() ;
+				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				questions.setIsNotChangeLanguage() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				sessionProvider.close();
+				return ;
+			} catch (Exception e) { 
+				e.printStackTrace() ;
+			} 
+			sessionProvider.close();
+			UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null) ;
+			uiPrintAll.setCategoryId(questions.categoryId_, questions.faqService_, questions.faqSetting_, questions.canEditQuestion);
+			popupContainer.setId("FAQDeleteQuestion") ;
+			popupAction.activate(popupContainer, 800, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
