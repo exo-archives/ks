@@ -1542,7 +1542,7 @@ public class UIQuestions extends UIContainer {
 			sessionProvider.close();
 			UIPrintAllQuestions uiPrintAll = popupContainer.addChild(UIPrintAllQuestions.class, null, null) ;
 			uiPrintAll.setCategoryId(questions.categoryId_, questions.faqService_, questions.faqSetting_, questions.canEditQuestion);
-			popupContainer.setId("FAQDeleteQuestion") ;
+			popupContainer.setId("FAQPrintAllQuestion") ;
 			popupAction.activate(popupContainer, 800, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
