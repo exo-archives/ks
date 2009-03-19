@@ -431,9 +431,9 @@
 															if(uicomponent.viewAuthorInfor){
 														%>
 															<div class="AuthorInfor" style="text-align:center;">
-																<div style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" onclick="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
+																<a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
 																	<span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
-																</div>
+																</a>
 																<%=question.getEmail()%>
 															</div>
 														<%}%>
@@ -483,10 +483,10 @@
 																				<%}%>
 																				<!-- action print question -->
 																				<td style="width:25px">
-																					<div onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
+																					<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
 																							title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>" style="cursor:pointer">
 																						<div class="PrintScrintFAQ"><span></span></div>
-																					</div>
+																					</a>
 																				</td>
 																				<!-- action send mail for frend -->
 																				<td style="width:25px">
@@ -498,9 +498,9 @@
 																						SendToFriend = "LockSendToFriend" ;
 																					}
 																					%>
-																					<div onclick="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
+																					<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
 																						<div class="$SendToFriend"><span></span></div>
-																					</div>
+																					</a>
 																				</td>
 																				<!-- action Discuss -->
 																			<%
@@ -639,9 +639,9 @@
 																					
 																					<!-- question content -->
 																					<div class="ViewQuestionNotApproved">
-																						<div onclick="$linkQuestion" style="color:$colorViewQuestion; cursor:pointer">
+																						<a href="$linkQuestion" style="color:$colorViewQuestion; cursor:pointer">
 																							<span class="QuestionName">$questionContent</span>
-																						</div>
+																						</a>
 																					</div>
 																					
 																				</div>
@@ -931,9 +931,9 @@
 																<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
 																		<!-- action Sort answer by vote -->
 																	<td style="width:70px">
-																		<div onclick="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
+																		<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
 																			<div class="SortAnswer"><span></span></div>
-																		</div>
+																		</a>
 																	</td>
 																<%}%>
 															</tr>
@@ -972,9 +972,9 @@
 																						</div>
 																						<%}%>
 																						<div class="AuthorInfor" style="text-align:center">
-																							<div title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" onclick="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray; cursor:pointer;">
+																							<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray; cursor:pointer;">
 																								<span class="UserName">$responseBy</span>
-																							</div>
+																							</a>
 																						</div>
 																					</div>
 																				</div>
@@ -1038,25 +1038,25 @@
 																	
 																	<% if(uicomponent.canEditQuestion){%>
 																		<td style="width:20px">
-																			<div title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" onclick="<%=uicomponent.event("EditAnswer", answer.getId())%>">
+																			<a title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
 																				<div class="ItemIcon Edit" style="height:20px;width:16px;">
 																						<span></span>
 																				</div>
-																			</div>
+																			</a>
 																		</td>
 																		<td style="width:20px;">
 																		<%
 																			actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");
 																			if(answer.getApprovedAnswers()) {
 																			%>
-																				<div onclick="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
+																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
 																					<div class="ApprovedQuestion"><span></span></div>
-																				</div>
+																				</a>
 																			<%} else {
 																			%>
-																				<div onclick="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
+																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
 																					<div class="UnApprovedQuestion"><span></span></div>
-																				</div>
+																				</a>
 																			<%}%>
 																		</td>
 																		<td style="width:20px;">
@@ -1064,20 +1064,20 @@
 																				actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Activate");
 																				if(answer.getActivateAnswers()) {
 																			%>
-																				<div onclick="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
+																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
 																					<div class="ActivateQuestion"><span></span></div>
-																				</div>
+																				</a>
 																			<%} else {
 																			%>
-																				<div onclick="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
+																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
 																					<div class="DeActivateQuestion"><span></span></div>
-																				</div>
+																				</a>
 																			<%}%>
 																		</td>
 																		<td style="width:20px">
-																				<div onclick="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
+																				<a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
 																					<div class="DeleteAnswer"><span></span></div>
-																				</div>
+																				</a>
 																		</td>
 																	<%}%>
 																	</tr>
@@ -1138,9 +1138,9 @@
 																							</div>
 																							<%}%>
 																							<div class="AuthorInfor" style="text-align:center">
-																								<div title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" onclick="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
+																								<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
 																									<span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
-																								</div>
+																								</a>
 																							</div>
 																						</div>
 																					</div>
@@ -1160,41 +1160,41 @@
 																		if(canEditComment){
 																			if (uicomponent.faqSetting_.isCanEdit()){%>
 																				<td style="width:20px;">
-																					<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
+																					<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
 																						<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																								<span></span>
 																						</div>
-																					</div>
+																					</a>
 																				</td>
 																		<%}%>
 																			<td style="width:20px">
-																				<div title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" onclick="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
+																				<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
 																					<div class="ItemIcon Edit" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
-																				</div>
+																				</a>
 																			</td>
 																			<td style="width:20px">
-																				<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
-																				</div>
+																				</a>
 																			</td>
 																	<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
 																			<td style="width:20px">
-																				<div title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
+																				<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 																					<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
-																				</div>
+																				</a>
 																			</td>
 																			<td style="width:20px">
-																				<div title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
-																				</div>
+																				</a>
 																			</td>
 																	<%}%>
 																	</tr>
