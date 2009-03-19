@@ -15,6 +15,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -295,6 +296,31 @@ public class TestForumService extends BaseForumTestCase{
 	  
   }
   
+  public void testPoll() throws Exception{
+  	Category cat = createCategory();
+		forumService_.saveCategory(sProvider, cat, true);
+		Forum forum = createdForum();
+		forumService_.saveForum(sProvider, cat.getId(), forum, true);
+		Topic topic = createdTopic();
+		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
+  	Poll poll = createPoll("question to this poll1", new String[]{"option 1", "option 2", "option 3"});
+  	
+  	//	Save new poll
+  	forumService_.savePoll(sProvider, cat.getId(), forum.getId(), topic.getId(), poll, true, false);
+  	
+  	//	Get poll
+  	assertNotNull(forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()));
+  	
+  	//	Set close for poll
+  	poll.setIsClosed(true);
+  	forumService_.setClosedPoll(sProvider, cat.getId(), forum.getId(), topic.getId(), poll);
+  	assertEquals(true, forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()).getIsClosed());
+  	
+  	//	Delete poll
+  	forumService_.removePoll(sProvider, cat.getId(), forum.getId(), topic.getId());
+  	assertEquals(null, forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()));
+  }
+  
   private UserProfile createdUserProfile(String userName) {
   	UserProfile userProfile = new UserProfile();
   	userProfile.setUserId(userName);
@@ -383,5 +409,22 @@ public class TestForumService extends BaseForumTestCase{
     cat.setModifiedBy("root") ;
     cat.setModifiedDate(new Date()) ;    
     return cat ;
+  }
+  
+  private Poll createPoll(String question, String[] options){
+  	Poll poll = new Poll();
+  	poll.setCreatedDate(new Date());
+  	poll.setIsAgainVote(true);
+  	poll.setIsClosed(false);
+  	poll.setIsMultiCheck(true);
+  	poll.setModifiedBy("root");
+  	poll.setModifiedDate(new Date());
+  	poll.setOption(options);
+  	poll.setOwner("root");
+  	poll.setQuestion(question);
+  	poll.setUserVote(new String[]{});
+  	poll.setVote(new String[]{});
+  	
+  	return poll;
   }
 }
