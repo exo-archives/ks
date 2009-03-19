@@ -319,6 +319,12 @@ public class TestForumService extends BaseForumTestCase{
   	//	Delete poll
   	forumService_.removePoll(sProvider, cat.getId(), forum.getId(), topic.getId());
   	assertEquals(null, forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()));
+  	
+  	//	Test get path of node
+  	assertNotNull(forumService_.getObjectNameByPath(sProvider,forumService_.getForum(sProvider, cat.getId(), forum.getId()).getPath()));
+  	
+  	//	Test get object name by path
+  	assertEquals(forum.getForumName(), ((Forum)forumService_.getObjectNameById(sProvider, forum.getId(), Utils.FORUM)).getForumName());
   }
   
   private UserProfile createdUserProfile(String userName) {
