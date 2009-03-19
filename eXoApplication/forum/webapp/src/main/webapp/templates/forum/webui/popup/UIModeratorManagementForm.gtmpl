@@ -24,10 +24,10 @@
 								</a>
 						<%}%>
 						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
-						<div class="Input" style="float:right;">
-						<%	
-							uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
-						%>
+						<div class="Input" style="float:right;" onkeydown="javaScript: if(event.keyCode == 13){<%=uicomponent.event("SearchUser");%>}">
+							<%	
+								uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
+							%>
 						</div>
 						<div class="Label" style="float:right; line-height:20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
 						<div style="clear:right;"><span></span></div>
