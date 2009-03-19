@@ -395,8 +395,11 @@
 											if(comments.size() > 0) {
 												classComment = "CommentExternal";
 										%>
-												<div class="TitleCommentContent">
-													<div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
+											<!--<div class="ResponseContainer" style="margin:10px 5px 0px 10px; border:1px solid gray; padding:1px;">-->
+												<div class="TitleResponseContent">
+													<div class="IconResponse" style="background-color:#e6e5e5;color:#5C5C5C;font-size:18px;line-height:26px;padding-left:20px;">
+														<%=_ctx.appRes("UIQuestions.label.Comments")%>
+													</div>
 												</div>
 										<% } %>
 											
