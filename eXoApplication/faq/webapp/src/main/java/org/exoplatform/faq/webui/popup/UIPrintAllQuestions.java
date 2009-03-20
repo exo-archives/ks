@@ -16,15 +16,19 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -53,6 +57,7 @@ import org.exoplatform.webui.form.UIForm;
     }
 )
 public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
+	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private String categoryId = null;
 	private String currentUser_;
 	private boolean canEditQuestion = false;
@@ -66,6 +71,33 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 			currentUser_ = FAQUtils.getCurrentUser();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unused")  
+	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
+		byte[] imageBytes = null;
+		if (input != null) {
+			imageBytes = new byte[input.available()];
+			input.read(imageBytes);
+			ByteArrayInputStream byteImage = new ByteArrayInputStream(imageBytes);
+			InputStreamDownloadResource dresource = new InputStreamDownloadResource(byteImage, "image");
+			dresource.setDownloadName(fileName);
+			return dservice.getDownloadLink(dservice.addDownloadResource(dresource));
+		}
+		return null;
+	}
+
+	private String getFileSource(FileAttachment attachment) throws Exception {
+		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		try {
+			InputStream input = attachment.getInputStream() ;
+			String fileName = attachment.getName() ;
+			//String fileName = attachment.getNodeName() ;
+			return getFileSource(input, fileName, dservice);
+		} catch (Exception e) {
+			e.printStackTrace() ;
+			return null;
 		}
 	}
 
@@ -86,6 +118,24 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		} catch (Exception e){}
 		if(url != null && url.trim().length() > 0) return url;
 		return Utils.DEFAULT_AVATAR_URL;
+	}
+	
+	private String convertSize(long size){
+		String result = "";
+		long  residual = 0;
+		int i = 0;
+		while(size >= 1000){
+			i ++;
+			residual = size % 1024;
+			size /= 1024;
+		}
+		if(residual > 500){
+			String str = residual + "";
+			result = (size + 1) + " " + sizes_[i];
+		}else{
+			result = size + " " + sizes_[i];
+		}
+		return result;
 	}
 	
 	public void setCategoryId(String cateId, FAQService service, FAQSetting setting, boolean canEdit){
