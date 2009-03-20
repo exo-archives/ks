@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumSearch;
@@ -490,11 +491,20 @@ public class TestForumService extends BaseForumTestCase{
 		List<String> values = new ArrayList<String>();
 		values.add("duytucntt@gmail.com");
   	forumService_.addWatch(sProvider, 1, topicPath, values, "root");
+  	//watch by user
   	List<Watch> watchs = forumService_.getWatchByUser("root", sProvider);
   	assertEquals(watchs.get(0).getEmail(), values.get(0));
   	forumService_.removeWatch(sProvider, 1, topicPath, values);
   	watchs = forumService_.getWatchByUser("root", sProvider);
   	assertEquals(watchs.size(), 0);
+  }
+  
+  public void testForumAdministration() throws Exception{
+  	ForumAdministration administration = createForumAdministration();
+  	forumService_.saveForumAdministration(sProvider, administration);
+  	administration = forumService_.getForumAdministration(sProvider);
+  	assertNotNull(administration);
+  	assertEquals(administration.getForumSortBy(), "forumName");
   }
   
   private UserProfile createdUserProfile(String userName) {
@@ -611,5 +621,18 @@ public class TestForumService extends BaseForumTestCase{
   	tag.setName(name);
   	tag.setOwner("root");
   	return tag;
+  }
+  
+  private ForumAdministration createForumAdministration() {
+  	ForumAdministration forumAdministration = new ForumAdministration() ;
+		forumAdministration.setForumSortBy("forumName") ;
+		forumAdministration.setForumSortByType("ascending") ;
+		forumAdministration.setTopicSortBy("threadName") ;
+		forumAdministration.setTopicSortByType("ascending") ;
+		forumAdministration.setCensoredKeyword("") ;
+		forumAdministration.setEnableHeaderSubject(false) ;
+		forumAdministration.setHeaderSubject("");
+		forumAdministration.setNotifyEmailContent("") ;
+  	return forumAdministration;
   }
 }
