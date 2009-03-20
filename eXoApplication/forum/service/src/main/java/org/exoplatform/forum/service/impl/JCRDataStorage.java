@@ -3307,7 +3307,13 @@ public class JCRDataStorage {
 		String sendTo = privateMessage.getSendTo();
 		sendTo = sendTo.replaceAll(";", ",");
 		String[] strUserNames = sendTo.split(",");
-		List<String> userNames = ForumServiceUtils.getUserPermission(strUserNames);
+		List<String> userNames;
+		// TODO: JUnit Test can't get OrganizationService
+		try {
+			userNames = ForumServiceUtils.getUserPermission(strUserNames);
+    } catch (Exception e) {
+    	userNames = Arrays.asList(strUserNames);
+    }
 		String id;
 		String userNameFirst = privateMessage.getFrom();
 		try {

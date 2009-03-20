@@ -285,7 +285,7 @@ public class TestForumService extends BaseForumTestCase{
   	assertEquals(bookMarks.size(), 2);
   }
   //// Private Message
-  public void testPrivateMessage () {
+  public void testPrivateMessage () throws Exception {
   	ForumPrivateMessage privateMessage = new ForumPrivateMessage();
   	privateMessage.setFrom("demo");
   	privateMessage.setIsUnread(false);
@@ -293,8 +293,23 @@ public class TestForumService extends BaseForumTestCase{
   	privateMessage.setMessage("Content privateMessage");
   	privateMessage.setSendTo("root");
   	//savePtivateMs
-  	//forumService_.getPrivateMessage(sProvider, userName, Utils.);
-	  
+  	forumService_.savePrivateMessage(sProvider, privateMessage);
+  	// get Private Message is SEND_MESSAGE
+  	JCRPageList pageList = forumService_.getPrivateMessage(sProvider, "demo", Utils.SEND_MESSAGE);
+  	assertNotNull(pageList);
+  	assertEquals(pageList.getAvailable(), 1);
+  	// get Private Message is RECEIVE_MESSAGE
+  	pageList = forumService_.getPrivateMessage(sProvider, "root", Utils.RECEIVE_MESSAGE);
+  	assertNotNull(pageList);
+  	assertEquals(pageList.getAvailable(), 1);
+  	//
+  	long t = forumService_.getNewPrivateMessage(sProvider, "root");
+  	assertEquals(t, 1);
+  	// Remove PrivateMessage
+  	forumService_.removePrivateMessage(sProvider, privateMessage.getId(), "demo", Utils.SEND_MESSAGE);
+  	pageList = forumService_.getPrivateMessage(sProvider, "demo", Utils.SEND_MESSAGE);
+  	assertEquals(pageList.getAvailable(), 0);
+  	//
   }
   
   public void testPoll() throws Exception{
