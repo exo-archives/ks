@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 
 
@@ -190,15 +191,15 @@ public class TestForumService extends BaseForumTestCase{
 		Forum forum = createdForum();
 		forumService_.saveForum(sProvider, cat.getId(), forum, true);
 		
-		// add 20 Topics
+		// add 10 Topics
     List<Topic> list = new ArrayList<Topic>() ;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 10; i++) {
       list.add(createdTopic());
       forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), list.get(i), true, false, "");
     }
-    Topic topic = list.get(18);
+    Topic topic = list.get(8);
     
-		// get Topic - topic in position 18
+		// get Topic - topic in position 8
     Topic topica = forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "");
 		assertNotNull(topica);
 		
@@ -208,9 +209,9 @@ public class TestForumService extends BaseForumTestCase{
 		
 		// update Topic
     topica.setIsSticky(true) ;
-    topica.setTopicName("topic thu 18") ;
+    topica.setTopicName("topic 8") ;
     forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topica, false, false, "") ;
-    assertEquals("topic thu 18", forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "").getTopicName());
+    assertEquals("topic 8", forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "").getTopicName());
     
     // modifyTopic
     topica.setIsLock(true);
@@ -222,12 +223,12 @@ public class TestForumService extends BaseForumTestCase{
     
 		//get PageList Topic
 		JCRPageList pagelist = forumService_.getPageTopic(sProvider, cat.getId(), forum.getId(), "", "");
-		assertEquals(pagelist.getAvailable(), 20);
+		assertEquals(pagelist.getAvailable(), 10);
 		pagelist.setPageSize(5);
     List <Topic> listTopic = pagelist.getPage(1) ;
     assertEquals(listTopic.size(), 5);
-    assertEquals(pagelist.getAvailablePage(), 4);
-    
+    assertEquals(pagelist.getAvailablePage(), 2);
+
     // get Topic By User
     topic = createdTopic();
     topic.setOwner("demo");
@@ -307,7 +308,6 @@ public class TestForumService extends BaseForumTestCase{
 		assertNull(forumService_.getPost(sProvider, categoryId, forumId, topicnew.getId(), newPost.getId()));
 		
 		//getViewPost
-		System.out.println(this.categoryId+"/"+forumId+"/"+topicId);
   }
   //BookMark
   public void testBookMark()throws Exception {
@@ -479,7 +479,22 @@ public class TestForumService extends BaseForumTestCase{
 		eventQuery.setModerator("") ;
 		forumSearchs = forumService_.getAdvancedSearch(sProvider, eventQuery);
 		assertEquals(forumSearchs.isEmpty(), false);
-		System.out.println(forumSearchs.size());
+  }
+  
+  public void testWatch() throws Exception {
+  	//  set Data
+  	setData();
+  	//addWatch
+  	String topicPath = forumService_.getForumHomePath(sProvider);
+		topicPath = topicPath+"/"+categoryId+"/"+forumId;
+		List<String> values = new ArrayList<String>();
+		values.add("duytucntt@gmail.com");
+  	forumService_.addWatch(sProvider, 1, topicPath, values, "root");
+  	List<Watch> watchs = forumService_.getWatchByUser("root", sProvider);
+  	assertEquals(watchs.get(0).getEmail(), values.get(0));
+  	forumService_.removeWatch(sProvider, 1, topicPath, values);
+  	watchs = forumService_.getWatchByUser("root", sProvider);
+  	assertEquals(watchs.size(), 0);
   }
   
   private UserProfile createdUserProfile(String userName) {
@@ -493,9 +508,9 @@ public class TestForumService extends BaseForumTestCase{
   	userProfile.setSignature("signature");
   	return userProfile;
   }
+  
   private Post createdPost() {
 		Post post = new Post();
-		
 		post.setOwner("root");
 		post.setCreatedDate(new Date());
 		post.setModifiedBy("root");
