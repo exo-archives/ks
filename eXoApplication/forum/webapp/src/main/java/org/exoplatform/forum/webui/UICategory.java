@@ -601,7 +601,7 @@ public class UICategory extends UIForm	{
 					path = path.substring(t+2) ;
 					String forumId = path.substring(path.indexOf("/")+1) ;
 					Forum forum = uiContainer.getForum(forumId) ;
-					path = "ForumNormalIcon//" + forum.getForumName() + "//" + path;
+					path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
 				} else if(type.equals("category")) {
 					path = path.substring(path.indexOf("//")+2) ;
 					Category category = uiContainer.getCategory() ;
@@ -610,7 +610,7 @@ public class UICategory extends UIForm	{
 					path = path.substring(t+2) ;
 					String topicId = path.substring(path.lastIndexOf("/")+1);
 					Topic topic = uiContainer.getTopic(topicId) ;
-					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
+					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topicId;
 				}
 				String userName = uiContainer.userProfile.getUserId() ;
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;

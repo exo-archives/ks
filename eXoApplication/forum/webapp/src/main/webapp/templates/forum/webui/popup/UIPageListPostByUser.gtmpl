@@ -82,9 +82,8 @@
 									%>
 										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
 									<%  }
-									String link_ = "javascript:if(confirm('" + _ctx.appRes("UITopicContainer.confirm.SetDeleteOnePost") + "'))" + uicomponent.event("DeletePostLink", post.getId());
+									String link_ =  uicomponent.event("DeletePostLink", post.getId());
 									%>
-										
 										<td class="Tdbox">
 											<div onclick="$link_">
 												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;  margin:0 auto;"><span></span></div>

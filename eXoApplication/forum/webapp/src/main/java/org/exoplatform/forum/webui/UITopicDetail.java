@@ -1477,8 +1477,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			try{
 				Topic topic = topicDetail.getTopic();
 				StringBuffer buffer = new StringBuffer();
-				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
-				.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topic.getId()) ;
+				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topic.getId()) ;
 				String userName = topicDetail.userProfile.getUserId() ;
 				topicDetail.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;

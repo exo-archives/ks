@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -109,7 +110,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	
 	private String getBookMarkId(String id) throws Exception {
 		for (String str : this.bookMarks) {
-			if(str.indexOf(id) > 0) return str ;
+			if(str.indexOf(id) >= 0) return str ;
 		}
 		return "";
 	}
@@ -117,49 +118,36 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 	static	public class OpenLinkActionListener extends EventListener<UIShowBookMarkForm> {
 		public void execute(Event<UIShowBookMarkForm> event) throws Exception {
 			UIShowBookMarkForm bookmarkForm = event.getSource() ;
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIForumPortlet forumPortlet = bookmarkForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIApplication uiApp = bookmarkForm.getAncestorOfType(UIApplication.class) ;
 			UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
-			String []id = path.split("/") ;
-			int length = id.length ;
 			String userName = forumPortlet.getUserProfile().getUserId();
 			long role = forumPortlet.getUserProfile().getUserRole();
 			boolean isRead = true;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				Category category = bookmarkForm.forumService.getCategory(sProvider, id[0]);
-				if(category == null) {
-					breadcumbs.setOpen(false) ;
-					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-					path = bookmarkForm.getBookMarkId(path) ;
-					if(!ForumUtils.isEmpty(path)) {
-						bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), path, false) ;
-						forumPortlet.updateUserProfileInfo() ;
-					}
-					return ;
-				}
-				String[] privateUser = category.getUserPrivate() ;
-				if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
-					isRead = ForumServiceUtils.hasPermission(privateUser, userName);
-				}
-				if(!isRead){
-					length = 0;
-				}
-				if(length == 3) {
-					String path_ = "" ;
-					Forum forum = bookmarkForm.forumService.getForum(sProvider,id[0] , id[1] ) ;
-					if(forum != null)path_ = forum.getPath()+"/"+id[2] ;
-					Topic topic = bookmarkForm.forumService.getTopicByPath(sProvider, path_, false) ;
+				if(id.indexOf(Utils.TOPIC) == 0) {
+					Topic topic = (Topic)bookmarkForm.forumService.getObjectNameById(sProvider, id, Utils.TOPIC);
+					String ids[] = topic.getPath().split("/");
+					int leng = ids.length;
+					String categoryId = ids[leng - 3];
+					String forumId = ids[leng - 2];
+					Forum forum = bookmarkForm.forumService.getForum(sProvider, categoryId, forumId ) ;
 					if(forum == null || topic == null) {
 						breadcumbs.setOpen(false) ;
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-						path = bookmarkForm.getBookMarkId(path) ;
-						if(!ForumUtils.isEmpty(path)) {
-							bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), path, false) ;
+						id = bookmarkForm.getBookMarkId(id) ;
+						if(!ForumUtils.isEmpty(id)) {
+							bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), id, false) ;
 							forumPortlet.updateUserProfileInfo() ;
 						}
 						return ;
+					}
+					Category category = bookmarkForm.forumService.getCategory(sProvider, categoryId);
+					String[] privateUser = category.getUserPrivate() ;
+					if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
+						isRead = ForumServiceUtils.hasPermission(privateUser, userName);
 					}
 					if(forum != null && forum.getIsClosed()) isRead = false;
 					if(role > 0){
@@ -182,23 +170,31 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						uiForumContainer.setIsRenderChild(false) ;
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
+						uiTopicDetail.setTopicFromCate(categoryId, forumId , topic) ;
 						uiTopicDetail.setUpdateForum(forum) ;
 						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(categoryId, forumId , topic.getId()) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId + "/" + forumId + " "));
 					}
-				} else if(length == 2){
-					Forum forum = bookmarkForm.forumService.getForum(sProvider, id[0] , id[1] ) ;
+				} else if(id.indexOf(Utils.FORUM) == 0 && id.indexOf(Utils.CATEGORY) < 0){
+					Forum forum = (Forum)bookmarkForm.forumService.getObjectNameById(sProvider, id, Utils.FORUM ) ;
 					if(forum == null) {
 						breadcumbs.setOpen(false) ;
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
-						path = bookmarkForm.getBookMarkId(path) ;
-						if(!ForumUtils.isEmpty(path)) {
-							bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), path, false) ;
+						id = bookmarkForm.getBookMarkId(id) ;
+						if(!ForumUtils.isEmpty(id)) {
+							bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), id, false) ;
 							forumPortlet.updateUserProfileInfo() ;
 						}
 						return ;
+					}
+					String ids[] = forum.getPath().split("/");
+					int leng = ids.length;
+					String categoryId = ids[leng - 2];
+					Category category = bookmarkForm.forumService.getCategory(sProvider, categoryId);
+					String[] privateUser = category.getUserPrivate() ;
+					if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
+						isRead = ForumServiceUtils.hasPermission(privateUser, userName);
 					}
 					if(forum.getIsClosed()) {
 						if(role > 0){
@@ -215,17 +211,22 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(id[0], forum) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1]));
+						uiTopicContainer.setUpdateForum(categoryId, forum) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+id));
 					}
-				} else if(length == 1){
+				} else if(id.indexOf(Utils.CATEGORY) >= 0){
+					Category category = (Category)bookmarkForm.forumService.getObjectNameById(sProvider, id, Utils.CATEGORY ) ;
+					String[] privateUser = category.getUserPrivate() ;
+					if(role > 0 && privateUser.length > 0 && !privateUser[0].equals(" ")) {
+						isRead = ForumServiceUtils.hasPermission(privateUser, userName);
+					}
 					if(!isRead && role == 0) isRead = true;
 					if(isRead){
-						List<Forum> list = bookmarkForm.forumService.getForums(sProvider, path, "");
+						List<Forum> list = bookmarkForm.forumService.getForums(sProvider, id, "");
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.getChild(UICategory.class).update(category, list);
 						categoryContainer.updateIsRender(false) ;
-						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path);
+						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(id);
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 					}
 				}

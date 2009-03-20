@@ -304,7 +304,7 @@
 								if(topicNewPost.getIsClosed()) {
 									if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", topicId) ;
 										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									} else {
 										openLinkLastPost = "javascript:void(0)";
@@ -314,7 +314,7 @@
 									if(forum.getIsModerateTopic()) {
 										if(topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin) || isAdmin){
 											openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-											urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
+											urlLastPost = uicomponent.url("OpenLastTopicLink", topicId) ;
 											urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 										} else {
 											openLinkLastPost = "javascript:void(0)";
@@ -322,7 +322,7 @@
 										}
 									} else {
 										openLinkLastPost = uicomponent.event("OpenLastTopicLink", (forumId+'/'+topicId)) ;
-										urlLastPost = uicomponent.url("OpenLastTopicLink", (path+'/'+topicId)) ;
+										urlLastPost = uicomponent.url("OpenLastTopicLink", (topicId)) ;
 										urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, uicomponent.id, "OpenLastTopicLink" );
 									}
 								}
@@ -350,7 +350,7 @@
 								lineHeight = "line-height:28px;";
 							}
 							String link = uicomponent.event("OpenForumLink", forumId);
-							String url = uicomponent.url("OpenForumLink", path);
+							String url = uicomponent.url("OpenForumLink", forumId);
 							url = ForumSessionUtils.getBreadcumbUrl(url, uicomponent.id, "OpenForumLink" );
 					%>
 								<tr class="$classRow" oncontextmenu="return false;">

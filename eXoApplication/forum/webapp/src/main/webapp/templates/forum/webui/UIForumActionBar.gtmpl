@@ -26,7 +26,9 @@
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="Icon ManageCategoryButton">
-															<span><%=_ctx.appRes("UICategory.label.manageCategory");%></span>
+															<div class="DownArrow1Icon" style="padding-right:16px;">
+																<a href="javaScript: void(0);"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
+															</div>
 														</div>
 													</div>
 												</div>

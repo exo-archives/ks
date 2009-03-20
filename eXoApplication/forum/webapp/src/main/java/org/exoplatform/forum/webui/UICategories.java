@@ -327,7 +327,7 @@ public class UICategories extends UIContainer	{
 					String categoryId = path.substring(0, path.indexOf("/")) ;
 					String forumId = path.substring(path.indexOf("/")+1) ;
 					Forum forum = uiContainer.getForumById(categoryId, forumId) ;
-					path = "ForumNormalIcon//" + forum.getForumName() + "//" + path;
+					path = "ForumNormalIcon//" + forum.getForumName() + "//" + forumId;
 				}else if(type.equals("category")){
 					path = path.substring(path.indexOf("//")+2) ;
 					Category category = uiContainer.getCategory(path) ;
@@ -335,7 +335,7 @@ public class UICategories extends UIContainer	{
 				} else {
 					path = path.substring(path.indexOf("//")+2) ;
 					Topic topic = uiContainer.getLastTopic(path) ;
-					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + path;
+					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
 				}
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {

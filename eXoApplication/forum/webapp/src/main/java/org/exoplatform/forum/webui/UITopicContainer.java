@@ -1036,12 +1036,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				try{
 					StringBuffer buffer = new StringBuffer();
 					if(topicId.equals("forum")) {
-						buffer.append("ForumNormalIcon//").append(topicContainer.forum.getForumName()).append("//")
-						.append(topicContainer.categoryId).append("/").append(topicContainer.forumId);
+						buffer.append("ForumNormalIcon//").append(topicContainer.forum.getForumName()).append("//").append(topicContainer.forumId);
 					}else {
 						Topic topic = topicContainer.getTopicByAll(topicId);
-						buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//")
-						.append(topicContainer.categoryId).append("/").append(topicContainer.forumId).append("/").append(topicId) ;
+						buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topicId) ;
 					}
 					String userName = topicContainer.userProfile.getUserId() ;
 					topicContainer.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
