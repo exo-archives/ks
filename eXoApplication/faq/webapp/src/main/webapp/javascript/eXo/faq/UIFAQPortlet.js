@@ -6,7 +6,7 @@ function UIFAQPortlet() {
 
 UIFAQPortlet.prototype.setCheckEvent = function(isCheck){
 	this.hiddentMenu = isCheck;
-}
+};
 
 UIFAQPortlet.prototype.viewTitle = function(id) {
 	var obj = document.getElementById(id) ;
@@ -193,8 +193,6 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var uiPortalApplication = document.getElementById("UIPortalApplication") ;
 	var tmp = DOMUtil.findAncestorByClass(obj, "FAQContainer");
 	var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div","QuestionSelect") ;
-//	var previousElement = DOMUtil.findPreviousElementByTagName(printArea, 'div') ;
-//  previousElement = previousElement.cloneNode(true) ;
 	printArea = printArea.cloneNode(true) ;
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
@@ -204,7 +202,6 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
 	printAction.style.display = "block" ;
-	//FAQContent.appendChild(previousElement) ;
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
 	dummyPortlet.appendChild(FAQContainer) ;
@@ -217,24 +214,25 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	window.scroll(0,0) ;
 };
 
-UIFAQPortlet.prototype.printAll = function(obj) {
-  var DOMUtil = eXo.core.DOMUtil ;
-  var uiPortalApplication = document.getElementById("UIPortalApplication") ;
-  var uiQuestion = DOMUtil.findAncestorByClass(obj, "UIQuestions") ;
-  var faqContainer = DOMUtil.findFirstDescendantByClass(uiQuestion, "div", "FAQContainer") ;
- 	var dummyPortlet = document.createElement("div") ;
-  faqContainer = faqContainer.cloneNode(true) ;
-  var faqContent = DOMUtil.findFirstDescendantByClass(faqContainer, "div", "FAQContent") ;
-  var uiAction = DOMUtil.findFirstChildByClass(faqContent, "div", "UIAction") ;
-  dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
-  uiAction.style.display = "block" ;
-  dummyPortlet.appendChild(this.removeLink(faqContainer)) ;
-	dummyPortlet.style.position ="absolute";
-	dummyPortlet.style.width ="100%";
-	dummyPortlet.style.zIndex = 1;
-  document.body.insertBefore(dummyPortlet,uiPortalApplication) ;
-	uiPortalApplication.style.display = "none";
-	window.scroll(0,0) ;
+UIFAQPortlet.prototype.printAll = function(obj) { 
+  var uiPortalApplication = document.getElementById("UIPortalApplication");
+  var container = document.createElement("div");
+  container.className = "UIFAQPortlet";
+  if(typeof(obj) == "string") obj = document.getElementById(obj);
+  uiPortalApplication.style.display = "none";
+  container.appendChild(obj.cloneNode(true));
+  document.body.appendChild(container);
+};
+
+UIFAQPortlet.prototype.closePrintAll = function() { 
+  var children = document.body.childNodes;
+  var i = children.length;
+  while(i--){
+  	if (eXo.core.DOMUtil.hasClass(children[i], "UIFAQPortlet")) {
+		eXo.core.DOMUtil.removeElement(children[i]);
+		return
+	}
+  }
 };
 
 UIFAQPortlet.prototype.removeLink = function(rootNode){
@@ -289,7 +287,7 @@ DOMUtil.prototype.getElemementsByClass = function(root,clazz){
 ScrollManager.prototype.loadItems = function(elementClass, clean) {
 	if (clean) this.cleanElements();
 	this.elements.clear();
-	this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass));
+	this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass).reverse());
 };
 
 UIFAQPortlet.prototype.loadActionScroll = function(){

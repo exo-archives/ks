@@ -7,6 +7,10 @@
 	import org.exoplatform.faq.service.FileAttachment;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.webui.ForumTransformHTML;
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext();
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIFAQPortlet.printAll("'+ uicomponent.getId() +'");');
 %>
 
 <div class="UIPrintAllQuestions $uicomponent.id">
@@ -479,7 +483,16 @@
 	        	 String actionLabel = _ctx.appRes("UIFAQPortlet.action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
-	        		<div onclick="$link" class="ActionButton LightBlueStyle">
+	        		<div onclick="window.print();" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
+		          	  	</div>
+		            	</div>
+		          	</div>
+		        	</div>
+					<div onclick="$link" class="ActionButton LightBlueStyle">
 		      	  	<div class="ButtonLeft">
 		        	  	<div class="ButtonRight">
 		          	  	<div class="ButtonMiddle">
@@ -487,7 +500,7 @@
 		          	  	</div>
 		            	</div>
 		          	</div>
-		        	</div>
+		        	</div>					
           <%}%>
 	      	</td>
 				</tr>
