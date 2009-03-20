@@ -5,8 +5,10 @@
 				<table class="UIFormGrid">
 					<tbody>						
 				<% 
-					String url = uicomponent.url("Cancel","pathId");
-			 		uicomponent.setLink(url);
+					try{
+						String url = uicomponent.url("Cancel","pathId");
+				 		uicomponent.setLink(url);
+			 		} catch(Exception e){}
 					for(field in uiform.getChildren()) { 
 						if(field.isRendered()) {
 				%>
