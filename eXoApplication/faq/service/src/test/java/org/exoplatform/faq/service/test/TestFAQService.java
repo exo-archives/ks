@@ -16,8 +16,13 @@
  */
 package org.exoplatform.faq.service.test;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -196,6 +201,24 @@ public class TestFAQService extends FAQServiceTestCase{
 		watch.setUser(user);
 		watch.setEmails(mail);
 		return watch;
+	}
+	
+	private FileAttachment createUserAvatar(String fileName) throws Exception{
+		FileAttachment attachment = new FileAttachment();
+		try {
+			File file =  new File("../service/src/test/java/conf/portal/defaultAvatar.jpg");
+			Writer writer = new BufferedWriter(new FileWriter(file));
+			writer.write("noi dung cua file");
+			writer.close();
+		
+			attachment.setName(fileName);
+			InputStream is = new FileInputStream(file);
+			attachment.setInputStream(is);
+			attachment.setMimeType("");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return attachment;
 	}
 
 	public void testCategory() throws Exception {
@@ -598,5 +621,17 @@ public class TestFAQService extends FAQServiceTestCase{
     } catch(Exception e) {
     	e.printStackTrace();
     }*/
+	}
+	
+	public void testUserAvatar()throws Exception{
+		//	Add new avatar for user:
+		faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"), sProvider_);
+		
+		//	Get user avatar 
+		assertNotNull(faqService_.getUserAvatar(USER_ROOT, sProvider_));
+		
+		//	Set default avartar for user
+		faqService_.setDefaultAvatar(USER_ROOT, sProvider_);
+		assertNull(faqService_.getUserAvatar(USER_ROOT, sProvider_));
 	}
 }

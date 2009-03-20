@@ -2543,14 +2543,15 @@ public class JCRDataStorage {
 			}
 		} catch (Exception e) {		}
 		link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
-		for(int i = 0; i < posts.size(); i ++){
+		for(Post post : posts){
 			message = new Message();
 			message.setMimeType("text/html");
 			message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
 			message.setSubject(headerSubject + objectName);
-			message.setBody(mailContent.replace("$postContent_", posts.get(i).getMessage())
+			message.setBody(mailContent.replace("$postContent_", post.getMessage())
 							.replace("$topicName_", topicName).replace("$link_", link));
-			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, posts.get(i).getOwner()).getEmail()}), message);
+			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, post.getOwner()).getEmail()}), message);
+			System.out.println("------------>ok");
 		}
 		// ----------------------- finish ----------------------
 		
