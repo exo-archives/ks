@@ -19,7 +19,7 @@
 	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
 	jsmanager.addJavascript('eXo.faq.UIFAQPortlet.initContextMenu("'+compId+'") ;') ;
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
-	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadActionScroll');
+	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIFAQPortlet.loadActionScroll();');
 	
 	
 	String url = uicomponent.url("Setting", "OBJECTID");
@@ -512,7 +512,7 @@
 																							String link = uicomponent.getLinkDiscuss();
 																			%>
 																				<td style="width:25px">
-																					<div onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
 																					</div>
 																				</td>
@@ -521,9 +521,9 @@
 																						link = FAQUtils.convertLinkToForum(link);
 																			%>
 																				<td style="width:25px">
-																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<a href="javascript:void(0);" onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
-																					</div>
+																					</a>
 																				</td>
 																			<%		}
 																					}
@@ -745,11 +745,11 @@
 																										 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion"); 
 																										 String link = uicomponent.event("ResponseQuestion", question.getId());
 																								%>
-																										<div onclick="$link" class="ActionButton LightBlueStyle">
+																										<div class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
 																													<div class="ButtonMiddle">
-																														<a href="javascript:void(0);">$actionLabel</a>
+																														<a href="$link">$actionLabel</a>
 																													</div>
 																												</div>
 																											</div>
@@ -758,11 +758,11 @@
 																								<%
 																									if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 																								%>
-																										<div onclick="<%=uicomponent.event("CommentQuestion", question.getId())%>" class="ActionButton LightBlueStyle">
+																										<div  class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
 																													<div class="ButtonMiddle">
-																														<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+																														<a href="<%=uicomponent.event("CommentQuestion", question.getId())%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
 																													</div>
 																												</div>
 																											</div>

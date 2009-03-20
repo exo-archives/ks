@@ -1190,12 +1190,12 @@
 
 .UIFAQPortlet .FAQToolbar .FAQCustomView {
 	background: url('background/CustomViewIconLeft.GIF') no-repeat left;
-	height:20px;
+	height:auto;
+	padding: 10px 12px;
 }
 
 .UIFAQPortlet .FAQToolbar .FAQCustomViewRight {
 	background: url('background/CustomViewIconRight.GIF') no-repeat left;
-	height:20px;
 }
 
 .UIFAQPortlet .FAQToolbar .AddCategory {

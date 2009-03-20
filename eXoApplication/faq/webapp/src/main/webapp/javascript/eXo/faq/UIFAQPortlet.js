@@ -61,8 +61,8 @@ UIFAQPortlet.prototype.changeCustomView = function(change, hileTitle, showTitle)
 	}
 	eXo.core.Browser.setCookie("FAQCustomView",columnCategories.style.display,1);
 	var uiNav = eXo.faq.UIFAQPortlet ;
-	uiNav.initActionScroll();
-	uiNav.initBreadCumbScroll();
+	if(typeof(uiNav.initActionScroll) == "function") uiNav.initActionScroll();
+	if(typeof(uiNav.initBreadCumbScroll) == "function") uiNav.initBreadCumbScroll();
 };
 
 UIFAQPortlet.prototype.changeStarForVoteQuestion = function(i, id){
