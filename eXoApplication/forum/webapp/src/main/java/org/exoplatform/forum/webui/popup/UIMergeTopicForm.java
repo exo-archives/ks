@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.jcr.PathNotFoundException;
 
@@ -30,8 +31,11 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -61,6 +65,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 	private List<Topic> listTopic ;
+	private String link;
 	public UIMergeTopicForm() throws Exception {
 	}
 	
@@ -81,6 +86,9 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 		addUIFormInput(titleThread) ;
 	}
 
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
+	
 	public void updateTopics(List<Topic> topics) {
 		this.listTopic = topics ;
 	}
@@ -115,9 +123,22 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 						for(Topic topic : uiForm.listTopic) {
 							if(topicMergeId.equals(topic.getId())) {continue ;}
 							try {
+							// set link
+								PortalRequestContext portalContext = Util.getPortalRequestContext();
+								String url = portalContext.getRequest().getRequestURL().toString();
+								url = url.replaceFirst("http://", "") ;
+								url = url.substring(0, url.indexOf("/")) ;
+								url = "http://" + url;
+								String link = uiForm.getLink();
+								link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
+								link = url + link;
+								link = link.replaceFirst("private", "public");
+								//
+								WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+								ResourceBundle res = context.getApplicationResourceBundle() ;
 								JCRPageList pageList = forumService.getPosts(sProvider, categoryId, forumId, topic.getId(), "", "", "", "") ;
 								List<Post> posts = pageList.getPage(0) ;
-								forumService.movePost(sProvider, posts, destTopicPath, false) ;
+								forumService.movePost(sProvider, posts, destTopicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
 								forumService.removeTopic(sProvider, categoryId, forumId, topic.getId()) ;
 		          } catch (Exception e) {
 			          isMerge = false;

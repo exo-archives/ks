@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
@@ -35,8 +36,11 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -66,12 +70,16 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	private List<Post> posts ;
 	private UserProfile userProfile ;
 	private List<Category> categories;
+	private String link;
 	public UIMovePostForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 	
 	public void updatePost(String topicId, List<Post> posts) throws Exception {
 		this.topicId = topicId ;
@@ -153,7 +161,20 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 			if(!ForumUtils.isEmpty(topicPath)) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uiForm.forumService.movePost(sProvider, uiForm.posts, topicPath, false) ;
+				// set link
+					PortalRequestContext portalContext = Util.getPortalRequestContext();
+					String url = portalContext.getRequest().getRequestURL().toString();
+					url = url.replaceFirst("http://", "") ;
+					url = url.substring(0, url.indexOf("/")) ;
+					url = "http://" + url;
+					String link = uiForm.getLink();
+					link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
+					link = url + link;
+					link = link.replaceFirst("private", "public");
+					//
+					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+					ResourceBundle res = context.getApplicationResourceBundle() ;
+					uiForm.forumService.movePost(sProvider, uiForm.posts, topicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;

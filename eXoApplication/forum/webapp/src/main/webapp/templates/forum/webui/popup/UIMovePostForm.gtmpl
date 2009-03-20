@@ -13,6 +13,8 @@
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
 		<% 
+			String url = uicomponent.url("Cancel","pathId");
+		 	uicomponent.setLink(url);
 			UserProfile userProfile = uicomponent.getUserProfile();
 			List categories = uicomponent.getCategories(); 
 			for(category in categories) {

@@ -158,7 +158,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 				try {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
-				// set link
+					// set link
 					PortalRequestContext portalContext = Util.getPortalRequestContext();
 					String url = portalContext.getRequest().getRequestURL().toString();
 					url = url.replaceFirst("http://", "") ;

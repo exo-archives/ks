@@ -2459,7 +2459,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic) throws Exception {
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		// Node Topic move Post
 		String srcTopicPath = posts.get(0).getPath();
@@ -2526,6 +2526,38 @@ public class JCRDataStorage {
 		} else {
 			forumHomeNode.save();
 		}
+		
+		/*
+		 * modified by Mai Van Ha
+		 */
+		String topicName = destTopicNode.getProperty("exo:name").getString();
+		UserProfile forumOwner = getUserProfileManagement(sProvider, destForumNode.getProperty("exo:owner").getString());
+		Message message = new Message();
+		String headerSubject = "";
+		String objectName = "[" + destForumNode.getParent().getProperty("exo:name").getString() + 
+												"][" + destForumNode.getProperty("exo:name").getString() + "] " + topicName;
+		try {
+			Node node = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
+			if (node.hasProperty("exo:enableHeaderSubject")) {
+				if(node.getProperty("exo:enableHeaderSubject").getBoolean()){
+					if (node.hasProperty("exo:headerSubject")) {
+						headerSubject = node.getProperty("exo:headerSubject").getString() + " ";
+					}
+				}
+			}
+		} catch (Exception e) {		}
+		link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
+		for(int i = 0; i < posts.size(); i ++){
+			message = new Message();
+			message.setMimeType("text/html");
+			message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
+			message.setSubject(headerSubject + objectName);
+			message.setBody(mailContent.replace("$postContent_", posts.get(i).getMessage())
+							.replace("$topicName_", topicName).replace("$link_", link));
+			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, posts.get(i).getOwner()).getEmail()}), message);
+		}
+		// ----------------------- finish ----------------------
+		
 	}
 
 	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {

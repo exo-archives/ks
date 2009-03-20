@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -32,8 +33,11 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -63,6 +67,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private List<Post> posts = new ArrayList<Post>() ;
 	private Topic topic = new Topic() ;
+	private String link;
 	private UserProfile userProfile = null;
 	private List<String> listPostId = new ArrayList<String>();
 	private boolean isRender = true;
@@ -73,7 +78,8 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
-	
+	public String getLink() {return link;}
+	public void setLink(String link) {this.link = link;}
 	private Post getPostById(String postId) throws Exception {
 		for (Post post : this.posts) {
 			if(post.getId().equals(postId)) return post ;
@@ -151,9 +157,23 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 					try {
+					// set link
+						PortalRequestContext portalContext = Util.getPortalRequestContext();
+						String url = portalContext.getRequest().getRequestURL().toString();
+						url = url.replaceFirst("http://", "") ;
+						url = url.substring(0, url.indexOf("/")) ;
+						url = "http://" + url;
+						String link = uiForm.getLink();
+						link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
+						link = url + link;
+						link = link.replaceFirst("private", "public");
+						//
+						WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+						ResourceBundle res = context.getApplicationResourceBundle() ;
+						
 						forumService.saveTopic(sProvider, categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-						forumService.movePost(sProvider, posts, destTopicPath, true);
+						forumService.movePost(sProvider, posts, destTopicPath, true, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link);
 					} catch (Exception e) {
 						sProvider.close();
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

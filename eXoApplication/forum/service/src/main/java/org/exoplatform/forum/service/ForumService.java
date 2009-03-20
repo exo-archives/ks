@@ -419,7 +419,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic)
+	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
 	    throws Exception;
 
 	/**

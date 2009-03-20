@@ -286,8 +286,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.modifyPost(sProvider, posts, type);
   }
 
-  public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic) throws Exception {
-    storage_.movePost(sProvider, posts, destTopicPath, isCreatNewTopic);
+  public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
+    storage_.movePost(sProvider, posts, destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
   public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
