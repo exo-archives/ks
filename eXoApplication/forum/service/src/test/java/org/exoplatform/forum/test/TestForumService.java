@@ -343,7 +343,7 @@ public class TestForumService extends BaseForumTestCase{
   	assertEquals(forum.getForumName(), ((Forum)forumService_.getObjectNameById(sProvider, forum.getId(), Utils.FORUM)).getForumName());
   }
   
-  public void testTab() throws Exception{
+  public void testTag() throws Exception{
   	Category cat = createCategory();
 		forumService_.saveCategory(sProvider, cat, true);
 		Forum forum = createdForum();
@@ -351,10 +351,12 @@ public class TestForumService extends BaseForumTestCase{
 		Topic topic = createdTopic();
 		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
 		Tag tag = createTag("new Tag 1");
+		Tag tag2 = createTag("new Tag 2");
+		Tag tag3 = createTag("new Tag 3");
 		//	Test save tag:
 		forumService_.saveTag(sProvider, tag, true);
-		forumService_.saveTag(sProvider, createTag("new Tag 2"), true);
-		forumService_.saveTag(sProvider, createTag("new Tag 3"), true);
+		forumService_.saveTag(sProvider, tag2, true);
+		forumService_.saveTag(sProvider, tag3, true);
 		
 		//	Test get tag
 		assertNotNull(forumService_.getTag(sProvider, tag.getId()));
@@ -366,7 +368,25 @@ public class TestForumService extends BaseForumTestCase{
 		assertEquals(3, forumService_.getTagsByUser(sProvider, "root").size());
 		
 		//	add topic in tag:
+		forumService_.addTopicInTag(sProvider, tag.getId(), 
+					forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "root").getPath());
 		
+		//	Get all topics in tag
+		assertEquals(1, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
+		
+		//	Get tag by topic
+		assertEquals(3, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
+		
+		//	Remove topic in tag:
+		forumService_.removeTopicInTag(sProvider, tag.getId(), 
+					forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "root").getPath());
+		
+		//	Get all topics in tag
+		assertEquals(0, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
+		
+		//	Remove tag:
+		forumService_.removeTag(sProvider, tag.getId());
+		assertEquals(2, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
   }
   
   private UserProfile createdUserProfile(String userName) {
