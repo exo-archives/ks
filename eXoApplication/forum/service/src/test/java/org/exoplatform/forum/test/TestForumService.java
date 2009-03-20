@@ -11,7 +11,9 @@ import java.util.List;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
@@ -56,20 +58,26 @@ public class TestForumService extends BaseForumTestCase{
 	public void testUserProfile() throws Exception {
   	String userName = "tu.duy";
 	  UserProfile userProfile = createdUserProfile(userName);
+	  
 	  //save UserProfile
 	  forumService_.saveUserProfile(sProvider, userProfile, true, true);
+	  
 	  // getUserInfo
 	  userProfile = forumService_.getUserInfo(sProvider, userName);
 	  assertNotNull(userProfile);
+	  
 	  // get Default
 	  userProfile = forumService_.getDefaultUserProfile(sProvider, userName, "");
 	  assertNotNull(userProfile);
+	  
 	  // getUserInformations
 	  userProfile = forumService_.getUserInformations(sProvider, userProfile);
 	  assertNotNull(userProfile);
+	  
 	  // getUserSettingProfile
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
 	  assertNotNull(userProfile);
+	  
 	  // saveUserSettingProfile
 	  assertEquals(userProfile.getIsAutoWatchMyTopics(), false);
 	  userProfile.setIsAutoWatchMyTopics(true);
@@ -83,6 +91,7 @@ public class TestForumService extends BaseForumTestCase{
   public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
+  	
     // add category
     forumService_.saveCategory(sProvider, cat, true) ;
     Category category = forumService_.getCategory(sProvider, catId); 
@@ -96,6 +105,7 @@ public class TestForumService extends BaseForumTestCase{
     forumService_.saveCategory(sProvider, cat, false) ;
     Category updatedCat = forumService_.getCategory(sProvider, catId) ;
     assertEquals("ReName Category", updatedCat.getCategoryName()) ;
+    
     // test removeCategory
     cat = forumService_.removeCategory(sProvider,catId);
     assertNotNull(cat);
@@ -108,14 +118,18 @@ public class TestForumService extends BaseForumTestCase{
   	// create new category
   	forumService_.saveCategory(sProvider, cat, true);
   	String catId = cat.getId();
+  	
   	//create new forum
   	Forum forum = createdForum();
   	String forumId = forum.getId();
+  	
   	// add forum
   	forumService_.saveForum(sProvider, catId, forum, true);
+  	
   	// getForum
   	forum  = forumService_.getForum(sProvider, catId, forumId);
   	assertNotNull(forum);
+  	
 		// getList Forum
   	//Created 5 new forum, we have total 6 forum.
   	List<Forum> forums = new ArrayList<Forum>();
@@ -123,6 +137,7 @@ public class TestForumService extends BaseForumTestCase{
   		forumService_.saveForum(sProvider, cat.getId(), createdForum(), true);
   	}
   	forums.addAll(forumService_.getForums(sProvider, catId, ""));
+  	
   	// check size of list forum
   	assertEquals(forums.size(), 6);
 
@@ -130,11 +145,13 @@ public class TestForumService extends BaseForumTestCase{
   	forum.setForumName("Forum update");
   	forumService_.saveForum(sProvider, catId, forum, false);
   	assertEquals(forum.getForumName(), forumService_.getForum(sProvider, catId, forumId).getForumName());
+  	
   	//modifyForum
   	forum.setIsLock(true);
   	forumService_.modifyForum(sProvider, forum, 2);
   	forum = forumService_.getForum(sProvider, catId, forumId);
   	assertEquals(forum.getIsLock(), true);
+  	
   	// saveModerateOfForum
   	List<String> list = new ArrayList<String>();
   	list.add(catId+"/"+forum.getId());
@@ -149,8 +166,10 @@ public class TestForumService extends BaseForumTestCase{
   	Category cate = createCategory();
   	forumService_.saveCategory(sProvider, cate, true);
   	Category cateNew = forumService_.getCategory(sProvider, cate.getId());
+  	
   	// move forum
   	forumService_.moveForum(sProvider, forums, cateNew.getPath());
+  	
   	// get forum in new category
   	forum = forumService_.getForum(sProvider, cate.getId(), forumId);
   	assertNotNull(forum);
@@ -170,6 +189,7 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveCategory(sProvider,cat, true);
 		Forum forum = createdForum();
 		forumService_.saveForum(sProvider, cat.getId(), forum, true);
+		
 		// add 20 Topics
     List<Topic> list = new ArrayList<Topic>() ;
     for (int i = 0; i < 20; i++) {
@@ -177,17 +197,21 @@ public class TestForumService extends BaseForumTestCase{
       forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), list.get(i), true, false, "");
     }
     Topic topic = list.get(18);
+    
 		// get Topic - topic in position 18
     Topic topica = forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "");
 		assertNotNull(topica);
+		
 		// get Topic by path
 		topica = forumService_.getTopicByPath(sProvider, cat.getId()+"/"+forum.getId()+"/"+topic.getId(), false);
 		assertNotNull(topica);
+		
 		// update Topic
     topica.setIsSticky(true) ;
     topica.setTopicName("topic thu 18") ;
     forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topica, false, false, "") ;
     assertEquals("topic thu 18", forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "").getTopicName());
+    
     // modifyTopic
     topica.setIsLock(true);
     list.clear();
@@ -195,6 +219,7 @@ public class TestForumService extends BaseForumTestCase{
     forumService_.modifyTopic(sProvider, list, 2);
     topica = forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "");
     assertEquals(topica.getIsLock(), true);
+    
 		//get PageList Topic
 		JCRPageList pagelist = forumService_.getPageTopic(sProvider, cat.getId(), forum.getId(), "", "");
 		assertEquals(pagelist.getAvailable(), 20);
@@ -202,6 +227,7 @@ public class TestForumService extends BaseForumTestCase{
     List <Topic> listTopic = pagelist.getPage(1) ;
     assertEquals(listTopic.size(), 5);
     assertEquals(pagelist.getAvailablePage(), 4);
+    
     // get Topic By User
     topic = createdTopic();
     topic.setOwner("demo");
@@ -223,21 +249,26 @@ public class TestForumService extends BaseForumTestCase{
 		topics.add(topica);
 		forumService_.moveTopic(sProvider, topics, forum1.getPath(), "", "");
     assertNotNull(forumService_.getTopic(sProvider, cat.getId(), forum1.getId(), topica.getId(), ""));
+    
 		//test remove Topic return Topic
 		assertNotNull(forumService_.removeTopic(sProvider, cat.getId(), forum1.getId(), topica.getId()));
   }
   
-  public void testPost() throws Exception {
+  private void setData() throws Exception {
   	Category cat = createCategory();
+  	this.categoryId = cat.getId();
 		forumService_.saveCategory(sProvider, cat, true);
 		Forum forum = createdForum();
-		forumService_.saveForum(sProvider, cat.getId(), forum, true);
+		this.forumId = forum.getId();
+		forumService_.saveForum(sProvider, categoryId, forum, true);
 		Topic topic = createdTopic();
-		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
-		//set id
-		categoryId = cat.getId();
-		forumId = forum.getId();
-		topicId = topic.getId();
+		forumService_.saveTopic(sProvider, categoryId, forumId, topic, true, false, "");
+		this.topicId = topic.getId();
+  }
+  
+  public void testPost() throws Exception {
+		//set Data
+		setData();
 		
 		List<Post> posts = new ArrayList<Post>();
 		for (int i = 0; i < 25; ++i) {
@@ -247,6 +278,7 @@ public class TestForumService extends BaseForumTestCase{
 		}
 		// getPost
 		assertNotNull(forumService_.getPost(sProvider, categoryId, forumId, topicId, posts.get(0).getId()));
+		
 		//get ListPost
 		JCRPageList pagePosts = forumService_.getPosts(sProvider, categoryId, forumId, topicId, "", "", "", "root");
 		assertEquals(pagePosts.getAvailable(), posts.size() + 1);// size = 26 (first post and new postList)
@@ -254,31 +286,40 @@ public class TestForumService extends BaseForumTestCase{
     assertEquals(page1.size(), 10);  
     List page3 = pagePosts.getPage(3) ;
     assertEquals(page3.size(), 6);
+    
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
 		forumService_.savePost(sProvider, categoryId, forumId, topicId, newPost, false, "");
 		assertEquals("New message", forumService_.getPost(sProvider, categoryId, forumId, topicId, newPost.getId()).getMessage());
+		
 		//test movePost
 		Topic topicnew = createdTopic();
-		forumService_.saveTopic(sProvider, cat.getId(), forumId, topicnew, true, false, "");
+		forumService_.saveTopic(sProvider, categoryId, forumId, topicnew, true, false, "");
 		topicnew = forumService_.getTopic(sProvider, categoryId, forumId, topicnew.getId(), "root");
 		List<Post> listPost = new ArrayList<Post>();
 		listPost.add(newPost);
 		forumService_.movePost(sProvider, listPost, topicnew.getPath(), false, "test mail content", "");
 		assertNotNull(forumService_.getPost(sProvider, categoryId, forumId, topicnew.getId(), newPost.getId()));
+		
 		//test remove Post return post
 		assertNotNull(forumService_.removePost(sProvider, categoryId, forumId, topicnew.getId(), newPost.getId()));
 		assertNull(forumService_.getPost(sProvider, categoryId, forumId, topicnew.getId(), newPost.getId()));
+		
 		//getViewPost
+		System.out.println(this.categoryId+"/"+forumId+"/"+topicId);
   }
   //BookMark
   public void testBookMark()throws Exception {
+  	//  set Data
+		setData();
+		
 	  // add bookmark
   	String bookMark = Utils.CATEGORY + "//" + categoryId;
   	forumService_.saveUserBookmark(sProvider, "root", bookMark, true);
   	bookMark = Utils.FORUM + "//" + categoryId+"/"+forumId;
   	forumService_.saveUserBookmark(sProvider, "root", bookMark, true);
+  	
   	// get bookmark
   	List<String> bookMarks = new ArrayList<String>();
   	bookMarks.addAll(forumService_.getBookmarks(sProvider, "root"));
@@ -292,74 +333,85 @@ public class TestForumService extends BaseForumTestCase{
   	privateMessage.setName("privateMessage Name");
   	privateMessage.setMessage("Content privateMessage");
   	privateMessage.setSendTo("root");
+  	
   	//savePtivateMs
   	forumService_.savePrivateMessage(sProvider, privateMessage);
+  	
   	// get Private Message is SEND_MESSAGE
   	JCRPageList pageList = forumService_.getPrivateMessage(sProvider, "demo", Utils.SEND_MESSAGE);
   	assertNotNull(pageList);
   	assertEquals(pageList.getAvailable(), 1);
+  	privateMessage = (ForumPrivateMessage) pageList.getPage(1).get(0);
+  	String privateMessageId_SEND = privateMessage.getId();
+  	
   	// get Private Message is RECEIVE_MESSAGE
   	pageList = forumService_.getPrivateMessage(sProvider, "root", Utils.RECEIVE_MESSAGE);
   	assertNotNull(pageList);
   	assertEquals(pageList.getAvailable(), 1);
+  	privateMessage = (ForumPrivateMessage) pageList.getPage(1).get(0);
+  	String privateMessageId_RECEIVE = privateMessage.getId();
   	//
   	long t = forumService_.getNewPrivateMessage(sProvider, "root");
   	assertEquals(t, 1);
+  	
   	// Remove PrivateMessage
-  	forumService_.removePrivateMessage(sProvider, privateMessage.getId(), "demo", Utils.SEND_MESSAGE);
+  	forumService_.removePrivateMessage(sProvider, privateMessageId_SEND, "demo", Utils.SEND_MESSAGE);
   	pageList = forumService_.getPrivateMessage(sProvider, "demo", Utils.SEND_MESSAGE);
+  	assertEquals(pageList.getAvailable(), 0);
+  	forumService_.removePrivateMessage(sProvider, privateMessageId_RECEIVE, "root", Utils.RECEIVE_MESSAGE);
+  	pageList = forumService_.getPrivateMessage(sProvider, "root", Utils.RECEIVE_MESSAGE);
   	assertEquals(pageList.getAvailable(), 0);
   	//
   }
   
   public void testPoll() throws Exception{
-  	Category cat = createCategory();
-		forumService_.saveCategory(sProvider, cat, true);
-		Forum forum = createdForum();
-		forumService_.saveForum(sProvider, cat.getId(), forum, true);
-		Topic topic = createdTopic();
-		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
+		//set Data
+		setData();
   	Poll poll = createPoll("question to this poll1", new String[]{"option 1", "option 2", "option 3"});
-  	
   	//	Save new poll
-  	forumService_.savePoll(sProvider, cat.getId(), forum.getId(), topic.getId(), poll, true, false);
+  	forumService_.savePoll(sProvider, categoryId, forumId, topicId, poll, true, false);
   	
   	//	Get poll
-  	assertNotNull(forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()));
+  	assertNotNull(forumService_.getPoll(sProvider, categoryId, forumId, topicId));
   	
   	//	Set close for poll
   	poll.setIsClosed(true);
-  	forumService_.setClosedPoll(sProvider, cat.getId(), forum.getId(), topic.getId(), poll);
-  	assertEquals(true, forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()).getIsClosed());
+  	forumService_.setClosedPoll(sProvider, categoryId, forumId, topicId, poll);
+  	assertEquals(true, forumService_.getPoll(sProvider, categoryId, forumId, topicId).getIsClosed());
   	
   	//	Delete poll
-  	forumService_.removePoll(sProvider, cat.getId(), forum.getId(), topic.getId());
-  	assertEquals(null, forumService_.getPoll(sProvider, cat.getId(), forum.getId(), topic.getId()));
+  	forumService_.removePoll(sProvider, categoryId, forumId, topicId);
+  	assertNull(forumService_.getPoll(sProvider, categoryId, forumId, topicId));
+  }
+  
+  public void testGetObject() throws Exception {
+  	//  set Data
+		setData();
+		
+  	//	Test get object by path
+		String topicPath = forumService_.getForumHomePath(sProvider);
+		topicPath = topicPath+"/"+categoryId+"/"+forumId+"/"+topicId;
+  	assertNotNull(forumService_.getObjectNameByPath(sProvider, topicPath));
   	
-  	//	Test get path of node
-  	assertNotNull(forumService_.getObjectNameByPath(sProvider,forumService_.getForum(sProvider, cat.getId(), forum.getId()).getPath()));
-  	
-  	//	Test get object name by path
-  	assertEquals(forum.getForumName(), ((Forum)forumService_.getObjectNameById(sProvider, forum.getId(), Utils.FORUM)).getForumName());
+  	//	Test get object by id
+  	assertNotNull(forumService_.getObjectNameById(sProvider, forumId, Utils.FORUM));
   }
   
   public void testTag() throws Exception{
-  	Category cat = createCategory();
-		forumService_.saveCategory(sProvider, cat, true);
-		Forum forum = createdForum();
-		forumService_.saveForum(sProvider, cat.getId(), forum, true);
-		Topic topic = createdTopic();
-		forumService_.saveTopic(sProvider, cat.getId(), forum.getId(), topic, true, false, "");
+  	//  set Data
+		setData();
 		Tag tag = createTag("new Tag 1");
-		Tag tag2 = createTag("new Tag 2");
-		Tag tag3 = createTag("new Tag 3");
+		Tag tag2 = createTag("new Tag 1");
+		Tag tag3 = createTag("new Tag 1");
+
 		//	Test save tag:
 		forumService_.saveTag(sProvider, tag, true);
 		forumService_.saveTag(sProvider, tag2, true);
 		forumService_.saveTag(sProvider, tag3, true);
 		
 		//	Test get tag
-		assertNotNull(forumService_.getTag(sProvider, tag.getId()));
+		tag = forumService_.getTag(sProvider, tag.getId());
+		assertNotNull(tag);
 		
 		//	Get all tag
 		assertEquals(3, forumService_.getTags(sProvider).size());
@@ -368,9 +420,20 @@ public class TestForumService extends BaseForumTestCase{
 		assertEquals(3, forumService_.getTagsByUser(sProvider, "root").size());
 		
 		//	add topic in tag:
-		forumService_.addTopicInTag(sProvider, tag.getId(), 
-					forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "root").getPath());
+		String topicPath = forumService_.getForumHomePath(sProvider);
+		topicPath = topicPath+"/"+categoryId+"/"+forumId+"/"+topicId;
+		forumService_.addTopicInTag(sProvider, tag.getId(), topicPath);
+		forumService_.addTopicInTag(sProvider, tag2.getId(), topicPath);
+		forumService_.addTopicInTag(sProvider, tag3.getId(), topicPath);
+		// getTagsByTopic
+		Topic topic = (Topic)forumService_.getObjectNameById(sProvider, topicId, Utils.TOPIC);
+		String tagIds[] = topic.getTagId();
+		List<Tag> tags = forumService_.getTagsByTopic(sProvider, tagIds);
+		assertEquals(tags.size(), 3);
 		
+		//getTopicsByTag
+		JCRPageList pagelist = forumService_.getTopicsByTag(sProvider, tag.getId(), "");
+		assertEquals(pagelist.getAvailable(), 1);
 		//	Get all topics in tag
 		assertEquals(1, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
 		
@@ -378,15 +441,45 @@ public class TestForumService extends BaseForumTestCase{
 		assertEquals(3, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
 		
 		//	Remove topic in tag:
-		forumService_.removeTopicInTag(sProvider, tag.getId(), 
-					forumService_.getTopic(sProvider, cat.getId(), forum.getId(), topic.getId(), "root").getPath());
+		forumService_.removeTopicInTag(sProvider, tag.getId(), topicPath);
 		
 		//	Get all topics in tag
 		assertEquals(0, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
-		
+
 		//	Remove tag:
 		forumService_.removeTag(sProvider, tag.getId());
 		assertEquals(2, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
+  }
+  
+  public void testSearch() throws Exception {
+  	//set Data
+  	setData();
+	  //getQuickSearch
+  	List<String> users = new ArrayList<String>();
+  	users.add("root");
+  	String pathQuery = ""; // from ForumService/
+  	String textQuery = "description";
+  	String type = "true,all";
+  	List<ForumSearch> forumSearchs = forumService_.getQuickSearch(sProvider, textQuery, type, pathQuery, users);
+  	assertEquals(forumSearchs.isEmpty(), false);
+  	//getAdvancedSearch
+  	ForumEventQuery eventQuery =  new ForumEventQuery();
+  	eventQuery.setListOfUser(users);
+		eventQuery.setUserPermission(0);
+		eventQuery.setType(Utils.TOPIC) ;
+		eventQuery.setKeyValue(textQuery) ;
+		eventQuery.setValueIn("entire") ;
+		eventQuery.setPath("") ;
+		eventQuery.setByUser("");
+		eventQuery.setIsLock("") ;
+		eventQuery.setIsClose("") ;
+		eventQuery.setTopicCountMin("0") ;
+		eventQuery.setPostCountMin("0") ;
+		eventQuery.setViewCountMin("0") ;
+		eventQuery.setModerator("") ;
+		forumSearchs = forumService_.getAdvancedSearch(sProvider, eventQuery);
+		assertEquals(forumSearchs.isEmpty(), false);
+		System.out.println(forumSearchs.size());
   }
   
   private UserProfile createdUserProfile(String userName) {
@@ -408,8 +501,8 @@ public class TestForumService extends BaseForumTestCase{
 		post.setModifiedBy("root");
 		post.setModifiedDate(new Date());
 		post.setName("SubJect");
-		post.setMessage("Noi dung topic test chang co j ");
-		post.setRemoteAddr("khongbiet");
+		post.setMessage("content description");
+		post.setRemoteAddr("192.168.1.1");
 		post.setIcon("classNameIcon");
 		post.setIsApproved(false);
 		
@@ -426,7 +519,7 @@ public class TestForumService extends BaseForumTestCase{
 		topicNew.setModifiedDate(new Date());
 		topicNew.setLastPostBy("root");
 		topicNew.setLastPostDate(new Date());
-		topicNew.setDescription("TopicDescription");
+		topicNew.setDescription("Topic description");
 		topicNew.setPostCount(0);
 		topicNew.setViewCount(0);
 		topicNew.setIsNotifyWhenAddPost("");

@@ -442,8 +442,6 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
-		System.out.println("\n\n queryString:  " + queryString.toString());
-		System.out.println("\nddd---> " + iter.getSize());
 		List<Category> categories = new ArrayList<Category>();
 		while (iter.hasNext()) {
 			Node cateNode = iter.nextNode();
@@ -1303,11 +1301,9 @@ public class JCRDataStorage {
 			}
 			stringBuffer.append(",exo:createdDate");
 			String pathQuery = stringBuffer.toString();
-			System.out.println("\n\n===========pathQuery:" + pathQuery);
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			System.out.println("\n\n===========pathQuery:" + iter.getSize());
 			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
 			return pagelist;
 		} catch (Exception e) {
@@ -3648,8 +3644,7 @@ public class JCRDataStorage {
 		if (pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath();
 		}
-		String[] values = type_.split(",");// user(admin or not admin), type(forum,
-		// topic, post)
+		String[] values = type_.split(",");// user(admin or not admin), type(forum, topic, post)
 		boolean isAdmin = false;
 		if (values[0].equals("true"))
 			isAdmin = true;
