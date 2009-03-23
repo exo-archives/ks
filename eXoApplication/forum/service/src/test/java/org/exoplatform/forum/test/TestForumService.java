@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import javax.jcr.ImportUUIDBehavior;
-
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -32,7 +34,10 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 
 
 /**
@@ -42,6 +47,10 @@ import org.exoplatform.services.jcr.ext.app.SessionProviderService;
  * July 3, 2007  
  */
 public class TestForumService extends BaseForumTestCase{
+	private final String USER_ROOT = "root";
+	private final String USER_DEMO = "demo";
+	private final String USER_JOHN = "john";
+	
 	public TestForumService() throws Exception {
 	  super();
   }
@@ -559,6 +568,27 @@ public class TestForumService extends BaseForumTestCase{
   	administration = forumService_.getForumAdministration(sProvider);
   	assertNotNull(administration);
   	assertEquals(administration.getForumSortBy(), "forumName");
+  }
+  
+  public void testUserLogin() throws Exception{
+  	//	Create user profile
+  	//User user = new User();
+  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+  	OrganizationService organizationService = (OrganizationService) container.getComponentInstance(OrganizationService.class);
+  	User user = organizationService.getUserHandler().findUserByName(USER_ROOT) ;
+  	forumService_.createUserProfile(sProvider, user);
+  	user = organizationService.getUserHandler().findUserByName(USER_JOHN) ;
+  	forumService_.createUserProfile(sProvider, user);
+  	user = organizationService.getUserHandler().findUserByName(USER_DEMO) ;
+  	forumService_.createUserProfile(sProvider, user);
+  	
+  	//	Add user login 
+  	forumService_.userLogin(USER_ROOT, USER_ROOT);
+  	forumService_.userLogin(USER_JOHN, USER_JOHN);
+  	forumService_.userLogin(USER_DEMO, USER_DEMO);
+  	
+  	//	Get all user online:
+  	assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());
   }
   
   private UserProfile createdUserProfile(String userName) {
