@@ -27,6 +27,7 @@ import org.exoplatform.sample.service.Information;
 import org.exoplatform.sample.service.SampleService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.organization.OrganizationService;
 import org.picocontainer.Startable;
 
 /**
@@ -40,8 +41,9 @@ public class SampleServiceImpl implements SampleService, Startable{
   private NodeHierarchyCreator nodeHierarchy_ ;
   private List<TestPlugin> plugins_ = new ArrayList<TestPlugin>();
   
-	public SampleServiceImpl(NodeHierarchyCreator nodeHierarchy) throws Exception {
+	public SampleServiceImpl(NodeHierarchyCreator nodeHierarchy, OrganizationService orService) throws Exception {
 		nodeHierarchy_ = nodeHierarchy ;
+		
 	}
 	
 	public void start() {
@@ -90,6 +92,8 @@ public class SampleServiceImpl implements SampleService, Startable{
 			emp.setProperty("exo:YOB", e.getYOB()) ;
 			emp.setProperty("exo:location", e.getLocation()) ;
 			sampleHome.getSession().save() ;
+			//Node newNode = emp.addNode("test", "nt:unstructured") ;
+			//emp.save() ;
 			return true ;
 		}catch(Exception ex) {
 			//ex.printStackTrace() ;
@@ -152,4 +156,15 @@ public class SampleServiceImpl implements SampleService, Startable{
 		}
 		return null;
 	}	
+	
+	public void addChild(SessionProvider sProvider) throws Exception {
+		try{
+			Node sampleHome = getSampleServiceHome(sProvider)  ;
+			Node empNode = sampleHome.getNode("x01") ;
+			empNode.addNode("child01","nt:unstructured") ;
+			empNode.addNode("child01","exo:test") ;			
+		}catch(Exception ex) {
+			ex.printStackTrace() ;
+		}		
+	}
 }

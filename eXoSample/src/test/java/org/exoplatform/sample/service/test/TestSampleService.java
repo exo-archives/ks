@@ -61,6 +61,7 @@ public class TestSampleService extends BaseSampleServiceTestCase{
 	public void testAddItem() throws Exception {
     Information info = new Information("x01", "Thuy Lam", "1m70", "50kg", "1987", "TP HCM") ;
   	assertTrue(sampleService_.addItem(info, sProvider_)) ;
+  	sampleService_.addChild(sProvider_) ;
   	assertFalse(sampleService_.addItem(null, sProvider_)) ;
   }
   

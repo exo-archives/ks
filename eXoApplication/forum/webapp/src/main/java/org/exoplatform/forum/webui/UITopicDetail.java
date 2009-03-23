@@ -1300,9 +1300,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			// set link
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
-				url = url.replaceFirst("http://", "") ;
-				url = url.substring(0, url.indexOf("/")) ;
-				url = "http://" + url;
+				/*url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;*/
+				url = "http://" + portalContext.getRequest().getServerName() + ":"+ portalContext.getRequest().getServerPort();
 				String link = topicDetail.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
 				link = link.replaceFirst("pathId", topicDetail.topicId) ;

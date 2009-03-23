@@ -35,5 +35,6 @@ public interface SampleService {
 	public String getWeight(String id, SessionProvider sProvider) throws Exception ;
 	public String getYOB(String id, SessionProvider sProvider) throws Exception ;
 	public String getLocation(String id, SessionProvider sProvider) throws Exception ;
+	public void addChild(SessionProvider sProvider) throws Exception ;
 
 }
