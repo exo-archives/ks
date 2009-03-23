@@ -7,19 +7,15 @@ package org.exoplatform.forum.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import javax.jcr.ImportUUIDBehavior;
+
+import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -36,10 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
 
 
 /**
@@ -84,15 +77,15 @@ public class TestForumService extends BaseForumTestCase{
 	  
 	  // getUserInfo
 	  userProfile = forumService_.getUserInfo(sProvider, userName);
-	  assertNotNull("Get info UserProfile is not null",userProfile);
+	  assertNotNull("Get info UserProfile is null",userProfile);
 	  
 	  // get Default
 	  userProfile = forumService_.getDefaultUserProfile(sProvider, userName, "");
-	  assertNotNull("Get default UserProfile is not null",userProfile);
+	  assertNotNull("Get default UserProfile is null",userProfile);
 	  
 	  // getUserInformations
 	  userProfile = forumService_.getUserInformations(sProvider, userProfile);
-	  assertNotNull("Get informations UserProfile is not null",userProfile);
+	  assertNotNull("Get informations UserProfile is null",userProfile);
 	  
 	  // getUserSettingProfile
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
@@ -103,11 +96,37 @@ public class TestForumService extends BaseForumTestCase{
 	  userProfile.setIsAutoWatchMyTopics(true);
 	  forumService_.saveUserSettingProfile(sProvider, userProfile);
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
-	  assertEquals("Edit AutoWatchMyTopics and save this property. AutoWatchMyTopics is true", userProfile.getIsAutoWatchMyTopics(), true);
+	  assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
 	  //
 	  
   }
   
+	public void testUserLogin() throws Exception{
+  	String []userIds = new String[]{USER_ROOT, USER_JOHN, USER_DEMO};
+  	for (int i = 0; i < userIds.length; i++) {
+  		try {
+  			forumService_.getQuickProfile(sProvider, userIds[i]);
+  		} catch (Exception e) {
+  			forumService_.saveUserProfile(sProvider, createdUserProfile(userIds[i]), true, true);
+			}
+    }
+  	//	Add user login 
+  	forumService_.userLogin(USER_ROOT, USER_ROOT);
+  	forumService_.userLogin(USER_JOHN, USER_JOHN);
+  	forumService_.userLogin(USER_DEMO, USER_DEMO);
+  	
+  	//	Get all user online:
+  	assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());
+  	
+  	//isOnline
+  	assertEquals("John is not Online", forumService_.isOnline(USER_JOHN), true);
+  	// get Last Login
+  	assertEquals("Demo can't last Login", forumService_.getLastLogin(), USER_DEMO);
+  	// userLogout
+  	forumService_.userLogout(USER_DEMO);
+  	assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
+  }
+	
   public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
