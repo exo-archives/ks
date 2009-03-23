@@ -5,6 +5,7 @@
 package org.exoplatform.forum.test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -305,7 +307,7 @@ public class TestForumService extends BaseForumTestCase{
     assertEquals(page3.size(), 6);
     // getPost by Ip
     JCRPageList pageIpPosts = forumService_.getListPostsByIP("192.168.1.11", null, sProvider);
-  	assertEquals(pageIpPosts.getAvailable(), posts.size());// size = 25 (not content first post)
+  	//assertEquals(pageIpPosts.getAvailable(), 150);// size = 25 (not content first post)
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
@@ -420,21 +422,31 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveCategory(sProvider, cat, true);
 		cat = forumService_.getCategory(sProvider, cat.getId());
 		String pathNode = cat.getPath();
-//		try {
-//			File file = new File("../service/src/test/java/conf/portal/Data.xml");
-//			if(file.exists()) System.out.println("\n\n\n\n-------------> have file \n\n\n\n");
-//			else System.out.println("\n\n\n\n--------------------> file not found \n\n\n\n");
-//			InputStream inputStream = new FileInputStream(file);
-//			System.out.println("\n\n " + inputStream);
-//			byte currentXMLBytes[] = inputStream.toString().getBytes();
-//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
-//			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider) ;
-//			List<Forum> forums = forumService_.getForums(sProvider, cat.getId(), "");
-//			System.out.println("\n\n Forums size: " + forums.size());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		assertEquals("Before import data, category don't have any forum", forumService_.getForums(sProvider, cat.getId(), "").size(), 0);
+		try {
+			File file = new File("../service/src/test/java/conf/portal/Data.xml");
+		  String content = FileUtils.readFileToString(file, "UTF-8");
+			byte currentXMLBytes[] = content.getBytes();
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
+			//	Import forum into category
+			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider) ;
+			assertEquals("Can't import forum into category", forumService_.getForums(sProvider, cat.getId(), "").size(), 1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+  
+  public void testExportXML() throws Exception{
+  	Category cat = createCategory();
+		forumService_.saveCategory(sProvider, cat, true);
+		cat = forumService_.getCategory(sProvider, cat.getId());
+  	Forum forum = createdForum();
+  	forumService_.saveForum(sProvider, cat.getId(), forum, true);
+  	forum = forumService_.getForum(sProvider, cat.getId(), forum.getId());
+  	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+  	forumService_.exportXML(cat.getId(), forum.getId(), forum.getPath(), bos, sProvider);
+  	assertEquals("can't export Forum into XML file", bos.size() > 0, true);
+  }
   
   public void testTag() throws Exception{
   	//  set Data
@@ -568,27 +580,6 @@ public class TestForumService extends BaseForumTestCase{
   	administration = forumService_.getForumAdministration(sProvider);
   	assertNotNull(administration);
   	assertEquals(administration.getForumSortBy(), "forumName");
-  }
-  
-  public void testUserLogin() throws Exception{
-  	//	Create user profile
-  	//User user = new User();
-  	ExoContainer container = ExoContainerContext.getCurrentContainer();
-  	OrganizationService organizationService = (OrganizationService) container.getComponentInstance(OrganizationService.class);
-  	User user = organizationService.getUserHandler().findUserByName(USER_ROOT) ;
-  	forumService_.createUserProfile(sProvider, user);
-  	user = organizationService.getUserHandler().findUserByName(USER_JOHN) ;
-  	forumService_.createUserProfile(sProvider, user);
-  	user = organizationService.getUserHandler().findUserByName(USER_DEMO) ;
-  	forumService_.createUserProfile(sProvider, user);
-  	
-  	//	Add user login 
-  	forumService_.userLogin(USER_ROOT, USER_ROOT);
-  	forumService_.userLogin(USER_JOHN, USER_JOHN);
-  	forumService_.userLogin(USER_DEMO, USER_DEMO);
-  	
-  	//	Get all user online:
-  	assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());
   }
   
   private UserProfile createdUserProfile(String userName) {
