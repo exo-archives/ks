@@ -96,6 +96,10 @@ public class UICategories extends UIContainer	{
   private int getDayForumNewPost() {
 		return dayForumNewPost;
 	}
+	
+	public boolean getUseAjax() {
+	  return useAjax;
+  }
 	 
 	public List<Category> getCategorys() { return this.categoryList ; }
 	public List<Category> getPrivateCategories() {

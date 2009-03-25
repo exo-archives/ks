@@ -3643,7 +3643,7 @@ public class JCRDataStorage {
 		if (pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath();
 		}
-		textQuery = StringUtils.replace(textQuery, "'", "&#39;");
+		textQuery = StringUtils.replace(textQuery, "'", "&apos;");
 		String[] values = type_.split(",");// user(admin or not admin), type(forum, topic, post)
 		boolean isAdmin = false;
 		if (values[0].equals("true"))

@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -32,6 +33,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UIFormWYSIWYGInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
@@ -53,7 +55,6 @@ import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
@@ -305,6 +306,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+			message = StringUtils.replace(message, "'", "&apos;");
 			String remoteAddr = "";
 			if(forumPortlet.isEnableIPLogging()) {
 				PortletRequestImp request = event.getRequestContext().getRequest();

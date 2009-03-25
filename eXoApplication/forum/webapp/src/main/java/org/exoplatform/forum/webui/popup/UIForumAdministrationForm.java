@@ -27,6 +27,7 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.webui.UIFormWYSIWYGInput;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -46,7 +47,6 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 
 /**

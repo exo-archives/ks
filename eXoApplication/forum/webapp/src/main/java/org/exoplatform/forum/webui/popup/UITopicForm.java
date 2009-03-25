@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -38,6 +39,7 @@ import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
+import org.exoplatform.forum.webui.UIFormWYSIWYGInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
@@ -61,14 +63,13 @@ import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
-import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
  *					tu.duy@exoplatform.com
- * Aug 22, 2007	
+ * Aug 22, 2007
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -365,6 +366,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+			message = StringUtils.replace(message, "'", "&apos;");
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() <= 0 && topicTitle.equals("null")) {k = 0;}
