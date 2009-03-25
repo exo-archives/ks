@@ -129,6 +129,7 @@ public class UIBreadcumbs extends UIContainer {
 					uiQuestions.setCategories(null) ;
 					uiBreadcums.setUpdataPath("FAQService");
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					sProvider.close();
 					return ;
 				}
 				//uiQuestions.setCategories(categoryId) ;
@@ -136,6 +137,7 @@ public class UIBreadcumbs extends UIContainer {
 				uiQuestions.language_ = "";
 			}
 			uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
+			sProvider.close();
 			uiBreadcums.setUpdataPath(paths);
 			categories.setPathCategory(paths);
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;

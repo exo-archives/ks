@@ -154,10 +154,11 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   		} catch (Exception e) {
   			e.printStackTrace();
   		}
-  		
+  		sessionProvider.close();
   		return listCategories;
   	}catch (Exception e){
   		e.printStackTrace();
+  		sessionProvider.close();
   		return null;
   	}
   }
@@ -188,10 +189,11 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
       } catch (Exception e) {
         e.printStackTrace();
       }
-  		
+  		sessionProvider.close();
   		return listQuestion_;
   	}catch (Exception e){
   		e.printStackTrace();
+  		sessionProvider.close();
   		return null;
   	}
   }

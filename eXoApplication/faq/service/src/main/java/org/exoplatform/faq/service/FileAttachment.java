@@ -156,7 +156,9 @@ public class FileAttachment {
   	else {
   		Node attachment ;
       try{
-      	attachment = (Node)getSesison().getItem(getId()) ;
+      	Session session = getSesison();
+      	attachment = (Node)session.getItem(getId()) ;
+      	session.logout();
         return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
       }catch (Exception e) {  
         return null ;

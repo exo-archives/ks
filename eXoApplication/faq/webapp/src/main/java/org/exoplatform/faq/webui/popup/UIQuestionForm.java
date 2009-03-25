@@ -521,6 +521,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
           popupAction.deActivate() ;
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+          
+          sessionProvider.close();
           return;
         }
         question_.setCreatedDate(date) ;

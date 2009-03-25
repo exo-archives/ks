@@ -331,6 +331,7 @@ public class JCRDataStorage {
 	public void checkEvenListen() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node questionHomeNode = getQuestionHome(sProvider, null);
+		sProvider.close();
 		ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
 		EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
 		if(listenerIterator.hasNext()){

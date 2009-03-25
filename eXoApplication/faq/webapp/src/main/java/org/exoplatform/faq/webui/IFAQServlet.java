@@ -32,6 +32,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Created by The eXo Platform SARL
@@ -54,7 +55,9 @@ public class IFAQServlet extends HttpServlet {
       PortalContainer.setInstance(pcontainer) ;
       FAQService faqService = (FAQService)pcontainer.getComponentInstanceOfType(FAQService.class) ;
       
-      Node node = faqService.getRSSNode(SessionProviderFactory.createSystemProvider(), categoryId) ;
+      SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
+      Node node = faqService.getRSSNode(sessionProvider, categoryId) ;
+      sessionProvider.close();
       if (node == null) throw new Exception("Node not found. ");
       session = node.getSession();
       response.setContentType("text/xml") ;

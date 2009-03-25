@@ -794,8 +794,10 @@ public class UICategories extends UIContainer{
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
+				sessionProvider.close();
 				return ;
 			}
+			sessionProvider.close();
 		}
 	}
 	
