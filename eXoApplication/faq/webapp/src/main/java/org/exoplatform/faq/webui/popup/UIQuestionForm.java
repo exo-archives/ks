@@ -37,7 +37,6 @@ import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.faq.webui.UIFormWYSIWYGInput;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
@@ -64,6 +63,7 @@ import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
+import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -193,7 +193,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       e.printStackTrace() ;
     }
     
-    inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, null, null, true) ;
+    inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
     //inputQuestionDetail.setColumns(80) ;
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;

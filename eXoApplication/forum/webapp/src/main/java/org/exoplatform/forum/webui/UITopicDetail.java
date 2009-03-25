@@ -29,7 +29,6 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
-import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -1303,8 +1302,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			// set link
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
-				/*url = url.replaceFirst("http://", "") ;
-				url = url.substring(0, url.indexOf("/")) ;*/
 				url = "http://" + portalContext.getRequest().getServerName() + ":"+ portalContext.getRequest().getServerPort();
 				String link = topicDetail.getLink();
 				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
@@ -1339,10 +1336,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						String path = topicDetail.categoryId + "/" + topicDetail.forumId + "/" + topicDetail.topicId;
 						topicDetail.forumService.addWatch(sProvider, 1, path, values, topicDetail.userProfile.getUserId()) ;
 					}
-				} catch (PathNotFoundException e) {e.printStackTrace();
-					sProvider.close();
+				} catch (PathNotFoundException e) {
+					e.printStackTrace();
 					String[] args = new String[] { } ;
 					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+				} finally {
+					sProvider.close();
 				}
 				textAreaInput.setValue("") ;
 				if(isOffend || hasTopicMod) {

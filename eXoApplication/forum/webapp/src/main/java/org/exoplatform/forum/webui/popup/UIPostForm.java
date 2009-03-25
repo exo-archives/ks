@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.webui.UIFormWYSIWYGInput;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
@@ -56,6 +55,7 @@ import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
+import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
  * Created by The eXo Platform SARL
@@ -111,7 +111,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
 		editReason.setRendered(false);
 		UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
-		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, null, null, true) ;
+		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "") ;
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
 		threadContent.addChild(postTitle) ;
 		threadContent.addChild(editReason) ;
@@ -422,6 +422,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					}
 					uiForm.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  uiForm.topicId) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+				} catch (Exception e) {
 				} finally {
 					sProvider.close();
 				}

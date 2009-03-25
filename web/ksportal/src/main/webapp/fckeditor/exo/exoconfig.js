@@ -80,7 +80,6 @@ eXoPlugin.getContent = function() {
 	else return null;
 };
 
-//eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Basic" });
 eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
 
 FCK["eXoPlugin"] = eXoPlugin;

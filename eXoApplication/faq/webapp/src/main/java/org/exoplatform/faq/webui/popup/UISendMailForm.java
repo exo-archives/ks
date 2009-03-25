@@ -31,7 +31,6 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.faq.webui.UIFormWYSIWYGInput;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -48,6 +47,7 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -196,7 +196,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       }
     }
     addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
-    addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, null, content, true)) ;
+    addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, content)) ;
 	}
 
 	public void setFieldToValue(String value) { getUIStringInput(FILED_TO).setValue(value) ;}

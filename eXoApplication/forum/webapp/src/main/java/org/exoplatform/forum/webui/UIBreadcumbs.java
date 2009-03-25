@@ -224,6 +224,7 @@ public class UIBreadcumbs extends UIContainer {
 						if(id.length > 1) {
 							topic = uiBreadcums.forumService.getTopicByPath(sProvider, path, false) ;
 						} else {
+							System.out.println("\n\n" + path);
 							topic = (Topic)uiBreadcums.forumService.getObjectNameById(sProvider, path, Utils.TOPIC);
 							path = topic.getPath();
 							path = path.substring(path.indexOf(Utils.CATEGORY));
@@ -248,7 +249,7 @@ public class UIBreadcumbs extends UIContainer {
 							}
 						}						
 					}catch(Exception e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 					}finally {
 						sProvider.close() ;
 					}
