@@ -200,10 +200,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 //	} catch (NullPointerException e) {
 //		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //	}
-		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
-		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, sessionProvider, 
-																				getApplicationComponent(DownloadService.class));
-		sessionProvider.close();
+		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
 		return url;
 	}
 	@SuppressWarnings("unused")

@@ -294,15 +294,13 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
   private String getAvatarUrl(){
 		String url = defaultAvatar;
-		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 		try {
 			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-			url = ForumSessionUtils.getUserAvatarURL(ForumSessionUtils.getCurrentUser(), this.forumService, sessionProvider, dservice);
+			url = ForumSessionUtils.getUserAvatarURL(ForumSessionUtils.getCurrentUser(), this.forumService, dservice);
 		} catch (Exception e) {
 			url = defaultAvatar;
 		}
 		if(url == null || url.trim().length() < 1) url = defaultAvatar;
-		sessionProvider.close();
 		return url;
 	}
 	

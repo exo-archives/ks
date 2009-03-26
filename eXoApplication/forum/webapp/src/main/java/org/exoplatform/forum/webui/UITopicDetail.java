@@ -385,7 +385,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 //			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 //		}
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, sessionProvider, dservice);
+		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
 	}
 
 	@SuppressWarnings("unused")

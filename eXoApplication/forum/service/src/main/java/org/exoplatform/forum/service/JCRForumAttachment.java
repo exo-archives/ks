@@ -37,10 +37,14 @@ public class JCRForumAttachment extends ForumAttachment {
 	@Override
 	public InputStream getInputStream() throws Exception {
 		Node attachment ;
+		Session session = getSesison();
 		try{
-			attachment = (Node)getSesison().getItem(getPathNode()) ;			
+			attachment = (Node)session.getItem(getPathNode()) ;			
 		}catch (Exception e) {
+			session.logout();
 			return null ;
+		}finally {
+			session.logout();
 		}
 		return attachment.getNode("jcr:content").getProperty("jcr:data").getStream() ;
 	}

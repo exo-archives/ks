@@ -1,6 +1,10 @@
 <%
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.ForumSessionUtils;
+  import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+  jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','false');") ;
   List bookMarks = uiform.getBookMark();
 %>
 
@@ -41,7 +45,7 @@
 					<tr>
 						<td><div class="$icon" style="width:24px;height:24px;"><span></span></div></td>
 						<td>
-							<a onmousedown="<%=uiform.event("OpenLink",linkPath);%>; return false;" href="$linkBm">$linkName</a>
+							<a action="<%=uiform.event("OpenLink",linkPath);%>; return false;" href="$linkBm">$linkName</a>
 						</td>
 						<td>
 							<div onclick="<%=uiform.event("DeleteLink",links);%>" style="cursor:pointer; margin:0 auto; width:18px;">

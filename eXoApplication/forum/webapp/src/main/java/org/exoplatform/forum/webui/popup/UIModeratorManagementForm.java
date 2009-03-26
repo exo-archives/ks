@@ -178,6 +178,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   			this.userProfiles.add(forumService.getUserProfileManagement(sessionProvider, ((User)obj).getUserName()));
   		}
   	}
+  	if(userProfiles ==  null) userProfiles = new ArrayList<UserProfile>();
   	return this.userProfiles ;
   }
   
@@ -461,10 +462,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   }
 	
 	public void setUserAvatarURL(String userId){
-		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
-		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService, sessionProvider, 
-																												getApplicationComponent(DownloadService.class));
-		sessionProvider.close();
+		userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
 	}
 	
   static  public class ViewProfileActionListener extends EventListener<UIModeratorManagementForm> {
@@ -680,10 +678,13 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   		if(uiForm.userAvartarUrl.equals("/forum/skin/DefaultSkin/webui/background/Avatar1.gif")) return;
   		String userId = ((UIFormStringInput)uiForm.findComponentById(FIELD_USERID_INPUT)).getValue();
   		SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
-  		uiForm.forumService.setDefaultAvatar(userId, sessionProvider);
-  		uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService, sessionProvider, 
-  																							uiForm.getApplicationComponent(DownloadService.class));
-  		sessionProvider.close();
+  		try {
+  			uiForm.forumService.setDefaultAvatar(userId, sessionProvider);
+      } catch (Exception e) {
+      } finally {
+      	sessionProvider.close();
+      }
+  		uiForm.userAvartarUrl = ForumSessionUtils.getUserAvatarURL(userId, uiForm.forumService, uiForm.getApplicationComponent(DownloadService.class));
   		event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
   	}
   }
