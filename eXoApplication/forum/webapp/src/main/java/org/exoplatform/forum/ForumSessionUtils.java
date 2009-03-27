@@ -84,7 +84,6 @@ public class ForumSessionUtils {
 		SessionProvider sessionProvider = getSystemProvider();
 		try{
 			ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
-			System.out.println("\n\n run this");
 			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
 			if(url == null || url.trim().length() < 1){
 				ForumContact contact = getPersonalContact(userName) ;

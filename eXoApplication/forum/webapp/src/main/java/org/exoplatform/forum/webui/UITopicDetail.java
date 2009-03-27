@@ -319,7 +319,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean userCanView() throws Exception {
-		if(!isMod){
+		if(isMod) return true;
+		else {
 			if(forum.getIsClosed() || topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		}
 		if(isCanPostReply()) return true;
