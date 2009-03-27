@@ -1516,7 +1516,9 @@
 
 .UIFAQPortlet .WatchUserManager {
 	background: url('background/FAQYey.gif') no-repeat right bottom;
-	padding: 10px 14px 9px 4px;
+	width: 16px;
+	height: 15px;
+	cursor:pointer;
 }
 
 .UIPrintPreview {
