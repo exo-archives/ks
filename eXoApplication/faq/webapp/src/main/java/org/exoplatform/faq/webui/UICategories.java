@@ -140,7 +140,7 @@ public class UICategories extends UIContainer{
 	}
 
 	private void setIsModerators(String currentUser_) {
-		categoryModerators.clear() ;
+		//categoryModerators.clear() ;
 		isModeratorSubCate = false;
 		canEditQuestion = false ;
 		
@@ -187,6 +187,7 @@ public class UICategories extends UIContainer{
 			}
 
 			if(!isModeratorSubCate) {
+				categoryModerators.clear() ;
 				for(Category category : listCate) {
 					try {
 						if(category.getModeratorsCategory().contains(currentUser_)) {
@@ -197,6 +198,11 @@ public class UICategories extends UIContainer{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				}
+			} else if(viewBackIcon) {
+				categoryModerators.clear() ;
+				for(int i = 0; i < listCate.size(); i ++){
+					categoryModerators.add(true);
 				}
 			}
 

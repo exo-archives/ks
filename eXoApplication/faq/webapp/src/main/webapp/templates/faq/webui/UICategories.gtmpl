@@ -16,6 +16,7 @@
 	jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
 	//jsmanager.addJavascript('eXo.faq.UIContextMenu.init("'+compId+'") ;') ;
 	String [] categoryAction;
+	boolean canEdit = false;
 %>
 <div id="$uicomponent.id" style="padding:0px 5px 2px 5px; line-height:28px;">
 	<div>
@@ -83,6 +84,10 @@
 					for(category in listCate){
 						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
+						
+						if(uicomponent.faqSetting_.isAdmin()) canEdit = true;
+						else if(listCateModerator.get(i))canEdit = true;
+						else canEdit = false;
 				%>
 						<div class="FAQTmpCategory"><span></span></div>
 						<div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
@@ -93,11 +98,10 @@
 								</a>
 								<%
 								String linkWacth = uicomponent.event("WatchManager", category.getId());
-								if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
-									List emailWatch = uicomponent.getListWatch(category.getId()) ;
-									if(emailWatch.size() > 0) {
+								if(canEdit) {
+									if(uicomponent.getListWatch(category.getId()).size() > 0) {
 								%>
-									<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
+										<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
 								<%
 									}
 								}
@@ -110,7 +114,7 @@
 												<div class="MiddleRightRightClickPopupMenu">
 													<div class="UIRightPopupMenuContainer" style="margin:0px;">
 														<%
-															if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate || listCateModerator.get(i)) {
+															if(canEdit) {
 																categoryAction = uicomponent.getActionCategory(category.getId()) ;
 															} else {
 																categoryAction = uicomponent.getActionCategoryWithUser(category.getId()) ;
