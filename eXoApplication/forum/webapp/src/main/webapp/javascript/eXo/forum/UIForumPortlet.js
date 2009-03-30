@@ -432,7 +432,7 @@ UIForumPortlet.prototype.showPicture = function(src) {
   var containerNode = document.createElement('div') ;
   var imageNode = document.createElement('img') ;
   imageNode.src = src ;
-  imageNode.setAttribute('alt', src) ;
+  imageNode.setAttribute('alt', 'Click to close') ;
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
   containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
