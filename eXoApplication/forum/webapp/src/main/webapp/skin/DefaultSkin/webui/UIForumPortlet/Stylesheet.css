@@ -254,6 +254,14 @@
 
 .UIForumPortlet .ContentContainer {
 	padding-left: 1px;
+	*padding-left: 0px;
+}
+
+.UIForumPortlet .UICategoryInfo .ContentContainer {
+	border-top:solid 1px #b7b7b7; 
+	*border-top: none; 
+	padding-top: 1px;
+	*padding-top: 0px;
 }
 
 .UIForumPortlet .ContentContainer .UITopicList a {
