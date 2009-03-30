@@ -260,7 +260,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(topic.getTopicName()));
-			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(ForumTransformHTML.enCodeHTML(topic.getDescription()));
+			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
 			
 			UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
 			String stat = "open";
