@@ -187,6 +187,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		long role = userProfile.getUserRole() ;
 		String userId = userProfile.getUserId() ;
 		List<String> ipBaneds = forum.getBanIP();
+		isModerator = false ;
+		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
 		if(ipBaneds != null && ipBaneds.size() > 0) {
 			if(!ipBaneds.contains(getIPRemoter())) {
 				String[] strings = this.forum.getCreateTopicRole() ;
@@ -194,10 +196,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 				}
 			} else canAddNewThread = false;
+		} else {
+			if(!isModerator) {
+				String[] strings = this.forum.getCreateTopicRole() ;
+				if(strings != null && strings.length > 0){
+					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+				}
+			}
 		}
-		isModerator = false ;
-		if(role == 0 || ForumServiceUtils.hasPermission(forum.getModerators(), userId)) isModerator = true;
-		else {
+		if(!isModerator) {
 			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'");
 			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
 			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
