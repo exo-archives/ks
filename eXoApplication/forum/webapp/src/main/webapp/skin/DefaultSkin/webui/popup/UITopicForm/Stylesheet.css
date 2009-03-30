@@ -73,3 +73,8 @@
 .UITopicForm .UIForm .UIFormGrid td.FieldComponent {
 	width: 700px;
 }
+
+.UITopicForm .UIFormTabPane .UITabContent .FieldComponent div{
+	width: 98%;
+	float:left;
+}
