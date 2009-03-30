@@ -125,7 +125,7 @@
 																		<!-- ==================================== question content =========================== -->
 																		<div class="ViewQuestionNotApproved">
 																			<a style="cursor:pointer">
-																				<span class="QuestionName">$questionContent</span>
+																				<span class="QuestionName" style="line-height:20px;">$questionContent</span>
 																			</a>
 																		</div>
 																		
