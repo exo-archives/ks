@@ -260,7 +260,7 @@
 											String linkRelaQues = "" ;
 									%>
 										<div class="RelationContent">
-											<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
+											<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes("UIQuestions.label.RelatedQuestion")%>:</div>
 									<%
 											for(String relationId : questionRelation) { 
 												quesRelaCont = "" ;
