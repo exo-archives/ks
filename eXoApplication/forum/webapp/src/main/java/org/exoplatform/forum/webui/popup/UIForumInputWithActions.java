@@ -78,7 +78,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
 				for(ActionData action : actions) {
 					String actionLabel ;
 					try{
-						actionLabel = uiForm.getLabel(res, "action." + action.getActionName())	;
+						actionLabel = uiForm.getLabel(res, action.getActionName())	;
 					}catch(MissingResourceException ex) {
 						actionLabel = action.getActionName() ;
 					}
