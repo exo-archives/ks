@@ -689,12 +689,14 @@
 }
 
 .UIPrintPreview .FAQContainer .FAQContent .ResponseContent {
-	padding: 0px;
+	padding: 0px 6px;
 	background: white;
 }
 
 .UIFAQPortlet .FAQContainer .ResponseContent .ResponseContainer{
 	border: solid 1px #b7b7b7;
+	width: 99.5%;
+	margin:auto;
 }
 
 .UIFAQPortlet .FAQContainer .ResponseContainer .TitleResponseContent{
@@ -712,7 +714,6 @@
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseExternal {
 	padding: 5px 10px 10px 0px; 
 	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
-	width: 98.4% !important;
 }
 
 .UIFAQPortlet .FAQContainer .ResponseContainer .TitleCommentContent{
@@ -1528,7 +1529,7 @@
 
 .UIPrintPreview {
 	background: white ;
-	height: 100% ;
+	height: auto ;
 }
 
 .UIPrintPreview .FAQContainer {
