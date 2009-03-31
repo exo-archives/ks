@@ -49,13 +49,14 @@ public class ForumPageList extends JCRPageList {
 		setAvailablePage(size);
 	};
 	
-	public ForumPageList(SessionProvider sProvider, NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
+	public ForumPageList(NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
 		value_ = value ;
 		isQuery_ = isQuery ;
-		sProvider_ = sProvider ;
 		if(iter == null) {
-			iter = setQuery(sProvider, isQuery_, value_) ;
+			sProvider_ = ForumServiceUtils.getSessionProvider();
+			iter = setQuery(sProvider_, isQuery_, value_) ;
+			sProvider_.close();
 		}
 		if(iter != null){
 			iter_ = iter ;
@@ -76,7 +77,9 @@ public class ForumPageList extends JCRPageList {
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(long page) throws Exception	{
 		if(iter_ == null) {
+			sProvider_ = ForumServiceUtils.getSessionProvider();
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+			sProvider_.close();
 			setAvailablePage(iter_.getSize()) ;
 			checkAndSetPage(page) ;
 			page = currentPage_;

@@ -1337,7 +1337,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						topicDetail.forumService.addWatch(sProvider, 1, path, values, topicDetail.userProfile.getUserId()) ;
 					}
 				} catch (PathNotFoundException e) {
-					e.printStackTrace();
 					String[] args = new String[] { } ;
 					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
 				} finally {

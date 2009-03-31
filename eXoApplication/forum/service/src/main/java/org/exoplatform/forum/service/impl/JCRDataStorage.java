@@ -1085,7 +1085,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 			return pagelist;
 		} catch (PathNotFoundException e) {
 			return null;
@@ -1278,7 +1278,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, stringBuffer.toString(), true);
+			JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
 			return pagelist;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1303,7 +1303,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 			return pagelist;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1627,7 +1627,7 @@ public class JCRDataStorage {
 			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
 			stringBuffer.append(getPathQuery(isApproved, isHidden, userLogin));
 			stringBuffer.append(" order by @exo:createdDate ascending");
-			pagelist = new ForumPageList(sProvider, null, 10, stringBuffer.toString(), true);
+			pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true);
 			return pagelist;				
 		} catch (PathNotFoundException e) {
 			return null;
@@ -1712,7 +1712,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery.toString(), true);
+			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery.toString(), true);
 			return pagelist;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1757,7 +1757,7 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(pathQuery, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
-		JCRPageList pagelist = new ForumPageList(sessionProvider, iter, 5, pathQuery, true);
+		JCRPageList pagelist = new ForumPageList(iter, 5, pathQuery, true);
 		return pagelist;
 	}
 
@@ -2041,7 +2041,13 @@ public class JCRDataStorage {
 		List<String> listUser = new ArrayList<String>();
 		List<String> emailList = new ArrayList<String>();
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
-		Node userProfileHome = getUserProfileHome(sProvider);
+		Node userProfileHome = null;
+		try {
+			userProfileHome = getUserProfileHome(sProvider);
+    } catch (Exception e) {
+    }finally {
+    	sProvider.close();
+    }
 		int count = 0;
 		if(post == null) {
 			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "] " + topic.getTopicName();
@@ -2831,7 +2837,7 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(pathQuery, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
-		JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+		JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 		return pagelist;
 	}
 
@@ -2868,7 +2874,7 @@ public class JCRDataStorage {
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		NodeIterator iterator = userProfileNode.getNodes();
-		JCRPageList pageList = new ForumPageList(sProvider, iterator, 10, userProfileNode.getPath(), false);
+		JCRPageList pageList = new ForumPageList(iterator, 10, userProfileNode.getPath(), false);
 		return pageList;
 	}
 
@@ -2881,7 +2887,7 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
-		JCRPageList pagelist = new ForumPageList(sessionProvider, iter, 10, stringBuffer.toString(), true);
+		JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
 		return pagelist;
 	}
 
@@ -3303,7 +3309,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			JCRPageList pagelist = new ForumPageList(sProvider, iter, 10, pathQuery, true);
+			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 			return pagelist;
 		} catch (PathNotFoundException e) {
 			e.fillInStackTrace();
