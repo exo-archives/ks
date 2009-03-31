@@ -134,7 +134,7 @@ public class TestForumService extends BaseForumTestCase{
     // add category
     forumService_.saveCategory(sProvider, cat, true) ;
     Category category = forumService_.getCategory(sProvider, catId); 
-    assertNotNull(category) ;
+    assertNotNull("Category is null", category) ;
     // get categories
     // List<Category> categories = forumService_.getCategories(sProvider) ;
     // assertEquals(categories.size(), 1) ;
@@ -142,13 +142,13 @@ public class TestForumService extends BaseForumTestCase{
     cat.setCategoryName("ReName Category") ;
     forumService_.saveCategory(sProvider, cat, false) ;
     Category updatedCat = forumService_.getCategory(sProvider, catId) ;
-    assertEquals("ReName Category", updatedCat.getCategoryName()) ;
+    assertEquals("Category name is not change","ReName Category", updatedCat.getCategoryName()) ;
     
     // test removeCategory
     cat = forumService_.removeCategory(sProvider,catId);
-    assertNotNull(cat);
+    assertNotNull("Category is null", cat);
     cat = forumService_.getCategory(sProvider, catId); 
-    assertNull(cat);
+    assertNull("Category is not null", cat);
   }
 
   public void testForum() throws Exception {
@@ -166,7 +166,7 @@ public class TestForumService extends BaseForumTestCase{
   	
   	// getForum
   	forum  = forumService_.getForum(sProvider, catId, forumId);
-  	assertNotNull(forum);
+  	assertNotNull("Forum is null", forum);
   	
 		// getList Forum
   	//Created 5 new forum, we have total 6 forum.
@@ -177,7 +177,7 @@ public class TestForumService extends BaseForumTestCase{
   	forums.addAll(forumService_.getForums(sProvider, catId, ""));
   	
   	// check size of list forum
-  	assertEquals(forums.size(), 6);
+  	assertEquals("List forums size not is equals",forums.size(), 6);
 
   	// update Forum
   	forum.setForumName("Forum update");
