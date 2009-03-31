@@ -550,14 +550,7 @@ public class ForumTransformHTML {
 		// }
 		return s;
 	}
-	public static String autoAddUser(String s) {
-		String tmp = s;
-		for (int i = 0; i < 400; i++) {
-			String t = tmp.replaceFirst("testUser", "testUser" + i);
-			s = s + "<br/>" + t;
-		}
-		return s;
-	}
+	
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {

@@ -29,6 +29,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -1292,7 +1293,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
 						buffer.append("&gt;") ;
-					} else {
+					} else if(c == '\''){
+						buffer.append("&apos;") ;
+					} else{
 						buffer.append(c) ;
 					}
 				} 

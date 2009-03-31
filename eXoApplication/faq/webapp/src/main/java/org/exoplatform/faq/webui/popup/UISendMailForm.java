@@ -31,6 +31,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIFormWYSIWYGInput;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -47,7 +48,6 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-import org.exoplatform.webui.form.UIFormWYSIWYGInput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
