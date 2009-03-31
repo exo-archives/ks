@@ -85,10 +85,15 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       UIAttachMentForm attachMentForm = event.getSource() ;
       List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>() ;
       long maxSize = FAQServiceImpl.maxUploadSize_ ;
+      long fileSize = 0 ;
       for(int i = 0 ; i < attachMentForm.numberUpload; i ++) {
         UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i) ;
         UploadResource uploadResource = uploadInput.getUploadResource() ;
-        long fileSize = 0 ;
+        
+        if(uploadResource == null) {
+        	continue;
+        }
+        
         if(uploadResource != null && uploadResource.getUploadedSize() > 0) {
           if(maxSize == 0 || uploadResource.getUploadedSize() <= maxSize) {
             FileAttachment fileAttachment = new FileAttachment() ;
