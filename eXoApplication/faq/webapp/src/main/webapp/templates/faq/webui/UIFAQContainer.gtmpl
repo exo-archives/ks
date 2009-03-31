@@ -1,6 +1,6 @@
 <div id="<%=uicomponent.getId()%>">
 	<%List children = uicomponent.getChildren() ;%>
-	<table width="100%">
+	<table style="table-layout:fixed; width:99%;">
 		<tr>
 			<td style="width:200px;" id = "FAQViewCategoriesColumn"><%uicomponent.renderChild(children.get(2).getClass());%></td>
 			<td>

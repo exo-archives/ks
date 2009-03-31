@@ -404,7 +404,7 @@
 						//	responseBy = question.getResponseBy();
 						//}
 					%>
-						<div class="QuestionSelect" style="_width:97%;">
+						<div class="QuestionSelect" style="_width:100%;">
 							<div class="DecoratorTL">
 								<div class="DecoratorTR">
 									<div class="DecoratorTC"><span></span></div>
