@@ -387,8 +387,8 @@
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer {
 	padding: 0px 0px 15px 8px;
-	background: #ebf2fb;
 	margin: 0px;
+	background: #ebf2fb;
 }
 
 .UIFAQPortlet .QuestionSelect .QuestionContainer .LeftQuestionContainer {
@@ -536,7 +536,7 @@
 }
 
 .UIFAQPortlet .QuestionSelect .DecoratorMC {
-	background: #DBE7F9;
+	width:100%;
 }
 
 .UIFAQPortlet .QuestionSelect .DecoratorBL{
@@ -685,6 +685,11 @@
 
 .UIFAQPortlet .FAQContainer .FAQContent .ResponseContent {
 	padding: 8px 8px 8px 12px;
+	background: white;
+}
+
+.UIPrintPreview .FAQContainer .FAQContent .ResponseContent {
+	padding: 0px;
 	background: white;
 }
 
