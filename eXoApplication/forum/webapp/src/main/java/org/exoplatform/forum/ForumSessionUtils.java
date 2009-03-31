@@ -79,23 +79,24 @@ public class ForumSessionUtils {
 		return SessionProviderFactory.createSystemProvider();
 	}
 	
-	public static String getUserAvatarURL(String userName, ForumService forumService, SessionProvider sessionProvider, 
-																				DownloadService dservice){
-		String url = null;
+	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
+		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		SessionProvider sessionProvider = getSystemProvider();
 		try{
 			ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
+			System.out.println("\n\n run this");
 			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
 			if(url == null || url.trim().length() < 1){
 				ForumContact contact = getPersonalContact(userName) ;
-				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0)
+				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0){
 					url = contact.getAvatarUrl();
-				else
-					url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+				}
 			}
-			return url;
 		}catch (Exception e){
-			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
+		}finally {
+			sessionProvider.close();
 		}
+		return url;
 	}
 	
 	public static String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {

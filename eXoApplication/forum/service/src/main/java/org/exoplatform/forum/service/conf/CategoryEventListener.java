@@ -44,7 +44,13 @@ public class CategoryEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
-					forumService.registerListenerForCategory(SessionProvider.createSystemProvider(), ev.getPath());
+					SessionProvider sProvider = SessionProvider.createSystemProvider();
+					try {
+						forumService.registerListenerForCategory(sProvider, ev.getPath());
+          } catch (Exception e) {
+          }finally {
+          	sProvider.close();
+          }
 				}else if(ev.getType() == Event.NODE_REMOVED) {
 					forumService.unRegisterListenerForCategory(ev.getPath()) ;
 				}				

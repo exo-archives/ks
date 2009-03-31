@@ -234,7 +234,7 @@ public class ForumTransformHTML {
 		// Custom replaces
 		if (b.indexOf("[!bbcode]") >= 0 && b.indexOf("[!v]") < 20) {
 			b = StringUtils.replace(b, "[!bbcode]", "");
-			b = StringUtils.replace(b, "\r\n", "<br>\r\n");
+			b = StringUtils.replace(b, "\r\n", "<br/>\r\n");
 		}
 		// Dir to images directory, should be replaced with a System propert
 		b = StringUtils.replace(b, "[imgdir]", "/www/public/images/");

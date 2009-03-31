@@ -112,6 +112,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					sProvider.close();
 					return;
 				}
   			popupAction.deActivate() ;
@@ -136,11 +137,9 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} catch(ItemExistsException ie){
-				ie.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} catch (Exception ise) {
-				ise.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} finally{
