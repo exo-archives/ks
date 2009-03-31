@@ -346,7 +346,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			service.setDefaultAvatar(FAQUtils.getCurrentUser(), sessionProvider);
 			sessionProvider.close();
 			settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
-			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent()) ;
 		}
 	}
 	
