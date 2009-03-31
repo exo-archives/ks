@@ -4,10 +4,17 @@
  **************************************************************************/
 package org.exoplatform.forum.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.jcr.ImportUUIDBehavior;
 
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -66,26 +73,26 @@ public class TestForumService extends BaseForumTestCase{
 	  
 	  // getUserInfo
 	  userProfile = forumService_.getUserInfo(sProvider, userName);
-	  assertNotNull(userProfile);
+	  assertNotNull("Get info UserProfile is not null",userProfile);
 	  
 	  // get Default
 	  userProfile = forumService_.getDefaultUserProfile(sProvider, userName, "");
-	  assertNotNull(userProfile);
+	  assertNotNull("Get default UserProfile is not null",userProfile);
 	  
 	  // getUserInformations
 	  userProfile = forumService_.getUserInformations(sProvider, userProfile);
-	  assertNotNull(userProfile);
+	  assertNotNull("Get informations UserProfile is not null",userProfile);
 	  
 	  // getUserSettingProfile
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
-	  assertNotNull(userProfile);
+	  assertNotNull("Get Setting UserProfile is not null",userProfile);
 	  
 	  // saveUserSettingProfile
-	  assertEquals(userProfile.getIsAutoWatchMyTopics(), false);
+	  assertEquals("Default AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), false);
 	  userProfile.setIsAutoWatchMyTopics(true);
 	  forumService_.saveUserSettingProfile(sProvider, userProfile);
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
-	  assertEquals(userProfile.getIsAutoWatchMyTopics(), true);
+	  assertEquals("Edit AutoWatchMyTopics and save this property. AutoWatchMyTopics is true", userProfile.getIsAutoWatchMyTopics(), true);
 	  //
 	  
   }
@@ -99,9 +106,8 @@ public class TestForumService extends BaseForumTestCase{
     Category category = forumService_.getCategory(sProvider, catId); 
     assertNotNull(category) ;
     // get categories
-   // List<Category> categories = forumService_.getCategories(sProvider) ;
-   // System.out.println("\n\n\n category: " + categories.size());
-//    assertEquals(categories.size(), 1) ;
+    // List<Category> categories = forumService_.getCategories(sProvider) ;
+    // assertEquals(categories.size(), 1) ;
     // update category
     cat.setCategoryName("ReName Category") ;
     forumService_.saveCategory(sProvider, cat, false) ;
@@ -288,7 +294,9 @@ public class TestForumService extends BaseForumTestCase{
     assertEquals(page1.size(), 10);  
     List page3 = pagePosts.getPage(3) ;
     assertEquals(page3.size(), 6);
-    
+    // getPost by Ip
+    JCRPageList pageIpPosts = forumService_.getListPostsByIP("192.168.1.11", null, sProvider);
+  	assertEquals(pageIpPosts.getAvailable(), posts.size());// size = 25 (not content first post)
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
@@ -310,7 +318,7 @@ public class TestForumService extends BaseForumTestCase{
 		
 		//getViewPost
   }
-  //BookMark
+  // BookMark
   public void testBookMark()throws Exception {
   	//  set Data
 		setData();
@@ -326,7 +334,7 @@ public class TestForumService extends BaseForumTestCase{
   	bookMarks.addAll(forumService_.getBookmarks(sProvider, "root"));
   	assertEquals(bookMarks.size(), 2);
   }
-  //// Private Message
+  // Private Message
   public void testPrivateMessage () throws Exception {
   	ForumPrivateMessage privateMessage = new ForumPrivateMessage();
   	privateMessage.setFrom("demo");
@@ -335,7 +343,7 @@ public class TestForumService extends BaseForumTestCase{
   	privateMessage.setMessage("Content privateMessage");
   	privateMessage.setSendTo("root");
   	
-  	//savePtivateMs
+  	// savePtivateMs
   	forumService_.savePrivateMessage(sProvider, privateMessage);
   	
   	// get Private Message is SEND_MESSAGE
@@ -397,6 +405,27 @@ public class TestForumService extends BaseForumTestCase{
   	//	Test get object by id
   	assertNotNull(forumService_.getObjectNameById(sProvider, forumId, Utils.FORUM));
   }
+  
+  public void  testImportXML() throws Exception{
+  	Category cat = createCategory();
+		forumService_.saveCategory(sProvider, cat, true);
+		cat = forumService_.getCategory(sProvider, cat.getId());
+		String pathNode = cat.getPath();
+//		try {
+//			File file = new File("../service/src/test/java/conf/portal/Data.xml");
+//			if(file.exists()) System.out.println("\n\n\n\n-------------> have file \n\n\n\n");
+//			else System.out.println("\n\n\n\n--------------------> file not found \n\n\n\n");
+//			InputStream inputStream = new FileInputStream(file);
+//			System.out.println("\n\n " + inputStream);
+//			byte currentXMLBytes[] = inputStream.toString().getBytes();
+//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
+//			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider) ;
+//			List<Forum> forums = forumService_.getForums(sProvider, cat.getId(), "");
+//			System.out.println("\n\n Forums size: " + forums.size());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+	}
   
   public void testTag() throws Exception{
   	//  set Data
@@ -499,6 +528,31 @@ public class TestForumService extends BaseForumTestCase{
   	assertEquals(watchs.size(), 0);
   }
   
+  public void testIpBan()throws Exception {
+  	// set Data
+  	setData();
+  	// set Ip ban
+	  String ip = "192.168.1.10";
+	  // save Ip ban
+	  forumService_.addBanIP(ip);
+	  // get Ip ban
+	  List<String> listBans = forumService_.getBanList();
+	  assertEquals("Ip have adding in listBans",listBans.get(0), ip);
+	  // addBanIPForum
+	  forumService_.addBanIPForum(sProvider, ip, categoryId+"/"+forumId);
+	  // getForumBanList
+	  List<String> listIpBanInForum = forumService_.getForumBanList(categoryId+"/"+forumId);
+	  assertEquals("Ip add in forum", listIpBanInForum.get(0), ip);
+	  // removeBanIPForum
+	  forumService_.removeBanIPForum(sProvider, ip, categoryId+"/"+forumId);
+	  listIpBanInForum = forumService_.getForumBanList(categoryId+"/"+forumId);
+	  assertEquals("Ip is removed in listIpBanInForum, size is 0 ",listIpBanInForum.size(), 0);
+	  // removeIpBan
+	  forumService_.removeBan(ip);
+	  listBans = forumService_.getBanList();
+	  assertEquals("Ip is removed in listBans, size is 0 ", listBans.size(), 0);
+  }
+  
   public void testForumAdministration() throws Exception{
   	ForumAdministration administration = createForumAdministration();
   	forumService_.saveForumAdministration(sProvider, administration);
@@ -527,7 +581,7 @@ public class TestForumService extends BaseForumTestCase{
 		post.setModifiedDate(new Date());
 		post.setName("SubJect");
 		post.setMessage("content description");
-		post.setRemoteAddr("192.168.1.1");
+		post.setRemoteAddr("192.168.1.11");
 		post.setIcon("classNameIcon");
 		post.setIsApproved(false);
 		

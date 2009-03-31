@@ -309,7 +309,6 @@ public class JCRDataStorage {
 	}
 
 
-
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		Node forumAdminNode;
@@ -2543,15 +2542,14 @@ public class JCRDataStorage {
 			}
 		} catch (Exception e) {		}
 		link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
-		for(Post post : posts){
+		for(int i = 0; i < posts.size(); i ++){
 			message = new Message();
 			message.setMimeType("text/html");
 			message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
 			message.setSubject(headerSubject + objectName);
-			message.setBody(mailContent.replace("$postContent_", post.getMessage())
+			message.setBody(mailContent.replace("$postContent_", posts.get(i).getMessage())
 							.replace("$topicName_", topicName).replace("$link_", link));
-			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, post.getOwner()).getEmail()}), message);
-			System.out.println("------------>ok");
+			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, posts.get(i).getOwner()).getEmail()}), message);
 		}
 		// ----------------------- finish ----------------------
 		
@@ -3645,6 +3643,7 @@ public class JCRDataStorage {
 		if (pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = forumHomeNode.getPath();
 		}
+		textQuery = StringUtils.replace(textQuery, "'", "&#39;");
 		String[] values = type_.split(",");// user(admin or not admin), type(forum, topic, post)
 		boolean isAdmin = false;
 		if (values[0].equals("true"))
