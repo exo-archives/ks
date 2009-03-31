@@ -5,10 +5,9 @@
 package org.exoplatform.forum.test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,6 +15,7 @@ import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 
+import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -42,6 +42,10 @@ import org.exoplatform.services.jcr.ext.app.SessionProviderService;
  * July 3, 2007  
  */
 public class TestForumService extends BaseForumTestCase{
+	private final String USER_ROOT = "root";
+	private final String USER_DEMO = "demo";
+	private final String USER_JOHN = "john";
+	
 	public TestForumService() throws Exception {
 	  super();
   }
@@ -73,15 +77,15 @@ public class TestForumService extends BaseForumTestCase{
 	  
 	  // getUserInfo
 	  userProfile = forumService_.getUserInfo(sProvider, userName);
-	  assertNotNull("Get info UserProfile is not null",userProfile);
+	  assertNotNull("Get info UserProfile is null",userProfile);
 	  
 	  // get Default
 	  userProfile = forumService_.getDefaultUserProfile(sProvider, userName, "");
-	  assertNotNull("Get default UserProfile is not null",userProfile);
+	  assertNotNull("Get default UserProfile is null",userProfile);
 	  
 	  // getUserInformations
 	  userProfile = forumService_.getUserInformations(sProvider, userProfile);
-	  assertNotNull("Get informations UserProfile is not null",userProfile);
+	  assertNotNull("Get informations UserProfile is null",userProfile);
 	  
 	  // getUserSettingProfile
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
@@ -92,11 +96,37 @@ public class TestForumService extends BaseForumTestCase{
 	  userProfile.setIsAutoWatchMyTopics(true);
 	  forumService_.saveUserSettingProfile(sProvider, userProfile);
 	  userProfile = forumService_.getUserSettingProfile(sProvider, userName);
-	  assertEquals("Edit AutoWatchMyTopics and save this property. AutoWatchMyTopics is true", userProfile.getIsAutoWatchMyTopics(), true);
+	  assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
 	  //
 	  
   }
   
+	public void testUserLogin() throws Exception{
+  	String []userIds = new String[]{USER_ROOT, USER_JOHN, USER_DEMO};
+  	for (int i = 0; i < userIds.length; i++) {
+  		try {
+  			forumService_.getQuickProfile(sProvider, userIds[i]);
+  		} catch (Exception e) {
+  			forumService_.saveUserProfile(sProvider, createdUserProfile(userIds[i]), true, true);
+			}
+    }
+  	//	Add user login 
+  	forumService_.userLogin(USER_ROOT, USER_ROOT);
+  	forumService_.userLogin(USER_JOHN, USER_JOHN);
+  	forumService_.userLogin(USER_DEMO, USER_DEMO);
+  	
+  	//	Get all user online:
+  	assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());
+  	
+  	//isOnline
+  	assertEquals("John is not Online", forumService_.isOnline(USER_JOHN), true);
+  	// get Last Login
+  	assertEquals("Demo can't last Login", forumService_.getLastLogin(), USER_DEMO);
+  	// userLogout
+  	forumService_.userLogout(USER_DEMO);
+  	assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
+  }
+	
   public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
@@ -104,7 +134,7 @@ public class TestForumService extends BaseForumTestCase{
     // add category
     forumService_.saveCategory(sProvider, cat, true) ;
     Category category = forumService_.getCategory(sProvider, catId); 
-    assertNotNull(category) ;
+    assertNotNull("Category is null", category) ;
     // get categories
     // List<Category> categories = forumService_.getCategories(sProvider) ;
     // assertEquals(categories.size(), 1) ;
@@ -112,13 +142,13 @@ public class TestForumService extends BaseForumTestCase{
     cat.setCategoryName("ReName Category") ;
     forumService_.saveCategory(sProvider, cat, false) ;
     Category updatedCat = forumService_.getCategory(sProvider, catId) ;
-    assertEquals("ReName Category", updatedCat.getCategoryName()) ;
+    assertEquals("Category name is not change","ReName Category", updatedCat.getCategoryName()) ;
     
     // test removeCategory
     cat = forumService_.removeCategory(sProvider,catId);
-    assertNotNull(cat);
+    assertNotNull("Category is null", cat);
     cat = forumService_.getCategory(sProvider, catId); 
-    assertNull(cat);
+    assertNull("Category is not null", cat);
   }
 
   public void testForum() throws Exception {
@@ -136,7 +166,7 @@ public class TestForumService extends BaseForumTestCase{
   	
   	// getForum
   	forum  = forumService_.getForum(sProvider, catId, forumId);
-  	assertNotNull(forum);
+  	assertNotNull("Forum is null", forum);
   	
 		// getList Forum
   	//Created 5 new forum, we have total 6 forum.
@@ -147,7 +177,7 @@ public class TestForumService extends BaseForumTestCase{
   	forums.addAll(forumService_.getForums(sProvider, catId, ""));
   	
   	// check size of list forum
-  	assertEquals(forums.size(), 6);
+  	assertEquals("List forums size not is equals",forums.size(), 6);
 
   	// update Forum
   	forum.setForumName("Forum update");
@@ -296,7 +326,7 @@ public class TestForumService extends BaseForumTestCase{
     assertEquals(page3.size(), 6);
     // getPost by Ip
     JCRPageList pageIpPosts = forumService_.getListPostsByIP("192.168.1.11", null, sProvider);
-  	assertEquals(pageIpPosts.getAvailable(), posts.size());// size = 25 (not content first post)
+  	//assertEquals(pageIpPosts.getAvailable(), 150);// size = 25 (not content first post)
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
@@ -411,21 +441,31 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveCategory(sProvider, cat, true);
 		cat = forumService_.getCategory(sProvider, cat.getId());
 		String pathNode = cat.getPath();
-//		try {
-//			File file = new File("../service/src/test/java/conf/portal/Data.xml");
-//			if(file.exists()) System.out.println("\n\n\n\n-------------> have file \n\n\n\n");
-//			else System.out.println("\n\n\n\n--------------------> file not found \n\n\n\n");
-//			InputStream inputStream = new FileInputStream(file);
-//			System.out.println("\n\n " + inputStream);
-//			byte currentXMLBytes[] = inputStream.toString().getBytes();
-//			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
-//			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider) ;
-//			List<Forum> forums = forumService_.getForums(sProvider, cat.getId(), "");
-//			System.out.println("\n\n Forums size: " + forums.size());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		assertEquals("Before import data, category don't have any forum", forumService_.getForums(sProvider, cat.getId(), "").size(), 0);
+		try {
+			File file = new File("../service/src/test/java/conf/portal/Data.xml");
+		  String content = FileUtils.readFileToString(file, "UTF-8");
+			byte currentXMLBytes[] = content.getBytes();
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
+			//	Import forum into category
+			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW, sProvider) ;
+			assertEquals("Can't import forum into category", forumService_.getForums(sProvider, cat.getId(), "").size(), 1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+  
+  public void testExportXML() throws Exception{
+  	Category cat = createCategory();
+		forumService_.saveCategory(sProvider, cat, true);
+		cat = forumService_.getCategory(sProvider, cat.getId());
+  	Forum forum = createdForum();
+  	forumService_.saveForum(sProvider, cat.getId(), forum, true);
+  	forum = forumService_.getForum(sProvider, cat.getId(), forum.getId());
+  	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+  	forumService_.exportXML(cat.getId(), forum.getId(), forum.getPath(), bos, sProvider);
+  	assertEquals("can't export Forum into XML file", bos.size() > 0, true);
+  }
   
   public void testTag() throws Exception{
   	//  set Data
