@@ -716,6 +716,12 @@
 	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
 }
 
+.UIPrintPreview .FAQContainer .FAQContent .ResponseExternal {
+	padding: 5px 10px 10px 0px; 
+	background: url('background/BottomResponseContent.gif') repeat-x bottom left;
+	width: auto !important;
+}
+
 .UIFAQPortlet .FAQContainer .ResponseContainer .TitleCommentContent{
 	background: url('background/TitleResponseContent.gif') repeat-x top left;
 	border-top: solid 1px #ffffff;
