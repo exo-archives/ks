@@ -35,6 +35,9 @@
 .UITopicDetail .ToolbarActionsContainer {
 	padding-right: 10px;
 }
+.UITopicDetail .PostsInThreadContainer .ForumToolbar {
+	border-bottom: solid 1px #b7b7b7;
+}
 
 .UITopicDetail .ForumToolbar .SearchIcon {
 	background-repeat: no-repeat;
@@ -53,7 +56,6 @@
 .UITopicDetail .ForumToolbar .TagIcon {
 	background: url('icons/16x16/TagIcon.gif') no-repeat center left;
 }
-
 /*************************************** ContentContainer ************************************/
 .UITopicDetail .PostContentContainer .PostContent {
 	min-height: 130px ;
@@ -316,7 +318,6 @@
 
 .UITopicDetail .ForumQuickReply .ContentContainer {
 	border: solid 1px #b7b7b7;
-	border-top: none;
 }
 
 .UITopicDetail .ForumQuickReply .ForumList {

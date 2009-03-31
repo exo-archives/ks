@@ -248,10 +248,12 @@ UIForumPortlet.prototype.expandCollapse = function(obj) {
 		contentContainer.style.display = "none" ;
 		obj.className = "ExpandButton" ;
 		obj.setAttribute("title","Expand") ;
+		forumToolbar.style.borderBottom = "solid 1px #b7b7b7";
 	} else {
 		contentContainer.style.display = "block" ;
 		obj.className = "CollapseButton" ;
 		obj.setAttribute("title","Collapse") ;
+		forumToolbar.style.borderBottom = "none";
 	}
 } ;
 //Edit by Duy Tu 14-11-07
