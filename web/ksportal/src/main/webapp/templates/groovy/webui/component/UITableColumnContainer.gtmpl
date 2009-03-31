@@ -55,17 +55,18 @@
 	%>
 	<div class="VIEW-CONTAINER">
 		<div id="$uicomponent.id">		
-			<table class="UITableColumnContainer" style="table-layout: fixed; width: 100%;_width: auto; $style">
-				<tr class="TRContainer" style="background:#ECEDEE;">
+			<div class="UITableColumnContainer" style="overflow:hidden;zoom:100%; $style">
+				<div class="TRContainer" style="background:#ECEDEE;">
 					<% for(uiChild in uicomponent.getChildren()) { %>
 					<% String cw = uiChild.getWidth();
 						 String cstyle = "";
 						 if (cw != null) {cstyle = "style=\"" + cw + "\"";}
 					 %>
-						<td class="${uiChild.id}TDContainer" $cstyle><% uicomponent.renderUIComponent(uiChild) %></td>
+						<div class="${uiChild.id}TDContainer" $cstyle><% uicomponent.renderUIComponent(uiChild) %></div>
 					<% } %>
-			 </tr>
-			</table>
+					<div style="clear: both;"><span></span></div>
+			 </div>
+			</div>
 		</div>
 	</div>
 	<%/*Debug On IE -----For DND */%>

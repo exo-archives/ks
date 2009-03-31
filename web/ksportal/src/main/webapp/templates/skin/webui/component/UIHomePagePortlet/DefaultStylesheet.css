@@ -1,5 +1,10 @@
 .sidebarTDContainer {
 	width: 220px;
+	float: right;
+}
+
+.pagebodyTDContainer {
+	margin-right: 225px;
 }
 
 #UIContainer-pagebody {
