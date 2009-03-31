@@ -7,7 +7,9 @@
 }
 
 .UIForumContainer .LockActionForum {
-	filter:alpha(opacity=50);-moz-opacity:.50;opacity:.50;
+	filter:alpha(opacity=50);
+	-moz-opacity:.50;
+	opacity:.50;
 }
 
 .UIForumContainer .ButtomAndPageListContainer .UIPageIterator {
@@ -48,6 +50,10 @@
 .UIForumContainer .ContentContainer .UITopicList .TitleNorman {
 	color: #204aa0;
 	font-size: 12px;
+}
+
+.UIForumContainer .ContentContainer .UITopicList .UIGrid th {
+	line-height: 16px;
 }
 
 .UIForumContainer .ContentContainer .TitleNewpost {

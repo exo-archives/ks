@@ -244,11 +244,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
-		if(isMod) return true;
 		if(userProfile.getUserRole() == 3) return false;
-		if(userProfile.getIsBanned()) return false;
-		if(isIPBaned(getIPRemoter())) return false;
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
+		if(userProfile.getIsBanned()) return false;
+		if(isMod) return true;
+		if(isIPBaned(getIPRemoter())) return false;
 		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		List<String> listUser = new ArrayList<String>() ;
 		String [] canPost = this.topic.getCanPost();
