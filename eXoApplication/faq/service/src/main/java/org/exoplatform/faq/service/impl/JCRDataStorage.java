@@ -331,6 +331,7 @@ public class JCRDataStorage {
 	public void checkEvenListen() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node questionHomeNode = getQuestionHome(sProvider, null);
+		sProvider.close();
 		ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
 		EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
 		if(listenerIterator.hasNext()){
@@ -994,8 +995,8 @@ public class JCRDataStorage {
 						responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
 					if (languageNode.hasProperty("exo:title")) 
 						questionContent = languageNode.getProperty("exo:title").getString();
-					if ((questionDetail.toLowerCase().indexOf(text) >= 0)
-					    || ArrayContentValue(responseContent, text)
+					if ((questionDetail != null && questionDetail.toLowerCase().indexOf(text) >= 0)
+					    || (responseContent!= null && ArrayContentValue(responseContent, text))
 					    || (authorContent.toLowerCase().indexOf(text) >= 0)
 					    || (emailContent.toLowerCase().indexOf(text) >= 0)) {
 						isAdd = true;

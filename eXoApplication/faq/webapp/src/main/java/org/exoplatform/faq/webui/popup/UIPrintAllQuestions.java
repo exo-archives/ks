@@ -74,6 +74,25 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		}
 	}
 	
+	private String getQuestionRelationById(String questionId) {
+		Question question = new Question();
+		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		try {
+			question = faqService_.getQuestionById(questionId, sessionProvider);
+			if(question != null) {
+				sessionProvider.close();
+				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
+			} else {
+				sessionProvider.close();
+				return "" ;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			sessionProvider.close();
+			return "" ;
+		}
+	}
+	
 	@SuppressWarnings("unused")  
 	private String getFileSource(InputStream input, String fileName, DownloadService dservice) throws Exception {
 		byte[] imageBytes = null;

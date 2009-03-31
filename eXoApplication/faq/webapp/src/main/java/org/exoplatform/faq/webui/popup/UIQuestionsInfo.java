@@ -174,6 +174,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         }
       }
     }
+    sessionProvider.close();
   }
   
   @SuppressWarnings("unused")

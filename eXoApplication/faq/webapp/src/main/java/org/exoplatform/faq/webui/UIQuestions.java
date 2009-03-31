@@ -1318,6 +1318,7 @@ public class UIQuestions extends UIContainer {
 				}
 				if(listRelaId.size() < question.getRelations().length) {
 					question.setRelations(listRelaId.toArray(new String[]{})) ;
+					FAQUtils.getEmailSetting(uiQuestions.faqSetting_, false, false);
 					faqService_.saveQuestion(question, false, sessionProvider,uiQuestions.faqSetting_) ;
 					for(int i = 0 ; i < uiQuestions.getListQuestion().size() ; i ++) {
 						if(uiQuestions.getListQuestion().get(i).getId().equals(questionId)) {

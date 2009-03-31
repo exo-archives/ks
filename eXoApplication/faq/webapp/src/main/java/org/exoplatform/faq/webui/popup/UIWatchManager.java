@@ -199,6 +199,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 							UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 						}
+						sessionProvider.close();
 						return ;
 					}
 				} catch (Exception e) {
@@ -211,6 +212,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+					sessionProvider.close();
 					return ;
 				}
 				

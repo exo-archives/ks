@@ -260,6 +260,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		this.removeChildById(QUESTION_LANGUAGE) ;
 		this.removeChildById(IS_APPROVED) ;
 		this.removeChildById(SHOW_ANSWER) ;
+		this.inputResponseQuestion_.setValue("");
 		listLanguageToReponse.clear() ;
 		listQuestIdRela.clear() ;
 		listRelationQuestion.clear() ;
@@ -460,7 +461,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					questionNode = faqService.getQuestionNodeById(question_.getId(), sessionProvider);
 					for(String lang : languages){
 						if(!lang.equals(question_.getLanguage())){
-							multiLanguages.saveAnswer(questionNode, responseForm.mapAnswers.get(lang), lang, sessionProvider);
+							try{
+								multiLanguages.saveAnswer(questionNode, responseForm.mapAnswers.get(lang), lang, sessionProvider);
+							} catch (Exception e){
+								e.printStackTrace();
+							}
 						}
 					}
 					faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;

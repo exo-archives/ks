@@ -125,7 +125,7 @@
 																		<!-- ==================================== question content =========================== -->
 																		<div class="ViewQuestionNotApproved">
 																			<a style="cursor:pointer">
-																				<span class="QuestionName">$questionContent</span>
+																				<span class="QuestionName" style="line-height:20px;">$questionContent</span>
 																			</a>
 																		</div>
 																		
@@ -188,9 +188,7 @@
 														%>
 																<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
 																	<div class="Image">
-																		<div onclick="eXo.faq.UIFAQPortlet.showPicture(this);">
-																			<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
-																		</div>
+																		<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
 																	</div>
 																	<div style="clear:left;"><span></span></div>
 											 						<div class="LabelBox">
@@ -260,7 +258,7 @@
 											String linkRelaQues = "" ;
 									%>
 										<div class="RelationContent">
-											<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
+											<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes("UIQuestions.label.RelatedQuestion")%>:</div>
 									<%
 											for(String relationId : questionRelation) { 
 												quesRelaCont = "" ;

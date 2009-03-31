@@ -404,7 +404,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       		questionForm.listQuestionContent.remove(questionForm.lastLanguage_);
       	}
       	questionForm.listQuestionDetail.put(questionForm.lastLanguage_, detail);
-      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, question);
+      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, question.trim());
       	if(!questionForm.listLanguages.contains(language)) questionForm.listLanguages.add(language);
       } else {
       	if(questionForm.listLanguages.contains(questionForm.lastLanguage_)){
@@ -480,7 +480,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       if(!validatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
       if(validatorDataInput.fckContentIsNotEmpty(questionContent)){
       	questionForm.listQuestionDetail.put(questionForm.lastLanguage_, questionDetail);
-      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, questionContent);
+      	questionForm.listQuestionContent.put(questionForm.lastLanguage_, questionContent.trim());
       	if(!questionForm.listLanguages.contains(questionForm.lastLanguage_)) questionForm.listLanguages.add(questionForm.lastLanguage_);
       } else {
       	if(questionForm.listLanguages.contains(questionForm.lastLanguage_)){
@@ -521,6 +521,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
           popupAction.deActivate() ;
           event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+          
+          sessionProvider.close();
           return;
         }
         question_.setCreatedDate(date) ;
@@ -535,7 +537,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setQuestion(questionForm.inputQuestionContent.getValue());
       try{
       	question_.setDetail(questionForm.listQuestionDetail.get(questionForm.defaultLanguage_)) ;
-      	question_.setQuestion(questionForm.listQuestionContent.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;")) ;
+      	question_.setQuestion(questionForm.listQuestionContent.get(questionForm.defaultLanguage_).replaceAll("<", "&lt;").replaceAll(">", "&gt;").trim()) ;
       } catch(Exception e){
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.default-question-null", null, ApplicationMessage.WARNING)) ;

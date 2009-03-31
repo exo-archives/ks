@@ -1,4 +1,5 @@
 function UIFAQPortlet() {
+	this.viewImage = true;
 	this.scrollManagerLoaded = false;
 	this.hiddentMenu = true;
 	this.scrollMgr = [];
@@ -143,18 +144,20 @@ UIFAQPortlet.prototype.hidePicture = function() {
 } ;
 
 UIFAQPortlet.prototype.showPicture = function(obj) {
-  var containerNode = document.createElement('div') ;
-	var imageNode = eXo.core.DOMUtil.findFirstDescendantByClass(obj,"img","AttachmentFile") ;
-	imageNodeSrc = imageNode.cloneNode(true);
-	imageNode.style.width = "auto" ;
-	imageNode.style.height = "auto" ;
-  containerNode.appendChild(imageNode) ;
-  containerNode.setAttribute('title', 'Click to close') ;
-  containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
-	this.showFullScreen(imageNode,containerNode);
-  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
-	obj.appendChild(imageNodeSrc);
+	if(this.viewImage){
+	  var containerNode = document.createElement('div') ;
+		var imageNode = eXo.core.DOMUtil.findFirstDescendantByClass(obj,"img","AttachmentFile") ;
+		imageNodeSrc = imageNode.cloneNode(true);
+		imageNode.style.width = "auto" ;
+		imageNode.style.height = "auto" ;
+	  containerNode.appendChild(imageNode) ;
+	  containerNode.setAttribute('title', 'Click to close') ;
+	  containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
+		this.showFullScreen(imageNode,containerNode);
+	  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
+	  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
+		obj.appendChild(imageNodeSrc);
+	}
 };
 
 UIFAQPortlet.prototype.getImageSize = function(imageNode){
@@ -212,6 +215,8 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
 	uiPortalApplication.style.display = "none";
 	window.scroll(0,0) ;
+	
+	this.viewImage = false;
 };
 
 UIFAQPortlet.prototype.printAll = function(obj) { 
@@ -272,6 +277,7 @@ UIFAQPortlet.prototype.closePrint = function() {
 	}
 	
 	window.scroll(0,0);
+	this.viewImage = true;
 } ;
 
 DOMUtil.prototype.getElemementsByClass = function(root,clazz){
