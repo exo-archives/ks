@@ -307,6 +307,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 			message = StringUtils.replace(message, "'", "&apos;");
+			message = ForumTransformHTML.fixAddBBcodeAction(message);
 			String remoteAddr = "";
 			if(forumPortlet.isEnableIPLogging()) {
 				PortletRequestImp request = event.getRequestContext().getRequest();

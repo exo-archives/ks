@@ -282,7 +282,10 @@ public class ForumTransformHTML {
 			try {
 				int clsIndex = b.indexOf("[/quote]", tagIndex);
 				String text = b.substring(tagIndex + 7, clsIndex);
-				if(text == null || text.trim().length() == 0) continue;
+				if(text == null || text.trim().length() == 0) {
+					b = StringUtils.replace(b, "[quote]" + text + "[/quote]", "");
+					continue;
+				}
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>").append(text).append("</div></div>");
@@ -301,14 +304,16 @@ public class ForumTransformHTML {
 				int clsUrl = urlStr.indexOf("]");
 				String userName = urlStr.substring(0, clsUrl);
 				String text = urlStr.substring(clsUrl + 1);
-				if(text == null || text.trim().length() == 0) continue;
+				if(text == null || text.trim().length() == 0) {
+					b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", "");
+					continue;
+				}
 				buffer = new StringBuffer();
 				buffer.append("<div class=\"Classquote\">");
 				buffer.append("<div>Originally Posted by <strong>").append(StringUtils.remove(userName, '"')).append(
 				    "</strong></div>");
 				buffer.append("<div>").append(text).append("</div></div>");
-				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer
-				    .toString());
+				b = StringUtils.replace(b, "[quote=" + userName + "]" + text + "[/quote]", buffer.toString());
 			} catch (Exception e) {
 				continue;
 			}
@@ -492,7 +497,7 @@ public class ForumTransformHTML {
 		s = StringUtils.replace(s, "\n", "");
 		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
-		s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
+	//	s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
 		try {
 			s = transform(s);
 			s = s.replaceAll("(https?|ftp)://", " $0").replaceAll("(=\"|=\'|\'>|\">)(\\s*)(https?|ftp)", "$1$3")
@@ -579,5 +584,60 @@ public class ForumTransformHTML {
 			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&#39", "'");
 		}
 		return s;
+	}
+	
+	public static String fixAddBBcodeAction(String b) {
+		int tagIndex = 0;
+		int lastIndex = 0;
+		String start;
+		String end;
+		String text_ = "";
+		StringBuilder builder = new StringBuilder();
+		String[] tagBBcode = new String[] { "quote", "code", "QUOTE", "CODE" };
+		for (int i = 0; i < tagBBcode.length; i++) {
+			start = "[" + tagBBcode[i];
+			end = "[/" + tagBBcode[i] + "]";
+			while ((tagIndex = b.indexOf(start, lastIndex)) != -1) {
+				lastIndex = tagIndex + 1;
+				try {
+					int clsIndex = b.indexOf(end, tagIndex);
+					String text = b.substring(tagIndex, clsIndex);
+					if (text == null || text.trim().length() == 0)
+						continue;
+					text_ = text;
+					builder = new StringBuilder();
+					if (text.indexOf('<' + "p") > text.indexOf('<' + "/p")) {
+						text = StringUtils.replaceOnce(text, "</p>", "");
+						int t = text.lastIndexOf('<' + "p>");
+						builder.append(text.substring(0, t));
+						if (text.length() > (t + 3)) {
+							builder.append(text.substring(t + 3));
+						}
+					}
+					text = builder.toString();
+					if(text != null && text.length() > 0) {
+						b = StringUtils.replace(b, text_, text);
+						text_ = text;
+					} else text = text_;
+					
+					builder = new StringBuilder();
+					if (text.indexOf('<' + "span") > text.indexOf('<' + "/span")) {
+						text = StringUtils.replaceOnce(text, "</span>", "");
+						int t = text.lastIndexOf('<' + "span");
+						builder.append(text.substring(0, t));
+						if (text.length() > (t + 6)) {
+							builder.append(text.substring((t + 6)));
+						}
+					}
+					text = builder.toString();
+					if(text != null && text.length() > 0) {
+						b = StringUtils.replace(b, text_, text);
+					}
+				} catch (Exception e) {
+					continue;
+				}
+			}
+		}
+		return b;
 	}
 }
