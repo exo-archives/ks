@@ -7,12 +7,17 @@ package org.exoplatform.forum.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+import org.apache.commons.io.FileUtils;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
@@ -32,7 +37,10 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 
 
 /**
@@ -327,6 +335,7 @@ public class TestForumService extends BaseForumTestCase{
     // getPost by Ip
     JCRPageList pageIpPosts = forumService_.getListPostsByIP("192.168.1.11", null, sProvider);
   	//assertEquals(pageIpPosts.getAvailable(), 150);// size = 25 (not content first post)
+
 		// update Post First
 		Post newPost = (Post)pagePosts.getPage(1).get(0);
 		newPost.setMessage("New message");
