@@ -206,7 +206,7 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	FAQContainer.appendChild(FAQContent) ;
 	dummyPortlet.appendChild(FAQContainer) ;
 	dummyPortlet = this.removeLink(dummyPortlet);
-	dummyPortlet.style.position ="absolute";
+	//dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="100%";
 	dummyPortlet.style.zIndex = 1;
 	document.body.insertBefore(this.removeLink(dummyPortlet),uiPortalApplication) ;
