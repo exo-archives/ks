@@ -1237,7 +1237,7 @@ public class JCRDataStorage {
 		if(faqSetting.getOrderBy().equals("created")){
 			queryString.append("@exo:createdDate ");
 		} else {
-			queryString.append("@exo:name ");
+			queryString.append("@exo:title ");
 		}
 		if(faqSetting.getOrderType().equals("asc")){
 			queryString.append("ascending");
@@ -1277,7 +1277,7 @@ public class JCRDataStorage {
 		if(faqSetting.getOrderBy().equals("created")){
 			queryString.append("@exo:createdDate ");
 		} else {
-			queryString.append("@exo:name ");
+			queryString.append("@exo:title ");
 		}
 		if(faqSetting.getOrderType().equals("asc")){
 			queryString.append("ascending");
@@ -1841,7 +1841,7 @@ public class JCRDataStorage {
 		if(faqSetting.getOrderBy().equals("created")){
 			queryString.append("@exo:createdDate ");
 		} else {
-			queryString.append("@exo:name ");
+			queryString.append("@exo:title ");
 		}
 		if(faqSetting.getOrderType().equals("asc")){
 			queryString.append("ascending");
