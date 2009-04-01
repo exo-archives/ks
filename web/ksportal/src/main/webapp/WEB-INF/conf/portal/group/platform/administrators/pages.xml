@@ -82,8 +82,8 @@
     <name>applicationRegistry</name>
     <access-permissions>*:/platform/administrators</access-permissions>
     <edit-permission>manager:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>group#platform/administrators:/exoadmin/PortletRegistryPortlet/PortletRegistry</instance-id>
+    <application>            
+      <instance-id>group#platform/administrators:/exoadmin/ApplicationRegistryPortlet/ApplicationRegistry</instance-id>
       <title>Application Registry</title>
       <show-info-bar>false</show-info-bar>
     </application>   

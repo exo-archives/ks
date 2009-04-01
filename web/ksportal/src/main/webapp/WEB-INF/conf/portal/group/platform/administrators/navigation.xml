@@ -19,15 +19,15 @@
 	    </node>
       
       <node>
-		    <uri>administration/applicationregistry</uri>
-		    <name>applicationregistry</name>
+		    <uri>administration/applicationRegistry</uri>
+		    <name>applicationRegistry</name>
 		    <label>#{administration.application-registry}</label>
 		    <page-reference>group::platform/administrators::applicationRegistry</page-reference>
 	    </node>
 	    
 	    <node>
 		    <uri>administration/comunityManagement</uri>
-		    <name>newAccount</name>
+		    <name>comunityManagement</name>
 		    <label>#{administration.comunity-management}</label>
 		    <page-reference>group::platform/administrators::communityManagement</page-reference>
 	    </node>
