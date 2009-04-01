@@ -37,8 +37,10 @@ import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -206,6 +208,7 @@ public class UIBreadcumbs extends UIContainer {
 			if(uiBreadcums.isOpen()) {
 				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 				UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
+				UIApplication uiApp = uiBreadcums.getAncestorOfType(UIApplication.class) ;
 				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0) {
 					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -248,7 +251,12 @@ public class UIBreadcumbs extends UIContainer {
 							}
 						}						
 					}catch(Exception e) {
-						//e.printStackTrace();
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+						categoryContainer.updateIsRender(true) ;
+						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+						path = FORUM_SERVICE;
 					}finally {
 						sProvider.close() ;
 					}
@@ -270,7 +278,12 @@ public class UIBreadcumbs extends UIContainer {
 							forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
 							forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum) ;
 						}catch(Exception e) {
-							e.printStackTrace();
+							uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+							UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+							categoryContainer.updateIsRender(true) ;
+							categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+							path = FORUM_SERVICE;
 						}finally {
 							sProvider.close() ;
 						}
