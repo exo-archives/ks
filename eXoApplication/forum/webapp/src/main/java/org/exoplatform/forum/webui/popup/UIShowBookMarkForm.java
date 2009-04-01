@@ -230,7 +230,16 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 					}
 				}
-			} finally {
+			} catch (Exception e) {
+				breadcumbs.setOpen(false) ;
+				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+				id = bookmarkForm.getBookMarkId(id) ;
+				if(!ForumUtils.isEmpty(id)) {
+					bookmarkForm.forumService.saveUserBookmark(sProvider, forumPortlet.getUserProfile().getUserId(), id, false) ;
+					forumPortlet.updateUserProfileInfo() ;
+				}
+				return ;
+			}finally {
 				sProvider.close();
 			}
 			if(!isRead) {
