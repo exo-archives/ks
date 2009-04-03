@@ -40,7 +40,7 @@ public class Answer {
   private String responseBy = null ;
   
   /** The date response. */
-  private Date dateResponse ;
+  private Date dateResponse = null ;
   
   /** The activate answers. */
   private Boolean activateAnswers;

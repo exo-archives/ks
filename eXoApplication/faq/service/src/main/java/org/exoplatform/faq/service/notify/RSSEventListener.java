@@ -58,7 +58,7 @@ public class RSSEventListener implements EventListener{
 			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
-		}		
+		}
 	}
   
 }

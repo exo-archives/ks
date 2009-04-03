@@ -119,7 +119,7 @@ public class JCRDataStorage {
 	private final int EVENT_REMOVE = 2;
 	private final String FAQ_RSS = "faq.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
-	protected List<EventListener> listeners_ = new ArrayList<EventListener>();
+	protected List<RSSEventListener> listeners_ = new ArrayList<RSSEventListener>();
 
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -319,6 +319,10 @@ public class JCRDataStorage {
 		}
 	}
 	
+	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
+		return getQuestionHome(sProvider, null).getNodes() ;
+	}
+  
 	protected void addListennerForNode(Node node) throws Exception{
 		listeners_.clear();
 		String wsName = node.getSession().getWorkspace().getName() ;
@@ -338,14 +342,19 @@ public class JCRDataStorage {
 	}
 	
 	public void removeRSSEventListener() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		ObservationManager observation = getQuestionHome(sProvider, null).getSession().getWorkspace().getObservationManager() ;
-		while(!listeners_.isEmpty()){
-			observation.removeEventListener(listeners_.get(0));
-			listeners_.remove(0);
-		}
-		sProvider.close();
-	}
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try{
+       ObservationManager observation = getQuestionHome(sProvider, null).getSession().getWorkspace().getObservationManager() ;
+       for(RSSEventListener ev : listeners_) {
+          observation.removeEventListener(ev);   
+       }
+       listeners_.clear() ;
+    }catch(Exception e) {
+      e.printStackTrace() ;
+    }finally{
+     sProvider.close() ;
+    }
+  }
 	
 	public void addRSSEventListener() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
