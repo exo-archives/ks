@@ -337,12 +337,20 @@ public class JCRDataStorage {
 		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), false, null, null, false) ;
 	}
 	
-	public void removeAllEventListenner(Node node) throws Exception {
-		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+	public void removeRSSEventListener() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		ObservationManager observation = getQuestionHome(sProvider, null).getSession().getWorkspace().getObservationManager() ;
 		while(!listeners_.isEmpty()){
 			observation.removeEventListener(listeners_.get(0));
 			listeners_.remove(0);
 		}
+		sProvider.close();
+	}
+	
+	public void addRSSEventListener() throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		addListennerForNode(getQuestionHome(sProvider, null));
+		sProvider.close();
 	}
 	
 	public void checkEvenListen() throws Exception{
