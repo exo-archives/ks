@@ -676,4 +676,8 @@ public interface FAQService {
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception;
 	
 	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+	
+	public void removeRSSEventListener() throws Exception;
+	
+	public void addRSSEventListener() throws Exception;
 }

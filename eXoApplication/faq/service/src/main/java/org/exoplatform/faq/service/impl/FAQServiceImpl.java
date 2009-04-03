@@ -761,6 +761,14 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
 		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
 	}
+	
+	public void removeRSSEventListener() throws Exception {
+		jcrData_.removeRSSEventListener();
+	}
+	
+	public void addRSSEventListener() throws Exception{
+		jcrData_.addRSSEventListener();
+	}
 
 	public void start() {
 		// TODO Auto-generated method stub
