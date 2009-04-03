@@ -308,9 +308,6 @@ public class JCRDataStorage {
 	private Node getQuestionHome(SessionProvider sProvider, String username) throws Exception {
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		try {
-			//	remove
-			removeAllEventListenner(faqServiceHome.getNode(Utils.QUESTION_HOME));
-			
 			return faqServiceHome.getNode(Utils.QUESTION_HOME) ;
 		} catch (PathNotFoundException ex) {
 			Node questionHome = faqServiceHome.addNode(Utils.QUESTION_HOME, Utils.EXO_FAQQUESTIONHOME) ;
