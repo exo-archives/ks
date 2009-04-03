@@ -38,6 +38,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
+import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
@@ -118,6 +119,8 @@ public class JCRDataStorage {
 	private final int EVENT_REMOVE = 2;
 	private final String FAQ_RSS = "faq.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+	protected List<EventListener> listeners_ = new ArrayList<EventListener>();
+
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
@@ -305,27 +308,44 @@ public class JCRDataStorage {
 	private Node getQuestionHome(SessionProvider sProvider, String username) throws Exception {
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		try {
+			//	remove
+			removeAllEventListenner(faqServiceHome.getNode(Utils.QUESTION_HOME));
+			
 			return faqServiceHome.getNode(Utils.QUESTION_HOME) ;
 		} catch (PathNotFoundException ex) {
 			Node questionHome = faqServiceHome.addNode(Utils.QUESTION_HOME, Utils.EXO_FAQQUESTIONHOME) ;
 			faqServiceHome.save() ;
 			
-			//		Add observation
+			//	Add observation
 			addListennerForNode(questionHome);
 			return questionHome ;
 		}
 	}
 	
 	protected void addListennerForNode(Node node) throws Exception{
+		listeners_.clear();
 		String wsName = node.getSession().getWorkspace().getName() ;
 		RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
-		RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
 		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+		RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
+		listeners_.add(changePropertyListener);
 		observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,node.getPath(), true, null, null, false) ;
+		
 		RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		listeners_.add(addQuestionListener);
 		observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,node.getPath(), false, null, null, false) ;
+		
 		RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		listeners_.add(removeQuestionListener);
 		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), false, null, null, false) ;
+	}
+	
+	public void removeAllEventListenner(Node node) throws Exception {
+		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+		while(!listeners_.isEmpty()){
+			observation.removeEventListener(listeners_.get(0));
+			listeners_.remove(0);
+		}
 	}
 	
 	public void checkEvenListen() throws Exception{
@@ -2306,6 +2326,7 @@ public class JCRDataStorage {
 	}
 	
 	public void generateRSS(String path, int typeEvent) throws Exception	{
+		System.out.println("\n---------------------->event:" + typeEvent );
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String feedType = "rss_2.0";
 		boolean isNew = false;
