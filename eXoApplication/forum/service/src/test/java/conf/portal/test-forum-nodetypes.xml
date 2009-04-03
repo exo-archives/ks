@@ -366,12 +366,6 @@
 			<propertyDefinition name="exo:forumCount" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
 				<valueConstraints/>
 			</propertyDefinition>		
-			<propertyDefinition name="exo:type" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
-				<valueConstraints/>
-				<defaultValues>
-					<defaultValue>category</defaultValue>
-				</defaultValues>
-			</propertyDefinition>		
 		</propertyDefinitions>
 		
 		<childNodeDefinitions>
@@ -435,7 +429,7 @@
 		</propertyDefinitions>
 	</nodeType>	 	 	 	
 	
-	<nodeType name="exo:userProfile" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	<nodeType name="exo:forumUserProfile" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
 		</supertypes>
@@ -708,9 +702,9 @@
 		  <supertype>nt:base</supertype>
 	  </supertypes>	 
 	  <childNodeDefinitions>
-			<childNodeDefinition name="*" defaultPrimaryType="exo:userProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:userProfile</requiredPrimaryType>
+					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>

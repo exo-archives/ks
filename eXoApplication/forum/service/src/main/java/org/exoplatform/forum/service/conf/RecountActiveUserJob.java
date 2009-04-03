@@ -24,6 +24,7 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.quartz.Job;
@@ -55,7 +56,7 @@ public class RecountActiveUserJob implements Job{
 	    			calendar.setTimeInMillis(currentDay) ;
 	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
 	    			StringBuilder stringBuilder = new StringBuilder();
-	    			stringBuilder.append("//element(*,exo:userProfile)[")
+	    			stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
 	    				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
 	    			forumService.evaluateActiveUsers(sysProvider, stringBuilder.toString()) ;
 	    			if (log_.isDebugEnabled()) {

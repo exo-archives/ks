@@ -105,7 +105,7 @@ public class ForumPageList extends JCRPageList {
 					currentListPage_.add(getPost(currentNode)) ;
 				}else if(currentNode.isNodeType("exo:topic")) {
 					currentListPage_.add(getTopic(currentNode)) ;
-				}else if(currentNode.isNodeType("exo:userProfile")) {
+				}else if(currentNode.isNodeType(Utils.USER_PROFILES_TYPE)) {
 					currentListPage_.add(getUserProfile(currentNode)) ;
 				}else if(currentNode.isNodeType("exo:privateMessage")) {
 					currentListPage_.add(getPrivateMessage(currentNode)) ;

@@ -734,7 +734,7 @@ public class JCRDataStorage {
 								}
 							}
 						} catch (PathNotFoundException e) {
-							userProfileNode = userProfileHomeNode.addNode(string, "exo:userProfile");
+							userProfileNode = userProfileHomeNode.addNode(string, Utils.USER_PROFILES_TYPE);
 							String[] strings = new String[] { (forum.getForumName() + "(" + categoryId + "/" + forum.getId()) };
 							userProfileNode.setProperty("exo:moderateForums", strings);
 							userProfileNode.setProperty("exo:userRole", 1);
@@ -1437,7 +1437,7 @@ public class JCRDataStorage {
 				long totalTopicByUser = newProfileNode.getProperty("exo:totalTopic").getLong();
 				newProfileNode.setProperty("exo:totalTopic", totalTopicByUser + 1);
 			} catch (PathNotFoundException e) {
-				newProfileNode = userProfileNode.addNode(topic.getOwner(), "exo:userProfile");
+				newProfileNode = userProfileNode.addNode(topic.getOwner(), Utils.USER_PROFILES_TYPE);
 				newProfileNode.setProperty("exo:userId", topic.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(topic.getOwner())) {
@@ -1855,7 +1855,7 @@ public class JCRDataStorage {
 				totalPostByUser = newProfileNode.getProperty("exo:totalPost").getLong();
 				newProfileNode.setProperty("exo:totalPost", totalPostByUser + 1);
 			} catch (PathNotFoundException e) {
-				newProfileNode = userProfileNode.addNode(post.getOwner(), "exo:userProfile");
+				newProfileNode = userProfileNode.addNode(post.getOwner(), Utils.USER_PROFILES_TYPE);
 				newProfileNode.setProperty("exo:userId", post.getOwner());
 				newProfileNode.setProperty("exo:userTitle", Utils.USER);
 				if(isAdminRole(post.getOwner())) {
@@ -2883,7 +2883,7 @@ public class JCRDataStorage {
 		Node forumHomeNode = getForumHomeNode(sessionProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(userProfileNode.getPath()).append("//element(*,exo:userProfile)").append("[(jcr:contains(., '").append(userSearch).append("'))]");
+		stringBuffer.append("/jcr:root").append(userProfileNode.getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
 		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -3110,7 +3110,7 @@ public class JCRDataStorage {
 			try {
 				newProfileNode = userProfileNode.getNode(userName);
 			} catch (PathNotFoundException e) {
-				newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
+				newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
 				newProfileNode.setProperty("exo:userId", userName);
 				newProfileNode.setProperty("exo:totalPost", 0);
 				newProfileNode.setProperty("exo:totalTopic", 0);
@@ -3251,7 +3251,7 @@ public class JCRDataStorage {
 				}
 			}
 		} catch (PathNotFoundException e) {
-			newProfileNode = userProfileNode.addNode(userName, "exo:userProfile");
+			newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
 			newProfileNode.setProperty("exo:userId", userName);
 			newProfileNode.setProperty("exo:userTitle", Utils.USER);
 			if(isAdminRole(userName)) {
@@ -3392,7 +3392,7 @@ public class JCRDataStorage {
 
 	private Node addNodeUserProfile(SessionProvider sProvider, String userName) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
-		Node profileNode = userProfileNode.addNode(userName, "exo:userProfile");
+		Node profileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
 		profileNode.setProperty("exo:userId", userName);
 		profileNode.setProperty("exo:userTitle", Utils.USER);
 		if(isAdminRole(userName)) {
@@ -4005,7 +4005,7 @@ public class JCRDataStorage {
 				if(profileHome.hasNode(userId)) {
 					profile = profileHome.getNode(userId) ;
 				}else {
-					profile = profileHome.addNode(userId, "exo:userProfile") ;
+					profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 					Calendar cal = getGreenwichMeanTime() ;
 					profile.setProperty("exo:userId", userId) ;
 					profile.setProperty("exo:lastLoginDate", cal) ;
@@ -4028,7 +4028,7 @@ public class JCRDataStorage {
 				if(profileHome.hasNode(userId)) {
 					profile = profileHome.getNode(userId) ;
 				}else {
-					profile = profileHome.addNode(userId, "exo:userProfile") ;
+					profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 					Calendar cal = getGreenwichMeanTime() ;
 					profile.setProperty("exo:userId", userId) ;
 					profile.setProperty("exo:lastLoginDate", cal) ;
@@ -4220,7 +4220,7 @@ public class JCRDataStorage {
 			if(query == null || query.length() == 0) {
 				Calendar calendar = GregorianCalendar.getInstance() ;
 				calendar.setTimeInMillis(calendar.getTimeInMillis() - 864000000) ;
-				stringBuilder.append("/jcr:root").append(path).append("//element(*,exo:userProfile)[")
+				stringBuilder.append("/jcr:root").append(path).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
 				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
 			} else {
 				stringBuilder.append("/jcr:root").append(path).append(query);
@@ -4500,7 +4500,7 @@ public class JCRDataStorage {
 	private List<String> getAllAdministrator(SessionProvider sProvider) throws Exception {
 		QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
 		StringBuilder pathQuery = new StringBuilder();
-		pathQuery.append("/jcr:root").append(getUserProfileHome(sProvider).getPath()).append("//element(*,exo:userProfile)[@exo:userRole=0]");
+		pathQuery.append("/jcr:root").append(getUserProfileHome(sProvider).getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[@exo:userRole=0]");
 		Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
