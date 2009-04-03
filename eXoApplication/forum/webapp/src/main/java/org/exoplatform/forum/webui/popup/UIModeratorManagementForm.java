@@ -264,10 +264,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		boolean isAdmin = false ;
 		UIFormCheckBoxInput userRole = new UIFormCheckBoxInput<Boolean>(FIELD_USERROLE_CHECKBOX, FIELD_USERROLE_CHECKBOX, false) ;
 		if(this.userProfile.getUserRole() == 0) isAdmin = true;
-		else if(isAdmin(this.userProfile.getUserId())){
+		if(isAdmin(this.userProfile.getUserId())){
 			userRole.setEnable(false);
 			isAdmin = true;
-			title = Utils.ADMIN;
+			if(this.userProfile.getUserRole() != 0) title = Utils.ADMIN;
 		}  
 		userRole.setValue(isAdmin);
 		userTitle.setValue(title);

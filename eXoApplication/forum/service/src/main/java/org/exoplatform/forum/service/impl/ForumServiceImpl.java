@@ -169,7 +169,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void createUserProfile (SessionProvider sysSession, User user) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
 		if(!profileHome.hasNode(user.getUserName())){
-  		Node profile = profileHome.addNode(user.getUserName(), "exo:userProfile") ;
+  		Node profile = profileHome.addNode(user.getUserName(), Utils.USER_PROFILES_TYPE) ;
   		Calendar cal = storage_.getGreenwichMeanTime() ;
   		profile.setProperty("exo:userId", user.getUserName()) ;
   		profile.setProperty("exo:lastLoginDate", cal) ;
