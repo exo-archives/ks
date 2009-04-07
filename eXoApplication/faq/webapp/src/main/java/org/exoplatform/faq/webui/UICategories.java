@@ -71,11 +71,15 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
 				@EventConfig(listeners = UICategories.RSSActionListener.class),
 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
+				@EventConfig(listeners = UICategories.FilterQuestionsActionListener.class),
 				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
 		}
 )
 
 public class UICategories extends UIContainer{
+	private String FILTER_QUESTIONS = "allQuestions";
+	private String FILTER_OPEN_QUESTIONS = "openQuestions";
+	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
 	public String parentCateID_ = null;
 	private String categoryId_ = null;
 	private boolean isSwap = false;
@@ -96,6 +100,7 @@ public class UICategories extends UIContainer{
 	FAQService faqService_;
 	private String portalName = null;
 	private String currentUser = null;
+	String font_weight[] = new String[]{"bold", "none", "none"};
 	public UICategories () throws Exception{ 
 		portalName = getPortalName();
 		currentUser = FAQUtils.getCurrentUser();
@@ -114,7 +119,7 @@ public class UICategories extends UIContainer{
 		long[] result = new long[]{0, 0, 0, 0} ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
-			result = faqService_.getCategoryInfo(categoryId_, sessionProvider) ;
+			result = faqService_.getCategoryInfo(categoryId_, sessionProvider, faqSetting_) ;
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
@@ -137,6 +142,7 @@ public class UICategories extends UIContainer{
 			this.categoryId_ = null;
 			this.parentCateID_ = null;
 		}
+		this.font_weight = new String[]{"bold", "none", "none"};;
 	}
 
 	private void setIsModerators(String currentUser_) {
@@ -234,13 +240,18 @@ public class UICategories extends UIContainer{
 		if(!isSwap){
 			List<Category> newList = new ArrayList<Category>();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
+			try{
+				newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
+				currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
+			} catch(Exception e){
+				currentName = faqService_.getCategoryById(this.parentCateID_, sessionProvider).getName();
+				e.printStackTrace();
+			}
 			viewBackIcon = true;
 			if(newList.isEmpty()) {
 				newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
 				viewBackIcon = false;
 			}
-			currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			if(currentName == null || currentName.trim().length() < 1) currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
 			this.listCate.clear();
@@ -925,6 +936,37 @@ public class UICategories extends UIContainer{
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+	
+	static  public class FilterQuestionsActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiCategories = event.getSource() ;
+			String typeFilter = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class) ;
+			UIQuestions questions = container.findFirstComponentOfType(UIQuestions.class);
+			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			int pos = 0;
+			if(typeFilter.equals(uiCategories.FILTER_OPEN_QUESTIONS)){
+				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(sessionProvider, uiCategories.categoryId_, uiCategories.faqSetting_);
+				pos = 1;
+			} else if (typeFilter.equals(uiCategories.FILTER_PENDING_QUESTIONS)){
+				questions.pageList = uiCategories.faqService_.getPendingQuestionsByCategory(uiCategories.categoryId_, sessionProvider, uiCategories.faqSetting_);
+				pos = 2;
+			} else {
+				questions.pageList = uiCategories.faqService_.getQuestionsByCatetory(uiCategories.categoryId_, sessionProvider, uiCategories.faqSetting_);
+				pos = 0;
+			}
+			for(int i = 0; i < 3; i ++){
+				if(i == pos) uiCategories.font_weight[i] = "bold";
+				else uiCategories.font_weight[i] = "none";
+			}
+			questions.pageList.setPageSize(10);
+			questions.pageIterator.setSelectPage(1);
+			questions.pageIterator = questions.getChildById(questions.OBJECT_ITERATOR);
+			questions.pageIterator.updatePageList(questions.pageList);
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
+		}
+	}
+	
 	static	public class MoveCategoryIntoActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;

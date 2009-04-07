@@ -192,7 +192,7 @@ public interface FAQService {
    * 
    * @throws Exception  if lost attachment
    */
-  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception ;
+  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception ;
   
   /**
    * Get questions are activagted and approved in the category.
@@ -239,7 +239,7 @@ public interface FAQService {
    * if not found question or lose file attach
    * @throws Exception the exception
    */
-  public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception ;
+  public long[] getCategoryInfo(String categoryId, SessionProvider sProvider, FAQSetting setting) throws Exception ;
   
   /**
    * Get questions in list categories.
@@ -676,4 +676,6 @@ public interface FAQService {
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception;
 	
 	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+	
+	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
 }

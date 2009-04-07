@@ -240,7 +240,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("This category is't already exist", faqService_.categoryAlreadyExist(cate2.getId(), sProvider_), true);
 		
 //		get infor of root category:
-		assertEquals("Have two categories in root category", faqService_.getCategoryInfo(null, sProvider_)[0], 2);
+		assertEquals("Have two categories in root category", faqService_.getCategoryInfo(null, sProvider_, faqSetting_)[0], 2);
 
 //		Get path of category
 		assertNotNull("Path of category node is null", faqService_.getCategoryPath(sProvider_, cate1.getId()));
@@ -353,7 +353,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	
 //		get question 1
 		assertNotNull("Question 1 have not been saved into data", faqService_.getQuestionById(question1.getId(), sProvider_)) ;
-		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_, "All").getAll() ;
+		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(sProvider_, "All", null).getAll() ;
 		assertEquals("have some questions are not yet answer", listQuestion.size(), 0) ; 
 
 //		update question 1

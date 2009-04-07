@@ -256,10 +256,10 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     } else {
     	if(this.cateId_.equals("All")){
     		this.pageList = faqService_.getAllQuestions(sProvider) ;
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, "All") ;
+    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, "All", null) ;
     	} else {
     		this.pageList = faqService_.getAllQuestionsByCatetory(this.cateId_, sProvider, this.faqSetting_);
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, this.cateId_) ;
+    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(sProvider, this.cateId_, null) ;
     	}
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;

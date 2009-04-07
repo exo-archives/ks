@@ -124,8 +124,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 * @return	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception {
-	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId);
+	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId, setting);
 	}
 	
 	/**
@@ -138,8 +138,8 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @return  number of (sub-categories, questions, questions is not approved,question is have not yet answered)
    * @throws Exception the exception
 	 */
-	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
-		return jcrData_.getCategoryInfo(categoryId, sProvider);
+	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider, FAQSetting setting) throws Exception {
+		return jcrData_.getCategoryInfo(categoryId, sProvider, setting);
 	}
   
 	/**
@@ -760,6 +760,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
 		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
+	}
+	
+	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception{
+		return jcrData_.getPendingQuestionsByCategory(categoryId, sProvider, faqSetting);
 	}
 
 	public void start() {

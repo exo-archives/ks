@@ -39,7 +39,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height:auto; padding:0px 0px 5px 5px; margin-bottom:5px; line-height:18px;_width:182px;">
+		<div class="FAQContainer" style="height:auto; padding:0px 0px 5px 10px; margin-bottom:5px; line-height:18px;_width:182px;">
 			<%
 			long[] cateInfo = uicomponent.getCategoryInfo() ;
 			long numberOfSubCate = cateInfo[0] ;
@@ -47,10 +47,13 @@
 			long questionNotAnswer = cateInfo[2] ;
 			long questionNotApproved = cateInfo[3] ;
 			%>
-			<div style="margin-top:2px;"><%= _ctx.appRes("UICategories.label.SubCategories"); %>:$numberOfSubCate</div>
-			<div style="margin-top:2px;"><%= _ctx.appRes("UICategories.title.Questions"); %>:$numberOfQuestion</div>
-			<div style="margin-top:2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %>:$questionNotAnswer</div>
-			<div style="margin-top:2px;"><%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %>:$questionNotApproved</div>
+			<div style="margin-top:2px;">$numberOfSubCate <%= _ctx.appRes("UICategories.label.SubCategories"); %></div>
+			<div id="uicategoriesCateInfors0" style="margin-top:2px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_QUESTIONS)%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></div>
+			<div id="uicategoriesCateInfors1" style="margin-top:2px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></div>
+			<%
+			if(uicomponent.canEditQuestion){%>
+				<div id="uicategoriesCateInfors2" style="margin-top:2px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></div>
+			<%}%>
 		</div>
 	</div>
 	

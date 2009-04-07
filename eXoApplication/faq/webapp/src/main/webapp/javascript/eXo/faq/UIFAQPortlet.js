@@ -5,6 +5,17 @@ function UIFAQPortlet() {
 	this.scrollMgr = [];
 };
 
+UIFAQPortlet.prototype.selectCateInfor = function(number){
+	var obj = null;
+	for(var i = 0; i < 3; i ++){
+		obj = document.getElementById('uicategoriesCateInfors' + i);
+		if(obj){
+			if(i == number) obj.style.fontWeight = "bold";
+			else obj.style.fontWeight = "normal";
+		}
+	}
+}
+
 UIFAQPortlet.prototype.setCheckEvent = function(isCheck){
 	this.hiddentMenu = isCheck;
 };

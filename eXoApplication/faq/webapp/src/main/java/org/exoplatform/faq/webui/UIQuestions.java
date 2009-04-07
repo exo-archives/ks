@@ -129,7 +129,7 @@ public class UIQuestions extends UIContainer {
 	private static String SEARCH_INPUT = "SearchInput" ;
 	private static String COMMENT_ITER = "CommentIter" ;
 	private static String ANSWER_ITER = "AnswerIter" ;
-	private static final String OBJECT_ITERATOR = "object_iter";
+	public static final String OBJECT_ITERATOR = "object_iter";
 
 	private FAQSetting faqSetting_ = null;
 	public List<Question> listQuestion_ =  null ;
@@ -166,7 +166,7 @@ public class UIQuestions extends UIContainer {
 	public boolean viewAuthorInfor = false;
 
 	public JCRPageList pageList ;
-	private UIFAQPageIterator pageIterator = null ;
+	public UIFAQPageIterator pageIterator = null ;
 	long pageSelect = 0;
 
 	public UIQuestions()throws Exception {
@@ -228,7 +228,7 @@ public class UIQuestions extends UIContainer {
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
 			if(currentUser_ != null && currentUser_.trim().length() > 0){
-				FAQServiceUtils serviceUtils = new FAQServiceUtils();
+				//FAQServiceUtils serviceUtils = new FAQServiceUtils();
 				if(faqSetting_.getIsAdmin().equals("TRUE")){
 					faqSetting_.setCanEdit(true);
 				} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
@@ -246,7 +246,7 @@ public class UIQuestions extends UIContainer {
 			pageIterator = this.getChildById(OBJECT_ITERATOR);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			this.pageList = null ;
 			this.pageList.setPageSize(10);
 			pageIterator.updatePageList(this.pageList) ;
