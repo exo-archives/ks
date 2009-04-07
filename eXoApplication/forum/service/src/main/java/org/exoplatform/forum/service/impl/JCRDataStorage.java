@@ -4123,6 +4123,7 @@ public class JCRDataStorage {
 	}
 
 	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+		int totalJob = 0;
 		try {
 			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
 			long t = 3;
@@ -4131,7 +4132,6 @@ public class JCRDataStorage {
 			} else {
 				t = newProfileNode.getProperty("exo:userRole").getLong();
 			}
-			int totalJob = 0;
 			if (t < 2) {
 				Node forumHomeNode = getForumHomeNode(sProvider);
 				String string = forumHomeNode.getPath();
@@ -4168,12 +4168,11 @@ public class JCRDataStorage {
 				iter = result.getNodes();
 				totalJob = totalJob + (int) iter.getSize();
 			}
-			return totalJob;
 		}catch (Exception e) {
-			return 0;
 		} finally{
 			sProvider.close();
 		}
+		return totalJob;
 	}
 	
 	public void getTotalJobWatting(List<String> userIds) {

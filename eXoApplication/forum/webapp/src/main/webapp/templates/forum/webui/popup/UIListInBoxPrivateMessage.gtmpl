@@ -19,7 +19,7 @@
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
-				<th style="width:80px"><%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
+				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.From");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.Receivedate");%></th>
 				<th style="width:40px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>

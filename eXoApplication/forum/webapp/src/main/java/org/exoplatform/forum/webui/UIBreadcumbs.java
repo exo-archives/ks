@@ -19,9 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -34,7 +32,6 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIModerationForum;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
-import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -44,7 +41,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 
 /**
  * Created by The eXo Platform SARL
@@ -57,8 +53,7 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 		events = {
 				@EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
 				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class),
-				@EventConfig(listeners = UIBreadcumbs.ModerationActionListener.class),
-				@EventConfig(listeners = UIBreadcumbs.PrivateMessageActionListener.class)
+				@EventConfig(listeners = UIBreadcumbs.ModerationActionListener.class)
 		}
 )
 public class UIBreadcumbs extends UIContainer {
@@ -68,6 +63,7 @@ public class UIBreadcumbs extends UIContainer {
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
 	private String forumHomePath_ ;
+	private String QUICK_SEARCH = "QuickSearchForm" ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private UserProfile userProfile ;
 	private boolean isLink = false ;
@@ -78,6 +74,7 @@ public class UIBreadcumbs extends UIContainer {
 		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;
+		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;
 	}
 
 	@SuppressWarnings("unused")
@@ -151,11 +148,6 @@ public class UIBreadcumbs extends UIContainer {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 	}
 	
-	@SuppressWarnings("unused")
-	private int getTotalJobWattingForModerator() throws Exception {
-		return forumService.getTotalJobWattingForModerator(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
-	}
-	
 	public boolean isOpen() {
 		return isOpen;
 	}
@@ -184,23 +176,6 @@ public class UIBreadcumbs extends UIContainer {
 	private List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
-	
-	@SuppressWarnings("unused")
-	private long getNewMessage() throws Exception {
-		try {
-			String username = this.userProfile.getUserId();
-			return forumService.getNewPrivateMessage(SessionProviderFactory.createSystemProvider(), username );
-    } catch (Exception e) {
-	    return -1;
-    }
-	}
-	
-  public String getUserToken()throws Exception {
-  	ExoContainer container = RootContainer.getInstance();
-  	container = ((RootContainer)container).getPortalContainer("portal");
-  	ContinuationService continuation = (ContinuationService) container.getComponentInstanceOfType(ContinuationService.class);
-    return continuation.getUserToken(userProfile.getUserId());
-  }
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
@@ -303,21 +278,6 @@ public class UIBreadcumbs extends UIContainer {
 		}
 	}	
 	
-	static public class PrivateMessageActionListener extends EventListener<UIBreadcumbs> {
-		public void execute(Event<UIBreadcumbs> event) throws Exception {
-			UIBreadcumbs breadcumbs = event.getSource() ;
-			UIForumPortlet forumPortlet = breadcumbs.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
-			messageForm.setUserProfile(breadcumbs.userProfile);
-			messageForm.setFullMessage(true) ;
-			popupContainer.setId("PrivateMessageForm") ;
-			popupAction.activate(popupContainer, 800, 480) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}	
-
 	static public class ModerationActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs breadcumbs = event.getSource() ;
@@ -330,7 +290,7 @@ public class UIBreadcumbs extends UIContainer {
 			popupAction.activate(popupContainer, 650, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 
 	static public class RssActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {

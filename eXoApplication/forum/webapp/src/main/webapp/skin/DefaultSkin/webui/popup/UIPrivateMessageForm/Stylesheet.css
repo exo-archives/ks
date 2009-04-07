@@ -1,7 +1,23 @@
+.UIPrivateMessageForm .UITabPane .TabPaneContent {
+  padding: 5px 0px;
+	width: 96%;
+  margin: auto;
+}
+
+.UIPrivateMessageForm .UITabPane .UITabContent {
+  padding: 8px 0px;
+  margin: auto;
+}
+
+.UIPrivateMessageForm .UITabPane .UIGrid {
+  width: 97%;
+  margin: auto;
+}
+
 .UIPrivateMessageForm .ForumMail .UIGrid .IconContent {
   margin:auto;
   overflow:auto;
-  width:75px;
+  width:40px;
 }
 
 .UIPrivateMessageForm .MessageTab .UIFormGrid {

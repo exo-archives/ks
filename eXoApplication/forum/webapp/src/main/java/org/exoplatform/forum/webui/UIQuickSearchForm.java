@@ -79,7 +79,10 @@ public class UIQuickSearchForm extends UIForm {
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 					return ;
 				}
-				UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;				
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;

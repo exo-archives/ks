@@ -1,11 +1,18 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.web.application.JavascriptManager;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	boolean isAdmin = false ;
 	if(userProfile.getUserRole() == 0) isAdmin = true ;
 	def rcontext = _ctx.getRequestContext() ;
-	rcontext.getJavascriptManager().addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
-	//rcontext.getJavascriptManager().addJavascript("eXo.forum.UIForumPortlet.loadScroll();") ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
+	jsmanager.importJavascript('eXo.core.JSON') ;
+	jsmanager.importJavascript('eXo.core.Cometd') ;
+	jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
+	jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
+
 %>
 <div class="UIForumActionBar" style="height:auto" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
@@ -105,9 +112,31 @@
 							</div>	
 							</td>
 							<td>
-								<%
-									uicomponent.renderChildren() ;
+								<div style="width:240px;">
+							<%
+								long numberOfNewMessage = uicomponent.getNewMessage();
+								if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
+									String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
+									if(numberOfNewMessage > 0) {
+										newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
+									} else {
+										newMessage = newMessage + "&nbsp;" ;
+									}
+									if(uicomponent.userProfile.getUserRole() <= 1) {
+										int total = uicomponent.getTotalJobWattingForModerator();
 								%>
+									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
+										<a style="line-height:24px; white-space:nowrap;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
+									</div>
+								<%}%>
+									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
+										<div style="line-height:24px; cursor:pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+											 <span>$newMessage</span>
+										</div>
+									</div>
+								<% } %>
+									<div style="clear:right;"><span></span></div>
+								</div>
 							</td>
 						</tr>
 					</table>
