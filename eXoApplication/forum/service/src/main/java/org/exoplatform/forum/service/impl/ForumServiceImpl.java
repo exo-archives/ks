@@ -38,7 +38,6 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -74,22 +73,11 @@ public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
   private final Map<String, String> onlineUsers_ = new ConcurrentHashMap<String, String>() ;
   private String lastLogin_ = "";
-  public static long maxUploadSize_ = 0;
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
     storage_ = new JCRDataStorage(nodeHierarchyCreator);
-    try {
-			PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
-			if (proParams != null) {
-				String maximum = proParams.getProperty("maximum.upload");
-				if (maximum != null && maximum.length() > 0) {
-						maxUploadSize_ = Long.parseLong(maximum)*1048576;
-	    	}
-	    }
-    } catch (Exception e) {
-    	maxUploadSize_ = 0;
-    }
   }
+
   public void addPlugin(ComponentPlugin plugin) throws Exception {
     storage_.addPlugin(plugin) ;
   }

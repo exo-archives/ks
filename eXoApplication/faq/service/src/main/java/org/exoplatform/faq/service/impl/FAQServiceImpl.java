@@ -60,23 +60,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	private MultiLanguages multiLanguages_ ;
-	public static long maxUploadSize_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
 	
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
-		try {
-			PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
-			if (proParams != null) {
-				String maximum = proParams.getProperty("maximum.upload");
-				if (maximum != null && maximum.length() > 0) {
-						maxUploadSize_ = Long.parseLong(maximum)*1048576;
-	    	}
-	    }
-		} catch (Exception e) {
-			maxUploadSize_ = 0;
-		}
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {

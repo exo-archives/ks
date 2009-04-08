@@ -398,8 +398,6 @@ public class JCRDataStorage {
 						List<TopicData> topics = forum.getTopics();
 						String topicId = "";
 						String ct = "";
-						for (int i = 0; i < 10; i++) {
-	            
 						for (TopicData topicData : topics) {
 							Topic topic = new Topic();
 							topic.setTopicName(topicData.getName());
@@ -414,8 +412,6 @@ public class JCRDataStorage {
 						}
 						TopicData topic = topics.get(0) ;
 						List<PostData> posts = topic.getPosts();
-						for (int j = 0; j < 15; j++) {
-	            
 						for (PostData postData : posts) {
 							Post post = new Post();
 							post.setName(postData.getName());
@@ -426,8 +422,6 @@ public class JCRDataStorage {
 							post.setOwner(postData.getOwner());
 							post.setIcon(postData.getIcon());
 							this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
-						}
-						}
 						}
 					}
 				}
