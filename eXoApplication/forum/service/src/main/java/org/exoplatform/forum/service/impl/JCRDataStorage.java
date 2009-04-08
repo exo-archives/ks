@@ -398,6 +398,8 @@ public class JCRDataStorage {
 						List<TopicData> topics = forum.getTopics();
 						String topicId = "";
 						String ct = "";
+						for (int i = 0; i < 10; i++) {
+	            
 						for (TopicData topicData : topics) {
 							Topic topic = new Topic();
 							topic.setTopicName(topicData.getName());
@@ -412,6 +414,8 @@ public class JCRDataStorage {
 						}
 						TopicData topic = topics.get(0) ;
 						List<PostData> posts = topic.getPosts();
+						for (int j = 0; j < 15; j++) {
+	            
 						for (PostData postData : posts) {
 							Post post = new Post();
 							post.setName(postData.getName());
@@ -422,6 +426,8 @@ public class JCRDataStorage {
 							post.setOwner(postData.getOwner());
 							post.setIcon(postData.getIcon());
 							this.savePost(sProvider, categoryId, forumId, topicId, post, true, "");
+						}
+						}
 						}
 					}
 				}
@@ -732,6 +738,7 @@ public class JCRDataStorage {
 										userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
 									}
 								}
+								getTotalJobWattingForModerator(sProvider, string);
 							}
 						} catch (PathNotFoundException e) {
 							userProfileNode = userProfileHomeNode.addNode(string, Utils.USER_PROFILES_TYPE);
@@ -744,6 +751,7 @@ public class JCRDataStorage {
 							} else {
 								userProfileNode.save();
 							}
+							getTotalJobWattingForModerator(sProvider, string);
 						}
 					}
 				}
@@ -1542,24 +1550,31 @@ public class JCRDataStorage {
 		}
 	}
 
+	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
+		List<String> list = new ArrayList<String>();
+		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
+		list.add(userProfile.getProperty("exo:fullName").getString());
+		list.add(userProfile.getProperty("exo:email").getString());
+		return list;
+	}
+	
 	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		long tmp = 0;
 		/*
 		 * modified by Mai Van Ha
 		 */
-		Node node = null;
 		String forumName = null;
-		node = (Node)forumHomeNode.getSession().getItem(destForumPath);
-		forumName = node.getProperty("exo:name").getString();
-		UserProfile forumOwner = getUserProfileManagement(sProvider, node.getProperty("exo:owner").getString());
+		Node destForumNode = (Node) forumHomeNode.getSession().getItem(destForumPath);
+		forumName = destForumNode.getProperty("exo:name").getString();
+		List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty("exo:owner").getString());
 		Message message = new Message();
 		message.setMimeType("text/html");
 		String headerSubject = "";
-		String objectName = "[" + node.getParent().getProperty("exo:name").getString() + 
-												"][" + node.getProperty("exo:name").getString() + "] ";
+		String objectName = "[" + destForumNode.getParent().getProperty("exo:name").getString() + 
+												"][" + destForumNode.getProperty("exo:name").getString() + "] ";
 		try {
-			node = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
+			Node node = forumHomeNode.getNode(Utils.FORUMADMINISTRATION);
 			if (node.hasProperty("exo:enableHeaderSubject")) {
 				if(node.getProperty("exo:enableHeaderSubject").getBoolean()){
 					if (node.hasProperty("exo:headerSubject")) {
@@ -1568,7 +1583,7 @@ public class JCRDataStorage {
 				}
 			}
 		} catch (Exception e) {		}
-		message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
+		message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 		// ----------------------- finish ----------------------
 		
 		for (Topic topic : topics) {
@@ -1589,10 +1604,9 @@ public class JCRDataStorage {
 			queryLastTopic(sProvider, srcForumNode.getPath());
 			// Topic Move
 			Node topicNode = (Node) forumHomeNode.getSession().getItem(newTopicPath);
-			topicNode.setProperty("exo:path", destForumPath.substring(destForumPath.lastIndexOf("/")));
+			topicNode.setProperty("exo:path", destForumNode.getName());
 			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
 			// Forum add Topic (destForum)
-			Node destForumNode = (Node) forumHomeNode.getSession().getItem(destForumPath);
 			destForumNode.setProperty("exo:topicCount", destForumNode.getProperty("exo:topicCount").getLong() + 1);
 			// setPath destForum
 			queryLastTopic(sProvider, destForumNode.getPath());
@@ -1608,7 +1622,9 @@ public class JCRDataStorage {
 			// send mail to author topic after move topic:
 			message.setSubject(headerSubject + objectName + topic.getTopicName());
 			message.setBody(mailContent.replace("$topicName_", topic.getTopicName()).replace("$forumName_", forumName).replace("$link_", link.replaceFirst("pathId", topic.getId())));
-			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, topic.getOwner()).getEmail()}), message);
+			List<String> fullNameEmailOwnerTopic = getFullNameAndEmail(sProvider, topic.getOwner());
+			fullNameEmailOwnerTopic.remove(0);
+			sendEmailNotification(fullNameEmailOwnerTopic, message);
 		}
 		if(forumHomeNode.isNew()) {
 			forumHomeNode.getSession().save();
@@ -2479,7 +2495,7 @@ public class JCRDataStorage {
 			forumHomeNode.getSession().getWorkspace().move(post.getPath(), newPostPath);
 			// Node Post move
 			postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
-			postNode.setProperty("exo:path", destTopicPath.substring(destTopicPath.lastIndexOf(Utils.FORUM), destTopicPath.lastIndexOf("/")));
+			postNode.setProperty("exo:path", destForumNode.getName());
 			postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
 			if (isCreatNewTopic && count == 0) {
 				count++;
@@ -2532,7 +2548,7 @@ public class JCRDataStorage {
 		 * modified by Mai Van Ha
 		 */
 		String topicName = destTopicNode.getProperty("exo:name").getString();
-		UserProfile forumOwner = getUserProfileManagement(sProvider, destForumNode.getProperty("exo:owner").getString());
+		List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty("exo:owner").getString());
 		Message message = new Message();
 		String headerSubject = "";
 		String objectName = "[" + destForumNode.getParent().getProperty("exo:name").getString() + 
@@ -2548,17 +2564,18 @@ public class JCRDataStorage {
 			}
 		} catch (Exception e) {		}
 		link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
-		for(int i = 0; i < posts.size(); i ++){
+		for(Post post : posts){
 			message = new Message();
 			message.setMimeType("text/html");
-			message.setFrom(forumOwner.getFullName() + "<" + forumOwner.getEmail() + ">");
+			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 			message.setSubject(headerSubject + objectName);
-			message.setBody(mailContent.replace("$postContent_", posts.get(i).getMessage())
+			message.setBody(mailContent.replace("$postContent_", post.getMessage())
 							.replace("$topicName_", topicName).replace("$link_", link));
-			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, posts.get(i).getOwner()).getEmail()}), message);
+			List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, post.getOwner());
+			fullNameEmailOwnerPost.remove(0);
+			sendEmailNotification(fullNameEmailOwnerPost, message);
 		}
 		// ----------------------- finish ----------------------
-		
 	}
 
 	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
@@ -3107,8 +3124,12 @@ public class JCRDataStorage {
 		Node newProfileNode;
 		String userName = newUserProfile.getUserId();
 		if (userName != null && userName.length() > 0) {
+			long role = 2;
 			try {
 				newProfileNode = userProfileNode.getNode(userName);
+				if(userProfileNode.hasProperty("exo:userRole")){
+					role = userProfileNode.getProperty("exo:userRole").getLong();
+				}
 			} catch (PathNotFoundException e) {
 				newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
 				newProfileNode.setProperty("exo:userId", userName);
@@ -3166,6 +3187,9 @@ public class JCRDataStorage {
 			} else {
 				userProfileNode.save();
 			}
+			if(role >=2 && newUserProfile.getUserRole() < 2 && !isAdminRole(userName)) {
+				getTotalJobWattingForModerator(sProvider, userName);
+			}
 		}
 	}
 
@@ -3210,6 +3234,7 @@ public class JCRDataStorage {
 		if(userProfileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(userProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 		return userProfile;
 	}
+	
 	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
@@ -3994,7 +4019,6 @@ public class JCRDataStorage {
 				}
 			}
 			
-			
 			Node profileHome = getUserProfileHome(sProvider);
 			Node profile ;
 			//update topic to user profile
@@ -4122,7 +4146,27 @@ public class JCRDataStorage {
 		return list;
 	}
 
-	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+	public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception {
+		int job = 0;
+		try {
+			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
+			long t = 3;
+			if (isAdminRole(userId)) {
+				t = 0;
+			} else {
+				t = newProfileNode.getProperty("exo:userRole").getLong();
+			}
+			if (t < 2) {
+				job = (int)newProfileNode.getProperty("exo:jobWattingForModerator").getLong();
+			}
+		} catch (Exception e) {
+	  }finally{
+			sProvider.close();
+		}
+		return job;
+	}
+	
+	private int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
 		int totalJob = 0;
 		try {
 			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
@@ -4167,10 +4211,11 @@ public class JCRDataStorage {
 				result = query.execute();
 				iter = result.getNodes();
 				totalJob = totalJob + (int) iter.getSize();
+				newProfileNode.setProperty("exo:jobWattingForModerator", totalJob);
+				newProfileNode.save();
 			}
 		}catch (Exception e) {
-		} finally{
-			sProvider.close();
+			e.printStackTrace();
 		}
 		return totalJob;
 	}
@@ -4194,7 +4239,7 @@ public class JCRDataStorage {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
+		}finally {
 			sProvider.close();
 		}
 	}

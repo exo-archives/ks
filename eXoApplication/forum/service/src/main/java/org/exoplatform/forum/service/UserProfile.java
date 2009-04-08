@@ -34,6 +34,7 @@ public class UserProfile {
 	private String signature ;
 	private long totalPost = 0;
 	private long totalTopic = 0;
+	private long jobWattingForModerator = 0;
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
 	
@@ -106,6 +107,9 @@ public class UserProfile {
 	
 	public void setTotalTopic(Long totalTopic) {this.totalTopic = totalTopic;}
 	public Long getTotalTopic() {return this.totalTopic ;}
+
+	public long getJobWattingForModerator() {return jobWattingForModerator;}
+	public void setJobWattingForModerator(long jobWattingForModerator) {this.jobWattingForModerator = jobWattingForModerator;}
 
 	public void setModerateForums(String[] moderateForums) { this.moderateForums = moderateForums ;	}
 	public String[] getModerateForums() { return moderateForums ;	}

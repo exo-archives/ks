@@ -27,6 +27,7 @@ import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
 import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
 import org.exoplatform.forum.webui.popup.UIImportForm;
+import org.exoplatform.forum.webui.popup.UIModerationForum;
 import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
@@ -62,7 +63,8 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.TagManagerActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class)
+				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class)
 		}
 )
 public class UIForumActionBar extends UIContainer	{
@@ -85,7 +87,7 @@ public class UIForumActionBar extends UIContainer	{
 	
 	@SuppressWarnings("unused")
 	private int getTotalJobWattingForModerator() throws Exception {
-		return forumService.getTotalJobWattingForModerator(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
+		return forumService.getJobWattingForModeratorByUser(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
 	}
 	
 	@SuppressWarnings("unused")
@@ -120,6 +122,20 @@ public class UIForumActionBar extends UIContainer	{
 		}
 	}	
 	
+  static public class ModerationActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIModerationForum messageForm = popupContainer.addChild(UIModerationForum.class, null, null) ;
+			messageForm.setUserProfile(uiActionBar.userProfile);
+			popupContainer.setId("ModerationForum") ;
+			popupAction.activate(popupContainer, 650, 480) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+  
 	static public class AddCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;

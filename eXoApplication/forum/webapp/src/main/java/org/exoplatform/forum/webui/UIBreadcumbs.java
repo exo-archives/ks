@@ -29,9 +29,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.webui.popup.UIModerationForum;
-import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -52,8 +49,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/UIBreadcumbs.gtmpl" ,
 		events = {
 				@EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
-				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class),
-				@EventConfig(listeners = UIBreadcumbs.ModerationActionListener.class)
+				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
 		}
 )
 public class UIBreadcumbs extends UIContainer {
@@ -278,20 +274,6 @@ public class UIBreadcumbs extends UIContainer {
 		}
 	}	
 	
-	static public class ModerationActionListener extends EventListener<UIBreadcumbs> {
-		public void execute(Event<UIBreadcumbs> event) throws Exception {
-			UIBreadcumbs breadcumbs = event.getSource() ;
-			UIForumPortlet forumPortlet = breadcumbs.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIModerationForum messageForm = popupContainer.addChild(UIModerationForum.class, null, null) ;
-			messageForm.setUserProfile(breadcumbs.userProfile);
-			popupContainer.setId("ModerationForum") ;
-			popupAction.activate(popupContainer, 650, 480) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}
-
 	static public class RssActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;

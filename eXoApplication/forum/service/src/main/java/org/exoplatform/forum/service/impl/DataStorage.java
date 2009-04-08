@@ -122,7 +122,7 @@ public interface DataStorage {
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values, String currentUser) throws Exception;
 	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception;
 	public List<ForumSearch> getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
-	public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception ;
+	public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception ;
 	public SendMessageInfo getMessageInfo(String name) throws Exception ;
 	public boolean isAdminRole(String userName) throws Exception ;
   public List<Post> getNewPosts(int number) throws Exception ;

@@ -457,8 +457,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getJobWattingForModerator(sProvider, paths); 
   }
 
-  public int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
-    return storage_.getTotalJobWattingForModerator(sProvider, userId);
+  public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception {
+    return storage_.getJobWattingForModeratorByUser(sProvider, userId);
   }
 
   public void userLogin(String userId, String userName) throws Exception {
