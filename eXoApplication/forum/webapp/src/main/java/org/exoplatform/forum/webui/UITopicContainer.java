@@ -133,7 +133,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() { return userProfile ;}
-
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+		this.userProfile	= userProfile ;
+  }
+	
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;

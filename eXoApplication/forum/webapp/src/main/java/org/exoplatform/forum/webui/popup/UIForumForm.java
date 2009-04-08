@@ -76,6 +76,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private ForumService forumService ;
 	private boolean isCategoriesUpdate = true;
 	private boolean isForumUpdate = false;
+	private boolean isActionBar = false;
 	private boolean isMode = false;
 	private boolean isAddValue = true;
 	private String forumId = "";
@@ -243,6 +244,14 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setForumUpdate(boolean isForumUpdate) {
 		this.isForumUpdate = isForumUpdate ;
 	}
+	
+	public boolean isActionBar() {
+  	return isActionBar;
+  }
+
+	public void setActionBar(boolean isActionBar) {
+  	this.isActionBar = isActionBar;
+  }
 	
 	@SuppressWarnings("unused")
 	private String [] getChildIds() {return new String[] {FIELD_MODERATOR_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE,FIELD_VIEWER_MULTIVALUE} ;}
@@ -412,11 +421,16 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				if(uiForm.isCategoriesUpdate) {
 					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 					uiCategories.setIsgetForumList(true) ;
-					context.addUIComponentToUpdateByAjax(uiCategories) ;
+					if(!uiForm.isActionBar) context.addUIComponentToUpdateByAjax(uiCategories) ;
 				}else {
 					UICategory uiCategory = forumPortlet.findFirstComponentOfType(UICategory.class) ;
 					uiCategory.setIsEditForum(true) ;
-					context.addUIComponentToUpdateByAjax(uiCategory) ;
+					if(!uiForm.isActionBar) context.addUIComponentToUpdateByAjax(uiCategory) ;
+				}
+				if(uiForm.isActionBar) {
+					forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
+					forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				}
 			} else {
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);

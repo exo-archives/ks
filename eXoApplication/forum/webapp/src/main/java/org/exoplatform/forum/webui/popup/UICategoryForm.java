@@ -26,15 +26,10 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.webui.UIBreadcumbs;
-import org.exoplatform.forum.webui.UICategories;
-import org.exoplatform.forum.webui.UICategory;
-import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -198,16 +193,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				if(!ForumUtils.isEmpty(uiForm.categoryId)) {
 					cat.setId(uiForm.categoryId) ;
 					forumService.saveCategory(sProvider, cat, false);
-					forumPortlet.cancelAction() ;
-					UICategory uiCategory = forumPortlet.getChild(UICategoryContainer.class).getChild(UICategory.class) ;
-					WebuiRequestContext context = event.getRequestContext() ;
-					context.addUIComponentToUpdateByAjax(forumPortlet.getChild(UIBreadcumbs.class)) ;
-					context.addUIComponentToUpdateByAjax(uiCategory) ;
 				} else {
 					forumService.saveCategory(sProvider, cat, true);
-					forumPortlet.cancelAction() ;
-					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories) ;
 				}
 			} catch (Exception e) {
 				sProvider.close();
@@ -216,6 +203,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				sProvider.close();
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+			forumPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	

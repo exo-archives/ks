@@ -174,6 +174,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return userProfile ;
 	}
 	
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+		this.userProfile	= userProfile ;
+  }
+	
 	public boolean getHasEnableIPLogging() {
 	  return enableIPLogging;
   }

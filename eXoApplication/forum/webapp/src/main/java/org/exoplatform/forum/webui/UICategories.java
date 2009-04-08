@@ -139,7 +139,8 @@ public class UICategories extends UIContainer	{
 	}
 	
 	private List<Category> getCategoryList() throws Exception {
-		this.getAncestorOfType(UIForumPortlet.class).getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			categoryList = forumService.getCategories(sProvider);
@@ -149,9 +150,9 @@ public class UICategories extends UIContainer	{
     	sProvider.close();
     }
 		if(categoryList.size() > 0)
-			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(true) ;
+			forumPortlet.getChild(UIForumActionBar.class).setHasCategory(true) ;
 		else 
-			((UICategoryContainer)getParent()).getChild(UIForumActionBar.class).setHasCategory(false) ;
+			forumPortlet.getChild(UIForumActionBar.class).setHasCategory(false) ;
 		return categoryList;
 	}	
 	

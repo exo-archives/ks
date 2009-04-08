@@ -58,6 +58,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isJumpRendered = false;
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
+	private boolean isShowForumActionBar = false;
 	private boolean enableBanIP = false;
 	private boolean useAjax = true;
 	private int dayForumNewPost = 0;
@@ -66,6 +67,8 @@ public class UIForumPortlet extends UIPortletApplication {
 	public UIForumPortlet() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIBreadcumbs.class, null, null) ;
+		boolean isRenderBar = !ForumSessionUtils.isAnonim() ;
+		addChild(UIForumActionBar.class, null, null).setRendered(isRenderBar);
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
@@ -82,6 +85,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	    		if(getChild(UISettingEditModeForm.class) != null)
 	    			removeChild(UISettingEditModeForm.class);
 		    	addChild(UIBreadcumbs.class, null, null) ;
+		  		addChild(UIForumActionBar.class, null, null).setRendered(!ForumSessionUtils.isAnonim());
 		  		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		  		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		  		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
@@ -94,6 +98,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	    		editModeForm.setUserProfile(getUserProfile());
 	    		if(getChild(UIBreadcumbs.class) != null) {
 		    		removeChild(UIBreadcumbs.class) ;
+		    		removeChild(UIForumActionBar.class) ;
 		    		removeChild(UICategoryContainer.class) ;
 		    		removeChild(UIForumContainer.class) ;
 		    		removeChild(UITopicsTag.class) ;
@@ -106,7 +111,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	 }
 	
 	public void updateIsRendered(String selected) throws Exception {
-		if(selected == ForumUtils.CATEGORIES) {
+		if(selected.equals(ForumUtils.CATEGORIES)) {
 			isCategoryRendered = true ;
 			isForumRendered = false ;
 			isTagRendered = false ;
@@ -127,6 +132,9 @@ public class UIForumPortlet extends UIPortletApplication {
 			isCategoryRendered = false ;
 			isSearchRendered = true ;
 		}
+		if(!isShowForumActionBar && !selected.equals(ForumUtils.CATEGORIES)){
+			getChild(UIForumActionBar.class).setRendered(false) ;
+		}
 		if(userProfile == null) updateUserProfileInfo();
 		isJumpRendered = this.userProfile.getIsShowForumJump() ;
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
@@ -146,6 +154,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		invisibleCategories.clear();
 		invisibleForums.clear();
 		try {
+			isShowForumActionBar = Boolean.parseBoolean(portletPref.getValue("showForumActionBar", ""));
 			dayForumNewPost = Integer.parseInt(portletPref.getValue("forumNewPost", ""));
 			useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
@@ -181,6 +190,9 @@ public class UIForumPortlet extends UIPortletApplication {
 		return enableBanIP;
 	}
 	
+	public boolean isShowForumActionBar() {
+	  return isShowForumActionBar;
+  }
 	public boolean isUseAjax(){
 		return useAjax;
 	}

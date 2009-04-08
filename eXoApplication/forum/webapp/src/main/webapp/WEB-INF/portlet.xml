@@ -29,6 +29,12 @@
 	
 		<portlet-preferences>
 			<preference>
+				<name>showForumActionBar</name>
+				<value>false</value> <!-- true/false -->
+				<read-only>false</read-only>
+			</preference>
+
+			<preference>
 				<name>forumNewPost</name>
 				<value>1</value> <!-- day number -->
 				<read-only>false</read-only>

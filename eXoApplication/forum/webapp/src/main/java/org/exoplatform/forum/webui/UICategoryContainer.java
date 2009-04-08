@@ -33,8 +33,6 @@ import org.exoplatform.webui.core.UIContainer;
 public class UICategoryContainer extends UIContainer	{
 	boolean isRenderJump = true;
 	public UICategoryContainer() throws Exception {
-		boolean isRenderBar = !ForumSessionUtils.isAnonim() ;
-		addChild(UIForumActionBar.class, null, null).setRendered(isRenderBar);
 		addChild(UICategories.class, null, null).setRendered(true) ;
 		addChild(UICategory.class, null, null).setRendered(false) ;
 		addChild(UICategoriesSummary.class, null, null);
@@ -43,12 +41,14 @@ public class UICategoryContainer extends UIContainer	{
 		this.isRenderJump = isRenderJump ;
   }
 	public void updateIsRender(boolean isRender) throws Exception {
-		boolean isRenderBar = !ForumSessionUtils.isAnonim() ;
-		if(isRenderBar) {
-			getChild(UIForumActionBar.class).setRendered(isRender);
-		}
 		getChild(UICategories.class).setRendered(isRender) ;
 		getChild(UICategory.class).setRendered(!isRender) ;
+		UIForumPortlet forumPortlet = getParent();
+		if(isRender || forumPortlet.isShowForumActionBar()) {
+			forumPortlet.getChild(UIForumActionBar.class).setRendered(!ForumSessionUtils.isAnonim()) ;
+		} else {
+			forumPortlet.getChild(UIForumActionBar.class).setRendered(false) ;
+		}
 		this.findFirstComponentOfType(UICategoryInfo.class).setRendered(isRender) ;
 		UIForumLinks forumLinks = ((UIForumPortlet) this.getParent()).getChild(UIForumLinks.class) ;
 		if(isRenderJump) {

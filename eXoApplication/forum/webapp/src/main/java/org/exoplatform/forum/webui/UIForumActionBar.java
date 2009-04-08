@@ -77,7 +77,7 @@ public class UIForumActionBar extends UIContainer	{
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
-		userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		userProfile = ((UIForumPortlet)this.getParent()).getUserProfile() ;
 		return userProfile;
 	}
 	
@@ -109,8 +109,8 @@ public class UIForumActionBar extends UIContainer	{
 	
   static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
-			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumActionBar uiActionBar = event.getSource();
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
@@ -124,8 +124,8 @@ public class UIForumActionBar extends UIContainer	{
 	
   static public class ModerationActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
-			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumActionBar uiActionBar = event.getSource();
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIModerationForum messageForm = popupContainer.addChild(UIModerationForum.class, null, null) ;
@@ -139,7 +139,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class AddCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.addChild(UICategoryForm.class, null, null) ;
@@ -152,7 +152,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class ImportCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.addChild(UIImportForm.class, null, null) ;
@@ -165,7 +165,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class ExportCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIExportForm exportForm = popupContainer.addChild(UIExportForm.class, null, null) ;
@@ -180,13 +180,14 @@ public class UIForumActionBar extends UIContainer	{
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
 			if(uiActionBar.hasCategory) {
-				UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+				UIForumPortlet forumPortlet = uiActionBar.getParent();
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
 				forumForm.initForm();
 				forumForm.setCategoryValue("", true) ;
 				forumForm.setForumUpdate(false) ;
+				forumForm.setActionBar(true);
 				popupContainer.setId("AddNewForumForm") ;
 				popupAction.activate(popupContainer, 650, 480) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -202,7 +203,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class ManageModeratorActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-				UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+				UIForumPortlet forumPortlet = uiActionBar.getParent();
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIModeratorManagementForm managementForm = popupContainer.addChild(UIModeratorManagementForm.class, null, null) ;
@@ -216,7 +217,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class EditProfileActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIForumUserSettingForm forumUserSettingForm = popupContainer.addChild(UIForumUserSettingForm.class, null, null) ;
@@ -230,7 +231,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class OpenBookMarkActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIShowBookMarkForm bookMarkForm = popupAction.createUIComponent(UIShowBookMarkForm.class, null, null) ;
 			popupAction.activate(bookMarkForm, 520, 360) ;
@@ -241,7 +242,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class OpenAdministrationActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIForumAdministrationForm administrationForm = popupContainer.addChild(UIForumAdministrationForm.class, null, null) ;
@@ -255,7 +256,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class TagManagerActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = uiActionBar.getParent();
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UITagManagerForm managerForm = popupContainer.addChild(UITagManagerForm.class, null, null) ;

@@ -42,6 +42,9 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.forum.webui.UITopicsTag;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
@@ -651,13 +654,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			}
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
       	forumPortlet.updateUserProfileInfo() ;
+      	userProfile = forumPortlet.getUserProfile();
+  			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;
+  			forumPortlet.findFirstComponentOfType(UITopicContainer.class).setUserProfile(userProfile) ;
+  			forumPortlet.findFirstComponentOfType(UITopicsTag.class).setUserProfile(userProfile) ;
       }
       uiForm.isEdit = false ;
       uiForm.setPageListUserProfile();
       UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
       popupWindow.setWindowSize(760, 350) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
     }
   }
   

@@ -1,5 +1,4 @@
 <%  
-	import org.exoplatform.forum.webui.UIForumActionBar ;
 	import org.exoplatform.forum.webui.UICategories ;
 	import org.exoplatform.forum.webui.UICategory ;
 	import org.exoplatform.forum.webui.UICategoriesSummary ;

@@ -52,6 +52,7 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.forum.webui.UITopicsTag;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -410,6 +411,10 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				sProvider.close();
 			}
 			forumPortlet.updateUserProfileInfo() ;
+			userProfile = forumPortlet.getUserProfile();
+			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;
+			forumPortlet.findFirstComponentOfType(UITopicContainer.class).setUserProfile(userProfile) ;
+			forumPortlet.findFirstComponentOfType(UITopicsTag.class).setUserProfile(userProfile) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 		}

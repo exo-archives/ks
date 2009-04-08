@@ -100,6 +100,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private UserProfile getUserProfile() {
 		return userProfile ;
 	}
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+		this.userProfile	= userProfile ;
+  }
 	
 	@SuppressWarnings("unused")
   private long getSizePost(String Id) throws Exception {
