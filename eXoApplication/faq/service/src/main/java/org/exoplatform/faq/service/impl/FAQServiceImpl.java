@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
@@ -111,8 +113,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 * @return	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
-	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId, setting);
+	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId);
 	}
 	
 	/**
@@ -125,8 +127,8 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @return  number of (sub-categories, questions, questions is not approved,question is have not yet answered)
    * @throws Exception the exception
 	 */
-	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider, FAQSetting setting) throws Exception {
-		return jcrData_.getCategoryInfo(categoryId, sProvider, setting);
+	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
+		return jcrData_.getCategoryInfo(categoryId, sProvider);
 	}
   
 	/**
@@ -748,9 +750,18 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
 		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
 	}
+  
+  // For migrate data
+	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
+		return jcrData_.getQuestionsIterator(sProvider) ;
+	}
+  
+	public void removeRSSEventListener() throws Exception {
+		jcrData_.removeRSSEventListener();
+	}
 	
-	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception{
-		return jcrData_.getPendingQuestionsByCategory(categoryId, sProvider, faqSetting);
+	public void addRSSEventListener() throws Exception{
+		jcrData_.addRSSEventListener();
 	}
 
 	public void start() {
