@@ -5,7 +5,8 @@ import org.exoplatform.forum.service.Category;
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
-			<%if(!uiform.listCategories.isEmpty()){%>
+			<%/*
+				if(!uiform.listCategories.isEmpty()){%>
 					<div>
 						<fieldset style="color:rgb(51, 51, 51); margin:10px;">
 							<legend class="StyleLegend" style="cursor:pointer;">Select categories</legend>
@@ -33,7 +34,8 @@ import org.exoplatform.forum.service.Category;
 							</div>
 						</fieldset>
 					</div>
-				<%}%>
+				<%}
+				*/%>
 				<table class="UIFormGrid">
 					<tbody>				
 					<% 
