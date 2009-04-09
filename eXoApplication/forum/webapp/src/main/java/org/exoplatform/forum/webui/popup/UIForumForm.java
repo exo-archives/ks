@@ -407,6 +407,17 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 					forumService.saveForum(sProvider, categoryId, newForum, false);
 				} else {
 					forumService.saveForum(sProvider, categoryId, newForum, true);
+					List<String> invisibleCategories = forumPortlet.getInvisibleCategories();
+					List<String> invisibleForums = forumPortlet.getInvisibleForums();
+					String listForumId = "", listCategoryId = "";
+					if(!invisibleCategories.isEmpty()){
+						if(invisibleCategories.contains(categoryId)) {
+							invisibleForums.add(newForum.getId());
+							listForumId = invisibleForums.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+							listCategoryId = invisibleCategories.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+							ForumUtils.savePortletPreference(listCategoryId, listForumId);
+						}
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
