@@ -26,29 +26,7 @@
 				</properties-param>
 			</init-params>
 	</component>
-	  
-		<component>
-    <key>org.exoplatform.forum.service.ForumService</key>
-    <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
-    <init-params>
-	    <properties-param>
-	      <name>upload-limit-config</name>
-	      <property name="maximum.upload" value="10" /> 
-	    </properties-param>
-    </init-params>
-  </component>
 
-	<component>
-    <key>org.exoplatform.faq.service.FAQService</key>
-    <type>org.exoplatform.faq.service.impl.FAQServiceImpl</type>
-    <init-params>
-	    <properties-param>
-	      <name>upload-limit-config</name>
-	      <property name="maximum.upload" value="10" /> 
-	    </properties-param>
-    </init-params>
-  </component>
-  
 	<external-component-plugins>
 		<target-component>org.exoplatform.faq.service.FAQService</target-component>		
 		

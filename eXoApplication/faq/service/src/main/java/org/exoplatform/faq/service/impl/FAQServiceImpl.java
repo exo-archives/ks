@@ -22,13 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
@@ -61,23 +59,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	private MultiLanguages multiLanguages_ ;
-	public static long maxUploadSize_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
 	
 	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
-		try {
-			PropertiesParam proParams = params.getPropertiesParam("upload-limit-config");
-			if (proParams != null) {
-				String maximum = proParams.getProperty("maximum.upload");
-				if (maximum != null && maximum.length() > 0) {
-						maxUploadSize_ = Long.parseLong(maximum)*1048576;
-	    	}
-	    }
-		} catch (Exception e) {
-			maxUploadSize_ = 0;
-		}
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
@@ -125,8 +111,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 * @return	QuestionPageList
 	 * @throws Exception the exception
 	 */
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId) throws Exception {
-	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId);
+	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(sProvider, categoryId, setting);
 	}
 	
 	/**
@@ -139,8 +125,8 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @return  number of (sub-categories, questions, questions is not approved,question is have not yet answered)
    * @throws Exception the exception
 	 */
-	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider) throws Exception {
-		return jcrData_.getCategoryInfo(categoryId, sProvider);
+	public long[] getCategoryInfo(String categoryId, SessionProvider sProvider, FAQSetting setting) throws Exception {
+		return jcrData_.getCategoryInfo(categoryId, sProvider, setting);
 	}
   
 	/**
@@ -762,18 +748,9 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
 		return jcrData_.getWatchByUser(userId, cateId, sessionProvider);
 	}
-  
-  // For migrate data
-	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
-		return jcrData_.getQuestionsIterator(sProvider) ;
-	}
-  
-	public void removeRSSEventListener() throws Exception {
-		jcrData_.removeRSSEventListener();
-	}
 	
-	public void addRSSEventListener() throws Exception{
-		jcrData_.addRSSEventListener();
+	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception{
+		return jcrData_.getPendingQuestionsByCategory(categoryId, sProvider, faqSetting);
 	}
 
 	public void start() {

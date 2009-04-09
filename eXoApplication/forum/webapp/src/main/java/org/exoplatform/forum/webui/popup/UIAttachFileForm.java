@@ -23,7 +23,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.impl.ForumServiceImpl;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -61,10 +60,8 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	private boolean	           isTopicForm	 = true;
 	private boolean 					 isChangeAvatar_ = false;
 	private int	               maxField	     = 5;
-	private long	             maxSize	     = 0;
 
 	public UIAttachFileForm() throws Exception {
-		maxSize = ForumServiceImpl.maxUploadSize_ ;
 		setMultiPart(true) ;
 	}
 	
@@ -107,14 +104,6 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					continue ;
 				}
 				try {
-					if(uiForm.maxSize > 0){
-						if((long)uploadResource.getUploadedSize() > uiForm.maxSize) {
-							Object[] args = {fileName, String.valueOf((uiForm.maxSize/1048576))};
-							uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-long", args, ApplicationMessage.WARNING));
-							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-							return ;
-						}
-					}
 					attachfile = new BufferAttachment() ;
 					attachfile.setId("ForumAttachment" + IdGenerator.generate());
 					attachfile.setName(uploadResource.getFileName()) ;

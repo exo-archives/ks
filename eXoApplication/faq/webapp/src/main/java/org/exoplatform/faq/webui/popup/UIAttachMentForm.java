@@ -23,7 +23,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.faq.service.impl.FAQServiceImpl;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
@@ -84,7 +83,6 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm attachMentForm = event.getSource() ;
       List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>() ;
-      long maxSize = FAQServiceImpl.maxUploadSize_ ;
       long fileSize = 0 ;
       for(int i = 0 ; i < attachMentForm.numberUpload; i ++) {
         UIFormUploadInput uploadInput = attachMentForm.getChildById(FILE_UPLOAD + i) ;
@@ -95,25 +93,18 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
         }
         
         if(uploadResource != null && uploadResource.getUploadedSize() > 0) {
-          if(maxSize == 0 || uploadResource.getUploadedSize() <= maxSize) {
-            FileAttachment fileAttachment = new FileAttachment() ;
-            fileAttachment.setName(uploadResource.getFileName()) ;
-            fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
-            fileAttachment.setMimeType(uploadResource.getMimeType()) ;
-            fileSize = (long)uploadResource.getUploadedSize() ;
-            fileAttachment.setSize(fileSize) ;
-            fileAttachment.setId("file" + IdGenerator.generate()) ;
-            fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
-            listFileAttachment.add(fileAttachment) ;
-          } else {
-            UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-            uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName(), String.valueOf((maxSize/1048576))}, ApplicationMessage.WARNING)) ;
-            event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-            return ;
-          }
+          FileAttachment fileAttachment = new FileAttachment() ;
+          fileAttachment.setName(uploadResource.getFileName()) ;
+          fileAttachment.setInputStream(uploadInput.getUploadDataAsStream()) ;
+          fileAttachment.setMimeType(uploadResource.getMimeType()) ;
+          fileSize = (long)uploadResource.getUploadedSize() ;
+          fileAttachment.setSize(fileSize) ;
+          fileAttachment.setId("file" + IdGenerator.generate()) ;
+          fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
+          listFileAttachment.add(fileAttachment) ;
         } else {
         	UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName(), String.valueOf((maxSize/1048576))}, ApplicationMessage.WARNING)) ;
+        	uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName()}, ApplicationMessage.WARNING)) ;
         	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         	return ;
         }
