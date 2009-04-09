@@ -274,8 +274,8 @@ public class ForumEventQuery {
     	if(type.equals(Utils.CATEGORY) || type.equals(Utils.FORUM)) searchBy = "fn:name()";
     	else searchBy = "@exo:path";
     	for(int i = 0; i < size; i ++){
+    		if(i > 0) stringBuffer.append(" or ");
     		stringBuffer.append(searchBy).append(" = '").append(listIds.get(i)).append("'");
-    		if(i < size - 1) stringBuffer.append(" or ");
     	}
     	stringBuffer.append(")");
     }
