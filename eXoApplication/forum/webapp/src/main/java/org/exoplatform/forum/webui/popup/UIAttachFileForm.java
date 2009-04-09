@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -67,9 +68,10 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	
 	public void setMaxField(int maxField){
 		this.maxField = maxField;
+		int sizeLimit = ForumUtils.getLimitUploadSize() ;
 		int i = 0 ;
 		while(i++ < maxField) {
-			UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
+			UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit) ;
 			addUIFormInput(uiInput) ;
 		}
 	}

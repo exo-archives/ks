@@ -45,7 +45,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	public void deActivate() throws Exception { }
 
 	public UIImportForm(){
-		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, ForumUtils.getLimitUploadSize()));
 		categoryPath = null;
 	}
 	
@@ -140,6 +140,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} catch (Exception ise) {
+				ise.printStackTrace() ;
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 			} finally{
