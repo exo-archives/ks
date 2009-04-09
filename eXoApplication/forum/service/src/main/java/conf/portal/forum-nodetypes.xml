@@ -283,6 +283,9 @@
 			</propertyDefinition>
 			<propertyDefinition name="exo:isAutoAddEmailNotify" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+        <defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:notifyWhenAddTopic" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
@@ -682,6 +685,9 @@
 			</propertyDefinition>
 			<propertyDefinition name="exo:enableHeaderSubject" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:notifyEmailContent" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
@@ -676,6 +677,8 @@ public interface FAQService {
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception;
 	
 	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+	
+	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception ; 
 	
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
 }

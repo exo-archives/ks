@@ -18,10 +18,17 @@
   			<valueConstraints/>
 	  	</propertyDefinition>
   		<propertyDefinition name="exo:approveResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  			<valueConstraints/>
+        <valueConstraints/>
+        <defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>
+  			
 	  	</propertyDefinition>
   		<propertyDefinition name="exo:activateResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  			<valueConstraints/>
+        <valueConstraints/>
+        <defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>  			
 	  	</propertyDefinition>
 	  	<propertyDefinition name="exo:usersVoteAnswer" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
@@ -108,6 +115,18 @@
   		<propertyDefinition name="exo:nameAttachs" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
+      
+      <!-- Propreties for migration data -->
+      <propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:dateResponse" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+  		</propertyDefinition> 
+  		<propertyDefinition name="exo:responseBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+	  	</propertyDefinition>
+      <!-- End for migration data -->
   	</propertyDefinitions>
   	<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
@@ -178,10 +197,16 @@
   			<valueConstraints/>
   		</propertyDefinition>  
   		<propertyDefinition name="exo:isModerateQuestions" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  			<valueConstraints/>
+        <valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>  			
   		</propertyDefinition>			
   		<propertyDefinition name="exo:isModerateAnswers" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  			<valueConstraints/>
+        <valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>  			
   		</propertyDefinition>			
   		<propertyDefinition name="exo:viewAuthorInfor" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
@@ -228,18 +253,30 @@
    <propertyDefinitions>
   		<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>Root</defaultValue>
+				</defaultValues>
   		</propertyDefinition>  			
   		<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>  
   		<propertyDefinition name="exo:isModerateQuestions" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
   		</propertyDefinition>			
   		<propertyDefinition name="exo:isModerateAnswers" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
   		</propertyDefinition>			
   		<propertyDefinition name="exo:viewAuthorInfor" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
   		</propertyDefinition>			
   		<propertyDefinition name="exo:moderators" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>

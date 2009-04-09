@@ -117,6 +117,7 @@ public class JCRDataStorage {
 	private final String ADMIN_="ADMIN".intern();
 	private final int EVENT_REMOVE = 2;
 	private final String FAQ_RSS = "faq.rss";
+	private boolean isActiveRss = true ;
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -315,6 +316,10 @@ public class JCRDataStorage {
 			return questionHome ;
 		}
 	}
+	
+	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
+		return getQuestionHome(sProvider, null).getNodes() ;
+	}	
 	
 	protected void addListennerForNode(Node node) throws Exception{
 		String wsName = node.getSession().getWorkspace().getName() ;
@@ -786,16 +791,21 @@ public class JCRDataStorage {
   			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
   		}
 	  	if(answerNode.isNew()){
-	  		java.util.Calendar calendar = null ;
-	  		calendar = null ;
-	  		calendar = GregorianCalendar.getInstance();
-	  		calendar.setTime(new Date());
-	  		answerNode.setProperty("exo:dateResponse", quesNode.getSession().getValueFactory().createValue(calendar));
+	  		java.util.Calendar calendar = GregorianCalendar.getInstance();
+	  		
+	  		if(answer.getDateResponse() != null){
+	  			calendar.setTime(answer.getDateResponse());
+	  			answerNode.setProperty("exo:dateResponse", calendar) ;
+	  		} else{
+	  			calendar.setTime(new Date());
+	  			answerNode.setProperty("exo:dateResponse", calendar);
+	  		} 
 	  		answerNode.setProperty("exo:id", answer.getId());
 	  	}
 	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
 	  		answerNode.setProperty("exo:postId", answer.getPostId());
 	  	}
+	  	System.out.println("answer.getResponses() ==> " + answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
