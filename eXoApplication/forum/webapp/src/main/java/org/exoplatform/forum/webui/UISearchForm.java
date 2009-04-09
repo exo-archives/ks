@@ -291,7 +291,13 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setFromDateCreatedLastPost(fromDateCreatedLastPost) ;
 			eventQuery.setToDateCreatedLastPost(toDateCreatedLastPost) ;
 			
-			eventQuery.getPathQuery();
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			if(type.equals(Utils.CATEGORY)){
+				eventQuery.getPathQuery(forumPortlet.getInvisibleCategories());
+			} else {
+				eventQuery.getPathQuery(forumPortlet.getInvisibleForums());
+			}
+			
 			if(eventQuery.getIsEmpty()) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
@@ -301,14 +307,14 @@ public class UISearchForm extends UIForm implements UISelector {
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			List<ForumSearch> list = null ;
 			try {
-				list = forumService.getAdvancedSearch(ForumSessionUtils.getSystemProvider(),eventQuery);
+				list = forumService.getAdvancedSearch(ForumSessionUtils.getSystemProvider(),eventQuery,
+														forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums());
 			}catch (Exception e) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				return ;
 			}
 			
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class);
 			categoryContainer.updateIsRender(true);

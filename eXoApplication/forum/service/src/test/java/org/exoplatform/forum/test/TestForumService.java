@@ -530,7 +530,7 @@ public class TestForumService extends BaseForumTestCase{
   	String pathQuery = ""; // from ForumService/
   	String textQuery = "description";
   	String type = "true,all";
-  	List<ForumSearch> forumSearchs = forumService_.getQuickSearch(sProvider, textQuery, type, pathQuery, users);
+  	List<ForumSearch> forumSearchs = forumService_.getQuickSearch(sProvider, textQuery, type, pathQuery, users, null, null);
   	assertEquals(forumSearchs.isEmpty(), false);
   	//getAdvancedSearch
   	ForumEventQuery eventQuery =  new ForumEventQuery();
@@ -547,7 +547,7 @@ public class TestForumService extends BaseForumTestCase{
 		eventQuery.setPostCountMin("0") ;
 		eventQuery.setViewCountMin("0") ;
 		eventQuery.setModerator("") ;
-		forumSearchs = forumService_.getAdvancedSearch(sProvider, eventQuery);
+		forumSearchs = forumService_.getAdvancedSearch(sProvider, eventQuery, null, null);
 		assertEquals(forumSearchs.isEmpty(), false);
   }
   

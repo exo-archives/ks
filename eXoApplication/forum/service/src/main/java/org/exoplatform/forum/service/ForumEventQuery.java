@@ -144,7 +144,7 @@ public class ForumEventQuery {
 	  return this.isEmpty ;
   }
 	
-	public String getPathQuery() {
+	public String getPathQuery(List<String> listIds) {
 		isAnd = false ; isEmpty = true;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
@@ -266,6 +266,20 @@ public class ForumEventQuery {
 				stringBuffer.append(" and (@exo:isApproved='true' and @exo:isActiveByTopic='true' and @exo:isHidden='false')");
 			}
     }
+    
+    if(listIds != null && listIds.size() > 0){
+    	stringBuffer.append(" and (");
+    	int size = listIds.size();
+    	String searchBy = null;
+    	if(type.equals(Utils.CATEGORY) || type.equals(Utils.FORUM)) searchBy = "fn:name()";
+    	else searchBy = "@exo:path";
+    	for(int i = 0; i < size; i ++){
+    		stringBuffer.append(searchBy).append(" = '").append(listIds.get(i)).append("'");
+    		if(i < size - 1) stringBuffer.append(" or ");
+    	}
+    	stringBuffer.append(")");
+    }
+    
     stringBuffer.append("]");
     if(isAnd) queryString.append(stringBuffer.toString()) ;
 	  return queryString.toString();

@@ -727,7 +727,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser, List<String> listCateIds, List<String> listForumIds) throws Exception;
 
 	/**
 	 * Gets the advanced search.
@@ -739,7 +739,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception;
+	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
 
 	/**
 	 * Save forum administration.

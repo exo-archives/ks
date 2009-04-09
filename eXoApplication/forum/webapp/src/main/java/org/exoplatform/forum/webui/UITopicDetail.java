@@ -603,7 +603,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				categoryContainer.updateIsRender(true) ;
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
-				List<ForumSearch> list = topicDetail.forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(topicDetail.getUserProfile().getUserId()));
+				List<ForumSearch> list = topicDetail.forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), 
+																						path, ForumSessionUtils.getAllGroupAndMembershipOfUser(topicDetail.getUserProfile().getUserId()),
+																						forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums());
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
