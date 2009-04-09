@@ -66,8 +66,9 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   
   public void setNumberUpload(int number){
   	numberUpload = number;
+  	int sizeLimit = FAQUtils.getLimitUploadSize() ;
   	for(int i = 0 ; i < numberUpload; i ++) {
-      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i)) ;
+      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit)) ;
     }
   }
   

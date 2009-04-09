@@ -29,6 +29,7 @@ import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -48,7 +49,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	public void deActivate() throws Exception { }
 
 	public UIImportForm(){
-		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, FAQUtils.getLimitUploadSize()));
 	}
 
 	public void setCategoryId(String categoryId){

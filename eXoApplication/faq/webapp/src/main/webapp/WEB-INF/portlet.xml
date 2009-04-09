@@ -78,6 +78,11 @@
         <value> </value>	<!-- id of forum;CategoryName/ForumName -->
         <read-only>false</read-only>
       </preference>
+      <preference>
+			  <name>uploadFileSizeLimitMB</name>
+			  <value>20</value>
+			  <read-only>false</read-only>
+			</preference>
     </portlet-preferences>  
   </portlet>
 </portlet-app>

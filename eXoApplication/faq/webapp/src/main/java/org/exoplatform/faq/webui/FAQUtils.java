@@ -66,6 +66,7 @@ public class FAQUtils {
 	private static String AKONG = "@" ;
 	public static String[] specialString = {"!", "#", "$", "%", "^", "&"
 		, ":", ">", "<", "~", "`", "]", "'", "/"} ;
+	public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB" ;
 
 	public static FAQService getFAQService() throws Exception {
 		return (FAQService)PortalContainer.getComponent(FAQService.class) ;
@@ -497,5 +498,12 @@ public class FAQUtils {
 	public static String convertLinkToForum(String s){
 		s = s.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("DiscussForum", "ChangePath");
 		return s;
+	}
+	
+	public static int getLimitUploadSize(){
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+		int limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+		return limitMB ;
 	}
 }
