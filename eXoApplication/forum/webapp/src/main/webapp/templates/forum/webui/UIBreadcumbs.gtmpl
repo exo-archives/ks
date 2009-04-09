@@ -2,7 +2,6 @@
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.portal.webui.util.Util;
-	uicomponent.setUserProfile();
 	uicomponent.setIsUseAjax();
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
@@ -12,7 +11,6 @@
 				<div class="BreadcumbsInfoBar">
 					<!-- <div class="OpenIcon" style="border:1px solid red;"><span></span></div> -->
 				<% int t = 0 ;
-					uicomponent.setUserProfile();
 					String link = "";
 					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;

@@ -590,3 +590,14 @@
 *html .UIForumPortlet .ButtonHeadBar {
 	width:90px; 
 }
+
+.UIForumListSearch .SearchResult {
+	padding-left: 1px;
+	*padding-left: 0px;
+}
+
+.UIForumListSearch .TitleBar {
+	font-weight: bold;
+	text-align: center;
+	line-height: 24px;
+}

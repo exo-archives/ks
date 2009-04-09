@@ -7,13 +7,22 @@
 <div class="UIForumListSearch" id="$uicomponent.id">
 	<div class="ContentContainer">
 		<div class="UITopicList">
-			<div>
+			<div class="ForumToolbar">
+				<div class="LeftBar">
+					<div class="RightBar">
+						<div class="CenterBar">
+							<div class="TitleBar"><%=_ctx.appRes("UIForumListSearch.label.SearchResult");%></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="SearchResult">
 				<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 					<thead>
 						<tr>
 							<th style="width:80px;"><%=_ctx.appRes("UIForumListSearch.label.Type");%></th>
 							<th style="width:40px;">&nbsp;</th>
-							<th><%=_ctx.appRes("UIForumListSearch.label.Name");%></th>
+							<th><%=_ctx.appRes("UIForumListSearch.label.NameItem");%></th>
 						</tr>
 					</thead>
 					<tbody>

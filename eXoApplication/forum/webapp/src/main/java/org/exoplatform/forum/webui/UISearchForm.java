@@ -367,10 +367,11 @@ public class UISearchForm extends UIForm implements UISelector {
 	static	public class CancelActionListener extends EventListener<UISearchForm> {
 		public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
-			UIForumPortlet forumPortlet = (UIForumPortlet)uiForm.getParent() ;
+			UIForumPortlet forumPortlet = uiForm.getParent() ;
 			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-			UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class);
-			categories.setIsRenderChild(false) ;
+			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+			categoryContainer.updateIsRender(true) ;
+			categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

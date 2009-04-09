@@ -132,8 +132,10 @@ public class UIForumPortlet extends UIPortletApplication {
 			isCategoryRendered = false ;
 			isSearchRendered = true ;
 		}
-		if(!isShowForumActionBar && !selected.equals(ForumUtils.CATEGORIES)){
-			getChild(UIForumActionBar.class).setRendered(false) ;
+		if(!isShowForumActionBar){
+			if(!isCategoryRendered || isSearchRendered){
+				getChild(UIForumActionBar.class).setRendered(false) ;
+			}
 		}
 		if(userProfile == null) updateUserProfileInfo();
 		isJumpRendered = this.userProfile.getIsShowForumJump() ;

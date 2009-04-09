@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -61,13 +60,18 @@ public class UIBreadcumbs extends UIContainer {
 	private String forumHomePath_ ;
 	private String QUICK_SEARCH = "QuickSearchForm" ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
-	private UserProfile userProfile ;
 	private boolean isLink = false ;
 	private boolean isOpen = true;
 	private String tooltipLink = "forumHome";
 	public UIBreadcumbs()throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		forumHomePath_ = forumService.getForumHomePath(ForumSessionUtils.getSystemProvider()) ;
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			forumHomePath_ = forumService.getForumHomePath(sProvider);
+		} catch (Exception e) {
+		} finally {
+			sProvider.close();
+		}
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;
 		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;
@@ -93,41 +97,49 @@ public class UIBreadcumbs extends UIContainer {
 				path_.add("/"+ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			} else {
 				String tempPath = ""; int i = 0;
-				for (String string : temp) {
-					pathNode = pathNode + "/" + string;
-					Object obj = forumService.getObjectNameByPath(ForumSessionUtils.getSystemProvider(), pathNode) ;
-					if(obj == null) {
-						if(i == 0) {
-							isLink = true;
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				try {
+					for (String string : temp) {
+						pathNode = pathNode + "/" + string;
+						Object obj = forumService.getObjectNameByPath(sProvider, pathNode);
+						if (obj == null) {
+							if (i == 0) {
+								isLink = true;
+							}
+							break;
 						}
-						break;
+						if (obj instanceof Category) {
+							Category category = (Category) obj;
+							tempPath = string;
+							breadcumbs_.add(category.getCategoryName());
+							tooltipLink = "category";
+						} else if (obj instanceof Forum) {
+							if (!ForumUtils.isEmpty(tempPath))
+								tempPath = tempPath + "/" + string;
+							else
+								tempPath = string;
+							Forum forum = (Forum) obj;
+							breadcumbs_.add(forum.getForumName());
+							tooltipLink = "forum";
+						} else if (obj instanceof Topic) {
+							if (!ForumUtils.isEmpty(tempPath))
+								tempPath = tempPath + "/" + string;
+							else
+								tempPath = string;
+							Topic topic = (Topic) obj;
+							breadcumbs_.add(topic.getTopicName());
+							tooltipLink = "topic";
+						} else if (obj instanceof Tag) {
+							Tag tag = (Tag) obj;
+							breadcumbs_.add(tag.getName());
+							tooltipLink = "tag";
+						}
+						path_.add(tempPath);
+						++i;
 					}
-					if(obj instanceof Category) {
-						Category category = (Category)obj ;
-						tempPath = string;
-						breadcumbs_.add(category.getCategoryName()) ;
-						tooltipLink = "category";
-					}else if(obj instanceof Forum) {
-						if(!ForumUtils.isEmpty(tempPath))
-							tempPath = tempPath + "/" + string ;
-						else tempPath = string;
-						Forum forum = (Forum)obj ;
-						breadcumbs_.add(forum.getForumName()) ;
-						tooltipLink = "forum";
-					}else if(obj instanceof Topic) {
-						if(!ForumUtils.isEmpty(tempPath))
-							tempPath = tempPath + "/" + string ;
-						else tempPath = string;
-						Topic topic = (Topic)obj;
-						breadcumbs_.add(topic.getTopicName()) ;
-						tooltipLink = "topic";
-					} else if(obj instanceof Tag){
-						Tag tag = (Tag)obj;
-						breadcumbs_.add(tag.getName()) ;
-						tooltipLink = "tag";
-					}
-					path_.add(tempPath) ;
-					++i;
+				} catch (Exception e) {
+				} finally {
+					sProvider.close();
 				}
 			}
 		} else {
@@ -137,11 +149,6 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			tooltipLink = "forumHome";
 		}
-	}
-	
-	@SuppressWarnings("unused")
-	private void setUserProfile() throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 	}
 	
 	public boolean isOpen() {
