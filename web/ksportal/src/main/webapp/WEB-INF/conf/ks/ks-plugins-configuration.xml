@@ -38,6 +38,11 @@
     </init-params>  
   </component>
   
+  <component>
+    <key>org.exoplatform.forum.service.user.ContactProvider</key>
+    <type>org.exoplatform.forum.service.user.PersonalProfileContactProvider</type>    
+  </component>
+  
 	<external-component-plugins>
 		<target-component>org.exoplatform.faq.service.FAQService</target-component>		
 		

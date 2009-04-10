@@ -15,21 +15,16 @@
 	String location = "" ;
 	Date birthDayDate =	null;
 	boolean isCity = false;
-	if(contact != null) {
-		birthDayDate = contact.getBirthday() ;
-		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
-		if(contact.getCountry() != null) {
-			if(isCity) location = location + ", ";
-			location = location + contact.getCountry() ;
-		}
-	}
+	birthDayDate = contact.getBirthday() ;
+	location = contact.getCity() + ", " + contact.getCountry() ;
+	
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String createdDate = "";
-	String fullName = userName;
+	String fullName = contact.getGivenName() + " " + contact.getFamilyName();
 	
 	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
-	fullName = userProfile.getFullName();
+	
 	
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
@@ -83,24 +78,16 @@
 							<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 								<tbody>
 								<% 
-									String firstName = "";
-									String lastName = "";
-									String email = "";
-									String gender = "";
-									String jobTitle = "";
-									String workPhone = "";
-									String mobile = "";
-									String siteOfUser = "";
-									if(contact != null) {
-										gender		 = contact.getGender();
-										jobTitle	 = contact.getJob();
-										workPhone	= contact.getPhone();
-										mobile		 = contact.getMobile();
-										siteOfUser = contact.getWebSite() ;
-									}
-									firstName = userProfile.getFirstName();
-									lastName	= userProfile.getLastName() ;
-									email		 = "<a target=\"_blank\" href=\"mailto:"+userProfile.getEmail()+"\">"+userProfile.getEmail()+"</a>" ;
+									String firstName = contact.getGivenName() ;
+									String lastName = contact.getFamilyName() ;
+									String email = contact.getEmailAddress() ;
+									String gender = contact.getGender() ;
+									String jobTitle = contact.getJob() ;
+									String workPhone = contact.getPhone() ;
+									String mobile = contact.getMobile() ;
+									String siteOfUser = contact.getWebSite() ;
+									
+									email		 = "<a target=\"_blank\" href=\"mailto:"+ email +"\">"+ email +"</a>" ;
 									if(!ForumUtils.isEmpty(siteOfUser)) {
 										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
 									}

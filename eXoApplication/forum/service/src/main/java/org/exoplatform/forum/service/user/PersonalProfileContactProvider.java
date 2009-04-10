@@ -51,6 +51,8 @@ public class PersonalProfileContactProvider implements ContactProvider {
         contact.setBirthday(profile.getAttribute("user.bdate"));
         contact.setGender(profile.getAttribute("user.gender"));
         contact.setJob(profile.getAttribute("user.jobtitle"));
+        contact.setGivenName(profile.getAttribute("user.name.given"));
+        contact.setFamilyName(profile.getAttribute("user.name.family")) ;        
         
         contact.setEmailAddress(profile.getAttribute("user.home-info.online.email"));
         contact.setCity(profile.getAttribute("user.home-info.postal.city"));
