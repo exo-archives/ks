@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import org.exoplatform.webui.event.EventListener;
 @ComponentConfig(
 		template =	"app:/templates/forum/webui/UICategories.gtmpl",
 		events = {
+			@EventConfig(listeners = UICategories.CollapCategoryActionListener.class),
 			@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
@@ -59,17 +61,18 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UICategories extends UIContainer	{
-	protected ForumService forumService ;
-	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>() ;
-	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>() ;
-	private List<Category> categoryList = new ArrayList<Category>() ;
-	private Map<String, Forum> AllForum = new HashMap<String, Forum>() ;
+	protected ForumService forumService;
+	private Map<String, List<Forum>> mapListForum = new HashMap<String, List<Forum>>();
+	private Map<String, Topic> maptopicLast = new HashMap<String, Topic>();
+	private List<Category> categoryList = new ArrayList<Category>();
+	private Map<String, Forum> AllForum = new HashMap<String, Forum>();
 	public final String FORUM_LIST_SEARCH = "forumListSearch";
-	private boolean isGetForumList = false ;
-	private boolean isRenderChild = false ;
-  private boolean useAjax = true;
-  private int dayForumNewPost = 0;
-	private UserProfile userProfile ;
+	private boolean isGetForumList = false;
+	private boolean isRenderChild = false;
+	private boolean useAjax = true;
+	private int dayForumNewPost = 0;
+	private UserProfile userProfile;
+	private List<String> collapCategories;
 	public UICategories() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
@@ -89,6 +92,8 @@ public class UICategories extends UIContainer	{
 		useAjax = forumPortlet.isUseAjax();
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
 		userProfile = forumPortlet.getUserProfile() ;
+		collapCategories = new ArrayList<String>();
+		collapCategories.addAll(Arrays.asList(userProfile.getCollapCategories()));
 		return this.userProfile ;
 	}
 	
@@ -100,7 +105,12 @@ public class UICategories extends UIContainer	{
 	public boolean getUseAjax() {
 	  return useAjax;
   }
-	 
+	
+	private boolean isCollapCategories(String categoryId) {
+		if(collapCategories.contains(categoryId)) return true;
+		return false;
+	}
+	
 	public List<Category> getCategorys() { return this.categoryList ; }
 	public List<Category> getPrivateCategories() {
 		List<Category> list = new ArrayList<Category>() ;
@@ -159,6 +169,7 @@ public class UICategories extends UIContainer	{
 	public void setIsgetForumList(boolean isGetForumList) { this.isGetForumList = isGetForumList ; }
 	
 	private List<Forum> getForumList(String categoryId) throws Exception {
+		if(isCollapCategories(categoryId)) return new ArrayList<Forum>();
 		List<Forum> forumList = null ;
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
@@ -239,6 +250,32 @@ public class UICategories extends UIContainer	{
 		if(uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
 			return ForumServiceUtils.hasPermission(uesrs, userProfile.getUserId()) ;
 		} else return true ;
+	}
+
+	static public class CollapCategoryActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiContainer = event.getSource();
+			String objects = event.getRequestContext().getRequestParameter(OBJECTID);
+			String[] id = objects.split(",");
+			String userName = uiContainer.userProfile.getUserId();
+			if (!userName.equals(UserProfile.USER_GUEST)) {
+				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				try {
+					uiContainer.forumService.saveCollapCategories(sProvider, userName, id[0], Boolean.parseBoolean(id[1]));
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					sProvider.close();
+				}
+			}
+			if (uiContainer.collapCategories.contains(id[0])) {
+				uiContainer.collapCategories.remove(id[0]);
+			} else {
+				uiContainer.collapCategories.add(id[0]);
+			}
+			uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
+		}
 	}
 
 	static public class OpenCategoryActionListener extends EventListener<UICategories> {

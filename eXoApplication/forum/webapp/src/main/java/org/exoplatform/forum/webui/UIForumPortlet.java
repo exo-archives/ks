@@ -116,12 +116,12 @@ public class UIForumPortlet extends UIPortletApplication {
 			isForumRendered = false ;
 			isTagRendered = false ;
 			isSearchRendered = false ;
-		} else if(selected == ForumUtils.FORUM) {
+		} else if(selected.equals(ForumUtils.FORUM)) {
 			isForumRendered = true ;
 			isCategoryRendered = false ;
 			isTagRendered = false ;
 			isSearchRendered = false ;
-		} else if(selected == ForumUtils.TAG) {
+		} else if(selected.equals(ForumUtils.TAG)) {
 			isTagRendered = true ;
 			isForumRendered = false ;
 			isCategoryRendered = false ;
@@ -256,7 +256,6 @@ public class UIForumPortlet extends UIPortletApplication {
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;

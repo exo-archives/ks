@@ -639,8 +639,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption,
-	    boolean isBan) throws Exception;
+	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
 
 	/**
 	 * Gets the user profile.
@@ -683,6 +682,18 @@ public interface ForumService {
 	 * @throws Exception the exception
 	 */
 	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception;
+
+	/**
+	 * Save user collapCategories.
+	 * 
+	 * @param sProvider is the SessionProvider
+	 * @param userName the user name
+	 * @param categoryId the book mark
+	 * @param isNew is the new
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void saveCollapCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception;
 
 	/**
 	 * Gets the page list user profile.

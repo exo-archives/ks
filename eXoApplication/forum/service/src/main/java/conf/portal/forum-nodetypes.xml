@@ -602,6 +602,9 @@
 					<defaultValue>true</defaultValue>
 				</defaultValues>
 			</propertyDefinition>
+			<propertyDefinition name="exo:collapCategories" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>				
+			</propertyDefinition>
 			
 			<propertyDefinition name="exo:isBanned" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>

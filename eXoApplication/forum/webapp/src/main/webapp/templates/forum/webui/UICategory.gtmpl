@@ -260,8 +260,10 @@
 						String titleTopic = "" ;
 					 	String topicId = "";
 					 	String path = "";
+					 	Date date = new Date();
 					 	int dayForumNewPost = uicomponent.getDayForumNewPost();
-						 for(forum in forums) {
+					 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+						for(forum in forums) {
 							if(i%2 == 0) classRow = "whileRow";
 							else classRow = "OddRow";
 							++i;
@@ -275,7 +277,6 @@
 						 	String classIconReadForum = "ThreadNoNewPost";
 						 	String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
 							List forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
-							long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 							path = categoryId+"/"+forumId ;
 						 	Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 						 	if(topicNewPost != null) {
@@ -285,9 +286,8 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 								topicNewPostTitle = topicNewPost.getTopicName();
 								lastPostBy = topicNewPost.getLastPostBy();
-								Date postDate = topicNewPost.getLastPostDate();
-								postDate.setTime(postDate.getTime() - setTime);
-								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+								date.setTime(topicNewPost.getLastPostDate() - setTime);
+								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 								if((toDay-createdDate)/86400000 <= dayForumNewPost){
 									classIconForum = "ForumNewPostIcon";

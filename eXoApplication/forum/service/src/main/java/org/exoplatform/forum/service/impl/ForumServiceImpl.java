@@ -369,6 +369,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.saveUserBookmark(sProvider, userName, bookMark, isNew);
   }
 
+  public void saveCollapCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
+  	storage_.saveCollapCategories(sProvider, userName, categoryId, isAdd);
+  }
+  
   public JCRPageList getPageListUserProfile(SessionProvider sProvider)throws Exception {
     return storage_.getPageListUserProfile(sProvider);
   }

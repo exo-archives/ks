@@ -243,8 +243,8 @@ UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 
 UIForumPortlet.prototype.expandCollapse = function(obj) {
 	var forumToolbar = eXo.core.DOMUtil.findAncestorByClass(obj,"ForumToolbar") ;
-	var contentContainer = eXo.core.DOMUtil.findNextElementByTagName(forumToolbar, "div") ;
-	if (contentContainer.style.display != "none") {
+	var contentContainer = eXo.core.DOMUtil.findNextElementByTagName(forumToolbar,"div") ;
+	if(contentContainer.style.display != "none") {
 		contentContainer.style.display = "none" ;
 		obj.className = "ExpandButton" ;
 		obj.setAttribute("title","Expand") ;

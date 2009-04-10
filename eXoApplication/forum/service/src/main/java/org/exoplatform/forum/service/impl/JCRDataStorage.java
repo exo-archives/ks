@@ -2924,6 +2924,8 @@ public class JCRDataStorage {
 		userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
 		
 		userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
+		if(profileNode.hasProperty("exo:collapCategories"))
+			userProfile.setCollapCategories(ValuesToArray(profileNode.getProperty("exo:collapCategories").getValues()));
 		
 		userProfile.setEmail(profileNode.getProperty("exo:email").getString());
 		Value[] values = profileNode.getProperty("exo:readTopic").getValues() ;
@@ -3278,6 +3280,57 @@ public class JCRDataStorage {
 			}
 			newProfileNode.setProperty("exo:userRole", 2);
 			newProfileNode.setProperty("exo:bookmark", new String[] { bookMark });
+			if(newProfileNode.isNew()) {
+				newProfileNode.getSession().save();
+			} else {
+				newProfileNode.save();
+			}
+		}
+	}
+
+	public void saveCollapCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
+		Node userProfileNode = getUserProfileHome(sProvider);
+		Node newProfileNode;
+		try {
+			newProfileNode = userProfileNode.getNode(userName);
+			if (newProfileNode.hasProperty("exo:collapCategories")) {
+				List<String> listCategoryId = ValuesToList(newProfileNode.getProperty("exo:collapCategories").getValues());
+				if(listCategoryId.contains(categoryId)) {
+					if(!isAdd) {
+						listCategoryId.remove(categoryId);
+						isAdd = true;
+					}
+				} else {
+					if(isAdd){
+						listCategoryId.add(categoryId);
+					}
+				}
+				if(isAdd){
+					String[] categoryIds = listCategoryId.toArray(new String[] {});
+					newProfileNode.setProperty("exo:collapCategories", categoryIds);
+					if(newProfileNode.isNew()) {
+						newProfileNode.getSession().save();
+					} else {
+						newProfileNode.save();
+					}
+				}
+			} else {
+				newProfileNode.setProperty("exo:collapCategories", new String[] { categoryId });
+				if(newProfileNode.isNew()) {
+					newProfileNode.getSession().save();
+				} else {
+					newProfileNode.save();
+				}
+			}
+		} catch (PathNotFoundException e) {
+			newProfileNode = userProfileNode.addNode(userName, Utils.USER_PROFILES_TYPE);
+			newProfileNode.setProperty("exo:userId", userName);
+			newProfileNode.setProperty("exo:userTitle", Utils.USER);
+			if(isAdminRole(userName)) {
+				newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
+			}
+			newProfileNode.setProperty("exo:userRole", 2);
+			newProfileNode.setProperty("exo:collapCategories", new String[] { categoryId });
 			if(newProfileNode.isNew()) {
 				newProfileNode.getSession().save();
 			} else {

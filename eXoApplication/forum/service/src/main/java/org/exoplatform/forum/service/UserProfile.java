@@ -64,6 +64,7 @@ public class UserProfile {
 	private boolean isShowForumJump = true ;
 	private boolean isAutoWatchMyTopics = false;
 	private boolean isAutoWatchTopicIPost = false;
+	private String[] collapCategories;
 	//UserBan
 	private boolean isBanned = false ;
 	private long banUntil = 0 ;
@@ -83,6 +84,7 @@ public class UserProfile {
 		readTopic = new String[] {} ;
 		bookmark = new String[] {} ;
 		banReasonSummary = new String[] {} ;
+		collapCategories = new String[] {} ;
 		Date dateHost = new Date() ;
 		timeZone = (double)dateHost.getTimezoneOffset()/ 60 ;
 		shortDateformat = "MM/dd/yyyy";
@@ -162,6 +164,8 @@ public class UserProfile {
 	public boolean getIsAutoWatchTopicIPost() {return isAutoWatchTopicIPost;}
 	public void setIsAutoWatchTopicIPost(boolean isAutoWatchTopicIPost) {this.isAutoWatchTopicIPost = isAutoWatchTopicIPost;}
 
+  public String[] getCollapCategories() {return collapCategories;}
+	public void setCollapCategories(String[] collapCategories) {this.collapCategories = collapCategories;}
 	//Ban
 	public void setIsBanned(boolean isBanned) {this.isBanned = isBanned; }
 	public boolean getIsBanned() {return isBanned; }

@@ -47,9 +47,19 @@
 						}
 						url = uicomponent.url("OpenCategory", categoryId);
 						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
+						String classCssCollap = "CollapseButton";
+						String actionCollap = uicomponent.event("CollapCategory", categoryId+",true");
+						String display = "block";
+						String styleForumToolBar = "";
+						if(uicomponent.isCollapCategories(categoryId)){
+							classCssCollap = "ExpandButton";
+							display = "none";
+							styleForumToolBar = "style=\"border-bottom:solid 1px #b7b7b7;\""; 
+							actionCollap = uicomponent.event("CollapCategory", categoryId+",false");
+						}
 		 %>
 			<div class="UIForumCategory">
-				<div class="ForumToolbar">
+				<div class="ForumToolbar" $styleForumToolBar>
 					<div class="LeftBar">
 						<div class="RightBar">
 							<div class="CenterBar">
@@ -69,13 +79,13 @@
 											</div>
 										</div>
 								</div>
-								<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this);"><span></span></div>
+								<div class="$classCssCollap" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this); $actionCollap;"><span></span></div>
 								<div style="clear:both;"><span></span></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="ContentContainer">
+				<div class="ContentContainer" style="display:$display">
 					<div class="ForumList">
 						<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 							<thead>
@@ -114,6 +124,8 @@
 			 						String topicPath = "";
 									int i = 0;
 									int dayForumNewPost = uicomponent.getDayForumNewPost();
+									long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+									Date date = new Date();
 				 					for(forum in forums) {
 										if(i%2 == 0) classRow = "whileRow";
 										else classRow = "OddRow";
@@ -128,7 +140,6 @@
 										String postCount = (String)forum.getPostCount();
 										String openLinkLastPost = "javascript:void(0)";
 										String urlLastPost = "javascript:void(0)";
-										long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 										String classIconReadForum = "ThreadNoNewPost";
 										String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
@@ -139,9 +150,8 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
-											Date postDate = topicNewPost.getLastPostDate();
-											postDate.setTime(postDate.getTime() - setTime);
-											dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+											date.setTime(topicNewPost.getLastPostDate().getTime()- setTime);
+											dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((int)((toDay-createdDate)/86400000) <= dayForumNewPost){
 												classIconForum = "ForumNewPostIcon";
