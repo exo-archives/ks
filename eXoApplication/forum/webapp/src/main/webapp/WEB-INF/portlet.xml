@@ -30,7 +30,7 @@
 		<portlet-preferences>
 			<preference>
 				<name>showForumActionBar</name>
-				<value>false</value> <!-- true/false -->
+				<value>true</value> <!-- true/false -->
 				<read-only>false</read-only>
 			</preference>
 
