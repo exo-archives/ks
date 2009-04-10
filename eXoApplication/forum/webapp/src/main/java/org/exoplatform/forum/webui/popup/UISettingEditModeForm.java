@@ -106,7 +106,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		for (Category category : categoryList) {
 			String categoryId = category.getId();
 			boolean isCheck = false;
-			if(listCategoryinv.contains(categoryId)) isCheck = true;
+			if(listCategoryinv.contains(categoryId) || listCategoryinv.isEmpty()) isCheck = true;
 			if (getUIFormCheckBoxInput(categoryId) != null) {
 				getUIFormCheckBoxInput(categoryId).setChecked(isCheck);
 			} else {
@@ -137,7 +137,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		for (Forum forum : forumList) {
 			String forumId = forum.getId();
 			boolean isCheck = false;
-			if(listforuminv.contains(forumId)) isCheck = true;
+			if(listforuminv.contains(forumId) || listCategoryinv.isEmpty()) isCheck = true;
 			if (getUIFormCheckBoxInput(forumId) != null) {
 				getUIFormCheckBoxInput(forumId).setChecked(isCheck);
 			} else {
