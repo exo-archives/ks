@@ -166,6 +166,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(invisibleCategories.size() == 1 && invisibleCategories.get(0).equals(" ")) invisibleCategories.clear();
 	}
 	
 	private List<String> getListInValus(String value) throws Exception {
