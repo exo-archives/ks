@@ -3752,8 +3752,7 @@ public class JCRDataStorage {
 						queryString.append(searchBy).append(" = '").append(listForumIds.get(i)).append("'");
 						if(i < listForumIds.size() - 1) queryString.append(" or ");
 					}
-					queryString.append(")");
-					isAnd = true;
+					queryString.append(") and ");
 			}
 			if (textQuery != null && textQuery.length() > 0 && !textQuery.equals("null")) {
 				queryString.append("(jcr:contains(., '").append(textQuery).append("'))");
