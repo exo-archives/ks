@@ -534,6 +534,7 @@
 			String longDateFormat = userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateTimeFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 			String shortDateFormat = userProfile.getShortDateFormat() ;
+			Date dateView = new Date();
 			for(post in posts) {
 			  String postId = post.getId();
 				String owner = post.getOwner() ;
@@ -553,24 +554,22 @@
 				if(ForumUtils.isEmpty(classIconPost)) 
 					classIconPost = "NormalTopicIcon" ;
 				String namePost = post.getName() ;
-				Date createdPostDate = post.getCreatedDate() ;
-				createdPostDate.setTime(createdPostDate.getTime() - setTime);
-				String createdDate = ForumUtils.getFormatDate(longDateFormat,createdPostDate);
+				dateView.setTime(post.getCreatedDate().getTime() - setTime);
+				String createdDate = ForumUtils.getFormatDate(longDateFormat,dateView);
 				String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 				String editBy = post.getModifiedBy() ;
 				String editDate ;
 				if(!ForumUtils.isEmpty(editBy)) {
-					Date modifileDate = post.getModifiedDate() ;// modifile
-					modifileDate.setTime(modifileDate.getTime() - setTime);
-					editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
+					dateView.setTime(post.getModifiedDate().getTime() - setTime);
+					editDate = ForumUtils.getFormatDate(longDateFormat,dateView);
 				}
 				List attachments = post.getAttachments() ;
 				String idMessage = "Id" + postId.substring(15);
 				String joinDate = "";
 				Date joinDate_ = userInfo.getJoinedDate();
 				if(joinDate_ != null) {
-					joinDate_.setTime(joinDate_.getTime() - setTime);
-					joinDate = ForumUtils.getFormatDate(shortDateFormat, joinDate_) ;
+					dateView.setTime(joinDate_.getTime() - setTime);
+					joinDate = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
 				}
 				String alert = "(<span style='color:#f77617; font-weight:normal;'>" ;
 				boolean isAnd = false ;
@@ -719,8 +718,8 @@
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
-											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,lastPostOfUser) ;
+											 dateView.setTime(lastPostOfUser.getTime() - setTime);
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,dateView) ;
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.Posts");%>:$totalPost</div>
 									<div><%=_ctx.appRes(uiformId + ".label.LastPost");%>: $lastPostDateOfUser</div>
@@ -734,8 +733,8 @@
 									  Date lastLogin = userInfo.getLastLoginDate();
 										String lastLoginUser = "" ;
 									  if(lastLogin != null){
-										  lastLogin.setTime(lastLogin.getTime() - setTime);
-										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, lastLogin) ;
+										  dateView.setTime(lastLogin.getTime() - setTime);
+										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, dateView) ;
 										}
 									%>
 									<div><%=_ctx.appRes(uiformId + ".label.LastLogin");%>:$lastLoginUser</div>

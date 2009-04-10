@@ -51,11 +51,11 @@
 			<%
 			  List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 				if(checkeds == null) checkeds = new ArrayList<String>();
+				Date postDate = new Date();
 				for(postId in postIds) {
 				  Post post = uiform.getPostById(postId);
-					Date createdPostDate = post.getCreatedDate() ;
-					createdPostDate.setTime(createdPostDate.getTime() - setTime);
-					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),createdPostDate);
+					postDate.setTime(post.getCreatedDate().getTime() - setTime);
+					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 					String classIconPost = post.getIcon() ;
 					if(classIconPost.length() <= 0) 
 						classIconPost = "NormalTopicIcon" ;

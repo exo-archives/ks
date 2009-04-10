@@ -286,7 +286,7 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 								topicNewPostTitle = topicNewPost.getTopicName();
 								lastPostBy = topicNewPost.getLastPostBy();
-								date.setTime(topicNewPost.getLastPostDate() - setTime);
+								date.setTime(topicNewPost.getLastPostDate().getTime() - setTime);
 								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 								if((toDay-createdDate)/86400000 <= dayForumNewPost){

@@ -79,7 +79,7 @@
 											</div>
 										</div>
 								</div>
-								<div class="$classCssCollap" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this); $actionCollap;"><span></span></div>
+								<div class="$classCssCollap" title="Collapse" onclick="$actionCollap;"><span></span></div>
 								<div style="clear:both;"><span></span></div>
 							</div>
 						</div>

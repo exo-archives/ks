@@ -39,6 +39,7 @@
 		String shortDateFormat = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		int nb = 0;
+		Date dateView = new Date();
 		for(post in posts) {
 			String owner = post.getOwner() ;
 			ForumContact contact = uiform.getPersonalContact(owner) ;
@@ -55,16 +56,14 @@
 			if(ForumUtils.isEmpty(classIconPost)) 
 				classIconPost = "NormalTopicIcon" ;
 			String namePost = post.getName() ;
-			Date createdPostDate = post.getCreatedDate() ;
-			createdPostDate.setTime(createdPostDate.getTime() - setTime);
-			String createdDate = ForumUtils.getFormatDate(longDateFormat,createdPostDate);
+			dateView.setTime(post.getCreatedDate().getTime() - setTime);
+			String createdDate = ForumUtils.getFormatDate(longDateFormat,dateView);
 			String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
 			String editBy = post.getModifiedBy() ;
 			String editDate ;
 			if(!ForumUtils.isEmpty(editBy)) {
-				Date modifileDate = post.getModifiedDate() ;// modifile
-				modifileDate.setTime(modifileDate.getTime() - setTime);
-				editDate = ForumUtils.getFormatDate(longDateFormat,modifileDate);
+				dateView.setTime(post.getModifiedDate().getTime() - setTime);
+				editDate = ForumUtils.getFormatDate(longDateFormat,dateView);
 			}
 			
 			String idMessage = "Id" + post.getId().substring(15);
@@ -126,9 +125,8 @@
 									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $joinDate</div>
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
-											 Date lastPostOfUser = userInfo.getLastPostDate() ;
-											 lastPostOfUser.setTime(lastPostOfUser.getTime() - setTime);
-											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,lastPostOfUser) ;
+											 dateView.setTime(userInfo.getLastPostDate().getTime() - setTime);
+											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,dateView) ;
 									%>
 									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
 									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
@@ -138,8 +136,9 @@
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
 									<div><%=_ctx.appRes("UITopicDetail.label.Location");%>: $location</div>
-									<%} 
-										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userInfo.getLastLoginDate()) ;
+									<%}
+										dateView.setTime(userInfo.getLastLoginDate().getTime() - setTime);
+										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
 									%>
 									<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
 								</div>

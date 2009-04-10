@@ -37,7 +37,8 @@
 								List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 							  if(checkeds == null) checkeds = new ArrayList<String>();
 								int i = 0;
-								 for(post in posts){
+								Date postDate = new Date();
+								for(post in posts){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String postId = post.getId();
@@ -45,8 +46,7 @@
 									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
 									String titlePost = ForumUtils.getSubString(message, 100);
 									String iconPost = post.getIcon() ;
-									Date postDate = post.getCreatedDate() ;
-									postDate.setTime(postDate.getTime() - setTime) ;
+									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
 									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
 							%>
 								<tr class="$classRow">
