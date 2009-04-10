@@ -693,7 +693,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveCollapCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception;
+	public void saveCollapsedCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception;
 
 	/**
 	 * Gets the page list user profile.

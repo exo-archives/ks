@@ -3288,7 +3288,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void saveCollapCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
+	public void saveCollapsedCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		try {

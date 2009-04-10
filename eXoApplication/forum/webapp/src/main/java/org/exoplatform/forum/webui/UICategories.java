@@ -261,7 +261,7 @@ public class UICategories extends UIContainer	{
 			if (!userName.equals(UserProfile.USER_GUEST)) {
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiContainer.forumService.saveCollapCategories(sProvider, userName, id[0], Boolean.parseBoolean(id[1]));
+					uiContainer.forumService.saveCollapsedCategories(sProvider, userName, id[0], Boolean.parseBoolean(id[1]));
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
