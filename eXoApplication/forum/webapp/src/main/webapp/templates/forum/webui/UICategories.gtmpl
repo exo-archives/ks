@@ -114,6 +114,7 @@
 			 						String topicPath = "";
 									int i = 0;
 									int dayForumNewPost = uicomponent.getDayForumNewPost();
+									Date postDate = new Date();
 				 					for(forum in forums) {
 										if(i%2 == 0) classRow = "whileRow";
 										else classRow = "OddRow";
@@ -139,8 +140,7 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 											topicNewPostTitle = topicNewPost.getTopicName();
 											lastPostBy = topicNewPost.getLastPostBy();
-											Date postDate = topicNewPost.getLastPostDate();
-											postDate.setTime(postDate.getTime() - setTime);
+											postDate.setTime(topicNewPost.getLastPostDate().getTime() - setTime);
 											dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 											long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 											if((int)((toDay-createdDate)/86400000) <= dayForumNewPost){
