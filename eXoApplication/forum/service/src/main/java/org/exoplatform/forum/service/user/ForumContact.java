@@ -39,15 +39,7 @@ public class ForumContact {
   private String webSite;
   
   
-  public ForumContact() {
-  	emailAddress = "" ;
-  	city = "";
-  	country = "" ;
-  	avatarUrl = "" ;
-  	gender = "" ;
-  	job = "" ;
-  	phone = "" ;
-  	webSite = "" ;
+  public ForumContact() {  	
   }
   
   public String getEmailAddress() {
