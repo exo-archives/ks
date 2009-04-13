@@ -72,7 +72,7 @@ public class UICategories extends UIContainer	{
 	private boolean useAjax = true;
 	private int dayForumNewPost = 0;
 	private UserProfile userProfile;
-	private List<String> collapCategories;
+	private List<String> collapCategories = null;
 	public UICategories() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
@@ -92,8 +92,12 @@ public class UICategories extends UIContainer	{
 		useAjax = forumPortlet.isUseAjax();
 		dayForumNewPost = forumPortlet.getDayForumNewPost();
 		userProfile = forumPortlet.getUserProfile() ;
-		collapCategories = new ArrayList<String>();
-		collapCategories.addAll(Arrays.asList(userProfile.getCollapCategories()));
+		if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
+			collapCategories = new ArrayList<String>();
+			collapCategories.addAll(Arrays.asList(userProfile.getCollapCategories()));
+		} else if(collapCategories == null){
+			collapCategories = new ArrayList<String>();
+		}
 		return this.userProfile ;
 	}
 	
@@ -267,13 +271,13 @@ public class UICategories extends UIContainer	{
 				} finally {
 					sProvider.close();
 				}
+				uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
 			}
 			if (uiContainer.collapCategories.contains(id[0])) {
 				uiContainer.collapCategories.remove(id[0]);
 			} else {
 				uiContainer.collapCategories.add(id[0]);
 			}
-			uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer);
 		}
 	}
@@ -285,7 +289,11 @@ public class UICategories extends UIContainer	{
 			UICategoryContainer categoryContainer = uiContainer.getParent() ;
 			try {
 				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
-				uiCategory.update(uiContainer.getCategory(categoryId), uiContainer.getForumList(categoryId)) ;
+				List<Forum> list = null;
+				if(!uiContainer.collapCategories.contains(categoryId)){
+					list = uiContainer.getForumList(categoryId);
+				}
+				uiCategory.update(uiContainer.getCategory(categoryId), list) ;
 				categoryContainer.updateIsRender(false) ;
 				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
 				uiContainer.maptopicLast.clear();
@@ -312,15 +320,6 @@ public class UICategories extends UIContainer	{
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
 			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
-//			String userId = ForumSessionUtils.getCurrentUser() ;
-//			if(userId != null && userId.length() > 0) {
-//				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-//				try{
-//					categories.forumService.updateForumAccess(userId, id[1]);
-//				} finally {
-//					sProvider.close();
-//				}
-//			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			categories.maptopicLast.clear();
 		}
