@@ -31,6 +31,7 @@
 				String classCssInbox = "EvenRow";
 				long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 				i = 0;
+				Date fromDate = new Date();
 				for(mail in InBoxmails) {
 					if(i%2 == 0) classCssInbox = "EvenRow";
 					else classCssInbox = "OddRow";
@@ -39,8 +40,7 @@
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getFrom();
-					Date fromDate = mail.getReceivedDate() ;
-					fromDate.setTime(fromDate.getTime() - setTime);
+					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
 					String strFromDate = ForumUtils.getFormatDate(formatDate, fromDate);
 		%>
 			<tr class="$classCssInbox">

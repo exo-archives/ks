@@ -260,6 +260,7 @@
 						String titleTopic = "" ;
 					 	String topicId = "";
 					 	String path = "";
+					 	Date date = new Date();
 					 	int dayForumNewPost = uicomponent.getDayForumNewPost();
 						 for(forum in forums) {
 							if(i%2 == 0) classRow = "whileRow";
@@ -285,9 +286,8 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 								topicNewPostTitle = topicNewPost.getTopicName();
 								lastPostBy = topicNewPost.getLastPostBy();
-								Date postDate = topicNewPost.getLastPostDate();
-								postDate.setTime(postDate.getTime() - setTime);
-								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
+								date.setTime(topicNewPost.getLastPostDate().getTime() - setTime);
+								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
 								if((toDay-createdDate)/86400000 <= dayForumNewPost){
 									classIconForum = "ForumNewPostIcon";

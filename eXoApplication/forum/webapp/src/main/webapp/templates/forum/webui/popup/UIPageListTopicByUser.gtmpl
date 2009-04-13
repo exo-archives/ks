@@ -61,7 +61,8 @@
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
-								 for(topic in topics){
+								Date postDate = new Date();
+								for(topic in topics){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
@@ -75,7 +76,6 @@
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
 
-									Date postDate = topic.getLastPostDate() ;
 									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
 									String title = "TitleNorman";
 									String newPost = "NoNew"; 
@@ -83,7 +83,7 @@
 										title = "TitleBold";
 										newPost = "New";									
 									}
-									postDate.setTime(postDate.getTime() - setTime);
+									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 									String hot = ""; 
 									if(topic.getPostCount() > 10) hot = "Hot"; 

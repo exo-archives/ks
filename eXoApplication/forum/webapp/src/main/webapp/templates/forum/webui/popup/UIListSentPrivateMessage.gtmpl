@@ -32,6 +32,7 @@
 				String classCssSend = "EvenRow";
 				i = 0;
 				long setTime = (long)(userProfile.getTimeZone()*3600000) ;
+				Date fromDate = new Date();
 				for(mail in sendmails) {
 					if(i%2 == 0) classCssSend = "EvenRow";
 					else classCssSend = "OddRow";
@@ -40,8 +41,7 @@
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
 					String fromUser = mail.getSendTo().replaceAll(",",", ") ;
-					Date fromDate = mail.getReceivedDate() ;
-					fromDate.setTime(fromDate.getTime() - setTime);
+					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
 					String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
 		%>
 			<tr class="$classCssSend">

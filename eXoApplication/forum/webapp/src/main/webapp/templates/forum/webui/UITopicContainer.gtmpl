@@ -423,8 +423,9 @@
 							if(checkeds == null) checkeds = new ArrayList<String>();
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
-								int i = 0;
 								String uiformId = uiform.id;
+								int i = 0;
+								Date postDate = new Date();
 								for(topic in topics){
 									boolean isLockTopic = topic.getIsLock() ;
 									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
@@ -437,7 +438,6 @@
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String postNewBy = topic.getLastPostBy() ;
-									Date postDate = topic.getLastPostDate() ;
 									
 									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
 									String title = "TitleNorman";
@@ -446,7 +446,7 @@
 										title = "TitleBold";
 										newPost = "New";									
 									}									
-									postDate.setTime(postDate.getTime() - setTime);
+									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 101);

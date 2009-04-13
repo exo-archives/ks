@@ -18,10 +18,10 @@
 		boolean isTimeOut = false;
 		String timeOutDate = "";
 		if(timeOut > 0) {
-			Date dateOut = poll.getModifiedDate() ;
+			Date dateOut = new Date() ;
 			Date today = new Date() ;
 			timeOut = timeOut*86400000 ;
-			dateOut.setTime(dateOut.getTime() + timeOut);
+			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
 			UserProfile option = uicomponent.getOption();
 			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
 			if(dateOut.getTime() < today.getTime()) {
