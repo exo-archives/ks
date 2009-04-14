@@ -421,8 +421,9 @@ public class ForumServiceImpl implements ForumService, Startable{
   	storage_.updateStatisticCounts(topicCount, postCount) ;
   }
   
-  public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser, List<String> listCateIds, List<String> listForumIds) throws Exception {
-    return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, currentUser, listCateIds, listForumIds);
+  public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId,
+  		List<String> listCateIds,List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
+    return storage_.getQuickSearch(sProvider, textQuery, type, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator);
   }
 
   public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception {

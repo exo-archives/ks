@@ -105,7 +105,8 @@ public interface DataStorage {
 	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception;
 	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception;
 	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception;
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId,
+			List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery) throws Exception;
 	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception;
 	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception;

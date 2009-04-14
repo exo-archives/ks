@@ -530,7 +530,7 @@ public class TestForumService extends BaseForumTestCase{
   	String pathQuery = ""; // from ForumService/
   	String textQuery = "description";
   	String type = "true,all";
-  	List<ForumSearch> forumSearchs = forumService_.getQuickSearch(sProvider, textQuery, type, pathQuery, users, null, null);
+  	List<ForumSearch> forumSearchs = forumService_.getQuickSearch(sProvider, textQuery, type, pathQuery, "root", null, null, null);
   	assertEquals(forumSearchs.isEmpty(), false);
   	//getAdvancedSearch
   	ForumEventQuery eventQuery =  new ForumEventQuery();
