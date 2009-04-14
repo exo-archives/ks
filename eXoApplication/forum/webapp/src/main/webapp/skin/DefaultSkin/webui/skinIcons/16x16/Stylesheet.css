@@ -452,3 +452,23 @@
 .UIForumPortlet .BanIpToolsIcon {
   background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
 }
+
+.UIForumPortlet .PrivateMessages {
+	line-height:24px; cursor:pointer;
+	padding-left: 22px; display: block;
+	background: url('icons/PrivateMessages.gif') no-repeat left center;
+}
+
+.UIForumPortlet #PendingJob {
+	line-height:24px; white-space:nowrap;
+	height:24px; cursor:pointer;
+	padding-left: 18px; display: block;
+	background: url('icons/PendingJob.gif') no-repeat left center;
+}
+
+.UIForumPortlet .PermLink {
+	line-height:24px; white-space:nowrap;
+	height:24px; cursor:pointer;
+	padding-left: 20px; display: block;
+	background: url('icons/PermLink.gif') no-repeat left center;
+}

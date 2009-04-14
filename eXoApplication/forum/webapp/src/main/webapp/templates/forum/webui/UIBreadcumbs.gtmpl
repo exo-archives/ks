@@ -83,7 +83,7 @@
 				  %>
 					<div class="SeparatorLine" style="float:right;">
 						<div class="ShareLink">
-							<a onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
+							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
 						</div>
 					</div>	
 					<%}%>
@@ -100,12 +100,12 @@
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
 					<div class="SeparatorLine" style="float:right;">
-						<a style="line-height:24px;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
+						<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
 					</div>
 					<%}%>
 					<div class="SeparatorLine" style="float:right;">
-						<div style="line-height:24px; cursor:pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
-							 $newMessage<div action="<%=uicomponent.event("Moderation");%>"></div>
+						<div class="PrivateMessages" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+							 <span>$newMessage</span>
 						</div>
 					</div>
 					<% } %>
