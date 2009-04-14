@@ -723,11 +723,12 @@ public interface ForumService {
 	 * @param textQuery the text query
 	 * @param type is type user and type object(forum, topic and post)
 	 * @param pathQuery the path query
+	 * @param forumIdsOfModerator TODO
 	 * @return the quick search
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, List<String> currentUser) throws Exception;
+	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
 	/**
 	 * Gets the advanced search.

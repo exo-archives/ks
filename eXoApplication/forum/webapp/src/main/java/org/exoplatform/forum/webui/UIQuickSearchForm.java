@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -71,9 +72,19 @@ public class UIQuickSearchForm extends UIForm {
 				String type = "";
 				if(userProfile.getUserRole() == 0) type = "true,all";
 				else type = "false,all" ;
+				List<String> forumIdsOfModerator = new ArrayList<String>();
+				if(userProfile.getUserRole() == 1) {
+					String []strings = userProfile.getModerateForums();
+					for (int i = 0; i < strings.length; i++) {
+	          String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
+	          if(str.length() > 0)
+	          	forumIdsOfModerator.add(str);
+          }
+				}
 				List<ForumSearch> list = null;
 				try {
-					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "", ForumSessionUtils.getAllGroupAndMembershipOfUser(userProfile.getUserId()));
+					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "", userProfile.getUserId(),
+															forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				}catch (Exception e) {
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;

@@ -565,10 +565,19 @@ public class UICategory extends UIForm	{
 					}
 				}
 				StringBuffer type = new StringBuffer();
+				List<String> forumIdsOfModerator = new ArrayList<String>();
 				if(uiCategory.userProfile.getUserRole() == 0){ 
 					type.append("true,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
 				} else {
 					type.append("false,").append(Utils.FORUM).append("/").append(Utils.TOPIC).append("/").append(Utils.POST);
+					if(uiCategory.userProfile.getUserRole() == 1) {
+						String []strings = uiCategory.userProfile.getModerateForums();
+						for (int i = 0; i < strings.length; i++) {
+		          String str = strings[i].substring(strings[i].lastIndexOf("/")+1);
+		          if(str.length() > 0)
+		          	forumIdsOfModerator.add(str);
+	          }
+					}
 				}
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
@@ -577,7 +586,8 @@ public class UICategory extends UIForm	{
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, ForumSessionUtils.getAllGroupAndMembershipOfUser(uiCategory.userProfile.getUserId()));
+				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, uiCategory.userProfile.getUserId(),
+																				forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
