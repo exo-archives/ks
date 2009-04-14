@@ -1,4 +1,3 @@
-// This is overwritten Cometd library from portal
 /*
 The package :
 Cometd
@@ -11,13 +10,14 @@ at the handshake, so the transport should not do it, and be set after.
 */
 
 /**
- *
- * Re-writed Cometd's contructor.
+ *  @author Uoc Nguyen (uoc.nguyen@exoplatform.com)
+ *  @description Re-written.
  *
  */
 function Cometd() {
 	this._connected = false;
 	this._polling = false;
+  this._connecting = false;
 
 	this.currentTransport=null;
 	this.url = '/cometd/cometd';
@@ -25,41 +25,29 @@ function Cometd() {
 	this.exoId = null;
 	this.exoToken = null;
 
-  // Check if JSESSIONID changed from last connection then clear it.
   var Browser = eXo.core.Browser;
-  if (Browser.getCookie('JSESSIONID') == Browser.getCookie('JSESSIONID_COMETD_BK')) {
-    this.clientId = eXo.core.Browser.getCookie('cometdClientID');
-  } else {
-    this.clientId = false;
-  }
-  // Backup current JSESSIONID to JSESSIONID_COMETD_BK
-  Browser.setCookie('JSESSIONID_COMETD_BK', Browser.getCookie('JSESSIONID'));
+
+  this.clientId = Browser.getCookie('cometdClientID') || false;
 	this.messageId = 0;
 	this.batch=0;
 
 	this._subscriptions = [];
 	this._messageQ = [];
-
-	this._maxInterval=30000;
-	this._backoffInterval=1000;		
+  this._connectionReadyCallbacks = [];
+	//this._maxInterval=30000;
+	this._maxInterval=5*1000;
+	this._backoffInterval=1000;
+  this._maxTry = 5;
+  this._tryToOpenTunnelCnt = 0;
+  this._retryInterval = 0;
+  this._multiClientsDetectCnt = 0;
 }
 
-Cometd.prototype.init = function() {
-	if(!this.currentTransport) {
-		this.currentTransport = new eXo.portal.LongPollTransport();
-		this.currentTransport.init(this);
-	}
-	
-	if(this.clientId)
-		this.currentTransport.initTunnel();
-	else
-		this.currentTransport.initHandshake();
-};
-
-// Re-writed cometd init function TODO: move to portal/eXoResource when change to use new portal branches version
 Cometd.prototype.init = function(forceDisconnect) {
-  if (!forceDisconnect &&
-      this._connected) {
+  this._tryToOpenTunnelCnt = 0;
+  if ((!forceDisconnect &&
+      this._connected) ||
+      this._connecting) {
     return;
   }
 	if(!this.currentTransport) {
@@ -73,6 +61,22 @@ Cometd.prototype.init = function(forceDisconnect) {
 		this.currentTransport.initHandshake();
 };
 
+Cometd.prototype.addOnConnectionReadyCallback = function(handle) {
+  if (handle) {
+    this._connectionReadyCallbacks.push(handle);
+  }
+};
+
+Cometd.prototype.removeOnConnectionReadtCallback = function(handle) {
+  for (var i=0; i<this._connectionReadyCallbacks.length; i++) {
+    if (this._connectionReadyCallbacks[i] == handle) {
+      this._connectionReadyCallbacks[i] = this._connectionReadyCallbacks[this._connectionReadyCallbacks.length - 1];
+      this._connectionReadyCallbacks.pop();
+      break;
+    }
+  }
+};
+
 // public API functions called by cometd or by the transport classes
 Cometd.prototype.deliver = function(messages){
 	messages.each(this._deliver, this);
@@ -84,6 +88,7 @@ Cometd.prototype.isConnected = function(){
 }
 
 Cometd.prototype._deliver = function(message){
+  //console.warn('Polling: ' + this._polling + ' - connected: ' + this._connected);
 	// dipatch events along the specified path
 
 	if(!message['channel']){
@@ -95,7 +100,19 @@ Cometd.prototype._deliver = function(message){
 	this.lastMessage = message;
 
 	if(message.advice){
-		this.advice = message.advice; // TODO maybe merge?
+    this.adviceBackup = this.advice;
+		this.advice = message.advice;
+    this.multiClients = message.advice['multiple-clients'];
+    if (this.multiClients) {
+      this._multiClientsDetectCnt ++;
+      //console.warn('Multiple clients detected and notify from server');
+      if (this._multiClientsDetectCnt == 1) {
+        window.alert('You has multiple tab/window using Cometd!\nPlease keep only once.');
+      }
+    } else {
+      this._multiClientsDetectCnt = 0;
+      this.resetRetryInterval();
+    }
 	}
 
 	// check to see if we got a /meta channel message that we care about
@@ -112,13 +129,13 @@ Cometd.prototype._deliver = function(message){
 				break;
 			case '/meta/subscribe':
 				if(!message.successful){
-					alert('todo manage error subscription');
+          throw (new Error('Subscription failured'));
 					return;
 				}
 				break;
 			case '/meta/unsubscribe':
 				if(!message.successful){
-					alert('todo manage error unsubscription');
+          throw (new Error('Unsubscription failured'));
 					return;
 				}
 				break;
@@ -165,7 +182,6 @@ Cometd.prototype.subscribe = function(	/*String */	channel,
 	}
 }
 
-
 Cometd.prototype.unsubscribe = function(/*string*/ channel){
 
 	var tname = channel;
@@ -186,22 +202,35 @@ Cometd.prototype.startBatch = function(){
 }
 
 Cometd.prototype.increaseRetryInterval = function() {
-	if (!this.advice)
-		this.advice = {};
-	if(!this.advice.interval)
-		this.advice.interval = 0;
-	if (this.advice.interval < 115000) {
-		this.advice.interval += 5000;
+  this.advice = this.advice || {};
+	if(!this.advice.interval ||
+     (this.advice.interval &&
+      this.advice.interval > this._maxInterval)) {
+    this.resetRetryInterval();
+  } else {
+		this._retryInterval += this._backoffInterval;
+    this.advice.interval = this._retryInterval;
 	}
+  //console.warn('Increased retry interval to: ' + this._retryInterval);
 }
 
 Cometd.prototype.resetRetryInterval = function() {
+  //console.warn('Reset retry interval');
 	if(this.advice) 
 		this.advice.interval = 0;
-
+  this._retryInterval = 0;
 }
 
 Cometd.prototype.endBatch = function(){
+  this._tryToOpenTunnelCnt = 0;
+  this._connecting = false;
+  // Callback to on connection ready handlers
+  for (var i=0; i<this._connectionReadyCallbacks.length; i++) {
+    var handler = this._connectionReadyCallbacks[i];
+    if (handler) {
+      handler();
+    }
+  }
 	if(--this.batch <= 0 && this.currentTransport && this._connected){
 		this.batch=0;
 
@@ -213,8 +242,8 @@ Cometd.prototype.endBatch = function(){
 	}
 }
 
-
 Cometd.prototype.disconnect = function(){
+  this._tryToOpenTunnelCnt = 0;
 	this._subscriptions.each(this.unsubscribe, this);
 	this._messageQ = [];
 	if(this.currentTransport){
@@ -228,9 +257,7 @@ Cometd.prototype._backoff = function(){
 	if(!this.advice || !this.advice.interval){
 		this.advice={reconnect:'retry',interval:0};
 	}
-	if(this.advice.interval<this._maxInterval){
-		this.advice.interval+=this._backoffInterval;
-	}
+  this.increaseRetryInterval();
 	/*if(this.advice.reconnect == 'handshake') {
 		
 	}*/
@@ -289,7 +316,7 @@ function LongPollTransport() {
 			}
 
 			if( this._cometd.advice && this._cometd.advice['interval'] && this._cometd.advice.interval>0 ){
-				setTimeout(function(){ eXo.core.Cometd.init(); }, this._cometd.advice.interval);
+				setTimeout(function(){ eXo.core.Cometd.init(); }, this._cometd._retryInterval);
 			}else{
 				this._cometd.init(this.url,this._props);
 			}
@@ -330,7 +357,7 @@ function LongPollTransport() {
 								this._cometd._polling = false;
 								if (request.status >=200 && request.status < 300) {
 									this._cometd.deliver(request.evalResponse());
-									this._cometd.resetRetryInterval();
+									//this._cometd.resetRetryInterval();
 								}
 								else
 									this._cometd._backoff();
@@ -341,6 +368,7 @@ function LongPollTransport() {
 								this.tunnelReq = null;
 								this._cometd._polling = false;
 								//console.debug('tunnel opening failed:', err);
+                this._cometd._tryToOpenTunnelCnt++;
 								this.tunnelCollapse();
 								throw (new Error('tunnel opening failed')) ;
 							}.bind(this);
@@ -349,6 +377,9 @@ function LongPollTransport() {
 	}
 
 	instance.tunnelCollapse = function(){
+    if (this._cometd._tryToOpenTunnelCnt > this._cometd._maxTry) {
+      return;
+    }
 		if(!this._cometd._polling){
 			// try to restart the tunnel
 			this._cometd._polling = false;
@@ -364,15 +395,15 @@ function LongPollTransport() {
 					(this._cometd.advice.interval>0) ){
 					var transport = this;
 					setTimeout(function(){ transport._connect(); },
-						this._cometd.advice.interval);
+						this._cometd._retryInterval);
 						this._cometd.increaseRetryInterval();
 				}else{
 					this._connect();
 					this._cometd.increaseRetryInterval();
 				}
 			}else{
-				this._connect();
 				this._cometd.increaseRetryInterval();
+				this._connect();
 			}
 		}
 	}

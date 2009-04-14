@@ -1,24 +1,34 @@
+Array.prototype.each = function (iterator, context) {
+	iterator = iterator.bind(context);
+  	for (var i = 0; i < this.length; i++) {
+		iterator(this[i]) ;
+	}
+};
+
 function ForumTotalJob() {
   
 } ;
 
 ForumTotalJob.prototype.init = function(eXoUser, eXoToken){
-  eXo.core.Cometd.exoId = eXoUser;
-  eXo.core.Cometd.exoToken = eXoToken;
-//  	alert(eXoUser + "  :  " + eXoToken);
-  eXo.core.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
-		eXo.forum.ForumTotalJob.alarm(eventObj) ;
-	});
+	if (!eXo.core.Cometd) {
+		eXo.require('eXo.core.Cometd');
+	}
   //eXo.core.Cometd.addOnConnectionReadyCallback(this.initCometd);
 	if (!eXo.core.Cometd.isConnected()) {
-     eXo.core.Cometd.init();
+		eXo.core.Cometd.exoId = eXoUser;
+	  eXo.core.Cometd.exoToken = eXoToken;
+    eXo.core.Cometd.addOnConnectionReadyCallback(this.subcribeCometdTopics);
+    eXo.core.Cometd.init();
+  } else {
+  	this.subcribeCometdTopics();
   }
 } ;
   
-ForumTotalJob.prototype.initCometd = function() {
-	 eXo.core.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
+ForumTotalJob.prototype.subcribeCometdTopics = function() {
+	//  	alert(eXoUser + "  :  " + eXoToken);
+  eXo.core.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
 		eXo.forum.ForumTotalJob.alarm(eventObj) ;
-  });
+	});
 };
 
 ForumTotalJob.prototype.alarm = function(eventObj){
