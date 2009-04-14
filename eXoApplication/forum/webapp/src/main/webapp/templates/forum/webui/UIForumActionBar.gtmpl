@@ -112,7 +112,7 @@
 							</div>	
 							</td>
 							<td>
-								<div style="width:240px;">
+								<div style="width:250px;">
 							<%
 								long numberOfNewMessage = uicomponent.getNewMessage();
 								if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
@@ -126,13 +126,13 @@
 										int total = uicomponent.getTotalJobWattingForModerator();
 								%>
 									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
-										<a style="line-height:24px; white-space:nowrap;" id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
+										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
 									</div>
 								<%}%>
 									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
-										<div style="line-height:24px; cursor:pointer;" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+										<a class="PrivateMessages" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
 											 <span>$newMessage</span>
-										</div>
+										</a>
 									</div>
 								<% } %>
 									<div style="clear:right;"><span></span></div>
