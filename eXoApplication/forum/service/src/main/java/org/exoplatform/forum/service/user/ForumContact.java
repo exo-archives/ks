@@ -25,8 +25,8 @@ package org.exoplatform.forum.service.user;
  *
  */
 public class ForumContact {
-	private String givenName;
-  private String familyName;
+	private String firstName;
+  private String lastName;
 	private String emailAddress;
   private String city;
   private String country;
@@ -48,20 +48,20 @@ public class ForumContact {
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
   }
-  public void setGivenName(String givenName) {
-		this.givenName = givenName;
+  public void setFirstName(String givenName) {
+		this.firstName = givenName;
 	}
 
-	public String getGivenName() {
-		return givenName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
+	public void setLastName(String familyName) {
+		this.lastName = familyName;
 	}
 
-	public String getFamilyName() {
-		return familyName;
+	public String getLastName() {
+		return lastName;
 	}
 
 	public String getCity() {

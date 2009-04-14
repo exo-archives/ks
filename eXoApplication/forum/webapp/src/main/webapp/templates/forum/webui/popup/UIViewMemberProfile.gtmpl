@@ -24,8 +24,8 @@
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String createdDate = "";
 	
-	if(contact.getGivenName() != null) fullName = contact.getGivenName() ;
-	if(contact.getFamilyName() != null) fullName = fullName + " " + contact.getFamilyName() ; 
+	if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
+	if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ; 
 	
 	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
 	
@@ -94,7 +94,7 @@
 									}
 									
 									String []labels = uiform.getLabelProfile();	
-									String []contents = [userName, contact.getGivenName() , contact.getFamilyName(), birthDay, contact.getGender(), email,
+									String []contents = [userName, contact.getFirstName() , contact.getLastName(), birthDay, contact.getGender(), email,
 										contact.getJob(), location, contact.getPhone(), contact.getMobile(), website]; 
 									int i = 0 ;
 									for(label in labels) {
