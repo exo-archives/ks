@@ -74,6 +74,145 @@
 			  <read-only>false</read-only>
 			</preference>
 		</portlet-preferences>
+	</portlet>
+	
+	<portlet>
+		<description xml:lang="EN">Forum Statistic Portlet</description>
+		<portlet-name>ForumStatisticPortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Statistic Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumStatisticPortlet/webui/configuration.xml</value>
+		</init-param>
 
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumStatisticPortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Statistic Portlet</title>
+			<short-title>Forum Statistic Portlet</short-title>
+			<keywords>forum statistic</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+	</portlet>
+	
+	<portlet>
+		<description xml:lang="EN">Forum Poll Portlet</description>
+		<portlet-name>ForumPollPortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Poll Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumPollPortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumPollPortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Poll Portlet</title>
+			<short-title>Forum Poll Portlet</short-title>
+			<keywords>forum poll</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+	</portlet>
+	
+	<portlet>
+		<description xml:lang="EN">Forum Moderate Portlet</description>
+		<portlet-name>ForumModeratePortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Moderate Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumModeratePortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumModeratePortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Moderate Portlet</title>
+			<short-title>Forum Moderate Portlet</short-title>
+			<keywords>forum moderate</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+	</portlet>
+	
+	<portlet>
+		<description xml:lang="EN">Forum Rule Portlet</description>
+		<portlet-name>ForumRulePortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Rule Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumRulePortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumRulePortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Rule Portlet</title>
+			<short-title>Forum Rule Portlet</short-title>
+			<keywords>forum rule</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+	</portlet>
+	
+	<portlet>
+		<description xml:lang="EN">Forum Quick Reply Portlet</description>
+		<portlet-name>ForumQuickReplyPortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Quick Reply Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumQuickReplyPortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumQuickReplyPortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Quick Reply Portlet</title>
+			<short-title>Forum Quick Reply Portlet</short-title>
+			<keywords>forum quick reply</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
 	</portlet>
 </portlet-app>
