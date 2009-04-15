@@ -22,14 +22,30 @@
     
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.resources</artifactId>
+      <artifactId>exo.portal.webui.portal</artifactId>
       <version>${org.exoplatform.portal.version}</version>
+      <scope>provided</scope>
     </dependency>
     
   	<dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
       <version>${org.exoplatform.jcr.version}</version>      
+    </dependency>    
+    
+    
+		<dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.8</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jcrom</groupId>
+      <artifactId>jcrom</artifactId>
+      <version>1.2</version>
+      <scope>compile</scope>
     </dependency> 
     
   </dependencies>

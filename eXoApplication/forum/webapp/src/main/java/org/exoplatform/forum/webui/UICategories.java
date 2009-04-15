@@ -32,6 +32,10 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.forum.webui.popup.UIRSSForm;
+import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -57,6 +61,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
 			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
+			@EventConfig(listeners = UICategories.RSSActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
 		}
 )
@@ -84,6 +89,15 @@ public class UICategories extends UIContainer	{
 	}
 	public boolean getIsRendered() throws Exception {
 		return isRenderChild ;
+	}
+	
+	public String getPortalName() {
+		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+	}
+	
+	public String getRSSLink(String cateId){
+		return RSS.getRSSLink("forum", getPortalName(), cateId);
 	}
 	
 	@SuppressWarnings("unused")
@@ -322,6 +336,22 @@ public class UICategories extends UIContainer	{
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			categories.maptopicLast.clear();
+		}
+	}
+	
+	static public class RSSActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories categories = event.getSource();
+			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String rssLink = categories.getRSSLink(cateId);
+			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("ForumRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

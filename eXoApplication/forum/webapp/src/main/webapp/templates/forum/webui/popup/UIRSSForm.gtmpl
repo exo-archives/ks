@@ -1,0 +1,36 @@
+<div class="UICategoryForm $uicomponent.id">
+	<% uiform.begin() %>
+		<div style="margin:10px 5px; text-algin:center">
+			<div style="background-color:#F3F3F3; border:1px solid #E6F3F3; padding:10px 5px;">
+				<a href="<%=uicomponent.rssLink%>">
+					<div class="Icon ForumRSS" style="height:24px; line-height:24px; text-algin:left;">
+						<div style="margin-left:30px;">RSS</div>
+					</div>
+				</a>
+				[&nbsp;<%=uicomponent.rssLink%>&nbsp;]
+			</div>
+		</div>	
+		
+		<div class="UIAction"> 
+			<table class="ActionContainer" style="text-align:center">
+				<tr>
+					<td>
+	        <% for(action in uicomponent.getActions()) { 
+	        	 String actionLabel = _ctx.appRes("UIForumPopupWindow.action." + action); 
+	           String link = uicomponent.event(action) ;
+	        %>
+	        		<div onclick="$link" class="ActionButton LightBlueStyle">
+		      	  	<div class="ButtonLeft">
+		        	  	<div class="ButtonRight">
+		          	  	<div class="ButtonMiddle">
+		          	  	<a href="javascript:void(0);">$actionLabel</a></div>
+		            	</div>
+		          	</div>
+		        	</div>
+	          <%}%>
+	      	</td>
+				</tr>
+		  </table> 
+		</div>
+	<%uiform.end()%>
+</div>

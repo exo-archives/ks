@@ -29,4 +29,16 @@
     <servlet-name>PortletWrapper</servlet-name>
     <url-pattern>/PortletWrapper</url-pattern>
   </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>forumservlet</servlet-name>
+    <servlet-class>org.exoplatform.ks.rss.KSRSSServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>forumservlet</servlet-name>
+    <url-pattern>/rss/*</url-pattern>
+  </servlet-mapping> 
 </web-app>

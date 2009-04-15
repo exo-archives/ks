@@ -17,7 +17,6 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +42,6 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
@@ -64,12 +61,11 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
-import org.exoplatform.faq.service.RSSData;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
-import org.exoplatform.faq.service.notify.RSSEventListener;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.ks.rss.*;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -81,17 +77,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * Created by The eXo Platform SARL
@@ -101,9 +86,6 @@ import com.sun.syndication.io.SyndFeedOutput;
  */
 public class JCRDataStorage {
   
-	private String linkQuestion = "";
-	private String cateOfQuestion = "";
-	
 	final private static String FAQ_APP = "faqApp".intern() ;
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 	final private static String USER_SETTING = "UserSetting".intern();
@@ -115,9 +97,7 @@ public class JCRDataStorage {
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
 	private boolean isOwner = false ;
 	private final String ADMIN_="ADMIN".intern();
-	private final int EVENT_REMOVE = 2;
-	private final String FAQ_RSS = "faq.rss";
-	private boolean isActiveRss = true ;
+	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
@@ -324,12 +304,12 @@ public class JCRDataStorage {
 	protected void addListennerForNode(Node node) throws Exception{
 		String wsName = node.getSession().getWorkspace().getName() ;
 		RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
-		RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
+		RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
 		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
 		observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,node.getPath(), true, null, null, false) ;
-		RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		RSSEventListener addQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
 		observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,node.getPath(), false, null, null, false) ;
-		RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
+		RSSEventListener removeQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
 		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), false, null, null, false) ;
 	}
 	
@@ -607,7 +587,6 @@ public class JCRDataStorage {
 			sendEmailNotification(Arrays.asList(new String[]{question.getEmail()}), message) ;
 		}
 		
-		this.linkQuestion = question.getLink();
 	}
 
 	
@@ -1106,8 +1085,7 @@ public class JCRDataStorage {
 	    throws Exception {
 		Node questionHome = getQuestionHome(sProvider, null);
 		Node questionNode = questionHome.getNode(questionId);
-		this.cateOfQuestion = questionNode.getProperty("exo:categoryId")
-		    .getString();
+		RSSProcess.cateid = questionNode.getProperty("exo:categoryId").getString();
 		questionNode.remove();
 		questionHome.save();
 	}
@@ -2319,178 +2297,6 @@ public class JCRDataStorage {
 		}
 	}
 	
-	protected void addNodeRSS(Node categoryNode, Node rssNode, RSSData data, boolean isNew) throws Exception {
-		rssNode.setProperty("exo:content", data.getContent());
-		if(isNew) categoryNode.getSession().save();
-		else categoryNode.save();
-	}
-	
-	protected void getRSSData(Node rssNode, RSSData data) throws Exception {
-		if(rssNode.hasProperty("exo:content")) data.setContent(rssNode.getProperty("exo:content").getValue().getStream());
-	}
-	
-	protected List<SyndEntry> getDetailRss(RSSData data, String questionId) throws Exception{
-		List<SyndEntry> entries = new ArrayList<SyndEntry>();
-		SyndEntry entry;
-		SyndContent description;
-		
-		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(data.getContent());
-		doc.getDocumentElement().normalize();
-		NodeList listNodes = doc.getElementsByTagName("item");
-		Element element = null;
-		for(int i = 0; i < listNodes.getLength() && i < 9; i ++){
-		 	try{
-				entry = new SyndEntryImpl();
-				element = (Element) listNodes.item(i);
-				if(element.getElementsByTagName("guid").item(0).getChildNodes().item(0).getNodeValue().equals(questionId)) continue;
-				entry.setTitle(element.getElementsByTagName("title").item(0).getChildNodes().item(0).getNodeValue());
-				try{
-					entry.setLink(element.getElementsByTagName("link").item(0).getChildNodes().item(0).getNodeValue());
-				} catch (NullPointerException e){
-					entry.setLink(" ");
-				}
-				description = new SyndContentImpl();
-				description.setType("text/plain");
-				description.setValue(element.getElementsByTagName("description").item(0).getChildNodes().item(0).getNodeValue());
-				entry.setDescription(description);
-				entry.setUri(element.getElementsByTagName("guid").item(0).getChildNodes().item(0).getNodeValue());
-				List<String> listContent = new ArrayList<String>();
-				entry.setContents(listContent);
-				entries.add(entry);
-	 	} catch (Exception e){
-	 		e.printStackTrace();
-	 	}
-	 }
-	 return entries;
-	}
-	
-	public void generateRSS(String path, int typeEvent) throws Exception	{
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		String feedType = "rss_2.0";
-		boolean isNew = false;
-		RSSData data = new RSSData();
-		try{
-			Node faqHome = getFAQServiceHome(sProvider) ;
-			SyndFeed feed = new SyndFeedImpl();
-			List<SyndEntry> entries = new ArrayList<SyndEntry>();
-			SyndEntry entry;
-			SyndContent description;
-			Node categoryNode = null;
-			Node RSSNode = null;
-			
-			if(typeEvent != EVENT_REMOVE) {
-				Node addedQuestion = (Node)faqHome.getSession().getItem(path) ;
-				//int lop = 0;
-				if(!addedQuestion.isNodeType("exo:faqQuestion")) return;
-				/*while(!addedQuestion.isNodeType("exo:faqQuestion") && lop < 6){
-					addedQuestion = addedQuestion.getParent();
-					lop ++;
-				}*/
-				
-				Question question = getQuestion(addedQuestion);
-				if(!question.isActivated() || !question.isApproved()) return;
-				categoryNode = getCategoryNodeById(question.getCategoryId(), sProvider);
-				// create rss file if doesn't exist
-				try{
-					RSSNode = categoryNode.getNode(FAQ_RSS);
-					getRSSData(RSSNode, data);
-					entries.addAll(getDetailRss(data, question.getId()));
-				} catch (PathNotFoundException e){
-					RSSNode = categoryNode.addNode(FAQ_RSS, "exo:faqRSS");
-					isNew = true;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try{
-					feed.setTitle(categoryNode.getProperty("exo:name").getString());
-					if(categoryNode.hasProperty("exo:description")) feed.setDescription(categoryNode.getProperty("exo:description").getString());
-					else feed.setDescription("RSS link: " + this.linkQuestion);
-				} catch (Exception e){
-					feed.setTitle(categoryNode.getName());
-					feed.setDescription(" ");
-				}
-				feed.setLink("http://www.exoplatform.com");
-				
-				// add addedQuestion to rss
-				try {
-					feed.setFeedType(feedType);
-
-					entry = new SyndEntryImpl();
-					entry.setUri(question.getId());
-					entry.setTitle(question.getQuestion());
-					//entry.setLink(RSSNode.getPath());
-					entry.setLink(this.linkQuestion);
-					List<String> listContent = new ArrayList<String>();
-					String content = "";
-					if(questionHasAnswer(addedQuestion)) {
-						for(Answer answer : getAnswers(addedQuestion))	
-							content += " Answer: " + answer.getResponses() + ". ";
-					}
-					if(questionHasComment(addedQuestion)){
-						for(Comment comment : getComment(addedQuestion)) 
-							content += " Comment: " + comment.getComments() + ". ";
-					}
-					listContent.add(content);
-					entry.setContributors(listContent);
-					description = new SyndContentImpl();
-					description.setType("text/plain");
-					description.setValue(question.getDetail() + ". " + content);
-					entry.setDescription(description);
-					entries.add(0, entry);
-					
-					feed.setEntries(entries);
-
-					SyndFeedOutput output = new SyndFeedOutput();
-					data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
-					addNodeRSS(categoryNode, RSSNode, data, isNew);
-					
-					/*// test file xml 
-					Writer writer = new FileWriter("maivanha.xml");
-					output.output(feed,writer);
-					writer.close();
-			    System.out.println("\n\n\n\n---------->finish write");*/
-				} catch (Exception ex) {
-						ex.printStackTrace();
-				}
-			} else {
-				if(cateOfQuestion == null || cateOfQuestion.trim().length() < 1) return;
-				try{
-					categoryNode = getCategoryNodeById(cateOfQuestion, sProvider);
-					RSSNode = categoryNode.getNode(FAQ_RSS);
-					getRSSData(RSSNode, data);
-					entries.addAll(getDetailRss(data, path.substring(path.lastIndexOf("/") + 1)));
-					try{
-						feed.setTitle(categoryNode.getProperty("exo:name").getString());
-						if(categoryNode.hasProperty("categoryNode"))feed.setDescription(categoryNode.getProperty("exo:description").getString());
-						else feed.setDescription(" ");
-					} catch (Exception e){
-						feed.setTitle(categoryNode.getName());
-						feed.setDescription(" ");
-					}
-					feed.setLink("http://www.exoplatform.com");
-					feed.setFeedType(feedType);
-					
-					feed.setEntries(entries);
-					
-					SyndFeedOutput output = new SyndFeedOutput();
-					data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
-					addNodeRSS(categoryNode, RSSNode, data, false);
-					
-				} catch (Exception e){ 
-					e.printStackTrace();
-				}
-			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}finally{
-			sProvider.close() ;
-		}
-		cateOfQuestion = null;
-		linkQuestion = null;
-	}
-	
 	public void saveTopicIdDiscussQuestion(String questionId, String topicId, SessionProvider sProvider) throws Exception{
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		Node questionNode ;
@@ -2501,36 +2307,5 @@ public class JCRDataStorage {
 		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception{
-		Node cateNode = null;
-		try{
-			cateNode = getCategoryNodeById(categoryId, sProvider);
-		} catch (Exception e){
-			return null;
-		}
-		if(!cateNode.hasNode(FAQ_RSS)){
-			String feedType = "rss_2.0";
-			SyndFeed feed = new SyndFeedImpl();
-			List<SyndEntry> entries = new ArrayList<SyndEntry>();
-			Node RSSNode = cateNode.addNode(FAQ_RSS, "exo:faqRSS");
-			try{
-				feed.setTitle(cateNode.getProperty("exo:name").getString());
-				if(cateNode.hasProperty("categoryNode"))feed.setDescription(cateNode.getProperty("exo:description").getString());
-				else feed.setDescription(" ");
-			} catch (Exception e){
-				feed.setTitle(cateNode.getName());
-				feed.setDescription(" ");
-			}
-			feed.setLink("http://www.exoplatform.com");
-			feed.setFeedType(feedType);
-			feed.setEntries(entries);
-			RSSData data = new RSSData();
-			SyndFeedOutput output = new SyndFeedOutput();
-			data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
-			addNodeRSS(cateNode, RSSNode, data, true);
-		}
-		return cateNode.getNode(FAQ_RSS);
 	}
 }

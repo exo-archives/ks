@@ -89,6 +89,7 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -147,6 +148,21 @@ public class JCRDataStorage {
 			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
 		}		
 	}
+
+	public void addRSSEventListenner() throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node forumHome = getForumHomeNode(sProvider) ;
+		ObservationManager observation = forumHome.getSession().getWorkspace().getObservationManager() ;
+		String wsName = forumHome.getSession().getWorkspace().getName() ;
+		String repoName = ((RepositoryImpl)forumHome.getSession().getRepository()).getName() ;
+		
+		RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+		observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,forumHome.getPath(), true, null, null, false) ;
+		RSSEventListener addNodeListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+		observation.addEventListener(addNodeListener, Event.NODE_ADDED ,forumHome.getPath(), true, null, null, false) ;
+		RSSEventListener removeNodeListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+		observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,forumHome.getPath(), true, null, null, false) ;
+	}
 	
 	public void initCategoryListener() {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -156,6 +172,7 @@ public class JCRDataStorage {
 			ObservationManager observation = forumHome.getSession().getWorkspace().getObservationManager() ;
 			String wsName = forumHome.getSession().getWorkspace().getName() ;
 			String repoName = ((RepositoryImpl)forumHome.getSession().getRepository()).getName() ;
+			
 			if(!listeners_.containsKey(forumHome.getPath())) {
 				CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName) ;
 				observation.addEventListener(categoryListener, Event.NODE_ADDED + Event.NODE_REMOVED ,forumHome.getPath(), false, null, null, false) ;
@@ -3857,6 +3874,7 @@ public class JCRDataStorage {
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		ForumSearch forumSearch;
+		
 		while (iter.hasNext()) {
 			forumSearch = new ForumSearch();
 			Node nodeObj = (Node) iter.nextNode();
@@ -3871,7 +3889,6 @@ public class JCRDataStorage {
 				else
 					forumSearch.setIcon("ForumNormalIcon");
 			} else if (type.equals(Utils.TOPIC)) {
-				if(!listForumIds.contains(nodeObj.getParent().getName())) continue;
 				if (nodeObj.getProperty("exo:isClosed").getBoolean())
 					forumSearch.setIcon("HotThreadNoNewClosePost");
 				else if (nodeObj.getProperty("exo:isLock").getBoolean())
@@ -3881,7 +3898,6 @@ public class JCRDataStorage {
 			} else if (type.equals(Utils.CATEGORY)) {
 				forumSearch.setIcon("CategoryIcon");
 			} else {
-				if(!listForumIds.contains(nodeObj.getParent().getParent().getName())) continue;
 				forumSearch.setIcon(nodeObj.getProperty("exo:icon").getString());
 			}
 			forumSearch.setPath(nodeObj.getPath());

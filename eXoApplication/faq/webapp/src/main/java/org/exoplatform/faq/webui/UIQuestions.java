@@ -64,6 +64,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
@@ -178,9 +179,7 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	public String getRSSLink(){
-		String rssLink = "";
-		rssLink = "/faq/iFAQRss/" + getPortalName() + "/" + categoryId_ + "/faq.rss" ;
-		return rssLink;
+		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
 	
 	private String getLinkDiscuss() {
@@ -1248,7 +1247,7 @@ public class UIQuestions extends UIContainer {
 							uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId))) {
 						uiQuestions.backPath_ = "" ;
 						if(strArr.length == 3){
-							if(!strArr[2].equals("noBack")) language_ = strArr[2];
+							if(!strArr[2].equals("0")) language_ = strArr[2];
 							else language_ = "" ;
 						}
 					} else {

@@ -1,5 +1,17 @@
 <nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
 	xmlns:jcr="http://www.jcp.org/jcr/1.0">
+	
+	
+  <nodeType name="exo:KSRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+  	<supertypes>
+	 	  <supertype>nt:base</supertype>
+	 	</supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="exo:content" requiredType="Binary" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>	  
+    </propertyDefinitions>
+  </nodeType>
 	 
 	<nodeType name="exo:poll" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -237,6 +249,12 @@
 				<requiredPrimaryType>exo:poll</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
+		
+			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>	
 		</childNodeDefinitions>
 	</nodeType>
 	
@@ -328,6 +346,12 @@
 				<requiredPrimaryType>exo:topic</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
+			
+			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>	
 		</childNodeDefinitions>
 	</nodeType> 
 	
@@ -377,7 +401,15 @@
 				<requiredPrimaryType>exo:forum</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
+			
+			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>	
+			
 		</childNodeDefinitions>
+		
 	</nodeType> 
 	
 	<nodeType name="exo:forumTag" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">

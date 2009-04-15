@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service.notify;
+package org.exoplatform.ks.rss;
 
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -22,18 +22,19 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.faq.service.FAQService;
+//import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 public class RSSEventListener implements EventListener{
+	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String workspace_ ;
 	private String repository_ ; 
-	private final int EVENT_ADDNEW = 0;
-	private final int EVENT_EDIT = 1;
-	private final int EVENT_REMOVE = 2;
 	
-	public RSSEventListener(String ws, String repo) throws Exception {
+	public RSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
+		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
+		RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
 		workspace_ = ws ;
-		repository_ = repo ;		
+		repository_ = repo ;
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }
@@ -41,18 +42,17 @@ public class RSSEventListener implements EventListener{
   
 	public void onEvent(EventIterator evIter){		
 		try{
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ; 
+			//ExoContainer container = ExoContainerContext.getCurrentContainer();
+			RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
-					faqService.generateRSS(ev.getPath(), EVENT_ADDNEW) ;
+					process.generateRSS(ev.getPath(), Event.NODE_ADDED);
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
 					String propertyPath = ev.getPath() ;
-					String nodePath = propertyPath.substring(0, propertyPath.lastIndexOf("/")) ;
-					faqService.generateRSS(nodePath, EVENT_EDIT) ;
+					process.generateRSS(propertyPath.substring(0, propertyPath.lastIndexOf("/")), Event.PROPERTY_CHANGED);
 				}else if(ev.getType() == Event.NODE_REMOVED) {
-					 faqService.generateRSS(ev.getPath(), EVENT_REMOVE) ;
+					process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
 				}
 				break ;								
 			}

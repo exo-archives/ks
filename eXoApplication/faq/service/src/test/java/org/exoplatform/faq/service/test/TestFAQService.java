@@ -499,17 +499,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		pageList.setPageSize(10);
 		assertEquals("Comment 1 is not removed", pageList.getPageItem(0).size(), 1);
 	}
-	
-	public void testRSS() throws Exception {
-		Category cate = createCategory("category to test RSS");
-		faqService_.saveCategory(null, cate, true, sProvider_);
-		Question question = createQuestion(cate);
-		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
-//		Generate RSS
-		faqService_.generateRSS(faqService_.getQuestionNodeById(question.getId(), sProvider_).getPath(), 1);
-//		Get RSS node
-		assertNotNull("RSS node have not been added into category", faqService_.getRSSNode(sProvider_, cate.getId()));
-	}
 
 	public void testImportData() throws Exception{
 		Question question = new Question();

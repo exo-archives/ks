@@ -121,6 +121,11 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}finally{
   		systemSession.close() ;
   	}
+  	try{
+  		storage_.addRSSEventListenner();
+  	} catch (Exception e){
+  		e.printStackTrace();
+  	}
 	}
 
 	public void stop() {}

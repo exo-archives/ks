@@ -677,10 +677,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
 		return jcrData_.getQuestionNodeById(questionId, sProvider);
 	}
-	
-	public void generateRSS(String path, int typeEvent) throws Exception  {
-		jcrData_.generateRSS(path, typeEvent) ;
-	}
 
 	public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sProvider) throws Exception {
 		jcrData_.saveTopicIdDiscussQuestion(questionId, pathDiscuss, sProvider);
@@ -688,10 +684,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
 		return jcrData_.getMaxindexCategory(parentId, sProvider);
-	}
-	
-	public Node getRSSNode(SessionProvider sProvider, String categoryId) throws Exception{
-		return jcrData_.getRSSNode(sProvider, categoryId);
 	}
 	
 	public void deleteAnswer(String questionId, String answerId, SessionProvider sProvider) throws Exception{

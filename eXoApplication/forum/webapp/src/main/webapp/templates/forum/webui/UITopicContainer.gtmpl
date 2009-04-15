@@ -483,6 +483,7 @@
 									if(uicomponent.isLogin){
 										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
 									}
+									actionBookmark += ";" + uicomponent.event("RSS", topicId);
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String url = uicomponent.url("OpenTopic", (topicId));
 									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
@@ -744,19 +745,24 @@
         <div class="MiddleLeftRightClickPopupMenu">
 	        <div class="MiddleRightRightClickPopupMenu">
             <div class="UIRightPopupMenuContainer">
-               <div class="ItemIcon AddLinkToBookIcon">
-                  <a class="MenuItem AddBookmark" href="">
-                    <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-                  </a>
-                 </div>
-                 <div class="ItemIcon AddWatchingIcon">
-                  <a href="" class="MenuItem AddWatching">
-                     <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-                    </a>
-       			</div>
-    			</div>
-        </div>
- 	                </div>
+              <div class="ItemIcon AddLinkToBookIcon">
+		              <a class="MenuItem AddBookmark" href="">
+		                <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
+		              </a>
+	            </div>
+	            <div class="ItemIcon AddWatchingIcon">
+	              <a href="" class="MenuItem AddWatching">
+             			<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+                </a>
+	   					</div>
+	   					<div class="ItemIcon ForumRSSFeed" style="padding-left: 18px">
+								<a class="MenuItem AddRSS" href="#">
+									RSS
+								</a>
+							</div>
+    				</div>
+        	</div>
+ 	      </div>
               <div class="BottomLeftRightClickPopupMenu">
 	                        <div class="BottomRightRightClickPopupMenu">
 	                                <div class="BottomCenterRightClickPopupMenu">

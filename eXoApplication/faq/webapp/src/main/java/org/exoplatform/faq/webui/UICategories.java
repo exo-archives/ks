@@ -37,6 +37,7 @@ import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -264,9 +265,7 @@ public class UICategories extends UIContainer{
 	}
 	
 	public String getRSSLink(String cateId){
-		String rssLink = "";
-		rssLink = "/faq/iFAQRss/" + portalName + "/" + cateId + "/faq.rss" ;
-		return rssLink;
+		return RSS.getRSSLink("faq", portalName, categoryId_);
 	}
 
 	private String getPortalName() {

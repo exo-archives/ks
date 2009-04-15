@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service;
+package org.exoplatform.ks.rss;
 
 import java.io.InputStream;
 
@@ -24,9 +24,13 @@ import java.io.InputStream;
  *					ha.mai@exoplatform.com
  * Jan 12, 2009, 5:55:37 PM
  */
-public class RSSData {
+public class RSS {
 	private String fileName ;
 	private InputStream content ;
+	
+	public static String getRSSLink(String appType, String portalName, String objectId){
+		return "/" + appType + "/rss/" + appType + "/" + objectId;
+	}
 	
 	public String getFileName() {
 		return fileName;

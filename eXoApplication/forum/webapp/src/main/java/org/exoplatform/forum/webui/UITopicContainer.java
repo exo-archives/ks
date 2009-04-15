@@ -39,8 +39,10 @@ import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -99,6 +101,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.ExportForumActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AdvancedSearchActionListener.class),
 		@EventConfig(listeners = UITopicContainer.BanIpForumToolsActionListener.class),
+		@EventConfig(listeners = UITopicContainer.RSSActionListener.class),
 		@EventConfig(listeners = UIForumKeepStickPageIterator.GoPageActionListener.class)
 	}
 )
@@ -136,6 +139,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		this.userProfile	= userProfile ;
   }
+
+	public String getRSSLink(String cateId){
+		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
+	}
 	
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
@@ -1120,6 +1128,23 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			popupContainer.setId("BanIPForumManagerForm") ;
 			ipForumManager.setForumId(uiForm.categoryId + "/" + uiForm.forumId);
 			popupAction.activate(popupContainer, 450, 500) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+
+	static public class RSSActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiForm = event.getSource();
+			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String rssLink = uiForm.getRSSLink(cateId);
+			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("ForumRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

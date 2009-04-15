@@ -683,6 +683,7 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	if(popupContainer == null) return;
 	var itemmenuBookMark = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddBookmark") ;
 	var itemmenuWatching = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddWatching") ;
+	var itemmenuRSS = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddRSS") ;
 	if(itemmenuWatching == null || itemmenuBookMark == null) return;
 	for(var i = 0; i < popupContents.length; i++){
 		var action = popupContents[i].getAttribute('action');
@@ -693,6 +694,14 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 			var actions = action.split(";");
 			itemmenuBookMark.href= actions[0] ;
 			itemmenuWatching.href= actions[1] ;
+			if(itemmenuRSS){
+				if(actions.length == 3) {
+					itemmenuRSS.href= actions[2] ;
+					itemmenuRSS.parentNode.style.display ="block";
+				} else {
+					itemmenuRSS.parentNode.style.display ="none";
+				}
+			}
 			itemmenuWatching.parentNode.style.display ="block";
 		}
 		popupContents[i].innerHTML = popupContainer.innerHTML;

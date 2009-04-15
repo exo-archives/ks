@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.webui;
+package org.exoplatform.ks.rss;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
-import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -40,7 +38,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  *					ha.mai@exoplatform.com
  * Jan 14, 2009, 8:58:11 AM
  */
-public class IFAQServlet extends HttpServlet {
+public class KSRSSServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {}  
 	public void service(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
@@ -49,14 +47,16 @@ public class IFAQServlet extends HttpServlet {
     String[] arrayInfo = pathInfo.toString().split("/") ;
     Session session = null ;
     try{
-      String portalName = arrayInfo[1] ;
+      String appType = arrayInfo[1];
       String categoryId = arrayInfo[2] ;
-      PortalContainer pcontainer = getPortalContainer(portalName) ;
-      PortalContainer.setInstance(pcontainer) ;
-      FAQService faqService = (FAQService)pcontainer.getComponentInstanceOfType(FAQService.class) ;
       
-      SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
-      Node node = faqService.getRSSNode(sessionProvider, categoryId) ;
+      //PortalContainer pcontainer = getPortalContainer(portalName) ;
+      //PortalContainer.setInstance(pcontainer) ;
+      SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+      RSSProcess process = new RSSProcess(sessionProvider, appType);
+      
+      Node node = process.getRSSNode(sessionProvider, categoryId, appType) ;
+      
       sessionProvider.close();
       if (node == null) throw new Exception("Node not found. ");
       session = node.getSession();
@@ -75,9 +75,9 @@ public class IFAQServlet extends HttpServlet {
       }
     }    		
 	}  
-  
+  /*
   private  PortalContainer getPortalContainer(String portalName) {
     PortalContainer pcontainer =  RootContainer.getInstance().getPortalContainer(portalName) ;
     return pcontainer ;
-  }
+  }*/
 }

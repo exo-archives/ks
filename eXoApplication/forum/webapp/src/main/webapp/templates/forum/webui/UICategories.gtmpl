@@ -41,7 +41,7 @@
 					if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
 						String title = category.getCategoryName();
 						if(uicomponent.userProfile.getUserRole() < 3){
-							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
+							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId) + ";" + uicomponent.event("RSS", categoryId);
 						} else {
 							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
 						}
@@ -201,7 +201,7 @@
 										}
 										String ids = categoryId + "/" + forumId;
 										if(uicomponent.userProfile.getUserRole() < 3){
-											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids) + ";" + uicomponent.event("RSS", forumId);
 										} else {
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
@@ -235,9 +235,9 @@
 											</td>
 											<%if(topicNewPost != null) {
 												if(uicomponent.userProfile.getUserRole() < 3){
-													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath);
+													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.event("RSS", topicNewPost.getId());
 												} else {
-													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath);
+													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath) + ";" + uicomponent.event("RSS", topicNewPost.getId());
 												}
 											%>
 										 	<td>
@@ -303,6 +303,11 @@
 					<div class="ItemIcon AddWatchingIcon">
 						<a class="MenuItem AddWatching" href="#">
 							<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
+						</a>
+					</div>
+					<div class="ItemIcon ForumRSSFeed" style="padding-left: 18px">
+						<a class="MenuItem AddRSS" href="#">
+							RSS
 						</a>
 					</div>
 				</div>

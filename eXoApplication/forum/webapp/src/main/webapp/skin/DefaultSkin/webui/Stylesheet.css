@@ -601,3 +601,11 @@
 	text-align: center;
 	line-height: 24px;
 }
+
+.UIForumPortlet .ForumRSS {
+	background: url('background/rss9.png') no-repeat;
+}
+
+.UIForumPortlet .ForumRSSFeed {
+	background: url('background/rss19.png') no-repeat;
+}

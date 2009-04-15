@@ -29,14 +29,14 @@
   </servlet>
   
   <servlet>
-    <servlet-name>ifaqservlet</servlet-name>
-    <servlet-class>org.exoplatform.faq.webui.IFAQServlet</servlet-class>
+    <servlet-name>faqservlet</servlet-name>
+    <servlet-class>org.exoplatform.ks.rss.KSRSSServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>ifaqservlet</servlet-name>
-    <url-pattern>/iFAQRss/*</url-pattern>
+    <servlet-name>faqservlet</servlet-name>
+    <url-pattern>/rss/*</url-pattern>
   </servlet-mapping> 
   
   <servlet-mapping>
