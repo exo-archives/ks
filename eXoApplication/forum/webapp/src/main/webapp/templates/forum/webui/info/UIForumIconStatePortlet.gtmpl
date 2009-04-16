@@ -1,0 +1,8 @@
+<%
+	import org.exoplatform.forum.webui.UIForumIconState ;	
+%>
+<div class="UIForumPortlet UIForumIconStatePortlet" id="$uicomponent.id">	
+  <div class="UICategoriesSummary">
+  	<% uicomponent.renderChildren()%>
+  </div>	
+</div>

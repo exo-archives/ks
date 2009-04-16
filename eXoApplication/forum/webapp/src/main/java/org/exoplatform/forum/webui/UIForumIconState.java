@@ -16,8 +16,16 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.forum.info.ForumParameter;
+
+import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL
@@ -27,18 +35,31 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumIconState.gtmpl"
+		lifecycle = UIApplicationLifecycle.class,
+		template =	"app:/templates/forum/webui/UIForumIconState.gtmpl",
+		events = {
+      @EventConfig(listeners = UIForumIconState.IconStateParamActionListener.class)      
+    }	
 )
 public class UIForumIconState extends UIContainer	{
-	private boolean isIconForum = true ;
+	private static boolean isForumIcon = true ;
 	public UIForumIconState() throws Exception {		
 	}
 	
 	public void updateInfor(boolean isIconForum) {
-		this.isIconForum = isIconForum ;
+		this.isForumIcon = isIconForum ;
 	}
 	
 	public boolean getIsIconForum() {
-		return this.isIconForum ;
+		return this.isForumIcon ;
 	}
+	
+	static  public class IconStateParamActionListener extends EventListener<UIComponent> {
+    public void execute(Event<UIComponent> event) throws Exception {
+    	System.out.println("\n\n\n\n =========== UIForumIconStatet: IconStateParam : " + event.getSource().getId() + "=================== \n\n\n\n");
+    	ForumParameter params = (ForumParameter)event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+    	UIForumIconState.isForumIcon = params.isForumIcon() ; 
+    	//System.out.println("\n\n\n\n =========== categoryId : " + params.getCategoryId() + "=================== \n\n\n\n");
+    }
+  }  
 }
