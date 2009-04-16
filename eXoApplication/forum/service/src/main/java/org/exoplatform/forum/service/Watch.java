@@ -24,10 +24,24 @@ package org.exoplatform.forum.service;
 public class Watch {
 	private String id;
 	private String userId;
-	private String email;
+	private String email = "";
 	private String nodePath;
 	private String path;
 	private String typeNode;
+	private boolean isRSS;
+	private boolean isEmail;
+	public boolean isAddWatchByRS() {
+		return isRSS;
+	}
+	public void setIsAddWatchByRSS(boolean isRSS) {
+		this.isRSS = isRSS;
+	}
+	public boolean isAddWatchByEmail() {
+		return isEmail;
+	}
+	public void setIsAddWatchByEmail(boolean isEmail) {
+		this.isEmail = isEmail;
+	}
 	public String getId() {
 		return id;
 	}

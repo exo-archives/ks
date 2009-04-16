@@ -41,10 +41,11 @@
 					if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
 						String title = category.getCategoryName();
 						if(uicomponent.userProfile.getUserRole() < 3){
-							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId) + ";" + uicomponent.event("RSS", categoryId);
+							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
 						} else {
 							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
 						}
+						actionBookmark += ";" + uicomponent.event("RSS", categoryId)
 						url = uicomponent.url("OpenCategory", categoryId);
 						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
 						String classCssCollap = "CollapseButton";
@@ -201,10 +202,11 @@
 										}
 										String ids = categoryId + "/" + forumId;
 										if(uicomponent.userProfile.getUserRole() < 3){
-											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids) + ";" + uicomponent.event("RSS", forumId);
+											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
 										} else {
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
+										actionBookmark += ";" + uicomponent.event("RSS", forumId)
 										String lineHeight = "line-height:12px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height:28px;";

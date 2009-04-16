@@ -180,6 +180,19 @@
 							</div>
 						</div>
 					</div>
+					<div class="ButtonHeadBar">
+						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="AddRSS" style="padding-left:16px;">
+											<a style="display:block;" href="<%=uicomponent.event("RSS",categoryId)%>">&nbsp;RSS</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				<%if(uicomponent.userProfile.getUserRole() < 3){%>
 					<div class="ButtonHeadBar">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">

@@ -656,4 +656,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception{
 		return storage_.getWatchByUser(userId, sessionProvider);
 	}
+	
+	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception{
+		storage_.updateEmailWatch(listNodeId, newEmailAdd, userId, sessionProvider);
+	}
 }

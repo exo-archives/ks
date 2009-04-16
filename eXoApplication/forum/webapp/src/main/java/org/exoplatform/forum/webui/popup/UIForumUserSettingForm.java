@@ -53,7 +53,10 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -88,6 +91,8 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UIForumUserSettingForm.OpenTabActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.OpentContentActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.DeleteEmailWatchActionListener.class), 
+			@EventConfig(listeners = UIForumUserSettingForm.ResetRSSActionListener.class), 
+			@EventConfig(listeners = UIForumUserSettingForm.UpdateEmailActionListener.class), 
 			@EventConfig(listeners = UIForumUserSettingForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
@@ -112,6 +117,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_SIGNATURE_TEXTAREA = "Signature" ;
 	public static final String FIELD_ISDISPLAYSIGNATURE_CHECKBOX = "IsDisplaySignature" ;
 	public static final String FIELD_ISDISPLAYAVATAR_CHECKBOX = "IsDisplayAvatar" ;
+	public static final String RSS_LINK = "RSSLink";
+	public static final String EMAIL_ADD = "EmailAddress";
 	
 	public final String WATCHES_ITERATOR = "WatchChesPageIterator";
 	
@@ -134,6 +141,11 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase(),
 																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase()};
 		setActions(new String[]{"Save", "Cancel"});
+	}
+	
+	public String getPortalName() {
+		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
 	@SuppressWarnings({ "unchecked", "deprecation" })
@@ -248,13 +260,31 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		inputSetOption.addUIFormInput(isShowForumJump) ;
 		
 		UIFormInputWithActions inputUserWatchManger = new UIFormInputWithActions(FIELD_USERWATCHMANGER_FORM);
-
+		listWatches = forumService.getWatchByUser(this.userProfile.getUserId(), sProvider);
+		sProvider.close();
+		
+		UIFormCheckBoxInput formCheckBoxRSS = null;
+		UIFormCheckBoxInput formCheckBoxEMAIL = null;
+		for(int i = 0; i < listWatches.size(); i ++){
+			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>("RSS" + listWatches.get(i).getId(), "RSS" + listWatches.get(i).getId(), listWatches.get(i).isAddWatchByRS());
+			formCheckBoxRSS.setChecked(listWatches.get(i).isAddWatchByRS());
+			inputUserWatchManger.addChild(formCheckBoxRSS);
+			
+			formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>("EMAIL" + listWatches.get(i).getId(), "EMAIL" + listWatches.get(i).getId(), listWatches.get(i).isAddWatchByEmail());
+			formCheckBoxEMAIL.setChecked(listWatches.get(i).isAddWatchByEmail());
+			inputUserWatchManger.addChild(formCheckBoxEMAIL);
+		}
+		
+		UIFormStringInput formStringInput = null;
+		formStringInput = new UIFormStringInput(RSS_LINK, null);
+		inputUserWatchManger.addChild(formStringInput);
+		formStringInput = new UIFormStringInput(EMAIL_ADD, null);
+		inputUserWatchManger.addChild(formStringInput);
+		
 		addUIFormInput(inputSetProfile);
 		addUIFormInput(inputSetOption);
 		addUIFormInput(inputUserWatchManger);
 		
-		listWatches = forumService.getWatchByUser(this.userProfile.getUserId(), sProvider);
-		sProvider.close();
 		
 		pageIterator = addChild(UIForumPageIterator.class, null, WATCHES_ITERATOR);
 		pageList = new ForumPageList(7, listWatches.size());
@@ -433,6 +463,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			uiForm.tabId = event.getRequestContext().getRequestParameter(OBJECTID);
 //			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
@@ -464,16 +495,17 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			String input =  event.getRequestContext().getRequestParameter(OBJECTID) ;
-			String email = input.substring(input.lastIndexOf("/") + 1) ;
-			String path = input.substring(0, input.lastIndexOf("/"));
+			String userId = input.substring(0, input.indexOf("/"));
+			String email = input.substring(input.lastIndexOf("/"));
+			String path = (input.substring(0, input.lastIndexOf("/"))).replace(userId + "/", "");
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			List<String>emails = new ArrayList<String>();
-			emails.add(email) ;
+			emails.add(userId + "/" + email) ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiForm.forumService.removeWatch(sProvider, 1, path, emails) ;
 				for(int i = 0; i < uiForm.listWatches.size(); i ++){
-					if(uiForm.listWatches.get(i).getNodePath().equals(path) && uiForm.listWatches.get(i).getEmail().equals(email)){
+					if(uiForm.listWatches.get(i).getNodePath().equals(path) && uiForm.listWatches.get(i).getUserId().equals(userId)){
 						uiForm.listWatches.remove(i);
 						break;
 					}
@@ -482,6 +514,64 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				uiForm.pageIterator.updatePageList(uiForm.pageList);
 			} finally {
 				sProvider.close();
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+		}
+	}
+	
+	static public class ResetRSSActionListener extends EventListener<UIForumUserSettingForm> {
+		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
+			UIForumUserSettingForm uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIFormInputWithActions inputUserWatchManger = uiForm.getChildById(FIELD_USERWATCHMANGER_FORM);
+			UIFormCheckBoxInput<Boolean> formCheckBoxRSS = null;
+			String listObjectId = "";
+			for(int i = 0; i < uiForm.listWatches.size(); i ++){
+				formCheckBoxRSS = inputUserWatchManger.getChildById("RSS" + uiForm.listWatches.get(i).getId());
+				if(formCheckBoxRSS.isChecked()) {
+					if(listObjectId.trim().length() > 0) listObjectId += "/";
+					listObjectId += uiForm.listWatches.get(i).getId();
+				}
+			}
+			if(listObjectId.trim().length() > 0){
+				String rssLink = "";
+				PortalRequestContext portalContext = Util.getPortalRequestContext();
+				String url = portalContext.getRequest().getRequestURL().toString();
+				url = url.replaceFirst("http://", "") ;
+				url = url.substring(0, url.indexOf("/")) ;
+				url = "http://" + url;
+				rssLink = url + RSS.getRSSLink("forum", uiForm.getPortalName(), listObjectId);
+				((UIFormStringInput)inputUserWatchManger.getChildById(uiForm.RSS_LINK)).setValue(rssLink);
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+	
+	static public class UpdateEmailActionListener extends EventListener<UIForumUserSettingForm> {
+		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
+			UIForumUserSettingForm uiForm = event.getSource() ;
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIFormInputWithActions inputUserWatchManger = uiForm.getChildById(FIELD_USERWATCHMANGER_FORM);
+			String newEmailAdd = ((UIFormStringInput)inputUserWatchManger.getChildById(EMAIL_ADD)).getValue();
+			if(newEmailAdd == null || newEmailAdd.trim().length() < 1 || !ForumUtils.isValidEmailAddresses(newEmailAdd)){
+				Object[] args = { };
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.Email-inValid", args, ApplicationMessage.ERROR)) ;
+				return;
+			}
+			UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
+			List<String> listObjectId = new ArrayList<String>();
+			for(int i = 0; i < uiForm.listWatches.size(); i ++){
+				formCheckBoxEMAIL = inputUserWatchManger.getChildById("EMAIL" + uiForm.listWatches.get(i).getId());
+				if(formCheckBoxEMAIL.isChecked()) {
+					listObjectId.add(uiForm.listWatches.get(i).getId());
+					uiForm.listWatches.get(i).setEmail(newEmailAdd);
+				}
+			}
+			if(listObjectId.size() > 0){
+				SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, ForumSessionUtils.getCurrentUser(), sessionProvider);
+				sessionProvider.close();
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}

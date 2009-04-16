@@ -498,7 +498,7 @@ public class JCRDataStorage {
 			cat.setUserPrivate(ValuesToArray(cateNode.getProperty("exo:userPrivate").getValues()));
 		if (cateNode.hasProperty("exo:forumCount"))
 			cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong());
-		if(cateNode.isNodeType("exo:forumWatching")) 
+		if(cateNode.isNodeType("exo:forumWatching") && cateNode.hasProperty("exo:emailWatching")) 
 			cat.setEmailNotification(ValuesToArray(cateNode.getProperty("exo:emailWatching").getValues()));
 		return cat;
 	}
@@ -919,7 +919,8 @@ public class JCRDataStorage {
 			forum.setBanIP(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 		
 		if (forumNode.isNodeType("exo:forumWatching")) {
-			forum.setEmailNotification(ValuesToArray(forumNode.getProperty("exo:emailWatching").getValues()));
+			if(forumNode.hasProperty("exo:emailWatching"))
+				forum.setEmailNotification(ValuesToArray(forumNode.getProperty("exo:emailWatching").getValues()));
 		}
 		return forum;
 	}
@@ -1252,7 +1253,8 @@ public class JCRDataStorage {
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToArray(topicNode.getProperty("exo:userVoteRating").getValues()));
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToArray(topicNode.getProperty("exo:tagId").getValues()));
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble());
-		if(topicNode.isNodeType("exo:forumWatching")) topicNew.setEmailNotification(ValuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
+		if(topicNode.isNodeType("exo:forumWatching") && topicNode.hasProperty("exo:emailWatching")) 
+			topicNew.setEmailNotification(ValuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
 		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
 		try {
 			Node FirstPostNode = topicNode.getNode(idFirstPost);
@@ -2092,16 +2094,19 @@ public class JCRDataStorage {
 						listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
 	
 					if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
-						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
-						int i = 0;
-						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
-							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
-								emailList.add(emails.get(i));
+						if(node.hasProperty("exo:emailWatching")){
+							List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+							int i = 0;
+							for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
+									emailList.add(emails.get(i));
+								}
+								i++;
 							}
-							i++;
 						}
 					} else {
-						emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+						if(node.hasProperty("exo:emailWatching"))
+							emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
 					}
 				}
 				if (node.hasProperty("exo:notifyWhenAddTopic")) {
@@ -2179,7 +2184,7 @@ public class JCRDataStorage {
 						} else listUser = listCanViewInTopic;
 					}
 				}
-				if (node.isNodeType("exo:forumWatching") && isSend) {
+				if (node.isNodeType("exo:forumWatching") && node.hasProperty("exo:emailWatching") && isSend) {
 					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 						int i = 0;
@@ -2219,7 +2224,7 @@ public class JCRDataStorage {
 				/*
 				 * check is approved, is activate by topic and is not hidden before send mail
 				 */
-				if (forumNode.isNodeType("exo:forumWatching") && isSend) {
+				if (forumNode.isNodeType("exo:forumWatching") && forumNode.hasProperty("exo:emailWatching") && isSend) {
 					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
 						int i = 0;
@@ -2235,7 +2240,7 @@ public class JCRDataStorage {
 				}
 				
 				List<String>emailListCategory = new ArrayList<String>();
-				if (categoryNode.isNodeType("exo:forumWatching") && isSend) {
+				if (categoryNode.isNodeType("exo:forumWatching") && categoryNode.hasProperty("exo:emailWatching") && isSend) {
 					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 						List<String> emails = ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
 						int i = 0;
@@ -3910,17 +3915,28 @@ public class JCRDataStorage {
 	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values, String currentUser) throws Exception {
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		if (path.indexOf(forumHomeNode.getName()) < 0)
-			path = forumHomeNode.getPath() + "/" + path;
 		try {
-			watchingNode = (Node) forumHomeNode.getSession().getItem(path);
+			if(watchType != -1) {
+				if (path.indexOf(forumHomeNode.getName()) < 0)
+					path = forumHomeNode.getPath() + "/" + path;
+				watchingNode = (Node) forumHomeNode.getSession().getItem(path);
+			}else{
+				QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+				StringBuffer queryString = new StringBuffer("/jcr:root" + forumHomeNode.getPath() 
+						+ "//*[@exo:id='").append(path).append("']") ;
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				watchingNode = result.getNodes().nextNode() ;
+			}
 			// add watching for node
+			List<String> listUsers = new ArrayList<String>();
 			if (watchingNode.isNodeType("exo:forumWatching")) {
 				if (watchType == 1) {// send email when had changed on category
 					List<String> listEmail = new ArrayList<String>();
-					listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
-					List<String> listUsers = new ArrayList<String>();
-					listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
+					if(watchingNode.hasProperty("exo:emailWatching"))
+						listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
+					if(watchingNode.hasProperty("exo:userWatching"))
+						listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
 					for (String str : values) {
 						if (listEmail.contains(str))
 							continue;
@@ -3929,16 +3945,25 @@ public class JCRDataStorage {
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(listEmail));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
+				} else if(watchType == -1){
+					if(watchingNode.hasProperty("exo:rssWatching"))
+						listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:rssWatching").getValues())));
+					if(!listUsers.contains(currentUser)){
+						listUsers.add(currentUser);
+						watchingNode.setProperty("exo:rssWatching", getStringsInList(listUsers));
+					}
 				}
 			} else {
 				watchingNode.addMixin("exo:forumWatching");
 				if (watchType == 1) { // send email when had changed on category
-					List<String> listUsers = new ArrayList<String>();
 					for (int i = 0; i < values.size(); i++) {
 						listUsers.add(currentUser);
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(values));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
+				} else if(watchType == -1){	// add RSS watching
+					listUsers.add(currentUser);
+					watchingNode.setProperty("exo:rssWatching", getStringsInList(listUsers));
 				}
 			}
 			if(watchingNode.isNew()) {
@@ -3961,19 +3986,33 @@ public class JCRDataStorage {
 			watchingNode = (Node) forumHomeNode.getSession().getItem(path);
 			List<String> newValues = new ArrayList<String>();
 			List<String> listNewUsers = new ArrayList<String>();
+			List<String> userRSS = new ArrayList<String>();
 			// add watching for node
 			if (watchingNode.isNodeType("exo:forumWatching")) {
 				if (watchType == 1) {
-					String[] strings = ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues());
-					String[] listOldUsers = ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues());
-					for (int i = 0; i < strings.length; i++) {
-						if (values.contains(strings[i]))
-							continue;
-						newValues.add(strings[i]);
-						listNewUsers.add(listOldUsers[i]);
+					String[] emails = new String[]{};
+					String[] listOldUsers = new String[]{};
+					String[] listRss = new String[]{};
+					
+					if(watchingNode.hasProperty("exo:emailWatching"))
+						emails = ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues());
+					if(watchingNode.hasProperty("exo:userWatching"))
+						listOldUsers = ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues());
+					if(watchingNode.hasProperty("exo:rssWatching"))
+						listRss = ValuesToArray(watchingNode.getProperty("exo:rssWatching").getValues());
+					
+					int n = (listRss.length > listOldUsers.length)?listRss.length:listOldUsers.length;
+					
+					for (int i = 0; i < n; i++) {
+						if(listOldUsers.length > i && !values.contains(listOldUsers[i] + "/" + emails[i])){
+							newValues.add(emails[i]);
+							listNewUsers.add(listOldUsers[i]);
+						}
+						if(listRss.length > i && !values.contains(listRss[i])) userRSS.add(listRss[i]);
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listNewUsers));
+					watchingNode.setProperty("exo:rssWatching", getStringsInList(userRSS));
 					if(watchingNode.isNew()) {
 						watchingNode.getSession().save();
 					} else {
@@ -3986,31 +4025,79 @@ public class JCRDataStorage {
 		}
 	}
 	
+	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception{
+		Node parentNode = getForumHomeNode(sessionProvider) ;
+		QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()).
+														append("//element(*,exo:forumWatching)[(");
+		for(int i = 0; i < listNodeId.size(); i ++){
+			if(i > 0) queryString.append(" or ");
+			queryString.append("@exo:id='").append(listNodeId.get(i)).append("'");
+		}
+		queryString.append(")]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iterator = result.getNodes();
+		Node watchingNode = null;
+		List<String> listEmail = null;
+		List<String> listUsers = null;
+		while(iterator.hasNext()){
+			watchingNode = iterator.nextNode();
+			listEmail = new ArrayList<String>();
+			listUsers = new ArrayList<String>();
+			if(watchingNode.hasProperty("exo:emailWatching"))
+				listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
+			if(watchingNode.hasProperty("exo:userWatching"))
+				listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
+			if(listUsers.contains(userId)){
+				for(int i = 0; i < listUsers.size(); i ++){
+					if(listUsers.get(i).equals(userId)){
+						listEmail.set(i, newEmailAdd);
+					}
+				}
+			}else {
+				listUsers.add(userId);
+				listEmail.add(newEmailAdd);
+			}
+			watchingNode.setProperty("exo:emailWatching", listEmail.toArray(new String[]{}));
+			watchingNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{}));
+			watchingNode.save();
+		}
+	}
+	
 	public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception{
 		Node forumHome = getForumHomeNode(sessionProvider) ;	
 		String rootPath = forumHome.getPath();
 		Session sess = forumHome.getSession();
 		QueryManager qm = sess.getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer();
-		queryString.append("/jcr:root").append(rootPath).append("//element(*,exo:forumWatching)[@exo:userWatching='").
-								append(userId).append("']") ;
+		queryString.append("/jcr:root").append(rootPath).append("//element(*,exo:forumWatching)[(@exo:userWatching='").
+								append(userId).append("') or (@exo:rssWatching='").append(userId).append("')]");
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iterator = result.getNodes();
 		List<Watch> listWaches = new ArrayList<Watch>();
 		Watch watch = new Watch();
 		Node node = null;
-		String users[] = null;
+		List<String> users = new ArrayList<String>();
+		List<String> RSSUsers = new ArrayList<String>();
 		String emails[] = null;
 		String path = null;
 		String pathName = "";
 		String typeNode = null;
 		while(iterator.hasNext()){
+			users = new ArrayList<String>();
+			RSSUsers = new ArrayList<String>();
+			emails = new String[]{};
+			
 			rootPath = forumHome.getPath();
 			pathName = "";
 			node = iterator.nextNode();
-			users = ValuesToArray(node.getProperty("exo:userWatching").getValues());
-			emails = ValuesToArray(node.getProperty("exo:emailWatching").getValues());
+			if(node.hasProperty("exo:userWatching"))users.addAll(Arrays.asList(ValuesToArray(node.getProperty("exo:userWatching").getValues())));
+			if(node.hasProperty("exo:emailWatching"))emails = ValuesToArray(node.getProperty("exo:emailWatching").getValues());
+			
+			if(node.hasProperty("exo:rssWatching"))RSSUsers.addAll(Arrays.asList(ValuesToArray(node.getProperty("exo:rssWatching").getValues())));
+			
 			path = node.getPath();
 			if(node.isNodeType(Utils.TYPE_CATEGORY)) typeNode = Utils.TYPE_CATEGORY;
 			else if(node.isNodeType(Utils.TYPE_FORUM)) typeNode = Utils.TYPE_FORUM;
@@ -4020,18 +4107,21 @@ public class JCRDataStorage {
 				if(pathName.trim().length() > 0) pathName += " > ";
 				pathName += ((Node)sess.getItem(rootPath)).getProperty("exo:name").getString() ;
 			}
-			for(int i = 0; i < users.length; i ++){
-				if(users[i].equals(userId)){
-					watch = new Watch();
-					watch.setId(node.getName());
-					watch.setNodePath(path);
-					watch.setUserId(userId);
-					watch.setEmail(emails[i]);
-					watch.setPath(pathName);
-					watch.setTypeNode(typeNode);
-					listWaches.add(watch);
-				}
+			watch = new Watch();
+			watch.setId(node.getName());
+			watch.setNodePath(path);
+			watch.setUserId(userId);
+			watch.setPath(pathName);
+			watch.setTypeNode(typeNode);
+			if(users.contains(userId)){
+				watch.setEmail(emails[users.indexOf(userId)]);
+				watch.setIsAddWatchByEmail(true);
+			} else {
+				watch.setIsAddWatchByEmail(false);
 			}
+			if(RSSUsers.contains(userId)) watch.setIsAddWatchByRSS(true);
+			else watch.setIsAddWatchByRSS(false);
+			listWaches.add(watch);
 		}
 		return listWaches;
 	}

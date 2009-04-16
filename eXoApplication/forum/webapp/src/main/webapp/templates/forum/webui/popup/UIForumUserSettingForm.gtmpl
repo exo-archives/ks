@@ -100,31 +100,46 @@ import org.exoplatform.forum.service.Utils;
 														<tr>
 															<th width="30"><span></span></th>
 															<th><%=_ctx.appRes("UIForumUserSettingForm.label.Path")%></th>
-															<th><%=_ctx.appRes("UIViewUserProfile.label.email")%></th>
+															<th width="32">
+																<div class="Icon ForumRSS" style="height:24px; line-height:24px; text-algin:left;">
+																	<span></span>
+																</div>
+															</th>
+															<th>
+																<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:24px; text-algin:left;">
+																	<span></span>
+																</div>
+															</th>
 															<th width="30"><span></span></th>
 														</tr>
 														<%
 														for(Watch watch : uicomponent.getListWatch()){%>
 															<tr>
 																<td class="text" style="text-align:left">
-																<%
-																if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
-																	<div class="CategoryIcon" style="height:24px; width:24px;"><span></span></div>
-																<%	
-																} else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
-																	<div class="ForumNormalIcon" style="height:24px; width:24px;"><span></span></div>
-																<%
-																} else {%>
-																	<div class="ThreadNoNewPost" style="height:24px; width:24px;"><span></span></div>
-																<%
-																}%>
+																	<%
+																	if(watch.getTypeNode().equals(Utils.TYPE_CATEGORY)){%>
+																		<div class="CategoryIcon" style="height:24px; width:24px;"><span></span></div>
+																	<%	
+																	} else if(watch.getTypeNode().equals(Utils.TYPE_FORUM)){%>
+																		<div class="ForumNormalIcon" style="height:24px; width:24px;"><span></span></div>
+																	<%
+																	} else {%>
+																		<div class="ThreadNoNewPost" style="height:24px; width:24px;"><span></span></div>
+																	<%
+																	}%>
 																</td>
 																<td class="text" style="text-align:left">
 																	<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>"><%=watch.getPath()%></a>
 																</td>
-																<td class="text" style="text-align:left"><%=watch.getEmail()%></td>
+																<td  class="text" style="text-align:left" width="32">
+																	<%uicomponent.renderUIComponent(tabconten.getChildById("RSS" + watch.getId()))%>
+																</td>
+																<td width="32" class="text" style="text-align:left">
+																	<%uicomponent.renderUIComponent(tabconten.getChildById("EMAIL" + watch.getId()))%>
+																	<%=watch.getEmail()%>
+																</td>
 																<td class="text" style="text-align:left">
-																	<div class="DeleteIcon" style="cursor:pointer;" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getNodePath() + "/" + watch.getEmail())%>}">
+																	<div class="DeleteIcon" style="cursor:pointer;" onclick="javaScript:if(confirm('<%=_ctx.appRes("UIForumUserSettingForm.msg.confirm-delete-emailwatch")%>')){<%=uiform.event("DeleteEmailWatch", watch.getUserId() + "/" + watch.getNodePath() + "/" + watch.getEmail())%>}">
 																		<span></span>
 																	</div>
 																</td>
@@ -132,9 +147,67 @@ import org.exoplatform.forum.service.Utils;
 														<%	
 														}%>
 														<tr>
-															<td colspan="4" align="right"><%uiform.renderChild(uiform.WATCHES_ITERATOR);%></td>
+															<td colspan="5" align="right"><%uiform.renderChild(uiform.WATCHES_ITERATOR);%></td>
 														</tr>
 													</tbody>
+												</table>
+												<table>
+													<tr>
+														<td align="left">
+															<div class="Icon ForumRSS" style="height:24px; line-height:24px; text-algin:left;padding-left:32px;margin-top:5px;">
+																<%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> : <%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.RSS_LINK))%>
+															</div>
+														</td>
+														<td align="left">
+															<div class="UIAction"> 
+																<table class="ActionContainer">
+																	<tr>
+																		<td align="center">
+																			<div class="ActionButton LightBlueStyle">
+																				<div class="ButtonLeft">
+																					<div class="ButtonRight">
+																						<div class="ButtonMiddle">
+																							<a href="<%=uiform.event("ResetRSS")%>">
+																								<%=_ctx.appRes("UIForumUserSettingForm.action.Reset")%>
+																							</a>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td align="left">
+															<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:24px; text-algin:left;padding-left:32px;">
+																<%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> : <%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL_ADD))%>
+															</div>
+														</td>
+														<td align="left">
+															<div class="UIAction"> 
+																<table class="ActionContainer">
+																	<tr>
+																		<td align="center">
+																			<div onclick="javaScript:void(0);" class="ActionButton LightBlueStyle">
+																				<div class="ButtonLeft">
+																					<div class="ButtonRight">
+																						<div class="ButtonMiddle">
+																							<a href="<%=uiform.event("UpdateEmail")%>">
+																								<%=_ctx.appRes("UIForumUserSettingForm.action.Update")%>
+																							</a>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+														</td>
+													</tr>
 												</table>
 											<%
 											} else if(!tabconten.id.equals("WatchChesPageIterator")){%>

@@ -1137,6 +1137,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiForm = event.getSource();
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String currentUser = ForumSessionUtils.getCurrentUser();
+			if(currentUser != null){
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+				uiForm.forumService.addWatch(sProvider, -1, cateId, null, currentUser);
+				sProvider.close();
+			}
 			String rssLink = uiForm.getRSSLink(cateId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

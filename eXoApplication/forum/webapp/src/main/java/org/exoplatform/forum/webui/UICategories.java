@@ -343,6 +343,12 @@ public class UICategories extends UIContainer	{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String currentUser = ForumSessionUtils.getCurrentUser();
+			if(currentUser != null){
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+				categories.forumService.addWatch(sProvider, -1, cateId, null, currentUser);
+				sProvider.close();
+			}
 			String rssLink = categories.getRSSLink(cateId);
 			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

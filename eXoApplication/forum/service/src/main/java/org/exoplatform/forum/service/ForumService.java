@@ -931,4 +931,6 @@ public interface ForumService {
   public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
   
   public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception;
+  
+  public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception;
 }
