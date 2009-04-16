@@ -45,23 +45,19 @@ public class KSRSSServlet extends HttpServlet {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
     String pathInfo = request.getPathInfo() ;
     String[] arrayInfo = pathInfo.toString().split("/") ;
-    Session session = null ;
     try{
       String appType = arrayInfo[1];
-      String categoryId = arrayInfo[2] ;
-      
-      //PortalContainer pcontainer = getPortalContainer(portalName) ;
-      //PortalContainer.setInstance(pcontainer) ;
+      String objectId = pathInfo.replaceFirst("/" + appType + "/", "") ;
       SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
       RSSProcess process = new RSSProcess(sessionProvider, appType);
-      
-      Node node = process.getRSSNode(sessionProvider, categoryId, appType) ;
-      
+      InputStream is = null;
+      if(arrayInfo.length == 3){
+      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
+	      response.setContentType("text/xml") ;
+      } else {
+      	is = process.getRSSOfMultiObjects(objectId.split("/"), sessionProvider);
+      }
       sessionProvider.close();
-      if (node == null) throw new Exception("Node not found. ");
-      session = node.getSession();
-      response.setContentType("text/xml") ;
-      InputStream is = node.getProperty("exo:content").getStream();
       byte[] buf = new byte[is.available()];
       is.read(buf);
       ServletOutputStream os = response.getOutputStream();
@@ -69,15 +65,6 @@ public class KSRSSServlet extends HttpServlet {
     }catch(Exception e) {
       throw new ServletException(e) ;
     }finally{
-      if(session != null) {
-        session.logout() ;
-        PortalContainer.setInstance(null) ;
-      }
     }    		
 	}  
-  /*
-  private  PortalContainer getPortalContainer(String portalName) {
-    PortalContainer pcontainer =  RootContainer.getInstance().getPortalContainer(portalName) ;
-    return pcontainer ;
-  }*/
 }

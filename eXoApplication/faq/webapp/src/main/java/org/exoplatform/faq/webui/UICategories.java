@@ -265,7 +265,7 @@ public class UICategories extends UIContainer{
 	}
 	
 	public String getRSSLink(String cateId){
-		return RSS.getRSSLink("faq", portalName, categoryId_);
+		return RSS.getRSSLink("faq", portalName, cateId);
 	}
 
 	private String getPortalName() {
@@ -924,7 +924,7 @@ public class UICategories extends UIContainer{
 	static  public class RSSActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet portlet = uiCategories.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;

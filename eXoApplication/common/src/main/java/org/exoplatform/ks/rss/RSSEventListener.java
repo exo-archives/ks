@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -29,6 +33,8 @@ public class RSSEventListener implements EventListener{
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String workspace_ ;
 	private String repository_ ; 
+	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
+																																						 "exo:userWatching"}));
 	
 	public RSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
 		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
@@ -44,13 +50,15 @@ public class RSSEventListener implements EventListener{
 		try{
 			//ExoContainer container = ExoContainerContext.getCurrentContainer();
 			RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
+			String path = null;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
+				path = ev.getPath();
+				if(listPropertyNotGetEvent.contains(path.substring(path.lastIndexOf("/") + 1))) continue;
 				if(ev.getType() == Event.NODE_ADDED){
 					process.generateRSS(ev.getPath(), Event.NODE_ADDED);
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					String propertyPath = ev.getPath() ;
-					process.generateRSS(propertyPath.substring(0, propertyPath.lastIndexOf("/")), Event.PROPERTY_CHANGED);
+					process.generateRSS(path.substring(0, path.lastIndexOf("/")), Event.PROPERTY_CHANGED);
 				}else if(ev.getType() == Event.NODE_REMOVED) {
 					process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
 				}

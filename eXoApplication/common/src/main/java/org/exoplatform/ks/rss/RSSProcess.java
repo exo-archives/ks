@@ -17,6 +17,7 @@
 package org.exoplatform.ks.rss;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -459,7 +460,7 @@ public class RSSProcess extends RSSGenerate {
 		return listComment;
 	}
 	
-	public Node getRSSNode(SessionProvider sProvider, String objectId, String appType) throws Exception{
+	public InputStream getRSSNode(SessionProvider sProvider, String objectId, String appType) throws Exception{
 		Node parentNode = null;
 		try{
 			if(appType.equals(KS_FAQ)) parentNode = getCategoryNodeById(objectId, sProvider);
@@ -476,11 +477,13 @@ public class RSSProcess extends RSSGenerate {
 			e.printStackTrace();
 			return null;
 		}
+		Node RSSNode = null;
+		InputStream inputStream = null;
 		if(!parentNode.hasNode(KS_RSS)){
 			String feedType = "rss_2.0";
 			SyndFeed feed = new SyndFeedImpl();
 			List<SyndEntry> entries = new ArrayList<SyndEntry>();
-			Node RSSNode = parentNode.addNode(KS_RSS, KS_RSS);
+			RSSNode = parentNode.addNode(KS_RSS, KS_RSS_TYPE);
 			try{
 				feed.setTitle(parentNode.getProperty("exo:name").getString());
 				if(parentNode.hasProperty("categoryNode"))feed.setDescription(parentNode.getProperty("exo:description").getString());
@@ -494,9 +497,47 @@ public class RSSProcess extends RSSGenerate {
 			feed.setEntries(entries);
 			RSS data = new RSS();
 			SyndFeedOutput output = new SyndFeedOutput();
-			data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
+			inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
+			data.setContent(inputStream);
 			addNodeRSS(parentNode, RSSNode, data, false);
+			
+			return inputStream;
+		} else {
+			RSSNode = parentNode.getNode(KS_RSS);
+			return RSSNode.getProperty("exo:content").getStream();
 		}
-		return parentNode.getNode(KS_RSS);
+	}
+	
+	protected Node getNodeById(String objectId, SessionProvider sProvider) throws Exception{
+		Node parentNode = getKSServiceHome(sProvider, FORUM_APP);
+		QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root" + parentNode.getPath() 
+				+ "//*[@exo:id='").append(objectId).append("']") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		parentNode = result.getNodes().nextNode() ;
+		return parentNode;
+	}
+	
+	public InputStream getRSSOfMultiObjects(String[] objectIds, SessionProvider sProvider) throws Exception{
+		InputStream inputStream = null;
+		SyndFeed feed = this.createNewFedd();
+		List<SyndEntry> entries = new ArrayList<SyndEntry>();
+		Node objectNode = null;
+		Node RSSNode = null;
+		for(String objectId : objectIds){
+			objectNode = getNodeById(objectId, sProvider);
+			try{
+				RSSNode = objectNode.getNode(KS_RSS);
+				getRSSData(RSSNode, data);
+				entries.addAll(getDetailRss(data, null));
+			} catch (Exception e){}
+		}
+		feed.setTitle("FORUM RSS FEED");
+		feed.setDescription(" ");
+		feed.setEntries(entries);
+		SyndFeedOutput output = new SyndFeedOutput();
+		inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
+		return inputStream;
 	}
 }
