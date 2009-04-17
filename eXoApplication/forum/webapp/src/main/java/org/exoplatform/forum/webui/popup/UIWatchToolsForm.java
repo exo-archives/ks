@@ -113,13 +113,13 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIWatchToolsForm> event) throws Exception {
 			String email = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIWatchToolsForm uiForm = event.getSource();
-			List<String>emails = new ArrayList<String>();
-			emails.add(email) ;
+			/*List<String>emails = new ArrayList<String>();
+			emails.add(email) ;*/
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				forumService.removeWatch(sProvider, 1, uiForm.getPath(), emails) ;
+				forumService.removeWatch(sProvider, 1, uiForm.getPath(), "/" + email) ;
 				if(uiForm.getIsTopic()){
 					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
 					topicDetail.setIsEditTopic(true) ;

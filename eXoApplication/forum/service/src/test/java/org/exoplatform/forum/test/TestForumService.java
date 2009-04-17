@@ -563,7 +563,7 @@ public class TestForumService extends BaseForumTestCase{
   	//watch by user
   	List<Watch> watchs = forumService_.getWatchByUser("root", sProvider);
   	assertEquals(watchs.get(0).getEmail(), values.get(0));
-  	forumService_.removeWatch(sProvider, 1, topicPath, values);
+  	forumService_.removeWatch(sProvider, 1, topicPath, "/" + values.get(0));
   	watchs = forumService_.getWatchByUser("root", sProvider);
   	assertEquals(watchs.size(), 0);
   }

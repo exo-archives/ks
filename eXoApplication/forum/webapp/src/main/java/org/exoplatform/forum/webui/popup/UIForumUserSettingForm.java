@@ -499,8 +499,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			String email = input.substring(input.lastIndexOf("/"));
 			String path = (input.substring(0, input.lastIndexOf("/"))).replace(userId + "/", "");
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			List<String>emails = new ArrayList<String>();
-			emails.add(userId + "/" + email) ;
+			String emails = userId + "/" + email;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiForm.forumService.removeWatch(sProvider, 1, path, emails) ;

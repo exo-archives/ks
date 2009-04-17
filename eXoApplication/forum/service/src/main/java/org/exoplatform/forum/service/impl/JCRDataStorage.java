@@ -3976,7 +3976,7 @@ public class JCRDataStorage {
 		}
 	}
 
-	public void removeWatch(SessionProvider sProvider, int watchType, String path, List<String> values) throws Exception {
+	public void removeWatch(SessionProvider sProvider, int watchType, String path, String values) throws Exception {
 		Node watchingNode = null;
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		String string = forumHomeNode.getPath();
@@ -4004,11 +4004,11 @@ public class JCRDataStorage {
 					int n = (listRss.length > listOldUsers.length)?listRss.length:listOldUsers.length;
 					
 					for (int i = 0; i < n; i++) {
-						if(listOldUsers.length > i && !values.contains(listOldUsers[i] + "/" + emails[i])){
+						if(listOldUsers.length > i && !values.contains("/" + emails[i])){
 							newValues.add(emails[i]);
 							listNewUsers.add(listOldUsers[i]);
 						}
-						if(listRss.length > i && !values.contains(listRss[i])) userRSS.add(listRss[i]);
+						if(listRss.length > i && !values.contains(listRss[i] + "/")) userRSS.add(listRss[i]);
 					}
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listNewUsers));
