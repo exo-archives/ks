@@ -278,7 +278,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		UIFormStringInput formStringInput = null;
 		formStringInput = new UIFormStringInput(RSS_LINK, null);
 		inputUserWatchManger.addChild(formStringInput);
-		formStringInput = new UIFormStringInput(EMAIL_ADD, null);
+		formStringInput = new UIFormStringInput(EMAIL_ADD, ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
+		formStringInput.setValue(ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
 		inputUserWatchManger.addChild(formStringInput);
 		
 		addUIFormInput(inputSetProfile);

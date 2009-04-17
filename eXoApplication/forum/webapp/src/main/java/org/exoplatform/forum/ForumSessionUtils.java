@@ -49,6 +49,13 @@ public class ForumSessionUtils {
 		return Util.getPortalRequestContext().getRemoteUser();
 	}
 	
+	static public String getEmailUser(String userName) throws Exception {
+		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		User user = organizationService.getUserHandler().findUserByName(userName) ;
+		String email = user.getEmail() ;
+		return email;
+	}
+	
 	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
 		List<String> listOfUser = new ArrayList<String>();
 		listOfUser.add(userId);

@@ -129,7 +129,9 @@ import org.exoplatform.forum.service.Utils;
 																	}%>
 																</td>
 																<td class="text" style="text-align:left">
-																	<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>"><%=watch.getPath()%></a>
+																	<a href="javaScript:void(0);" onclick="<%=uiform.event("OpentContent",watch.getNodePath())%>" title="<%=watch.getPath()%>">
+																		<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
+																	</a>
 																</td>
 																<td  class="text" style="text-align:left" width="32">
 																	<%uicomponent.renderUIComponent(tabconten.getChildById("RSS" + watch.getId()))%>
