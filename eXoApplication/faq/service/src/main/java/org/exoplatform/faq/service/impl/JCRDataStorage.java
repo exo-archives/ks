@@ -738,7 +738,6 @@ public class JCRDataStorage {
   }
   
   public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception{
-  	System.out.println("\n\n\n\n------------------>start save answer:" + answers.length);
   	Node quesNode = getQuestionNodeById(questionId, sProvider);
   	if(!quesNode.isNodeType("mix:faqi18n")) {
   		quesNode.addMixin("mix:faqi18n") ;
@@ -784,7 +783,6 @@ public class JCRDataStorage {
 	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
 	  		answerNode.setProperty("exo:postId", answer.getPostId());
 	  	}
-	  	System.out.println("answer.getResponses() ==> " + answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
 	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
@@ -794,7 +792,6 @@ public class JCRDataStorage {
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}
-  	System.out.println("------------------------>finish save answer");
   }
   
   public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception{
@@ -940,7 +937,6 @@ public class JCRDataStorage {
 			Node commentNode =  getQuestionNodeById(questionId, sProvider).getNode(Utils.COMMENT_HOME).getNode(commentId);
 			return getCommentByNode(commentNode);
 		} catch (Exception e){
-			e.printStackTrace();
 			return null;
 		}
 	}

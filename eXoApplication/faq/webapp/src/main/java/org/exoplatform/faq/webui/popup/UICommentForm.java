@@ -239,21 +239,26 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							}
 						}
 					}
-					
-					if(commentForm.languageSelected == null || commentForm.languageSelected.trim().length() < 0 ||
-							commentForm.languageSelected.equals(commentForm.question_.getLanguage())){
-						faqService_.saveComment(commentForm.question_.getId(), commentForm.comment, commentForm.isAddNew, sessionProvider);
-						faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
-					} else {
-						MultiLanguages multiLanguages = new MultiLanguages();
-						multiLanguages.saveComment(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), 
-																			 commentForm.comment, commentForm.languageSelected, sessionProvider);
+					try{
+						if(commentForm.languageSelected == null || commentForm.languageSelected.trim().length() < 0 ||
+								commentForm.languageSelected.equals(commentForm.question_.getLanguage())){
+							faqService_.saveComment(commentForm.question_.getId(), commentForm.comment, commentForm.isAddNew, sessionProvider);
+							faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
+						} else {
+							MultiLanguages multiLanguages = new MultiLanguages();
+							multiLanguages.saveComment(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), 
+																				 commentForm.comment, commentForm.languageSelected, sessionProvider);
+						}
+					}catch(Exception e){
+						UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					}
-					
 				} else {
 					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
 	        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
 	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+	        sessionProvider.close();
 	        return;
 				}
 			} catch(Exception e){
