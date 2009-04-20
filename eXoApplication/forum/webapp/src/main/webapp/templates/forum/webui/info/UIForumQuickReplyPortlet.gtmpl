@@ -1,5 +1,22 @@
-<div class="UIForumQuickReplyPortlet" id="$uicomponent.id">
-	
-	Hello, this is the Forum Quick Reply area
-	
+<%  
+	if(uicomponent.isRenderChild){
+%>
+<div id="$uicomponent.id">
+	<div class="UIForumPortlet UIForumQuickReplyPortlet">
+		<div class="ParentMaskLayer">
+			<div class="MaskLayerForum"><span></span></div>
+		</div>
+		<%
+			List children = uicomponent.getChildren() ;
+			for(component in children) {
+				if(component.isRendered()){
+					uicomponent.renderChild(component.getClass()) ; 
+				}
+			}
+		%>
+		<%uicomponent.renderPopupMessages();%>
+	</div>
 </div>
+<% } else { %>
+	<div id="$uicomponent.id"><span></span></div>
+<% } %>

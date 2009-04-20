@@ -74,6 +74,9 @@
 			  <read-only>false</read-only>
 			</preference>
 		</portlet-preferences>
+		<supported-processing-event>
+			<name>ReLoadPortletEvent</name>
+		</supported-processing-event>
 	</portlet>
 	
 	<portlet>
@@ -130,6 +133,11 @@
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
+		
+		<supported-processing-event>
+			<name>ForumPollEvent</name>
+		</supported-processing-event>
+		
 	</portlet>
 	
 	<portlet>
@@ -212,8 +220,11 @@
 			<short-title>Forum Quick Reply Portlet</short-title>
 			<keywords>forum quick reply</keywords>
 		</portlet-info>
-	
 		<portlet-preferences></portlet-preferences>
+		
+		<supported-processing-event>
+			<name>QuickReplyEvent</name>
+		</supported-processing-event>
 	</portlet>
 	
 	<portlet>

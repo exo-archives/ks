@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.info;
 
+import org.exoplatform.forum.webui.UICategoryInfo;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -35,11 +36,10 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 public class UIForumStatisticPortlet extends UIPortletApplication {
 	public UIForumStatisticPortlet() throws Exception {
-  	
+  	addChild(UICategoryInfo.class, null, null);
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-   
     super.processRender(app, context) ;
   }  
   

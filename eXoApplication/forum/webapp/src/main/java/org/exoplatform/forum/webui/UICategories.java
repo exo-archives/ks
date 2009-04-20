@@ -39,6 +39,7 @@ import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -364,7 +365,8 @@ public class UICategories extends UIContainer	{
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			WebuiRequestContext context = event.getRequestContext() ; 
+			String path = context.getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
 			Forum forum = categories.getForumById(id[0], id[1]);
 			Topic topic = categories.getLastTopic(path) ;
@@ -373,7 +375,7 @@ public class UICategories extends UIContainer	{
 				Object[] args = { "" };
 				UIApplication uiApp = categories.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} else {
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -388,7 +390,7 @@ public class UICategories extends UIContainer	{
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 				categories.maptopicLast.clear() ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			context.addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	

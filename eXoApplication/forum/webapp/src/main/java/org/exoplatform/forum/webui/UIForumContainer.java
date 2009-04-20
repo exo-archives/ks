@@ -16,6 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import javax.portlet.ActionResponse;
+import javax.xml.namespace.QName;
+
+import org.exoplatform.forum.info.ForumParameter;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -35,10 +41,19 @@ public class UIForumContainer extends UIContainer	{
 		addChild(UITopicContainer.class, null, null) ;
 		addChild(UITopicDetailContainer.class, null, null).setRendered(false) ;
 		addChild(UIForumSummary.class, null, null) ;
-	} 
+	}
+	
 	public void setIsRenderChild(boolean isRender) {
 		getChild(UITopicContainer.class).setRendered(isRender) ;
 		getChild(UITopicDetailContainer.class).setRendered(!isRender) ;
 		getChild(UIForumSummary.class).setRendered(isRender) ;
+		if(isRender){
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
+			ForumParameter param = new ForumParameter() ;
+			param.setRenderQuickReply(false);
+			actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+			actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+		}
 	}
 }

@@ -1,0 +1,50 @@
+<div class="UITopicDetail">
+<% uiform.begin() %>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tbody>
+				<tr>
+					<td>
+						<div class="ForumCategory ForumQuickReply">
+							<div class="ForumToolbar">
+								<div class="LeftBar">
+									<div class="RightBar">
+										<div class="CenterBar">
+											<div class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></div>
+											<div class="CollapseButton" title="Expand category" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+											<div style="clear:both;"><span></span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="ContentContainer">
+								<div class="ForumList">
+									<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
+									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
+								</div>
+								<div class="ActionContent">
+							<%	uicomponent.links =  uicomponent.url("QuickReply", "pathId");
+								for(action in uicomponent.getActions()) { 
+									 String actionLabel = _ctx.appRes("UITopicDetail.action." + action); 
+									 String link = uicomponent.event(action) ;
+							%>
+									<div onclick="$link" class="ActionButton LightBlueStyle">
+										<div class="ButtonLeft">
+											<div class="ButtonRight">
+												<div class="ButtonMiddle">
+													<a href="javascript:void(0);">$actionLabel</a>
+												</div>
+											</div>
+										</div>
+									</div>
+							<%}%>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+	 	</table> 
+	</div>
+<%uiform.end()%>
+</div>

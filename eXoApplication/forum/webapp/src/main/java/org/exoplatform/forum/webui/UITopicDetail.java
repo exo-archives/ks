@@ -25,11 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
+import javax.portlet.ActionResponse;
+import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -68,6 +71,7 @@ import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.Portle
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -206,6 +210,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		cleanCheckedList();
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, userName) ;
+		setRenderQuickReply();
 	}
 	
 	public void setTopicFromCate(String categoryId, String forumId, Topic topic) throws Exception {
@@ -220,10 +225,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
+		setRenderQuickReply();
 	}
 	
 	public void hasPoll(boolean hasPoll) {
+		System.out.println("\n\n has poll: " + hasPoll);
 		this.topic.setIsPoll(hasPoll);
+		if(hasPoll) setRenderQuickReply();
 	}
 	
 	public void setUpdateContainer(String categoryId, String forumId, Topic topic, long numberPage) throws Exception {
@@ -240,7 +248,21 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
+		setRenderQuickReply();
 	}
+	
+	private void setRenderQuickReply() {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
+		ForumParameter param = new ForumParameter() ;
+		param.setRenderQuickReply(true);
+		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+		param = new ForumParameter() ;
+		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+		param.setRenderPoll(topic.getIsPoll());
+		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+  }
 	
 	public void setUpdateForum(Forum forum) throws Exception {
 		this.forum = forum ;

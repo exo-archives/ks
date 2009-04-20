@@ -20,12 +20,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
+import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
@@ -35,11 +38,15 @@ import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.Portle
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 /**
  * Author : Nguyen Quang Hung
  *					hung.nguyen@exoplatform.com
@@ -47,7 +54,10 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  */
 @ComponentConfig(
 	 lifecycle = UIApplicationLifecycle.class, 
-	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl"
+	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
+	 events = {
+	  	@EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class)
+	 }
 )
 public class UIForumPortlet extends UIPortletApplication {
 	private ForumService forumService;
@@ -148,7 +158,23 @@ public class UIForumPortlet extends UIPortletApplication {
 		getChild(UIForumContainer.class).setRendered(isForumRendered) ;
 		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
 		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
+		if(!isForumRendered) {
+			try {
+	      this.setRenderQuickReply();
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
+		}
 	}
+	
+	public void setRenderQuickReply() {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
+		ForumParameter param = new ForumParameter() ;
+		param.setRenderQuickReply(false);
+		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+  }
 	
 	public void loadPreferences() throws Exception {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
@@ -272,5 +298,18 @@ public class UIForumPortlet extends UIPortletApplication {
 		}finally {
 			sProvider.close();
 		}				
+	}
+	
+	static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {
+		public void execute(Event<UIForumPortlet> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource() ;
+			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+			if(params.getTopicId() != null){
+				forumPortlet.userProfile.setLastTimeAccessTopic(params.getTopicId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+				topicDetail.setIdPostView("lastpost");
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
 	}
 }

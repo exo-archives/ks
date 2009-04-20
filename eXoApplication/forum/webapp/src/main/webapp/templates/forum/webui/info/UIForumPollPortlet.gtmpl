@@ -1,5 +1,22 @@
-<div class="UIForumPollPortlet" id="$uicomponent.id">
-	
-	Hello, this is the Forum Poll area
-	
+<% if(uicomponent.isRenderChild) {%>
+<div id="$uicomponent.id">
+	<div class="UIForumPortlet UIForumPollPortlet">
+		<div class="ParentMaskLayer">
+			<div class="MaskLayerForum"><span></span></div>
+		</div>
+		<div class="UIForumContainer">
+		<%
+			List children = uicomponent.getChildren() ;
+			for(component in children) {
+				if(component.isRendered()){
+					uicomponent.renderChild(component.getClass()) ; 
+				}
+			}
+		%>
+		</div>
+		<%uicomponent.renderPopupMessages();%>
+	</div>
 </div>
+<% } else { %>
+	<div id="$uicomponent.id"><span></span></div>
+<% } %>

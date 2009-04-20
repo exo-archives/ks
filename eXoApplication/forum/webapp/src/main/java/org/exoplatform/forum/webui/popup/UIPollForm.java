@@ -24,6 +24,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -284,14 +285,21 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				} finally {
 					sProvider.close();
 				}
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
 				uiForm.isUpdate = false ;
-				UITopicDetailContainer detailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
-				detailContainer.setRederPoll(true) ;
-				detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]) ;
-				detailContainer.getChild(UITopicDetail.class).hasPoll(true);
-				event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
+				try {
+					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.cancelAction() ;
+					UITopicDetailContainer detailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
+					detailContainer.setRederPoll(true) ;
+					detailContainer.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]) ;
+					detailContainer.getChild(UITopicDetail.class).hasPoll(true);
+					event.getRequestContext().addUIComponentToUpdateByAjax(detailContainer);
+        } catch (Exception e) {
+        	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+					forumPollPortlet.cancelAction() ;
+					forumPollPortlet.getChild(UITopicPoll.class).updateFormPoll(id[id.length - 3], id[id.length - 2], id[id.length - 1]);
+        	event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet);
+        }
 			}
 			if(!ForumUtils.isEmpty(sms)) {
 				Object[] args = { };
@@ -317,8 +325,13 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 	static	public class CancelActionListener extends EventListener<UIPollForm> {
 		public void execute(Event<UIPollForm> event) throws Exception {
 			UIPollForm uiForm = event.getSource() ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
+			try {
+				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.cancelAction() ;
+      } catch (Exception e) {
+      	UIForumPollPortlet forumPollPortlet = uiForm.getAncestorOfType(UIForumPollPortlet.class) ;
+				forumPollPortlet.cancelAction() ;
+      }
 			uiForm.isUpdate = false ;
 		}
 	}

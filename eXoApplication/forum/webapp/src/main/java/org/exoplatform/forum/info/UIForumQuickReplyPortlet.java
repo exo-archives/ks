@@ -16,11 +16,19 @@
  ***************************************************************************/
 package org.exoplatform.forum.info;
 
+import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.forum.webui.popup.UIQuickReplyForm;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Author : Hung Nguyen Quang
@@ -29,18 +37,49 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
  */
 
 @ComponentConfig(
-   lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/forum/webui/info/UIForumQuickReplyPortlet.gtmpl"
+    lifecycle = UIApplicationLifecycle.class,
+    template = "app:/templates/forum/webui/info/UIForumQuickReplyPortlet.gtmpl",
+    events = {
+    	@EventConfig(listeners = UIForumQuickReplyPortlet.QuickReplyEventActionListener.class)
+    }
 )
-
 public class UIForumQuickReplyPortlet extends UIPortletApplication {
+	private boolean isRenderChild = false;
 	public UIForumQuickReplyPortlet() throws Exception {
-  	
+		addChild(UIQuickReplyForm.class, null, null).setRendered(false) ;
+		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-   
     super.processRender(app, context) ;
   }  
   
+  public void renderPopupMessages() throws Exception {
+		UIPopupMessages popupMess = getUIPopupMessages();
+		if(popupMess == null)	return ;
+		WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+		popupMess.processRender(context);
+	}
+
+	public void cancelAction() throws Exception {
+		WebuiRequestContext context = RequestContext.getCurrentInstance() ;
+		UIPopupAction popupAction = getChild(UIPopupAction.class) ;
+		popupAction.deActivate() ;
+		context.addUIComponentToUpdateByAjax(popupAction) ;
+	}
+	
+	static public class QuickReplyEventActionListener extends EventListener<UIForumQuickReplyPortlet> {
+		public void execute(Event<UIForumQuickReplyPortlet> event) throws Exception {
+			UIForumQuickReplyPortlet quickReplyPortlet = event.getSource();
+			ForumParameter params = (ForumParameter) event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
+			quickReplyPortlet.isRenderChild = params.isRenderQuickReply();
+			if(quickReplyPortlet.isRenderChild && params.getCategoryId() == null) quickReplyPortlet.isRenderChild = false;
+			UIQuickReplyForm quickReplyForm = quickReplyPortlet.getChild(UIQuickReplyForm.class);
+			if(quickReplyPortlet.isRenderChild) {
+				quickReplyForm.setIds(params.getCategoryId(), params.getForumId(), params.getTopicId());
+			}
+			quickReplyForm.setRendered(quickReplyPortlet.isRenderChild);
+			event.getRequestContext().addUIComponentToUpdateByAjax(quickReplyPortlet);
+		}
+	}
 } 

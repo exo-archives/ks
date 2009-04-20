@@ -1,5 +1,6 @@
 .UIForumLinks {
 	margin: 0px 10px;
+	overflow: auto;
 }
 
 .UIForumLinks .HorizontalLayout {

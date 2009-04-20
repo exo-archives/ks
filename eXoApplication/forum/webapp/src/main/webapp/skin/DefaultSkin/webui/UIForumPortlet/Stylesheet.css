@@ -1,9 +1,8 @@
 .UIForumPortlet {
-	min-height: 470px;
-	padding-bottom: 20px;
+	padding-bottom: 10px;
 	background: white;
 	border: 1px solid #b7b7b7;
-	margin: 3px;
+	margin-left: 3px;
 }
 
 *html .UIForumPortlet {

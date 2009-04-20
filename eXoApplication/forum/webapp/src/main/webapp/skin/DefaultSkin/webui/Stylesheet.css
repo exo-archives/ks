@@ -11,6 +11,7 @@
 @import url('UIForumPageIterator/Stylesheet.css') ;
 @import url('UISearchForm/Stylesheet.css') ;
 @import url('UISliderControl/Stylesheet.css') ;
+@import url('UIForumPortletInfo/Stylesheet.css') ;
 
 .UIWindow .UIForumPortlet {
 	margin:0px;

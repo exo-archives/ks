@@ -547,22 +547,23 @@ UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
 //	}
 //};
 
-UIForumPortlet.prototype.setMaskLayer = function() {
-	var forumPortlet = document.getElementById('UIForumPortlet') ;
-	var masklayer = document.getElementById('MaskLayerForum') ;
-	var popupAction = document.getElementById('UIForumPopupAction') ;
-	var popupWindow = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
+UIForumPortlet.prototype.setMaskLayer = function(id) {
+	var DOMUtil = eXo.core.DOMUtil;
+	var forumPortlet = document.getElementById(id) ;
+	var masklayer = DOMUtil.findFirstDescendantByClass(forumPortlet, "div", "MaskLayerForum") ;
+	var popupAction = DOMUtil.findFirstDescendantByClass(forumPortlet, "span", "UIForumPopupAction") ;
+	var popupWindow = DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
  	if(masklayer) {
   	masklayer.style.width = "auto";
   	masklayer.style.height = "auto";
-	 	if(popupWindow != null) {
+	 	if(popupWindow) {
 		 	if(popupWindow.style.display == "block") {
 				masklayer.style.width = (forumPortlet.offsetWidth - 3) + "px";
 				masklayer.style.height = (forumPortlet.offsetHeight - 3) + "px";
 			}
-			var closeButton = eXo.core.DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
+			var closeButton = DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
 			if(closeButton) {
-				var newDiv = eXo.core.DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
+				var newDiv = DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
 				if(!newDiv) newDiv = document.createElement("div");
 				closeButton.appendChild(newDiv);
 				newDiv.style.width = "16px";

@@ -25,6 +25,7 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -68,7 +69,23 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
-		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		UserProfile userProfile = new UserProfile();
+		try {
+			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
+		} catch (Exception e) {
+			String userName = ForumSessionUtils.getCurrentUser();
+			if (userName != null) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+				try {
+					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+					userProfile = forumService.getQuickProfile(sProvider, userName);
+				} catch (Exception ex) {
+				} finally {
+					sProvider.close();
+				}
+			}
+		}
+		return userProfile;
 	}
 	
 	public String getPortalName() {
@@ -184,8 +201,13 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				popupAction.deActivate();
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				forumPortlet.cancelAction() ;
+				try {
+					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.cancelAction() ;
+        } catch (Exception e) {
+        	UIForumQuickReplyPortlet forumPortlet = uiForm.getAncestorOfType(UIForumQuickReplyPortlet.class) ;
+        	forumPortlet.cancelAction() ;
+        }
 			}
 		}
 	}

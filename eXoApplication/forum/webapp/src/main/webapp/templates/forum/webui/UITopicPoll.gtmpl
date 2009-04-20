@@ -8,6 +8,7 @@
 %>
 	<% 
 		uiform.begin() ; 
+		UserProfile userProfile = uicomponent.getUserProfile();
 		Poll poll = uicomponent.getPoll() ;
 		if(poll != null) {
 		String question = poll.getQuestion() ;
@@ -22,8 +23,7 @@
 			Date today = new Date() ;
 			timeOut = timeOut*86400000 ;
 			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
-			UserProfile option = uicomponent.getOption();
-			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((option.getLongDateFormat() + ", " + option.getTimeFormat()),dateOut);
+			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),dateOut);
 			if(dateOut.getTime() < today.getTime()) {
 				timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
 				isAgain = false ;
@@ -103,10 +103,10 @@
 	
 	<div class="TopicPollContainer">
 		<% 
-		if(timeOut > 0) {
+			if(timeOut > 0) {
 		%>
 		<div class="PollTime">$timeOutDate</div>
-		<% } %>
+		<%} %>
 		<div class="UIFormTabPane">
 			<div class="UITabPane">
 				<div class="TabPaneContent">

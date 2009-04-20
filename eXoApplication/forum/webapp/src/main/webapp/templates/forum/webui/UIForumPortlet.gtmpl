@@ -4,7 +4,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
-	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.setMaskLayer');
+	jsmanager.addOnResizeJavascript('function(){eXo.forum.UIForumPortlet.setMaskLayer("'+uicomponent.id+'");}');
 %>
 
 <div class="UIForumPortlet" id="$uicomponent.id">
@@ -20,4 +20,5 @@
 		}
 	%>
 	<%uicomponent.renderPopupMessages();%>
+	<div><span></span></div>
 </div>
