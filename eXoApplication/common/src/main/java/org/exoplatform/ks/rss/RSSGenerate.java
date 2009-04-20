@@ -122,7 +122,12 @@ public abstract class RSSGenerate {
 		RSS data = new RSS();
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		
-		Node RSSNode = node.getNode(KS_RSS);
+		Node RSSNode = null;
+		try{
+			RSSNode = node.getNode(KS_RSS);
+		}catch(PathNotFoundException pn){
+			return;
+		}
 		getRSSData(RSSNode, data);
 		entries.addAll(getDetailRss(data, objectid));
 		

@@ -7,7 +7,7 @@
 %>
 <div class="UIResponse $uicomponent.id">
 	<% uiform.begin() %>
-		<div class="HorizontalLayout">
+		<div class="HorizontalLayout" style="*width:93%;">
 			<div class="UIFormInput">
 				<table class="UIFormGrid" style="width:100%">
 					<tbody>
