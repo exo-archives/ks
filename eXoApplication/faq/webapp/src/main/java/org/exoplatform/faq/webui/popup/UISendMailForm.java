@@ -92,8 +92,12 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   public List<User> addCCUsers = new ArrayList<User>();
   public List<User> addBCCUsers = new ArrayList<User>();
   private int posOfResponse = 0;
+  private List<String> listAnotherEmail = new ArrayList<String>();
   
-	public UISendMailForm() throws Exception { this.setActions(new String[]{"Send", "Cancel"}) ;}
+	public UISendMailForm() throws Exception { 
+		listAnotherEmail = new ArrayList<String>();
+		this.setActions(new String[]{"Send", "Cancel"}) ;
+	}
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -199,13 +203,34 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, content)) ;
 	}
 
-	public void setFieldToValue(String value) { getUIStringInput(FILED_TO).setValue(value) ;}
+	public void setFieldToValue(String value) { 
+		if(listAnotherEmail != null && listAnotherEmail.size() > 0){
+			for(String email : listAnotherEmail){
+				value = email + "," + value;
+			}
+		}
+		getUIStringInput(FILED_TO).setValue(value) ;
+	}
 	public String getFieldToValue(){return getUIStringInput(FILED_TO).getValue();}
 	
-	public void setFieldCCValue(String value) { getUIStringInput(FILED_ADD_CC).setValue(value) ;}
+	public void setFieldCCValue(String value) { 
+		if(listAnotherEmail != null && listAnotherEmail.size() > 0){
+			for(String email : listAnotherEmail){
+				value = email + "," + value;
+			}
+		}
+		getUIStringInput(FILED_ADD_CC).setValue(value) ;
+	}
 	public String getFieldCCValue(){return getUIStringInput(FILED_ADD_CC).getValue();}
 	
-	public void setFieldBCCValue(String value) { getUIStringInput(FILED_ADD_BCC).setValue(value) ;}
+	public void setFieldBCCValue(String value) { 
+		if(listAnotherEmail != null && listAnotherEmail.size() > 0){
+			for(String email : listAnotherEmail){
+				value = email + "," + value;
+			}
+		}
+		getUIStringInput(FILED_ADD_BCC).setValue(value) ;
+	}
 	public String getFieldBCCValue(){return getUIStringInput(FILED_ADD_BCC).getValue();}
 	
 	static public class SendActionListener extends EventListener<UISendMailForm> {
@@ -287,15 +312,21 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
       InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
       List<String> emailList = new ArrayList<String>();
+      sendMailForm.listAnotherEmail = new ArrayList<String>();
       for (int i = 0 ; i < toAddresses.length; i++) {
         if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
       }
+      
+      sendMailForm.listAnotherEmail.addAll(emailList);
       
       List<User> toUser = sendMailForm.getToUsers() ;
       if (toUser != null && toUser.size() > 0) {
         List<User> userList = new ArrayList<User>();
         for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+          if (emailList.contains(ct.getEmail())) {
+          	userList.add(ct) ;
+          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
+          }
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
@@ -314,15 +345,19 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
       InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
       List<String> emailList = new ArrayList<String>();
+      sendMailForm.listAnotherEmail = new ArrayList<String>();
       for (int i = 0 ; i < toAddresses.length; i++) {
         if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
       }
-      
+      sendMailForm.listAnotherEmail.addAll(emailList);
       List<User> toUser = sendMailForm.getAddCCUsers() ;
       if (toUser != null && toUser.size() > 0) {
         List<User> userList = new ArrayList<User>();
         for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+          if (emailList.contains(ct.getEmail())){
+          	userList.add(ct) ;
+          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
+          }
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
@@ -341,15 +376,19 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
       InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
       List<String> emailList = new ArrayList<String>();
+      sendMailForm.listAnotherEmail = new ArrayList<String>();
       for (int i = 0 ; i < toAddresses.length; i++) {
         if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
       }
-      
+      sendMailForm.listAnotherEmail.addAll(emailList);
       List<User> toUser = sendMailForm.getAddBCCUsers() ;
       if (toUser != null && toUser.size() > 0) {
         List<User> userList = new ArrayList<User>();
         for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) userList.add(ct) ;
+          if (emailList.contains(ct.getEmail())) {
+          	userList.add(ct) ;
+          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
+          }
         }
         addressEmailsForm.setAlreadyCheckedUser(userList);
       }
