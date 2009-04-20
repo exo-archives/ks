@@ -349,8 +349,8 @@
 									<div class="LeftOverButton">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
-												<div class="AddRSS" style="padding-left:16px;">
-													<a style="display:block;" href="<%=uicomponent.event("RSS","forum")%>">&nbsp;RSS</a>
+												<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
+													<a style="display:block;" href="<%=uicomponent.event("RSS",forum.getId())%>">&nbsp;RSS</a>
 												</div>
 											</div>
 										</div>

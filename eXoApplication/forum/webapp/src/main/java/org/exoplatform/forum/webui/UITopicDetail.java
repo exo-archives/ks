@@ -53,6 +53,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
+import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITagForm;
@@ -62,6 +63,7 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
@@ -141,6 +143,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.BanIPAllForumActionListener.class),
 			@EventConfig(listeners = UITopicDetail.BanIPThisForumActionListener.class),
 			@EventConfig(listeners = UITopicDetail.AddBookMarkActionListener.class),
+			@EventConfig(listeners = UITopicDetail.RSSActionListener.class),
 			@EventConfig(listeners = UITopicDetail.AddWatchingActionListener.class)
 		}
 )
@@ -172,6 +175,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		addChild(UIPostRules.class, null, null);
 		this.setSubmitAction("GoNumberPage") ;
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
+	}
+	
+
+	public String getRSSLink(String cateId){
+		PortalContainer pcontainer =  PortalContainer.getInstance() ;
+		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
 	public UserProfile getUserProfile() {
@@ -1545,6 +1554,29 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			}finally {
 				sProvider.close();
 			}
+		}
+	}
+	
+
+	static public class RSSActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail uiForm = event.getSource();
+			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String currentUser = ForumSessionUtils.getCurrentUser();
+			if(currentUser != null){
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+				uiForm.forumService.addWatch(sProvider, -1, topicId, null, currentUser);
+				sProvider.close();
+			}
+			String rssLink = uiForm.getRSSLink(topicId);
+			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("ForumRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

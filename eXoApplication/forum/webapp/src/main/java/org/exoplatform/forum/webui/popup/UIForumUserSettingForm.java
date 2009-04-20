@@ -265,7 +265,11 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		
 		UIFormCheckBoxInput formCheckBoxRSS = null;
 		UIFormCheckBoxInput formCheckBoxEMAIL = null;
+		String listObjectId = "";
 		for(int i = 0; i < listWatches.size(); i ++){
+			if(listObjectId.trim().length() > 0) listObjectId += "/";
+			listObjectId += listWatches.get(i).getId();
+			
 			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>("RSS" + listWatches.get(i).getId(), "RSS" + listWatches.get(i).getId(), listWatches.get(i).isAddWatchByRS());
 			formCheckBoxRSS.setChecked(listWatches.get(i).isAddWatchByRS());
 			inputUserWatchManger.addChild(formCheckBoxRSS);
@@ -277,7 +281,19 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		
 		UIFormStringInput formStringInput = null;
 		formStringInput = new UIFormStringInput(RSS_LINK, null);
+		if(listObjectId.trim().length() > 0){
+			String rssLink = "";
+			PortalRequestContext portalContext = Util.getPortalRequestContext();
+			String url = portalContext.getRequest().getRequestURL().toString();
+			url = url.replaceFirst("http://", "") ;
+			url = url.substring(0, url.indexOf("/")) ;
+			url = "http://" + url;
+			rssLink = url + RSS.getRSSLink("forum", getPortalName(), listObjectId);
+			formStringInput.setValue(rssLink);
+		}
 		inputUserWatchManger.addChild(formStringInput);
+		
+		
 		formStringInput = new UIFormStringInput(EMAIL_ADD, ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
 		formStringInput.setValue(ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
 		inputUserWatchManger.addChild(formStringInput);

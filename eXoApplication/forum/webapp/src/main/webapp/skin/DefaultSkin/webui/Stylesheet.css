@@ -608,5 +608,6 @@
 }
 
 .UIForumPortlet .ForumRSSFeed {
-	background: url('background/rss19.png') no-repeat;
+	background: url('background/rss.png') no-repeat left center;
+	line-height:14px;
 }
