@@ -453,7 +453,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       	return ;
-      } else if(FAQUtils.getUserByUserId(author) != null){
+      } else if(FAQUtils.getCurrentUser() == null && FAQUtils.getUserByUserId(author) != null){
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-duplicate", null, ApplicationMessage.WARNING)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
