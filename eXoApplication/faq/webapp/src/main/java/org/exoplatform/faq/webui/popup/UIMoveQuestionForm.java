@@ -188,7 +188,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					Category category = faqService_.getCategoryById(cateId, sessionProvider);
 					List<String> listModerator = Arrays.asList(category.getModerators()) ;
 					boolean canMove = false;
-					if(listModerator.contains(FAQUtils.getCurrentUser())) canMove = true;
+					if(moveQuestionForm.faqSetting_.isAdmin() || listModerator.contains(FAQUtils.getCurrentUser())) canMove = true;
 					else {
 						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
 						for(String user : listModerator){
