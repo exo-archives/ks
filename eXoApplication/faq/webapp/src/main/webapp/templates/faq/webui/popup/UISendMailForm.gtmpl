@@ -22,7 +22,7 @@
 									}
 								%>
 									<div id="div$name" style="display:$display; width:100%; float:left; margin:5px 0px 5px 5px;">
-										<div class="FieldLabel" style="width:100px; float:left;">
+										<div class="FieldLabel" style="width:90px; float:left;">
 											<%
 											if(!fieldName.equals(uicomponent.getId())) {
 												name = input.getName();
@@ -57,18 +57,27 @@
 										</div>
 										<%
 										String width = "auto";
-										if(input.getName().equals("Message")) width = "500px"
+										if(input.getName().equals(uicomponent.FILED_MESSAGE)) width = "480px"
 										else width = "auto";
 										%>
 										<div class="FieldComponent" style="width:$width; float:left;">
 											<div style="float:left; width:100%;">
-												<% uiform.renderField(input) %>
-												<%if(input.getName().equals("To")){%>
+												<%uiform.renderField(input) %>
+												<%if(!input.getName().equals(uicomponent.FILED_MESSAGE) &&
+															!input.getName().equals(uicomponent.FILED_ADD_CC) &&
+															!input.getName().equals(uicomponent.FILED_ADD_BCC) &&
+															!input.getName().equals(uicomponent.FILED_QUESTION_LANGUAGE)){%>
+														*
+												<%}
+													if(input.getName().equals("To")){%>
 													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
 													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
 												<%}%>
 											</div>
 										</div>
+										<%if(input.getName().equals(uicomponent.FILED_MESSAGE)){%>
+												<div style="float:left;width:10px;">*</div>
+										<%}%>
 									</div>
 									<div style="clear:left"><span></span></div>
 							<%}
