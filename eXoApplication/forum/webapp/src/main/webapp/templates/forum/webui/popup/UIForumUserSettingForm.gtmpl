@@ -2,7 +2,7 @@
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.Utils;
 %>
-<div class="UIFormInputWithActions">	
+<div class="UIFormInputWithActions" style="*width:96.5%;">	
 	<% uiform.begin() %>	
 	<div class="UIFormTabPane">
 		<div class="UITabPane">

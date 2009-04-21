@@ -6,7 +6,7 @@
 	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
 	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
 %>
-<div class="UIFormInputWithActions UIForumAdministrationForm">	
+<div class="UIFormInputWithActions UIForumAdministrationForm" style="*width:97%;">	
 	<% uiform.begin() %>	
 	<div class="UIFormTabPane">
 		<div class="UITabPane">

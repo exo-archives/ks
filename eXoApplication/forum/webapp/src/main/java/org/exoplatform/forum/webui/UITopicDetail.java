@@ -1290,7 +1290,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
 			viewPostedByUser.setUserProfile(userId) ;
 			popupContainer.setId("ViewPostedByUser") ;
-			popupAction.activate(popupContainer, 760, 350) ;
+			popupAction.activate(popupContainer, 760, 370) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1306,7 +1306,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
 			topicCreatedByUser.setUserId(userId) ;
 			popupContainer.setId("ViewTopicCreatedByUser") ;
-			popupAction.activate(popupContainer, 760, 350) ;
+			popupAction.activate(popupContainer, 760, 450) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
