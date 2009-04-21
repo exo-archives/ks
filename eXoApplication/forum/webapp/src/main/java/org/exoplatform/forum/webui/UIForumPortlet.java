@@ -162,7 +162,6 @@ public class UIForumPortlet extends UIPortletApplication {
 			try {
 	      this.setRenderQuickReply();
       } catch (Exception e) {
-	      e.printStackTrace();
       }
 		}
 	}
@@ -172,8 +171,11 @@ public class UIForumPortlet extends UIPortletApplication {
 		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
 		ForumParameter param = new ForumParameter() ;
 		param.setRenderQuickReply(false);
+		param.setRenderPoll(false);
+		param.setRenderModerator(false);
 		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
 		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+		actionRes.setEvent(new QName("ForumModerateEvent"), param) ;
   }
 	
 	public void loadPreferences() throws Exception {

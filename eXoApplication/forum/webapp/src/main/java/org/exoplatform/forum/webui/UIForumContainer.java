@@ -52,6 +52,7 @@ public class UIForumContainer extends UIContainer	{
 			ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
 			ForumParameter param = new ForumParameter() ;
 			param.setRenderQuickReply(false);
+			param.setRenderPoll(false);
 			actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
 			actionRes.setEvent(new QName("ForumPollEvent"), param) ;
 		}

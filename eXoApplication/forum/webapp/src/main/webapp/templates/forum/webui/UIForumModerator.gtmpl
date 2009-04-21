@@ -1,0 +1,40 @@
+<%  
+	List moderators =	uicomponent.getModeratorsForum() ;
+	int total = moderators.size();
+%>
+<div class="UIForumModerator" id="uicomponent.id">
+	<div class="ForumCategory">
+		<div class="ForumToolbar">
+			<div class="LeftBar">
+				<div class="RightBar">
+					<div class="CenterBar">
+						<div class="Title"><%=_ctx.appRes("UIForumForm.label.Moderator");%><% if(total > 0) { %>($total)<% } %></div>
+						<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+						<div style="clear:both;"><span></span></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ContentContainer">
+			<div class="ForumList">
+				<div class="text">
+				<% boolean isMod = false ;
+				int i = 1;
+				for(moderator in moderators) {
+					isMod = true ;
+					if(i == moderators.size()) {
+				%>
+					<a href="#">$moderator</a>
+				<%}else {%> 
+					<a href="#">$moderator</a>,
+				<%}
+				 ++i;
+				}					
+				if(!isMod){%>
+				<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
+				<% } %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

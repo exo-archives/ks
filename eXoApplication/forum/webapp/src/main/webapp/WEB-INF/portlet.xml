@@ -164,8 +164,11 @@
 			<short-title>Forum Moderate Portlet</short-title>
 			<keywords>forum moderate</keywords>
 		</portlet-info>
-	
 		<portlet-preferences></portlet-preferences>
+		
+		<supported-processing-event>
+			<name>ForumModerateEvent</name>
+		</supported-processing-event>
 	</portlet>
 	
 	<portlet>

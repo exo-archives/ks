@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.forum.service.Forum;
@@ -36,25 +35,20 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UIForumInfos.gtmpl"
 )
 public class UIForumInfos extends UIContainer	{
-	private List<String> moderators = new ArrayList<String>();
 	private UserProfile userProfile ;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);
-	}
-
-	@SuppressWarnings("unused")
-	private List<String> getModeratorsForum() throws Exception {
-		return moderators ;
+		addChild(UIForumModerator.class, null, null);
 	}
 	
 	public void setForum(Forum forum)throws Exception {
 		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
-		this.moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
+		List<String> moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
 		boolean isLock = forum.getIsClosed() ;
 		if(!isLock) isLock = forum.getIsLock() ;
 		if(!isLock && userProfile.getUserRole()!=0) {
-			if(!this.moderators.contains(userProfile.getUserId())) {
+			if(!moderators.contains(userProfile.getUserId())) {
 				String []listUser = forum.getCreateTopicRole() ;
 				if(listUser != null && listUser.length > 0)
 					isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
@@ -62,5 +56,8 @@ public class UIForumInfos extends UIContainer	{
 		}
 		postRules.setLock(isLock) ;
 		postRules.setUserProfile(this.userProfile) ;
+		UIForumModerator forumModerator = getChild(UIForumModerator.class);
+		forumModerator.setModeratorsForum(moderators);
+	
 	}
 }

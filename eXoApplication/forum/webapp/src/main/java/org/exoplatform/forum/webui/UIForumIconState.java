@@ -17,7 +17,6 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.forum.info.ForumParameter;
-
 import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
