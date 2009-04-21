@@ -547,8 +547,8 @@ public class UICategory extends UIForm	{
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 			Topic topic = uiCategory.getTopic(id[1]) ;
-			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
+			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic) ;
 			uiTopicDetail.setIdPostView("lastpost") ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId()) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[0] + " "));

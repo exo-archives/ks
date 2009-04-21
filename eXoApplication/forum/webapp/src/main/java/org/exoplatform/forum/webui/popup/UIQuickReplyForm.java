@@ -73,6 +73,7 @@ public class UIQuickReplyForm extends UIForm {
 	private String userName;
 	private String links = "";
 	private Topic topic;
+	private boolean isModerator = false;
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public UIQuickReplyForm() {
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
@@ -82,10 +83,11 @@ public class UIQuickReplyForm extends UIForm {
 		return links;
 	}
 	
-	public void setIds(String categoryId, String forumId, String topicId) throws Exception {
+	public void setInitForm(String categoryId, String forumId, String topicId, boolean isModerator) throws Exception {
 		this.categoryId = categoryId;
 		this.forumId = forumId;
 		this.topicId = topicId;
+		this.isModerator = isModerator;
 		this.userName = ForumSessionUtils.getCurrentUser() ;
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
@@ -115,7 +117,7 @@ public class UIQuickReplyForm extends UIForm {
 			if(checksms != null && checksms.trim().length() > 0) {
 				boolean isOffend = false ;
 				boolean hasTopicMod = false ;
-				if(true) {
+				if(!quickReply.isModerator) {
 					String stringKey = forumAdministration.getCensoredKeyword();
 					if(stringKey != null && stringKey.length() > 0) {
 						stringKey = stringKey.toLowerCase() ;

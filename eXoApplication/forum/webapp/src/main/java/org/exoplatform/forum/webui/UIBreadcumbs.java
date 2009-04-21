@@ -218,8 +218,8 @@ public class UIBreadcumbs extends UIContainer {
 							uiForumContainer.setIsRenderChild(false) ;
 							uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 							UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
 							uiTopicDetail.setUpdateForum(forum) ;
+							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
 							uiTopicDetail.setIdPostView("top") ;
 							uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));

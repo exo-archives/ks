@@ -207,8 +207,8 @@ public class UIForumListSearch extends UIContainer {
 						uiForumContainer.setIsRenderChild(false) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
 						uiTopicDetail.setUpdateForum(forum) ;
+						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[length-3], id[length-2] , topic.getId()) ;
 						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;

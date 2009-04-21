@@ -185,7 +185,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       } catch (Exception e) {
 	      e.printStackTrace();
 	      Object[] args = { "" };
-	      uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fall", args, ApplicationMessage.INFO)) ;
+	      uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO)) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       }
 		}

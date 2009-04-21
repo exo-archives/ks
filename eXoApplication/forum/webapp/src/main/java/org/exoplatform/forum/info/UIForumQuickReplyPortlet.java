@@ -76,7 +76,7 @@ public class UIForumQuickReplyPortlet extends UIPortletApplication {
 			if(quickReplyPortlet.isRenderChild && params.getCategoryId() == null) quickReplyPortlet.isRenderChild = false;
 			UIQuickReplyForm quickReplyForm = quickReplyPortlet.getChild(UIQuickReplyForm.class);
 			if(quickReplyPortlet.isRenderChild) {
-				quickReplyForm.setIds(params.getCategoryId(), params.getForumId(), params.getTopicId());
+				quickReplyForm.setInitForm(params.getCategoryId(), params.getForumId(), params.getTopicId(), params.isModerator());
 			}
 			quickReplyForm.setRendered(quickReplyPortlet.isRenderChild);
 			event.getRequestContext().addUIComponentToUpdateByAjax(quickReplyPortlet);

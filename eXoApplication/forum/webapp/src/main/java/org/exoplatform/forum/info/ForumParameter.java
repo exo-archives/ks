@@ -14,6 +14,7 @@ public class ForumParameter implements Serializable {
 	private boolean isForumIcon ; 
 	private boolean isRenderQuickReply = false;
 	private boolean isRenderPoll = false;
+	private boolean isModerator = false;
 	
 	public void setCategoryId(String s) {categoryId = s;}
 	public String getCategoryId() { return categoryId;}
@@ -35,6 +36,13 @@ public class ForumParameter implements Serializable {
 	}
 	public void setRenderQuickReply(boolean isRenderQuickReply) {
 		this.isRenderQuickReply = isRenderQuickReply;
+	}
+
+	public boolean isModerator() {
+		return isModerator;
+	}
+	public void setModerator(boolean isModerator) {
+		this.isModerator = isModerator;
 	}
 
 	public boolean isRenderPoll() {

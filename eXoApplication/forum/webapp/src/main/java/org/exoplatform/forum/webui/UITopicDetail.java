@@ -163,6 +163,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isModeratePost = false ;
 	private boolean isMod = false ;
 	private boolean enableIPLogging = true;
+	private boolean isCanPost = false;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -219,7 +220,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		cleanCheckedList();
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topicId, userName) ;
-		setRenderQuickReply();
+		setRenderInfoPorlet();
 	}
 	
 	public void setTopicFromCate(String categoryId, String forumId, Topic topic) throws Exception {
@@ -234,13 +235,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
-		setRenderQuickReply();
+		setRenderInfoPorlet();
 	}
 	
-	public void hasPoll(boolean hasPoll) {
-		System.out.println("\n\n has poll: " + hasPoll);
+	public void hasPoll(boolean hasPoll) throws Exception {
 		this.topic.setIsPoll(hasPoll);
-		if(hasPoll) setRenderQuickReply();
+		if(hasPoll) setRenderInfoPorlet();
 	}
 	
 	public void setUpdateContainer(String categoryId, String forumId, Topic topic, long numberPage) throws Exception {
@@ -257,27 +257,43 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
-		setRenderQuickReply();
+		setRenderInfoPorlet();
 	}
 	
-	private void setRenderQuickReply() {
+	private void setRenderInfoPorlet() throws Exception {
+		isMod = false;
+		if(userProfile.getUserRole() == 0) isMod = true;
+		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
 		ForumParameter param = new ForumParameter() ;
-		param.setRenderQuickReply(true);
-		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
-		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
-		param = new ForumParameter() ;
 		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
 		param.setRenderPoll(topic.getIsPoll());
 		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+		param = new ForumParameter() ;
+		try {
+			isCanPost = isCanPostReply();
+    } catch (Exception e) {
+    	e.printStackTrace();
+    	isCanPost = false;
+    }
+		param.setRenderQuickReply(isCanPost);
+		param.setModerator(isMod);
+		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+	}
+	
+	private boolean getCanPost() throws Exception {
+	  if(isEditTopic) {
+	  	isCanPost = isCanPostReply();
+	  }
+	  return isCanPost;
   }
 	
 	public void setUpdateForum(Forum forum) throws Exception {
 		this.forum = forum ;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean isCanPostReply() throws Exception {
 		if(userProfile.getUserRole() == 3) return false;
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
@@ -358,7 +374,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		else {
 			if(forum.getIsClosed() || topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		}
-		if(isCanPostReply()) return true;
+		if(getCanPost()) return true;
 		List<String> listUser = new ArrayList<String>() ;
 		String [] canPost = topic.getCanView();
 		if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
@@ -426,9 +442,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
-		isMod = false;
-		if(this.userProfile.getUserRole() == 0) isMod = true;
-		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 				String isApprove = "";
@@ -525,7 +538,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				 * set permission for post reply
 				 */
 				if(this.topic != null && !this.topic.getIsClosed() && !this.topic.getIsLock()){
-					postRules.setCanAddPost(isCanPostReply());
+					postRules.setCanAddPost(getCanPost());
 				} else {
 					postRules.setCanAddPost(false);
 				}
