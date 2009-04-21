@@ -68,6 +68,9 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 		}
 )
 public class UISendMailForm extends UIForm implements UIPopupComponent	{
+	private boolean isViewCC = false;
+	private boolean isViewBCC = false;
+	
   private static final String FILED_FROM_NAME = "FromName" ;
   private static final String FILED_FROM = "From" ;
   private static final String FILED_TO = "To" ;
@@ -219,6 +222,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 				value = email + "," + value;
 			}
 		}
+		if(value != null && value.trim().length() > 0) isViewCC = true;
 		getUIStringInput(FILED_ADD_CC).setValue(value) ;
 	}
 	public String getFieldCCValue(){return getUIStringInput(FILED_ADD_CC).getValue();}
@@ -229,6 +233,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 				value = email + "," + value;
 			}
 		}
+		if(value != null && value.trim().length() > 0) isViewBCC = true;
 		getUIStringInput(FILED_ADD_BCC).setValue(value) ;
 	}
 	public String getFieldBCCValue(){return getUIStringInput(FILED_ADD_BCC).getValue();}

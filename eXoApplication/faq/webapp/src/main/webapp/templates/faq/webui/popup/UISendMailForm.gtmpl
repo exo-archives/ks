@@ -15,7 +15,7 @@
 								fieldName = uicomponent.getLabel(input.getName());
 								if(!fieldName.equals(uicomponent.getId())) {
 									name = input.getName();
-									if(name.equals("AddCc") || name.equals("AddBcc") ){
+									if((name.equals("AddCc") && !uicomponent.isViewCC) || (name.equals("AddBcc") && !uicomponent.isViewBCC) ){
 										display = "none" ;
 									} else {
 										display = "block" ;
