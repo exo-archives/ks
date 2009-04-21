@@ -1,11 +1,19 @@
 <%
+	import java.util.Map;
+	import java.util.HashMap;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
 	import org.exoplatform.webui.form.UIFormInputWithActions;
+	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 %>
 
 <div class="FAQUIQuestionInfo $uicomponent.id">
 	<% uiform.begin() %>
+	<%
+	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+	Map<String, String> mapPath = new HashMap<String, String>();
+	%>
   <div class="UIFormTabPane">
     <div class="UITabPane">
       <div class="TabPaneContent">
@@ -73,6 +81,7 @@
             
               	<div class="UITabContentContainer">
 	              
+	              	<!-- ================================================== All questions ====================================== -->
 	              	<div class="UITabContent UIIETabContent" style="display:$displayEdit;" id="UITabContent"> 
 					          <div style="display:block;">
 
@@ -81,6 +90,7 @@
 														<table class="UIGrid">
 															<tr>
 																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th><b>Category</b></th>
 																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsApproved")%></b></th>
 																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsActivated")%></b></th>
 																<th style="width:60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
@@ -95,9 +105,12 @@
 																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
 																	linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
 																	actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getId()) ;
+																	if(!mapPath.containsKey(question.getCategoryId()))
+																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(sessionProvider,question.getCategoryId()));
 																%>
 																	<tr>
 																		<td class="text"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
+																		<td class="text"><%=mapPath.get(question.getCategoryId())%></td>
 																		<td class="text" style="text-align:center;">
 																		<%if(question.isApproved()) {%>
 																				<div class="TrueIcon">
@@ -168,6 +181,7 @@
 
 	              	</div>
 	              	
+	              	<!-- =================================================== Pending questions ====================================== -->
 	              	<div class="UITabContent UIIETabContent" style="display:$displayResponse" id="UITabContent">
 					          <div style="display:block;"  >
 									
@@ -176,6 +190,7 @@
 														<table class="UIGrid">
 															<tr>
 																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
+																<th><b>Category</b></th>
 																<th>
 																	<div style="padding-right:4px;">
 																		<b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Languages")%></b>
@@ -191,9 +206,12 @@
 																for(Question question in questionNotAnswered) {
 																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
 																	linkResponse = uicomponent.event("ResponseQuestion", question.getId()) ;
+																	if(!mapPath.containsKey(question.getCategoryId()))
+																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(sessionProvider,question.getCategoryId()));
 																%>
 																	<tr>
 																		<td class="text" style="text-align:left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
+																		<td class="text"><%=mapPath.get(question.getCategoryId())%></td>
 																		<td class="text" style="margin-right:4px;white-space:nowrap; text-align:left">
 																		<%
 																			String linkResponseByLanguage = "";
@@ -261,6 +279,6 @@
     
     </div>  
   </div>
-	
+	<%sessionProvider.close();%>
 	<%uiform.end()%>
 </div>

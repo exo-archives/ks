@@ -261,6 +261,16 @@ public interface FAQService {
   public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception ;
   
   /**
+   * Get path of question. For example question A is included in category C and C is child of
+   * category B, then, this function will be return C > B
+   * @param categoryId	id of category is contain question
+   * @param sProvider		the Session provider
+   * @return	name of categories
+   * @throws Exception
+   */
+  public String getCategoryPathOfQuestion(String categoryId, SessionProvider sProvider) throws Exception;
+  
+  /**
    * Get all language nodes of question node which have id is specified,
    * with each language node get properties of them and set into 
    * QuestionLanguage object. One QuestionLanguage object have properties: 

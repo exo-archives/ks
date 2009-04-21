@@ -192,6 +192,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer, sProvider);
 	}
+	
+	public String getCategoryPathOfQuestion(String categoryId, SessionProvider sProvider) throws Exception{
+		return jcrData_.getCategoryPathOfQuestion(categoryId, sProvider);
+	}
   
 	/**
 	 * This method should lookup languageNode of question

@@ -271,6 +271,16 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   @SuppressWarnings("unused")
+	private String getCategoryPath(SessionProvider sessionProvider, String categoryId){
+  	try{
+  		return faqService_.getCategoryPathOfQuestion(categoryId, sessionProvider);
+  	}catch(Exception e){
+  		e.printStackTrace();
+  		return null;
+  	}
+  }
+  
+  @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     if(!isChangeTab_){
       pageSelect = pageIterator.getPageSelected() ;
