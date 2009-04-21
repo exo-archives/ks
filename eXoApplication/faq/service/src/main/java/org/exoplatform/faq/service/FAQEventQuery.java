@@ -374,7 +374,7 @@ public String getPathQuery() {
 	    	isAnd = true ;
 	    }
     } else if(type.equals("faqAttachment")) {
-    	if(attachment != null && attachment.length() > 0) {
+    	if(attachment != null && attachment.trim().length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("(jcr:contains(@exo:fileName, '").append(attachment).append("'))") ;
 	    	isAnd = true ;

@@ -78,7 +78,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String FIELD_LANGUAGE = "Language" ;
 	final static private String FIELD_QUESTION = "Question" ;
 	final static private String FIELD_RESPONSE = "Response" ;
-	final static private String FIELD_ATTACHMENT = "attachment" ;
+	//final static private String FIELD_ATTACHMENT = "attachment" ;
 	final static private String ITEM_EMPTY= "empty" ;
 	final static private String ITEM_CATEGORY="faqCategory" ;
 	final static private String ITEM_QUESTION="faqQuestion" ;
@@ -144,7 +144,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = new UIFormSelectBox(FIELD_LANGUAGE, FIELD_LANGUAGE, list) ;
 		UIFormTextAreaInput question = new UIFormTextAreaInput(FIELD_QUESTION, FIELD_QUESTION, null) ;
 		UIFormTextAreaInput response = new UIFormTextAreaInput(FIELD_RESPONSE, FIELD_RESPONSE, null) ;
-		UIFormStringInput attachment = new UIFormStringInput(FIELD_ATTACHMENT,FIELD_ATTACHMENT, null) ;
+		//UIFormStringInput attachment = new UIFormStringInput(FIELD_ATTACHMENT,FIELD_ATTACHMENT, null) ;
 		
 		addUIFormInput(text) ;
 		addUIFormInput(searchType) ;
@@ -157,7 +157,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(language) ;
 		addUIFormInput(question) ;
 		addUIFormInput(response) ;
-		addUIFormInput(attachment);
+		//addUIFormInput(attachment);
 		addUIFormInput(fromDate) ;
 		addUIFormInput(toDate) ;
 	}
@@ -183,7 +183,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(isLanguage) ;
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(isQuestion) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(isResponse) ;
-		UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
+		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
 		categoryName.setValue("") ;
 		modeQuestion.setValue("") ;
 		moderator.setValue("") ;
@@ -193,7 +193,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		language.setValue("") ;
 		question.setValue("") ;
 		response.setValue("") ;
-		attachment.setValue("");
+		//attachment.setValue("");
 	}
 	public String getLabel(ResourceBundle res, String id) throws Exception {
 		String label = getId() + ".label." + id;    
@@ -384,7 +384,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String language = advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).getValue() ;
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
-			String nameAttachment = advancedSearch.getUIStringInput(FIELD_ATTACHMENT).getValue();
+			//String nameAttachment = advancedSearch.getUIStringInput(FIELD_ATTACHMENT).getValue();
+			String nameAttachment = "";
 			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
 					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(nameAttachment)) { 
@@ -452,7 +453,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
-				advanced.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
+				//advanced.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
 				result.setLanguage(language) ;
 				List<Question> list = new ArrayList<Question>() ;
 				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
