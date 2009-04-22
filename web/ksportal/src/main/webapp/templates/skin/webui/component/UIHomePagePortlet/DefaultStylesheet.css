@@ -344,7 +344,9 @@
 }
 
 .UINavigationPortlet .UINavigationBar .UIHorizontalTabs .TabsContainer {
+  overflow: auto;
   float: none;
+  height: auto;
 }
 
 .UINavigationPortlet .UINavigationBar .RightNavigationBar {
@@ -579,13 +581,13 @@
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
   line-height: 33px; 
-  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat left top;
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat left -1px;
   padding-left: 4px;
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
   line-height: 33px; 
-  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat right top;
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat right -1px;
   padding-right: 4px;
 }
 
