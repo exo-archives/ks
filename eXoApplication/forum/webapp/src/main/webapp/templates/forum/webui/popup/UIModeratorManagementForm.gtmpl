@@ -71,7 +71,7 @@
 										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.EditProfile");%>" class="Icon16x16 EditIcon"><span></span></div>							
 									</div>
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("ViewProfile",user.getUserId());%>">
-										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewProfileIcon"><span></span></div>							
+										 <div title="<%=_ctx.appRes("UIModeratorManagementForm.label.ViewProfile");%>" class="Icon16x16 ViewPublicUserInfo"><span></span></div>							
 									</div>
 									<div style="clear:left;"><span></span></div>
 								</div>

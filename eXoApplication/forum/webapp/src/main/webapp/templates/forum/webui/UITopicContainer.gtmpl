@@ -733,37 +733,33 @@
 		<div style="clear:left;"><span></span></div>
 	</div>
 	<% //Begin RightClick Bookmark	%>
-	 <div id="RightClickContainer" style="display:none;">
-           <%if(isShowMenu){%>
+	<div id="RightClickContainer" style="display:none;">
+<%if(isShowMenu){%>
  		<div class="TopLeftRightClickPopupMenu">
      <div class="TopRightRightClickPopupMenu">
        <div class="TopCenterRightClickPopupMenu"><span></span></div>
       		<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
-    </div>
-        </div>
-        <div class="MiddleLeftRightClickPopupMenu">
-	        <div class="MiddleRightRightClickPopupMenu">
-            <div class="UIRightPopupMenuContainer">
-               <div class="ItemIcon AddLinkToBookIcon">
-                  <a class="MenuItem AddBookmark" href="">
-                    <%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-                  </a>
-                 </div>
-                 <div class="ItemIcon AddWatchingIcon">
-                  <a href="" class="MenuItem AddWatching">
-                     <%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-                    </a>
-       			</div>
-    			</div>
-        </div>
- 	                </div>
-              <div class="BottomLeftRightClickPopupMenu">
-	                        <div class="BottomRightRightClickPopupMenu">
-	                                <div class="BottomCenterRightClickPopupMenu">
-	                                    <div class="FixHeight"><span></span></div>
-	                                </div>
-	                        </div>
-                </div>
+    		</div>
+      </div>
+      <div class="MiddleLeftRightClickPopupMenu">
+				<div class="MiddleRightRightClickPopupMenu">
+					<div class="UIRightPopupMenuContainer">
+						<div class="ItemIcon AddLinkToBookIcon">
+							<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+						</div>
+						<div class="ItemIcon AddWatchingIcon">
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+	 					</div>
+					</div>
+				</div>
+ 			</div>
+			<div class="BottomLeftRightClickPopupMenu">
+				<div class="BottomRightRightClickPopupMenu">
+					<div class="BottomCenterRightClickPopupMenu">
+						<div class="FixHeight"><span></span></div>
+					</div>
+				</div>
+			</div>
        <% } 
        %>
 </div>
