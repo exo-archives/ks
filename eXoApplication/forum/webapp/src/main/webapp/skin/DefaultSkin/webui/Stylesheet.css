@@ -44,17 +44,18 @@
 	min-width:170px;
 }
 
-.UIForumPortlet .UIRightClickPopupMenu .MenuItem {
-	display:block;
-	text-align:left;
-}
-
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
 	min-width:110px;
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
+	text-align:left;
+	display: block;
+	margin: 0px;
 	min-width:60px;
+	padding: 0px 0px 0px 28px;
+	background-position: 6px;
+	line-height: 24px;
 }
 
 *html .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
@@ -64,14 +65,9 @@
 *html .UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
 	width:60px;
 }
+
 .UIForumPortlet .ContentAction .UIRightClickPopupMenu .ItemIcon:hover {
 	background-color:#DEE4F2;
-}
-
-.UIForumPortlet .ContentAction .UIRightClickPopupMenu .ItemIcon {
-	background-position: 8px;
-	margin: 0px;
-	padding-left: 30px;
 }
 
 .UIForumPortlet .ContentAction .UIRightClickPopupMenu .UIRightPopupMenuContainer {
@@ -89,10 +85,6 @@
 .UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
   color: orange;
   background-color: transparent;
-}
-
-.UIForumPortlet .UIRightClickPopupMenu .ItemIcon {
-  display: block;
 }
 
 /**************************** UIActionForum *********************************/
@@ -438,14 +430,9 @@
 
 .UIForumPortlet .DisableMenuItem {
 	display:block;
-	line-height:16px;
 	white-space:nowrap;
 	cursor:none;
-	
 	-moz-opacity:0.5;
-}
-
-.UIForumPortlet .DisableMenuItem {
 	*color:#b7b7b7;
 	_color:#b7b7b7;
 }
@@ -603,11 +590,15 @@
 	line-height: 24px;
 }
 
+.UIForumPortlet .PMStyle {
+	line-height:24px; cursor:pointer;
+	padding-left: 22px; display: block;
+}
+
 .UIForumPortlet .ForumRSS {
 	background: url('background/rss2.png') no-repeat;
 }
 
 .UIForumPortlet .ForumRSSFeed {
 	background: url('background/rss1.png') no-repeat left center;
-	line-height:14px;
 }

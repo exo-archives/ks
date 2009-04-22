@@ -297,20 +297,14 @@
 		<div class="MiddleLeftRightClickPopupMenu">
 			<div class="MiddleRightRightClickPopupMenu">
 				<div class="UIRightPopupMenuContainer">
-					<div class="ItemIcon AddLinkToBookIcon" style="min-width:62px;">
-						<a class="MenuItem AddBookmark" href="#">
-							<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-						</a>
+					<div class="ItemIcon AddLinkToBookIcon">
+						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 					</div>
 					<div class="ItemIcon AddWatchingIcon">
-						<a class="MenuItem AddWatching" href="#">
-							<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-						</a>
-					</div>
-					<div class="ItemIcon ForumRSSFeed" style="padding-left: 18px">
-						<a class="MenuItem AddRSS" href="#">
-							RSS
-						</a>
+						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+ 					</div>
+ 					<div class="ItemIcon ForumRSSFeed">
+						<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 					</div>
 				</div>
 			</div>

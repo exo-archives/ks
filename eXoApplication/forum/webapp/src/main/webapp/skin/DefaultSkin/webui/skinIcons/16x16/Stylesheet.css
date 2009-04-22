@@ -33,7 +33,7 @@
 	background: url('icons/ModerationIcon.gif') no-repeat ;
 }
 
-.UIForumPortlet .ViewProfileIcon {
+.UIForumPortlet .ViewPublicUserInfo {
 	background: url('icons/ViewProfileIcon.gif') no-repeat left center ;
 }
 
@@ -454,10 +454,14 @@
   background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
 }
 
-.UIForumPortlet .PrivateMessages {
-	line-height:24px; cursor:pointer;
-	padding-left: 22px; display: block;
+.UIForumPortlet .PrivateMessage {
 	background: url('icons/PrivateMessages.gif') no-repeat left center;
+}
+
+.UIForumPortlet .ViewPostedByUser {
+}
+
+.UIForumPortlet .ViewThreadByUser {
 }
 
 .UIForumPortlet #PendingJob {

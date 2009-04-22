@@ -130,7 +130,7 @@
 									</div>
 								<%}%>
 									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
-										<a class="PrivateMessages" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
+										<a class="PrivateMessage PMStyle" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
 											 <span>$newMessage</span>
 										</a>
 									</div>
