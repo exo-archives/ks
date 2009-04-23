@@ -12,7 +12,7 @@
 		      %>
 				      	<tr>
 				      		<td class="FieldLabel">
-				          		<%=(uicomponent.getLabel("FileUpload") + " " + i ) %> :
+				          		<%=(uicomponent.getLabel("FileUpload")) %> :
 				          </td>
 				          <td class="FieldComponent">
   	              	<div class="FileAttachment">
