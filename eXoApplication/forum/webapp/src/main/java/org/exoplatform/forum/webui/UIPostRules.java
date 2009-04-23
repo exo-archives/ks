@@ -16,7 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -49,7 +53,17 @@ public class UIPostRules extends UIContainer	{
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		if(this.userProfile == null) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+			try {
+				this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+      } catch (Exception e) {
+      	SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+    		try{
+    			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+    			userProfile = forumService.getDefaultUserProfile(sProvider, ForumSessionUtils.getCurrentUser(), "") ;
+    		}finally {
+    			sProvider.close();
+    		}				
+      }
 		}
 		return this.userProfile ;
 	}

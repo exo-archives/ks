@@ -164,6 +164,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isMod = false ;
 	private boolean enableIPLogging = true;
 	private boolean isCanPost = false;
+	private boolean canCreateTopic;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -260,27 +261,56 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		setRenderInfoPorlet();
 	}
 	
-	private void setRenderInfoPorlet() throws Exception {
+	public void setRenderInfoPorlet() throws Exception {
 		isMod = false;
 		if(userProfile.getUserRole() == 0) isMod = true;
 		if(!isMod) isMod = ForumServiceUtils.hasPermission(forum.getModerators(), userName) ;
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
-		ForumParameter param = new ForumParameter() ;
-		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
-		param.setRenderPoll(topic.getIsPoll());
-		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
-		param = new ForumParameter() ;
 		try {
-			isCanPost = isCanPostReply();
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
+			ForumParameter param = new ForumParameter() ;
+			param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+			param.setRenderPoll(topic.getIsPoll());
+			actionRes.setEvent(new QName("ForumPollEvent"), param) ;
+			param = new ForumParameter() ;
+			try {
+				isCanPost = isCanPostReply();
+			} catch (Exception e) {
+				isCanPost = false;
+			}
+			param.setRenderQuickReply(isCanPost);
+			param.setModerator(isMod);
+			param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+			actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+			param = new ForumParameter() ;
+			List<String> list = param.getInfoRules();
+			if(forum.getIsClosed() || forum.getIsLock())
+				list.set(0, "true");
+			else list.set(0, "");
+			list.set(1, String.valueOf(getCanCreateTopic()));
+			list.set(2, String.valueOf(isCanPost));
+			param.setInfoRules(list);
+			param.setRenderRule(true);
+			actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
     } catch (Exception e) {
-    	e.printStackTrace();
-    	isCanPost = false;
+	    e.printStackTrace();
     }
-		param.setRenderQuickReply(isCanPost);
-		param.setModerator(isMod);
-		param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
-		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
+	}
+	
+	private boolean getCanCreateTopic() throws Exception {
+		/**
+		 * set permission for create new thread
+		 */
+		String[] strings = this.forum.getCreateTopicRole();
+		canCreateTopic = this.isMod;
+		if(!canCreateTopic){ 
+			if(isIPBaned(getIPRemoter())) canCreateTopic = false;
+			else {
+				if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateTopic = true;
+				else canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
+			}
+		}
+		return canCreateTopic;
 	}
 	
 	private boolean getCanPost() throws Exception {
@@ -518,22 +548,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		postRules.setUserProfile(this.userProfile) ;
 		if(!isNull) {
 			if(this.forum.getIsClosed() || this.forum.getIsLock()){
-				postRules.setCanCreateNewThread(false);
-				postRules.setCanAddPost(false);
+				postRules.setLock(true);
 			} else {
-				/**
-				 * set permission for create new thread
-				 */
-				String[] strings = this.forum.getCreateTopicRole();
-				boolean canCreateThread = this.isMod;
-				if(!canCreateThread){ 
-					if(isIPBaned(getIPRemoter())) canCreateThread = false;
-					else {
-						if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateThread = true;
-						else canCreateThread = ForumServiceUtils.hasPermission(strings, userName);
-					}
-				}
-				postRules.setCanCreateNewThread(canCreateThread);
+				postRules.setCanCreateNewThread(canCreateTopic);
 				/**
 				 * set permission for post reply
 				 */
@@ -837,6 +854,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				try {
 					topicDetail.forumService.modifyTopic(sProvider, topics, 1) ;
 					topicDetail.isEditTopic = true ;
+					topicDetail.setRenderInfoPorlet();
 				} finally {
 					sProvider.close();
 				}
@@ -860,6 +878,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				try {
 					topicDetail.forumService.modifyTopic(sProvider, topics, 1) ;
 					topicDetail.isEditTopic = true ;
+					topicDetail.setRenderInfoPorlet();
 				} finally {
 					sProvider.close();
 				}
@@ -883,6 +902,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				try {
 					topicDetail.forumService.modifyTopic(sProvider, topics, 2) ;
 					topicDetail.isEditTopic = true ;
+					topicDetail.setRenderInfoPorlet();
 				} finally {
 					sProvider.close();
 				}
@@ -906,6 +926,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				try {
 					topicDetail.forumService.modifyTopic(sProvider, topics, 2) ;
 					topicDetail.isEditTopic = true ;
+					topicDetail.setRenderInfoPorlet();
 				} finally {
 					sProvider.close();
 				}

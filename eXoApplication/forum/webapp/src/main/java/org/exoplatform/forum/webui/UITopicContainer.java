@@ -128,6 +128,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private boolean isLogin = false;
 	private boolean isNull = false; 
 	private boolean enableIPLogging = true;
+	private boolean isReload = true;
 	public boolean isNull() { return isNull; }
 	public void setNull(boolean isNull) { this.isNull = isNull;}
 	public boolean isLogin() {return isLogin;}
@@ -138,7 +139,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
-		if(ForumSessionUtils.getCurrentUser() != null) isLogin = true;
+		if(!ForumSessionUtils.isAnonim()) isLogin = true;
 	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() { return userProfile ;}
@@ -157,6 +158,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.pageSelect = 1 ;
 		this.isUpdate = false ;
+		this.isReload = false;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
@@ -174,6 +176,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.isUpdate = true ;
 		this.pageSelect = 1 ;
+		this.isReload = false;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.useAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
@@ -195,7 +198,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		ForumParameter param = new ForumParameter() ;
 		param.setRenderModerator(true);
 		param.setModerators(moderators);
+		param.setRenderRule(true);
+		List<String> list = param.getInfoRules();
+		boolean isLock = forum.getIsClosed() ;
+		if(!isLock) isLock = forum.getIsLock() ;
+		if(!isLock) isLock = !canAddNewThread ;
+		list.set(0, String.valueOf(isLock));
+		param.setInfoRules(list);
 		actionRes.setEvent(new QName("ForumModerateEvent"), param) ;
+		actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
 	}
 	
 	public void setForum(boolean isSetModerator) throws Exception {
@@ -203,28 +214,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
 			this.isUpdate = false ;
 		}
-		UIForumContainer forumContainer = this.getParent() ;
-		if(this.forum != null){
-			forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
-		}
-		if(isSetModerator) setForumModeratorPortlet();
-	}
-	
-	private Forum getForum() throws Exception {
-		return this.forum ;
-	}
-	
-	@SuppressWarnings("unused")
-	private void initPage() throws Exception {
-		setForum(false);
 		this.canAddNewThread = true ;
-		if(userProfile == null) userProfile = new UserProfile();
-		StringBuffer strQuery = new StringBuffer() ;
-		long role = userProfile.getUserRole() ;
 		String userId = userProfile.getUserId() ;
 		List<String> ipBaneds = forum.getBanIP();
 		isModerator = false ;
-		if(role == 0 || moderators.contains(userId)) isModerator = true;
+		if(userProfile.getUserRole() == 0 || moderators.contains(userId)) isModerator = true;
 		if(ipBaneds != null && ipBaneds.size() > 0) {
 			if(!ipBaneds.contains(getIPRemoter())) {
 				String[] strings = this.forum.getCreateTopicRole() ;
@@ -240,6 +234,24 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 			}
 		}
+		if(isSetModerator) setForumModeratorPortlet();
+		UIForumContainer forumContainer = this.getParent() ;
+		if(this.forum != null){
+			forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
+		}
+	}
+	
+	private Forum getForum() throws Exception {
+		return this.forum ;
+	}
+	
+	@SuppressWarnings("unused")
+	private void initPage() throws Exception {
+		if(userProfile == null) userProfile = new UserProfile();
+		StringBuffer strQuery = new StringBuffer() ;
+		String userId = userProfile.getUserId() ;
+		if(isReload)setForum(false);
+		else isReload = true;
 		if(!isModerator) {
 			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'");
 			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
@@ -529,6 +541,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			popupContainer.setId("EditForumForm") ;
 			popupAction.activate(popupContainer, 650, 480) ;
 			uiTopicContainer.isUpdate = true ;
+			uiTopicContainer.isReload = false;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
@@ -538,10 +551,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(true);
-			uiTopicContainer.isUpdate = true ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiTopicContainer.forumService.modifyForum(sProvider, forum, 2) ;
+				uiTopicContainer.isUpdate = true ;
+				uiTopicContainer.isReload = false;
+				uiTopicContainer.setForum(true);
 			} finally {
 				sProvider.close();
 			}
@@ -555,10 +570,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsLock(false);
-			uiTopicContainer.isUpdate = true ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiTopicContainer.forumService.modifyForum(sProvider, forum, 2) ;
+				uiTopicContainer.isUpdate = true ;
+				uiTopicContainer.isReload = false;
+				uiTopicContainer.setForum(true);
 			} finally {
 				sProvider.close();
 			}
@@ -572,10 +589,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(false);
-			uiTopicContainer.isUpdate = true ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiTopicContainer.forumService.modifyForum(sProvider, forum, 1) ;
+				uiTopicContainer.isUpdate = true ;
+				uiTopicContainer.isReload = false;
+				uiTopicContainer.setForum(true);
 			} finally {
 				sProvider.close();
 			}
@@ -589,10 +608,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UITopicContainer uiTopicContainer = event.getSource();
 			Forum forum = uiTopicContainer.getForum() ;
 			forum.setIsClosed(true);
-			uiTopicContainer.isUpdate = true ;
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				uiTopicContainer.forumService.modifyForum(sProvider, forum, 1) ;
+				uiTopicContainer.isUpdate = true ;
+				uiTopicContainer.isReload = false;
+				uiTopicContainer.setForum(true);
 			} finally {
 				sProvider.close();
 			}

@@ -197,6 +197,10 @@
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
+
+		<supported-processing-event>
+			<name>ForumRuleEvent</name>
+		</supported-processing-event>
 	</portlet>
 	
 	<portlet>

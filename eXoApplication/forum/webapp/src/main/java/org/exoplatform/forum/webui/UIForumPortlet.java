@@ -173,9 +173,11 @@ public class UIForumPortlet extends UIPortletApplication {
 		param.setRenderQuickReply(false);
 		param.setRenderPoll(false);
 		param.setRenderModerator(false);
+		param.setRenderRule(false);
 		actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
 		actionRes.setEvent(new QName("ForumPollEvent"), param) ;
 		actionRes.setEvent(new QName("ForumModerateEvent"), param) ;
+		actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
   }
 	
 	public void loadPreferences() throws Exception {

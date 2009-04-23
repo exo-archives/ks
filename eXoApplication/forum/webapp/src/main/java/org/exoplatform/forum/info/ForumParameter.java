@@ -14,14 +14,20 @@ public class ForumParameter implements Serializable {
 	private String topicId;
 	private String postId;
 	private List<String> moderators ;
+	private List<String> infoRules ;
 	private boolean isForumIcon ; 
 	private boolean isRenderQuickReply = false;
 	private boolean isRenderPoll = false;
 	private boolean isRenderModerator = false;
+	private boolean isRenderRule = false;
 	private boolean isModerator = false;
 	
 	public ForumParameter() {
 		moderators = new ArrayList<String>();
+		infoRules = new ArrayList<String>();
+		infoRules.add("false");
+		infoRules.add("false");
+		infoRules.add("false");
   }
 	
 	public void setCategoryId(String s) {categoryId = s;}
@@ -37,6 +43,13 @@ public class ForumParameter implements Serializable {
 	}
 	public void setModerators(List<String> moderators) {
 		this.moderators = moderators;
+	}
+
+	public List<String> getInfoRules() {
+		return infoRules;
+	}
+	public void setInfoRules(List<String> infoRules) {
+		this.infoRules = infoRules;
 	}
 	
 	public void setForumIcon(boolean isForumIcon) {
@@ -72,5 +85,12 @@ public class ForumParameter implements Serializable {
 	}
 	public void setRenderModerator(boolean isRenderModerator) {
 		this.isRenderModerator = isRenderModerator;
+	}
+
+	public boolean isRenderRule() {
+		return isRenderRule;
+	}
+	public void setRenderRule(boolean isRenderRule) {
+		this.isRenderRule = isRenderRule;
 	}
 }
