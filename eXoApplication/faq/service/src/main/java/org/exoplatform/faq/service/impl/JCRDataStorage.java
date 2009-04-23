@@ -1341,7 +1341,7 @@ public class JCRDataStorage {
 		Node cateNode = null;
 		cateNode = getCategoryHome(sProvider, null);
 		if(cateNode.hasProperty("exo:name")) path = cateNode.getProperty("exo:name").getString();
-		else path = "Root";
+		else path = "Home";
 		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
 			String[] paths = ((getCategoryNodeById(categoryId, sProvider).getPath()).replace(getCategoryHome(sProvider, null).getPath() + "/", "")).split("/");
 			for(int i = 0; i < paths.length; i ++){

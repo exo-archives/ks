@@ -254,7 +254,7 @@
   		<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
         <defaultValues>
-					<defaultValue>Root</defaultValue>
+					<defaultValue>Home</defaultValue>
 				</defaultValues>
   		</propertyDefinition>  			
   		<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">

@@ -281,7 +281,11 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       	return ;
-      }  
+      } else if(subject == null || subject.trim().length() < 0){
+      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.subject-field-empty",null)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
+      }
       Message  message = new Message(); 
       message.setMimeType(MIMETYPE_TEXTHTML) ;
       message.setFrom(fullFrom) ;
