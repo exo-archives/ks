@@ -178,7 +178,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	  	this.userProfiles = new ArrayList<UserProfile>();
 	  	SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
   		for(Object obj : this.userPageList.getPageUser(page)){
-  			this.userProfiles.add(forumService.getUserProfileManagement(sessionProvider, ((User)obj).getUserName()));
+  			if(obj instanceof User)
+  				this.userProfiles.add(forumService.getUserProfileManagement(sessionProvider, ((User)obj).getUserName()));
+  			else if(obj instanceof UserProfile)
+  				this.userProfiles.add((UserProfile)obj);
   		}
   	}
   	if(userProfiles ==  null) userProfiles = new ArrayList<UserProfile>();
@@ -745,6 +748,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
         q.setEmail(keyword) ;
         for(Object obj : service.getUserHandler().findUsers(q).getAll()){
         	mapObject.put(((User)obj).getUserName(), obj);
+        }
+        
+        SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
+        for(Object object : uiForm.forumService.searchUserProfile(sessionProvider, keyword).getPage(0)){
+        	mapObject.put(((UserProfile)object).getUserId(), object);
         }
         
         results.addAll(Arrays.asList(mapObject.values().toArray()));
