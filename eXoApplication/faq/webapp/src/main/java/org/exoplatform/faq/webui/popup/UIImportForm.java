@@ -20,6 +20,7 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.upload.UploadService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -49,7 +50,9 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	public void deActivate() throws Exception { }
 
 	public UIImportForm(){
-		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, FAQUtils.getLimitUploadSize()));
+		int sizeLimit = FAQUtils.getLimitUploadSize() ;
+		if(sizeLimit >= 0) this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
+		else this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
 	}
 
 	public void setCategoryId(String categoryId){
@@ -101,6 +104,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				service.getCategoryNodeById(importForm.categoryId_, sProvider);
 
 				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
+				
 				if(uploadInput.getUploadResource() == null){
 					uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -145,14 +149,18 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				}
-			
+				
+				//remove temp file in upload service and server
+				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
+				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			} catch (Exception e){
 				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				sProvider.close();
-			}
+			}			
+			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIFAQContainer faqContainer = portlet.getChild(UIFAQContainer.class);
 			faqContainer.getChild(UIQuestions.class).setIsNotChangeLanguage() ;
@@ -166,6 +174,10 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			UIFAQPortlet portlet = importForm.getAncestorOfType(UIFAQPortlet.class) ;
+//		remove temp file in upload service and server
+			UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
+			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
+			uploadService.removeUpload(uploadInput.getUploadId()) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

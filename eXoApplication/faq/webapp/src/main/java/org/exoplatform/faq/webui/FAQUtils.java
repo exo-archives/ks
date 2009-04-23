@@ -503,7 +503,12 @@ public class FAQUtils {
 	public static int getLimitUploadSize(){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
-		int limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim());
+		int limitMB ;
+		try {
+			limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim()) ;
+		}catch (Exception e) {
+			limitMB = -1 ;
+		}
 		return limitMB ;
 	}
 }

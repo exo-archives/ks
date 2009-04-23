@@ -29,6 +29,7 @@ import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
+import org.exoplatform.upload.UploadService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,7 +69,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   	numberUpload = number;
   	int sizeLimit = FAQUtils.getLimitUploadSize() ;
   	for(int i = 0 ; i < numberUpload; i ++) {
-      addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit)) ;
+      if(sizeLimit >= 0) addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i, sizeLimit)) ;
+      else addChild(new UIFormUploadInput(FILE_UPLOAD + i, FILE_UPLOAD + i)) ;
     }
   }
   
@@ -83,6 +85,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
     @SuppressWarnings("static-access")
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm attachMentForm = event.getSource() ;
+			UploadService uploadService = attachMentForm.getApplicationComponent(UploadService.class) ;
+
       List<FileAttachment> listFileAttachment = new ArrayList<FileAttachment>() ;
       long fileSize = 0 ;
       for(int i = 0 ; i < attachMentForm.numberUpload; i ++) {
@@ -109,6 +113,8 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
         	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         	return ;
         }
+//      remove temp file in upload service and server
+  			uploadService.removeUpload(uploadInput.getUploadId()) ;
       }
       
       if(listFileAttachment.isEmpty()) {
@@ -169,8 +175,16 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   }
   
   static public class CancelActionListener extends EventListener<UIAttachMentForm> {
+  	@SuppressWarnings("static-access")
     public void execute(Event<UIAttachMentForm> event) throws Exception {
-      UIAttachMentForm uiAttachMent = event.getSource() ;  
+      UIAttachMentForm uiAttachMent = event.getSource() ;
+//    remove temp file in upload service and server      
+      UploadService uploadService = uiAttachMent.getApplicationComponent(UploadService.class) ;
+      for(int i = 0 ; i < uiAttachMent.numberUpload; i ++) {
+        UIFormUploadInput uploadInput = uiAttachMent.getChildById(FILE_UPLOAD + i) ;
+  			uploadService.removeUpload(uploadInput.getUploadId()) ;
+      }
+      
       if(uiAttachMent.isChangeAvatar){
       	UIWatchContainer popupContainer = uiAttachMent.getAncestorOfType(UIWatchContainer.class) ;
       	UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;

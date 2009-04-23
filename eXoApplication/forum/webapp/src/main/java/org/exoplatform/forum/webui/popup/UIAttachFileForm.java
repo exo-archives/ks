@@ -69,9 +69,11 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	public void setMaxField(int maxField){
 		this.maxField = maxField;
 		int sizeLimit = ForumUtils.getLimitUploadSize() ;
+		UIFormUploadInput uiInput ;
 		int i = 0 ;
 		while(i++ < maxField) {
-			UIFormUploadInput uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit) ;
+			if(sizeLimit >= 0) uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i), sizeLimit) ;
+			else uiInput = new UIFormUploadInput(FIELD_UPLOAD + String.valueOf(i), FIELD_UPLOAD + String.valueOf(i)) ;
 			addUIFormInput(uiInput) ;
 		}
 	}
@@ -164,6 +166,12 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	static	public class CancelActionListener extends EventListener<UIAttachFileForm> {
 		public void execute(Event<UIAttachFileForm> event) throws Exception {
 			UIAttachFileForm uiForm = event.getSource() ;
+			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
+			int i = 0 ;
+			while(i++ < uiForm.maxField) {
+				UIFormUploadInput input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+				uploadService.removeUpload(input.getUploadId()) ;
+			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
