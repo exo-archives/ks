@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,18 @@
   <name>eXo Knowledge Suite Config</name>
   <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
+  
+  <properties>
+     <exo.product.name>exo-ks</exo.product.name>
+     <exo.product.specification>1.2</exo.product.specification>
+  </properties>
 
+  <scm>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/trunk</url>
+  </scm> 
+  
   <modules>
     <module>web/ksportal</module>
 	<module>web/ksResources</module>
