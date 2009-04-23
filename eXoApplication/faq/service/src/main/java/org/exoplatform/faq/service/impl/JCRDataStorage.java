@@ -310,7 +310,7 @@ public class JCRDataStorage {
 		RSSEventListener addQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
 		observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,node.getPath(), false, null, null, false) ;
 		RSSEventListener removeQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), false, null, null, false) ;
+		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), true, null, null, false) ;
 	}
 	
 	public void checkEvenListen() throws Exception{

@@ -211,42 +211,49 @@ public class RSSProcess extends RSSGenerate {
 		boolean isNew = false;
 		try{
 			appHomeNode = getKSServiceHome(sProvider, FAQ_APP);
-			SyndEntry entry;
-			SyndContent description;
 			Node categoryNode = null;
-			Node RSSNode = null;
-			
 			if(typeEvent != 2) {
+				SyndEntry entry;
+				SyndContent description;
+				Node RSSNode = null;
 				String categoryLink = linkItem + "?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UICategories&op=OpenCategory&" +
 																					"objectId=";
 				linkItem += "?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ViewQuestion&" +
 											"objectId=";
-				Node addedQuestion = (Node)appHomeNode.getSession().getItem(path) ;
-				if(!addedQuestion.isNodeType("exo:faqQuestion")) return;
-				if(!addedQuestion.getProperty("exo:isActivated").getBoolean() || 
-						!addedQuestion.getProperty("exo:isApproved").getBoolean()) return;
-				categoryNode = getCategoryNodeById(addedQuestion.getProperty("exo:categoryId").getString(), sProvider);
+				Node questionNode = (Node)appHomeNode.getSession().getItem(path) ;
+				if(!questionNode.isNodeType("exo:faqQuestion")) return;
+				
+				String categoreDescription = "";
+				categoryNode = getCategoryNodeById(questionNode.getProperty("exo:categoryId").getString(), sProvider);
+				if(categoryNode.hasProperty("exo:description")) categoreDescription = categoryNode.getProperty("exo:description").getString();
+				else categoreDescription = "eXo link:" + eXoLink;
+				
+				if(!questionNode.getProperty("exo:isActivated").getBoolean() || 
+						!questionNode.getProperty("exo:isApproved").getBoolean()){
+					removeRSSItem(questionNode.getProperty("exo:categoryId").getString(), categoryNode, categoreDescription);
+					return;
+				}
 				
 				// Create new entry
 				List<String> listContent = new ArrayList<String>();
 				String content = "";
-				if(addedQuestion.hasNode("faqAnswerHome") && addedQuestion.getNode("faqAnswerHome").hasNodes()) {
-					for(String answer : getAnswers(addedQuestion))	
+				if(questionNode.hasNode("faqAnswerHome") && questionNode.getNode("faqAnswerHome").hasNodes()) {
+					for(String answer : getAnswers(questionNode))	
 						content += " <b><u>Answer:</u></b> " + answer + ". ";
 				}
-				if(addedQuestion.hasNode("faqCommentHome") && addedQuestion.getNode("faqCommentHome").hasNodes()){
-					for(String comment : getComments(addedQuestion)) 
+				if(questionNode.hasNode("faqCommentHome") && questionNode.getNode("faqCommentHome").hasNodes()){
+					for(String comment : getComments(questionNode)) 
 						content += " <b><u>Comment:</u></b> " + comment + ". ";
 				}
 				listContent.add(content);
 				description = new SyndContentImpl();
 				description.setType(descriptionType);
-				description.setValue(addedQuestion.getProperty("exo:name").getString() + ". " + content);
+				description.setValue(questionNode.getProperty("exo:name").getString() + ". " + content);
 				
-				linkItem += addedQuestion.getProperty("exo:categoryId").getString() + "/" + addedQuestion.getName() + "/0";
-				entry = createNewEntry(addedQuestion.getName(), addedQuestion.getProperty("exo:title").getString(), 
-																linkItem, listContent, description, addedQuestion.getProperty("exo:createdDate").getDate().getTime(),
-																addedQuestion.getProperty("exo:author").getString());
+				linkItem += questionNode.getProperty("exo:categoryId").getString() + "/" + questionNode.getName() + "/0";
+				entry = createNewEntry(questionNode.getName(), questionNode.getProperty("exo:title").getString(), 
+																linkItem, listContent, description, questionNode.getProperty("exo:createdDate").getDate().getTime(),
+																questionNode.getProperty("exo:author").getString());
 				entry.setLink(linkItem);
 				
 				// update for RSS Feed
@@ -254,7 +261,7 @@ public class RSSProcess extends RSSGenerate {
 				try{
 					RSSNode = categoryNode.getNode(KS_RSS);
 					getRSSData(RSSNode, data);
-					if(typeEvent != Event.NODE_ADDED)feed = updateRSSFeed(data, addedQuestion.getName(), entry);
+					if(typeEvent != Event.NODE_ADDED)feed = updateRSSFeed(data, questionNode.getName(), entry);
 					else feed = updateRSSFeed(data, null, entry);
 				} catch (PathNotFoundException e){
 					RSSNode = categoryNode.addNode(KS_RSS, KS_RSS_TYPE);
@@ -263,41 +270,35 @@ public class RSSProcess extends RSSGenerate {
 						feed = this.createNewFedd("", categoryNode.getProperty("exo:createdDate").getDate().getTime());
 					else
 						feed = this.createNewFedd("", new Date());
-					feed.setLink(categoryLink + addedQuestion.getProperty("exo:categoryId").getString());
+					feed.setLink(categoryLink + questionNode.getProperty("exo:categoryId").getString());
 					feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				
+				feed.setDescription(categoreDescription);
 				try{
 					feed.setTitle(categoryNode.getProperty("exo:name").getString());
-					if(categoryNode.hasProperty("exo:description")) feed.setDescription(categoryNode.getProperty("exo:description").getString());
-					else feed.setDescription("eXo link:" + eXoLink);
 				} catch (Exception e){
-					feed.setTitle(categoryNode.getName());
-					feed.setDescription(" ");
+					feed.setTitle("Home");
 				}
 
 				SyndFeedOutput output = new SyndFeedOutput();
 				data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
 				addNodeRSS(categoryNode, RSSNode, data, isNew);
-				
-				/*try {
-					// test file xml 
-					Writer writer = new FileWriter("maivanha.xml");
-					output.output(feed,writer);
-					writer.close();
-					System.out.println("--------------------->finish write xml file");
-				} catch (Exception ex) {
-						ex.printStackTrace();
-				}*/
 			} else {
 				categoryNode = getCategoryNodeById(cateid, sProvider);
-				if(categoryNode.hasProperty("exo:description"))
-					removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, categoryNode.getProperty("exo:description").getString());
-				else
-					removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, " ");
-				cateid = null;
+				if(path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0){
+					if(path.indexOf("/faqCommentHome") > 0) path = path.substring(0, path.indexOf("/faqCommentHome"));
+					else path = path.substring(0, path.indexOf("/faqAnswerHome"));
+					this.generateFAQRSS(path, Event.PROPERTY_CHANGED, sProvider);
+				} else {
+					if(categoryNode.hasProperty("exo:description"))
+						removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, categoryNode.getProperty("exo:description").getString());
+					else
+						removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, " ");
+					cateid = null;
+				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
@@ -315,7 +316,8 @@ public class RSSProcess extends RSSGenerate {
 				int i = 0;
 				while(nodeIterator.hasNext()){
 					answerNode = nodeIterator.nextNode();
-					if(answerNode.hasProperty("exo:responses")) 
+					if(answerNode.hasProperty("exo:responses") && answerNode.getProperty("exo:approveResponses").getBoolean() &&
+							answerNode.getProperty("exo:activateResponses").getBoolean()) 
 						listAnswers.add((answerNode.getProperty("exo:responses").getValue().getString())) ;
 					i ++;
 				}
