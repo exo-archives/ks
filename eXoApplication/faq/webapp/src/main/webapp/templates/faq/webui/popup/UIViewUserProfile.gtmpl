@@ -27,8 +27,8 @@
 	boolean isCity = false;
 	if(contact != null) {
 		//birthDayDate = contact.getBirthday() ;
-		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
-		if(contact.getCountry() != null) {
+		if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
+		if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
 			if(isCity) location = location + ", ";
 			location = location + contact.getCountry() ;
 		}

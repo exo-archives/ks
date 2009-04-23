@@ -140,7 +140,7 @@ public class FAQUtils {
 		if(profile.getAttribute("user.business-info.postal.country") != null)contact.setCountry(profile.getAttribute("user.business-info.postal.country"));        
 		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
 		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
-		if(profile.getAttribute("user.business-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.business-info.online.uri"));
+		if(profile.getAttribute("user.home-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
 		SessionProvider sessionProvider = getSystemProvider();
 		FileAttachment fileAttachment = faqService.getUserAvatar(userId, sessionProvider);
 		sessionProvider.close();
