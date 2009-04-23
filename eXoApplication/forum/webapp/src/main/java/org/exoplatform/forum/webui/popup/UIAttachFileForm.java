@@ -168,9 +168,12 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 			UIAttachFileForm uiForm = event.getSource() ;
 			UploadService uploadService = uiForm.getApplicationComponent(UploadService.class) ;
 			int i = 0 ;
+			UIFormUploadInput input ;
 			while(i++ < uiForm.maxField) {
-				UIFormUploadInput input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
-				uploadService.removeUpload(input.getUploadId()) ;
+				try {
+					input = (UIFormUploadInput)uiForm.getUIInput(FIELD_UPLOAD + String.valueOf(i));
+					uploadService.removeUpload(input.getUploadId()) ;
+				}catch(Exception e) {}				
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;

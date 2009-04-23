@@ -180,9 +180,12 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       UIAttachMentForm uiAttachMent = event.getSource() ;
 //    remove temp file in upload service and server      
       UploadService uploadService = uiAttachMent.getApplicationComponent(UploadService.class) ;
+      UIFormUploadInput uploadInput ;
       for(int i = 0 ; i < uiAttachMent.numberUpload; i ++) {
-        UIFormUploadInput uploadInput = uiAttachMent.getChildById(FILE_UPLOAD + i) ;
-  			uploadService.removeUpload(uploadInput.getUploadId()) ;
+        try{
+        	uploadInput = uiAttachMent.getChildById(FILE_UPLOAD + i) ;
+    			uploadService.removeUpload(uploadInput.getUploadId()) ;
+        }catch(Exception e){}
       }
       
       if(uiAttachMent.isChangeAvatar){

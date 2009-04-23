@@ -257,4 +257,31 @@
 	
 		<portlet-preferences></portlet-preferences>
 	</portlet>
+	<portlet>
+		<description xml:lang="EN">Forum Link Portlet</description>
+		<portlet-name>ForumLinkPortlet</portlet-name>
+		<display-name xml:lang="EN">Forum Link Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/forum/ForumaLinkPortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<!--portlet-mode>help</portlet-mode-->
+			<!--portlet-mode>edit</portlet-mode-->
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.forum.ForumLinkPortlet</resource-bundle>
+		<portlet-info>
+			<title>Forum Link Portlet</title>
+			<short-title>Forum Link Portlet</short-title>
+			<keywords>forum link</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+	</portlet>
 </portlet-app>
