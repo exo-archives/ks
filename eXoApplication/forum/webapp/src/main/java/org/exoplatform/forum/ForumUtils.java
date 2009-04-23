@@ -46,6 +46,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 public class ForumUtils {
 	public static final String FIELD_EXOFORUM_LABEL = "eXoForum".intern() ;
 	public static final String FIELD_SEARCHFORUM_LABEL = "SearchForum".intern() ;
+  public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB" ;
 	
 	public static final String SEARCHFORM_ID = "SearchForm".intern() ;
 	public static final String GOPAGE_ID_T = "goPageTop".intern() ;
@@ -348,5 +349,15 @@ public class ForumUtils {
 		portletPref.store();
   }
 	
-	
+	public static int getLimitUploadSize(){
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
+		int limitMB ;
+		try {
+			limitMB = Integer.parseInt(portletPref.getValue(UPLOAD_FILE_SIZE, "").trim()) ;
+		}catch (Exception e) {
+			limitMB = -1 ;
+		}
+		return limitMB ;
+	}		
 }

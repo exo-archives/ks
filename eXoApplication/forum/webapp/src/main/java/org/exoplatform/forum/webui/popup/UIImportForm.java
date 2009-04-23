@@ -19,6 +19,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.upload.UploadService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -45,7 +46,9 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	public void deActivate() throws Exception { }
 
 	public UIImportForm(){
-		this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
+		int sizeLimit = ForumUtils.getLimitUploadSize() ;
+		if(sizeLimit >= 0) this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD, sizeLimit));
+		else this.addChild(new UIFormUploadInput(FILE_UPLOAD, FILE_UPLOAD));
 		categoryPath = null;
 	}
 	
@@ -150,12 +153,23 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				popupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
+//		remove temp file in upload service and server
+			UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
+			uploadService.removeUpload(uploadInput.getUploadId()) ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
+//		remove temp file in upload service and server
+			UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
+      try {
+        UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
+			 uploadService.removeUpload(uploadInput.getUploadId()) ;
+      }catch(Exception e) {
+      
+      }			
 			UIForumPortlet portlet = importForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;

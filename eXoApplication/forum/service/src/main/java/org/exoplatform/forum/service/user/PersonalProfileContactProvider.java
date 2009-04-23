@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.user;
 import org.apache.commons.logging.Log;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
 
 /**
@@ -46,13 +47,16 @@ public class PersonalProfileContactProvider implements ContactProvider {
     ForumContact contact = new ForumContact();
       try {
         UserProfile profile = orgService.getUserProfileHandler().findUserProfileByName(userId);
-       
+        User user = orgService.getUserHandler().findUserByName(userId);
+        
         contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
         contact.setBirthday(profile.getAttribute("user.bdate"));
         contact.setGender(profile.getAttribute("user.gender"));
         contact.setJob(profile.getAttribute("user.jobtitle"));
+        contact.setFirstName(user.getFirstName());
+        contact.setLastName(user.getLastName()) ;        
         
-        contact.setEmailAddress(profile.getAttribute("user.home-info.online.email"));
+        contact.setEmailAddress(user.getEmail());
         contact.setCity(profile.getAttribute("user.home-info.postal.city"));
         contact.setCountry(profile.getAttribute("user.home-info.postal.country"));        
         contact.setMobile(profile.getAttribute("user.home-info.telecom.mobile.number"));

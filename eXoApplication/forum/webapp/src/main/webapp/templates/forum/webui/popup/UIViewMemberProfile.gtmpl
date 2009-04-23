@@ -13,23 +13,22 @@
 	String avatarUrl = "";
 	String birthDay = "" ;
 	String location = "" ;
+	String fullName = "";
 	Date birthDayDate =	null;
 	boolean isCity = false;
-	if(contact != null) {
-		birthDayDate = contact.getBirthday() ;
-		if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
-		if(contact.getCountry() != null) {
-			if(isCity) location = location + ", ";
-			location = location + contact.getCountry() ;
-		}
-	}
+	birthDayDate = contact.getBirthday() ;
+	if(contact.getCity() != null ) location = contact.getCity() ;
+	if(contact. getCountry() != null) location = location + ", " + contact.getCountry() ;
+	
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String createdDate = "";
-	String fullName = userName;
+	
+	if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
+	if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ; 
 	
 	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
-	fullName = userProfile.getFullName();
+	
 	
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
@@ -83,37 +82,26 @@
 							<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 								<tbody>
 								<% 
-									String firstName = "";
-									String lastName = "";
-									String email = "";
-									String gender = "";
-									String jobTitle = "";
-									String workPhone = "";
-									String mobile = "";
-									String siteOfUser = "";
-									if(contact != null) {
-										gender		 = contact.getGender();
-										jobTitle	 = contact.getJob();
-										workPhone	= contact.getPhone();
-										mobile		 = contact.getMobile();
-										siteOfUser = contact.getWebSite() ;
+									String email; 
+									String website ;
+									if (contact.getEmailAddress() != null) {
+									  email = contact.getEmailAddress() ;
+									  email		 = "<a target=\"_blank\" href=\"mailto:"+ email +"\">"+ email +"</a>" ;
 									}
-									firstName = userProfile.getFirstName();
-									lastName	= userProfile.getLastName() ;
-									email		 = "<a target=\"_blank\" href=\"mailto:"+userProfile.getEmail()+"\">"+userProfile.getEmail()+"</a>" ;
-									if(!ForumUtils.isEmpty(siteOfUser)) {
-										siteOfUser = "<a target=\"_blank\" href=\""+siteOfUser+"\">"+siteOfUser+"</a>";
+									if(contact.getWebSite() != null) {
+									  website = contact.getWebSite() ;
+									  website = "<a target=\"_blank\" href=\""+website+"\">"+website+"</a>";
 									}
+									
 									String []labels = uiform.getLabelProfile();	
-									String []contents = [userName, firstName, lastName, birthDay, gender, email,
-										jobTitle, location, workPhone, mobile, siteOfUser]; 
+									String []contents = [userName, contact.getFirstName() , contact.getLastName(), birthDay, contact.getGender(), email,
+										contact.getJob(), location, contact.getPhone(), contact.getMobile(), website]; 
 									int i = 0 ;
 									for(label in labels) {
-										String content = "";
-										content = contents[i];
+										String content = contents[i];
 										if(content == null) content = "";
 										label = _ctx.appRes(uicomponent.getName() + ".label." + label) ;
-										++i ;
+										i++ ;
 								%>
 									<tr>
 										<td class="Label">$label:</td>
