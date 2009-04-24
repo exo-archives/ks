@@ -172,11 +172,11 @@ public class UITopicPoll extends UIForm	{
 	}
 	
 	@SuppressWarnings("unused")
-	private boolean getIsVoted() throws Exception {
+	private boolean isGuestPermission() throws Exception {
 		if(poll_.getIsClosed()) return true ;
 		String userVote = userProfile.getUserId() ;
 		userIsBanned = userProfile.getIsBanned();
-		if(userIsBanned) return true;
+		if(userIsBanned || userProfile.getUserRole() > 2) return true;
 		if(ForumUtils.isEmpty(userVote)) return true ;
 		if(poll_.getTimeOut() > 0) {
 			Date today = new Date() ;

@@ -13,7 +13,6 @@
 		if(poll != null) {
 		String question = poll.getQuestion() ;
 		long timeOut = poll.getTimeOut() ;
-		boolean displayVoted = uicomponent.getIsVoted();
 		boolean isAnonim = ForumSessionUtils.isAnonim();
 		boolean isAgain = poll.getIsAgainVote() ;
 		boolean isTimeOut = false;
@@ -113,7 +112,7 @@
 					<div class="WorkingArea">
 					 	<div class="HorizontalLayout">
 							<div class="UITabContentContainer">
-							 <% if(displayVoted == false) { %> 
+							 <% if(uicomponent.isGuestPermission() == false) { %> 
 								<div class="UITabContent">
 									<div class="TopicPollContent">
 										<div class="PollQuestion">${question}?</div>
