@@ -77,6 +77,9 @@
 		<supported-processing-event>
 			<name>ReLoadPortletEvent</name>
 		</supported-processing-event>
+		<supported-processing-event>
+			<name>OpenLink</name>
+		</supported-processing-event>
 	</portlet>
 	
 	<portlet>
@@ -269,7 +272,7 @@
 		
 		<init-param>
 			<name>webui.configuration</name>
-			<value>/WEB-INF/conf/portlet/forum/ForumaLinkPortlet/webui/configuration.xml</value>
+			<value>/WEB-INF/conf/portlet/forum/ForumLinkPortlet/webui/configuration.xml</value>
 		</init-param>
 
 		<expiration-cache>0</expiration-cache>
@@ -287,5 +290,9 @@
 		</portlet-info>
 	
 		<portlet-preferences></portlet-preferences>
+		
+		<supported-processing-event>
+			<name>ForumLinkEvent</name>
+		</supported-processing-event>
 	</portlet>
 </portlet-app>

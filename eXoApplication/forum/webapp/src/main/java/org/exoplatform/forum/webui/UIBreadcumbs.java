@@ -19,8 +19,12 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.ActionResponse;
+import javax.xml.namespace.QName;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -31,6 +35,8 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -63,6 +69,7 @@ public class UIBreadcumbs extends UIContainer {
 	private boolean isLink = false ;
 	private boolean isOpen = true;
 	private String tooltipLink = "forumHome";
+	private UserProfile userProfile ;
 	public UIBreadcumbs()throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
@@ -78,12 +85,15 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	@SuppressWarnings("unused")
-  private void setIsUseAjax(){
-		this.useAjax = this.getAncestorOfType(UIForumPortlet.class).isUseAjax();
+  private void setIsUseAjax() throws Exception{
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
+		userProfile = forumPortlet.getUserProfile();
+		useAjax = forumPortlet.isUseAjax();
 	}
 
 	public void setUpdataPath(String path) throws Exception {
 		isLink = false ;
+		setRenderForumLink(path);
 		if(!ForumUtils.isEmpty(path) && !path.equals(FORUM_SERVICE)) {
 			String temp[] = path.split("/") ;
 			String pathNode = forumHomePath_;
@@ -149,6 +159,25 @@ public class UIBreadcumbs extends UIContainer {
 			breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			tooltipLink = "forumHome";
 		}
+	}
+	
+	private void setRenderForumLink(String path) throws Exception {
+		try {
+			PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+			ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+			ForumParameter param = new ForumParameter();
+			if (userProfile.getIsShowForumJump() && !path.equals(FORUM_SERVICE)) {
+				if(path.indexOf(Utils.TOPIC) > 0) {
+					path = path.substring(0, path.lastIndexOf("/"));
+				}
+				param.setRenderForumLink(true);
+				param.setPath(path);
+			} else {
+				param.setRenderForumLink(false);
+			}
+			actionRes.setEvent(new QName("ForumLinkEvent"), param) ;
+    } catch (Exception e) {
+    }
 	}
 	
 	public boolean isOpen() {

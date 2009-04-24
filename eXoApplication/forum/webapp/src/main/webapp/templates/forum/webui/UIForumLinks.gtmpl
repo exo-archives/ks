@@ -4,7 +4,6 @@
 
 <div class="UIForumLinks">
 	 <% uiform.begin(); 
-	 	 uiform.setForumLinks() ;
 	 	 uiform.setUpdateForumLinks() ;
 	 %>
 		<div class="HorizontalLayout" >

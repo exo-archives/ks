@@ -19,15 +19,21 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.ActionResponse;
+import javax.xml.namespace.QName;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.ForumParameter;
+import org.exoplatform.forum.info.UIForumLinkPortlet;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -62,7 +68,6 @@ public class UIForumLinks extends UIForm {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
-	
 	private String getStrQuery(List<String> list, String property){
 		StringBuffer strQueryCate = new StringBuffer();
 		int t = 0;
@@ -75,7 +80,19 @@ public class UIForumLinks extends UIForm {
 	}
 	
 	public void setUpdateForumLinks() throws Exception {
-		
+		SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+		try {
+			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+    } catch (Exception e) {
+    	String userName = ForumSessionUtils.getCurrentUser();
+			if (userName != null) {
+				try {
+					userProfile = forumService.getQuickProfile(sProvider, userName);
+				} catch (Exception ex) {
+					userProfile = new UserProfile();
+				}
+			}
+    }
 		String strQueryCate = "";
 		String strQueryForum = "";
 		List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
@@ -86,7 +103,7 @@ public class UIForumLinks extends UIForm {
 			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "[@exo:isClosed='false' or "+strQueryForum+"]";
 		}
 		
-		this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider(), strQueryCate, strQueryForum);
+		this.forumLinks = forumService.getAllLink(sProvider, strQueryCate, strQueryForum);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL)+"/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE)) ;
 		String space = "&nbsp; &nbsp; ",	type = "/categoryLink"; 
@@ -111,19 +128,13 @@ public class UIForumLinks extends UIForm {
 			forumLink.setValue(path.trim()) ;
 			addUIFormInput(forumLink) ;
 		}
+		sProvider.close();
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
 		return	findComponentById(name) ;
 	}
-	
-	@SuppressWarnings("unused")
-	private void setForumLinks() throws Exception {
-		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
-		UICategories categories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
-		this.userProfile = forumPortlet.getUserProfile() ;
-	}
-	
+
 	public List<ForumLinkData> getForumLinks() throws Exception {
 		return this.forumLinks ;
 	}
@@ -137,44 +148,65 @@ public class UIForumLinks extends UIForm {
 			UIForumLinks uiForm = event.getSource() ;
 			UIFormSelectBoxForum selectBoxForum = uiForm.getUIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX) ;
 			String path = selectBoxForum.getValue();
-			boolean isErro = false ;
-			if(!path.equals(uiForm.path)) {
-				uiForm.path = path ;
+			try {
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-				if(path.lastIndexOf(Utils.FORUM) > 0) {
-					String id[] = path.trim().split("/");
-					Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[0], id[1]);;
-					if(forum != null){
-						UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-						forumContainer.getChild(UIForumDescription.class).setForum(forum);
-						forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
-						forumContainer.setIsRenderChild(true) ;
-						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-					} else isErro = true ;
-				} else if(path.indexOf(Utils.CATEGORY) >= 0) {
-					Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), path.trim()) ;
-					if(category != null){
+				boolean isErro = false ;
+				if(!path.equals(uiForm.path)) {
+					if(path.lastIndexOf(Utils.FORUM) > 0) {
+						String id[] = path.trim().split("/");
+						Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[0], id[1]);;
+						if(forum != null){
+							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+							forumContainer.getChild(UIForumDescription.class).setForum(forum);
+							forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+							forumContainer.setIsRenderChild(true) ;
+							forumPortlet.updateIsRendered(ForumUtils.FORUM);
+						} else isErro = true ;
+					} else if(path.indexOf(Utils.CATEGORY) >= 0) {
+						Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), path.trim()) ;
+						if(category != null){
+							UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+							categoryContainer.getChild(UICategory.class).update(category, null) ;
+							categoryContainer.updateIsRender(false) ;
+							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+						} else isErro = true ;
+					}
+					if(isErro) {
+						Object[] args = { };
+						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
+						path = Utils.FORUM_SERVICE ;
+					}
+					if(path.indexOf(Utils.FORUM_SERVICE) >= 0) {
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-						categoryContainer.getChild(UICategory.class).update(category, null) ;
-						categoryContainer.updateIsRender(false) ;
+						categoryContainer.updateIsRender(true) ;
+						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-					} else isErro = true ;
+					}
+					uiForm.path = path ;
+					forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				}
-				if(isErro) {
-					Object[] args = { };
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
-					path = Utils.FORUM_SERVICE ;
-				}
-				if(path.indexOf(Utils.FORUM_SERVICE) >= 0) {
-					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-					categoryContainer.updateIsRender(true) ;
-					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				}
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(path.trim());
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			}
+      } catch (Exception e) {
+      	try {
+      		if(!path.equals(uiForm.path)) {
+  					uiForm.path = path ;
+						UIForumLinkPortlet linkPortlet  = uiForm.getParent();
+						if(path.equals(Utils.FORUM_SERVICE)){
+							linkPortlet.setRenderChild(false);
+						} else {
+							linkPortlet.setRenderChild(true);
+						}
+						ActionResponse actionRes = event.getRequestContext().getResponse() ;
+						ForumParameter param = new ForumParameter() ;
+						param.setPath(path);
+						actionRes.setEvent(new QName("OpenLink"), param) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
+      		}
+        } catch (Exception ex) {
+	        ex.printStackTrace();
+        }
+      }
 		}
 	}
 }

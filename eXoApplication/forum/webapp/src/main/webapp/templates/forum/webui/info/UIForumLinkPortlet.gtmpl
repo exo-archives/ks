@@ -1,5 +1,18 @@
-<div class="UIForumLinkPortlet" id="$uicomponent.id">
-	
-	Hello, this is the Forum Link area
-	
+<%  
+	if(uicomponent.isRenderChild){
+%>
+<div id="$uicomponent.id">
+	<div class="UIForumPortlet UIForumLinkPortlet">
+		<%
+			List children = uicomponent.getChildren() ;
+			for(component in children) {
+				if(component.isRendered()){
+					uicomponent.renderChild(component.getClass()) ; 
+				}
+			}
+		%>
+	</div>
 </div>
+<% } else { %>
+<div id="$uicomponent.id"><span></span></div>
+<% } %>

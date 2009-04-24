@@ -117,7 +117,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String forumId = "";
 	private String categoryId = "";
 	private Forum forum;
-//	private JCRPageList pageList ;
 	private List <Topic> topicList ;
 	private List<String> moderators;
 	private boolean isUpdate = false;

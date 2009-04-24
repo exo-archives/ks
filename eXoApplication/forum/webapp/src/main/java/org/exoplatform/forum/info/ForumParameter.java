@@ -13,6 +13,7 @@ public class ForumParameter implements Serializable {
 	private String forumId;
 	private String topicId;
 	private String postId;
+	private String path;
 	private List<String> moderators ;
 	private List<String> infoRules ;
 	private boolean isForumIcon ; 
@@ -20,6 +21,7 @@ public class ForumParameter implements Serializable {
 	private boolean isRenderPoll = false;
 	private boolean isRenderModerator = false;
 	private boolean isRenderRule = false;
+	private boolean isRenderForumLink = false;
 	private boolean isModerator = false;
 	
 	public ForumParameter() {
@@ -38,6 +40,8 @@ public class ForumParameter implements Serializable {
 	public String getTopicId() { return topicId;}
 	public void setPostId(String postId) { this.postId = postId; }
 	public String getPostId() { return postId; }
+	public String getPath() {return path; }
+	public void setPath( String path) { this.path = path;}
 	public List<String> getModerators() {
 		return moderators;
 	}
@@ -92,5 +96,12 @@ public class ForumParameter implements Serializable {
 	}
 	public void setRenderRule(boolean isRenderRule) {
 		this.isRenderRule = isRenderRule;
+	}
+
+	public boolean isRenderForumLink() {
+		return isRenderForumLink;
+	}
+	public void setRenderForumLink(boolean isRenderForumLink) {
+		this.isRenderForumLink = isRenderForumLink;
 	}
 }
