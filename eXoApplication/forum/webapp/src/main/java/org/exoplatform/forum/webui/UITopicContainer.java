@@ -192,7 +192,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public boolean getCanAddNewThread(){return this.canAddNewThread ; }
 	
 	private void setForumModeratorPortlet() throws Exception {
-		moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
 		ForumParameter param = new ForumParameter() ;
@@ -215,10 +214,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			this.isUpdate = false ;
 		}
 		this.canAddNewThread = true ;
+		moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		String userId = userProfile.getUserId() ;
 		List<String> ipBaneds = forum.getBanIP();
 		isModerator = false ;
-		if(userProfile.getUserRole() == 0 || moderators.contains(userId)) isModerator = true;
+		if(userProfile.getUserRole() == 0 || (!moderators.isEmpty() && moderators.contains(userId))) isModerator = true;
 		if(ipBaneds != null && ipBaneds.size() > 0) {
 			if(!ipBaneds.contains(getIPRemoter())) {
 				String[] strings = this.forum.getCreateTopicRole() ;
