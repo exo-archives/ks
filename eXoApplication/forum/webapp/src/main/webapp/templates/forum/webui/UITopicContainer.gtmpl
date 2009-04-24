@@ -507,7 +507,17 @@
 							%>
 								<tr class="$classRow $classSelect" oncontextmenu="return false;">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
-									<td class="Tdbox"><div class="StatusIcon $iconClassTopic"><span></span></div></td>
+									<td class="Tdbox" style="*text-align:left;">
+										<%if(topic.getIsPoll()){%>
+												<div class="StatusIcon $iconClassTopic" style="margin:8px;">
+													<div class="StatusIcon Stats" style="margin-left:18px;" title="This topic has a poll"><span></span></div>
+												</div>
+										<%} else {%>
+												<div class="StatusIcon $iconClassTopic">
+													<span></span>
+												</div>
+										<%}%>
+									</td>
 									<td>
 										<div>
 										<% if(topic.getIsSticky()) {%>

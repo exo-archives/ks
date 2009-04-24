@@ -142,9 +142,11 @@ public class RSSProcess extends RSSGenerate {
 			
 			Node nodes[] = new Node[]{topicNode, forumNode, categoryNode};
 			
-			if((postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
+			if((topicNode.hasProperty("exo:isApproved") && !topicNode.getProperty("exo:isApproved").getBoolean())||
+					(postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
 					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())||
-					(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean())){
+					(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean()) ||
+					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())){
 				if(topicNode.hasProperty("exo:description")){
 					removeRSSItem(postNode.getName(), topicNode, topicNode.getProperty("exo:description").getString());
 					removeRSSItem(postNode.getName(), forumNode, forumNode.getProperty("exo:description").getString());

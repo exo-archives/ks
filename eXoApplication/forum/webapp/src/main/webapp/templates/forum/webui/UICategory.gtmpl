@@ -395,7 +395,16 @@
 									}
 						 %>
 									<td >
-								 		<div class="LastPostIcon $topicNewPostIcon"><span></span></div>
+								 		<!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
+								 		<%if(topicNewPost.getIsPoll()){%>
+												<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
+													<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="This topic has a poll"><span></span></div>
+												</div>
+										<%} else {%>
+												<div class="LastPostIcon $topicNewPostIcon">
+													<span></span>
+												</div>
+										<%}%>
 								 		<div style="float: left;">
 								 			<% ++rCNB; %>
 								 			<%if(uicomponent.useAjax){%>
