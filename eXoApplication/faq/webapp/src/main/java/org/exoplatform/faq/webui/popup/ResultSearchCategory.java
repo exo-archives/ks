@@ -25,6 +25,7 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -130,6 +131,8 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			uiQuestions.setPath(newPath) ;
 			breadcumbs.setUpdataPath(newPath);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+			categories.setPathCategory(breadcumbs.getPaths());
 			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 			faqPortlet.cancelAction() ;
