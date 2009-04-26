@@ -47,6 +47,7 @@ import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -369,7 +370,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		return this.forumService.getTagsByTopic(ForumSessionUtils.getSystemProvider(), tagIds);	
+		List<Tag> list = new ArrayList<Tag>();
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			list = this.forumService.getTagsByTopic(sProvider, tagIds);
+    } catch (Exception e) {
+    }finally{
+    	sProvider.close();
+    }
+		return list;	
 	}
 	
 	static public class SearchFormActionListener extends EventListener<UITopicContainer> {

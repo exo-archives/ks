@@ -336,3 +336,9 @@
 	height: 25px;
 	padding: 10px 0px 0px 0px;
 }
+
+.UITopicDetail .TagIcon {
+	background-position: center;
+	height: 24px; width: 24px;
+	display: block;
+}

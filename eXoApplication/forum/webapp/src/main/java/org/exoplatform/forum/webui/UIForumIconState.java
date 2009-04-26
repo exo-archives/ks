@@ -20,7 +20,6 @@ import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.webui.application.portlet.PortletApplication;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -41,7 +40,7 @@ import org.exoplatform.webui.event.EventListener;
     }	
 )
 public class UIForumIconState extends UIContainer	{
-	private static boolean isForumIcon = true ;
+	private boolean isForumIcon = true ;
 	public UIForumIconState() throws Exception {		
 	}
 	
@@ -53,12 +52,11 @@ public class UIForumIconState extends UIContainer	{
 		return this.isForumIcon ;
 	}
 	
-	static  public class IconStateParamActionListener extends EventListener<UIComponent> {
-    public void execute(Event<UIComponent> event) throws Exception {
-    	System.out.println("\n\n\n\n =========== UIForumIconStatet: IconStateParam : " + event.getSource().getId() + "=================== \n\n\n\n");
+	static  public class IconStateParamActionListener extends EventListener<UIForumIconState> {
+    public void execute(Event<UIForumIconState> event) throws Exception {
+    	UIForumIconState forumIconState = event.getSource();
     	ForumParameter params = (ForumParameter)event.getRequestContext().getAttribute(PortletApplication.PORTLET_EVENT_VALUE);
-    	UIForumIconState.isForumIcon = params.isForumIcon() ; 
-    	//System.out.println("\n\n\n\n =========== categoryId : " + params.getCategoryId() + "=================== \n\n\n\n");
+    	forumIconState.isForumIcon = params.isForumIcon() ; 
     }
   }  
 }

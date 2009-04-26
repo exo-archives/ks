@@ -40,6 +40,7 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -99,6 +100,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.AddPostActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.RatingTopicActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.AddTagTopicActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.OpenTopicsTagActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.GoNumberPageActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.SearchFormActionListener.class ),
 			
@@ -532,6 +534,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return posts ;
 	}
 	
+	@SuppressWarnings("unused")
+	private List<Tag> getTagsByTopic() throws Exception {
+		List<Tag> list = new ArrayList<Tag>();
+		String[] tagIds = topic.getTagId();
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			list = this.forumService.getTagsByTopic(sProvider, tagIds);
+    } catch (Exception e) {
+    }finally{
+    	sProvider.close();
+    }
+		return list;	
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
 	
@@ -635,7 +651,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-
+	
+	static public class OpenTopicsTagActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail uiTopicContainer = event.getSource() ;
+			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
+			forumPortlet.getChild(UIForumLinks.class).setValueOption(Utils.FORUM_SERVICE) ;
+			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
+			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
 	static public class SearchFormActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
