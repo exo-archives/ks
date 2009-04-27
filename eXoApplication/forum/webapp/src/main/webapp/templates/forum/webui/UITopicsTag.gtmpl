@@ -202,6 +202,7 @@
 									if(isShowMenu){
 										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
 									}
+									actionBookmark += ";" + uicomponent.event("RSS", topicId);
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String path = topic.getPath();
 									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
@@ -376,33 +377,32 @@
 		<%if(isShowMenu){%>
 		<div class="TopLeftRightClickPopupMenu">
 			<div class="TopRightRightClickPopupMenu">
-				<div class="TopCenterRightClickPopupMenu"><span></span></div>
-				<div class="RightClickCustomItem" style="display:none;">Open</div>
+   			<div class="TopCenterRightClickPopupMenu"><span></span></div>
+  				<div class="RightClickCustomItem" style="display:none; height:0px"><span></span></div>
+  			</div>
 			</div>
-		</div>
-		<div class="MiddleLeftRightClickPopupMenu">
-			<div class="MiddleRightRightClickPopupMenu">
-				<div class="UIRightPopupMenuContainer">
-					<div class="MenuItem AddBookmark">
-						<a href="#" class="ItemIcon AddLinkToBookIcon">
-								<%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%>
-						</a>
+  		<div class="MiddleLeftRightClickPopupMenu">
+				<div class="MiddleRightRightClickPopupMenu">
+					<div class="UIRightPopupMenuContainer">
+						<div class="ItemIcon AddLinkToBookIcon">
+							<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
+						</div>
+						<div class="ItemIcon AddWatchingIcon">
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+	 					</div>
+	 					<div class="ItemIcon ForumRSSFeed">
+							<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+						</div>
 					</div>
-					<div class="MenuItem AddWatching">
-						<a href="#" class="ItemIcon AddWatchingIcon">
-							<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>
-						</a>
+				</div>
+ 			</div>
+			<div class="BottomLeftRightClickPopupMenu">
+				<div class="BottomRightRightClickPopupMenu">
+					<div class="BottomCenterRightClickPopupMenu">
+						<div class="FixHeight"><span></span></div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="BottomLeftRightClickPopupMenu">
-			<div class="BottomRightRightClickPopupMenu">
-				<div class="BottomCenterRightClickPopupMenu">
-					<div class="FixHeight"><span></span></div>
-				</div>
-			</div>
-		</div>
 	<% } %>
 	</div>
 	<% //End RightClick Bookmark %>
