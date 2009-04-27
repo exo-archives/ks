@@ -511,6 +511,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				} else {
 					uiTopicDetail.setIdPostView("top") ;
 				}
+				if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+					uiTopicContainer.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+				}
 				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
 				
 				WebuiRequestContext context = event.getRequestContext() ;

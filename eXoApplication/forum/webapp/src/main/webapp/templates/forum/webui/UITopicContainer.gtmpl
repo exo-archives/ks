@@ -440,6 +440,7 @@
 								int i = 0;
 								Date postDate = new Date();
 								for(topic in topics){
+									postDate = topic.getLastPostDate();
 									boolean isLockTopic = topic.getIsLock() ;
 									if(!isLockTopic) isLockTopic = topic.getIsClosed() ;
 									if(i%2 == 0) classRow = "whileRow";
@@ -518,12 +519,14 @@
 												</div>
 										<%}%>
 									</td>
+									
+									<!-- --------------------------------- View name of topic ------------------------------------------------- -->
 									<td>
 										<div>
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<div style="float:left;">
+											<div style="float:left">
 												<% ++rCNB; %>
 												<%if(uicomponent.useAjax){%>
 														<a ctxMenuId="UIPopupCategory${rCNB}" actions="$link;" href="$url" title="$titlePost" class="ActionLink $title PopupMenu">$topicTitle</a>
@@ -561,6 +564,7 @@
 										</div>
 										<div><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
+									
 									<td class="Tdbox">$attachment</td>
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">
