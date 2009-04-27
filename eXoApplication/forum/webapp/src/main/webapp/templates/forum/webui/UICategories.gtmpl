@@ -144,6 +144,7 @@
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
 										String classIconReadForum = "ThreadNoNewPost";
 										String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
+										String fontWeight = "normal";
 				 						if(topicNewPost != null) {
 				 							topicPath = categoryId+'/'+forumId+'/'+topicNewPost.getId() ;
 											topicNewPostIcon = topicNewPost.getIcon();
@@ -163,6 +164,7 @@
 												if(createdDate > lastAccess) {
 													classIconReadForum = "ThreadNewPost";
 													titleNoNewPostForum =  _ctx.appRes("UIForumIconState.label.ForumNewPost");
+													fontWeight = "bold";
 												}
 											}
 											
@@ -221,9 +223,9 @@
 												<div style="float:left">
 														<% ++rCNB; %>
 													<%if(uicomponent.useAjax){%>
-															<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+															<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<%} else {%>
-															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" style="$lineHeight" class="ForumTitle ActionLink">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
 													<%}%>
 													
 													<div id="UIPopupCategory${rCNB}" style="display:none;">
