@@ -1452,12 +1452,35 @@ public class JCRDataStorage {
 		}
 	}
 	
-	private void setIndexCategory(Node parentNode, QueryManager qm) throws Exception {
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()). 
+	private void setIndexCategory(Node parentNode, Node cateNode, long newPos, QueryManager qm, SessionProvider sessionProvider) throws Exception {
+		StringBuffer queryString = null;
+		Query query = null;
+		QueryResult result = null;
+		NodeIterator iter = null;
+		
+		if(cateNode.getProperty("exo:index").getLong() != newPos){
+			queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()). 
+																		append("/element(*,exo:faqCategory)[@exo:index=").append(newPos).
+																		append("]order by @exo:index ascending, @exo:createdDate descending") ;
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			if(iter.hasNext()){
+				if(parentNode.hasProperty("exo:id"))
+					swapCategories(parentNode.getName(), cateNode.getName(), iter.nextNode().getName(), sessionProvider);
+				else
+					swapCategories(null, cateNode.getName(), iter.nextNode().getName(), sessionProvider);
+			}else{
+				cateNode.setProperty("exo:index", newPos);
+			}
+			cateNode.save();
+		}
+		
+		queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()). 
 																	 append("/element(*,exo:faqCategory)order by @exo:index ascending, @exo:createdDate descending") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
+		query = qm.createQuery(queryString.toString(), Query.XPATH);
+		result = query.execute();
+		iter = result.getNodes();
 		long i = 1;
 		while (iter.hasNext()) {
 			Node node = (Node)iter.next();
@@ -1510,6 +1533,7 @@ public class JCRDataStorage {
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
 		Query query = null;
 		QueryResult result = null;
+		long newPos = cat.getIndex();
 		if(parentId != null && parentId.length() > 0) {	
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
 																		 append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
@@ -1519,26 +1543,30 @@ public class JCRDataStorage {
 			Node catNode;
 			if(isAddNew) {
 				catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
+				cat.setIndex(getMaxindexCategory(parentId, sProvider) + 1);
 				saveCategory(catNode, cat) ;
 				parentCategory.getSession().save() ;
 			}else {
 				catNode = parentCategory.getNode(cat.getId()) ;
+				cat.setIndex(catNode.getProperty("exo:index").getLong());
 				saveCategory(catNode, cat) ;
-				catNode.save() ;
+				parentCategory.save() ;
 			}
-			setIndexCategory(parentCategory, qm);
+			setIndexCategory(parentCategory, catNode, newPos, qm, sProvider);
 		} else{
 			Node catNode ;
 			if(isAddNew) {
 				catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
+				cat.setIndex(getMaxindexCategory(parentId, sProvider) + 1);
 			} else {
 				 if(cat.getId() != null) catNode = categoryHome.getNode(cat.getId()) ;
 				 else catNode = getCategoryHome(sProvider, null);
+				 cat.setIndex(catNode.getProperty("exo:index").getLong());
 			}
 			saveCategory(catNode, cat) ;
-			if(categoryHome.isNew()) categoryHome.getSession().save();
+			if(isAddNew) categoryHome.getSession().save();
 			else categoryHome.save();
-			setIndexCategory(categoryHome, qm);
+			setIndexCategory(categoryHome, catNode, newPos, qm, sProvider);
 		}
 	}
 	
