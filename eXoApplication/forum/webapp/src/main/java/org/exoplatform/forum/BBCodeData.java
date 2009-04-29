@@ -104,8 +104,6 @@ public class BBCodeData {
 		String start, end, bbc, str="ss", param, option;
 		for (BBCode bbcode : bbcodes) {
 			bbc = bbcode.getTagName();
-			System.out.println("\n\n tagName: " + bbcode.getTagName());
-			System.out.println("\n\n getReplacement: " + bbcode.getReplacement());
 			if(bbc.equals("URL")){
 				s = StringUtils.replace(s, "[link", "[URL");
 				s = StringUtils.replace(s, "[/link]", "[/URL]");

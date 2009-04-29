@@ -320,22 +320,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	    } catch (Exception e) {
 	    }
 		}
-		List<BBCode> bbCodes = new ArrayList<BBCode>();
-    bbCodes.addAll(BBCodeData.createDefaultBBcode());
-    if(listBBCode.isEmpty())listBBCode.addAll(bbCodes);
-    else {
-    	boolean isAdd ;
-	    for (BBCode bbc : bbCodes) {
-	    	isAdd = true;
-	    	for (BBCode code : listBBCode) {
-		      if(bbc.getTagName().equals(code.getTagName()) && (bbc.isOption() == code.isOption())) {
-		      	isAdd = false;
-		      	break;
-		      }
-	      }
-	    	if(isAdd) listBBCode.add(bbc);
-	    }
-    }
+    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
     s = BBCodeData.getReplacementByBBcode(s, listBBCode);
     return s;
 	}
@@ -515,6 +500,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {
+		isGetSv = true;
 		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 				String isApprove = "";
