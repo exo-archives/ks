@@ -1,0 +1,133 @@
+/***************************************************************************
+ * Copyright (C) 2003-2009 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ ***************************************************************************/
+package org.exoplatform.forum.webui.popup;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.BBCode;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.form.UIForm;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
+import org.exoplatform.webui.form.UIFormStringInput;
+import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.validator.MandatoryValidator;
+
+import com.lowagie.tools.split_pdf;
+
+/**
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *          tu.duy@exoplatform.com
+ * Apr 28, 2009 - 9:55:17 AM  
+ */
+
+@ComponentConfig(
+		lifecycle = UIFormLifecycle.class,
+		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+		events = {
+			@EventConfig(listeners = UIAddBBCodeForm.SaveActionListener.class), 
+			@EventConfig(listeners = UIAddBBCodeForm.PreviewActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UIAddBBCodeForm.CancelActionListener.class, phase=Phase.DECODE)
+		}
+)
+public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
+	public static final String FIELD_TAGNAME_INPUT = "TagName" ;
+	public static final String FIELD_REPLACEMENT_TEXTARE = "Replacement" ;
+	public static final String FIELD_DESCRIPTION_TEXTARE = "Description" ;
+	public static final String FIELD_EXAMPLE_TEXTARE = "Example" ;
+	public static final String FIELD_USEOPTION_CHECKBOX = "UseOption" ;
+	
+	public UIAddBBCodeForm() throws Exception{
+		UIFormStringInput tagNameInput = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
+		tagNameInput.addValidator(MandatoryValidator.class);
+		UIFormTextAreaInput replacementInput = new UIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE, FIELD_REPLACEMENT_TEXTARE, null);
+		replacementInput.addValidator(MandatoryValidator.class);
+		UIFormTextAreaInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE, FIELD_DESCRIPTION_TEXTARE, null);
+		UIFormTextAreaInput example = new UIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE, FIELD_EXAMPLE_TEXTARE, null);
+		example.addValidator(MandatoryValidator.class);
+		UIFormCheckBoxInput<Boolean> isOption = new UIFormCheckBoxInput<Boolean>(FIELD_USEOPTION_CHECKBOX, FIELD_USEOPTION_CHECKBOX, false);
+		addUIFormInput(tagNameInput);
+		addUIFormInput(replacementInput);
+		addUIFormInput(description);
+		addUIFormInput(example);
+		addUIFormInput(isOption);
+		this.setActions(new String[]{"Save", "Cancel"});
+  }
+	
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
+	
+	static	public class SaveActionListener extends EventListener<UIAddBBCodeForm> {
+		public void execute(Event<UIAddBBCodeForm> event) throws Exception {
+			UIAddBBCodeForm uiForm = event.getSource();
+			String tagName = uiForm.getUIStringInput(FIELD_TAGNAME_INPUT).getValue();
+			String replacement = uiForm.getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE).getValue();
+			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
+			String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
+			boolean isOption = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
+			BBCode bbcode = new BBCode();
+			bbcode.setTagName(tagName);
+			bbcode.setReplacement(replacement);
+			bbcode.setDescription(description);
+			bbcode.setExample(example);
+			bbcode.setOption(isOption);
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				List<BBCode> bbcodes = new ArrayList<BBCode>();
+				bbcodes.add(bbcode);
+	      ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	      forumService.saveBBCode(sProvider, bbcodes);
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }finally {
+      	sProvider.close();
+      }
+      UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+			popupAction.deActivate() ;
+			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static	public class PreviewActionListener extends EventListener<UIAddBBCodeForm> {
+		public void execute(Event<UIAddBBCodeForm> event) throws Exception {
+		}
+	}
+	
+	static	public class CancelActionListener extends EventListener<UIAddBBCodeForm> {
+		public void execute(Event<UIAddBBCodeForm> event) throws Exception {
+			UIAddBBCodeForm addBBCodeForm = event.getSource();
+			UIPopupContainer popupContainer = addBBCodeForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+			popupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+}

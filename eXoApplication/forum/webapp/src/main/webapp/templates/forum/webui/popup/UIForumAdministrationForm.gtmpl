@@ -1,10 +1,11 @@
 <%	
+	import org.exoplatform.forum.service.BBCode;
 	import org.exoplatform.forum.webui.popup.UIListTopicOld;
 	import org.exoplatform.forum.webui.popup.UIPageListPostByUser;
-	
 	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
 	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
 	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
+	List bbcodes = uiform.getListBBcode();
 %>
 <div class="UIFormInputWithActions UIForumAdministrationForm" style="*width:97%;">	
 	<% uiform.begin() %>	
@@ -131,6 +132,63 @@
 												<div class="Refresh"><span></span></div>
 											</div>
 											<div style="clear:left;"><span></span></div>
+									<%} else if(tabconten.id.equals(uicomponent.FIELD_BBCODE_TAB)) {%>
+											<div class="BBCodeContainer">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+													<thead>
+														<tr>
+															<th style="width:80px; text-align:center">TAG</th>
+															<th>Description</th>
+															<th width="40px">Active</th>
+															<th width="60px">Edit/Delete</th>
+														</tr>
+													</thead>
+													<tbody>
+													<%
+														int l = 0;
+														for(bbcode in bbcodes) {
+															if(l%2 == 0) classCssInbox = "whileRow";
+															else classCssInbox = "OddRow";
+															++l;
+															String value = "false";
+															String tagId = bbcode.getId();
+															String checked = "";
+															if(bbcode.isActive()){
+																checked = "checked=\"checked\"";
+																value = "true";
+															}
+													%>				
+														<tr class="$classCssInbox">
+															<td style="text-align:center"><%=bbcode.getTagName();%></td>
+															<td style="text-align:left"><%=bbcode.getDescription();%></td>
+															<td style="text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
+															<td style="text-align:center">Action</td>
+														</tr>
+													<%} %>
+													</tbody>
+												</table>
+											</div>
+											<div class="UIAction"> 
+												<table class="ActionContainer">
+													<tr>
+														<td align="center">
+														<%	
+															 String actionLabel = "Add BBcode"; 
+															 String link = uiform.event("AddNewBBCode") ;
+														%>
+															 <div onclick="$link" class="ActionButton LightBlueStyle">
+																 <div class="ButtonLeft">
+																	 <div class="ButtonRight">
+																	 	 <div class="ButtonMiddle">
+																		 	 <a href="javascript:void(0);">$actionLabel</a>
+																	 	 </div>
+																	 </div>
+																 </div>
+															 </div>
+														 </td>
+													</tr>
+										 		</table> 
+											</div>
 									<%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}

@@ -21,19 +21,24 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -64,6 +69,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.PostsActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.UnBanActionListener.class, confirm= "UIForumAdministrationForm.msg.confirm-delete-ipban"), 
 			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.AddNewBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
@@ -78,6 +84,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
 	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
+	public static final String FIELD_BBCODE_TAB = "bbcodesTab" ;
 	public static final String IP_BAN_TAB = "ipBanTab" ;
 	
 	public static final String NEW_IP_BAN_INPUT1 = "newIpBan1";
@@ -99,8 +106,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
 	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator" ;
+	private boolean isEditBBcode = false;
 	private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private UIForumPageIterator pageIterator ;
 	public UIForumAdministrationForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -109,13 +118,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
 	}
 	
-	public void setInit() throws Exception{
+	@SuppressWarnings("unchecked")
+  public void setInit() throws Exception{
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 //		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
 		UIFormInputWithActions ipBanTab = new UIFormInputWithActions(IP_BAN_TAB);
+		UIFormInputWithActions bbcodeTab = new UIFormInputWithActions(FIELD_BBCODE_TAB);
 		
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
@@ -172,6 +183,37 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		headerSubject.setValue(administration.getHeaderSubject());
 		//headerSubject.setEditable(administration.getEnableHeaderSubject());
 		
+//		listBBCode = ...
+		listBBCode = new ArrayList<BBCode>();
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			listBBCode.addAll(forumService.getBBCode(sProvider));
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+    List<BBCode> bbCodes = new ArrayList<BBCode>();
+    bbCodes.addAll(BBCodeData.createDefaultBBcode());
+    if(listBBCode.isEmpty())listBBCode.addAll(bbCodes);
+    else {
+    	boolean isAdd ;
+	    for (BBCode bbc : bbCodes) {
+	    	isAdd = true;
+	    	for (BBCode code : listBBCode) {
+		      if(bbc.getTagName().equals(code.getTagName()) && (bbc.isOption() == code.isOption())) {
+		      	isAdd = false;
+		      	break;
+		      }
+	      }
+	    	if(isAdd) listBBCode.add(bbc);
+	    }
+    }
+    
+		for (BBCode bbc : listBBCode) {
+			UIFormCheckBoxInput<Boolean>isActiveBBcode = new UIFormCheckBoxInput<Boolean>(bbc.getId(), bbc.getId(), false);
+    	isActiveBBcode.setChecked(bbc.isActive());
+      bbcodeTab.addChild(isActiveBBcode);
+    }
+		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
 		forumSortTab.addUIFormInput(topicSortBy) ;
@@ -189,6 +231,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(forumSortTab) ;
 		addUIFormInput(forumCensorTab) ;
 		addUIFormInput(notifyEmailTab) ;
+		addUIFormInput(bbcodeTab) ;
 		//addUIFormInput(activeTopicTab) ;
 		if(ForumUtils.enableIPLogging()){
 			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
@@ -200,6 +243,13 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		}
 	}
 	
+	@SuppressWarnings("unused")
+  private List<BBCode> getListBBcode() throws Exception{
+		if(isEditBBcode){
+			// add service
+		}
+		return listBBCode;
+	}
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<String> getListIpBan() throws Exception{
 		listIpBan = new ArrayList<String>();
@@ -298,9 +348,26 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				administrationForm.forumService.saveForumAdministration(sProvider, forumAdministration) ;
-			} finally {
-				sProvider.close();
+			} catch (Exception e) {
 			}
+			UIFormInputWithActions bbcodeTab = administrationForm.getChildById(FIELD_BBCODE_TAB) ;
+//			
+			List<BBCode> bbCodes = new ArrayList<BBCode>();
+			for (BBCode bbc : administrationForm.listBBCode) {
+				boolean isActive = (Boolean)bbcodeTab.getUIFormCheckBoxInput(bbc.getId()).getValue();
+				if(bbc.isActive() != isActive){
+					bbc.setActive(isActive);
+					bbCodes.add(bbc);
+				}
+      }
+			if(!bbCodes.isEmpty()){
+				try {
+					administrationForm.forumService.saveBBCode(sProvider, bbCodes);
+	      } catch (Exception e) {
+	      }
+	      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsGetSv(true);
+			}
+			sProvider.close();
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -342,7 +409,22 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIForumAdministrationForm uiForm = event.getSource();
 			uiForm.id = Integer.parseInt(id);
+			if(id.equals("bbcodesTab")){
+				UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+	      popupWindow.setWindowSize(650, 450) ;
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+
+	static	public class AddNewBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAddBBCodeForm bbcForm = popupAction.activate(UIAddBBCodeForm.class, 670) ;
+			bbcForm.setId("AddBBCodeForm") ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

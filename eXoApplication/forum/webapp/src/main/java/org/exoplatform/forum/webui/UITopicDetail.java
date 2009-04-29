@@ -30,9 +30,11 @@ import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
+import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -167,6 +169,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean enableIPLogging = true;
 	private boolean isCanPost = false;
 	private boolean canCreateTopic;
+	private boolean isGetSv = true;
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -215,6 +219,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topicId ;
+		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		forumPortlet.updateAccessTopic(topicId);
@@ -230,6 +235,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
+		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
@@ -252,6 +258,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
+		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
@@ -297,6 +304,40 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     } catch (Exception e) {
 	    e.printStackTrace();
     }
+	}
+	
+	public void setIsGetSv(boolean isGetSv) {
+		this.isGetSv = isGetSv;
+  }
+	
+	@SuppressWarnings("unused")
+  private String getReplaceByBBCode(String s) throws Exception {
+		if(isGetSv) {
+			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+			try {
+				listBBCode = forumService.getBBCodeUse(sProvider);
+				isGetSv = false;
+	    } catch (Exception e) {
+	    }
+		}
+		List<BBCode> bbCodes = new ArrayList<BBCode>();
+    bbCodes.addAll(BBCodeData.createDefaultBBcode());
+    if(listBBCode.isEmpty())listBBCode.addAll(bbCodes);
+    else {
+    	boolean isAdd ;
+	    for (BBCode bbc : bbCodes) {
+	    	isAdd = true;
+	    	for (BBCode code : listBBCode) {
+		      if(bbc.getTagName().equals(code.getTagName()) && (bbc.isOption() == code.isOption())) {
+		      	isAdd = false;
+		      	break;
+		      }
+	      }
+	    	if(isAdd) listBBCode.add(bbc);
+	    }
+    }
+    s = BBCodeData.getReplacementByBBcode(s, listBBCode);
+    return s;
 	}
 	
 	private boolean getCanCreateTopic() throws Exception {

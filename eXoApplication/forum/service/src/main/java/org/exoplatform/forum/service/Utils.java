@@ -33,13 +33,14 @@ public class Utils {
 	public final static String TYPE_CATEGORY = "exo:forumCategory";
 	public final static String TYPE_FORUM = "exo:forum";
 	public final static String TYPE_TOPIC = "exo:topic";
+	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
 	
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
 	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
 	public final static String USER_PROFILE_HOME = "UserAdministration".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
-	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
 	public final static String FORUM_BAN_IP = "forumBanIP".intern() ;
+	public final static String FORUM_BBCODE = "forumBBCode".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
@@ -49,6 +50,7 @@ public class Utils {
 	public final static String POST = "post".intern() ;
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
+	public final static String BBCODE = "bbcode".intern() ;
 	public final static String RECEIVE_MESSAGE = "receive".intern() ;
 	public final static String SEND_MESSAGE = "send".intern() ;
 	

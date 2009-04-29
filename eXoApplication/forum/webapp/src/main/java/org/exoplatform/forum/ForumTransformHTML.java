@@ -42,8 +42,8 @@ public class ForumTransformHTML {
 		int tagIndex = 0;
 		// Lower Case bbc
 		String start, end;
-		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT",
-		    "RIGHT", "CENTER", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "CODE", "LIST" };
+		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", 
+				"LEFT", "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "CSS", "EMAIL", "CODE", "LIST" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
 			end = "[/" + bbc + "]";

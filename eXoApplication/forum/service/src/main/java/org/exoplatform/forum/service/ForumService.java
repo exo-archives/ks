@@ -933,4 +933,8 @@ public interface ForumService {
   public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception;
   
   public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception;
+  
+  public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception ;
+  public List<BBCode> getBBCode(SessionProvider sProvider) throws Exception ;
+  public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception;
 }

@@ -38,6 +38,7 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -659,5 +660,17 @@ public class ForumServiceImpl implements ForumService, Startable{
 	
 	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception{
 		storage_.updateEmailWatch(listNodeId, newEmailAdd, userId, sessionProvider);
+	}
+	
+	public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception{
+		storage_.saveBBCode(sProvider, bbcodes);
+	}
+	
+	public List<BBCode> getBBCode(SessionProvider sProvider) throws Exception {
+		return storage_.getBBCode(sProvider);
+	}
+
+	public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception {
+		return storage_.getBBCodeUse(sProvider);
 	}
 }
