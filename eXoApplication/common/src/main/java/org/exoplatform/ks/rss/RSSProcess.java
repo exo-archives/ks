@@ -362,7 +362,6 @@ public class RSSProcess extends RSSGenerate {
 				parentNode = result.getNodes().nextNode() ;
 			}
 		} catch (Exception e){
-			e.printStackTrace();
 			return null;
 		}
 		Node RSSNode = null;

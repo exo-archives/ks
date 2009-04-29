@@ -140,13 +140,12 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		fieldInput.setValue(oldValue) ;
 	} 
 
-	public void setCategoryValue(String categoryId, boolean isUpdate) throws Exception{
+	public void setCategoryValue(Category cat, boolean isUpdate) throws Exception{
 		if(isUpdate) {
 			FAQService faqService = FAQUtils.getFAQService();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			Category cat = faqService.getCategoryById(categoryId, sessionProvider) ;
 			sessionProvider.close();
-			categoryId_ = categoryId ; 
+			categoryId_ = cat.getId() ; 
 			oldName_ = cat.getName() ;
 			index_ = cat.getIndex();
 			if(oldName_ != null && oldName_.trim().length() > 0) getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;

@@ -464,9 +464,9 @@ public class UICategories extends UIContainer{
 						return ;
 					}
 				} catch (Exception e) {
+					FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 					sessionProvider.close();
 					return ;
@@ -498,24 +498,19 @@ public class UICategories extends UIContainer{
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 					uiCategoryForm.init(false);
-					uiCategoryForm.setCategoryValue(categoryId, true) ;
+					Category category = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider);
+					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-				sessionProvider.close();
-				return ;
 			}
 			sessionProvider.close();
 		}
@@ -534,42 +529,31 @@ public class UICategories extends UIContainer{
 				String parentCateId = null;
 				if(uiCategories.viewBackIcon)parentCateId = uiCategories.categoryId_;
 				else parentCateId = uiCategories.parentCateID_;
-				/*if(uiCategories.categoryId_ != null && uiCategories.parentCateID_ == null && uiCategories.viewBackIcon 
-					&& !categoryId.equals(uiCategories.categoryId_)){
-					parentCateId = uiCategories.categoryId_;
-				} else { parentCateId = uiCategories.parentCateID_;}*/
 				if(uiCategories.faqSetting_.isAdmin() || uiCategories.canEditQuestion 
 					|| cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 					if (uiCategories.faqService_.getCategoryNodeById(parentCateId, sessionProvider).hasNode(categoryId)) {
+						Category category = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider);
 						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;	
 						uiPopupContainer.setId("FAQEditSubCategoryForm") ;
 						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 						categoryForm.init(false) ;
-						//String parentCategoryId = newPath_.substring(newPath_.lastIndexOf("/")+1, newPath_.length()) ;
 						categoryForm.setParentId(parentCateId) ;
-						categoryForm.setCategoryValue(categoryId, true) ;
+						categoryForm.setCategoryValue(category, true) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						//questions.setIsNotChangeLanguage();
 						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-						sessionProvider.close();
-						return ;
 					}
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.erroDonotHavePermissionEdit", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//questions.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//questions.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			sessionProvider.close();
@@ -600,26 +584,17 @@ public class UICategories extends UIContainer{
 						}
 					}
 					uiCategories.faqService_.removeCategory(categoryId, sessionProvider) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				FAQUtils.findCateExist(uiCategories.faqService_, uiPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-				sessionProvider.close();
-				return ;
 			}
 			sessionProvider.close();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
 	
@@ -641,39 +616,9 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					try {
 						questions.setQuestions() ;
-					} catch (Exception pathEx){
-						UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
-						String pathCate = "" ;
-						for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")) {
-							if(path.equals("FAQService")){
-								pathCate = path ;
-								continue ;
-							}
-							try {
-								uiCategories.faqService_.getCategoryById(path, sessionProvider);
-								if(pathCate.trim().length() > 0) pathCate += "/" ;
-								pathCate += path ;
-							} catch (Exception pathExc) {
-								try {
-									breadcumbs.setUpdataPath(pathCate) ;
-								} catch (Exception exc) {
-									e.printStackTrace();
-								}
-								if(pathCate.indexOf("/") > 0) {
-									questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
-									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-								} else {
-									questions.categoryId_ = null ;
-									//questions.setCategories() ;
-									questions.setListObject();
-									questions.setIsNotChangeLanguage() ;
-									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-								}
-								break ;
-							}
-						}
-					}
+					} catch (Exception pathEx){}
 					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+					FAQUtils.findCateExist(uiCategories.faqService_, fAQContainer, sessionProvider);
 					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 					sessionProvider.close();
 					return ;
@@ -759,27 +704,19 @@ public class UICategories extends UIContainer{
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						//question.setIsNotChangeLanguage();
 						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-						sessionProvider.close();
-						return ;
 					}
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
-				sessionProvider.close();
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			} finally{
 				sessionProvider.close();
-				return ;
 			}
 		}
 	}
@@ -804,15 +741,12 @@ public class UICategories extends UIContainer{
 				}
 				if(watch != null)uiCategories.faqService_.addWatch(objectId, watch, sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
-			 	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-			 	event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 			} catch (Exception e) {
+				FAQUtils.findCateExist(uiCategories.faqService_, container, sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
-				sessionProvider.close();
-				return ;
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 			sessionProvider.close();
 		}
 	}
@@ -839,18 +773,13 @@ public class UICategories extends UIContainer{
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						//uiQuestions.setIsNotChangeLanguage();
 						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-						sessionProvider.close();
-						return ;
 					}
 				} catch (Exception e) {
+					FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//uiQuestions.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 
 				// watch question manager
@@ -866,10 +795,7 @@ public class UICategories extends UIContainer{
 				} catch (Exception e) {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//uiQuestions.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			}
 			sessionProvider.close();
@@ -880,21 +806,17 @@ public class UICategories extends UIContainer{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				uiCategories.faqService_.getCategoryById(cateId, sessionProvider) ;
+				uiCategories.faqService_.UnWatch(cateId, sessionProvider,FAQUtils.getCurrentUser()) ;
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				return ;
 			}
-			uiCategories.faqService_.UnWatch(cateId, sessionProvider,FAQUtils.getCurrentUser()) ;
 			sessionProvider.close();
-			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 	
@@ -912,9 +834,6 @@ public class UICategories extends UIContainer{
 				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
-				sessionProvider.close();
-				return ;
 			}
 			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;

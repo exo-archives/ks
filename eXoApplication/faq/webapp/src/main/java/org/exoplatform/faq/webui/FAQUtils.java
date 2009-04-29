@@ -71,6 +71,53 @@ public class FAQUtils {
 	public static FAQService getFAQService() throws Exception {
 		return (FAQService)PortalContainer.getComponent(FAQService.class) ;
 	}
+	
+	/**
+	 * Find category which is already exist.<br/>
+	 * for example: when you are standing in category D in path: Root\A\B\C\D, you do some action
+	 * (add new category, add question, go out to category C or B) but another moderator delete
+	 * category C (or B, A). Then this function will be use to find the nearest category with
+	 * category D (which is exist) and move you into this category.<br/>
+	 * <u>Detail:</u><br/>
+	 * the first, system get category C, if C is exist, you will be moved into C else jump to 
+	 * B and test again.<br/>
+	 * This processing is done until find a category already exist.
+	 * @param faqService_			FAQ Service
+	 * @param fAQContainer		UIFAQContainer this component is used to updated data
+	 * @param sessionProvider	SessionProvider
+	 * @throws Exception
+	 */
+	public static void findCateExist(FAQService faqService_, UIFAQContainer fAQContainer, SessionProvider sessionProvider) throws Exception{
+		UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class) ;
+		String pathCate = "" ;
+		for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")){
+			if(path.equals("FAQService")){
+				pathCate = path ;
+				continue ;
+			}
+			try {
+				faqService_.getCategoryById(path, sessionProvider);
+				if(pathCate.trim().length() > 0) pathCate += "/" ;
+				pathCate += path ;
+			} catch (Exception pathExc) {
+				UIQuestions questions = fAQContainer.findFirstComponentOfType(UIQuestions.class);
+				try {
+					breadcumbs.setUpdataPath(pathCate) ;
+				} catch (Exception exc) {
+					exc.printStackTrace();
+				}
+				if(pathCate.indexOf("/") > 0) {
+					questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
+				} else {
+					questions.categoryId_ = null ;
+					questions.setListObject();
+					questions.setIsNotChangeLanguage() ;
+				}
+				((UICategories)fAQContainer.findFirstComponentOfType(UICategories.class)).setPathCategory(pathCate);
+				break;
+			}
+		}
+	}
 
 	public static String filterString(String text, boolean isEmail) {
 		for (String str : specialString) {
@@ -511,4 +558,5 @@ public class FAQUtils {
 		}
 		return limitMB ;
 	}
+	
 }

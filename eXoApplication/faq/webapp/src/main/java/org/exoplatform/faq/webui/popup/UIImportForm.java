@@ -154,7 +154,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
 				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			} catch (Exception e){
-				e.printStackTrace();
+				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIFAQContainer.class), sProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;

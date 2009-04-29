@@ -56,7 +56,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	public void setUpdataPath(String path) throws Exception {
-		if(path != null && path.length() > 0 ) {
+		if(path != null && path.trim().length() > 0 ) {
 			String temp[] = path.split("/") ;
 			this.path_ = path ;
 			paths_.clear() ;
@@ -136,10 +136,14 @@ public class UIBreadcumbs extends UIContainer {
 				uiQuestions.backPath_ = "" ;
 				uiQuestions.language_ = "";
 			}
-			uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
+			try{
+				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
+				uiBreadcums.setUpdataPath(paths);
+				categories.setPathCategory(paths);
+			} catch(Exception e){
+				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class), sProvider);
+			}
 			sProvider.close();
-			uiBreadcums.setUpdataPath(paths);
-			categories.setPathCategory(paths);
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 		}
 	}

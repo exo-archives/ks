@@ -505,9 +505,6 @@ public class UIQuestions extends UIContainer {
 				quesLanguage.setLanguage(question.getLanguage()) ;
 				quesLanguage.setQuestion(question.getQuestion());
 				quesLanguage.setDetail(question.getDetail()) ;
-//				TODO:
-//				quesLanguage.setAnswers(question.getAnswers()) ;
-//				quesLanguage.setComments(question.getComments());
 				
 				listQuestionLanguage.add(quesLanguage) ;
 
@@ -518,9 +515,6 @@ public class UIQuestions extends UIContainer {
 						question.setLanguage(questionLanguage.getLanguage()) ;
 						question.setQuestion(questionLanguage.getQuestion());
 						question.setDetail(questionLanguage.getDetail()) ;
-//						TODO: 
-//						question.setAnswers(questionLanguage.getAnswers()) ;
-//						question.setComments(questionLanguage.getComments());
 					}
 				}
 			}
@@ -759,7 +753,6 @@ public class UIQuestions extends UIContainer {
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 				try {
 					Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
-					//FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(question.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
@@ -773,6 +766,7 @@ public class UIQuestions extends UIContainer {
 						return ;
 					}
 				} catch (Exception e) {
+					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
@@ -787,8 +781,6 @@ public class UIQuestions extends UIContainer {
 			}
 			category.init(true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-			//UIFAQContainer fAQContainer = question.getAncestorOfType(UIFAQContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
 		}
 	}
 
@@ -799,56 +791,25 @@ public class UIQuestions extends UIContainer {
 			questions.isChangeLanguage = false ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			if(categoryId != null){
+				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				try {
 					faqService_.getCategoryById(categoryId, sessionProvider);
+					sessionProvider.close();
 				} catch (Exception e) {
 					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
 					try {
 						questions.setQuestions() ;
-					} catch (Exception pathEx){
-						UIFAQContainer container = questions.getParent() ;
-						UIBreadcumbs breadcumbs = container.findFirstComponentOfType(UIBreadcumbs.class) ;
-						String pathCate = "" ;
-						for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")) {
-							if(path.equals("FAQService")){
-								pathCate = path ;
-								continue ;
-							}
-							try {
-								faqService_.getCategoryById(path, sessionProvider);
-								if(pathCate.trim().length() > 0) pathCate += "/" ;
-								pathCate += path ;
-							} catch (Exception pathExc) {
-								try {
-									breadcumbs.setUpdataPath(pathCate) ;
-								} catch (Exception exc) {
-									e.printStackTrace();
-								}
-								if(pathCate.indexOf("/") > 0) {
-									questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
-									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-								} else {
-									questions.categoryId_ = null ;
-									//questions.setCategories() ;
-									questions.setListObject();
-									questions.setIsNotChangeLanguage() ;
-									event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
-								}
-								break ;
-							}
-						}
-					}
-					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+						FAQUtils.findCateExist(faqService_, fAQContainer, sessionProvider);
+					} catch (Exception pathEx){}
 					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 					sessionProvider.close();
 					return ;
 				}
 			}
-			sessionProvider.close();
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
@@ -873,7 +834,6 @@ public class UIQuestions extends UIContainer {
 	static	public class SettingActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
-			//String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 480) ;
@@ -915,31 +875,25 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					return ;
 				}
-				
-				/*UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
-				popupContainer.setId("CategoryWatchForm") ;
-				uiWatchForm.setCategoryID(objectId) ;*/
 			} else {
 				try {
 					faqService_.getQuestionById(objectId, sessionProvider) ;
+					UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+					UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+					UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
+					popupContainer.setId("CategoryWatchForm") ;
+					uiWatchForm.setQuestionID(objectId) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
 					UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					return ;
 				}
-				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIWatchForm uiWatchForm = popupAction.activate(UIWatchForm.class, 420) ;
-				popupContainer.setId("CategoryWatchForm") ;
-				uiWatchForm.setQuestionID(objectId) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
+			sessionProvider.close();
 		}
 	}
 
@@ -955,7 +909,6 @@ public class UIQuestions extends UIContainer {
 			if(objectID.indexOf("Question") < 0){
 				try {
 					Category cate = faqService_.getCategoryById(objectID, sessionProvider) ;
-					//FAQServiceUtils serviceUtils = new FAQServiceUtils() ;
 					if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 						UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 						UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
@@ -968,24 +921,17 @@ public class UIQuestions extends UIContainer {
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 						uiQuestions.setIsNotChangeLanguage();
 						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-						sessionProvider.close();
-						return ;
 					}
 				} catch (Exception e) {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					uiQuestions.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 
 				// watch question manager
 			} else {
 				try {
-					/*Question question = faqService_.getQuestionById(objectID, sessionProvider) ;
-					String currentUser = FAQUtils.getCurrentUser() ;
-					FAQServiceUtils serviceUtils = new FAQServiceUtils() ;*/
 					UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 					UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
 					UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
@@ -997,8 +943,6 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					uiQuestions.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			}
 			sessionProvider.close();
@@ -1009,28 +953,24 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
 				faqService_.getQuestionById(questionId, sessionProvider) ;
+				faqService_.UnWatchQuestion(questionId, sessionProvider,FAQUtils.getCurrentUser()) ;
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				uiQuestions.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				return ;
 			}
-			faqService_.UnWatchQuestion(questionId, sessionProvider,FAQUtils.getCurrentUser()) ;
 			sessionProvider.close();
-			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 
 	static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			//String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -1083,33 +1023,26 @@ public class UIQuestions extends UIContainer {
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			
 			try {
-				//Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
-				//String currentUser = FAQUtils.getCurrentUser() ;
 				if(questions.faqSetting_.isAdmin() || questions.canEditQuestion) {
+					Category category = faqService_.getCategoryById(categoryId, sessionProvider);
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
 					uiCategoryForm.init(false);
 					if(categoryId != null && !categoryId.equals("null"))
 						uiCategoryForm.setParentId(uiPortlet.findFirstComponentOfType(UICategories.class).parentCateID_);
-					uiCategoryForm.setCategoryValue(categoryId, true) ;
+					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-				sessionProvider.close();
-				return ;
 			}
 			sessionProvider.close();
 		}
@@ -1158,21 +1091,21 @@ public class UIQuestions extends UIContainer {
 						faqService_.saveAnswer(questions.questionView_, answer, false, sProvider);
 					else
 						multiLanguages.saveAnswer(questionNode, answer,language_, sProvider);
-					sProvider.close();
 					questions.setIsNotChangeLanguage();
 				}
 			} catch (Exception e){
-				UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
-				//UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				questions.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				return ;
 			}
-			UIFAQContainer faqContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
+			sProvider.close();
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 
@@ -1237,9 +1170,6 @@ public class UIQuestions extends UIContainer {
 							uiQuestions.listQuestion_.get(i).setQuestion(uiQuestions.listQuestionLanguage.get(0).getQuestion()) ;
 							uiQuestions.listQuestion_.get(i).setDetail(uiQuestions.listQuestionLanguage.get(0).getDetail()) ;
 							uiQuestions.listQuestion_.get(i).setLanguage(uiQuestions.listQuestionLanguage.get(0).getLanguage()) ;
-//						TODO:
-//							uiQuestions.listQuestion_.get(i).setAnswers(uiQuestions.listQuestionLanguage.get(0).getAnswers()) ;
-//							uiQuestions.listQuestion_.get(i).setComments(uiQuestions.listQuestionLanguage.get(0).getComments()) ;
 							break ;
 						}
 					}
@@ -1337,11 +1267,14 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.questionView_ = "" ;
 				}
 			} catch(javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				uiQuestions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				//return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} finally {
@@ -1354,9 +1287,6 @@ public class UIQuestions extends UIContainer {
 	static  public class ResponseQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
-			UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question2 = null ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
@@ -1365,18 +1295,25 @@ public class UIQuestions extends UIContainer {
 				question2 = faqService_.getQuestionById(questionId, sessionProvider);
 				cateIsApprovedAnswers = !faqService_.getCategoryById(question.categoryId_, sessionProvider).isModerateAnswers();
 			} catch(javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(question.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				question.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(question) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(question.getAncestorOfType(UIFAQContainer.class)) ;
 				sessionProvider.close();
 				return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
+			UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
 			if(questionId.equals(question.questionView_)){
 				responseForm.setQuestionId(question2, language_, cateIsApprovedAnswers) ;
@@ -1393,9 +1330,6 @@ public class UIQuestions extends UIContainer {
 	static  public class EditAnswerActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
-			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question = null ;
 			Answer answer = null;
 			String answerId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -1410,18 +1344,25 @@ public class UIQuestions extends UIContainer {
 																								answerId, language_);
 				}
 			} catch(javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				uiQuestions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
 				sessionProvider.close();
 				return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
+			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
 			responseForm.setAnswerInfor(question, answer, language_) ;
 			responseForm.setFAQSetting(uiQuestions.faqSetting_);
@@ -1468,6 +1409,11 @@ public class UIQuestions extends UIContainer {
 			try{
 				question = faqService_.getQuestionById(questionId, sessionProvider) ;
 			} catch(javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1515,7 +1461,6 @@ public class UIQuestions extends UIContainer {
 			deleteQuestion.setQuestionId(question) ;
 			popupContainer.setId("FAQDeleteQuestion") ;
 			popupAction.activate(popupContainer, 450, 250) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1530,7 +1475,7 @@ public class UIQuestions extends UIContainer {
 			try{
 				faqService_.getCategoryById(questions.categoryId_, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
-				e.printStackTrace() ;
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1546,7 +1491,6 @@ public class UIQuestions extends UIContainer {
 			uiPrintAll.setCategoryId(questions.categoryId_, faqService_, questions.faqSetting_, questions.canEditQuestion);
 			popupContainer.setId("FAQPrintAllQuestion") ;
 			popupAction.activate(popupContainer, 800, 500) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1559,6 +1503,11 @@ public class UIQuestions extends UIContainer {
 			try{
 				question = faqService_.getQuestionById(questions.questionView_, sProvider);
 			} catch(Exception e){
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1588,7 +1537,6 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
 			String commentId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				Node node = faqService_.getQuestionNodeById(questions.questionView_, sessionProvider);
@@ -1599,12 +1547,16 @@ public class UIQuestions extends UIContainer {
 					faqService_.deleteComment(questions.questionView_, commentId, sessionProvider);
 				}
 			} catch (javax.jcr.PathNotFoundException e) {
-				e.printStackTrace() ;
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				};
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				questions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 				sessionProvider.close();
 				return ;
 			} catch (Exception e) { 
@@ -1658,7 +1610,11 @@ public class UIQuestions extends UIContainer {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace() ;
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1691,6 +1647,11 @@ public class UIQuestions extends UIContainer {
 			try{
 				question = faqService_.getQuestionById(questionId, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1724,7 +1685,6 @@ public class UIQuestions extends UIContainer {
 			commentForm.setInfor(question, commentId, questions.faqSetting_, language_) ;
 			popupContainer.setId("FAQCommentForm") ;
 			popupAction.activate(popupContainer, 850, 500) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1743,7 +1703,11 @@ public class UIQuestions extends UIContainer {
 			try{
 				question = faqService_.getQuestionById(questions.questionView_, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
-				e.printStackTrace() ;
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1797,6 +1761,11 @@ public class UIQuestions extends UIContainer {
 			try {
 				faqService_.getQuestionById(questionId, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
+				try{
+					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1814,7 +1783,6 @@ public class UIQuestions extends UIContainer {
 			moveQuestionForm.setFAQSetting(questions.faqSetting_) ;
 			popupAction.activate(popupContainer, 600, 400) ;
 			moveQuestionForm.setListCate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -1831,12 +1799,16 @@ public class UIQuestions extends UIContainer {
 				question = faqService_.getQuestionById(questionId, sessionProvider) ;
 				categoryId = question.getCategoryId() ;
 			} catch (Exception e) {
+				try{
+					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				uiQuestions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
 				sessionProvider.close();
 				return ;
 			}
@@ -1938,17 +1910,18 @@ public class UIQuestions extends UIContainer {
 					}
 				}
 			} catch (Exception e){
-				e.printStackTrace();
-				UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+				try{
+					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
+				}catch(Exception exc){
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				uiQuestions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
 			sessionProvider.close();
 			uiQuestions.setIsNotChangeLanguage();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 	
@@ -1973,7 +1946,6 @@ public class UIQuestions extends UIContainer {
 				String link = uiForm.getLinkDiscuss(); 
 				link = link.replaceFirst("private", "public");
 				String topicId = topic.getId() ;
-				System.out.println("\n\n ==========>" + categoryId+" / "+ forumId + " / " + topicId);
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				Question question = faqService.getQuestionById(questionId, sProvider);
 				String userName = question.getAuthor();
@@ -2154,24 +2126,16 @@ public class UIQuestions extends UIContainer {
 					}
 					uiQuestions.setIsNotChangeLanguage() ;
 					uiQuestions.listCateId_.clear() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//question.setIsNotChangeLanguage();
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					sessionProvider.close();
-					return ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//question.setIsNotChangeLanguage();
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-				sessionProvider.close();
-				return ;
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			sessionProvider.close();
 		}
 	}
