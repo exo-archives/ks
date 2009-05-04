@@ -330,7 +330,7 @@ public class ForumTransformHTML {
 				if(text == null || text.trim().length() == 0) continue;
 				String text_ = text.replaceAll("&nbsp;", "&#32");
 				buffer = new StringBuffer();
-				buffer.append("<div>Code:</div><div class=\"ClassCode\">");
+				buffer.append("<div class=\"ClassCode\">");
 				buffer.append("<pre>").append(text_).append("</pre></div>");
 				b = StringUtils.replace(b, "[code]" + text + "[/code]", buffer.toString());
 			} catch (Exception e) {

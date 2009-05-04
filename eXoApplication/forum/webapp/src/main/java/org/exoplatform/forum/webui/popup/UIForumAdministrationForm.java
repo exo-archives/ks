@@ -409,11 +409,13 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIForumAdministrationForm uiForm = event.getSource();
 			uiForm.id = Integer.parseInt(id);
-			if(id.equals("bbcodesTab")){
+			if(uiForm.id == 3){
 				UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
 	      popupWindow.setWindowSize(650, 450) ;
+	      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
+			} else {
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 

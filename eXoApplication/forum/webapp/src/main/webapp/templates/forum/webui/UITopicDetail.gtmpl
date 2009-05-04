@@ -104,14 +104,17 @@
 		</div>
 		<div class="TagContainer" style="float:left;">
 			<div class="TagContent">
-				<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;">Tag:</div>
 			<%  
 			 	List<Tag> tags = uicomponent.getTagsByTopic();
+			 	if(!tags.isEmpty()){
+			%>
+				<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;">Tag:</div>
+			<%}
 			 	for(tag in tags) {
 			 		String tagName = tag.getName();
 			 		String color = tag.getColor();
 			%>
-				<a class="TagIcon FloatLeft ${color}TagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>"><span></span></a>
+				<a class="TagIcon FloatLeft ${color}TagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 			<%} %>
 				<div style="clear:left;"><span></span></div>
 			</div>

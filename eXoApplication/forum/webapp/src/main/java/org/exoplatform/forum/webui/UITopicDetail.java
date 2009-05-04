@@ -368,7 +368,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				listUser.addAll(Arrays.asList(canPost));
 			}
 		}
-		if(listUser.size() > 0) {
+		if(!listUser.isEmpty()) {
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}
 		return true ;

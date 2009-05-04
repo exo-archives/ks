@@ -56,6 +56,15 @@
 .UITopicDetail .ForumToolbar .TagIcon {
 	background: url('icons/16x16/TagIcon.gif') no-repeat center left;
 }
+
+.UITopicDetail .TagContainer .TagIcon {
+	white-space: nowrap;
+	background-position: left;
+	line-height: 24px;
+	padding: 0px 0px 0px 20px;
+	margin: 0px 2px;
+	display: block;
+}
 /*************************************** ContentContainer ************************************/
 .UITopicDetail .PostContentContainer .PostContent {
 	min-height: 130px ;
@@ -335,10 +344,4 @@
 	margin: 0px auto;
 	height: 25px;
 	padding: 10px 0px 0px 0px;
-}
-
-.UITopicDetail .TagIcon {
-	background-position: center;
-	height: 24px; width: 24px;
-	display: block;
 }
