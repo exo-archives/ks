@@ -137,24 +137,36 @@ public class RSSProcess extends RSSGenerate {
 		try{
 			Node postNode = (Node)appHomeNode.getSession().getItem(path);
 			Node topicNode = postNode.getParent();
+			
+			if((postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean() &&
+					(topicNode.hasProperty("exo:isApproved") && !topicNode.getProperty("exo:isApproved").getBoolean())) ||
+					(postNode.hasProperty("exo:userPrivate") && 
+							!postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"))
+					)
+				return;
+			
 			Node forumNode = topicNode.getParent();
 			Node categoryNode = forumNode.getParent();
 			
-			Node nodes[] = new Node[]{topicNode, forumNode, categoryNode};
-			
-			if((topicNode.hasProperty("exo:isApproved") && !topicNode.getProperty("exo:isApproved").getBoolean())||
-					(postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
+			if((postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
 					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())||
-					(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean()) ||
-					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())){
-				if(topicNode.hasProperty("exo:description")){
-					removeRSSItem(postNode.getName(), topicNode, topicNode.getProperty("exo:description").getString());
-					removeRSSItem(postNode.getName(), forumNode, forumNode.getProperty("exo:description").getString());
-					removeRSSItem(postNode.getName(), categoryNode, categoryNode.getProperty("exo:description").getString());
-				}else{
-					removeRSSItem(postNode.getName(), topicNode, " ");
-					removeRSSItem(postNode.getName(), forumNode, " ");
-					removeRSSItem(postNode.getName(), categoryNode, " ");
+					(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean())
+					){
+				if(typeEvent != Event.NODE_ADDED){
+					if(topicNode.hasProperty("exo:description"))
+						removeRSSItem(postNode.getName(), topicNode, topicNode.getProperty("exo:description").getString());
+					else
+						removeRSSItem(postNode.getName(), topicNode, " ");
+					
+					if(forumNode.hasProperty("exo:description"))
+						removeRSSItem(postNode.getName(), forumNode, forumNode.getProperty("exo:description").getString());
+					else
+						removeRSSItem(postNode.getName(), forumNode, " ");
+					
+					if(categoryNode.hasProperty("exo:description"))
+						removeRSSItem(postNode.getName(), categoryNode, categoryNode.getProperty("exo:description").getString());
+					else
+						removeRSSItem(postNode.getName(), categoryNode, " ");
 				}
 				return;
 			}
@@ -171,7 +183,7 @@ public class RSSProcess extends RSSGenerate {
 			entry.setLink(linkItem + topicNode.getName());
 			Node RSSNode = null;
 			SyndFeed feed = null;
-			for(Node node : nodes){
+			for(Node node : new Node[]{topicNode, forumNode, categoryNode}){
 				isNew = false;
 				data = new RSS();
 				try{
