@@ -364,11 +364,11 @@
   width:55px;
 }
 
-.UIForumPortlet .PostViewContainer .QuoteContent {
+.UIForumPortlet .QuoteContent {
 	padding: 10px;
 }
 
-.UIForumPortlet .PostViewContainer .Classquote {
+.UIForumPortlets .Classquote {
 	background: #ededf7;
 	border: 1px solid #d8d8d8;
 	padding: 6px 6px 6px 15px;

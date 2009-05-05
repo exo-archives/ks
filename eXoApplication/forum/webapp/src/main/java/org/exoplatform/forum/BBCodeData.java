@@ -99,9 +99,8 @@ public class BBCodeData {
   }
 	
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
-		int lastIndex = 0;
-		int tagIndex = 0;
-		String start, end, bbc, str="ss", param, option;
+		int lastIndex = 0, tagIndex = 0, clsIndex = 0;
+		String start, end, bbc, str="", param, option;
 		for (BBCode bbcode : bbcodes) {
 			bbc = bbcode.getTagName();
 			if(bbc.equals("URL")){
@@ -110,47 +109,108 @@ public class BBCodeData {
 				s = StringUtils.replace(s, "[LINK", "[URL");
 				s = StringUtils.replace(s, "[/LINK]", "[/URL]");
 			}
-			lastIndex = 0; tagIndex = 0;
-			if(bbcode.isOption()){
-				start = "[" + bbc + "=";
-				end = "[/" + bbc + "]";
-				s = StringUtils.replace(s, start.toLowerCase(), start);
-				s = StringUtils.replace(s, end.toLowerCase(), end);
-				while ((tagIndex = s.indexOf(start, lastIndex)) != -1) {
-					lastIndex = tagIndex + 1;
-					try {
-						int clsIndex = s.indexOf(end, tagIndex);
-						str = s.substring(tagIndex + start.length(), clsIndex);
-						option = str.substring(0, str.indexOf("]"));
-						param = str.substring(str.indexOf("]")+1);
-						param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
-						param = StringUtils.replace(param, "{option}", option.trim());
-						s = StringUtils.replace(s, start + str + end, param);
-					} catch (Exception e) {
-						continue;
+			bbc = bbc.toLowerCase();
+			if(!bbc.equals("list")){
+				lastIndex = 0; tagIndex = 0;
+				if(bbcode.isOption()){
+					start = "[" + bbc + "=";
+					end = "[/" + bbc + "]";
+					s = StringUtils.replace(s, start.toUpperCase(), start);
+					s = StringUtils.replace(s, end.toUpperCase(), end);
+					while ((tagIndex = s.indexOf(start, lastIndex)) != -1) {
+						lastIndex = tagIndex + 1;
+						try {
+							clsIndex = s.indexOf(end, tagIndex);
+							str = s.substring(tagIndex + start.length(), clsIndex);
+							option = str.substring(0, str.indexOf("]"));
+							param = str.substring(str.indexOf("]")+1);
+							param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
+							param = StringUtils.replace(param, "{option}", option.trim());
+							s = StringUtils.replace(s, start + str + end, param);
+						} catch (Exception e) {
+							continue;
+						}
+					}
+				} else {
+					start = "[" + bbc + "]";
+					end = "[/" + bbc + "]";
+					s = StringUtils.replace(s, start.toUpperCase(), start);
+					s = StringUtils.replace(s, end.toUpperCase(), end);
+					while ((tagIndex = s.indexOf(start, lastIndex)) != -1) {
+						lastIndex = tagIndex + 1;
+						try {
+							clsIndex = s.indexOf(end, tagIndex);
+							str = s.substring(tagIndex + start.length(), clsIndex);
+							param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
+							s = StringUtils.replace(s, start + str + end, param);
+						} catch (Exception e) {
+							continue;
+						}
 					}
 				}
-			} else {
-				start = "[" + bbc + "]";
-				end = "[/" + bbc + "]";
-				s = StringUtils.replace(s, start.toLowerCase(), start);
-				s = StringUtils.replace(s, end.toLowerCase(), end);
-				while ((tagIndex = s.indexOf(start, lastIndex)) != -1) {
-					lastIndex = tagIndex + 1;
-					try {
-						int clsIndex = s.indexOf(end, tagIndex);
-						str = s.substring(tagIndex + start.length(), clsIndex);
-						param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
-						s = StringUtils.replace(s, start + str + end, param);
-					} catch (Exception e) {
-						continue;
-					}
-				}
-			}
-    }
+	    } else {
+	    	lastIndex = 0;
+	  		tagIndex = 0;
+	  		s = StringUtils.replace(s, "[LIST", "[list");
+	  		s = StringUtils.replace(s, "[/LIST]", "[/list]");
+	  		while ((tagIndex = s.indexOf("[list]", lastIndex)) != -1) {
+	  			lastIndex = tagIndex + 1;
+	  			try {
+	  				clsIndex = s.indexOf("[/list]", tagIndex);
+	  				str = s.substring(tagIndex + 6, clsIndex);
+	  				String str_ =  "";
+	  				str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
+	  				str_ = StringUtils.replace(str_, "[*]", "</li><li>");
+	  				if(str_.lastIndexOf("</li><li>") > 0) {
+	  					str_ = str_ + "</li>";
+	  				}
+	  				if(str_.indexOf("<br/>") >= 0) {
+	  					str_ = StringUtils.replace(str_, "<br/>", "");
+	  				}
+	  				if(str_.indexOf("<p>") >= 0) {
+	  					str_ = StringUtils.replace(str_, "<p>", "");
+	  					str_ = StringUtils.replace(str_, "</p>", "");
+	  				}
+	  				s = StringUtils.replace(s, "[list]" + str + "[/list]", "<ul>" + str_ + "</ul>");
+	  			} catch (Exception e) {
+	  				continue;
+	  			}
+	  		}
+	  		
+	  		lastIndex = 0;
+	  		tagIndex = 0;
+	  		while ((tagIndex = s.indexOf("[list=", lastIndex)) != -1) {
+	  			lastIndex = tagIndex + 1;
+	  			
+	  			try {
+	  				clsIndex = s.indexOf("[/list]", tagIndex);
+	  				String content = s.substring(tagIndex + 6, clsIndex);
+	  				int clsType = content.indexOf("]");
+	  				String type = content.substring(0, clsType);
+	  				type.replaceAll("\"", "").replaceAll("'", "");
+	  				str = content.substring(clsType + 1);
+	  				String str_ =  "";
+	  				str_ = StringUtils.replaceOnce(str, "[*]", "<li>");
+	  				str_ = StringUtils.replace(str_, "[*]", "</li><li>");
+	  				if(str_.lastIndexOf("</li><li>") > 0) {
+	  					str_ = str_ + "</li>";
+	  				}
+	  				if(str_.indexOf("<br/>") >= 0) {
+	  					str_ = StringUtils.replace(str_, "<br/>", "");
+	  				}
+	  				if(str_.indexOf("<p>") >= 0) {
+	  					str_ = StringUtils.replace(str_, "<p>", "");
+	  					str_ = StringUtils.replace(str_, "</p>", "");
+	  				}
+	  				s = StringUtils.replace(s, "[list=" + content + "[/list]", "<ol type=\""+type+"\">" + str_ + "</ol>");
+	  			} catch (Exception e) {
+	  				continue;
+	  			}
+	  		}
+	    }
+		}
 		return s;
 	}
-	
 }
 
 

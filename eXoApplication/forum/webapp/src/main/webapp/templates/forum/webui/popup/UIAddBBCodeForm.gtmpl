@@ -1,0 +1,154 @@
+<div class="UIAddBBCodeForm">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>
+					<% if(!uiform.getPriview()) {
+						String actionPriview = uicomponent.event("Preview",uiform.PREVIEW);
+					%>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_TAGNAME_INPUT);%></td>
+							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldComponent" style="width:360px;"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldComponent">
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="$actionPriview">
+																	<span><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></span>
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_USEOPTION_CHECKBOX);%></td>
+							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX); %></td>
+						</tr>
+						<% } else { 
+							 String actionPriview = uicomponent.event("Preview","back");
+						%>
+						<tr>
+							<td class="FieldPriview"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+						</tr>
+						<tr>
+							<td class="FieldPriview"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE); %></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div onclick="link" class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="<%=uicomponent.event("Apply");%>">
+																	Apply
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldPriview">
+								<div class="PreviewContainer">
+									<% String example = uiform.getReplaceByBBCode(); %>
+									<samp>$example</samp>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="$actionPriview">
+																	Back
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+				<% 
+					 if(uiform.getPriview()) {
+				%>
+					<div style="display:none;">
+					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
+					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
+					</div>
+				<% } %>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+					 String onclick = "" ;
+					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft" onclick="$onclick">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

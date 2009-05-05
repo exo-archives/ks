@@ -219,7 +219,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topicId ;
-		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		forumPortlet.updateAccessTopic(topicId);
@@ -235,7 +234,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
-		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
@@ -258,7 +256,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
-		this.isGetSv = true;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
@@ -313,6 +310,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
 		if(isGetSv) {
+			listBBCode.clear();
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
 				listBBCode = forumService.getBBCodeUse(sProvider);

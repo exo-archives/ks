@@ -4824,11 +4824,13 @@ public class JCRDataStorage {
     bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
     bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
     bbCode.setExample(bbcNode.getProperty("exo:example").getString());
-    bbCode.setDescription(bbcNode.getProperty("exo:description").getString());
+    if(bbcNode.hasProperty("exo:description"))
+    	bbCode.setDescription(bbcNode.getProperty("exo:description").getString());
     bbCode.setActive(bbcNode.getProperty("exo:isActive").getBoolean());
     bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
 		return bbCode;
 	}
+	
 	public List<BBCode> getBBCode(SessionProvider sProvider) throws Exception {
 		List<BBCode> bbcodes = new ArrayList<BBCode>();
 		Node bbCodeHome = getBBcodeHomeNode(sProvider);
@@ -4854,26 +4856,6 @@ public class JCRDataStorage {
     }
 		return bbcodes;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

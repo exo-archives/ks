@@ -49,8 +49,6 @@ public class Post {
 	private long numberAttach = 0;
 	private List<ForumAttachment> attachments = null ;
 	
-	
-
 	public Post() {
 		id = Utils.POST + IdGenerator.generate() ;
 		userPrivate = new String[]{"exoUserPri"};

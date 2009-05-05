@@ -70,6 +70,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.UnBanActionListener.class, confirm= "UIForumAdministrationForm.msg.confirm-delete-ipban"), 
 			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.AddNewBBCodeActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.EditBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
@@ -183,30 +184,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		headerSubject.setValue(administration.getHeaderSubject());
 		//headerSubject.setEditable(administration.getEnableHeaderSubject());
 		
-//		listBBCode = ...
-		listBBCode = new ArrayList<BBCode>();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-		try {
-			listBBCode.addAll(forumService.getBBCode(sProvider));
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }
-    List<BBCode> bbCodes = new ArrayList<BBCode>();
-    bbCodes.addAll(BBCodeData.createDefaultBBcode());
-    if(listBBCode.isEmpty())listBBCode.addAll(bbCodes);
-    else {
-    	boolean isAdd ;
-	    for (BBCode bbc : bbCodes) {
-	    	isAdd = true;
-	    	for (BBCode code : listBBCode) {
-		      if(bbc.getTagName().equals(code.getTagName()) && (bbc.isOption() == code.isOption())) {
-		      	isAdd = false;
-		      	break;
-		      }
-	      }
-	    	if(isAdd) listBBCode.add(bbc);
-	    }
-    }
+		setListBBcode();
     
 		for (BBCode bbc : listBBCode) {
 			UIFormCheckBoxInput<Boolean>isActiveBBcode = new UIFormCheckBoxInput<Boolean>(bbc.getId(), bbc.getId(), false);
@@ -243,13 +221,28 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		}
 	}
 	
+	public void setListBBcode() throws Exception {
+		listBBCode = new ArrayList<BBCode>();
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			listBBCode.addAll(forumService.getBBCode(sProvider));
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+	}
+	
 	@SuppressWarnings("unused")
   private List<BBCode> getListBBcode() throws Exception{
-		if(isEditBBcode){
-			// add service
-		}
 		return listBBCode;
 	}
+	
+	private BBCode getBBCode(String bbcId) {
+		for (BBCode bbCode : listBBCode) {
+	    if(bbCode.getId().equals(bbcId)) return bbCode;
+    }
+		return new BBCode();
+	}
+	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<String> getListIpBan() throws Exception{
 		listIpBan = new ArrayList<String>();
@@ -354,7 +347,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 //			
 			List<BBCode> bbCodes = new ArrayList<BBCode>();
 			for (BBCode bbc : administrationForm.listBBCode) {
-				boolean isActive = (Boolean)bbcodeTab.getUIFormCheckBoxInput(bbc.getId()).getValue();
+				boolean isActive = true;
+				try {
+					isActive = (Boolean)bbcodeTab.getUIFormCheckBoxInput(bbc.getId()).getValue();
+        } catch (Exception e) {
+        }
 				if(bbc.isActive() != isActive){
 					bbc.setActive(isActive);
 					bbCodes.add(bbc);
@@ -426,6 +423,20 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIAddBBCodeForm bbcForm = popupAction.activate(UIAddBBCodeForm.class, 670) ;
 			bbcForm.setId("AddBBCodeForm") ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+
+	static	public class EditBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
+			BBCode bbCode = uiForm.getBBCode(bbcId);
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAddBBCodeForm bbcForm = popupAction.activate(UIAddBBCodeForm.class, 670) ;
+			bbcForm.setEditBBcode(bbCode);
+			bbcForm.setId("EditBBCodeForm") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

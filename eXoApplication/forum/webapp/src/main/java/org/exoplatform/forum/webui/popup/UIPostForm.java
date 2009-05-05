@@ -80,7 +80,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService ;
 	public static final String FIELD_POSTTITLE_INPUT = "PostTitle" ;
 	public static final String FIELD_EDITREASON_INPUT = "editReason" ;
-	//public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_LABEL_QUOTE = "ReUser" ;
 	
 	final static public String ACT_REMOVE = "remove" ;

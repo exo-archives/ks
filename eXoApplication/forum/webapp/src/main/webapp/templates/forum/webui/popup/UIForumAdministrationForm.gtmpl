@@ -133,16 +133,20 @@
 											</div>
 											<div style="clear:left;"><span></span></div>
 									<%} else if(tabconten.id.equals(uicomponent.FIELD_BBCODE_TAB)) {%>
-											<div class="BBCodeContainer">
+											<div style="padding:0px 16px 0px 1px;">
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<thead>
 														<tr>
 															<th style="width:80px; text-align:center">TAG</th>
 															<th>Description</th>
 															<th width="40px">Active</th>
-															<th width="60px">Edit/Delete</th>
+															<th width="60px">Edit</th>
 														</tr>
 													</thead>
+												</table>
+											</div>
+											<div class="BBCodeContainer">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<tbody>
 													<%
 														int l = 0;
@@ -159,10 +163,16 @@
 															}
 													%>				
 														<tr class="$classCssInbox">
-															<td style="text-align:center"><%=bbcode.getTagName();%></td>
+															<td style="width:80px;text-align:center"><%=bbcode.getTagName();%></td>
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
-															<td style="text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
-															<td style="text-align:center">Action</td>
+															<td style="width:40px;text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
+															<td style="width:60px;text-align:center">
+																<div class="ActionContainer" style="margin:0px auto; width:18px;">
+																	<div style="cursor:pointer;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
+																		 <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>							
+																	</div>
+																</div>
+															</td>
 														</tr>
 													<%} %>
 													</tbody>
