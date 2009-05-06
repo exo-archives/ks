@@ -152,7 +152,11 @@ public abstract class RSSGenerate {
 	 * <p>The first, based on RSS parameter (the first parameter) to get all items.<br>
 	 * After that, from id of object which is changed,the item of this object  will be removed from RSSFeed.<br>
 	 * The finally, add new entry (the third parameter) into top of RSS Feed.<br></p>
-	 * <p><b><u>Note:</u></b> <i>Set the third parameter is <b><code>null</code></b> when remove an item</i></p>
+	 * <p><b><u>Note:</u></b> 
+	 * <i>Set the third parameter is <b><code>null</code></b> when remove an item</i></p>
+	 * <i>Set the second parameter is <b><code>null</code></b> when get all items and add new entry with
+	 * the third parameter</i></p>
+	 * <i>Set the second and third parameter is <b><code>null</code></b> when get all items without add any item</i></p>
 	 * @param data							RSS object
 	 * @param idOfObjectChange	id of object which is changed
 	 * @return									List of items

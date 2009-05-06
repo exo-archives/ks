@@ -189,7 +189,7 @@ public class RSSProcess extends RSSGenerate {
 				try{
 					RSSNode = node.getNode(KS_RSS);
 					getRSSData(RSSNode, data);
-					feed = updateRSSFeed(data, null, entry);
+					feed = updateRSSFeed(data, postNode.getName(), entry);
 				} catch (PathNotFoundException e){
 					RSSNode = node.addNode(KS_RSS, KS_RSS_TYPE);
 					isNew = true;
@@ -363,8 +363,12 @@ public class RSSProcess extends RSSGenerate {
 	public InputStream getRSSNode(SessionProvider sProvider, String objectId, String appType) throws Exception{
 		Node parentNode = null;
 		try{
-			if(appType.equals(KS_FAQ)) parentNode = getCategoryNodeById(objectId, sProvider);
-			else{
+			if(appType.equals(KS_FAQ)){
+				parentNode = getCategoryNodeById(objectId, sProvider);
+				if(parentNode.hasProperty("exo:isView") && !parentNode.getProperty("exo:isView").getBoolean()){
+					return null;
+				}
+			}else{
 				parentNode = getKSServiceHome(sProvider, FORUM_APP);
 				QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
 				StringBuffer queryString = new StringBuffer("/jcr:root" + parentNode.getPath() 
