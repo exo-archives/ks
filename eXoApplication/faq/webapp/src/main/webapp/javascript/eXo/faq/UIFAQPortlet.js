@@ -5,6 +5,23 @@ function UIFAQPortlet() {
 	this.scrollMgr = [];
 };
 
+UIFAQPortlet.prototype.checkedNode = function(elm){
+	var input = elm.getElementsByTagName("input")[0];
+  var DOMUtil = eXo.core.DOMUtil;
+  var parentNode = DOMUtil.findAncestorByClass(input,"FAQDomNode") ;
+  var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "FAQChildNodeContainer");
+  if(containerChild) {
+  	var checkboxes = containerChild.getElementsByTagName("input");
+  	for(var i = 0; i < checkboxes.length; ++i){
+  		//if(input.checked)checkboxes[i].checked = true;
+  		//else checkboxes[i].checked = false;
+  		checkboxes[i].checked = input.checked;
+  		if(!input.checked) checkboxes[i].disabled= true;
+  		else checkboxes[i].disabled= false;
+  	}
+  }
+}
+
 UIFAQPortlet.prototype.selectCateInfor = function(number){
 	var obj = null;
 	for(var i = 0; i < 3; i ++){
@@ -127,7 +144,7 @@ UIFAQPortlet.prototype.viewDivById = function(id) {
 UIFAQPortlet.prototype.treeView = function(id) {
 	var obj = document.getElementById(id) ;
 	if(obj){
-		if(obj.style.display === "none") {
+		if(obj.style.display == '' || obj.style.display === "none") {
 			obj.style.display = "block" ;
 		} else {
 			obj.style.display = "none" ;

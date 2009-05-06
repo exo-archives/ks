@@ -24,6 +24,8 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.faq.service.Cate;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
@@ -80,6 +82,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	public final String SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
 	public final String SET_DEFAULT_ADDNEW_QUESTION_TAB = "AddNewQuestionTab";
 	public final String SET_DEFAULT_EDIT_QUESTION_TAB = "EditQuestionTab";
+	public final String CATEGORY_SCOPING = "CategoryScoping";
 	public final String ITEM_VOTE = "vote";
 
 	private final String DISPLAY_MODE = "display-mode".intern();
@@ -107,6 +110,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private int indexOfTab = 0;
 	private String avatarUrl ;
 	private String tabSelected = DISPLAY_TAB;
+	private List<Cate> listCate = new ArrayList<Cate>() ;
 	
 	public UISettingForm() throws Exception {
 		isEditPortlet_ = false;
@@ -123,14 +127,50 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		this.idForumName =  idForumName;
 		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_CATEGORY_PATH_INPUT).setValue(idForumName.get(1));
 	}
+	
+	private void setListCate() throws Exception {
+		FAQService faqService = FAQUtils.getFAQService() ;
+    List<Cate> listCate = new ArrayList<Cate>();
+    Cate parentCate = null ;
+    Cate childCate = null ;
+    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, true)) {
+      if(category != null) {
+        Cate cate = new Cate() ;
+        cate.setCategory(category) ;
+        cate.setDeft(0) ;
+        listCate.add(cate) ;
+      }
+    }
+    
+    while (!listCate.isEmpty()) {
+      parentCate = new Cate() ;
+      parentCate = listCate.get(0);
+      listCate.remove(0);
+      this.listCate.add(parentCate) ;
+      int i = 0;
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, true)){
+        if(category != null) {
+          childCate = new Cate() ;
+          childCate.setCategory(category) ;
+          childCate.setDeft(parentCate.getDeft() + 1) ;
+          listCate.add(i ++, childCate) ;
+        }
+      }
+    }
+    sessionProvider.close();
+  }
 
 	public void init() throws Exception {
 		if(isEditPortlet_){
+			setListCate();
+			
 			UIFormInputWithActions DisplayTab = new UIFormInputWithActions(DISPLAY_TAB);
 			UIFormInputWithActions EmailTab = new UIFormInputWithActions(SET_DEFAULT_EMAIL_TAB);
 			UIFormInputWithActions EmailAddNewQuestion = new UIFormInputWithActions(SET_DEFAULT_ADDNEW_QUESTION_TAB);
 			UIFormInputWithActions EmailEditQuestion = new UIFormInputWithActions(SET_DEFAULT_EDIT_QUESTION_TAB);
 			UIFormInputWithActions Discussion = new UIFormInputWithActions(DISCUSSION_TAB);
+			UIFormInputWithActions CategoryScoping = new UIFormInputWithActions(CATEGORY_SCOPING);
 			
 			List<SelectItemOption<String>> displayMode = new ArrayList<SelectItemOption<String>>();
 			displayMode.add(new SelectItemOption<String>(DISPLAY_APPROVED, DISPLAY_APPROVED ));
@@ -189,9 +229,17 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			actionData.add(ad) ;
 			Discussion.setActionField(FIELD_CATEGORY_PATH_INPUT, actionData) ; 
 			
+			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+			for(Cate cate : listCate){
+				checkBoxInput = new UIFormCheckBoxInput<Boolean>(cate.getCategory().getId(), cate.getCategory().getId(), false);
+				checkBoxInput.setChecked(cate.getCategory().isView());
+				CategoryScoping.addChild(checkBoxInput);
+			}
+			
 			this.addChild(DisplayTab);
 			this.addChild(EmailTab);
 			this.addChild(Discussion);
+			this.addChild(CategoryScoping);
 			
 			DisplayTab.setRendered(true);
 			EmailAddNewQuestion.setRendered(true);
@@ -250,16 +298,38 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
+			FAQService service = FAQUtils.getFAQService() ;
+			SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
 			if(settingForm.isEditPortlet_){
-				UIFormInputWithActions displayTab = settingForm.getChildById(settingForm.DISPLAY_TAB);
-				faqSetting.setDisplayMode(((UIFormSelectBox)displayTab.getChildById(settingForm.DISPLAY_MODE)).getValue());
-				faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_BY)).getValue())) ;
-				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
-				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
+				
+				UIFormInputWithActions inputWithActions = settingForm.getChildById(settingForm.CATEGORY_SCOPING);
+				List<String> listCateIds = new ArrayList<String>();
+				UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+				int position = 1;
+				boolean isView = true;
+				for(Cate cate : settingForm.listCate){
+					checkBoxInput = inputWithActions.getChildById(cate.getCategory().getId());
+					if(cate.getDeft() <= position || (!checkBoxInput.isChecked() && isView)){
+						isView = cate.getCategory().isView();
+						position = cate.getDeft();
+					}
+					if((cate.getDeft() > position) && !isView)checkBoxInput.setChecked(false);
+					if((checkBoxInput.isChecked() && !cate.getCategory().isView()) || 
+							(!checkBoxInput.isChecked() && cate.getCategory().isView())){
+						listCateIds.add(cate.getCategory().getId());
+					}
+				}
+				if(listCateIds != null && listCateIds.size() > 0)service.changeStatusCategoryView(listCateIds, sessionProvider);
+				
+				inputWithActions = settingForm.getChildById(settingForm.DISPLAY_TAB);
+				faqSetting.setDisplayMode(((UIFormSelectBox)inputWithActions.getChildById(settingForm.DISPLAY_MODE)).getValue());
+				faqSetting.setOrderBy(String.valueOf(((UIFormSelectBox)inputWithActions.getChildById(ORDER_BY)).getValue())) ;
+				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)inputWithActions.getChildById(ORDER_TYPE)).getValue())) ;
+				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)inputWithActions.
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
-				faqSetting.setEnableAutomaticRSS(((UIFormCheckBoxInput<Boolean>)displayTab.
+				faqSetting.setEnableAutomaticRSS(((UIFormCheckBoxInput<Boolean>)inputWithActions.
 																								getChildById(settingForm.ENABLE_RSS)).isChecked());
-				faqSetting.setEnableViewAvatar(((UIFormCheckBoxInput<Boolean>)displayTab.
+				faqSetting.setEnableViewAvatar(((UIFormCheckBoxInput<Boolean>)inputWithActions.
 																								getChildById(settingForm.ENABLE_VIEW_AVATAR)).isChecked());
 				
 				UIFormInputWithActions emailTab = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
@@ -290,13 +360,10 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        return ;
 			} else {
-				FAQService service = FAQUtils.getFAQService() ;
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
-				SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
 				service.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), sessionProvider) ;
 				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
@@ -306,9 +373,10 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				categories.resetListCate(sessionProvider);
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
-				sessionProvider.close();
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
+			sessionProvider.close();
+			return ;
 		}
 	}
 	
@@ -393,6 +461,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				settingForm.isResetMail = false;
 				if(id == 0) settingForm.tabSelected = settingForm.DISPLAY_TAB;
 				else if(id == 2)  settingForm.tabSelected = DISCUSSION_TAB;
+				else if(id == 3) settingForm.tabSelected = settingForm.CATEGORY_SCOPING;
 				else settingForm.tabSelected = settingForm.SET_DEFAULT_EMAIL_TAB;
 			} else {
 				settingForm.indexOfTab = id;

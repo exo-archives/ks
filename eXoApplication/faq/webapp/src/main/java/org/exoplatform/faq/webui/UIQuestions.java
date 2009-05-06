@@ -653,7 +653,7 @@ public class UIQuestions extends UIContainer {
 		SessionProvider sProvider = FAQUtils.getSystemProvider();
 		List<Category> listCategories = new ArrayList<Category>();
 		try {
-			listCategories = faqService_.getSubCategories(cateId, sProvider, faqSetting_);
+			listCategories = faqService_.getSubCategories(cateId, sProvider, faqSetting_, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -681,13 +681,13 @@ public class UIQuestions extends UIContainer {
 		Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
 		if(categoryId == null || categoryId.equals("null")) cate.setId(null);
 		listResult.add(cate) ;
-		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
+		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false)) {
 			stackCate.push(category) ;
 		}
 		while(!stackCate.isEmpty()) {
 			cate = stackCate.pop() ;
 			listResult.add(cate) ;
-			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_)) {
+			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false)) {
 				stackCate.push(category) ;
 			}
 		}
@@ -2119,7 +2119,7 @@ public class UIQuestions extends UIContainer {
 						breadcumbs.setUpdataPath(newPath_);
 						categories.setPathCategory(breadcumbs.getPaths());					
 					} else {
-						listCate = faqService_.getSubCategories(null, sessionProvider, faqSetting);
+						listCate = faqService_.getSubCategories(null, sessionProvider, faqSetting, true);
 						for(Category category : listCate) {
 							faqService_.removeCategory(category.getId(), sessionProvider) ;
 						}

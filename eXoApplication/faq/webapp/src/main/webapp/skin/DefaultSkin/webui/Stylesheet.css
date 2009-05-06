@@ -932,6 +932,13 @@
 .UIFAQPortlet .UISettingForm {
 	padding:8px;
 }
+
+.UIFAQPortlet .FAQChildNodeContainer {
+	display:none;
+	padding-left:30px;
+	margin-top:10px;
+}
+
 .UIResultContainer .PopupContent {
 	max-height: 450px;
 }

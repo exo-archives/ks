@@ -69,6 +69,8 @@ public interface FAQService {
 	 * @throws Exception the exception
 	 */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
+	
+	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception;
   
 	/**
    * This method should check exists of category and remove it
@@ -128,7 +130,7 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
   
   public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
   

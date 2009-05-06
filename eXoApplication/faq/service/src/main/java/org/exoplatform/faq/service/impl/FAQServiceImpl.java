@@ -256,8 +256,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 * @see     list category
 	 * @throws Exception the exception
 	 */
-	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		return jcrData_.getSubCategories(categoryId, sProvider ,faqSetting);
+	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception {
+		return jcrData_.getSubCategories(categoryId, sProvider ,faqSetting, isGetAll);
 	}
 	
 	/**
@@ -316,6 +316,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
 		jcrData_.saveCategory(parentId, cat, isAddNew, sProvider) ;
+	}
+	
+	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception{
+		jcrData_.changeStatusCategoryView(listCateIds, sProvider);
 	}
 	
 	/**

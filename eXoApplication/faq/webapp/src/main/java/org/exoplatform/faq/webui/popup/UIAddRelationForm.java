@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -64,23 +65,6 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   private FAQSetting faqSetting_ = new FAQSetting();
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
- 
-  public class Cate{
-    private Category category;
-    private int deft ;
-    public Category getCategory() {
-      return category;
-    }
-    public void setCategory(Category category) {
-      this.category = category;
-    }
-    public int getDeft() {
-      return deft;
-    }
-    public void setDeft(int deft) {
-      this.deft = deft;
-    }
-  }
   
   @SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
@@ -128,7 +112,12 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   @SuppressWarnings("unchecked")
 private void initPage() throws Exception {
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    listQuestion = faqService.getAllQuestions(sessionProvider).getAll() ;
+    List<String> listIds = new ArrayList<String>();
+    listIds.add("null");
+    for(Cate cate : listCate){
+    	listIds.add(cate.getCategory().getId());
+    }
+    listQuestion.addAll(faqService.getQuestionsByListCatetory(listIds, false, sessionProvider).getAll());
     UIFormCheckBoxInput checkQuestion ;
     for(Question question : listQuestion) {
       if(quesIdsSelect.contains(question.getId())) {
@@ -147,7 +136,7 @@ private void initPage() throws Exception {
     Cate parentCate = null ;
     Cate childCate = null ;
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, false)) {
       if(category != null) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -162,7 +151,7 @@ private void initPage() throws Exception {
       listCate.remove(0);
       this.listCate.add(parentCate) ;
       int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
@@ -173,59 +162,6 @@ private void initPage() throws Exception {
     }
     sessionProvider.close();
   }
-  
-/*  private String renderBox() {
-    Stack<String> stackCateid = new Stack<String>() ;
-    StringBuffer stringBuffer = new StringBuffer() ;
-    int n = this.listCate.size() ;
-    Cate cate = null ;
-    for(int i = 0; i < n; i ++) {
-      cate = listCate.get(i) ;
-      if(i == 0) {
-          stringBuffer.append(cate.getCategory().getName()) ;
-      } else if(i > 0) {
-        int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
-        if(sub == 0) {
-          stringBuffer.append("<div>") ;
-          for(Question question : getQuestions(stackCateid.pop())) {
-            stringBuffer.append(question.getQuestion()) ;
-          }
-          stringBuffer.append("</div>") ;
-          
-          stringBuffer.append(cate.getCategory().getName()) ;
-        } else if(sub > 0) {
-          stringBuffer.append("<div>" + cate.getCategory().getName()) ;
-        } else {
-          stringBuffer.append("<div>") ;
-          for(Question question : getQuestions(stackCateid.pop())) {
-            stringBuffer.append( question.getQuestion()) ;
-          }
-          stringBuffer.append("</div>") ;
-          for(int j = 0 ; j < (-1*sub); j ++) {
-            for(Question question : getQuestions(stackCateid.pop())) {
-              stringBuffer.append(question.getQuestion()) ;
-            }
-            stringBuffer.append("</div>") ;
-          }
-          stringBuffer.append(cate.getCategory().getId()) ;
-        }
-      }
-      stackCateid.push(cate.getCategory().getId()) ;
-    }
-    stringBuffer.append("<div>") ;
-    for(Question question : getQuestions(stackCateid.pop())) {
-      stringBuffer.append(question.getQuestion()) ;
-    }
-    stringBuffer.append("</div>") ;
-    
-    for(int i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
-      for(Question question : getQuestions(stackCateid.pop())) {
-        stringBuffer.append(question.getQuestion()) ;
-      }
-      stringBuffer.append("</div>") ;
-    }
-    return stringBuffer.toString() ;
-  }*/
   
   @SuppressWarnings("unused")
   private List<Question> getQuestions(String cateId) {

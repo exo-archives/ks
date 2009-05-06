@@ -1165,12 +1165,35 @@ public class JCRDataStorage {
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		return questionHome.getNode(questionId);
 	}
+
+	protected List<String> listCateIdsView(SessionProvider sessionProvider) throws Exception{
+		List<String> listId = new ArrayList<String>();
+		Node cateHomeNode = getCategoryHome(sessionProvider, null);
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(cateHomeNode.getPath()). 
+																		append("//element(*,exo:faqCategory)[@exo:isView='true'] order by @exo:createdDate descending");
+		QueryManager qm = cateHomeNode.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		
+		NodeIterator iter = result.getNodes() ;
+		while(iter.hasNext()) {
+			listId.add(iter.nextNode().getName());
+		}
+		listId.add("null");
+		return listId;
+	}
 	
 	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
 		Node questionHome = getQuestionHome(sProvider, null) ;
 		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-																	 append("//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+																	 append("//element(*,exo:faqQuestion)[");
+		List<String> listIds = listCateIdsView(sProvider);
+		for(int i = 0; i < listIds.size(); i ++){
+			if(i > 0) queryString.append(" or ");
+			queryString.append("(exo:categoryId='").append(listIds.get(i)).append("')");
+		}
+		queryString.append("]order by @exo:createdDate ascending");
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
@@ -1183,7 +1206,13 @@ public class JCRDataStorage {
 		StringBuffer queryString = null;
 		if( categoryId!=null && categoryId.equals("All")){
 			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+												append("//element(*,exo:faqQuestion)[");
+			List<String> listIds = listCateIdsView(sProvider);
+			for(int i = 0; i < listIds.size(); i ++){
+				if(i > 0) queryString.append(" or ");
+				queryString.append("(exo:categoryId='").append(listIds.get(i)).append("')");
+			}
+			queryString.append("] order by @exo:createdDate ascending");
 		} else {
 			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
 												append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
@@ -1369,6 +1398,7 @@ public class JCRDataStorage {
 			categoryNode.setProperty("exo:id", category.getId()) ;
 			categoryNode.setProperty("exo:index", category.getIndex()) ;
 			categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
+			categoryNode.setProperty("exo:isView", category.isView());
 		}
 		categoryNode.setProperty("exo:name", category.getName()) ;
 		categoryNode.setProperty("exo:description", category.getDescription()) ;
@@ -1377,6 +1407,30 @@ public class JCRDataStorage {
 		categoryNode.setProperty("exo:isModerateQuestions", category.isModerateQuestions()) ;
 		categoryNode.setProperty("exo:viewAuthorInfor", category.isViewAuthorInfor()) ;
 		categoryNode.setProperty("exo:isModerateAnswers", category.isModerateAnswers());
+	}
+	
+	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception{
+		if(listCateIds == null || listCateIds.size() < 1) return;
+		Node categoryHomeNode = getCategoryHome(sProvider, null);
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHomeNode.getPath()).
+																															append("//element(*,exo:faqCategory)");
+		queryString.append("[");
+		for(int i = 0; i < listCateIds.size(); i ++){
+			if(i > 0) queryString.append(" or ");
+			queryString.append("(@exo:id='").append(listCateIds.get(i)).append("')");
+		}
+		queryString.append("]") ;
+			
+		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iterator = result.getNodes();
+		Node cateNode = null;
+		while(iterator.hasNext()){
+			cateNode = iterator.nextNode();
+			cateNode.setProperty("exo:isView", !cateNode.getProperty("exo:isView").getBoolean());
+		}
+		categoryHomeNode.save();
 	}
 	
 	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
@@ -1594,6 +1648,7 @@ public class JCRDataStorage {
 		if(categoryNode.hasProperty("exo:isModerateAnswers")) cat.setModerateAnswers(categoryNode.getProperty("exo:isModerateAnswers").getBoolean()) ;
 		if(categoryNode.hasProperty("exo:viewAuthorInfor")) cat.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean()) ;
 		if(categoryNode.hasProperty("exo:index")) cat.setIndex(categoryNode.getProperty("exo:index").getLong()) ;
+		if(categoryNode.hasProperty("exo:isView")) cat.setView(categoryNode.getProperty("exo:isView").getBoolean()) ;
 		return cat;
 	}
 	
@@ -1605,7 +1660,8 @@ public class JCRDataStorage {
 		Node categoryHome = getCategoryHome(sProvider, null) ;
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																	 append("//element(*,exo:faqCategory)[@exo:moderators='").append(user).append("']") ;
+																	 append("//element(*,exo:faqCategory)[@exo:moderators='").
+																	 append(user).append("' and @exo:isView='true']") ;
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes() ;
@@ -1644,7 +1700,7 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
+	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception {
 		List<Category> catList = new ArrayList<Category>() ;
 		Node parentCategory ;
 		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("FAQService")) {
@@ -1655,8 +1711,13 @@ public class JCRDataStorage {
 		String orderBy = faqSetting.getOrderBy() ;
 		String orderType = faqSetting.getOrderType();
 		
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
-																	 append("/element(*,exo:faqCategory)order by ");
+		StringBuffer queryString = null;
+		if(!isGetAll)
+			queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
+													append("/element(*,exo:faqCategory)[@exo:isView='true']order by ");
+		else
+			queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
+														append("/element(*,exo:faqCategory) order by ");
 		
 		//order by and ascending or descending
 		if(orderBy.equals("created")) {
@@ -2029,6 +2090,7 @@ public class JCRDataStorage {
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
 		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
 		List<String> ids = new ArrayList<String>();
+		List<String> listIdViews = listCateIdsView(sProvider);
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
 			StringBuffer stringBuffer = new StringBuffer() ;
@@ -2042,6 +2104,17 @@ public class JCRDataStorage {
 			if(temp != null && temp.length() > 0) { 
 				stringBuffer.append(temp) ;
 			}
+			
+			if(type.equals("faqCategory"))stringBuffer.append(" and (@exo:isView='true')");
+			else if (type.equals("faqQuestion")){
+				stringBuffer.append(" and (");
+				for(int i = 0; i < listIdViews.size(); i ++){
+					if(i > 0) stringBuffer.append(" or ");
+					stringBuffer.append("(exo:categoryId='").append(listIdViews.get(i)).append("')");
+				}
+				stringBuffer.append(")");
+			}
+			
 			stringBuffer.append("]") ;
 			if(isOwner) queryString.append(stringBuffer.toString()) ;
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -2058,7 +2131,7 @@ public class JCRDataStorage {
 					if(type.equals("comment") || type.equals("answer")){
 						while(!node.isNodeType("exo:faqQuestion"))
 							node = node.getParent();
-						if(ids.contains(node.getName())){
+						if(ids.contains(node.getName()) || !listIdViews.contains(node.getProperty("exo:categoryId").getString())){
 							continue;
 						}
 						id = node.getName();
@@ -2096,6 +2169,8 @@ public class JCRDataStorage {
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
+		queryString = queryString.substring(0, queryString.lastIndexOf("]")) +
+									" and (exo:isView='true')]";
 		try {
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
@@ -2118,6 +2193,7 @@ public class JCRDataStorage {
 	}
 	
 	public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+		List<String> listIdViews = listCateIdsView(sProvider);
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		Map<String, Question> questionMap = new HashMap<String, Question>();
 		Question question = null;
@@ -2129,6 +2205,15 @@ public class JCRDataStorage {
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
+		if(listIdViews.size() > 0){
+			StringBuffer buffer = new StringBuffer(" and (");
+			for(int i = 0; i < listIdViews.size(); i ++){
+				if(i > 0) buffer.append(" or ");
+				buffer.append("exo:categoryId='").append(listIdViews.get(i)).append("'");
+			}
+			buffer.append(")]");
+			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + buffer.toString();
+		}
 		if(eventQuery.getText() != null || eventQuery.getAuthor() != null || eventQuery.getEmail() != null || eventQuery.getQuestion() != null){
 			try {
 				Query query = qm.createQuery(queryString, Query.XPATH) ;
@@ -2159,6 +2244,7 @@ public class JCRDataStorage {
 			String id = "";
 			while(iter.hasNext()) {
 				node = (Node)iter.nextNode().getParent().getParent();
+				if(!listIdViews.contains(node.getProperty("exo:categoryId").getString())) continue;
 				id = node.getName();
 				question = getQuestionById(node.getName(), sProvider);
 				if(questionMap.isEmpty() || !questionMap.containsKey(id)){

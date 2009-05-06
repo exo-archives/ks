@@ -39,10 +39,19 @@ public class Category {
   private boolean isModerateQuestions = false ;
   private boolean isModerateAnswers = false ;
   private boolean viewAuthorInfor = false;
+  private boolean isView = true;
   private String[] moderators ;
   private Date createdDate ;
   
-  /**
+  public boolean isView() {
+		return isView;
+	}
+
+	public void setView(boolean isView) {
+		this.isView = isView;
+	}
+
+	/**
    * Class constructor specifying id of object is created
    */
   public Category() {

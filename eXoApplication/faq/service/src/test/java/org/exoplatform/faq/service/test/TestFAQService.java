@@ -259,7 +259,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("Name of category 1 haven't been changed", "Nguyen van truong test category111111", cate1.getName());
 
 //		get Categories
-		List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_) ;
+		List<Category> listCate = faqService_.getSubCategories(null, sProvider_, faqSetting_, false) ;
 		assertEquals("In root category don't have two subcategories", listCate.size(), 2) ;
 
 //		Get Maxindex of cateogry
@@ -267,7 +267,7 @@ public class TestFAQService extends FAQServiceTestCase{
 									faqService_.getMaxindexCategory(null, sessionProvider), 2);
 
 //		get sub category
-		List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_, faqSetting_) ;
+		List<Category> listSubCate = faqService_.getSubCategories(cate1.getId(), sProvider_, faqSetting_, false) ;
 		assertEquals("Category 1 not only have one subcategory", listSubCate.size(), 1) ;
 
 //		update sub category 

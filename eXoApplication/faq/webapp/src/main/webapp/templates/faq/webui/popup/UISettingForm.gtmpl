@@ -1,6 +1,7 @@
 <%
 import org.exoplatform.faq.service.Utils;
-
+import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.Cate;
 
 if(!uicomponent.isEditPortlet_){
 %>
@@ -156,7 +157,6 @@ if(!uicomponent.isEditPortlet_){
 						%>
 								<div class="UITabContent"	style="display:$display;">
 								<%if(formInput.getId().equals(uicomponent.SET_DEFAULT_EMAIL_TAB)){%>
-										
 										<div>
 											<!-- -------------------------------------------------------------------------------------------------------------------- -->
 											<div class="UIHorizontalTabs">
@@ -207,7 +207,8 @@ if(!uicomponent.isEditPortlet_){
 																<table class="UIFormGrid" style="width:100%;">
 																	<tbody>
 																		<%//uicomponent.renderUIComponent(uiFormInput);
-																			for(childForm in uiFormInput.getChildren()) {%>
+																			for(childForm in uiFormInput.getChildren()) {
+																			%>
 																				<tr>
 																					<td class="FieldLabel" style="white-space:nowrap; width:120px;">
 																						<%=_ctx.appRes("FAQPortletSetting.label." + childForm.getName())%>
@@ -229,8 +230,98 @@ if(!uicomponent.isEditPortlet_){
 												</div>
 											</div>
 									 	</div>
-									 
-								 <%} else {
+								 <%}else if(formInput.getId().equals(uicomponent.CATEGORY_SCOPING)) {%>
+								 		<!-- View interface -->
+										<div class="HorizontalLayout ViewQuestionsToSelect" style="overflow:auto;">
+											<%
+											List listCate = uicomponent.listCate;
+											Stack<String> stackCateid = new Stack<String>() ;
+									    StringBuffer stringBuffer = new StringBuffer() ;
+									    int n = listCate.size() ;
+									    int i = 0 ;
+									    int id = 0 ;
+									   %>
+										   <!-- ===================================== view all subcategories of root category ==================================== -->
+										   <%
+										   if(uicomponent.listCate != null && !uicomponent.listCate.isEmpty()){
+										   	for(cate in uicomponent.listCate) {
+										   		stackCateid.push(cate.getCategory().getId()) ;
+										    	id ++ ;
+										    	i ++ ;
+										      if(i == 1) {%>
+											      <div class="FAQDomNode">
+															<div class="FAQCategoryTreeView" id="FAQCate$i">
+																<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
+															 	 </div>
+																<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+																	<%= cate.getCategory().getName();%>
+																</a>
+															</div>
+															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+										  	<%
+									      	} else if(i > 1) {
+										        int sub = cate.getDeft() - listCate.get(i - 2).getDeft() ;
+										        if(sub == 0) {%>
+										        		</div>
+										        	</div>
+											      <div class="FAQDomNode">
+										        	<div class="FAQCategoryTreeView">
+										        			<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
+															 	 </div>
+																	<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+																		<%= cate.getCategory().getName();%>
+																	</a>
+															</div>
+															<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+															
+										    <%
+										        } else if(sub > 0) {%>
+												      <div class="FAQDomNode">
+																<div class="FAQCategoryTreeView">
+														    	<div id="FAQCate$i" style=" overflow-x:auto;">
+														    		<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+																 	 		<%formInput.renderChild(cate.getCategory().getId());%>
+																 	 </div>
+														    		<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+														    			<%= cate.getCategory().getName();%>
+														    		</a>
+														    	</div>
+														    </div>
+															  <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+										    <%
+										        } else {%>
+										     		<%for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
+											    				</div>
+											    			</div>
+										     		<%}%>
+											      <div class="FAQDomNode">
+														 <div class="Icon FAQCategoryTreeView">
+														 	 <div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+														 	 		<%formInput.renderChild(cate.getCategory().getId());%>
+														 	 </div>
+															 <a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+															 	<%= cate.getCategory().getName();%>
+															 </a>
+														 </div>
+														 <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+										     <%
+										        }
+										      }
+										    }%>
+										    	</div>
+										    </div>
+										    <%
+										    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+										    		</div>
+										    	</div>
+										  	<%
+										    }%>
+										<%}%>
+										</div>
+										
+								 <%}else {
 										uicomponent.renderUIComponent(formInput) ;
 									}
 									%>

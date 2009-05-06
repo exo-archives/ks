@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
@@ -84,23 +85,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
-	public class Cate{
-		private Category category;
-		private int deft ;
-		public Category getCategory() {
-			return category;
-		}
-		public void setCategory(Category category) {
-			this.category = category;
-		}
-		public int getDeft() {
-			return deft;
-		}
-		public void setDeft(int deft) {
-			this.deft = deft;
-		}
-	}
-
 	public List<Cate> getListCate(){
 		return this.listCate ;
 	}
@@ -117,7 +101,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		Cate parentCate = null ;
 		Cate childCate = null ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_)) {
+		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false)) {
 			if(category != null && !category.getId().equals(categoryId_)) {
 				Cate cate = new Cate() ;
 				cate.setCategory(category) ;
@@ -131,7 +115,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			parentCate = listCate.get(listCate.size() - 1) ;
 			listCate.remove(parentCate) ;
 			this.listCate.add(parentCate) ;
-			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
+			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
 				if(category != null && !category.getId().equals(categoryId_)) {
 					childCate = new Cate() ;
 					childCate.setCategory(category) ;
@@ -170,7 +154,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			listCate.add(cateClass) ;
 			int i = 0 ;
 			while(i < listCate.size()) {
-				for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), sessionProvider, faqSetting_)) {
+				for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), sessionProvider, faqSetting_, false)) {
 					cateClass = new CateClass() ;
 					cateClass.setCategory(category) ;
 					cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;

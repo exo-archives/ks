@@ -207,7 +207,13 @@
         <defaultValues>
 					<defaultValue>false</defaultValue>
 				</defaultValues>  			
-  		</propertyDefinition>			
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:isView" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+        <defaultValues>
+					<defaultValue>true</defaultValue>
+				</defaultValues>  			
+  		</propertyDefinition>	
   		<propertyDefinition name="exo:viewAuthorInfor" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>			

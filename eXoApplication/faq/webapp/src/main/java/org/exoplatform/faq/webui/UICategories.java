@@ -242,7 +242,7 @@ public class UICategories extends UIContainer{
 			List<Category> newList = new ArrayList<Category>();
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_);
+				newList = faqService_.getSubCategories(this.categoryId_, sessionProvider, faqSetting_, false);
 				currentName = faqService_.getCategoryById(this.categoryId_, sessionProvider).getName();
 			} catch(Exception e){
 				currentName = faqService_.getCategoryById(this.parentCateID_, sessionProvider).getName();
@@ -250,7 +250,7 @@ public class UICategories extends UIContainer{
 			}
 			viewBackIcon = true;
 			if(newList.isEmpty()) {
-				newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_);
+				newList = faqService_.getSubCategories(this.parentCateID_, sessionProvider, faqSetting_, false);
 				viewBackIcon = false;
 			}
 			if(currentName == null || currentName.trim().length() < 1) currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
@@ -276,7 +276,7 @@ public class UICategories extends UIContainer{
 	public void resetListCate(SessionProvider sProvider) throws Exception{
 		isSwap = true;
 		listCate.clear();
-		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_));
+		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_, false));
 		setIsModerators(FAQUtils.getCurrentUser());
 	}
 	
@@ -310,13 +310,13 @@ public class UICategories extends UIContainer{
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 		Category cate = null ;
 		listResult.add(faqService_.getCategoryById(categoryId, sessionProvider)) ;
-		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_)) {
+		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false)) {
 			stackCate.push(category) ;
 		}
 		while(!stackCate.isEmpty()) {
 			cate = stackCate.pop() ;
 			listResult.add(cate) ;
-			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_)) {
+			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false)) {
 				stackCate.push(category) ;
 			}
 		}
@@ -688,7 +688,7 @@ public class UICategories extends UIContainer{
 			try {
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					List<Category> listCate = uiCategories.faqService_.getSubCategories(null, sessionProvider, uiCategories.faqSetting_) ;
+					List<Category> listCate = uiCategories.faqService_.getSubCategories(null, sessionProvider, uiCategories.faqSetting_, false) ;
 					String cateId = null ;
 					if(listCate.size() == 1 ) {
 						for(Category cat: listCate) { cateId = cat.getId(); }

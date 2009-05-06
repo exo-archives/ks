@@ -746,8 +746,7 @@ public class QuestionPageList extends JCRPageList {
    * @see                 List
    */
 	public List<Question> getAll() throws Exception { 
-    
-    if(iter_ == null) {
+    if(iter_ == null || !iter_.hasNext()) {
       Session session = getJCRSession() ;
       if(isQuery_) {
         QueryManager qm = session.getWorkspace().getQueryManager() ;
@@ -766,6 +765,7 @@ public class QuestionPageList extends JCRPageList {
       Node questionNode = iter_.nextNode();
       questions.add(getQuestion(questionNode));
     }
+    iter_ = null;
     return questions; 
   }
 	

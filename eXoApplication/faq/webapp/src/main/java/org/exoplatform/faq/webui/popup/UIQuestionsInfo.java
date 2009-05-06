@@ -141,7 +141,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     Cate parentCate = new Cate() ;
     Cate childCate = new Cate() ;
     
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_)) {
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, false)) {
       if(category != null) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -165,7 +165,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       if(isAdmin || hasInGroup(listGroup, parentCate.getCategory().getModerators()))
       	this.listCategories.add(new SelectItemOption<String>(dept + parentCate.getCategory().getName(), parentCate.getCategory().getId())) ;
       int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_)){
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;
@@ -226,7 +226,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
 	      listCateId.addAll(faqService_.getListCateIdByModerator(user, sProvider)) ;
 	      int i = 0 ;
 	      while(i < listCateId.size()) {
-	        for(Category category : faqService_.getSubCategories(listCateId.get(i), sProvider, faqSetting_ )) {
+	        for(Category category : faqService_.getSubCategories(listCateId.get(i), sProvider, faqSetting_, false )) {
 	          if(!listCateId.contains(category.getId())) {
 	            listCateId.add(category.getId()) ;
 	          }
