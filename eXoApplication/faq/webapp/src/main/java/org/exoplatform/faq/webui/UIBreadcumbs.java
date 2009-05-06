@@ -110,38 +110,22 @@ public class UIBreadcumbs extends UIContainer {
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
 			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			String categoryId = null;
-			if(paths.equals("FAQService")){
-				UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-				uiContainer.updateIsRender(true) ;
-				uiQuestions.setCategories(categoryId) ;
-				sProvider.close();
-			} else {
-				uiQuestions.setPath(paths) ;
-				categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
-				try {
-					uiQuestions.setCategories(categoryId) ;
-				} catch (Exception e) {
-					UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					UIFAQContainer uiContainer = faqPortlet.findFirstComponentOfType(UIFAQContainer.class) ;
-					uiContainer.updateIsRender(true) ;
-					uiQuestions.setCategories(null) ;
-					uiBreadcums.setUpdataPath("FAQService");
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					sProvider.close();
-					return ;
-				}
-				//uiQuestions.setCategories(categoryId) ;
-				uiQuestions.backPath_ = "" ;
-				uiQuestions.language_ = "";
-			}
 			try{
+				if(!paths.equals("FAQService")){
+					uiQuestions.setPath(paths) ;
+					categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+					uiQuestions.backPath_ = "" ;
+					uiQuestions.language_ = "";
+				}
 				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);
+				uiQuestions.setCategories(categoryId) ;
 			} catch(Exception e){
 				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class), sProvider);
+				UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
 			sProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
