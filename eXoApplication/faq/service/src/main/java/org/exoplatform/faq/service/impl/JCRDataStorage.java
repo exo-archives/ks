@@ -1613,14 +1613,19 @@ public class JCRDataStorage {
 				catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
 				cat.setIndex(getMaxindexCategory(parentId, sProvider) + 1);
 			} else {
-				 if(cat.getId() != null) catNode = categoryHome.getNode(cat.getId()) ;
-				 else catNode = getCategoryHome(sProvider, null);
-				 cat.setIndex(catNode.getProperty("exo:index").getLong());
+				 if(cat.getId() != null){
+					 catNode = categoryHome.getNode(cat.getId()) ;
+					 cat.setIndex(catNode.getProperty("exo:index").getLong());
+				 }else{
+					 catNode = getCategoryHome(sProvider, null);
+					 cat.setIndex(1);
+				 }
 			}
 			saveCategory(catNode, cat) ;
 			if(isAddNew) categoryHome.getSession().save();
 			else categoryHome.save();
-			setIndexCategory(categoryHome, catNode, newPos, qm, sProvider);
+			// when update for root category, don't need reset index.
+			if(cat.getId() != null)setIndexCategory(categoryHome, catNode, newPos, qm, sProvider);
 		}
 	}
 	
@@ -1639,7 +1644,8 @@ public class JCRDataStorage {
 	
 	private Category getCategory(Node categoryNode) throws Exception {
 		Category cat = new Category() ;
-		cat.setId(categoryNode.getName()) ;
+		if(categoryNode.hasProperty("exo:id"))cat.setId(categoryNode.getName()) ;
+		else cat.setId(null);
 		if(categoryNode.hasProperty("exo:name")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
 		if(categoryNode.hasProperty("exo:description")) cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
 		if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
@@ -2205,7 +2211,7 @@ public class JCRDataStorage {
 		eventQuery.setPath(path) ;
 		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-		if(listIdViews.size() > 0){
+		if(listIdViews.size() > 0 && queryString.lastIndexOf("]") > 0){
 			StringBuffer buffer = new StringBuffer(" and (");
 			for(int i = 0; i < listIdViews.size(); i ++){
 				if(i > 0) buffer.append(" or ");

@@ -235,7 +235,8 @@ public class RSSProcess extends RSSGenerate {
 				linkItem += "?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ViewQuestion&" +
 											"objectId=";
 				Node questionNode = (Node)appHomeNode.getSession().getItem(path) ;
-				if(!questionNode.isNodeType("exo:faqQuestion")) return;
+				if(!questionNode.isNodeType("exo:faqQuestion") && !questionNode.isNodeType("exo:answer")) return;
+				else if(questionNode.isNodeType("exo:answer"))questionNode = questionNode.getParent().getParent();
 				
 				String categoreDescription = "";
 				categoryNode = getCategoryNodeById(questionNode.getProperty("exo:categoryId").getString(), sProvider);
@@ -244,7 +245,7 @@ public class RSSProcess extends RSSGenerate {
 				
 				if(!questionNode.getProperty("exo:isActivated").getBoolean() || 
 						!questionNode.getProperty("exo:isApproved").getBoolean()){
-					removeRSSItem(questionNode.getProperty("exo:categoryId").getString(), categoryNode, categoreDescription);
+					removeRSSItem(questionNode.getName(), categoryNode, categoreDescription);
 					return;
 				}
 				
