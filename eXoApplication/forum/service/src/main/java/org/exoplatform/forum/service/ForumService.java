@@ -59,6 +59,15 @@ public interface ForumService {
 	* @throws Exception the exception
 	*/
 	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
+
+	/**
+	 * Adds the plugin.
+	 * 
+	 * @param plugin the plugin
+	 * 
+	 * @throws Exception the exception
+	 */
+	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception;
 	
 	/**
 	 * Gets the categories.
@@ -937,4 +946,5 @@ public interface ForumService {
   public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception ;
   public List<BBCode> getBBCode(SessionProvider sProvider) throws Exception ;
   public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception;
+  public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception ;
 }

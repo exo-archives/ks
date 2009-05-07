@@ -90,6 +90,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage_.addInitialDataPlugin(plugin) ;
   }
+
+  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
+  	storage_.addInitBBCodePlugin(plugin) ;
+  }
   
   public void start() {
   	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
@@ -111,6 +115,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}
   	try{
   		storage_.initDefaultData() ;
+  		storage_.initDefaultBBCode();
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
@@ -672,5 +677,9 @@ public class ForumServiceImpl implements ForumService, Startable{
 
 	public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception {
 		return storage_.getBBCodeUse(sProvider);
+	}
+	
+	public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception {
+		storage_.removeBBCode(sProvider, bbcodeId);
 	}
 }

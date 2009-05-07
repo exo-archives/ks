@@ -81,9 +81,11 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
+import org.exoplatform.forum.service.conf.InitBBCodePlugin;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
@@ -121,6 +123,7 @@ public class JCRDataStorage {
 	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
+	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	protected Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
 
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
@@ -148,6 +151,13 @@ public class JCRDataStorage {
 		if(plugin instanceof InitializeForumPlugin) {
 			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
 		}		
+	}
+
+	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
+		System.out.println("\n\n Run init bbcode");
+		if(plugin instanceof InitBBCodePlugin) {
+			defaultBBCodePlugins_.add((InitBBCodePlugin)plugin) ;
+		}
 	}
 
 	public void addRSSEventListenner() throws Exception{
@@ -389,6 +399,35 @@ public class JCRDataStorage {
 		}
 	}
 
+	public void initDefaultBBCode() throws Exception{
+		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+		try {
+			Node bbCodeHome = getBBcodeHomeNode(sProvider);
+			NodeIterator iter = bbCodeHome.getNodes();
+			if(iter.getSize() <= 0){ 
+				List<BBCode> bbCodes = new ArrayList<BBCode>();
+		    for (InitBBCodePlugin pln : defaultBBCodePlugins_) {
+		    	List<BBCodeData> codeDatas = pln.getBBCodePlugin().getBbcodeDatas();
+		    	for (BBCodeData codeData : codeDatas) {
+		        BBCode bbCode = new BBCode();
+		        bbCode.setTagName(codeData.getTagName());
+		        bbCode.setReplacement(codeData.getReplacement());
+		        bbCode.setDescription(codeData.getDescription());
+		        bbCode.setExample(codeData.getExample());
+		        bbCode.setOption(Boolean.parseBoolean(codeData.getIsOption()));
+		        bbCode.setActive(Boolean.parseBoolean(codeData.getIsActive()));
+		        bbCodes.add(bbCode);
+	        }
+	      }
+		    if(!bbCodes.isEmpty()){
+		    	this.saveBBCode(sProvider, bbCodes);
+		    }
+			}
+    } catch (Exception e) {
+	    e.printStackTrace();
+    }
+	  
+  }
 	public void initDefaultData() throws Exception {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		try {
@@ -4857,6 +4896,15 @@ public class JCRDataStorage {
 		return bbcodes;
 	}
 	
-	
+	public void removeBBCode(SessionProvider sProvider, String bbcodeId) throws Exception {
+		Node bbCodeHome = getBBcodeHomeNode(sProvider);
+		try {
+			bbCodeHome.getNode(bbcodeId).remove();
+			bbCodeHome.save();
+    } catch (Exception e) {
+    }finally{
+    	sProvider.close();
+    }
+	}
 	
 }

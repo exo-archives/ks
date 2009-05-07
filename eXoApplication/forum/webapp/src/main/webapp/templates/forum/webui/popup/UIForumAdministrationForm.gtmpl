@@ -140,7 +140,7 @@
 															<th style="width:80px; text-align:center">TAG</th>
 															<th>Description</th>
 															<th width="40px">Active</th>
-															<th width="60px">Edit</th>
+															<th width="60px">Edit/Delete</th>
 														</tr>
 													</thead>
 												</table>
@@ -167,10 +167,14 @@
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
 															<td style="width:40px;text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
 															<td style="width:60px;text-align:center">
-																<div class="ActionContainer" style="margin:0px auto; width:18px;">
-																	<div style="cursor:pointer;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
-																		 <div title="Edit Profile" class="Icon16x16 EditIcon"><span></span></div>							
+																<div class="ActionContainer" style="margin:0px auto; width:40px;">
+																	<div style="cursor:pointer; float:left; margin: 0px 2px;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
+																		 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
 																	</div>
+																	<div style="cursor:pointer; float:left; margin: 0px 2px;" onclick="<%=uiform.event("DeleteBBCode", tagId)%>">
+																		 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
+																	</div>
+																	<div style="clear:left;"><span></span></div>
 																</div>
 															</td>
 														</tr>

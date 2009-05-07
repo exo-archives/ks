@@ -108,12 +108,12 @@
 
 .UIAddBBCodeForm #Description {
 	width: 450px;
-	height: 40px;
+	height: 55px;
 }
 
 .UIAddBBCodeForm .FieldComponent #Example {
 	width: 350px;
-	height: 50px;
+	height: 55px;
 }
 
 .UIAddBBCodeForm .FieldPriview {
@@ -136,7 +136,7 @@
 }
 
 .UIAddBBCodeForm .FieldComponent .UIAction .ActionContainer{
-	margin: 0px;
+	margin: 8px 0px;
 }
 
 

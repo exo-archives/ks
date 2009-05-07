@@ -120,6 +120,7 @@
 					<div style="display:none;">
 					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
 					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
+					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
 					</div>
 				<% } %>
 			</div>

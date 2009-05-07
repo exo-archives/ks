@@ -123,6 +123,7 @@ public class BBCodeData {
 							clsIndex = s.indexOf(end, tagIndex);
 							str = s.substring(tagIndex + start.length(), clsIndex);
 							option = str.substring(0, str.indexOf("]"));
+							if(option.indexOf("+")==0)option = option.replaceFirst("+", "");
 							param = str.substring(str.indexOf("]")+1);
 							param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
 							param = StringUtils.replace(param, "{option}", option.trim());

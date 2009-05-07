@@ -42,7 +42,7 @@ public class ForumTransformHTML {
 		int tagIndex = 0;
 		// Lower Case bbc
 		String start, end;
-		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", 
+		String[] bbcs = new String[] { "B", "I", "HIGHLIGHT", "IMG", "URL", "LINK", "GOTO", "QUOTE", 
 				"LEFT", "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "CSS", "EMAIL", "CODE", "LIST" };
 		for (String bbc : bbcs) {
 			start = "[" + bbc;
@@ -425,7 +425,7 @@ public class ForumTransformHTML {
 		List<String> bbcList = new ArrayList<String>();
 		// clean bbcode
 		String[] bbcs = new String[] { "B", "I", "IMG", "CSS", "URL", "LINK", "GOTO", "QUOTE", "LEFT", "CODE",
-		    "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "CSS", "EMAIL", "LIST" };
+		    "RIGHT", "CENTER", "JUSTIFY", "SIZE", "COLOR", "RIGHT", "LEFT", "CENTER", "JUSTIFY", "EMAIL", "LIST" };
 		bbcList.addAll(Arrays.asList(bbcs));
 		for (String bbc : bbcs) {
 			bbcList.add(bbc.toLowerCase());

@@ -71,6 +71,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.GetDefaultMailActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.AddNewBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.EditBBCodeActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.DeleteBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
@@ -107,7 +108,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
 	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator" ;
-	private boolean isEditBBcode = false;
 	private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
@@ -431,6 +431,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
+			System.out.println("\n\n id1: " + bbcId);
 			BBCode bbCode = uiForm.getBBCode(bbcId);
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -438,6 +439,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			bbcForm.setEditBBcode(bbCode);
 			bbcForm.setId("EditBBCodeForm") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class DeleteBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
+			uiForm.forumService.removeBBCode(SessionProviderFactory.createSystemProvider(), bbcId);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent()) ;
 		}
 	}
 	
