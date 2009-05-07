@@ -319,7 +319,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 						listCateIds.add(settingForm.listCate.get(i).getCategory().getId());
 						settingForm.listCate.get(i).getCategory().setView(checkBoxInput.isChecked());
 					}
-					System.out.println("\n\n\n\n--------------------->" + settingForm.listCate.get(i).getCategory().getName());
 				}
 				if(listCateIds != null && listCateIds.size() > 0)service.changeStatusCategoryView(listCateIds, sessionProvider);
 				
