@@ -307,17 +307,19 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 				int position = 1;
 				boolean isView = true;
-				for(Cate cate : settingForm.listCate){
-					checkBoxInput = inputWithActions.getChildById(cate.getCategory().getId());
-					if(cate.getDeft() <= position || (!checkBoxInput.isChecked() && isView)){
-						isView = cate.getCategory().isView();
-						position = cate.getDeft();
+				for(int i = 0; i < settingForm.listCate.size(); i ++){
+					checkBoxInput = inputWithActions.getChildById(settingForm.listCate.get(i).getCategory().getId());
+					if(settingForm.listCate.get(i).getDeft() <= position || (!checkBoxInput.isChecked() && isView)){
+						isView = settingForm.listCate.get(i).getCategory().isView();
+						position = settingForm.listCate.get(i).getDeft();
 					}
-					if((cate.getDeft() > position) && !isView)checkBoxInput.setChecked(false);
-					if((checkBoxInput.isChecked() && !cate.getCategory().isView()) || 
-							(!checkBoxInput.isChecked() && cate.getCategory().isView())){
-						listCateIds.add(cate.getCategory().getId());
+					if((settingForm.listCate.get(i).getDeft() > position) && !isView)checkBoxInput.setChecked(false);
+					if((checkBoxInput.isChecked() && !settingForm.listCate.get(i).getCategory().isView()) || 
+							(!checkBoxInput.isChecked() && settingForm.listCate.get(i).getCategory().isView())){
+						listCateIds.add(settingForm.listCate.get(i).getCategory().getId());
+						settingForm.listCate.get(i).getCategory().setView(checkBoxInput.isChecked());
 					}
+					System.out.println("\n\n\n\n--------------------->" + settingForm.listCate.get(i).getCategory().getName());
 				}
 				if(listCateIds != null && listCateIds.size() > 0)service.changeStatusCategoryView(listCateIds, sessionProvider);
 				

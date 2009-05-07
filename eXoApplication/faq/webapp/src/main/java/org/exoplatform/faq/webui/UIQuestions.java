@@ -1156,7 +1156,6 @@ public class UIQuestions extends UIContainer {
 			String strId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String questionId = new String() ;
 			Question question = new Question();
-			//language_ = "" ;
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				if(strId.indexOf("/") < 0) {
@@ -1182,7 +1181,7 @@ public class UIQuestions extends UIContainer {
 							uiQuestions.backPath_.trim().length() > 0 && uiQuestions.backPath_.equals(strId))) {
 						uiQuestions.backPath_ = "" ;
 						if(strArr.length == 3){
-							if(!strArr[2].equals("0")) language_ = strArr[2];
+							if(!strArr[2].equals("0") && !strArr[2].equals("noBack")) language_ = strArr[2];
 							else language_ = "" ;
 						}
 					} else {
@@ -1267,6 +1266,7 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.questionView_ = "" ;
 				}
 			} catch(javax.jcr.PathNotFoundException e) {
+				e.printStackTrace();
 				try{
 					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
 				}catch(Exception exc){
@@ -1817,7 +1817,7 @@ public class UIQuestions extends UIContainer {
 			UISendEmailsContainer watchContainer = popupAction.activate(UISendEmailsContainer.class, 700) ;
 			UISendMailForm sendMailForm = watchContainer.getChild(UISendMailForm.class) ;
 			//link
-			String link = uiQuestions.getLink().replaceFirst("UIQuestions", "UIQuestions").replaceFirst("Setting", "ViewQuestion").replaceAll("&amp;", "&");
+			String link = uiQuestions.getLink().replaceFirst("Setting", "ViewQuestion").replaceAll("&amp;", "&");
 			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 			String portalName = "/" + Util.getUIPortal().getName() ;
 			if(link.indexOf(portalName) > 0) {
@@ -1830,11 +1830,12 @@ public class UIQuestions extends UIContainer {
 			url = url.replaceFirst("http://", "") ;
 			url = url.substring(0, url.indexOf("/")) ;
 			url = "http://" + url;
-			String path = uiQuestions.getPathService(categoryId);
-			if(!categoryId.equals("null")) path += "/"+ categoryId;
-			link = link.replaceFirst("OBJECTID", path);
+			String path = null;
+			if(!categoryId.equals("null"))link = link.replaceFirst("OBJECTID", categoryId);
+			else link = link.replaceFirst("OBJECTID", uiQuestions.getPathService(categoryId));
+			//link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
-			sendMailForm.setLink(link.replaceFirst("private", "public") + "/" + questionId + "/noBack");
+			sendMailForm.setLink(link.replaceFirst("private", "public") + "/" + questionId + "/0");
 			if(!questionId.equals(uiQuestions.questionView_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
 			else sendMailForm.setUpdateQuestion(questionId , language_) ;
 			watchContainer.setId("FAQSendMailForm") ;

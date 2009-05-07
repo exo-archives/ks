@@ -431,7 +431,7 @@ public class JCRDataStorage {
 			if(question.getCategoryId()!= null && !question.getCategoryId().equals("null"))
 				path = getCategoryNodeById(question.getCategoryId(), sProvider).getPath().replace("/exo:applications/faqApp/catetories/", "");
 			path = (question.getLink().substring(0, question.getLink().indexOf("FAQService") + 10) + path).replace("private", "public");
-			question.setLink(path + "/" + question.getId() + "/noBack");
+			question.setLink(path + "/" + question.getId() + "/0");
 		}
 		
 		if(faqSetting.getDisplayMode().equals("approved")) {
