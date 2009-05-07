@@ -2220,6 +2220,7 @@ public class JCRDataStorage {
 			buffer.append(")]");
 			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + buffer.toString();
 		}
+		System.out.println("\n\n\n\n--------------->queryString:\n" + queryString);
 		if(eventQuery.getText() != null || eventQuery.getAuthor() != null || eventQuery.getEmail() != null || eventQuery.getQuestion() != null){
 			try {
 				Query query = qm.createQuery(queryString, Query.XPATH) ;

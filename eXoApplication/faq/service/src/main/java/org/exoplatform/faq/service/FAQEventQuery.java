@@ -367,7 +367,7 @@ public String getPathQuery() {
 	    }
 	    if(question != null && question.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
-	    	stringBuffer.append("(jcr:contains(@exo:name, '").append(question).append("'))") ;
+	    	stringBuffer.append("( (jcr:contains(@exo:title,'").append(question).append("')) or (jcr:contains(@exo:name, '").append(question).append("')) )") ;
 	    	isAnd = true ;
 	    }
 	    if(response != null && response.length() > 0) {
