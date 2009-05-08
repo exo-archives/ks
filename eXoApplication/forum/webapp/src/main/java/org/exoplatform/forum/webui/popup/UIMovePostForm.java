@@ -140,7 +140,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
 		List<Topic> topics = new ArrayList<Topic>() ;
-		List<Topic> topics_ = this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;; 
+		List<Topic> topics_ = this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
 		for(Topic topic : topics_) {
 			if(topic.getId().equalsIgnoreCase(this.topicId)) continue ;
 			if(this.userProfile.getUserRole() == 1){

@@ -1172,7 +1172,8 @@ public class JCRDataStorage {
 			List<Topic> topics = new ArrayList<Topic>();
 			while (iter.hasNext()) {
 				Node topicNode = iter.nextNode();
-				topics.add(getTopicNode(topicNode));
+				if(topicNode.isNodeType("exo:topic"))
+					topics.add(getTopicNode(topicNode));
 			}
 			return topics;
 		} catch (PathNotFoundException e) {
@@ -2521,10 +2522,12 @@ public class JCRDataStorage {
 				topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
 
 				NodeIterator nodeIterator = topicNode.getNodes();
-				long last = nodeIterator.getSize() - 1;
-				nodeIterator.skip(last);
+				/*long last = nodeIterator.getSize() - 1;
+				nodeIterator.skip(last);*/
 				while(nodeIterator.hasNext()){
-					postNode = nodeIterator.nextNode();
+					Node node = nodeIterator.nextNode();
+					if(node.isNodeType("exo:post"))
+						postNode = node;
 				}
 				topicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
 				topicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
@@ -2536,9 +2539,11 @@ public class JCRDataStorage {
 				forumNode.save();
 				return post;
 			} catch (PathNotFoundException e) {
+				e.printStackTrace();
 				return null;
 			}
 		} catch (PathNotFoundException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

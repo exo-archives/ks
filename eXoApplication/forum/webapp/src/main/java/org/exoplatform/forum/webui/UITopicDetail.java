@@ -1297,6 +1297,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					topicDetail.forumService.removePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
+				} catch(Exception e){
+					e.printStackTrace();
 				} finally {
 					sProvider.close();
 				}
