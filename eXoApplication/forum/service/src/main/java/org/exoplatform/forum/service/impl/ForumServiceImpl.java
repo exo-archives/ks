@@ -474,7 +474,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
     	userProfileHome.save() ;
     	// update most online users
-    	Node statisticNode = storage_.getForumHomeNode(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
+    	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
     	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
   		if(array.length > 1) {
     		int ol = onlineUsers_.size() ;
@@ -488,9 +488,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     	}    	
     }catch(Exception e) {
     	e.printStackTrace() ;
-    }finally {
-    	sysProvider.close();
-    }
+    }finally{sysProvider.close() ;}
   }
 
   public void userLogout(String userId) throws Exception {
@@ -676,7 +674,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 
 	public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception {
-		return storage_.getBBCodeUse(sProvider);
+		return storage_.getActiveBBCode(sProvider);
 	}
 	
 	public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception {
