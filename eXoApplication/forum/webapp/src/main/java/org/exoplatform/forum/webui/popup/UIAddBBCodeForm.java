@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.BBCodeData;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -121,6 +122,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
 			String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
 			boolean isOption = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
+			if(ForumUtils.isEmpty(description)) description = " ";
 			uiForm.bbcode.setTagName(tagName.toUpperCase());
 			uiForm.bbcode.setReplacement(replacement);
 			uiForm.bbcode.setDescription(description);
@@ -170,6 +172,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_TEXTARE).getValue();
 				String example = uiForm.getUIFormTextAreaInput(FIELD_EXAMPLE_TEXTARE).getValue();
 				boolean isOption = (Boolean)uiForm.getUIFormCheckBoxInput(FIELD_USEOPTION_CHECKBOX).getValue();
+				if(ForumUtils.isEmpty(description)) description = " ";
 				uiForm.bbcode.setTagName(tagName);
 				uiForm.bbcode.setReplacement(replacement);
 				uiForm.bbcode.setDescription(description);
