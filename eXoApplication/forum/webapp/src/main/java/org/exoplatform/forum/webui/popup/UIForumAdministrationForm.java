@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
@@ -119,7 +118,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
 	}
 	
-	@SuppressWarnings("unchecked")
   public void setInit() throws Exception{
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
@@ -229,6 +227,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
     } catch (Exception e) {
 	    e.printStackTrace();
     }
+    
 	}
 	
 	@SuppressWarnings("unused")
@@ -431,7 +430,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
-			System.out.println("\n\n id1: " + bbcId);
 			BBCode bbCode = uiForm.getBBCode(bbcId);
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -447,7 +445,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			UIForumAdministrationForm uiForm = event.getSource();
 			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
 			uiForm.forumService.removeBBCode(SessionProviderFactory.createSystemProvider(), bbcId);
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent()) ;
+			uiForm.setListBBcode();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	

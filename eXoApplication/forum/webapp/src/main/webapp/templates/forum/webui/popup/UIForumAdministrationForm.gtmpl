@@ -167,11 +167,11 @@
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
 															<td style="width:40px;text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
 															<td style="width:60px;text-align:center">
-																<div class="ActionContainer" style="margin:0px auto; width:40px;">
-																	<div style="cursor:pointer; float:left; margin: 0px 2px;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
+																<div class="ActionContainer" style="margin:0px auto; width:42px;">
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", tagId)%>">
 																		 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
 																	</div>
-																	<div style="cursor:pointer; float:left; margin: 0px 2px;" onclick="<%=uiform.event("DeleteBBCode", tagId)%>">
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIForumAdministrationForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", tagId)%>;}">
 																		 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
 																	</div>
 																	<div style="clear:left;"><span></span></div>

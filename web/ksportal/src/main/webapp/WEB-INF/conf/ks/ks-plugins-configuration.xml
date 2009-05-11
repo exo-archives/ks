@@ -325,7 +325,7 @@
 											<string><![CDATA[<span style="font-weight: bold; color: blue;">{param}</span>]]></string>
 										</field>
 										<field name="description">
-											<string>The [font] tag allows you to change the font of your text.</string>
+											<string>The [font] tag allows you to make highlight of your text.</string>
 										</field>
 										<field name="example">
 											<string>[highlight]this text is highlighted[/highlight]</string>
@@ -348,7 +348,7 @@
 											<string><![CDATA[<div align="left">{param}</div>]]></string>
 										</field>
 										<field name="description">
-											<string>Change the left alignment of your text.</string>
+											<string>The [left] tag allows you to change the left alignment of your text.</string>
 										</field>
 										<field name="example">
 											<string>[LEFT]This text is left-aligned[/LEFT]</string>
@@ -370,7 +370,7 @@
 											<string><![CDATA[<div align="right">{param}</div>]]></string>
 										</field>
 										<field name="description">
-											<string>Change the right alignment of your text.</string>
+											<string>The [right] tag allows you to change the right alignment of your text.</string>
 										</field>
 										<field name="example">
 											<string>[U]example[/U]</string>
@@ -392,7 +392,7 @@
 											<string><![CDATA[<div align="center">{param}</div>]]></string>
 										</field>
 										<field name="description">
-											<string>Change the center alignment of your text.</string>
+											<string>The [center] tag allows you to change the center alignment of your text.</string>
 										</field>
 										<field name="example">
 											<string>[CENTER]this text is center-aligned[/CENTER]</string>
@@ -414,7 +414,7 @@
 											<string><![CDATA[<div align="justify">{param}</div>]]></string>
 										</field>
 										<field name="description">
-											<string>Change the justify alignment of your text.</string>
+											<string>The [justify] tag allows you to change the justify alignment of your text.</string>
 										</field>
 										<field name="example">
 											<string>[JUSTIFY]this text is justify-aligned[/JUSTIFY]</string>
@@ -460,7 +460,7 @@
 											<string><![CDATA[<a href="mailto:{option}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [email] tag allows you to link to an email address. You can include an optional parameter to 'name' your link.</string>
+											<string>The [email={option}] tag allows link to an email address and use an optional parameter to 'name' of this link.</string>
 										</field>
 										<field name="example">
 											<string>[email=demo@example.com]Click Here to Email me[/email] </string>
@@ -483,7 +483,7 @@
 											<string><![CDATA[<a target='_blank' href="{param}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [url] tag allows you to link to other websites and files.</string>
+											<string>The [url] tag allows link to other websites and files.</string>
 										</field>
 										<field name="example">
 											<string>[URL]http://www.exoplatform.com[/URL]</string>
@@ -506,7 +506,7 @@
 											<string><![CDATA[<a target='_blank' href="{option}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [url=link]text[/url] tag allows you to link to other websites and files. You can include an optional parameter to 'name' your link.</string>
+											<string>The [url={option}] tag allows link to other websites and files and usean optional parameter to 'name' of thislink.</string>
 										</field>
 										<field name="example">
 											<string>[URL=http://www.exoplatform.com]Click goto exoplatform website.[/URL]</string>
@@ -529,7 +529,7 @@
 											<string><![CDATA[<a href="{option}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [goto] tag allows  goto directly to link instead of open new window or new tab.</string>
+											<string>Allows goto directly to link instead of open a new window or a new tab. </string>
 										</field>
 										<field name="example">
 											<string>[goto=http://www.exoplatform.com]Goto this link.[/goto]></string>
@@ -552,7 +552,7 @@
 											<string>You can not define this bbcode tag. It is defined by the developer.</string>
 										</field>
 										<field name="description">
-											<string>The [list] tag allows you to create simple, each bullet is denoted by the [*] tag.</string>
+											<string>The [list] tag allows create simple, each bullet is denoted by the [*] tag.</string>
 										</field>
 										<field name="example">
 											<string>[list][*]list item 1[*]list item 2[/list]</string>
@@ -575,7 +575,7 @@
 											<string>You can not define this bbcode tag. It is defined by the developer.</string>
 										</field>
 										<field name="description">
-											<string>The [list=option] tag allows you to create bulleted lists specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</string>
+											<string>The [list={option}] tag allows create bulleted lists specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</string>
 										</field>
 										<field name="example">
 											<string>[list=1][*]list item 1[*]list item 2[/list]</string>
@@ -598,7 +598,7 @@
 											<string><![CDATA[<img border="0" alt="" src="{param}" class="inlineimg"/>]]></string>
 										</field>
 										<field name="description">
-											<string>The [img] tag allows you to embed images within your posts. You can also combine this tag with the [url] tag to make images become links.</string>
+											<string>The [img] tag allows you to shows the image indicated by {url}</string>
 										</field>
 										<field name="example">
 											<string>[url=http://www.google.com.vn] [img]http://groups.google.com.vn/groups/img/3nb/groups_medium_vi.gif[/img] [/url]</string>
@@ -621,7 +621,7 @@
 											<string><![CDATA[<div class="Classquote">{param}</div>]]></string>
 										</field>
 										<field name="description">
-											<string>The [quote] tag allows you to attribute text to someone else.</string>
+											<string>The [quote] tag allows attribute content of poster.</string>
 										</field>
 										<field name="example">
 											<string>[quote]Lorem ipsum dolor sit amet[/quote]</string>
@@ -644,7 +644,7 @@
 											<string><![CDATA[<div class="Classquote"><div>Originally Posted by <strong>{option}</strong></div><div>{param}</div></div>]]></string>
 										</field>
 										<field name="description">
-											<string>The [quote] tag allows you to attribute text to someone else.</string>
+											<string>The [quote={option}] tag allows attibute content and user name of poster.</string>
 										</field>
 										<field name="example">
 											<string>[quote=John Doe]Lorem ipsum dolor sit amet[/quote]</string>
@@ -703,31 +703,6 @@
 										</field>
 									</object>
 								</value>
-
-								<!-- CSS -->
-								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
-										<field name="tagName">
-											<string>CSS</string>
-										</field>
-										<field name="replacement">
-											<string><![CDATA[<span class="{option}">{param}</span>]]></string>
-										</field>
-										<field name="description">
-											<string>The [css] tag allows you to add div tag and set class Name for this it.</string>
-										</field>
-										<field name="example">
-											<string>[css:highlight]Text is highlight[/img]</string>
-										</field>
-										<field name="isOption">
-											<string>true</string>
-										</field>
-										<field name="isActive">
-											<string>true</string>
-										</field>
-									</object>
-								</value>
-
 								<!-- SLIDESHARE -->
 								<value>
 									<object type="org.exoplatform.forum.service.conf.BBCodeData">
