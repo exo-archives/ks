@@ -259,7 +259,7 @@
 											<string><![CDATA[<font color="{option}">{param}</font>]]></string>
 										</field>
 										<field name="description">
-											<string>The [color] tag allows you to change the color of your text.</string>
+											<string>The [color=option] tag allows you to change the color of your text.</string>
 										</field>
 										<field name="example">
 											<string>[COLOR=blue]This text is blue[/COLOR]</string>
@@ -281,7 +281,7 @@
 											<string><![CDATA[<font size="{option}">{param}</font>]]></string>
 										</field>
 										<field name="description">
-											<string>The [size] tag allows you to change the size of your text.</string>
+											<string>The [size=option] tag allows you to change the size of your text.</string>
 										</field>
 										<field name="example">
 											<string>[size=+2]this text is two sizes larger than normal[/size]</string>
@@ -303,7 +303,7 @@
 											<string><![CDATA[<font face="{option}">{param}</font>]]></string>
 										</field>
 										<field name="description">
-											<string>The [font] tag allows you to change the font of your text.</string>
+											<string>The [font=option] tag allows you to change the font of your text.</string>
 										</field>
 										<field name="example">
 											<string>[font=courier]this text is in the courier font[/font]</string>
@@ -325,7 +325,7 @@
 											<string><![CDATA[<span style="font-weight: bold; color: blue;">{param}</span>]]></string>
 										</field>
 										<field name="description">
-											<string>The [font] tag allows you to make highlight of your text.</string>
+											<string>The [highlight] tag allows you to make highlight of your text.</string>
 										</field>
 										<field name="example">
 											<string>[highlight]this text is highlighted[/highlight]</string>
@@ -460,7 +460,7 @@
 											<string><![CDATA[<a href="mailto:{option}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [email={option}] tag allows link to an email address and use an optional parameter to 'name' of this link.</string>
+											<string>The [email=option] tag allows link to an email address and use an optional parameter to 'name' of this link.</string>
 										</field>
 										<field name="example">
 											<string>[email=demo@example.com]Click Here to Email me[/email] </string>
@@ -506,7 +506,7 @@
 											<string><![CDATA[<a target='_blank' href="{option}">{param}</a>]]></string>
 										</field>
 										<field name="description">
-											<string>The [url={option}] tag allows link to other websites and files and usean optional parameter to 'name' of thislink.</string>
+											<string>The [url=option] tag allows link to other websites and files and usean optional parameter to 'name' of thislink.</string>
 										</field>
 										<field name="example">
 											<string>[URL=http://www.exoplatform.com]Click goto exoplatform website.[/URL]</string>
@@ -575,7 +575,7 @@
 											<string>You can not define this bbcode tag. It is defined by the developer.</string>
 										</field>
 										<field name="description">
-											<string>The [list={option}] tag allows create bulleted lists specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</string>
+											<string>The [list=option] tag allows create bulleted lists specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</string>
 										</field>
 										<field name="example">
 											<string>[list=1][*]list item 1[*]list item 2[/list]</string>
@@ -644,7 +644,7 @@
 											<string><![CDATA[<div class="Classquote"><div>Originally Posted by <strong>{option}</strong></div><div>{param}</div></div>]]></string>
 										</field>
 										<field name="description">
-											<string>The [quote={option}] tag allows attibute content and user name of poster.</string>
+											<string>The [quote=option] tag allows attibute content and user name of poster.</string>
 										</field>
 										<field name="example">
 											<string>[quote=John Doe]Lorem ipsum dolor sit amet[/quote]</string>
@@ -690,10 +690,10 @@
 											<string><![CDATA[<span class="{option}">{param}</span>]]></string>
 										</field>
 										<field name="description">
-											<string>The [css] tag allows you to add div tag and set class Name for this it.</string>
+											<string>The [css=option] tag allows you to add div tag and set class Name for this it.</string>
 										</field>
 										<field name="example">
-											<string>[css:highlight]Text is highlight[/img]</string>
+											<string>[css=highlight]Text is highlight[/css]</string>
 										</field>
 										<field name="isOption">
 											<string>true</string>
@@ -725,7 +725,7 @@
 </string>
 										</field>
 										<field name="description">
-											<string>The [SLIDESHARE] tag allows you to run slide in slidesharecdn.com site.</string>
+											<string>The [SLIDESHARE=option] tag allows you to run slide in slidesharecdn.com site.</string>
 										</field>
 										<field name="example">
 											<string>[SLIDESHARE=slideId]My slide[/SLIDESHARE]</string>

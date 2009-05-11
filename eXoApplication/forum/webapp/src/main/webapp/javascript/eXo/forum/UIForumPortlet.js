@@ -796,6 +796,38 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	uiContextMenu.setup();
 };
 
+UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
+	var parentElm = document.getElementById(id);
+	var bbCodeContentHelp = eXo.core.DOMUtil.findFirstDescendantByClass(parentElm,"div","BBCodeHelpContent");
+	if(bbCodeContentHelp){
+		if(isIn == "true"){
+			bbCodeContentHelp.style.display = "block";
+			var contentHelp = eXo.core.DOMUtil.findFirstDescendantByClass(parentElm,"div","ContentHelp");
+			var l = String(contentHelp.innerHTML).length;
+			if(l < 100){
+				contentHelp.style.width = (20 + l*4) + "px"
+			} else {
+				contentHelp.style.width = "400px"
+			}
+			var parPopup = document.getElementById("UIForumPopupWindow");
+			var parPopup2 = document.getElementById("UIForumChildPopupWindow");
+			var left = 0;
+			var idField = String(id).replace("Help", "");
+			var field = document.getElementById(idField);
+			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + field.offsetWidth + 130;
+			var worksPace = document.getElementById('UIWorkingWorkspace');
+			if((left > contentHelp.offsetWidth) && ((left + contentHelp.offsetWidth)  > worksPace.offsetWidth)) {
+				bbCodeContentHelp.style.left = "-"  + (contentHelp.offsetWidth + 16) + "px";
+			} else {
+				bbCodeContentHelp.style.left = "0px";
+			}
+		} else {
+			bbCodeContentHelp.style.display = "none";
+		}
+	}
+	
+}
+
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 
 eXo.forum.CheckBox = {

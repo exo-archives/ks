@@ -385,3 +385,36 @@
 .UIForumPortlet .ClassCode pre {
   padding: 5px;
 }
+
+.UIForumPortlet .highlight{
+	font-weight: bold;
+	color: blue;
+}
+
+.UIForumPortlet .IconBBCodeHelp {
+ 	width: 16px; height:16px;
+ 	float: left; margin: 0px 0px 0px 5px;
+ 	cursor: pointer;
+}
+
+.UIForumPortlet .BBCodeHelpContent {
+  position: absolute;
+  display:none;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+}
+
+.UIForumPortlet .ContentHelp {
+	white-space:normal;
+  background: #ffffff;
+	cursor: text;
+	padding: 10px;
+	margin: 12px;
+  border:double 3px #b7b7b7;
+}
+
+
+
+
+

@@ -163,7 +163,12 @@
 															}
 													%>				
 														<tr class="$classCssInbox">
-															<td style="width:80px;text-align:center"><%=bbcode.getTagName();%></td>
+															<td style="width:80px;text-align:center">
+																<span><%=bbcode.getTagName();%></span>
+																<% if(bbcode.isOption()) {%>
+																<span>(OPTION)</span>
+																<% } %>
+															</td>
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>
 															<td style="width:40px;text-align:center"><input type="checkbox" class="checkbox" value="$value" name="$tagId" $checked/></td>
 															<td style="width:60px;text-align:center">

@@ -458,10 +458,8 @@
 	background: url('icons/PrivateMessages.gif') no-repeat left center;
 }
 
-.UIForumPortlet .ViewPostedByUser {
-}
-
-.UIForumPortlet .ViewThreadByUser {
+.UIForumPortlet .ShowHelpIcon {
+	background: url('icons/ShowHelpIcon.gif') no-repeat left center;
 }
 
 .UIForumPortlet #PendingJob {

@@ -6,22 +6,67 @@
 					<tbody>
 					<% if(!uiform.getPriview()) {
 						String actionPriview = uicomponent.event("Preview",uiform.PREVIEW);
+						String id = "";
 					%>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_TAGNAME_INPUT);%></td>
-							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></div>
+								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
-							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></div>
+								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
-							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></div>
+								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
-							<td class="FieldComponent" style="width:360px;"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldComponent" style="width:360px;">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></div>
+								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
 							<td class="FieldComponent">
 								<div class="UIAction"> 
 									<table class="ActionContainer">
@@ -46,7 +91,18 @@
 						</tr>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_USEOPTION_CHECKBOX);%></td>
-							<td class="FieldComponent" colspan="2"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX); %></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft" id="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
+								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
 						</tr>
 						<% } else { 
 							 String actionPriview = uicomponent.event("Preview","back");
@@ -67,9 +123,7 @@
 													<div class="ButtonLeft">
 														<div class="ButtonRight">
 															<div class="ButtonMiddle">
-																<a href="<%=uicomponent.event("Apply");%>">
-																	Apply
-																</a>
+																<a href="<%=uicomponent.event("Apply");%>"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
 															</div>
 														</div>
 													</div>
@@ -98,9 +152,7 @@
 													<div class="ButtonLeft">
 														<div class="ButtonRight">
 															<div class="ButtonMiddle">
-																<a href="$actionPriview">
-																	Back
-																</a>
+																<a href="$actionPriview"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></a>
 															</div>
 														</div>
 													</div>
@@ -139,9 +191,7 @@
 							<div class="ButtonLeft" onclick="$onclick">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);">
-											$actionLabel
-										</a>
+										<a href="javascript:void(0);">$actionLabel</a>
 									</div>
 								</div>
 							</div>
