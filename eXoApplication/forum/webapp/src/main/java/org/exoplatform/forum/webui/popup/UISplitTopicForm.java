@@ -104,7 +104,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 		}
 		pageList = new ForumPageList(6, listPostId.size());
 		pageList.setPageSize(6);
-//		this.updatePageList(pageList);
+		maxPage = pageList.getAvailablePage() ;
 		List<String>list = new ArrayList<String>();
 		try {
 			list.addAll(pageList.getPageList(pageSelect, this.listPostId)) ;

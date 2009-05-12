@@ -154,7 +154,6 @@ public class JCRDataStorage {
 	}
 
 	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-		System.out.println("\n\n Run init bbcode");
 		if(plugin instanceof InitBBCodePlugin) {
 			defaultBBCodePlugins_.add((InitBBCodePlugin)plugin) ;
 		}

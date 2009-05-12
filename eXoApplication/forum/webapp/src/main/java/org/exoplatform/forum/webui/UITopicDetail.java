@@ -518,6 +518,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				this.pageSelect = maxPage;
 			}
 		} catch (Exception e) {
+		}finally {
 			sProvider.close();
 		}
 	}
@@ -529,33 +530,36 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private List<Post> getPostPageList() throws Exception {
 		List<Post> posts = new ArrayList<Post>();  
 		if(this.pageList == null) return posts ;
-		posts = this.pageList.getPage(this.pageSelect) ;
-		if(posts == null) posts = new ArrayList<Post>(); 
-		List<String> userNames = new ArrayList<String>() ;
-		mapUserProfile.clear() ;
-		for (Post post : posts) {
-			if(!userNames.contains(post.getOwner())) userNames.add(post.getOwner());			
-			if(getUIFormCheckBoxInput(post.getId()) != null) {
-				getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
-			}else {
-				addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
-			}
-			this.IdLastPost = post.getId() ;
-		}
-		//updateUserProfiles
-		if(userNames.size() > 0) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-			try{
-				List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
-				for(UserProfile profile : profiles) {
-					mapUserProfile.put(profile.getUserId(), profile) ;
+		try {
+			posts = this.pageList.getPage(this.pageSelect) ;
+			if(posts == null) posts = new ArrayList<Post>(); 
+			List<String> userNames = new ArrayList<String>() ;
+			mapUserProfile.clear() ;
+			for (Post post : posts) {
+				if(!userNames.contains(post.getOwner())) userNames.add(post.getOwner());			
+				if(getUIFormCheckBoxInput(post.getId()) != null) {
+					getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
+				}else {
+					addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
 				}
-			}catch(Exception e) {
-				e.printStackTrace() ;
-			}finally {
-				sProvider.close() ;
+				this.IdLastPost = post.getId() ;
 			}
-		}
+			//updateUserProfiles
+			if(userNames.size() > 0) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try{
+					List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
+					for(UserProfile profile : profiles) {
+						mapUserProfile.put(profile.getUserId(), profile) ;
+					}
+				}catch(Exception e) {
+					e.printStackTrace() ;
+				}finally {
+					sProvider.close() ;
+				}
+			}
+		} catch (Exception e) {
+    }
 		return posts ;
 	}
 	
