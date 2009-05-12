@@ -16,7 +16,29 @@
 								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 									<div style="position: absolute;">
 										<div class="BBCodeHelpContent">
-											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
 										</div>
 									</div>
 								</div>
@@ -31,7 +53,29 @@
 								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 									<div style="position: absolute;">
 										<div class="BBCodeHelpContent">
-											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
 										</div>
 									</div>
 								</div>
@@ -46,7 +90,29 @@
 								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 									<div style="position: absolute;">
 										<div class="BBCodeHelpContent">
-											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
 										</div>
 									</div>
 								</div>
@@ -61,7 +127,29 @@
 								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 									<div style="position: absolute;">
 										<div class="BBCodeHelpContent">
-											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
 										</div>
 									</div>
 								</div>
@@ -97,7 +185,29 @@
 								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
 									<div style="position: absolute;">
 										<div class="BBCodeHelpContent">
-											<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
 										</div>
 									</div>
 								</div>
