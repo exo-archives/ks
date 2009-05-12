@@ -313,7 +313,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			listBBCode.clear();
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				listBBCode = forumService.getBBCodeUse(sProvider);
+				listBBCode = forumService.getActiveBBCode(sProvider);
 				isGetSv = false;
 	    } catch (Exception e) {
 	    }

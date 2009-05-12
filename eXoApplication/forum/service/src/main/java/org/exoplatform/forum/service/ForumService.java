@@ -24,14 +24,13 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.User;
 
 // TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL.
  */
-public interface ForumService {
+public interface ForumService extends ForumServiceLegacy{
 
 	/**
 	 * Adds the plugin.
@@ -78,7 +77,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Category> getCategories(SessionProvider sProvider) throws Exception;
+	public List<Category> getCategories() throws Exception;
 	
 	/**
 	 * Gets the category.
@@ -90,7 +89,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Category getCategory(SessionProvider sProvider, String categoryId) throws Exception;
+	public Category getCategory(String categoryId) throws Exception;
 	
 	/**
 	 * Save category. Check exists category, if not to create new else update exists category
@@ -101,7 +100,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception;
+	public void saveCategory(Category category, boolean isNew) throws Exception;
 	
 	/**
 	 * Removes the category. Check exists of category and remove it 
@@ -113,7 +112,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception;
+	public Category removeCategory(String categoryId) throws Exception;
 	
 	/**
 	 * Gets the forums in the category identify. 
@@ -125,7 +124,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception;
+	public List<Forum> getForums(String categoryId, String strQuery) throws Exception;
 	
 	/**
 	 * Gets the forum in the category identify.
@@ -138,7 +137,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Forum getForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	public Forum getForum(String categoryId, String forumId) throws Exception;
 	
 	/**
 	 * Modify this forum identify.
@@ -149,7 +148,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception;
+	public void modifyForum(Forum forum, int type) throws Exception;
 
 	/**
 	 * Save forum.Check exists forum, if not to create new else update exists forum
@@ -161,7 +160,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception;
+	public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception;
 
 	/**
 	 * Save user is moderator of list forum
@@ -174,7 +173,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception;
+	public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception;
 	
 	/**
 	 * Remove the forum in category identify.
@@ -187,7 +186,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	public Forum removeForum(String categoryId, String forumId) throws Exception;
 	
 	/**
 	 * Move forum. Move list forum to category by path of category
@@ -198,7 +197,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception;
+	public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception;
 	
 	/**
 	 * Gets the page topic in forum identify.
@@ -220,7 +219,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
+	public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception;
 	/**
 	 * Gets the page topic by user.
 	 * 
@@ -231,7 +230,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception;
+	public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * Gets the page topic old.
@@ -243,7 +242,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception;
+	public JCRPageList getPageTopicOld(long date) throws Exception;
 
 	/**
 	 * Gets the topics.
@@ -256,7 +255,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception;
+	public List<Topic> getTopics(String categoryId, String forumId) throws Exception;
 	
 	/**
 	 * Gets the topic.
@@ -271,7 +270,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception;
+	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
 	
 	/**
 	 * Gets the topic by path.
@@ -284,7 +283,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception;
+	public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
 
 	/**
 	 * Modify topic.
@@ -295,7 +294,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception;
+	public void modifyTopic(List<Topic> topics, int type) throws Exception;
 
 	/**
 	 * Save topic.
@@ -309,7 +308,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception;
+	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception;
 	
 	/**
 	 * Removes the topic.
@@ -323,7 +322,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+	public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception;
 	
 	/**
 	 * Move topic.
@@ -334,7 +333,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
+	public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 	
 	/**
 	 * Gets the posts.
@@ -352,8 +351,8 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
-	public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
+	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
+	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	/**
 	 * Gets the page post by user.
 	 * 
@@ -366,7 +365,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
+	public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
 	 * This method should: 1. Check the user permission 2. Load the Page Post data
@@ -382,7 +381,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId,
+	public Post getPost(String categoryId, String forumId, String topicId,
 	    String postId) throws Exception;
 
 	/**
@@ -399,10 +398,10 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void savePost(SessionProvider sProvider, String categoryId, String forumId,
+	public void savePost(String categoryId, String forumId,
 	    String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception;
 	
-	public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception;
+	public void modifyPost(List<Post> posts, int type) throws Exception;
 	/**
 	 * Removes the post.
 	 * 
@@ -416,7 +415,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Post removePost(SessionProvider sProvider, String categoryId, String forumId,
+	public Post removePost(String categoryId, String forumId,
 	    String topicId, String postId) throws Exception;
 
 	/**
@@ -428,7 +427,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
+	public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
 	    throws Exception;
 
 	/**
@@ -443,7 +442,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+	public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
 
 	/**
 	 * Save poll.
@@ -458,7 +457,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void savePoll(SessionProvider sProvider, String categoryId, String forumId,
+	public void savePoll(String categoryId, String forumId,
 	    String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception;
 
 	/**
@@ -473,7 +472,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Poll removePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception;
+	public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
 
 	/**
 	 * Sets the closed poll.
@@ -486,7 +485,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception;
+	public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;
 
 	/**
 	 * Gets the object name by path.
@@ -498,7 +497,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception;
+	public Object getObjectNameByPath(String path) throws Exception;
 
 	/**
 	 * Gets the object name by path.
@@ -510,7 +509,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Object getObjectNameById(SessionProvider sProvider, String id, String type) throws Exception;
+	public Object getObjectNameById(String id, String type) throws Exception;
 
 	/**
 	 * Gets the all link.
@@ -523,7 +522,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum) throws Exception;
+	public List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception;
 
 	/**
 	 * Gets the forum home path.
@@ -534,7 +533,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public String getForumHomePath(SessionProvider sProvider) throws Exception;
+	public String getForumHomePath() throws Exception;
 
 	/**
 	 * Adds the topic in tag.
@@ -545,7 +544,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+	public void addTopicInTag(String tagId, String topicPath) throws Exception;
 
 	/**
 	 * Removes the topic in tag.
@@ -556,7 +555,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+	public void removeTopicInTag(String tagId, String topicPath) throws Exception;
 
 	/**
 	 * Gets the tag.
@@ -568,7 +567,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception;
+	public Tag getTag(String tagId) throws Exception;
 
 	/**
 	 * Gets the tags.
@@ -579,7 +578,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Tag> getTags(SessionProvider sProvider) throws Exception;
+	public List<Tag> getTags() throws Exception;
 
 	/**
 	 * Gets the tags by user.
@@ -591,7 +590,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception;
+	public List<Tag> getTagsByUser(String userName) throws Exception;
 
 	/**
 	 * Gets the tags by topic.
@@ -603,7 +602,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception;
+	public List<Tag> getTagsByTopic(String[] tagIds) throws Exception;
 
 	/**
 	 * Gets the topics by tag.
@@ -615,7 +614,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception;
+	public JCRPageList getTopicsByTag(String tagId, String strOrderBy) throws Exception;
 
 	/**
 	 * Save tag.
@@ -626,7 +625,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception;
+	public void saveTag(Tag newTag, boolean isNew) throws Exception;
 
 	/**
 	 * Removes the tag.
@@ -636,7 +635,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void removeTag(SessionProvider sProvider, String tagId) throws Exception;
+	public void removeTag(String tagId) throws Exception;
 
 	/**
 	 * Save user profile.
@@ -648,7 +647,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
+	public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
 
 	/**
 	 * Gets the user profile.
@@ -666,7 +665,7 @@ public interface ForumService {
 	/*public UserProfile getUserProfile(SessionProvider sProvider, String userName,
 	    boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception;*/
 
-	public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception;
+	public JCRPageList searchUserProfile(String userSearch) throws Exception;
 	
 	/**
 	 * Gets the user info.
@@ -678,7 +677,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception;
+	public UserProfile getUserInfo(String userName) throws Exception;
 
 	/**
 	 * Save user bookmark.
@@ -690,7 +689,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception;
+	public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception;
 
 	/**
 	 * Save user collapCategories.
@@ -702,7 +701,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveCollapsedCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception;
+	public void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception;
 
 	/**
 	 * Gets the page list user profile.
@@ -713,7 +712,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageListUserProfile(SessionProvider sProvider) throws Exception;
+	public JCRPageList getPageListUserProfile() throws Exception;
 
 	/**
 	 * Save forum statistic.
@@ -723,7 +722,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception;
+	public void saveForumStatistic(ForumStatistic forumStatistic) throws Exception;
 
 	/**
 	 * Gets the forum statistic.
@@ -734,7 +733,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception;
+	public ForumStatistic getForumStatistic() throws Exception;
 
 	/**
 	 * Gets the quick search.
@@ -748,7 +747,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
+	public List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
 
 	/**
 	 * Gets the advanced search.
@@ -760,7 +759,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider, ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
+	public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception;
 
 	/**
 	 * Save forum administration.
@@ -770,7 +769,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception;
+	public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception;
 
 	/**
 	 * Gets the forum administration.
@@ -781,7 +780,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception;
+	public ForumAdministration getForumAdministration() throws Exception;
 
 	/**
 	 * User login.
@@ -841,8 +840,8 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception;
-	public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception ;
+	public JCRPageList getPrivateMessage(String userName, String type) throws Exception;
+	public long getNewPrivateMessage(String userName) throws Exception ;
 	/**
 	 * Save private message.
 	 * 
@@ -851,7 +850,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception;
+	public void savePrivateMessage(ForumPrivateMessage privateMessage) throws Exception;
 
 	/**
 	 * Save read message.
@@ -863,7 +862,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception;
+	public void saveReadMessage(String messageId, String userName, String type) throws Exception;
 
 	/**
 	 * Removes the private message.
@@ -875,7 +874,7 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception;
+	public void removePrivateMessage(String messageId, String userName, String type) throws Exception;
 
 	/**
 	 * Adds the watch.
@@ -887,10 +886,10 @@ public interface ForumService {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void addWatch(SessionProvider sProvider, int watchType, String path, List<String> values, String currentUser) throws Exception;
-	public void removeWatch(SessionProvider sProvider, int watchType, String path, String values) throws Exception;
-	public List<ForumSearch> getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception ;
-	public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception ;
+	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
+	public void removeWatch(int watchType, String path, String values) throws Exception;
+	public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception ;
+	public int getJobWattingForModeratorByUser(String userId) throws Exception ;
 	public SendMessageInfo getMessageInfo(String name) throws Exception ;
 	public boolean isAdminRole(String userName) throws Exception ;
   
@@ -902,49 +901,48 @@ public interface ForumService {
    */
   public List<Post> getNewPosts(int number) throws Exception ;
   
-  public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception ;
-  public void updateForumStatistic(SessionProvider systemSession) throws Exception ;
-  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception ;
-  public void createUserProfile (SessionProvider sysSession, User user) throws Exception ;
+  public NodeIterator search(String queryString) throws Exception ;
+  public void updateForumStatistic() throws Exception ;
+  public void evaluateActiveUsers(String query) throws Exception ;
+  public void createUserProfile (User user) throws Exception ;
 
   public void updateTopicAccess (String userId, String topicId) throws Exception ;
   public void updateForumAccess (String userId, String forumId) throws Exception ;
-  //public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
-  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
+  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos) throws Exception;
   
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
-  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception ;
-  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception ;
-  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
-  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception ;
-  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception ;
-  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception  ;
-  public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception ;
-  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception ;
+  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception ;
+  public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception ;
+  public UserProfile getQuickProfile(String userName) throws Exception ;
+  public UserProfile getUserInformations(UserProfile userProfile) throws Exception ;
+  public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception ;
+  public List<String> getBookmarks(String userName) throws Exception ;
+  public UserProfile getUserSettingProfile(String userName) throws Exception  ;
+  public UserProfile getUserProfileManagement(String userName) throws Exception ;
+  public void saveUserSettingProfile(UserProfile userProfile) throws Exception ;
   public void updateForum(String path) throws Exception ;
   public List<String> getBanList() throws Exception ;
   public boolean addBanIP(String ip) throws Exception ;
   public void removeBan(String ip) throws Exception ;
   
   public List<String> getForumBanList(String forumId) throws Exception ;
-  public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception ;
-  public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception ;
+  public boolean addBanIPForum(String ip, String forumId) throws Exception ;
+  public void removeBanIPForum(String ip, String forumId) throws Exception ;
   
-  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sessionProvider) throws Exception;
+  public JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception;
   public void updateStatisticCounts(long topicCoutn, long postCount) throws Exception  ;
-  public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception;
+  public void registerListenerForCategory(String categoryId) throws Exception;
   public void unRegisterListenerForCategory(String path) throws Exception ;
-  public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
-  public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
+  public ForumAttachment getUserAvatar(String userName) throws Exception;
+  public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception;
   
-  public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+  public void setDefaultAvatar(String userName)throws Exception;
   
-  public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception;
+  public List<Watch> getWatchByUser(String userId) throws Exception;
   
-  public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception;
+  public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception;
   
-  public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception ;
-  public List<BBCode> getBBCode(SessionProvider sProvider) throws Exception ;
-  public List<BBCode> getBBCodeUse(SessionProvider sProvider) throws Exception;
-  public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception ;
+  public void saveBBCode(List<BBCode> bbcodes) throws Exception ;
+  public List<BBCode> getAllBBCode() throws Exception ;
+  public List<BBCode> getActiveBBCode() throws Exception;
+  public void removeBBCode(String bbcodeId) throws Exception ;
 }

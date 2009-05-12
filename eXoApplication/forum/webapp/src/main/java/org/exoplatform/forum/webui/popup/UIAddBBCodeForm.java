@@ -131,7 +131,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			uiForm.listBBCode = new ArrayList<BBCode>();
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				uiForm.listBBCode.addAll(uiForm.forumService.getBBCodeUse(sProvider));
+				uiForm.listBBCode.addAll(uiForm.forumService.getActiveBBCode(sProvider));
 	    } catch (Exception e) {
 	    }
     	for (BBCode code : uiForm.listBBCode) {
@@ -181,7 +181,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				uiForm.listBBCode = new ArrayList<BBCode>();
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiForm.listBBCode.addAll(uiForm.forumService.getBBCodeUse(sProvider));
+					uiForm.listBBCode.addAll(uiForm.forumService.getActiveBBCode(sProvider));
 		    } catch (Exception e) {
 		    }
 		    if(uiForm.isEdit){

@@ -223,7 +223,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		listBBCode = new ArrayList<BBCode>();
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			listBBCode.addAll(forumService.getBBCode(sProvider));
+			listBBCode.addAll(forumService.getAllBBCode(sProvider));
     } catch (Exception e) {
 	    e.printStackTrace();
     }
