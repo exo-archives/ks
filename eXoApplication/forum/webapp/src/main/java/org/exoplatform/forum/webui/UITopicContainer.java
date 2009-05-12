@@ -192,20 +192,23 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public boolean getCanAddNewThread(){return this.canAddNewThread ; }
 	
 	private void setForumModeratorPortlet() throws Exception {
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-		ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
-		ForumParameter param = new ForumParameter() ;
-		param.setRenderModerator(true);
-		param.setModerators(moderators);
-		param.setRenderRule(true);
-		List<String> list = param.getInfoRules();
-		boolean isLock = forum.getIsClosed() ;
-		if(!isLock) isLock = forum.getIsLock() ;
-		if(!isLock) isLock = !canAddNewThread ;
-		list.set(0, String.valueOf(isLock));
-		param.setInfoRules(list);
-		actionRes.setEvent(new QName("ForumModerateEvent"), param) ;
-		actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
+		try {
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			ActionResponse actionRes = (ActionResponse)pcontext.getResponse();
+			ForumParameter param = new ForumParameter() ;
+			param.setRenderModerator(true);
+			param.setModerators(moderators);
+			param.setRenderRule(true);
+			List<String> list = param.getInfoRules();
+			boolean isLock = forum.getIsClosed() ;
+			if(!isLock) isLock = forum.getIsLock() ;
+			if(!isLock) isLock = !canAddNewThread ;
+			list.set(0, String.valueOf(isLock));
+			param.setInfoRules(list);
+			actionRes.setEvent(new QName("ForumModerateEvent"), param) ;
+			actionRes.setEvent(new QName("ForumRuleEvent"), param) ;
+    } catch (Exception e) {
+    }
 	}
 	
 	public void setForum(boolean isSetModerator) throws Exception {
