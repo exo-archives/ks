@@ -63,7 +63,6 @@ public class UIBreadcumbs extends UIContainer {
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
 	private List<String> path_ = new ArrayList<String>();
-	private String forumHomePath_ ;
 	private String QUICK_SEARCH = "QuickSearchForm" ;
 	public static final String FORUM_SERVICE = Utils.FORUM_SERVICE ;
 	private boolean isLink = false ;
@@ -72,13 +71,6 @@ public class UIBreadcumbs extends UIContainer {
 	private UserProfile userProfile ;
 	public UIBreadcumbs()throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-		try {
-			forumHomePath_ = forumService.getForumHomePath(sProvider);
-		} catch (Exception e) {
-		} finally {
-			sProvider.close();
-		}
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;
 		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;
@@ -96,7 +88,6 @@ public class UIBreadcumbs extends UIContainer {
 		setRenderForumLink(path);
 		if(!ForumUtils.isEmpty(path) && !path.equals(FORUM_SERVICE)) {
 			String temp[] = path.split("/") ;
-			String pathNode = forumHomePath_;
 			path_.clear() ;
 			breadcumbs_.clear() ;
 			path_.add(FORUM_SERVICE) ;
@@ -110,8 +101,12 @@ public class UIBreadcumbs extends UIContainer {
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
 					for (String string : temp) {
-						pathNode = pathNode + "/" + string;
-						Object obj = forumService.getObjectNameByPath(sProvider, pathNode);
+						
+						if (!ForumUtils.isEmpty(tempPath))
+							tempPath = tempPath + "/" + string;
+						else
+							tempPath = string;
+						Object obj = forumService.getObjectNameByPath(sProvider, tempPath);
 						if (obj == null) {
 							if (i == 0) {
 								isLink = true;
@@ -124,18 +119,10 @@ public class UIBreadcumbs extends UIContainer {
 							breadcumbs_.add(category.getCategoryName());
 							tooltipLink = "category";
 						} else if (obj instanceof Forum) {
-							if (!ForumUtils.isEmpty(tempPath))
-								tempPath = tempPath + "/" + string;
-							else
-								tempPath = string;
 							Forum forum = (Forum) obj;
 							breadcumbs_.add(forum.getForumName());
 							tooltipLink = "forum";
 						} else if (obj instanceof Topic) {
-							if (!ForumUtils.isEmpty(tempPath))
-								tempPath = tempPath + "/" + string;
-							else
-								tempPath = string;
 							Topic topic = (Topic) obj;
 							breadcumbs_.add(topic.getTopicName());
 							tooltipLink = "topic";

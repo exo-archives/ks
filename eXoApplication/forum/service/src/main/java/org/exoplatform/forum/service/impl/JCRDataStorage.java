@@ -3722,6 +3722,11 @@ public class JCRDataStorage {
 	public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception {
 		Object object = new Object();
 		try {
+			if(path.indexOf(Utils.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
+				path = getCategoryHome(sProvider).getPath() + "/" + path;
+			} else {
+				path = getTagHome(sProvider).getPath() + "/" + path;
+			}
 			Node myNode = (Node) getForumHomeNode(sProvider).getSession().getItem(path);
 			if (path.indexOf(Utils.POST) > 0) {
 				Post post = new Post();
