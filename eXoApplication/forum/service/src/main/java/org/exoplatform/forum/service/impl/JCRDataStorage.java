@@ -332,6 +332,7 @@ public class JCRDataStorage {
 		}catch(PathNotFoundException e) {
 			return getForumDataHome(sysProvider).addNode(Utils.TAG_HOME, "exo:tagHome") ;
 		}catch(Exception e){
+			e.printStackTrace();
 			return null ;
 		}
 	}
@@ -2952,16 +2953,15 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Tag> tags = new ArrayList<Tag>();
 		try {
-			Node categoryHome = getCategoryHome(sProvider);
-			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() + "//element(*,exo:forumTag)");
+			Node tagHome = getTagHome(sProvider);
+			QueryManager qm = tagHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + tagHome.getPath() + "//element(*,exo:forumTag)");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();			
 			while (iter.hasNext()) {
 				try {
-					Node tagNode = iter.nextNode();
-					tags.add(getTagNode(tagNode));
+					tags.add(getTagNode((Node)iter.nextNode()));
 				}catch(Exception e) {}				
 			}
 			return tags;

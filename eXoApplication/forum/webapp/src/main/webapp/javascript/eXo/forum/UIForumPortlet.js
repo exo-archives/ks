@@ -821,9 +821,9 @@ UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
 			var left = 0;
 			var idField = String(id).replace("Help", "");
 			var field = document.getElementById(idField);
-			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + field.offsetWidth + 130;
+			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + field.offsetWidth + 135;
 			var worksPace = document.getElementById('UIWorkingWorkspace');
-			if((left > contentHelp.offsetWidth) && ((left + contentHelp.offsetWidth)  > worksPace.offsetWidth)) {
+			if((left > contentHelp.offsetWidth) && ((left + bbCodeContentHelp.offsetWidth)  > worksPace.offsetWidth)) {
 				bbCodeContentHelp.style.left = "-"  + (contentHelp.offsetWidth + 50) + "px";
 				popupHelp.className = "LeftBBCodeHelpPopup";
 			} else {

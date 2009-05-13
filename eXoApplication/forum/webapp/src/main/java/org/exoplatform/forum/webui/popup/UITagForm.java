@@ -68,13 +68,8 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
-	public void activate() throws Exception {
-		// TODO Auto-generated method stub
-	}
-
-	public void deActivate() throws Exception {
-		// TODO Auto-generated method stub
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
 	public void setTopicPathAndTagId(String topicPath, String[] tagId) {
 		this.topicPath = topicPath ;
