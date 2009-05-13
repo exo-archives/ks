@@ -51,7 +51,7 @@
 								<td class="ControlButtonContainer">
 									<!-- ================== CustomView action ====================== -->
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-										<div style="cursor:pointer" id = "FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
+										<div style="cursor:pointer" class="SeparatorLine" id="FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
@@ -63,14 +63,13 @@
 											</div>
 										</div>
 									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
 									
 									<%
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									 	String linkRss = uicomponent.event("RSS", uicomponent.getRSSLink());
 									%>
 										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkRss">
+											<div onclick="$linkRss" class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
@@ -82,27 +81,26 @@
 												</div>
 											</div>
 										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
 								<%
 								}
 								if(canEditQuestion) {
 								%>
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this); eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this);"	class="DefaultStyle FAQBar ControlButton">
-									
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="Icon CategoryManager">
-														<div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
-															<a href="javascript:void(0);">Manage Category</a>
+										<div class="SeparatorLine">
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon CategoryManager">
+															<div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
+																<a href="javascript:void(0);">Manage Category</a>
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										
-										<!-- ================================================= Begin popup menu ================================ -->
-										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
+											
+											<!-- ================================================= Begin popup menu ================================ -->
+											<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
 											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
 											
 												<div class="MiddleLeftRightClickPopupMenu">
@@ -133,9 +131,8 @@
 											</div>
 										</div>
 									<!-- ================================================= End popup menu ================================ -->
-								
+									</div>
 								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
 								<%
 								}
 								if(canEditQuestion) {
@@ -148,7 +145,7 @@
 										String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
 								%>
 										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction">
+											<div onclick="$linkAction" class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
@@ -160,14 +157,13 @@
 												</div>
 											</div>
 										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
 								<%
 									}
 								} else {
 									String linkAction =uicomponent.event("AddNewQuestion", cateId);
 								%>
 										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction">
+											<div onclick="$linkAction" class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
@@ -179,13 +175,12 @@
 												</div>
 											</div>
 										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
 							<%}%>
 							<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
 									String actionSetting = uicomponent.event("Setting");
 							%>
 									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-										<div onclick="$actionSetting" >
+										<div onclick="$actionSetting" class="SeparatorLine">
 											<div class="LeftOverButton">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
@@ -197,11 +192,10 @@
 											</div>
 										</div>
 									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
 								<% } %>
 								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
 									<!--<div onclick="eXo.faq.UIFAQPortlet.printAll(this)">-->
-									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>">
+									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>" class="SeparatorLine">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
@@ -213,7 +207,6 @@
 										</div>
 									</div>
 								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
 								<div class="ScrollButtons" style="width:35px;_width:50px;">
 									<div title="Previous">
 										<div title="Next"><span></span></div>

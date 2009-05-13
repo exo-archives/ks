@@ -132,10 +132,9 @@
 }
 
 .UIFAQPortlet .FAQToolbar .SeparatorLine {
-	float: left;
-	background: url(background/FAQPortlet.gif) no-repeat left -188px;
-	width: 2px; height: 22px;
-	margin: 3px;
+	background: url(background/FAQPortlet.gif) no-repeat right -188px;
+	padding-right: 2px;
+	margin: 0px 3px;
 }
 
 .UIFAQPortlet .FAQToolbar .LeftBar {
@@ -202,7 +201,7 @@
 .UIFAQPortlet .DefaultStyle {
 	background: none;
 	float: left;
-	margin: 3px 3px 0px 3px; 
+	margin: 3px 0px 0px 0px;
 }
 
 .UIFAQPortlet .DefaultStyle .LeftOverButton {
