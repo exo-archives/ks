@@ -4990,7 +4990,6 @@ public class JCRDataStorage {
 	
 	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		
 		try {
 			Node bbCodeHome = getBBcodeHome(sProvider);
 			Node bbcNode;
@@ -4998,7 +4997,9 @@ public class JCRDataStorage {
 				try {
 					bbcNode = bbCodeHome.getNode(bbcode.getId());
 	      } catch (Exception e) {
-	      	bbcNode = bbCodeHome.addNode(bbcode.getId(), "exo:forumBBCode");
+	      	String id = bbcode.getTagName() + "_" + Utils.BBCODE;
+	      	if(bbcode.isOption()) id = id + "_option";
+	      	bbcNode = bbCodeHome.addNode(id, "exo:forumBBCode");
 	      }
 				bbcNode.setProperty("exo:tagName", bbcode.getTagName());
 				bbcNode.setProperty("exo:replacement", bbcode.getReplacement());
