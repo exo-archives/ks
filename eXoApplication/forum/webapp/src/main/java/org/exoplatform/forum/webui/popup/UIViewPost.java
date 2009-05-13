@@ -24,13 +24,16 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
+import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -60,7 +63,10 @@ import org.exoplatform.webui.form.UIForm;
 public class UIViewPost extends UIForm implements UIPopupComponent {
 	private Post post;
 	private boolean isViewUserInfo = true ;
+	private ForumService forumService;
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	public UIViewPost() {
+		forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 	}
 	
 	public void setActionForm(String[] actions) {
@@ -77,7 +83,6 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			if (userName != null) {
 				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
 				try {
-					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 					userProfile = forumService.getQuickProfile(sProvider, userName);
 				} catch (Exception ex) {
 				} finally {
@@ -86,6 +91,12 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			}
 		}
 		return userProfile;
+	}
+	
+	@SuppressWarnings("unused")
+  private String getReplaceByBBCode(String s) throws Exception {
+    s = BBCodeData.getReplacementByBBcode(s, listBBCode);
+    return s;
 	}
 	
 	public String getPortalName() {
@@ -110,6 +121,12 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			listBBCode = forumService.getActiveBBCode(sProvider);
+    } catch (Exception e) {
+    }
+    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
 	}
 	
 	@SuppressWarnings("unused")
@@ -140,9 +157,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			posts.add(post);
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				forumService.modifyPost(sProvider, posts, 1);
-				forumService.modifyPost(sProvider, posts, 2);
+				uiForm.forumService.modifyPost(sProvider, posts, 1);
+				uiForm.forumService.modifyPost(sProvider, posts, 2);
 			}catch(Exception e) {
 				e.printStackTrace() ;
 			}finally {
@@ -171,8 +187,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 			try{
 				String []path = post.getPath().split("/");
 				int l = path.length ;
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				forumService.removePost(sProvider, path[l-4], path[l-3], path[l-2], post.getId());
+				uiForm.forumService.removePost(sProvider, path[l-4], path[l-3], path[l-2], post.getId());
 			}catch(Exception e) {
 				e.printStackTrace() ;
 			}finally {

@@ -26,7 +26,9 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
+import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -69,6 +71,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private long pageSelect ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	public UIViewTopic() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
@@ -77,7 +80,15 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {}
 	
 	public Topic getTopic() { return topic;}
-	public void setTopic(Topic topic) {this.topic = topic;}
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		try {
+			listBBCode = forumService.getActiveBBCode(sProvider);
+    } catch (Exception e) {
+    }
+    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
+	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile ;
@@ -86,6 +97,12 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public void setActionForm(String[] actions) {
 	  this.setActions(actions);
   }
+	
+	@SuppressWarnings("unused")
+  private String getReplaceByBBCode(String s) throws Exception {
+    s = BBCodeData.getReplacementByBBcode(s, listBBCode);
+    return s;
+	}
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {

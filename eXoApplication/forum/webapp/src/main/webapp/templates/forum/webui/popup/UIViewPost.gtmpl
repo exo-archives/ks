@@ -12,7 +12,7 @@
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
 	Post post = uicomponent.getPostView(); 
 	String title = post.getName();	
-	String messager = ForumTransformHTML.convertCodeHTML(post.getMessage());
+	String messager = uicomponent.getReplaceByBBCode(post.getMessage());
 	String classIcon = post.getIcon() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	String postCreatedDate = ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	

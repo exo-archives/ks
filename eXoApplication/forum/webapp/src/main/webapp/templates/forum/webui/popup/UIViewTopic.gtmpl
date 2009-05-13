@@ -58,7 +58,7 @@
 			String namePost = post.getName() ;
 			dateView.setTime(post.getCreatedDate().getTime() - setTime);
 			String createdDate = ForumUtils.getFormatDate(longDateFormat,dateView);
-			String message = ForumTransformHTML.convertCodeHTML(post.getMessage()) ;
+			String message = uicomponent.getReplaceByBBCode(post.getMessage()) ;
 			String editBy = post.getModifiedBy() ;
 			String editDate ;
 			if(!ForumUtils.isEmpty(editBy)) {
