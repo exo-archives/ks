@@ -501,7 +501,11 @@ public interface ForumServiceLegacy {
   /**
    * @deprecated use {@link ForumService#getActiveBBCode()}
    */
-  public List<BBCode> getActiveBBCode(SessionProvider sProvider) throws Exception;
+  public List<String> getActiveBBCode(SessionProvider sProvider) throws Exception;
+  /**
+   * @deprecated use {@link ForumService#getBBcode()}
+   */
+  public BBCode getBBcode(SessionProvider sProvider, String id) throws Exception;
   
   /**
    * @deprecated use {@link ForumService#removeBBCode(String bbcodeId)}

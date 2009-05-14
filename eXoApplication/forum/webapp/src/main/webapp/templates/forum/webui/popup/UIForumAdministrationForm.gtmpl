@@ -166,7 +166,7 @@
 															<td style="width:80px;text-align:center">
 																<span><%=bbcode.getTagName();%></span>
 																<% if(bbcode.isOption()) {%>
-																<span>(OPTION)</span>
+																<span>(Option)</span>
 																<% } %>
 															</td>
 															<td style="text-align:left"><%=bbcode.getDescription();%></td>

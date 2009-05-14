@@ -309,17 +309,46 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
+		List<String> bbcName = new ArrayList<String>();
 		if(isGetSv) {
-			listBBCode.clear();
+			List<BBCode> bbcs = new ArrayList<BBCode>();
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				listBBCode = forumService.getActiveBBCode(sProvider);
+				bbcName = forumService.getActiveBBCode(sProvider);
 				isGetSv = false;
 	    } catch (Exception e) {
+	    }finally {
+	    	sProvider.close();
 	    }
+	    boolean isAdd = true;
+	    BBCode bbCode;
+	    for (String string : bbcName) {
+	    	isAdd = true;
+	    	for (BBCode bbc : listBBCode) {
+	    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+	    			bbcs.add(bbc);
+	    			isAdd = false;
+	    			break;
+	    		}
+	    	}
+	    	if(isAdd) {
+	    		bbCode = new BBCode();
+	    		if(string.indexOf("=") >= 0){
+	    			bbCode.setOption(true);
+	    			string = string.replaceFirst("=", "");
+	    			bbCode.setId(string+"_option");
+	    		}else {
+	    			bbCode.setId(string);
+	    		}
+	    		bbCode.setTagName(string);
+	    		bbcs.add(bbCode);
+	    	}
+	    }
+	    listBBCode.clear();
+	    listBBCode.addAll(bbcs);
 		}
     if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
-    s = BBCodeData.getReplacementByBBcode(s, listBBCode);
+    s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
     return s;
 	}
 	

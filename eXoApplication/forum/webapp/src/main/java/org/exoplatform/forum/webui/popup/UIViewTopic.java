@@ -82,11 +82,38 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public Topic getTopic() { return topic;}
 	public void setTopic(Topic topic) {
 		this.topic = topic;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		List<String> bbcName = new ArrayList<String>();
+		List<BBCode> bbcs = new ArrayList<BBCode>();
 		try {
-			listBBCode = forumService.getActiveBBCode(sProvider);
+			bbcName = forumService.getActiveBBCode();
     } catch (Exception e) {
     }
+    boolean isAdd = true;
+    BBCode bbCode;
+    for (String string : bbcName) {
+    	isAdd = true;
+    	for (BBCode bbc : listBBCode) {
+    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+    			bbcs.add(bbc);
+    			isAdd = false;
+    			break;
+    		}
+    	}
+    	if(isAdd) {
+    		bbCode = new BBCode();
+    		if(string.indexOf("=") >= 0){
+    			bbCode.setOption(true);
+    			string = string.replaceFirst("=", "");
+    			bbCode.setId(string+"_option");
+    		}else {
+    			bbCode.setId(string);
+    		}
+    		bbCode.setTagName(string);
+    		bbcs.add(bbCode);
+    	}
+    }
+    listBBCode.clear();
+    listBBCode.addAll(bbcs);
     if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
 	}
 	@SuppressWarnings("unused")
@@ -100,7 +127,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
-    s = BBCodeData.getReplacementByBBcode(s, listBBCode);
+    s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
     return s;
 	}
 	

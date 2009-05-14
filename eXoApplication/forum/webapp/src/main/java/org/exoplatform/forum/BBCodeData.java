@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.BBCode;
+import org.exoplatform.forum.service.ForumService;
 
 /**
  * Created by The eXo Platform SAS
@@ -98,7 +99,7 @@ public class BBCodeData {
 		return bbcodes;
   }
 	
-	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
+	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes, ForumService forumService) throws Exception {
 		int lastIndex = 0, tagIndex = 0, clsIndex = 0;
 		String start, end, bbc, str="", param, option;
 		for (BBCode bbcode : bbcodes) {
@@ -121,6 +122,10 @@ public class BBCodeData {
 						lastIndex = tagIndex + 1;
 						try {
 							clsIndex = s.indexOf(end, tagIndex);
+							str = bbcode.getReplacement();
+							if(str == null || str.trim().length() == 0 || str.equals("null")) {
+								bbcode.setReplacement(forumService.getBBcode(bbcode.getId()).getReplacement());
+							}
 							str = s.substring(tagIndex + start.length(), clsIndex);
 							option = str.substring(0, str.indexOf("]"));
 							if(option.indexOf("+")==0)option = option.replaceFirst("+", "");
@@ -141,6 +146,10 @@ public class BBCodeData {
 						lastIndex = tagIndex + 1;
 						try {
 							clsIndex = s.indexOf(end, tagIndex);
+							str = bbcode.getReplacement();
+							if(str == null || str.trim().length() == 0 || str.equals("null")) {
+								bbcode.setReplacement(forumService.getBBcode(bbcode.getId()).getReplacement());
+							}
 							str = s.substring(tagIndex + start.length(), clsIndex);
 							param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
 							s = StringUtils.replace(s, start + str + end, param);

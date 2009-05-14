@@ -111,7 +111,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode() throws Exception {
-    return BBCodeData.getReplacementByBBcode(example, listBBCode);
+    return BBCodeData.getReplacementByBBcode(example, listBBCode, null);
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIAddBBCodeForm> {
@@ -131,7 +131,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			uiForm.listBBCode = new ArrayList<BBCode>();
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				uiForm.listBBCode.addAll(uiForm.forumService.getActiveBBCode(sProvider));
+				uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode(sProvider));
 	    } catch (Exception e) {
 	    }
     	for (BBCode code : uiForm.listBBCode) {
@@ -181,7 +181,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				uiForm.listBBCode = new ArrayList<BBCode>();
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiForm.listBBCode.addAll(uiForm.forumService.getActiveBBCode(sProvider));
+					uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode(sProvider));
 		    } catch (Exception e) {
 		    }
 		    if(uiForm.isEdit){

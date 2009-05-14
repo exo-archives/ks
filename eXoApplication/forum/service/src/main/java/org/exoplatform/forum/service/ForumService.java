@@ -945,6 +945,7 @@ public interface ForumService extends ForumServiceLegacy{
   
   public void saveBBCode(List<BBCode> bbcodes) throws Exception ;
   public List<BBCode> getAllBBCode() throws Exception ;
-  public List<BBCode> getActiveBBCode() throws Exception;
+  public List<String> getActiveBBCode() throws Exception;
+  public BBCode getBBcode(String id) throws Exception;
   public void removeBBCode(String bbcodeId) throws Exception ;
 }

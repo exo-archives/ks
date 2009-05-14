@@ -711,7 +711,7 @@
 										</field>
 										<field name="replacement">
 <string>
-<![CDATA[<div style="width:425px; height:355;" align="center">
+<![CDATA[<div style="width:425px; height:355px;" align="center">
 <object style="margin:0px" width="425" height="355">
 	<param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0"/>
   <param name="allowFullScreen" value="true"/>

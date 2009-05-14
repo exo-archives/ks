@@ -334,7 +334,6 @@ public class JCRDataStorage {
 		}catch(PathNotFoundException e) {
 			return getForumDataHome(sysProvider).addNode(Utils.TAG_HOME, "exo:tagHome") ;
 		}catch(Exception e){
-			e.printStackTrace();
 			return null ;
 		}
 	}
@@ -5221,11 +5220,15 @@ public class JCRDataStorage {
 			Node bbCodeHome = getBBcodeHome(sProvider);
 			Node bbcNode;
 			for (BBCode bbcode : bbcodes) {
+				String id = bbcode.getTagName();
+				if(bbcode.isOption()) id = id + "_option";
 				try {
 					bbcNode = bbCodeHome.getNode(bbcode.getId());
+					if(!id.equals(bbcode.getId())) {
+						bbcNode.remove();
+						bbcNode = bbCodeHome.addNode(id, "exo:forumBBCode");
+					}
 	      } catch (Exception e) {
-	      	String id = bbcode.getTagName() + "_" + Utils.BBCODE;
-	      	if(bbcode.isOption()) id = id + "_option";
 	      	bbcNode = bbCodeHome.addNode(id, "exo:forumBBCode");
 	      }
 				bbcNode.setProperty("exo:tagName", bbcode.getTagName());
@@ -5274,9 +5277,9 @@ public class JCRDataStorage {
 		return bbcodes;		
 	}
 	
-	public List<BBCode> getActiveBBCode() throws Exception {
+	public List<String> getActiveBBCode() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<BBCode> bbcodes = new ArrayList<BBCode>();
+		List<String> bbcodes = new ArrayList<String>();
 		try{
 			QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
@@ -5284,12 +5287,33 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
+			String tagName = "";
 			while (iter.hasNext()) {
 		    Node bbcNode = (Node) iter.next();
-		    bbcodes.add(getBBCodeNode(bbcNode));
+		    tagName = bbcNode.getProperty("exo:tagName").getString();
+		    if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
+		    bbcodes.add(tagName);
 	    }
 		}finally { sProvider.close() ;}
 		return bbcodes;
+	}
+	
+	public BBCode getBBcode(String id) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		BBCode bbCode = new BBCode();
+		Node bbcNode;
+		try{
+			Node bbCodeHome = getBBcodeHome(sProvider);
+			try {
+				bbcNode = bbCodeHome.getNode(id);
+				bbCode.setId(bbcNode.getName());
+		    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
+		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
+		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
+      } catch (Exception e) {
+      }
+		}finally { sProvider.close() ;}
+		return bbCode ;
 	}
 	
 	public void removeBBCode(String bbcodeId) throws Exception {

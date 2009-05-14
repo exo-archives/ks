@@ -1064,12 +1064,20 @@ public class ForumServiceImpl implements ForumService, Startable{
 		return storage_.getAllBBCode();
 	}
 
-	public List<BBCode> getActiveBBCode(SessionProvider sProvider) throws Exception {
+	public List<String> getActiveBBCode(SessionProvider sProvider) throws Exception {
 		return getActiveBBCode();
 	}
 	
-	public List<BBCode> getActiveBBCode() throws Exception {
-		return storage_.getActiveBBCode();
+	public List<String> getActiveBBCode() throws Exception {
+		return (List<String>) storage_.getActiveBBCode();
+	}
+	
+	public BBCode getBBcode(SessionProvider sProvider, String id) throws Exception {
+		return getBBcode(id);
+	}
+	
+	public BBCode getBBcode(String id) throws Exception{
+		return storage_.getBBcode(id);
 	}
 	
 	public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception {
