@@ -460,7 +460,7 @@
 		<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:tagHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:tagHome</requiredPrimaryType>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:forumTag" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
@@ -533,7 +533,7 @@
 		<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:forumBBCodeHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:forumBBCodeHome</requiredPrimaryType>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:forumBBCode" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
@@ -870,7 +870,7 @@
 	 <childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:userProfileHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:userProfileHome</requiredPrimaryType>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
