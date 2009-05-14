@@ -874,12 +874,12 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  return storage_.exportXML(listCategoryIds, forumId, nodePath, bos, sessionProvider);
   }*/
   
-  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
-	  return exportXML(categoryId, forumId, nodePath, bos);
+  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll, SessionProvider sessionProvider) throws Exception{
+	  return exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
   }
   
-  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos) throws Exception{
-	  return storage_.exportXML(categoryId, forumId, nodePath, bos);
+  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
+	  return storage_.exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
   }
 
   
@@ -946,6 +946,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception {
 	  storage_.importXML(nodePath, bis, typeImport);
+  }
+  
+  public void updateDataImported() throws Exception{
+  	storage_.updateDataImported();
   }
   
   public void updateForum(String path) throws Exception{

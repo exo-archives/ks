@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
@@ -93,6 +94,7 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.RSSEventListener;
+import org.exoplatform.services.jcr.ext.common.NodeWrapper;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -2703,7 +2705,10 @@ public class JCRDataStorage {
 			NodeIterator nodeIterator = srcTopicNode.getNodes();
 			long posLast = nodeIterator.getSize() - 1;
 			nodeIterator.skip(posLast);
-			while(nodeIterator.hasNext()) postNode = nodeIterator.nextNode();
+			while(nodeIterator.hasNext()){
+				Node node = nodeIterator.nextNode();
+				if(node.isNodeType("exo:post")) postNode = node;
+			}
 			srcTopicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
 			srcTopicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
 			// set srcForumNode
@@ -4696,78 +4701,300 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}		
 	}
 	
-	public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos) throws Exception{
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node categoryHome = getCategoryHome(sProvider);
-		try {
+	protected List<File> createCategoryFiles(List<String> objectIds, SessionProvider sessionProvider) throws Exception{
+		Node categoryHome = getCategoryHome(sessionProvider);
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+		List<File> listFiles = new ArrayList<File>();
+		File file = null;
+		Writer writer = null;
+		for(Category category : getCategories()){
+			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
+			outputStream = new ByteArrayOutputStream() ;
+			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
+			file = new File(category.getId() + ".xml");
+			file.deleteOnExit();
+			file.createNewFile();
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(outputStream.toString());
+			writer.close();
+			listFiles.add(file);
+		}
+		return listFiles;
+	}
+	
+	protected List<File> createForumFiles(String categoryId, List<String> objectIds, SessionProvider sessionProvider) throws Exception{
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+		List<File> listFiles = new ArrayList<File>();
+		File file = null;
+		Writer writer = null;
+		for(Forum forum : getForums(categoryId, null)){
+			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
+			outputStream = new ByteArrayOutputStream();
+			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
+			file = new File(forum.getId() + ".xml");
+			file.deleteOnExit();
+			file.createNewFile();
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(outputStream.toString());
+			writer.close();
+			listFiles.add(file);
+		}
+		return listFiles;
+	}
+	
+	protected List<File> createFilesFromNode(Node node) throws Exception{
+		List<File> listFiles = new ArrayList<File>();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+		File file = null;
+		Writer writer = null;
+		if(node != null){
+			outputStream = new ByteArrayOutputStream();
+			node.getSession().exportSystemView(node.getPath(), outputStream, false, false ) ;
+			file = new File(node.getName() + ".xml");
+			file.deleteOnExit();
+			file.createNewFile();
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(outputStream.toString());
+			writer.close();
+			listFiles.add(file);
+		}
+		return listFiles;
+	}
+	
+	protected List<File> createAllForumFiles(SessionProvider sessionProvider) throws Exception{
+		List<File> listFiles = new ArrayList<File>();
+		
+		/*// Create Statistic file
+		listFiles.addAll(createFilesFromNodeIter(categoryHome, null, getStatisticHome(sessionProvider), ""));*/
+		
+		// Create Administration file
+		listFiles.addAll(createFilesFromNode(getAdminHome(sessionProvider)));
+		
+		//Create UserProfile files
+		listFiles.addAll(createFilesFromNode(getUserProfileHome(sessionProvider)));
+		
+		// create tag files
+		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider)));
+		
+		// Create BBCode file
+		listFiles.addAll(createFilesFromNode(getBBcodeHome(sessionProvider)));
+		
+		// Create BanIP file
+		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider)));
+		
+		// Create category home file
+		listFiles.addAll(createFilesFromNode(getCategoryHome(sessionProvider)));
+		
+		return listFiles;
+	}
+	
+	public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, 
+													ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
+		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		List<File> listFiles = new ArrayList<File>();
+		
+		if(!isExportAll){
 			if(categoryId != null){
-				categoryHome.getSession().exportSystemView(nodePath, bos, false, false ) ;
-				categoryHome.getSession().logout();
-				return null;
-			} else {
-				List<File> listFiles = new ArrayList<File>();
-				File file = null;
-				Writer writer = null;
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
-				//session = categoryHome.getSession();
-				for(Category category : getCategories()){
-					outputStream = new ByteArrayOutputStream() ;
-					categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
-					file = new File(category.getId() + ".xml");
-					file.deleteOnExit();
-					file.createNewFile();
-					writer = new BufferedWriter(new FileWriter(file));
-					writer.write(outputStream.toString());
-					writer.close();
-					listFiles.add(file);
+				if(forumId == null || forumId.trim().length() < 1){
+					listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
+				} else {
+					Node categoryHome = getCategoryHome(sessionProvider);
+					categoryHome.getSession().exportSystemView(nodePath, bos, false, false ) ;
+					categoryHome.getSession().logout();
+					return null;
 				}
-				// tao file zip:
-				ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-				int byteReads;
-				byte[] buffer = new byte[4096]; // Create a buffer for copying
-				FileInputStream inputStream = null;
-				ZipEntry zipEntry = null;
-				for(File f : listFiles){
-					inputStream = new FileInputStream(f);
-					zipEntry = new ZipEntry(f.getPath());
-					zipOutputStream.putNextEntry(zipEntry);
-					while((byteReads = inputStream.read(buffer)) != -1)
-						zipOutputStream.write(buffer, 0, byteReads);
-					inputStream.close();
-				}
-				zipOutputStream.close();
-				file = new File("exportCategory.zip");
-				categoryHome.getSession().logout();
-				for(File f : listFiles) f.deleteOnExit();
-				return file;
-				//outputStream.toString().writeTo(bos);
+			}else{
+				listFiles.addAll(createCategoryFiles(objectIds, sessionProvider));
 			}
-		}catch (Exception e) {
-			e.printStackTrace() ;
-		}finally { sProvider.close() ;}
-		return null ;
+		}else{
+			listFiles.addAll(createAllForumFiles(sessionProvider));
+		}
+		
+		// tao file zip:
+		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+		int byteReads;
+		byte[] buffer = new byte[4096]; // Create a buffer for copying
+		FileInputStream inputStream = null;
+		ZipEntry zipEntry = null;
+		for(File f : listFiles){
+			inputStream = new FileInputStream(f);
+			zipEntry = new ZipEntry(f.getPath());
+			zipOutputStream.putNextEntry(zipEntry);
+			while((byteReads = inputStream.read(buffer)) != -1)
+				zipOutputStream.write(buffer, 0, byteReads);
+			inputStream.close();
+		}
+		zipOutputStream.close();
+		File file = null;
+		file = new File("exportCategory.zip");
+		for(File f : listFiles) f.deleteOnExit();
+		return file;
 	}
 
-	public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception {
+		boolean isReset = false;
+		String nodeType = "";
+		String nodeName = "";
 		byte[] bdata	= new byte[bis.available()];
 		bis.read(bdata) ;
+		
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
-		Session session = getForumHomeNode(sProvider).getSession();
+		Document doc = docBuilder.parse(is);
+		doc.getDocumentElement ().normalize ();
+		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
+		
+		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
+			// All nodes when import need reset childnode
+			if(typeNodeExport.equals("exo:categoryHome")){
+				nodePath = getCategoryHome(sessionProvider).getPath();
+				isReset = true;
+				nodeType = "exo:forumCategory";
+				nodeName = "CategoryHome";
+			}else if(typeNodeExport.equals("exo:userProfileHome")){
+				nodePath = getUserProfileHome(sessionProvider).getPath();
+				isReset = true;
+				nodeType = "exo:forumUserProfile";
+				nodeName = "UserProfileHome";
+			}else if(typeNodeExport.equals("exo:tagHome")){
+				nodePath = getTagHome(sessionProvider).getPath();
+				isReset = true;
+				nodeType = "exo:forumTag";
+				nodeName = "TagHome";
+			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
+				nodePath = getBBcodeHome(sessionProvider).getPath();
+				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+				isReset = true;
+				nodeType = "exo:forumBBCode";
+				nodeName = "forumBBCode";
+			}
+			// Node import but don't need reset childnodes
+			else if(typeNodeExport.equals("exo:administrationHome")){
+				nodePath = getForumSystemHome(sessionProvider).getPath();
+				Node node = getAdminHome(sessionProvider);
+				node.remove();
+				getForumSystemHome(sessionProvider).save();
+				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+			}else if(typeNodeExport.equals("exo:banIPHome")){
+				nodePath = getForumSystemHome(sessionProvider).getPath();
+				Node node = getBanIPHome(sessionProvider);
+				node.remove();
+				getForumSystemHome(sessionProvider).save();
+				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+			}
+		}else{
+			isReset = false;
+			if(typeNodeExport.equals("exo:forumCategory"))
+				nodePath = getCategoryHome(sessionProvider).getPath();
+		}
+		
+		is = new ByteArrayInputStream(bdata) ;
+		Session session = getForumHomeNode(sessionProvider).getSession();
 		session.importXML(nodePath, is, typeImport);
 		session.save();		
-		Node parentNode = (Node)session.getItem(nodePath);		
-		if(parentNode.isNodeType("exo:forumHome")){
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			is = new ByteArrayInputStream(bdata) ;
-			Document doc = docBuilder.parse(is);
-			NodeList list = doc.getChildNodes() ;
-			String name = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
-			updateImportedData(nodePath + "/" + name);
+		
+		// Reset data in node
+		if(isReset){
+			Node node = null;
+			QueryManager qm = session.getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
+			
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iterator = result.getNodes();
+			
+			// Delete node if already exist
+			if(iterator.getSize() > 0){
+				queryString = new StringBuffer("/jcr:root").append(nodePath).append("/").append(nodeName).
+																								append("/element(*,").append(nodeType).append(")[") ;
+				int i = 0;
+				while(iterator.hasNext()){
+					if(i > 0) queryString.append(" or ");
+					queryString.append("(fn:name() = '").append(iterator.nextNode().getName()).append("')");
+					i ++;
+				}
+				queryString.append("]");
+				
+				query = qm.createQuery(queryString.toString(), Query.XPATH);
+				result = query.execute();
+				iterator = result.getNodes();
+				while(iterator.hasNext()){
+					node = iterator.nextNode();
+					node.remove();
+				}
+				session.save();
+			}
+			
+			// Move node
+			node = (Node)session.getItem(nodePath + "/" + nodeName);
+			iterator = node.getNodes();
+			while(iterator.hasNext()){
+				Node childNode = iterator.nextNode();
+				try{
+					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			node.remove();
+			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
+			session.save();
 		}
+		
 		session.logout();
-		sProvider.close() ;
+		sessionProvider.close() ;
+	}
+	
+	public void updateDataImported() throws Exception{
+		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		
+		// Update forum statistic
+		ForumStatistic forumStatistic = getForumStatistic();
+		Node categoryHome = getCategoryHome(sessionProvider);
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+																		append("//element(*,exo:post)") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iterator = result.getNodes();
+		forumStatistic.setPostCount(iterator.getSize());
+		
+		queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+												append("//element(*,exo:topic)") ;
+		query = qm.createQuery(queryString.toString(), Query.XPATH);
+		result = query.execute();
+		iterator = result.getNodes();
+		forumStatistic.setTopicCount(iterator.getSize());
+		
+		saveForumStatistic(forumStatistic);
+		
+		// Update user infor: total post, total topic:
+		Node userHomeNode = getUserProfileHome(sessionProvider);
+		iterator = userHomeNode.getNodes();
+		Node userNode = null;
+		while(iterator.hasNext()){
+			userNode = iterator.nextNode();
+			// Update total post for user
+			queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+													append("//element(*,exo:post)") ;
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			result = query.execute();
+			userNode.setProperty("exo:totalPost", result.getNodes().getSize());
+			
+			// Update total topic for user
+			queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+													append("//element(*,exo:topic)") ;
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			result = query.execute();
+			userNode.setProperty("exo:totalTopic", result.getNodes().getSize());
+			
+			userNode.save();
+		}
+		userHomeNode.save();
+		
+		sessionProvider.close();
 	}
 
 	public void updateTopicAccess (String userId, String topicId) throws Exception {

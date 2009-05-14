@@ -1,31 +1,48 @@
 <%
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 %>
 <div class="UIFormForum $uicomponent.id" style="padding:10px;">
 	<% uiform.begin() %>
+		<div style="display:none;" id="divChecked" checked="0"><span></span></div>
 		<div class="HorizontalLayout">
 			<div class="UIFormInput">
-			<%/*
-				if(!uiform.listCategories.isEmpty()){%>
+			<%
+				if(!uiform.listObjects.isEmpty()){%>
 					<div>
 						<fieldset style="color:rgb(51, 51, 51); margin:10px;">
 							<legend class="StyleLegend" style="cursor:pointer;">Select categories</legend>
-							<div style="height:100px; overflow:auto;">
+							<div style="height:160px; overflow:auto;">
 								<table class="UIGrid" style="margin:2px auto; width:95%;">
 									<thead>
 										<tr>
-											<th style="width:16px;"><!-- input style="width:16px; margin:2px auto" type="checkbox" id="checkAllCategories"/ --></th>
-											<th align="center" style="width:100%">Categories</th>
+											<th style="width:16px;"><span></span></th>
+											<%if(uicomponent.object_ == null){%>
+												<th align="center" style="width:100%">Categories</th>
+											<%}else if(uicomponent.object_ instanceof Category){%>
+												<th align="center" style="width:100%">Forums</th>
+											<%}%>
 										</tr>
 									</thead>
 									<tbody>	
 										<%
 										child = uiform.getChildById(uicomponent.LIST_CATEGORIES);
 										int i = 0;
-										for(Category cate : uiform.listCategories){%>
+										for(Object object : uiform.listObjects){%>
 											<tr>
-												<td><% child.renderChild(i) %></td>
-												<td style="padding-left:10px; width:100%"><%=cate.getCategoryName();%></td>
+												<td>
+													<% child.renderChild(i) %>
+												</td>
+												<td style="padding-left:10px; width:100%">
+													<%try{%>
+														<%=object.getCategoryName();%>
+													<%}catch(Exception e){%>
+														<%=object.getForumName();%>
+													<%}%>
+												</td>
 											</tr>
 									<%	i ++;
 										}%>
@@ -35,7 +52,7 @@ import org.exoplatform.forum.service.Category;
 						</fieldset>
 					</div>
 				<%}
-				*/%>
+				%>
 				<table class="UIFormGrid">
 					<tbody>				
 					<% 
@@ -47,7 +64,9 @@ import org.exoplatform.forum.service.Category;
 								<td class="FieldLabel" style="white-space:nowrap;">
 									$fieldName
 								</td>
-								<td class="FieldComponent"><% uiform.renderField(field) %></td>
+								<td class="FieldComponent">
+									<% uiform.renderField(field) %>
+								</td>
 							</tr>
 					<% 
 						}

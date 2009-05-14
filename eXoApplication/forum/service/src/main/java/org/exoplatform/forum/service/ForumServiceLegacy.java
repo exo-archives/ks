@@ -396,7 +396,7 @@ public interface ForumServiceLegacy {
 	/**
    * @deprecated use {@link ForumService#exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos)}
    */
-  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception;
+  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll, SessionProvider sessionProvider) throws Exception;
   
   /**
    * @deprecated use {@link ForumService#importXML(String nodePath, ByteArrayInputStream bis,int typeImport)}

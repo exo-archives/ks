@@ -26,11 +26,13 @@ import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
+import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
@@ -42,10 +44,14 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 public class UIExportForm extends UIForm implements UIPopupComponent{
+	private boolean isExportAll = false;
 	private final String LIST_CATEGORIES = "listCategories";
 	private final String CREATE_ZIP = "createZip";
 	private final String FILE_NAME = "FileName";
-	List<Category> listCategories = new ArrayList<Category>();
+	private String EXPORT_MODE = "ExportMode";
+	private String EXPORT_ALL = "ExportAll";
+	private String EXPORT_CATEGORIES = "ExportCategories";
+	List<Object> listObjects = new ArrayList<Object>();
 	private Object object_ = "";
 	public void activate() throws Exception { }
 
@@ -59,31 +65,51 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 	public void setObjectId(Object object){
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
-		if(object == null){
+		if(object == null || object instanceof Category){
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 			try {
 				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
-				for(Category category : service.getCategories(sessionProvider)){
-					listCategories.add(category);
-					checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getCategoryName(), category.getId(), true);
-					checkBoxInput.setChecked(true);
-					formInputWithActions.addChild(checkBoxInput);
+				if(object == null){
+					for(Category category : service.getCategories(sessionProvider)){
+						listObjects.add(category);
+						checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getId(), category.getId(), true);
+						checkBoxInput.setChecked(true);
+						formInputWithActions.addChild(checkBoxInput);
+					}
+				}else if(object instanceof Category){
+					for(Forum forum : service.getForums(sessionProvider, ((Category)object).getId(), null)){
+						listObjects.add(forum);
+						checkBoxInput = new UIFormCheckBoxInput<Boolean>(forum.getId(), forum.getId(), true);
+						checkBoxInput.setChecked(true);
+						formInputWithActions.addChild(checkBoxInput);
+					}
 				}
 				addChild(formInputWithActions);
-			} catch (Exception e) {
-			}
+			}catch(Exception e){ }
 			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 			ResourceBundle res = context.getApplicationResourceBundle() ;
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
 			stringInput.setValue(res.getString("UIExportForm.label.DefaultFileName"));
 			checkBoxInput = new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false );
 			checkBoxInput.setChecked(true).setEnable(false);
-			
+
 			addChild(stringInput);
 			addChild(checkBoxInput);
-		} else {
+			
+			if(object == null ){
+				List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
+				EXPORT_ALL = res.getString("UIExportForm.label.ExportAll");
+				EXPORT_CATEGORIES = res.getString("UIExportForm.label.ExportCategories");
+				EXPORT_MODE = res.getString("UIExportForm.label.ExportMode");
+				list.add(new SelectItemOption<String>(EXPORT_ALL));
+				list.add(new SelectItemOption<String>(EXPORT_CATEGORIES));
+				UIFormRadioBoxInput exportMode = new UIFormRadioBoxInput(EXPORT_MODE, EXPORT_MODE, list);
+				exportMode.setValue(EXPORT_CATEGORIES);
+				addChild(exportMode);
+			}
+		}else{
 			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 			ResourceBundle res = context.getApplicationResourceBundle() ;
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
@@ -100,7 +126,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		for(UIComponent component : ((UIFormInputWithActions)this.getChildById(LIST_CATEGORIES)).getChildren()){
 			checkBox = (UIFormCheckBoxInput<Boolean>)component;
 			if(checkBox.isChecked()) listId.add(checkBox.getId());
-		}
+		}		
 		return listId;
 	} 
 
@@ -116,6 +142,15 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
+			}
+			UIFormRadioBoxInput radioBoxInput = exportForm.getChildById(exportForm.EXPORT_MODE);
+			if(radioBoxInput != null){
+				String value = radioBoxInput.getValue();
+				if(value.equals(exportForm.EXPORT_CATEGORIES)){
+					exportForm.isExportAll = false;
+				} else {
+					exportForm.isExportAll = true;
+				}
 			}
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
@@ -139,8 +174,13 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
 			File file =  null;
 			try{
-				file = (File)service.exportXML(categoryId, forumId, nodePath, bos, sessionProvider);
+				List<String> listId = new ArrayList<String>();
+				if(!exportForm.isExportAll){
+					if(forumId == null || forumId.trim().length() < 1) listId.addAll(exportForm.getListSelected());
+				}
+				file = (File)service.exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
 			} catch(Exception e){
+				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				return;

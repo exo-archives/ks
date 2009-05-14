@@ -908,9 +908,11 @@ public interface ForumService extends ForumServiceLegacy{
 
   public void updateTopicAccess (String userId, String topicId) throws Exception ;
   public void updateForumAccess (String userId, String forumId) throws Exception ;
-  public Object exportXML(String categoryId, String forumId, String nodePath, ByteArrayOutputStream bos) throws Exception;
+  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos,  boolean isExportAll) throws Exception;
   
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception ;
+  public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception ;
+  public void updateDataImported() throws Exception;
+  
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception ;
   public UserProfile getQuickProfile(String userName) throws Exception ;
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception ;

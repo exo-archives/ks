@@ -463,7 +463,7 @@ public class TestForumService extends BaseForumTestCase{
   	forumService_.saveForum(sProvider, cat.getId(), forum, true);
   	forum = forumService_.getForum(sProvider, cat.getId(), forum.getId());
   	ByteArrayOutputStream bos = new ByteArrayOutputStream();
-  	forumService_.exportXML(cat.getId(), forum.getId(), forum.getPath(), bos, sProvider);
+  	forumService_.exportXML(cat.getId(), forum.getId(), new ArrayList<String>(), forum.getPath(), bos, false);
   	assertEquals("can't export Forum into XML file", bos.size() > 0, true);
   }
   
