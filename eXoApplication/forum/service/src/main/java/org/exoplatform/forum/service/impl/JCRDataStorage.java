@@ -960,7 +960,7 @@ public class JCRDataStorage {
 
 	public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node forumHomeNode = getForumHomeNode(sProvider);
+		Node forumHomeNode = getCategoryHome(sProvider);
 		for (String path : forumPaths) {
 			String forumPath = forumHomeNode.getPath() + "/" + path;
 			Node forumNode;
@@ -3987,7 +3987,6 @@ public class JCRDataStorage {
 		Node categoryHome = getCategoryHome(sProvider);
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		sProvider.close() ;
 		if (pathQuery == null || pathQuery.length() <= 0) {
 			pathQuery = categoryHome.getPath();
 		}
@@ -4066,6 +4065,7 @@ public class JCRDataStorage {
 				}
 			}
 			queryString.append("]");
+			
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -4102,6 +4102,7 @@ public class JCRDataStorage {
 				listSearchEvent.add(forumSearch);
 			}
 		}
+		sProvider.close() ;
 		return listSearchEvent;
 	}
 
@@ -4110,7 +4111,6 @@ public class JCRDataStorage {
 		Node categoryHome = getCategoryHome(sProvider) ;
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		sProvider.close() ;
 		String path = eventQuery.getPath();
 		if (path == null || path.length() <= 0) {
 			path = categoryHome.getPath();
@@ -4155,7 +4155,7 @@ public class JCRDataStorage {
 			forumSearch.setPath(nodeObj.getPath());
 			listSearchEvent.add(forumSearch);
 		}
-
+		sProvider.close() ;
 		return listSearchEvent;
 	}
 

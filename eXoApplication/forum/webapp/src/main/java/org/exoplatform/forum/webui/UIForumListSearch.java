@@ -165,6 +165,7 @@ public class UIForumListSearch extends UIContainer {
 				topic = forumService.getTopic(sProvider, cateId, forumId, topicId, userProfile.getUserId());
 				post = forumService.getPost(sProvider, "" , "", "", path) ;
 			} catch (Exception e) { 
+				e.printStackTrace();
 			}finally {
 				sProvider.close();
 			}
