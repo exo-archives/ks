@@ -779,7 +779,7 @@ UIForumPortlet.prototype.loadTagScroll = function(e) {
 	var uiNav = eXo.forum.UIForumPortlet ;
   var container = document.getElementById("TagContainer") ;
   if(container) {
-    uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
+    uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("TagContainer") ;
     uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
     uiNav.tagScrollMgr.mainContainer = container.parentNode ;
     uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
