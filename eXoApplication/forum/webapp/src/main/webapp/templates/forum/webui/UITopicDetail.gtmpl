@@ -19,7 +19,7 @@
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
-
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.loadTagScroll();") ;
 	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
 	String userLogin ;
@@ -102,20 +102,26 @@
 				</div>
 			</div>
 		</div>
+		<%  
+		 	List<Tag> tags = uicomponent.getTagsByTopic();
+		 	if(!tags.isEmpty()){
+		%>
+			<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;">Tag:</div>
+		<%}%>
 		<div class="TagContainer" style="float:left;">
-			<div class="TagContent">
-			<%  
-			 	List<Tag> tags = uicomponent.getTagsByTopic();
-			 	if(!tags.isEmpty()){
-			%>
-				<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;">Tag:</div>
-			<%}
+			<div class="TagContent" id="TagContainer">
+			<%
 			 	for(tag in tags) {
 			 		String tagName = tag.getName();
 			 		String color = tag.getColor();
 			%>
 				<a class="TagIcon FloatLeft ${color}TagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 			<%} %>
+				<div class="ScrollButtons" style="width:35px;">
+      		<div title="Previous">
+      			<div title="Next"><span></span></div>
+      		</div>
+      	</div>
 				<div style="clear:left;"><span></span></div>
 			</div>
 		</div>

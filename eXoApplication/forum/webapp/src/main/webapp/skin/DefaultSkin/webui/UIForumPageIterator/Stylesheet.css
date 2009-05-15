@@ -1,8 +1,7 @@
 .UIForumPageIterator {    
 	float:right;
 	margin: 0px ;
-	width: 420px;
-	padding: 3px 0px 0px 0px ;
+	padding: 3px 0px 0px 5px ;
 }
 
 .UIForumPageIterator .PageIteratorContainer {    

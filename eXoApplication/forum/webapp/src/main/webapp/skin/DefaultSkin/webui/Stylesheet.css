@@ -457,13 +457,13 @@
 	_margin:14px 0px 0px 0px;
 }
 
-.UIForumPortlet .UIForumActionBar .ScrollButtons {
+.UIForumPortlet .ScrollButtons {
 	display:none;
 	float:right;
 	padding:5px 1px 5px 1px;
 }
 
-.UIForumPortlet .UIForumActionBar .DisableScrollLeftButton {
+.UIForumPortlet  .DisableScrollLeftButton {
 	background:url('background/DisableScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -473,7 +473,7 @@
 	width:13px;
 }
 
-.UIForumPortlet .UIForumActionBar .DisableScrollRightButton {
+.UIForumPortlet  .DisableScrollRightButton {
 	background:url('background/DisableScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -482,7 +482,7 @@
 	width:13px;
 }
 
-.UIForumPortlet .UIForumActionBar .ScrollRightButton {
+.UIForumPortlet  .ScrollRightButton {
 	background:url('background/ScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -491,7 +491,7 @@
 	width:13px;
 }
 
-.UIForumPortlet .UIForumActionBar .ScrollLeftButton {
+.UIForumPortlet  .ScrollLeftButton {
 	background:url('background/ScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -501,7 +501,7 @@
 	width:13px;
 }
 
-.UIForumPortlet .UIForumActionBar .HighlightScrollRightButton {
+.UIForumPortlet .HighlightScrollRightButton {
 	background:url('background/HighlightScrollRightButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;
@@ -510,7 +510,7 @@
 	width:13px;
 }
 
-.UIForumPortlet .UIForumActionBar .HighlightScrollLeftButton {
+.UIForumPortlet .HighlightScrollLeftButton {
 	background:url('background/HighlightScrollLeftButton.gif') no-repeat left;
 	cursor:pointer;
 	float:left;

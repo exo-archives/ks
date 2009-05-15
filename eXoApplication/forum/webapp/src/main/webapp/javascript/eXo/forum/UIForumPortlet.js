@@ -769,6 +769,55 @@ UIForumPortlet.prototype.initScroll = function() {
   uiNav.scrollMgr.renderElements() ;
 } ;
 
+ScrollManager.prototype.loadItems = function(elementClass, clean) {
+	if (clean) this.cleanElements();
+	this.elements.clear();
+	this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass).reverse());
+};
+
+UIForumPortlet.prototype.loadTagScroll = function(e) {
+	var uiNav = eXo.forum.UIForumPortlet ;
+  var container = document.getElementById("TagContainer") ;
+  if(container) {
+    uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("UIForumActionBar") ;
+    uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
+    uiNav.tagScrollMgr.mainContainer = container.parentNode ;
+    uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
+    uiNav.tagScrollMgr.loadItems("TagIcon", true) ;
+    
+    var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.tagScrollMgr.arrowsContainer, "div");
+    if(button.length >= 2) {    
+      uiNav.tagScrollMgr.initArrowButton(button[0],"left", "ScrollLeftButton", "HighlightScrollLeftButton", "DisableScrollLeftButton") ;
+      uiNav.tagScrollMgr.initArrowButton(button[1],"right", "ScrollRightButton", "HighlightScrollRightButton", "DisableScrollRightButton") ;
+    }
+		
+    uiNav.scrollManagerLoaded = true;
+    uiNav.initTagScroll() ;
+  }
+} ;
+
+UIForumPortlet.prototype.initTagScroll = function() {
+  var uiNav = eXo.forum.UIForumPortlet ;
+  if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
+  var elements = uiNav.tagScrollMgr.elements ;
+	uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
+  uiNav.tagScrollMgr.init() ;
+  uiNav.tagScrollMgr.checkAvailableSpace() ;
+  uiNav.tagScrollMgr.renderElements() ;
+} ;
+
+UIForumPortlet.prototype.setTagContainerWidth = function(container){
+	var nodes = eXo.core.DOMUtil.getChildrenByTagName(container.parentNode,"div");
+	var width = 0;
+	var i = nodes.length;
+	while(i--){
+		if((nodes[i].className == container.className) || !nodes[i].className) continue;
+		width += nodes[i].offsetWidth;
+	}
+	width = container.parentNode.offsetWidth - width;
+	container.style.width = width + "px";
+};
+
 UIForumPortlet.prototype.executeLink = function(evt) {
   var onclickAction = String(this.getAttribute("actions")) ;
 	eval(onclickAction) ;
