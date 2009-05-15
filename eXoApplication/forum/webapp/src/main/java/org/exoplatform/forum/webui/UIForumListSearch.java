@@ -142,6 +142,7 @@ public class UIForumListSearch extends UIContainer {
 			UIForumListSearch uiForm = event.getSource() ;
 			String objId = event.getRequestContext().getRequestParameter(OBJECTID);
 			ForumSearch forumSearch = uiForm.getForumSearch(objId) ;
+			
 			String path = forumSearch.getPath();
 			String type = forumSearch.getType() ;
 			boolean isErro = false ;
@@ -151,19 +152,23 @@ public class UIForumListSearch extends UIContainer {
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			
 			String []id = path.split("/") ;
+			String cateId="", forumId="", topicId="", postId="";
+			for (int i = 0; i < id.length; i++) {
+	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
+	      if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
+	      if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
+	      if(id[i].indexOf(Utils.POST) >= 0) postId = id[i];
+      }
 			Category category = null;
 			Forum forum = null;
 			Topic topic = null;
 			Post post = null;
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try{
-				String cateId =  id[3];
 				category = forumService.getCategory(sProvider, cateId) ;
-				String forumId = id[4];
-				forum = forumService.getForum(sProvider,cateId , forumId ) ;
-				String topicId = id[5];
+				forum = forumService.getForum(sProvider, cateId, forumId) ;
 				topic = forumService.getTopic(sProvider, cateId, forumId, topicId, userProfile.getUserId());
-				post = forumService.getPost(sProvider, "" , "", "", path) ;
+				post = forumService.getPost(sProvider, cateId , forumId, topicId, path) ;
 			} catch (Exception e) { 
 				e.printStackTrace();
 			}finally {
@@ -185,7 +190,6 @@ public class UIForumListSearch extends UIContainer {
 					}
 				} else isErro = true ;
 			} else if(type.equals(Utils.FORUM)) {
-				int length = id.length ;
 				if(forum != null) {
 					if(isRead) {
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -193,13 +197,12 @@ public class UIForumListSearch extends UIContainer {
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(id[length-2], forum) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
+						uiTopicContainer.setUpdateForum(cateId, forum) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId+"/"+forumId));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
 				} else isErro = true ;
 			} else if(type.equals(Utils.TOPIC)){
-				int length = id.length ;
 				if(topic != null) {
 					if(isRead){
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -209,12 +212,12 @@ public class UIForumListSearch extends UIContainer {
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
+						uiTopicDetail.setTopicFromCate(cateId, forumId, topic) ;
 						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[length-3], id[length-2] , topic.getId()) ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId , topic.getId()) ;
 						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
 				} else isErro = true ;

@@ -38,6 +38,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategory;
@@ -604,16 +605,19 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			
 			String []id = path.split("/") ;
+			String cateId="", forumId="", topicId="";
+			for (int i = 0; i < id.length; i++) {
+	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
+	      if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
+	      if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
+      }
 			Category category = null;
 			Forum forum = null;
 			Topic topic = null;
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try{
-				String cateId =  id[3];
 				category = forumService.getCategory(sProvider, cateId) ;
-				String forumId = id[4];
 				forum = forumService.getForum(sProvider,cateId , forumId ) ;
-				String topicId = id[5];
 				topic = forumService.getTopic(sProvider, cateId, forumId, topicId, userProfile.getUserId());
 			} catch (Exception e) { 
 			}finally {
@@ -622,19 +626,18 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			
 			isRead = uiForm.canView(category, forum, topic, null, userProfile);
 			
-			if(id.length == 4) {
+			if(ForumUtils.isEmpty(forumId)) {
 				if(category != null) {
 					if(isRead){
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.getChild(UICategory.class).update(category, null);
 						categoryContainer.updateIsRender(false) ;
-						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(id[3]);
+						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(cateId);
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
 				} else isErro = true ;
-			} else if(id.length == 5) {
-				int length = id.length ;
+			} else if(ForumUtils.isEmpty(topicId)) {
 				if(forum != null) {
 					if(isRead) {
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -642,13 +645,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(id[length-2], forum) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-2]+"/"+id[length-1]));
+						uiTopicContainer.setUpdateForum(cateId, forum) ;
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId+"/"+forumId));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
 				} else isErro = true ;
-			} else if(id.length == 6){
-				int length = id.length ;
+			} else {
 				if(topic != null) {
 					if(isRead){
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
@@ -658,12 +660,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(id[length-3], id[length-2], topic) ;
+						uiTopicDetail.setTopicFromCate(cateId, forumId, topic) ;
 						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[length-3], id[length-2] , topic.getId()) ;
+						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId , topic.getId()) ;
 						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[length-3] + "/" + id[length-2] + " "));
+						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId + " "));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
 				} else isErro = true ;

@@ -762,7 +762,7 @@ public class JCRDataStorage {
 	public Forum getForum(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
-			Node forumNode = getCategoryHome(sProvider).getNode(categoryId).getNode(forumId);
+			Node forumNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId);
 			return getForum(forumNode);			
 		} catch (Exception e) {
 			return null;

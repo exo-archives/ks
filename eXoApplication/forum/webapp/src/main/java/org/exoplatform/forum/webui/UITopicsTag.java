@@ -227,7 +227,14 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			String []id = idAndNumber.split(",") ;
 			Topic topic = uiTopicsTag.getTopic(id[0]);
-			String cateId = topic.getPath().split("/")[3];
+			String[]ids = topic.getPath().split("/");
+			String cateId="", forumId="", topicId="", postId="";
+			for (int i = 0; i < ids.length; i++) {
+	      if(ids[i].indexOf(Utils.CATEGORY) >= 0) cateId = ids[i];
+	      if(ids[i].indexOf(Utils.FORUM) >= 0) forumId = ids[i];
+	      if(ids[i].indexOf(Utils.TOPIC) >= 0) topicId = ids[i];
+	      if(ids[i].indexOf(Utils.POST) >= 0) postId = ids[i];
+      }
 			SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 			Category category = ((ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class)).getCategory(sProvider, cateId);
 			String[] privateUsers = category.getUserPrivate();
@@ -238,8 +245,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				return ;
 			}
 			sProvider.close();
-			String []temp = topic.getPath().split("/") ;
-			Forum forum = uiTopicsTag.getForum(temp[temp.length-3], temp[temp.length-2]) ;
+			Forum forum = uiTopicsTag.getForum(cateId, forumId) ;
 			UIForumPortlet forumPortlet = uiTopicsTag.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FORUM);
 			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
@@ -248,14 +254,14 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiTopicDetail.setUpdateForum(forum);
-			uiTopicDetail.setUpdateContainer(temp[temp.length-3], temp[temp.length-2], topic, Long.parseLong(id[1])) ;
-			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length-3], temp[temp.length-2], topic.getId()) ;
+			uiTopicDetail.setUpdateContainer(cateId, forumId, topic, Long.parseLong(id[1])) ;
+			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId, topic.getId()) ;
 			if(id[2].equals("true")) {
 				uiTopicDetail.setIdPostView("lastpost") ;
 			} else {
 				uiTopicDetail.setIdPostView("top") ;
 			}
-			forumPortlet.getChild(UIForumLinks.class).setValueOption(temp[temp.length-3] + "/" + temp[temp.length-2] + "");
+			forumPortlet.getChild(UIForumLinks.class).setValueOption(cateId + "/" + forumId + " ");
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
