@@ -186,7 +186,7 @@ public class JCRDataStorage {
 		try {
 			return getFAQServiceHome(sProvider).getNode(Utils.SETTING_HOME) ;
 		}catch(PathNotFoundException e) {
-			Node settingHome = getFAQServiceHome(sProvider).addNode(Utils.SETTING_HOME, "exo:settingHome") ;
+			Node settingHome = getFAQServiceHome(sProvider).addNode(Utils.SETTING_HOME, "exo:faqSettingHome") ;
 			settingHome.getSession().save() ;
 			return settingHome ;
 		}		
@@ -196,7 +196,7 @@ public class JCRDataStorage {
 		try {
 			return getSettingHome(sProvider).getNode(Utils.USER_SETTING_HOME) ;
 		}catch(PathNotFoundException e) {
-			Node userSettingHome = getSettingHome(sProvider).addNode(Utils.USER_SETTING_HOME, "exo:userSettingHome") ;
+			Node userSettingHome = getSettingHome(sProvider).addNode(Utils.USER_SETTING_HOME, "exo:faqUserSettingHome") ;
 			userSettingHome.getSession().save() ;
 			return userSettingHome ;
 		}		
@@ -249,6 +249,7 @@ public class JCRDataStorage {
 				attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
 				return attachment ;	
 			}			
+		}catch(Exception e){
 		}finally { sProvider.close() ;}
 		return null ;
 	}
