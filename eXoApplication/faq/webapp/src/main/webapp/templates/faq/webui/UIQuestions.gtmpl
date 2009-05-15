@@ -495,16 +495,16 @@
 																				<td style="width:25px">
 																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
-																					</div>
+																					</a>
 																				</td>
 																			<%		} else {
 																						String link = uicomponent.url("DiscussForum", pathDiscuss);
 																						link = FAQUtils.convertLinkToForum(link);
 																			%>
 																				<td style="width:25px">
-																					<a href="javascript:void(0);" onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
-																					</a>
+																					</div>
 																				</td>
 																			<%		}
 																					}
