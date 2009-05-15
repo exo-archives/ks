@@ -137,7 +137,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void stop() {}
 	
 	@SuppressWarnings("unchecked")
-  public void updateForumStatistic(SessionProvider systemSession) throws Exception{
+  public void updateForumStatistic(SessionProvider sProvider) throws Exception{
+		sProvider.close() ;
 		updateForumStatistic() ; 	
 	}
 	
@@ -177,7 +178,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}
 	}
 	
-	public void createUserProfile (SessionProvider sysSession, User user) throws Exception  {
+	public void createUserProfile (SessionProvider sProvider, User user) throws Exception  {
+		sProvider.close() ;
 		createUserProfile(user) ;
 	}
 	
@@ -212,6 +214,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
+		sProvider.close() ;
 		saveCategory(category, isNew);
   }
 	
@@ -220,6 +223,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 	
 	public Category getCategory(SessionProvider sProvider, String categoryId) throws Exception {
+		sProvider.close() ;
     return getCategory(categoryId);
   }
 	
@@ -228,6 +232,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Category> getCategories(SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
     return getCategories();
   }
   
@@ -236,6 +241,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
+  	sProvider.close() ;
     return removeCategory(categoryId) ;
   }
   
@@ -244,6 +250,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception {
+  	sProvider.close() ;
     modifyForum(forum, type) ;
   }
   
@@ -252,6 +259,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception {
+  	sProvider.close() ;
     saveForum(categoryId, forum, isNew);
   }
   
@@ -260,6 +268,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception {
+  	sProvider.close() ;
     saveModerateOfForums(forumPaths, userName, isDelete) ;
   }
   
@@ -268,6 +277,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception {
+  	sProvider.close() ;
     moveForum(forums, destCategoryPath);
   }
   
@@ -276,6 +286,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Forum getForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
+  	sProvider.close() ;
     return getForum(categoryId, forumId);
   }
   
@@ -284,6 +295,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception {
+  	sProvider.close() ;
     return getForums(categoryId, strQuery);
   }
   
@@ -292,6 +304,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
+  	sProvider.close() ;
     return removeForum(categoryId, forumId);
   }
   
@@ -300,6 +313,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception {
+  	sProvider.close() ;
     modifyTopic(topics, type) ;
   }
   
@@ -308,6 +322,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
+  	sProvider.close() ;
     saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
   }
   
@@ -316,6 +331,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
+  	sProvider.close() ;
     return getTopic(categoryId, forumId, topicId, userRead);
   }
   
@@ -324,6 +340,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception{
+  	sProvider.close() ;
     return getTopicByPath(topicPath, isLastPost) ;
   }
   
@@ -332,6 +349,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
+  	sProvider.close() ;
   	return getPageTopic(categoryId, forumId, strQuery, strOrderBy);
   }
   
@@ -340,6 +358,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
+  	sProvider.close() ;
     return getTopics(categoryId, forumId);
   }
   
@@ -348,6 +367,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
+  	sProvider.close() ;
     moveTopic(topics, destForumPath, mailContent, link);
   }
   
@@ -356,6 +376,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
+  	sProvider.close() ;
     return removeTopic(categoryId, forumId, topicId);
   }
   
@@ -364,6 +385,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
+  	sProvider.close() ;
     return getPost(categoryId, forumId, topicId, postId);
   }
   
@@ -372,6 +394,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
+  	sProvider.close() ;
     return getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
   }
   
@@ -380,6 +403,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
+  	sProvider.close() ;
     return getAvailablePost(categoryId, forumId, topicId, isApproved, isHidden, userLogin);
   }
   
@@ -388,6 +412,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
+  	sProvider.close() ;
     savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
   }
   
@@ -396,6 +421,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
+  	sProvider.close() ;
     modifyPost(posts, type);
   }
   
@@ -404,6 +430,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
+  	sProvider.close() ;
     movePost(posts, destTopicPath, isCreatNewTopic, mailContent, link);
   }
   
@@ -412,6 +439,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
+  	sProvider.close() ;
     return removePost(categoryId, forumId, topicId, postId);
   }
   
@@ -420,6 +448,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception {
+  	sProvider.close() ;
     return getObjectNameByPath(path);
   }
   
@@ -428,6 +457,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Object getObjectNameById(SessionProvider sProvider, String path, String type) throws Exception {
+  	sProvider.close() ;
   	return getObjectNameById(path, type);
   }
   
@@ -436,6 +466,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum)throws Exception {
+  	sProvider.close() ;
     return getAllLink(strQueryCate, strQueryForum) ;
   }
   
@@ -444,6 +475,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public String getForumHomePath(SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
   	return getForumHomePath() ;  	
   }
   
@@ -455,6 +487,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
+  	sProvider.close() ;
     return getPoll(categoryId, forumId, topicId) ;
   }
   
@@ -463,6 +496,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Poll removePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
+  	sProvider.close() ;
     return removePoll(categoryId, forumId, topicId);
   }
   
@@ -471,6 +505,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void savePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception {
+  	sProvider.close() ;
     savePoll(categoryId, forumId, topicId, poll, isNew, isVote) ;
   }
   
@@ -479,6 +514,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception {
+  	sProvider.close() ;
     setClosedPoll(categoryId, forumId, topicId, poll) ;
   }
   
@@ -487,6 +523,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
+  	sProvider.close() ;
     addTopicInTag(tagId, topicPath) ;
   }
   
@@ -495,6 +532,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
+  	sProvider.close() ;
     removeTopicInTag(tagId, topicPath);
   }
   
@@ -503,6 +541,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public Tag getTag(SessionProvider sProvider, String tagId) throws Exception {
+  	sProvider.close() ;
     return getTag(tagId);
   }
   
@@ -511,6 +550,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
     return getTagsByUser(userName);
   }
   
@@ -519,6 +559,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Tag> getTags(SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
     return getTags();
   }
   
@@ -527,6 +568,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception {
+  	sProvider.close() ;
     return getTagsByTopic(tagIds);
   }
   
@@ -535,6 +577,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception {
+  	sProvider.close() ;
     return getTopicsByTag(tagId, strOrderBy);
   }
   
@@ -543,6 +586,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception {
+  	sProvider.close() ;
     saveTag(newTag, isNew) ;
   }
   
@@ -551,6 +595,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void removeTag(SessionProvider sProvider, String tagId) throws Exception {
+  	sProvider.close() ;
     removeTag(tagId) ;
   }
   
@@ -563,6 +608,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }*/
 
   public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
+  	sProvider.close() ;
     saveUserProfile(userProfile, isOption, isBan) ;
   }
   
@@ -571,6 +617,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
     return getUserInfo(userName);
   }
   
@@ -579,6 +626,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
   	return getUserProfileManagement(userName);
   }
   
@@ -587,6 +635,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
+  	sProvider.close() ;
     saveUserBookmark(userName, bookMark, isNew);
   }
   
@@ -595,6 +644,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveCollapsedCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
+  	sProvider.close() ;
   	saveCollapsedCategories(userName, categoryId, isAdd);
   }
   
@@ -603,6 +653,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public JCRPageList getPageListUserProfile(SessionProvider sProvider)throws Exception {
+  	sProvider.close() ;
     return getPageListUserProfile();
   }
   
@@ -611,6 +662,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
+  	sProvider.close() ;
     return getPrivateMessage(userName, type);
   }
   
@@ -619,6 +671,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
   	return getNewPrivateMessage(userName);
   }
   
@@ -627,6 +680,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
+  	sProvider.close() ;
     removePrivateMessage(messageId, userName, type) ;
   }
   
@@ -635,6 +689,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
+  	sProvider.close() ;
     saveReadMessage(messageId, userName, type) ;
   }
   
@@ -643,6 +698,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
+  	sProvider.close() ;
     savePrivateMessage(privateMessage) ;
   }
   
@@ -651,6 +707,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {
+  	sProvider.close() ;
     return getPageTopicOld(date) ;
   }
   
@@ -659,6 +716,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
+  	sProvider.close() ;
     return getPageTopicByUser(userName, isMod, strOrderBy);
   }
   
@@ -667,6 +725,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
+  	sProvider.close() ;
     return getPagePostByUser(userName, userId, isMod, strOrderBy);
   }
   
@@ -675,6 +734,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
     return getForumStatistic();
   }
   
@@ -683,6 +743,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception {
+  	sProvider.close() ;
     saveForumStatistic(forumStatistic) ;
   }
   
@@ -696,6 +757,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId,
   		List<String> listCateIds,List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
+  	sProvider.close() ;
     return getQuickSearch(textQuery, type, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator);
   }
   
@@ -705,6 +767,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception {
+  	sProvider.close() ;
     return getAdvancedSearch(eventQuery, listCateIds, listForumIds);
   }
   
@@ -713,6 +776,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
     return getForumAdministration();
   }
   
@@ -721,6 +785,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
+  	sProvider.close() ;
     saveForumAdministration(forumAdministration) ;
   }
   
@@ -729,6 +794,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void addWatch(SessionProvider sProvider, int watchType, String path,List<String> values, String currentUser) throws Exception {
+  	sProvider.close() ;
     addWatch(watchType, path, values, currentUser) ; 
   }
   
@@ -737,6 +803,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void removeWatch(SessionProvider sProvider, int watchType, String path,String values) throws Exception {
+  	sProvider.close() ;
     removeWatch(watchType, path, values) ; 
   }
   
@@ -745,6 +812,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<ForumSearch> getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
+  	sProvider.close() ;
     return getJobWattingForModerator(paths); 
   }
   
@@ -753,6 +821,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception {
+  	sProvider.close() ;
     return getJobWattingForModeratorByUser(userId);
   }
   
@@ -816,7 +885,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getMessageInfo(name) ;
   }
 
-  public JCRPageList searchUserProfile(SessionProvider sessionProvider, String userSearch) throws Exception {
+  public JCRPageList searchUserProfile(SessionProvider sProvider, String userSearch) throws Exception {
+  	sProvider.close() ;
     return searchUserProfile(userSearch);
   }
   
@@ -847,7 +917,8 @@ public class ForumServiceImpl implements ForumService, Startable{
     return list;
   }
   
-  public NodeIterator search(String queryString, SessionProvider sessionProvider) throws Exception {
+  public NodeIterator search(String queryString, SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
   	return search(queryString) ;
   }	
   
@@ -855,7 +926,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   	return storage_.search(queryString) ;
   }
   
-  public void evaluateActiveUsers(SessionProvider sysProvider, String query) throws Exception {
+  public void evaluateActiveUsers(SessionProvider sProvider, String query) throws Exception {
+  	sProvider.close() ;
   	evaluateActiveUsers(query) ;
   }
   
@@ -874,7 +946,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  return storage_.exportXML(listCategoryIds, forumId, nodePath, bos, sessionProvider);
   }*/
   
-  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll, SessionProvider sessionProvider) throws Exception{
+  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll, SessionProvider sProvider) throws Exception{
+  	sProvider.close() ;
 	  return exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
   }
   
@@ -892,6 +965,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
   	return getQuickProfile(userName) ;
   }
   
@@ -900,6 +974,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	sProvider.close() ;
   	return getUserInformations(userProfile) ;
   }
   
@@ -908,6 +983,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception {
+  	sProvider.close() ;
   	return getDefaultUserProfile(userName, ip) ;
   }
   
@@ -916,6 +992,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
   	return getBookmarks(userName) ;
   }
   
@@ -924,6 +1001,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
+  	sProvider.close() ;
   	return getUserSettingProfile(userName) ;
   }
   
@@ -932,6 +1010,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
   
   public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
+  	sProvider.close() ;
   	saveUserSettingProfile(userProfile);
   }
   
@@ -940,7 +1019,8 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception {
+  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sProvider) throws Exception {
+  	sProvider.close() ;
 	  importXML(nodePath, bis, typeImport);
   }
   
@@ -969,6 +1049,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sProvider) throws Exception{
+  	sProvider.close() ;
   	return getListPostsByIP(ip, strOrderBy);
   }
   
@@ -981,6 +1062,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
 	public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+		sProvider.close() ;
 	  return addBanIPForum(ip, forumId);
   }
 	
@@ -989,6 +1071,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
 	public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
+		sProvider.close() ;
 	  removeBanIPForum(ip, forumId);
   }
 	
@@ -996,7 +1079,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  storage_.removeBanIPForum(ip, forumId);
   }
 	
-	public void registerListenerForCategory(SessionProvider sessionProvider, String categoryId) throws Exception{
+	public void registerListenerForCategory(SessionProvider sProvider, String categoryId) throws Exception{
+		sProvider.close() ;
 		registerListenerForCategory(categoryId);
 	}
 	
@@ -1008,7 +1092,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 		storage_.unRegisterListenerForCategory(path) ;
 	}
 	
-	public ForumAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
+	public ForumAttachment getUserAvatar(String userName, SessionProvider sProvider) throws Exception{
+		sProvider.close() ;
 		return getUserAvatar(userName);
 	}
 	
@@ -1016,7 +1101,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 		return storage_.getUserAvatar(userName);
 	}
 	
-	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
+	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sProvider) throws Exception{
+		sProvider.close() ;
 		saveUserAvatar(userId, fileAttachment);
 	}
 	
@@ -1024,7 +1110,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 		storage_.saveUserAvatar(userId, fileAttachment);
 	}
 	
-	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
+	public void setDefaultAvatar(String userName, SessionProvider sProvider)throws Exception{
+		sProvider.close() ;
 		setDefaultAvatar(userName);
 	}
 	
@@ -1032,7 +1119,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 		storage_.setDefaultAvatar(userName);
 	}
 	
-	public List<Watch> getWatchByUser(String userId, SessionProvider sessionProvider) throws Exception{
+	public List<Watch> getWatchByUser(String userId, SessionProvider sProvider) throws Exception{
+		sProvider.close() ;
 		return getWatchByUser(userId);
 	}
 	
@@ -1040,7 +1128,8 @@ public class ForumServiceImpl implements ForumService, Startable{
 		return storage_.getWatchByUser(userId);
 	}
 	
-	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception{
+	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sProvider) throws Exception{
+		sProvider.close() ;
 		updateEmailWatch(listNodeId, newEmailAdd, userId);
 	}
 	
@@ -1049,6 +1138,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 	
 	public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception{
+		sProvider.close() ;
 		saveBBCode(bbcodes);
 	}
 	
@@ -1057,6 +1147,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 	
 	public List<BBCode> getAllBBCode(SessionProvider sProvider) throws Exception {
+		sProvider.close() ;
 		return getAllBBCode();
 	}
 	
@@ -1065,14 +1156,16 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 
 	public List<String> getActiveBBCode(SessionProvider sProvider) throws Exception {
+		sProvider.close() ;
 		return getActiveBBCode();
 	}
 	
 	public List<String> getActiveBBCode() throws Exception {
-		return (List<String>) storage_.getActiveBBCode();
+		return storage_.getActiveBBCode();
 	}
 	
 	public BBCode getBBcode(SessionProvider sProvider, String id) throws Exception {
+		sProvider.close() ;
 		return getBBcode(id);
 	}
 	
@@ -1081,6 +1174,7 @@ public class ForumServiceImpl implements ForumService, Startable{
 	}
 	
 	public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception {
+		sProvider.close() ;
 		removeBBCode(bbcodeId);
 	}
 	
