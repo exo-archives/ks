@@ -299,7 +299,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
 			FAQService service = FAQUtils.getFAQService() ;
-			SessionProvider sessionProvider = SessionProviderFactory.createSystemProvider();
+			SessionProvider sessionProvider = SessionProvider.createSystemProvider();
 			if(settingForm.isEditPortlet_){
 				
 				UIFormInputWithActions inputWithActions = settingForm.getChildById(settingForm.CATEGORY_SCOPING);

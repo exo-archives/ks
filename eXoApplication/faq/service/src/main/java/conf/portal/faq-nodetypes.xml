@@ -116,7 +116,7 @@
   			<valueConstraints/>
   		</propertyDefinition>
       
-      <!-- Propreties for migration data -->
+      <!-- Propreties for migration data 1.0 to 1.1-->
       <propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
@@ -336,6 +336,52 @@
         </requiredPrimaryTypes>
       </childNodeDefinition>
     </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:faqUserSetting" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <propertyDefinitions>
+      <propertyDefinition name="exo:ordeBy" requiredType="String" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>        
+      </propertyDefinition>
+      <propertyDefinition name="exo:ordeType" requiredType="String" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>        
+      </propertyDefinition>
+      <propertyDefinition name="exo:sortQuestionByVote" requiredType="Boolean" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>        
+      </propertyDefinition>      
+    </propertyDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:faqUserSettingHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>
+   <childNodeDefinitions>
+	   <childNodeDefinition name="*" defaultPrimaryType="exo:faqUserSetting" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
+		    <requiredPrimaryTypes>
+		    	<requiredPrimaryType>exo:faqUserSetting</requiredPrimaryType>
+		    </requiredPrimaryTypes>
+	   </childNodeDefinition>  
+  	</childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:faqSettingHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>
+   <childNodeDefinitions>
+	   <childNodeDefinition name="*" defaultPrimaryType="exo:faqUserSettingHome" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
+		    <requiredPrimaryTypes>
+		    	<requiredPrimaryType>exo:faqUserSettingHome</requiredPrimaryType>
+		    </requiredPrimaryTypes>
+	   </childNodeDefinition>  
+  	</childNodeDefinitions>
   </nodeType>
   
 </nodeTypes>  

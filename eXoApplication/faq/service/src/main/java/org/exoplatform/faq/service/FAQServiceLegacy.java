@@ -32,6 +32,11 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  */
 
 public interface FAQServiceLegacy {
+	
+	/**
+   * @deprecated use {@link FAQService#changeStatusCategoryView(List<String> listCateIds)}
+   */
+	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception ;
   
 	/**
    * @deprecated use {@link FAQService#saveCategory(String parentId, Category cat, boolean isAddNew)}
@@ -61,7 +66,7 @@ public interface FAQServiceLegacy {
   /**
    * @deprecated use {@link FAQService#getSubCategories(String categoryId, FAQSetting faqSetting)}
    */
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#moveCategory(String categoryId, String destCategoryId)}

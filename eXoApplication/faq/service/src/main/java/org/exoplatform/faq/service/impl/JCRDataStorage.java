@@ -151,12 +151,13 @@ public class JCRDataStorage {
 		return false;
 	}
 	
-	public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception {
+	public boolean isAdminRole(String userName) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		try {
+			Node cateHomeNode = getCategoryHome(sProvider, null);
 			for(int i = 0; i < rulesPlugins_.size(); ++i) {
 				List<String> list = new ArrayList<String>();
-				list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));
-				Node cateHomeNode = getCategoryHome(sessionProvider, null);
+				list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));				
 				if(cateHomeNode.hasProperty("exo:moderators")) 
 					list.addAll(Arrays.asList(ValuesToStrings(cateHomeNode.getProperty("exo:moderators").getValues()))) ;
 				if(list.contains(userName)) return true;
@@ -164,7 +165,7 @@ public class JCRDataStorage {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} finally { sProvider.close() ;}
 		return false ;
 	}
 	
@@ -181,84 +182,112 @@ public class JCRDataStorage {
 	  return list;
   }
 	
-	public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception{
-		Node userNode = nodeHierarchyCreator_.getUserNode(sProvider, userName);
-		if(userNode.hasNode(FAQ_APP)){
-			Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
+	private Node getSettingHome(SessionProvider sProvider) throws Exception {
+		try {
+			return getFAQServiceHome(sProvider).getNode(Utils.SETTING_HOME) ;
+		}catch(PathNotFoundException e) {
+			Node settingHome = getFAQServiceHome(sProvider).addNode(Utils.SETTING_HOME, "exo:settingHome") ;
+			settingHome.getSession().save() ;
+			return settingHome ;
+		}		
+	}
+	
+	private Node getUserSettingHome(SessionProvider sProvider) throws Exception {
+		try {
+			return getSettingHome(sProvider).getNode(Utils.USER_SETTING_HOME) ;
+		}catch(PathNotFoundException e) {
+			Node userSettingHome = getSettingHome(sProvider).addNode(Utils.USER_SETTING_HOME, "exo:userSettingHome") ;
+			userSettingHome.getSession().save() ;
+			return userSettingHome ;
+		}		
+	}
+	
+	public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node userSettingHome = getUserSettingHome(sProvider) ;
+			Node userSettingNode = userSettingHome.getNode(userName) ;
 			if(userSettingNode.hasProperty("exo:ordeBy")) faqSetting.setOrderBy(userSettingNode.getProperty("exo:ordeBy").getValue().getString());
 			if(userSettingNode.hasProperty("exo:ordeType")) faqSetting.setOrderType(userSettingNode.getProperty("exo:ordeType").getValue().getString());
 			if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
-		} else {
-			Node appNode = userNode.addNode(FAQ_APP);
-			Node UserSettingNode = appNode.addNode(USER_SETTING);
-			UserSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
-			UserSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
-			UserSettingNode.setProperty("exo:sortQuestionByVote", false);
-			userNode.getSession().save();
-		}
+		}catch (Exception e) {
+			//e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 	}
 	
-	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception{
-		Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sessionProvider);
-		FileAttachment attachment =	null;
-		if(ksAvatarHomeNode.hasNode(userName)){
-			Node node = ksAvatarHomeNode.getNode(userName);
-			Node nodeFile = null;
-			String workspace = "";
+	public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{			
+			Node userSettingNode = getUserSettingHome(sProvider).getNode(userName);
+			userSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
+			userSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
+			userSettingNode.setProperty("exo:sortQuestionByVote", faqSetting.isSortQuestionByVote());
+			userSettingNode.save() ;
+		}catch ( PathNotFoundException e) {
+			Node userSettingNode = getUserSettingHome(sProvider).addNode(userName, "exo:faqUserSetting") ;
+			userSettingNode.setProperty("exo:ordeBy", faqSetting.getOrderBy());
+			userSettingNode.setProperty("exo:ordeType", faqSetting.getOrderType());
+			userSettingNode.setProperty("exo:sortQuestionByVote", faqSetting.isSortQuestionByVote());
+			userSettingNode.getSession().save() ;
+		}finally { sProvider.close() ;}		
+	}
+	
+	public FileAttachment getUserAvatar(String userName) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node node = getKSUserAvatarHomeNode(sProvider).getNode(userName);
 			if(node.isNodeType("nt:file")) {
-				attachment = new FileAttachment() ;
-				nodeFile = node.getNode("jcr:content") ;
+				FileAttachment attachment = new FileAttachment() ;
+				Node nodeFile = node.getNode("jcr:content") ;
 				attachment.setId(node.getPath());
 				attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 				attachment.setNodeName(node.getName());
 				attachment.setName("avatar." + attachment.getMimeType());
-				workspace = node.getSession().getWorkspace().getName() ;
+				String workspace = node.getSession().getWorkspace().getName() ;
 				attachment.setWorkspace(workspace) ;
 				attachment.setPath("/" + workspace + node.getPath()) ;
-				try{
-					if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-					else attachment.setSize(0) ;
-				} catch (Exception e) {
-					attachment.setSize(0) ;
-					e.printStackTrace() ;
-					return null;
-				}
-			}
-			return attachment;
-		} else {
-			return attachment;
-		}
+				attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+				return attachment ;	
+			}			
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception{
-		Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sessionProvider);
-		Node avatarNode = null;
-		if(ksAvatarHomeNode.hasNode(userId)) avatarNode = ksAvatarHomeNode.getNode(userId);
-		else avatarNode = ksAvatarHomeNode.addNode(userId, "nt:file");
+	public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
+			Node ksAvatarHomeNode = getKSUserAvatarHomeNode(sProvider);
+			Node avatarNode ;
+			if(ksAvatarHomeNode.hasNode(userId)) avatarNode = ksAvatarHomeNode.getNode(userId);
+			else avatarNode = ksAvatarHomeNode.addNode(userId, "nt:file");
 			FAQServiceUtils.reparePermissions(avatarNode, "any");
-			Node nodeContent = null;
+			Node nodeContent ;
 			if (avatarNode.hasNode("jcr:content")) nodeContent = avatarNode.getNode("jcr:content");
 			else	nodeContent = avatarNode.addNode("jcr:content", "nt:resource") ;
 			nodeContent.setProperty("jcr:mimeType", fileAttachment.getMimeType());
 			nodeContent.setProperty("jcr:data", fileAttachment.getInputStream());
 			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
-		} catch (Exception e) {
+			if(avatarNode.isNew()) ksAvatarHomeNode.getSession().save();
+			else ksAvatarHomeNode.save();
+		}catch (Exception e) {
 			e.printStackTrace() ;
-		}
-		if(avatarNode.isNew()) ksAvatarHomeNode.getSession().save();
-		else ksAvatarHomeNode.save();
+		}finally {sProvider.close() ;}		
 	}
 	
-	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception{
-		Node ksAvatarHomnode = getKSUserAvatarHomeNode(sessionProvider);
-		if(ksAvatarHomnode.hasNode(userName)){
-			Node node = ksAvatarHomnode.getNode(userName);
-			if(node.isNodeType("nt:file")) {
-				node.remove();
-				ksAvatarHomnode.save();
+	public void setDefaultAvatar(String userName)throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node avatarHome = getKSUserAvatarHomeNode(sProvider);
+			if(avatarHome.hasNode(userName)){
+				Node node = avatarHome.getNode(userName);
+				if(node.isNodeType("nt:file")) {
+					node.remove();
+					avatarHome.save();
+				}
 			}
-		}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 	}
 	
 	private Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
@@ -297,8 +326,14 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {
-		return getQuestionHome(sProvider, null).getNodes() ;
+	public NodeIterator getQuestionsIterator() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			return getQuestionHome(sProvider, null).getNodes() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+		return null ;
 	}	
 	
 	protected void addListennerForNode(Node node) throws Exception{
@@ -367,7 +402,6 @@ public class JCRDataStorage {
 	@SuppressWarnings("static-access")
 	private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
 		boolean isMoveQuestion = false;
-		
 		questionNode.setProperty("exo:language", question.getLanguage()) ;
 		questionNode.setProperty("exo:name", question.getDetail()) ;
 		questionNode.setProperty("exo:author", question.getAuthor()) ;
@@ -429,7 +463,7 @@ public class JCRDataStorage {
 		if(question.getLink().trim().length() > 0){
 			String path = "";
 			if(question.getCategoryId()!= null && !question.getCategoryId().equals("null"))
-				path = getCategoryNodeById(question.getCategoryId(), sProvider).getPath().replace("/exo:applications/faqApp/catetories/", "");
+				path = getCategoryNodeById(question.getCategoryId()).getPath().replace("/exo:applications/faqApp/catetories/", "");
 			path = (question.getLink().substring(0, question.getLink().indexOf("FAQService") + 10) + path).replace("private", "public");
 			question.setLink(path + "/" + question.getId() + "/0");
 		}
@@ -440,7 +474,7 @@ public class JCRDataStorage {
 				List<String> emails = new ArrayList<String>() ;
 				List<String> emailsList = new ArrayList<String>() ;
 				try {
-					Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+					Node cate = getCategoryNodeById(question.getCategoryId()) ;
 					if(cate.isNodeType("exo:faqWatching")){
 						emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 						for(String email: emails) {
@@ -469,7 +503,7 @@ public class JCRDataStorage {
 				List<String> emailsList = new ArrayList<String>() ;
 				emailsList.add(question.getEmail()) ;
 				try {
-					Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+					Node cate = getCategoryNodeById(question.getCategoryId()) ;
 					if(cate.isNodeType("exo:faqWatching")){
 						for(String email: Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
 							for(String string_ : Utils.splitForFAQ(email) ) {
@@ -507,7 +541,7 @@ public class JCRDataStorage {
 				List<String> emailsList = new ArrayList<String>() ;
 				if(question.getCategoryId() != null && !question.getCategoryId().equals("null")){
 					try {
-						Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+						Node cate = getCategoryNodeById(question.getCategoryId()) ;
 						if(cate.isNodeType("exo:faqWatching")){
 							emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 							for(String email: emails) {
@@ -539,7 +573,7 @@ public class JCRDataStorage {
 				emailsList.add(question.getEmail()) ;
 				if(question.getCategoryId() != null && !question.getCategoryId().equals("null")){
 					try {
-						Node cate = getCategoryNodeById(question.getCategoryId(), sProvider) ;
+						Node cate = getCategoryNodeById(question.getCategoryId()) ;
 						if(cate.isNodeType("exo:faqWatching")){
 							emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 							for(String email: emails) {
@@ -578,7 +612,7 @@ public class JCRDataStorage {
 			message.setFrom(question.getAuthor() + "<email@gmail.com>");
 			message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
 			String contentMail = faqSetting.getEmailMoveQuestion();
-			String categoryName = getCategoryById(question.getCategoryId(), sProvider).getName();
+			String categoryName = getCategoryById(question.getCategoryId()).getName();
 			if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
 			contentMail = contentMail.replace("&questionContent_", question.getQuestion()).
 																replace("&categoryName_", categoryName).
@@ -591,8 +625,7 @@ public class JCRDataStorage {
 
 	
 	public void sendMessage(Message message) throws Exception {
-		
-	  try{
+		try{
 	  	MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
 	  	mService.sendMessage(message) ;		
 	  }catch(NullPointerException e) {
@@ -601,29 +634,34 @@ public class JCRDataStorage {
 	  }
   }
   
-  public List<QuestionLanguage> getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception {
+  public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
     String languages = "languages" ;
-    Node questionHome = getQuestionHome(sProvider, null) ;
-    Node questionNode = questionHome.getNode(questionId) ;
-    if(questionNode.hasNode(languages)) {
-      Node languageNode = questionNode.getNode(languages) ;
-      NodeIterator nodeIterator = languageNode.getNodes() ;
-      while(nodeIterator.hasNext()) {
-        Node node = (Node)nodeIterator.next() ;
-        QuestionLanguage questionLanguage = new QuestionLanguage() ;
-        
-        questionLanguage.setId(node.getName()) ;
-        if(node.hasProperty("exo:language")) questionLanguage.setLanguage(node.getProperty("exo:language").getValue().getString());
-        if(node.hasProperty("exo:title")) questionLanguage.setQuestion(node.getProperty("exo:title").getValue().getString());
-        if(node.hasProperty("exo:name")) questionLanguage.setDetail(node.getProperty("exo:name").getValue().getString());
-        Comment[] comments = getComment(node);
-        Answer[] answers = getAnswers(node);
-        questionLanguage.setComments(comments);
-        questionLanguage.setAnswers(answers);
-        listQuestionLanguage.add(questionLanguage) ;
+    try {
+    	Node questionNode = getQuestionHome(sProvider, null).getNode(questionId) ;
+      if(questionNode.hasNode(languages)) {
+        Node languageNode = questionNode.getNode(languages) ;
+        NodeIterator nodeIterator = languageNode.getNodes() ;
+        while(nodeIterator.hasNext()) {
+          Node node = nodeIterator.nextNode() ;
+          try {
+          	QuestionLanguage questionLanguage = new QuestionLanguage() ;          
+            questionLanguage.setId(node.getName()) ;
+            if(node.hasProperty("exo:language")) questionLanguage.setLanguage(node.getProperty("exo:language").getValue().getString());
+            if(node.hasProperty("exo:title")) questionLanguage.setQuestion(node.getProperty("exo:title").getValue().getString());
+            if(node.hasProperty("exo:name")) questionLanguage.setDetail(node.getProperty("exo:name").getValue().getString());
+            Comment[] comments = getComment(node);
+            Answer[] answers = getAnswers(node);
+            questionLanguage.setComments(comments);
+            questionLanguage.setAnswers(answers);
+            listQuestionLanguage.add(questionLanguage) ;
+          }catch (Exception e){}          
+        }
       }
-    }
+    }catch (Exception e){
+    	e.printStackTrace() ;
+    } finally { sProvider.close() ;}    
     return listQuestionLanguage ;
   }
   
@@ -635,18 +673,28 @@ public class JCRDataStorage {
 		return false;
 	}
 	
-	public void deleteAnswer(String questionId, String answerId, SessionProvider sProvider) throws Exception{
-		Node questionNode = getQuestionNodeById(questionId, sProvider);
-		Node answerNode = questionNode.getNode(Utils.ANSWER_HOME).getNode(answerId);
-		answerNode.remove();
-		questionNode.save();
+	public void deleteAnswer(String questionId, String answerId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionNode = getQuestionNodeById(questionId);
+			Node answerNode = questionNode.getNode(Utils.ANSWER_HOME).getNode(answerId);
+			answerNode.remove();
+			questionNode.save();
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
 	}
 	
-	public void deleteComment(String questionId, String commentId, SessionProvider sProvider) throws Exception{
-		Node questionNode = getQuestionNodeById(questionId, sProvider);
-		Node commnetNode = questionNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
-		commnetNode.remove();
-		questionNode.save();
+	public void deleteComment(String questionId, String commentId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionNode = getQuestionNodeById(questionId);
+			Node commnetNode = questionNode.getNode(Utils.COMMENT_HOME).getNode(commentId);
+			commnetNode.remove();
+			questionNode.save();
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
 	}
 	
 	public Answer[] getAnswers(Node questionNode) throws Exception{
@@ -681,7 +729,8 @@ public class JCRDataStorage {
     return answer;
   }
 	
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception{
+	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node questionHome = getQuestionHome(sProvider, null) ;
 			Node answerHome = questionHome.getNode(questionId).getNode(Utils.ANSWER_HOME);
@@ -697,194 +746,223 @@ public class JCRDataStorage {
 			return pageList;
 		} catch (Exception e) {
 			return null;
-		}
+		} finally { sProvider.close() ;}
 	}
 
-  public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception{
-  	Node quesNode = getQuestionNodeById(questionId, sProvider);
-  	if(!quesNode.isNodeType("mix:faqi18n")) {
-  		quesNode.addMixin("mix:faqi18n") ;
-  	}
-  	Node answerHome = null;
-  	try{
-  		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-  	} catch (Exception e){
-  		answerHome = quesNode.addNode(Utils.ANSWER_HOME);
-  	}
-  	Node answerNode;
-  	if(isNew){
-  		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
-  		java.util.Calendar calendar = null ;
-  		calendar = null ;
-  		calendar = GregorianCalendar.getInstance();
-  		calendar.setTime(new Date());
-  		answerNode.setProperty("exo:dateResponse", quesNode.getSession().getValueFactory().createValue(calendar));
-  		answerNode.setProperty("exo:id", answer.getId());
-  	} else {
-  		answerNode = answerHome.getNode(answer.getId());
-  	}
-  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
-  		answerNode.setProperty("exo:postId", answer.getPostId());
-  	}
-  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
+  public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+  	try {
+  		Node quesNode = getQuestionNodeById(questionId);
+    	if(!quesNode.isNodeType("mix:faqi18n")) {
+    		quesNode.addMixin("mix:faqi18n") ;
+    	}
+    	Node answerHome = null;
+    	try{
+    		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
+    	} catch (Exception e){
+    		answerHome = quesNode.addNode(Utils.ANSWER_HOME);
+    	}
+    	Node answerNode;
+    	if(isNew){
+    		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+    		java.util.Calendar calendar = null ;
+    		calendar = null ;
+    		calendar = GregorianCalendar.getInstance();
+    		calendar.setTime(new Date());
+    		answerNode.setProperty("exo:dateResponse", quesNode.getSession().getValueFactory().createValue(calendar));
+    		answerNode.setProperty("exo:id", answer.getId());
+    	} else {
+    		answerNode = answerHome.getNode(answer.getId());
+    	}
+    	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+    		answerNode.setProperty("exo:postId", answer.getPostId());
+    	}
+    	answerNode.setProperty("exo:responses", answer.getResponses()) ;
+    	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+    	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+    	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+    	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+    	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;    	
+    	if(isNew) quesNode.getSession().save();
+    	else quesNode.save();
+  	}catch (Exception e) {
+  		e.printStackTrace() ;
+  	}finally { sProvider.close() ;}
+  }
+  
+  public void saveAnswer(String questionId, Answer[] answers) throws Exception{
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+    	Node quesNode = getQuestionNodeById(questionId);
+    	if(!quesNode.isNodeType("mix:faqi18n")) {
+    		quesNode.addMixin("mix:faqi18n") ;
+    	}
+    	Node answerHome = null;
+    	Node answerNode;
+    	try{
+    		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
+    	} catch (Exception e){
+    		answerHome = quesNode.addNode(Utils.ANSWER_HOME);
+    	}
+    	if(!answerHome.isNew()){
+    		List<String> listNewAnswersId = new ArrayList<String>();
+      	for(int i = 0; i < answers.length; i ++){
+      		listNewAnswersId.add(answers[i].getId());
+      	}
+      	NodeIterator nodeIterator = answerHome.getNodes();
+      	while(nodeIterator.hasNext()){
+      		answerNode = nodeIterator.nextNode();
+      		if(!listNewAnswersId.contains(answerNode.getProperty("exo:id").getString()))
+      			answerNode.remove();
+      	}
+    	}
+    	for(Answer answer : answers){
+    		answerNode = null;
+    		try{
+    			answerNode = answerHome.getNode(answer.getId());
+    		} catch(PathNotFoundException e) {
+    			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+    		}
+  	  	try {
+  	  		if(answerNode.isNew()){
+    	  		java.util.Calendar calendar = GregorianCalendar.getInstance();  	  		
+    	  		if(answer.getDateResponse() != null){
+    	  			calendar.setTime(answer.getDateResponse());
+    	  			answerNode.setProperty("exo:dateResponse", calendar) ;
+    	  		} else{
+    	  			calendar.setTime(new Date());
+    	  			answerNode.setProperty("exo:dateResponse", calendar);
+    	  		} 
+    	  		answerNode.setProperty("exo:id", answer.getId());
+    	  	}
+    	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+    	  		answerNode.setProperty("exo:postId", answer.getPostId());
+    	  	}
+    	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
+    	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+    	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+    	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+    	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+    	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
+  	  	}catch (Exception e) {}    		
+    	}
+    	if (answerHome.isNew()) answerHome.getSession().save() ;
+    	else answerHome.save() ;
+    }catch (Exception e) {
+    	e.printStackTrace() ;
+    }finally { sProvider.close() ;}
+    
   	
-  	if(isNew) quesNode.getSession().save();
-  	else quesNode.save();
   }
   
-  public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception{
-  	Node quesNode = getQuestionNodeById(questionId, sProvider);
-  	if(!quesNode.isNodeType("mix:faqi18n")) {
-  		quesNode.addMixin("mix:faqi18n") ;
-  	}
-  	Node answerHome = null;
-  	Node answerNode;
-  	try{
-  		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-  	} catch (Exception e){
-  		answerHome = quesNode.addNode(Utils.ANSWER_HOME);
-  	}
-  	if(!answerHome.isNew()){
-  		List<String> listNewAnswersId = new ArrayList<String>();
-    	for(int i = 0; i < answers.length; i ++){
-    		listNewAnswersId.add(answers[i].getId());
+  public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+  	try {
+  		Node quesNode = getQuestionNodeById(questionId);
+    	if(!quesNode.isNodeType("mix:faqi18n")) {
+    		quesNode.addMixin("mix:faqi18n") ;
     	}
-    	NodeIterator nodeIterator = answerHome.getNodes();
-    	while(nodeIterator.hasNext()){
-    		answerNode = nodeIterator.nextNode();
-    		if(!listNewAnswersId.contains(answerNode.getProperty("exo:id").getString()))
-    			answerNode.remove();
+    	Node commentHome = null;
+    	try{
+    		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
+    	} catch (PathNotFoundException e){
+    		commentHome = quesNode.addNode(Utils.COMMENT_HOME, NT_UNSTRUCTURED);
     	}
-  	}
-  	for(Answer answer : answers){
-  		answerNode = null;
-  		try{
-  			answerNode = answerHome.getNode(answer.getId());
-  		} catch(Exception e) {
-  			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
-  		}
-	  	if(answerNode.isNew()){
-	  		java.util.Calendar calendar = GregorianCalendar.getInstance();
-	  		
-	  		if(answer.getDateResponse() != null){
-	  			calendar.setTime(answer.getDateResponse());
-	  			answerNode.setProperty("exo:dateResponse", calendar) ;
-	  		} else{
-	  			calendar.setTime(new Date());
-	  			answerNode.setProperty("exo:dateResponse", calendar);
-	  		} 
-	  		answerNode.setProperty("exo:id", answer.getId());
-	  	}
-	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
-	  		answerNode.setProperty("exo:postId", answer.getPostId());
-	  	}
-	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
-	  	if(answerNode.isNew()) quesNode.getSession().save();
-	  	else quesNode.save();
-  	}
+    	Node commentNode;
+    	if(isNew){
+    		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
+    		java.util.Calendar calendar = null ;
+    		calendar = null ;
+    		calendar = GregorianCalendar.getInstance();
+    		calendar.setTime(new Date());
+    		commentNode.setProperty("exo:dateComment", quesNode.getSession().getValueFactory().createValue(calendar));
+    		commentNode.setProperty("exo:id", comment.getId());
+    	} else {
+    		commentNode = commentHome.getNode(comment.getId());
+    	}
+    	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
+    		commentNode.setProperty("exo:postId", comment.getPostId());
+    	}
+    	commentNode.setProperty("exo:comments", comment.getComments()) ;
+    	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
+    	if(isNew) quesNode.getSession().save();
+    	else quesNode.save();
+  	}catch(Exception e) {
+  		e.printStackTrace() ;
+  	}finally { sProvider.close() ;}
   }
   
-  public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception{
-  	Node quesNode = getQuestionNodeById(questionId, sProvider);
-  	if(!quesNode.isNodeType("mix:faqi18n")) {
-  		quesNode.addMixin("mix:faqi18n") ;
-  	}
-  	Node commentHome = null;
-  	try{
-  		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
-  	} catch (Exception e){
-  		commentHome = quesNode.addNode(Utils.COMMENT_HOME, NT_UNSTRUCTURED);
-  	}
-  	Node commentNode;
-  	if(isNew){
-  		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
-  		java.util.Calendar calendar = null ;
-  		calendar = null ;
-  		calendar = GregorianCalendar.getInstance();
-  		calendar.setTime(new Date());
-  		commentNode.setProperty("exo:dateComment", quesNode.getSession().getValueFactory().createValue(calendar));
-  		commentNode.setProperty("exo:id", comment.getId());
-  	} else {
-  		commentNode = commentHome.getNode(comment.getId());
-  	}
-  	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
-  		commentNode.setProperty("exo:postId", comment.getPostId());
-  	}
-  	commentNode.setProperty("exo:comments", comment.getComments()) ;
-  	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
-  	if(isNew) quesNode.getSession().save();
-  	else quesNode.save();
+  public void saveAnswerQuestionLang(String questionId, Answer answer, String language, boolean isNew) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+  	try {
+  		Node quesNode = getQuestionNodeById(questionId);
+    	Node answerHome = null;
+    	try{
+    		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
+    	} catch (PathNotFoundException e){
+    		answerHome = quesNode.addNode(Utils.ANSWER_HOME, NT_UNSTRUCTURED);
+    	}
+    	Node answerNode;
+    	if(isNew){
+    		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+    		java.util.Calendar calendar = null ;
+    		calendar = null ;
+    		calendar = GregorianCalendar.getInstance();
+    		calendar.setTime(answer.getDateResponse());
+    		answerNode.setProperty("exo:dateResponses", answerNode.getSession().getValueFactory().createValue(calendar));
+    	} else {
+    		answerNode = answerHome.getNode(answer.getId());
+    	}
+    	answerNode.setProperty("exo:responses", answer.getResponses()) ;
+    	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+    	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+    	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+    	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+  	}catch (Exception e) {
+  		e.printStackTrace() ;
+  	}finally { sProvider.close() ;}  	
   }
   
-  public void saveAnswerQuestionLang(String questionId, Answer answer, String language, boolean isNew, SessionProvider sProvider) throws Exception{
-  	Node quesNode = getQuestionNodeById(questionId, sProvider);
-  	Node answerHome = null;
-  	try{
-  		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-  	} catch (Exception e){
-  		answerHome = quesNode.addNode(Utils.ANSWER_HOME, NT_UNSTRUCTURED);
-  	}
-  	Node answerNode;
-  	if(isNew){
-  		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
-  		java.util.Calendar calendar = null ;
-  		calendar = null ;
-  		calendar = GregorianCalendar.getInstance();
-  		calendar.setTime(answer.getDateResponse());
-  		answerNode.setProperty("exo:dateResponses", answerNode.getSession().getValueFactory().createValue(calendar));
-  	} else {
-  		answerNode = answerHome.getNode(answer.getId());
-  	}
-  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+  public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+  	try {
+  		Node quesNode = getQuestionNodeById(questionId);
+    	Node commentHome = null;
+    	try{
+    		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
+    	} catch (PathNotFoundException e){
+    		commentHome = quesNode.addNode(Utils.COMMENT_HOME, NT_UNSTRUCTURED);
+    	}
+    	Node commentNode;
+    	if(isNew){
+    		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
+    		java.util.Calendar calendar = null ;
+    		calendar = null ;
+    		calendar = GregorianCalendar.getInstance();
+    		calendar.setTime(comment.getDateComment());
+    		commentNode.setProperty("exo:dateComment", commentNode.getSession().getValueFactory().createValue(calendar));
+    	} else {
+    		commentNode = commentHome.getNode(comment.getId());
+    	}
+    	commentNode.setProperty("exo:comments", comment.getComments()) ;
+    	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
+    	if(isNew) quesNode.getSession().save();
+    	else quesNode.save();
+  	}catch (Exception e) {
+  		e.printStackTrace() ;
+  	}finally { sProvider.close() ;}
+  	
   }
   
-  public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew, SessionProvider sProvider) throws Exception{
-  	Node quesNode = getQuestionNodeById(questionId, sProvider);
-  	Node commentHome = null;
-  	try{
-  		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
-  	} catch (Exception e){
-  		commentHome = quesNode.addNode(Utils.COMMENT_HOME, NT_UNSTRUCTURED);
-  	}
-  	Node commentNode;
-  	if(isNew){
-  		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
-  		java.util.Calendar calendar = null ;
-  		calendar = null ;
-  		calendar = GregorianCalendar.getInstance();
-  		calendar.setTime(comment.getDateComment());
-  		commentNode.setProperty("exo:dateComment", commentNode.getSession().getValueFactory().createValue(calendar));
-  	} else {
-  		commentNode = commentHome.getNode(comment.getId());
-  	}
-  	commentNode.setProperty("exo:comments", comment.getComments()) ;
-  	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
-  	if(isNew) quesNode.getSession().save();
-  	else quesNode.save();
-  }
-  
-	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception{
+	public Answer getAnswerById(String questionId, String answerid) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			Node answerNode = getQuestionNodeById(questionId, sProvider).getNode(Utils.ANSWER_HOME).getNode(answerid);
+			Node answerNode = getQuestionNodeById(questionId).getNode(Utils.ANSWER_HOME).getNode(answerid);
 			return getAnswerByNode(answerNode);
 		} catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
+			e.printStackTrace();			
+		}finally { sProvider.close() ;}
+		return null;
 	}
 	
 	public Comment[] getComment(Node questionNode) throws Exception{
@@ -906,7 +984,8 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception{
+	public JCRPageList getPageListComment(String questionId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node questionHome = getQuestionHome(sProvider, null) ;
 			Node commentHome = questionHome.getNode(questionId).getNode(Utils.COMMENT_HOME);
@@ -919,7 +998,7 @@ public class JCRDataStorage {
 			return pageList;
 		} catch (Exception e) {
 			return null;
-		}
+		} finally { sProvider.close() ; }
 	}
 	
 	private Comment getCommentByNode(Node commentNode) throws Exception {
@@ -932,13 +1011,14 @@ public class JCRDataStorage {
 		return comment;
 	}
 	
-	public Comment getCommentById(String questionId, String commentId, SessionProvider sProvider) throws Exception{
+	public Comment getCommentById(String questionId, String commentId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			Node commentNode =  getQuestionNodeById(questionId, sProvider).getNode(Utils.COMMENT_HOME).getNode(commentId);
+			Node commentNode =  getQuestionNodeById(questionId).getNode(Utils.COMMENT_HOME).getNode(commentId);
 			return getCommentByNode(commentNode);
 		} catch (Exception e){
 			return null;
-		}
+		} finally { sProvider.close() ;}
 	}
 	
 	private Node getLanguageNodeByLanguage(Node questionNode, String languge) throws Exception{
@@ -953,137 +1033,155 @@ public class JCRDataStorage {
   	return null;
   }
 	
-	public List<Question> searchQuestionByLangageOfText( List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception {
+	public List<Question> searchQuestionByLangageOfText( List<Question> listQuestion, String languageSearch, String text) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> listResult = new ArrayList<Question>();
-		Node questionHome = getQuestionHome(sProvider, null);
-		Node questionNode = null;
-		Node languageNode = null;
-		String languages = Utils.LANGUAGE_HOME;
-		text = text.toLowerCase();
-		String authorContent = new String();
-		String emailContent = new String();
-		String questionDetail = new String();
-		String questionContent = new String();
-		String responseContent[] = null;
-		for (Question question : listQuestion) {
-			questionNode = questionHome.getNode(question.getId());
-			if (questionNode.hasNode(languages)) {
-				//languageNode = questionNode.getNode(languages);
-				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
-				if (languageNode != null) {
-					boolean isAdd = false;
-					if (questionNode.hasProperty("exo:author"))
-						authorContent = questionNode.getProperty("exo:author").getValue().getString();
-					if (questionNode.hasProperty("exo:email"))
-						emailContent = questionNode.getProperty("exo:email").getValue().getString();
-					if (languageNode.hasProperty("exo:name"))
-						questionDetail = languageNode.getProperty("exo:name").getValue().getString();
-					if (languageNode.hasProperty("exo:responses"))
-						responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
-					if (languageNode.hasProperty("exo:title")) 
-						questionContent = languageNode.getProperty("exo:title").getString();
-					if ((questionDetail != null && questionDetail.toLowerCase().indexOf(text) >= 0)
-					    || (responseContent!= null && ArrayContentValue(responseContent, text))
-					    || (authorContent.toLowerCase().indexOf(text) >= 0)
-					    || (emailContent.toLowerCase().indexOf(text) >= 0)) {
-						isAdd = true;
-					}
-					if (isAdd) {
-						question.setQuestion(questionContent);
-						question.setAuthor(authorContent);
-						question.setEmail(emailContent);
-						question.setLanguage(languageSearch);
-						question.setDetail(questionDetail);
-						question.setAnswers(getAnswers(questionNode));
-						listResult.add(question);
-					}
-				}
-			}
-		}
-		return listResult;
-	}
-
-	public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
-		List<Question> listResult = new ArrayList<Question>();
-		Node questionHome = getQuestionHome(sProvider, null);
-		Node questionNode = null;
-		Node languageNode = null;
-		String languages = Utils.LANGUAGE_HOME;
-		String questionDetail = new String();
-		String questionContent = new String();
-		Answer[] answers = null;
-		String[] responseContent = null;
-		for (Question question : listQuestion) {
-			questionNode = questionHome.getNode(question.getId());
-			if (questionNode.hasNode(languages)) {
-				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
-				if (languageNode != null) {
-					boolean isAdd = false;
-					if (languageNode.hasProperty("exo:name")) questionDetail = languageNode.getProperty("exo:name").getString();
-					if (languageNode.hasProperty("exo:title")) questionContent = languageNode.getProperty("exo:title").getString();
-					answers = getAnswers(languageNode);
-					responseContent = new String[answers.length];
-					for (int i = 0; i < answers.length; i++) {
-						responseContent[i] = answers[i].getResponses();
-					}
-					if ((questionSearch == null || questionSearch.trim().length() < 1)
-					    && (responseSearch == null || responseSearch.trim().length() < 1)) {
-						isAdd = true;
-					} else {
-						if ((questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
-						    && (responseSearch == null || responseSearch.trim().length() < 1)) {
-							isAdd = true;
-						} else if (answers != null
-						    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))
-						    && (questionSearch == null || questionSearch.trim().length() < 1)) {
-							isAdd = true;
-						} else if (answers != null && (questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
-						    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))) {
-							isAdd = true;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode = null;
+			Node languageNode = null;
+			String languages = Utils.LANGUAGE_HOME;
+			text = text.toLowerCase();
+			String authorContent = new String();
+			String emailContent = new String();
+			String questionDetail = new String();
+			String questionContent = new String();
+			String responseContent[] = null;
+			for (Question question : listQuestion) {
+				try {
+					questionNode = questionHome.getNode(question.getId());
+					if (questionNode.hasNode(languages)) {
+						//languageNode = questionNode.getNode(languages);
+						languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+						if (languageNode != null) {
+							boolean isAdd = false;
+							if (questionNode.hasProperty("exo:author"))
+								authorContent = questionNode.getProperty("exo:author").getValue().getString();
+							if (questionNode.hasProperty("exo:email"))
+								emailContent = questionNode.getProperty("exo:email").getValue().getString();
+							if (languageNode.hasProperty("exo:name"))
+								questionDetail = languageNode.getProperty("exo:name").getValue().getString();
+							if (languageNode.hasProperty("exo:responses"))
+								responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
+							if (languageNode.hasProperty("exo:title")) 
+								questionContent = languageNode.getProperty("exo:title").getString();
+							if ((questionDetail != null && questionDetail.toLowerCase().indexOf(text) >= 0)
+							    || (responseContent!= null && ArrayContentValue(responseContent, text))
+							    || (authorContent.toLowerCase().indexOf(text) >= 0)
+							    || (emailContent.toLowerCase().indexOf(text) >= 0)) {
+								isAdd = true;
+							}
+							if (isAdd) {
+								question.setQuestion(questionContent);
+								question.setAuthor(authorContent);
+								question.setEmail(emailContent);
+								question.setLanguage(languageSearch);
+								question.setDetail(questionDetail);
+								question.setAnswers(getAnswers(questionNode));
+								listResult.add(question);
+							}
 						}
 					}
-					if (isAdd) {
-						question.setLanguage(languageSearch);
-						question.setQuestion(questionContent);
-						question.setDetail(questionDetail);
-						question.setAnswers(answers);
-						listResult.add(question);
-					}
-				}
+				}catch(Exception e) {}
 			}
-		}
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 		return listResult;
 	}
 
-	public Node saveQuestion(Question question, boolean isAddNew,
-	    SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null);
-		Node questionNode;
-		if (isAddNew) {
-			try {
-				questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
-			} catch (PathNotFoundException e) {
+	public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<Question> listResult = new ArrayList<Question>();
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode = null;
+			Node languageNode = null;
+			String languages = Utils.LANGUAGE_HOME;
+			String questionDetail = new String();
+			String questionContent = new String();
+			Answer[] answers = null;
+			String[] responseContent = null;
+			for (Question question : listQuestion) {
+				questionNode = questionHome.getNode(question.getId());
+				if (questionNode.hasNode(languages)) {
+					languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+					if (languageNode != null) {
+						boolean isAdd = false;
+						if (languageNode.hasProperty("exo:name")) questionDetail = languageNode.getProperty("exo:name").getString();
+						if (languageNode.hasProperty("exo:title")) questionContent = languageNode.getProperty("exo:title").getString();
+						answers = getAnswers(languageNode);
+						responseContent = new String[answers.length];
+						for (int i = 0; i < answers.length; i++) {
+							responseContent[i] = answers[i].getResponses();
+						}
+						if ((questionSearch == null || questionSearch.trim().length() < 1)
+						    && (responseSearch == null || responseSearch.trim().length() < 1)) {
+							isAdd = true;
+						} else {
+							if ((questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
+							    && (responseSearch == null || responseSearch.trim().length() < 1)) {
+								isAdd = true;
+							} else if (answers != null
+							    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))
+							    && (questionSearch == null || questionSearch.trim().length() < 1)) {
+								isAdd = true;
+							} else if (answers != null && (questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
+							    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))) {
+								isAdd = true;
+							}
+						}
+						if (isAdd) {
+							question.setLanguage(languageSearch);
+							question.setQuestion(questionContent);
+							question.setDetail(questionDetail);
+							question.setAnswers(answers);
+							listResult.add(question);
+						}
+					}
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
+		return listResult;
+	}
+
+	public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode;
+			if (isAddNew) {
+				try {
+					questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
+				} catch (PathNotFoundException e) {
+					questionNode = questionHome.getNode(question.getId());
+				}
+			} else {
 				questionNode = questionHome.getNode(question.getId());
 			}
-		} else {
-			questionNode = questionHome.getNode(question.getId());
-		}
-		saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
-		if (questionHome.isNew())
-			questionHome.getSession().save();
-		else
-			questionHome.save();
-		return questionNode;
+			saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
+			if (questionHome.isNew())	questionHome.getSession().save();
+			else questionHome.save();
+			return questionNode;
+		}catch (Exception e) {
+			return null ;
+		}finally {sProvider.close() ;}    
 	}
 	
 
-	public void removeQuestion(String questionId, SessionProvider sProvider)
-	    throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null);
-		Node questionNode = questionHome.getNode(questionId);
-		RSSProcess.cateid = questionNode.getProperty("exo:categoryId").getString();
-		questionNode.remove();
-		questionHome.save();
+	public void removeQuestion(String questionId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode = questionHome.getNode(questionId);
+			RSSProcess.cateid = questionNode.getProperty("exo:categoryId").getString();
+			questionNode.remove();
+			questionHome.save();
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		} finally { sProvider.close() ;}
 	}
 		
   public Comment getCommentById(Node questionNode, String commentId) throws Exception{
@@ -1156,14 +1254,26 @@ public class JCRDataStorage {
 		return question ;
 	}
 	
-	public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		return getQuestion(questionHome.getNode(questionId)) ;
+	public Question getQuestionById(String questionId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			return getQuestion(questionHome.getNode(questionId)) ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+		return null ;
 	}
 	
-	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		return questionHome.getNode(questionId);
+	public Node getQuestionNodeById(String questionId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			return questionHome.getNode(questionId);
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		} finally { sProvider.close() ;}
+		return null ;
 	}
 
 	protected List<String> listCateIdsView(SessionProvider sessionProvider) throws Exception{
@@ -1183,213 +1293,248 @@ public class JCRDataStorage {
 		return listId;
 	}
 	
-	public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-																	 append("//element(*,exo:faqQuestion)[");
-		List<String> listIds = listCateIdsView(sProvider);
-		for(int i = 0; i < listIds.size(); i ++){
-			if(i > 0) queryString.append(" or ");
-			queryString.append("(exo:categoryId='").append(listIds.get(i)).append("')");
-		}
-		queryString.append("]order by @exo:createdDate ascending");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		return pageList ;
-	}
-	
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting faqSetting) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		if( categoryId!=null && categoryId.equals("All")){
-			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[");
+	public QuestionPageList getAllQuestions() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+																		 append("//element(*,exo:faqQuestion)[");
 			List<String> listIds = listCateIdsView(sProvider);
 			for(int i = 0; i < listIds.size(); i ++){
 				if(i > 0) queryString.append(" or ");
 				queryString.append("(exo:categoryId='").append(listIds.get(i)).append("')");
 			}
-			queryString.append("] order by @exo:createdDate ascending");
-		} else {
-			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
-			if(faqSetting != null) {
-				if(faqSetting.getDisplayMode().equals("approved")) queryString.append(" and (@exo:isApproved='true')");
+			queryString.append("]order by @exo:createdDate ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		} finally { sProvider.close() ;}
+		return null ;
+	}
+	
+	public QuestionPageList getQuestionsNotYetAnswer(String categoryId, FAQSetting faqSetting) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			if( categoryId!=null && categoryId.equals("All")){
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[");
+				List<String> listIds = listCateIdsView(sProvider);
+				for(int i = 0; i < listIds.size(); i ++){
+					if(i > 0) queryString.append(" or ");
+					queryString.append("(exo:categoryId='").append(listIds.get(i)).append("')");
+				}
+				queryString.append("] order by @exo:createdDate ascending");
+			} else {
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')");
+				if(faqSetting != null) {
+					if(faqSetting.getDisplayMode().equals("approved")) queryString.append(" and (@exo:isApproved='true')");
+				}
+				queryString.append("]");
+				queryString.append("order by @exo:createdDate ascending");
 			}
-			queryString.append("]");
-			queryString.append("order by @exo:createdDate ascending");
-		}
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		pageList.setNotYetAnswered(true);
-		return pageList ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			pageList.setNotYetAnswered(true);
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception{
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
-		queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-											append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-											append(" and (@exo:isActivated='true') and (@exo:isApproved='false')").append("]");
-		
-		queryString.append("order by ");
-		
-		if(faqSetting.isSortQuestionByVote()){
-			queryString.append("@exo:markVote descending, ");
-		}
-		
-		// order by and ascending or deascending
-		if(faqSetting.getOrderBy().equals("created")){
-			queryString.append("@exo:createdDate ");
-		} else {
-			queryString.append("@exo:title ");
-		}
-		if(faqSetting.getOrderType().equals("asc")){
-			queryString.append("ascending");
-		} else {
-			queryString.append("descending");
-		}
-		
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		return pageList ;
-	}
-	
-	public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
-		if(faqSetting.getDisplayMode().equals("approved")) {
+	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
 												append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-																			append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
-																			append("]");
-		} else {
-			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-												append(" and (@exo:isActivated='true')").
-												append("]");
-		}
-		
-		queryString.append("order by ");
-		
-		if(faqSetting.isSortQuestionByVote()){
-			queryString.append("@exo:markVote descending, ");
-		}
-		
-		// order by and ascending or deascending
-		if(faqSetting.getOrderBy().equals("created")){
-			queryString.append("@exo:createdDate ");
-		} else {
-			queryString.append("@exo:title ");
-		}
-		if(faqSetting.getOrderType().equals("asc")){
-			queryString.append("ascending");
-		} else {
-			queryString.append("descending");
-		}
-		
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		return pageList ;
+												append(" and (@exo:isActivated='true') and (@exo:isApproved='false')").append("]");		
+			queryString.append("order by ");		
+			if(faqSetting.isSortQuestionByVote()){
+				queryString.append("@exo:markVote descending, ");
+			}		
+			// order by and ascending or deascending
+			if(faqSetting.getOrderBy().equals("created")){
+				queryString.append("@exo:createdDate ");
+			} else {
+				queryString.append("@exo:title ");
+			}
+			if(faqSetting.getOrderType().equals("asc")){
+				queryString.append("ascending");
+			} else {
+				queryString.append("descending");
+			}		
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();		
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+		return null ;
 	}
 	
-	public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		if(faqSetting.getDisplayMode().equals("approved")){
-			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
-												append(" and (@exo:isApproved='true')").
-												append("]");
-		} else {
-			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
-												append("]");
-		}
-		
-		queryString.append("order by ");
-		
-		if(faqSetting.isSortQuestionByVote()){
-			queryString.append("@exo:markVote descending, ");
-		}
-		
-		//	order by and ascending or deascending
-		if(faqSetting.getOrderBy().equals("created")){
-			queryString.append("@exo:createdDate ");
-		} else {
-			queryString.append("@exo:title ");
-		}
-		if(faqSetting.getOrderType().equals("asc")){
-			queryString.append("ascending");
-		} else {
-			queryString.append("descending");
-		}
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		
-		return pageList ;
+	public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
+		SessionProvider sProvider =  SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
+			if(faqSetting.getDisplayMode().equals("approved")) {
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+																				append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
+																				append("]");
+			} else {
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+													append(" and (@exo:isActivated='true')").
+													append("]");
+			}
+			
+			queryString.append("order by ");
+			
+			if(faqSetting.isSortQuestionByVote()){
+				queryString.append("@exo:markVote descending, ");
+			}		
+			// order by and ascending or deascending
+			if(faqSetting.getOrderBy().equals("created")){
+				queryString.append("@exo:createdDate ");
+			} else {
+				queryString.append("@exo:title ");
+			}
+			if(faqSetting.getOrderType().equals("asc")){
+				queryString.append("ascending");
+			} else {
+				queryString.append("descending");
+			}			
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();			
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
-																		append("//element(*,exo:faqQuestion)[(");
-		int i = 0 ;
-		for(String categoryId : listCategoryId) {
-			queryString.append("(@exo:categoryId='").append(categoryId).append("')");
-			if(i < listCategoryId.size() - 1)
-				queryString.append(" or ") ;
-			i ++ ;
-		}
-		queryString.append(")]order by @exo:createdDate ascending");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = null;
-		pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		pageList.setNotYetAnswered(isNotYetAnswer);
-		return pageList ;
+	public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			if(faqSetting.getDisplayMode().equals("approved")){
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).append("')").
+													append(" and (@exo:isApproved='true')").
+													append("]");
+			} else {
+				queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[@exo:categoryId='").append(categoryId).append("'").
+													append("]");
+			}			
+			queryString.append("order by ");			
+			if(faqSetting.isSortQuestionByVote()){
+				queryString.append("@exo:markVote descending, ");
+			}			
+			//	order by and ascending or deascending
+			if(faqSetting.getOrderBy().equals("created")){
+				queryString.append("@exo:createdDate ");
+			} else {
+				queryString.append("@exo:title ");
+			}
+			if(faqSetting.getOrderType().equals("asc")){
+				queryString.append("ascending");
+			} else {
+				queryString.append("descending");
+			}
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;		
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public String getCategoryPathOfQuestion(String categoryId, SessionProvider sProvider) throws Exception{
+	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
+																			append("//element(*,exo:faqQuestion)[(");
+			int i = 0 ;
+			for(String categoryId : listCategoryId) {
+				queryString.append("(@exo:categoryId='").append(categoryId).append("')");
+				if(i < listCategoryId.size() - 1)
+					queryString.append(" or ") ;
+				i ++ ;
+			}
+			queryString.append(")]order by @exo:createdDate ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = null;
+			pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			pageList.setNotYetAnswered(isNotYetAnswer);
+			return pageList ;
+		} catch ( Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
+	}
+	
+	public String getCategoryPathOfQuestion(String categoryId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String path = "";
 		Node cateNode = null;
-		cateNode = getCategoryHome(sProvider, null);
-		if(cateNode.hasProperty("exo:name")) path = cateNode.getProperty("exo:name").getString();
-		else path = "Home";
-		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
-			String[] paths = ((getCategoryNodeById(categoryId, sProvider).getPath()).replace(getCategoryHome(sProvider, null).getPath() + "/", "")).split("/");
-			for(int i = 0; i < paths.length; i ++){
-				path += " > " + getCategoryNodeById(paths[i], sProvider).getProperty("exo:name").getString();
+		try {
+			cateNode = getCategoryHome(sProvider, null);
+			if(cateNode.hasProperty("exo:name")) path = cateNode.getProperty("exo:name").getString();
+			else path = "Home";
+			if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
+				String[] paths = ((getCategoryNodeById(categoryId).getPath()).replace(getCategoryHome(sProvider, null).getPath() + "/", "")).split("/");
+				for(int i = 0; i < paths.length; i ++){
+					path += " > " + getCategoryNodeById(paths[i]).getProperty("exo:name").getString();
+				}
 			}
-		}
+		}catch( Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 		return path;
 	}
 	
-	public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		for(String id : questions) {
-			try{
-				questionHome.getNode(id).setProperty("exo:categoryId", destCategoryId) ;				
-			}catch(ItemNotFoundException ex){
-				ex.printStackTrace() ;
+	public void moveQuestions(List<String> questions, String destCategoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			for(String id : questions) {
+				try{
+					questionHome.getNode(id).setProperty("exo:categoryId", destCategoryId) ;				
+				}catch(ItemNotFoundException ex){
+					ex.printStackTrace() ;
+				}
 			}
-		}
-		questionHome.save() ;
+			questionHome.save() ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		
 	} 
 	
 	@SuppressWarnings("static-access")
@@ -1409,77 +1554,93 @@ public class JCRDataStorage {
 		categoryNode.setProperty("exo:isModerateAnswers", category.isModerateAnswers());
 	}
 	
-	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception{
+	public void changeStatusCategoryView(List<String> listCateIds) throws Exception{
 		if(listCateIds == null || listCateIds.size() < 1) return;
-		Node categoryHomeNode = getCategoryHome(sProvider, null);
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHomeNode.getPath()).
-																															append("//element(*,exo:faqCategory)");
-		queryString.append("[");
-		for(int i = 0; i < listCateIds.size(); i ++){
-			if(i > 0) queryString.append(" or ");
-			queryString.append("(@exo:id='").append(listCateIds.get(i)).append("')");
-		}
-		queryString.append("]") ;
-			
-		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iterator = result.getNodes();
-		Node cateNode = null;
-		while(iterator.hasNext()){
-			cateNode = iterator.nextNode();
-			cateNode.setProperty("exo:isView", !cateNode.getProperty("exo:isView").getBoolean());
-		}
-		categoryHomeNode.save();
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHomeNode = getCategoryHome(sProvider, null);
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHomeNode.getPath()).
+																																append("//element(*,exo:faqCategory)");
+			queryString.append("[");
+			for(int i = 0; i < listCateIds.size(); i ++){
+				if(i > 0) queryString.append(" or ");
+				queryString.append("(@exo:id='").append(listCateIds.get(i)).append("')");
+			}
+			queryString.append("]") ;
+				
+			QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iterator = result.getNodes();
+			Node cateNode = null;
+			while(iterator.hasNext()){
+				cateNode = iterator.nextNode();
+				cateNode.setProperty("exo:isView", !cateNode.getProperty("exo:isView").getBoolean());
+			}
+			categoryHomeNode.save();
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 	}
 	
-	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
-				+ "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		pageList.setNotYetAnswered(true);
-		 
-		return pageList ;
+	public QuestionPageList getQuestionsNotYetAnswer() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + questionHome.getPath() 
+					+ "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			pageList.setNotYetAnswered(true);		 
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
+	public List<String> getListPathQuestionByCategory(String categoryId) throws Exception{
 		List<String> listPath = new ArrayList<String>();
 		List<String> listCateIds = new ArrayList<String>();
 		Queue<Node> listNodes = new LinkedList<Node>();
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		NodeIterator nodeIterator = null;
-		if(categoryId != null){
-			Node categoryNode = getCategoryNodeById(categoryId, sProvider);
-			nodeIterator = categoryNode.getNodes();
-			while(nodeIterator.hasNext()){
-				listNodes.add(nodeIterator.nextNode());
-			}
-			while(!listNodes.isEmpty()){
-				categoryNode = listNodes.poll();
-				listCateIds.add(categoryNode.getName());
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			NodeIterator nodeIterator = null;
+			if(categoryId != null){
+				Node categoryNode = getCategoryNodeById(categoryId);
 				nodeIterator = categoryNode.getNodes();
 				while(nodeIterator.hasNext()){
 					listNodes.add(nodeIterator.nextNode());
 				}
+				while(!listNodes.isEmpty()){
+					categoryNode = listNodes.poll();
+					listCateIds.add(categoryNode.getName());
+					nodeIterator = categoryNode.getNodes();
+					while(nodeIterator.hasNext()){
+						listNodes.add(nodeIterator.nextNode());
+					}
+				}
 			}
-		}
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath())
-									.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId + "").append("')");
-		for(String id : listCateIds){
-			queryString.append(" or (@exo:categoryId='").append(id).append("')");
-		}
-		queryString.append("]");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		nodeIterator = result.getNodes();
-		while(nodeIterator.hasNext()){
-			listPath.add(nodeIterator.nextNode().getPath());
-		}
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath())
+										.append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId + "").append("')");
+			for(String id : listCateIds){
+				queryString.append(" or (@exo:categoryId='").append(id).append("')");
+			}
+			queryString.append("]");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			nodeIterator = result.getNodes();
+			while(nodeIterator.hasNext()){
+				listPath.add(nodeIterator.nextNode().getPath());
+			}
+			return listPath;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
 		return listPath;
 	}
 	
@@ -1521,9 +1682,9 @@ public class JCRDataStorage {
 			iter = result.getNodes();
 			if(iter.hasNext()){
 				if(parentNode.hasProperty("exo:id"))
-					swapCategories(parentNode.getName(), cateNode.getName(), iter.nextNode().getName(), sessionProvider);
+					swapCategories(parentNode.getName(), cateNode.getName(), iter.nextNode().getName());
 				else
-					swapCategories(null, cateNode.getName(), iter.nextNode().getName(), sessionProvider);
+					swapCategories(null, cateNode.getName(), iter.nextNode().getName());
 			}else{
 				cateNode.setProperty("exo:index", newPos);
 			}
@@ -1548,21 +1709,28 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
-		Query query = null;
-		QueryResult result = null;
-		if(parentId != null && parentId.length() > 0) {	
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																		 append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
-			query = qm.createQuery(queryString.toString(), Query.XPATH);
-			result = query.execute();
-			Node parentCategory = result.getNodes().nextNode() ;
-			return	getMaxIndex(parentCategory.getPath(), qm, query, result);
-		} else {
-			return	getMaxIndex(categoryHome.getPath(), qm, query, result);
-		}
+	public long getMaxindexCategory(String parentId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		long max = 0 ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
+			Query query = null;
+			QueryResult result = null;
+			if(parentId != null && parentId.length() > 0) {	
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																			 append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
+				query = qm.createQuery(queryString.toString(), Query.XPATH);
+				result = query.execute();
+				Node parentCategory = result.getNodes().nextNode() ;
+				max = getMaxIndex(parentCategory.getPath(), qm, query, result);
+			} else {
+				max = getMaxIndex(categoryHome.getPath(), qm, query, result);
+			}
+		}catch (Exception e) {
+			throw(e) ;
+		}finally { sProvider.close() ;}
+		return max ;
 	}
 	
 	protected long getMaxIndex(String nodePath, QueryManager qm, Query query, QueryResult result) throws Exception{
@@ -1579,67 +1747,78 @@ public class JCRDataStorage {
 		return index;
 	}
 	
-	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception {
-		if(getCategoryNodeByName(cat,isAddNew, sProvider)){
-			throw new RuntimeException();
-		}
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
-		Query query = null;
-		QueryResult result = null;
-		long newPos = cat.getIndex();
-		if(parentId != null && parentId.length() > 0) {	
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																		 append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
-			query = qm.createQuery(queryString.toString(), Query.XPATH);
-			result = query.execute();
-			Node parentCategory = result.getNodes().nextNode() ;
-			Node catNode;
-			if(isAddNew) {
-				catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
-				cat.setIndex(getMaxindexCategory(parentId, sProvider) + 1);
-				saveCategory(catNode, cat) ;
-				parentCategory.getSession().save() ;
-			}else {
-				catNode = parentCategory.getNode(cat.getId()) ;
-				cat.setIndex(catNode.getProperty("exo:index").getLong());
-				saveCategory(catNode, cat) ;
-				parentCategory.save() ;
+	public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			if(getCategoryNodeByName(cat,isAddNew, sProvider)){
+				throw new RuntimeException();
 			}
-			setIndexCategory(parentCategory, catNode, newPos, qm, sProvider);
-		} else{
-			Node catNode ;
-			if(isAddNew) {
-				catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
-				cat.setIndex(getMaxindexCategory(parentId, sProvider) + 1);
-			} else {
-				 if(cat.getId() != null){
-					 catNode = categoryHome.getNode(cat.getId()) ;
-					 cat.setIndex(catNode.getProperty("exo:index").getLong());
-				 }else{
-					 catNode = getCategoryHome(sProvider, null);
-					 cat.setIndex(1);
-				 }
+			Node categoryHome = getCategoryHome(sProvider, null) ;
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();;
+			Query query = null;
+			QueryResult result = null;
+			long newPos = cat.getIndex();
+			if(parentId != null && parentId.length() > 0) {	
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																			 append("//element(*,exo:faqCategory)[@exo:id='").append(parentId).append("']") ;
+				query = qm.createQuery(queryString.toString(), Query.XPATH);
+				result = query.execute();
+				Node parentCategory = result.getNodes().nextNode() ;
+				Node catNode;
+				if(isAddNew) {
+					catNode = parentCategory.addNode(cat.getId(), "exo:faqCategory") ;
+					cat.setIndex(getMaxindexCategory(parentId) + 1);
+					saveCategory(catNode, cat) ;
+					parentCategory.getSession().save() ;
+				}else {
+					catNode = parentCategory.getNode(cat.getId()) ;
+					cat.setIndex(catNode.getProperty("exo:index").getLong());
+					saveCategory(catNode, cat) ;
+					parentCategory.save() ;
+				}
+				setIndexCategory(parentCategory, catNode, newPos, qm, sProvider);
+			} else{
+				Node catNode ;
+				if(isAddNew) {
+					catNode = categoryHome.addNode(cat.getId(), "exo:faqCategory") ;
+					cat.setIndex(getMaxindexCategory(parentId) + 1);
+				} else {
+					 if(cat.getId() != null){
+						 catNode = categoryHome.getNode(cat.getId()) ;
+						 cat.setIndex(catNode.getProperty("exo:index").getLong());
+					 }else{
+						 catNode = getCategoryHome(sProvider, null);
+						 cat.setIndex(1);
+					 }
+				}
+				saveCategory(catNode, cat) ;
+				if(isAddNew) categoryHome.getSession().save();
+				else categoryHome.save();
+				// when update for root category, don't need reset index.
+				if(cat.getId() != null)setIndexCategory(categoryHome, catNode, newPos, qm, sProvider);
 			}
-			saveCategory(catNode, cat) ;
-			if(isAddNew) categoryHome.getSession().save();
-			else categoryHome.save();
-			// when update for root category, don't need reset index.
-			if(cat.getId() != null)setIndexCategory(categoryHome, catNode, newPos, qm, sProvider);
-		}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		
 	}
 	
-	public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-					
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																	 append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		Node categoryNode = result.getNodes().nextNode() ;
-		categoryNode.remove() ;
-		categoryHome.save() ;
+	public void removeCategory(String categoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;
+			
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																		 append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			Node categoryNode = result.getNodes().nextNode() ;
+			categoryNode.remove() ;
+			categoryHome.save() ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		} finally { sProvider.close() ;}		
 	}
 	
 	private Category getCategory(Node categoryNode) throws Exception {
@@ -1658,169 +1837,200 @@ public class JCRDataStorage {
 		return cat;
 	}
 	
-	public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
-		return getCategory(getCategoryNodeById(categoryId, sProvider)) ;
+	public Category getCategoryById(String categoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			return getCategory(getCategoryNodeById(categoryId)) ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																	 append("//element(*,exo:faqCategory)[@exo:moderators='").
-																	 append(user).append("' and @exo:isView='true']") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes() ;
-		List<String> listCateId = new ArrayList<String>() ;
-		while(iter.hasNext()) {
-			listCateId.add(getCategory(iter.nextNode()).getId()) ;
-		}
-		return listCateId ;
-	}
-	
-	public List<Category> getAllCategories(SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqCategory)") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes() ;
-		List<Category> catList = new ArrayList<Category>() ;
-		while(iter.hasNext()) {
-			catList.add(getCategory(iter.nextNode())) ;
-		}
-		return catList ;
-	}
-	
-	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
-		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
-			Node categoryHome = getCategoryHome(sProvider, null) ;	
+	public List<String> getListCateIdByModerator(String user) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-					+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																		 append("//element(*,exo:faqCategory)[@exo:moderators='").
+																		 append(user).append("' and @exo:isView='true']") ;
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-			return result.getNodes().nextNode() ;
-		} else{
-			return getCategoryHome(sProvider, null);
-		}
+			NodeIterator iter = result.getNodes() ;
+			List<String> listCateId = new ArrayList<String>() ;
+			while(iter.hasNext()) {
+				listCateId.add(getCategory(iter.nextNode()).getId()) ;
+			}
+			return listCateId ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;		
 	}
 	
-	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception {
+	public List<Category> getAllCategories() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqCategory)") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes() ;
+			List<Category> catList = new ArrayList<Category>() ;
+			while(iter.hasNext()) {
+				catList.add(getCategory(iter.nextNode())) ;
+			}
+			return catList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
+		
+	}
+	
+	public Node getCategoryNodeById(String categoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
+				Node categoryHome = getCategoryHome(sProvider, null) ;	
+				QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+				StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+						+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				return result.getNodes().nextNode() ;
+			} else{
+				return getCategoryHome(sProvider, null);
+			}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		} finally {sProvider.close() ;} 
+		return null ;
+	}
+	
+	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> catList = new ArrayList<Category>() ;
-		Node parentCategory ;
-		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("FAQService")) {
-			parentCategory = getCategoryNodeById(categoryId, sProvider) ;
-		}else {
-			parentCategory = getCategoryHome(sProvider, null) ;
-		}
-		String orderBy = faqSetting.getOrderBy() ;
-		String orderType = faqSetting.getOrderType();
-		
-		StringBuffer queryString = null;
-		if(!isGetAll)
-			queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
-													append("/element(*,exo:faqCategory)[@exo:isView='true']order by ");
-		else
-			queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
-														append("/element(*,exo:faqCategory) order by ");
-		
-		//order by and ascending or descending
-		if(orderBy.equals("created")) {
-			if(orderType.equals("asc")) queryString.append("@exo:createdDate ascending") ;
-			else queryString.append("@exo:createdDate descending") ;
-		} else {
-			if(orderType.equals("asc")) queryString.append("@exo:index ascending") ;
-			else queryString.append("@exo:index descending") ;
-		}
-		
-		QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		
-		NodeIterator iter = result.getNodes() ;
-		while(iter.hasNext()) {
-			catList.add(getCategory(iter.nextNode())) ;
-		} 
+		try {			
+			Node parentCategory ;
+			if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("FAQService")) {
+				parentCategory = getCategoryNodeById(categoryId) ;
+			}else {
+				parentCategory = getCategoryHome(sProvider, null) ;
+			}
+			String orderBy = faqSetting.getOrderBy() ;
+			String orderType = faqSetting.getOrderType();
+			
+			StringBuffer queryString = null;
+			if(!isGetAll)
+				queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
+														append("/element(*,exo:faqCategory)[@exo:isView='true']order by ");
+			else
+				queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
+															append("/element(*,exo:faqCategory) order by ");
+			
+			//order by and ascending or descending
+			if(orderBy.equals("created")) {
+				if(orderType.equals("asc")) queryString.append("@exo:createdDate ascending") ;
+				else queryString.append("@exo:createdDate descending") ;
+			} else {
+				if(orderType.equals("asc")) queryString.append("@exo:index ascending") ;
+				else queryString.append("@exo:index descending") ;
+			}
+			
+			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			
+			NodeIterator iter = result.getNodes() ;
+			while(iter.hasNext()) {
+				catList.add(getCategory(iter.nextNode())) ;
+			} 
+			return catList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
 		return catList ;
 	}
 	
-	public long[] getCategoryInfo( String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception	{
+	public long[] getCategoryInfo( String categoryId, FAQSetting faqSetting) throws Exception	{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		long[] cateInfo = new long[]{0, 0, 0, 0};
-		Node parentCategory ;
-		if(categoryId != null)
-			parentCategory = getCategoryNodeById(categoryId, sProvider) ;
-		else 
-			parentCategory = getCategoryHome(sProvider, null);
-		
-		NodeIterator iter = parentCategory.getNodes() ;
-		cateInfo[0] = iter.getSize() ;
-		if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;
-		if(categoryId == null) categoryId = "null";
-		
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-																	append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).
-																	append("') and (@exo:isActivated='true')").
-																	append("]").append("order by @exo:createdDate ascending");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator nodeIterator = result.getNodes() ;
-		cateInfo[1] = nodeIterator.getSize() ;
-		
-		Node questionNode = null;
-		boolean questionIsApproved = true;
-		boolean onlyGetApproved = false;
-		if(faqSetting.getDisplayMode().equals("approved")) onlyGetApproved = true;
-		while(nodeIterator.hasNext()) {
-			questionNode = nodeIterator.nextNode() ;
-			if(questionNode.hasProperty("exo:isApproved") && questionNode.getProperty("exo:isApproved").getBoolean())
-				questionIsApproved = true;
-			else questionIsApproved = false;
-			if(!questionIsApproved){
-				cateInfo[3] ++ ;
-				if(onlyGetApproved)cateInfo[1] --;
+		try {
+			Node parentCategory ;
+			if(categoryId != null)
+				parentCategory = getCategoryNodeById(categoryId) ;
+			else 
+				parentCategory = getCategoryHome(sProvider, null);
+			
+			NodeIterator iter = parentCategory.getNodes() ;
+			cateInfo[0] = iter.getSize() ;
+			if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;
+			if(categoryId == null) categoryId = "null";
+			
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+																		append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(categoryId).
+																		append("') and (@exo:isActivated='true')").
+																		append("]").append("order by @exo:createdDate ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator nodeIterator = result.getNodes() ;
+			cateInfo[1] = nodeIterator.getSize() ;
+			
+			Node questionNode = null;
+			boolean questionIsApproved = true;
+			boolean onlyGetApproved = false;
+			if(faqSetting.getDisplayMode().equals("approved")) onlyGetApproved = true;
+			while(nodeIterator.hasNext()) {
+				questionNode = nodeIterator.nextNode() ;
+				if(questionNode.hasProperty("exo:isApproved") && questionNode.getProperty("exo:isApproved").getBoolean())
+					questionIsApproved = true;
+				else questionIsApproved = false;
+				if(!questionIsApproved){
+					cateInfo[3] ++ ;
+					if(onlyGetApproved)cateInfo[1] --;
+				}
+				if((!questionNode.hasNode(Utils.ANSWER_HOME) || questionNode.getNode(Utils.ANSWER_HOME).getNodes().getSize() < 1)&& 
+						(!onlyGetApproved || (onlyGetApproved && questionIsApproved))){
+						cateInfo[2] ++;
+				}
 			}
-			if((!questionNode.hasNode(Utils.ANSWER_HOME) || questionNode.getNode(Utils.ANSWER_HOME).getNodes().getSize() < 1)&& 
-					(!onlyGetApproved || (onlyGetApproved && questionIsApproved))){
-					cateInfo[2] ++;
-			}
-		}
-		
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}				
 		return cateInfo ;
 	}
 	
-	public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception {
-		Node catNode = getCategoryNodeById(categoryId, sProvider) ;
-		QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();;
-		Query query = null;
-		QueryResult result = null;
-		Node destCatNode ;
-		String resPath = catNode.getPath() ;
-		String resNodePath = resPath.substring(0,resPath.lastIndexOf("/")) ;
-		if(!destCategoryId.equals("null")) {
-			destCatNode = getCategoryNodeById(destCategoryId, sProvider) ;	
-		} else {
-			destCatNode = getCategoryHome(sProvider, null) ;
-		}
-		catNode.setProperty("exo:index", getMaxIndex(destCatNode.getPath(), qm, query, result) + 1);
-		if(!resNodePath.equals(destCatNode.getPath())) {
-			destCatNode.getSession().move(catNode.getPath(), destCatNode.getPath() +"/"+ categoryId) ;
-			catNode.getSession().save() ;
-			destCatNode.getSession().save() ;
-		}
+	public void moveCategory(String categoryId, String destCategoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node catNode = getCategoryNodeById(categoryId) ;
+			QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();;
+			Query query = null;
+			QueryResult result = null;
+			Node destCatNode ;
+			String resPath = catNode.getPath() ;
+			String resNodePath = resPath.substring(0,resPath.lastIndexOf("/")) ;
+			if(!destCategoryId.equals("null")) {
+				destCatNode = getCategoryNodeById(destCategoryId) ;	
+			} else {
+				destCatNode = getCategoryHome(sProvider, null) ;
+			}
+			catNode.setProperty("exo:index", getMaxIndex(destCatNode.getPath(), qm, query, result) + 1);
+			if(!resNodePath.equals(destCatNode.getPath())) {
+				destCatNode.getSession().move(catNode.getPath(), destCatNode.getPath() +"/"+ categoryId) ;
+				catNode.getSession().save() ;
+				destCatNode.getSession().save() ;
+			}
+		}catch (Exception e){ 
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 	}
 	
-	public void saveFAQSetting(FAQSetting faqSetting,String userName, SessionProvider sProvider) throws Exception {
-		Node userNode = nodeHierarchyCreator_.getUserNode(sProvider, userName);
-		Node userSettingNode = userNode.getNode(FAQ_APP).getNode(USER_SETTING);
-		userSettingNode .setProperty("exo:ordeBy", faqSetting.getOrderBy());
-		userSettingNode .setProperty("exo:ordeType", faqSetting.getOrderType());
-		userSettingNode .setProperty("exo:sortQuestionByVote", faqSetting.isSortQuestionByVote());
-		userNode.save() ;
-	}
-
 	private String [] ValuesToStrings(Value[] Val) throws Exception {
 		if(Val.length < 1) return new String[]{} ;
 		if(Val.length == 1) return new String[]{Val[0].getString()} ;
@@ -1831,9 +2041,10 @@ public class JCRDataStorage {
 		return Str;
 	}
   
-	public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
+	public void addWatch(String id, Watch watch)throws Exception {
+		//SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node watchingNode = null;
-		watchingNode = getCategoryNodeById(id, sProvider) ;
+		watchingNode = getCategoryNodeById(id) ;
 		//add watching for node
 		if(watchingNode.isNodeType("exo:faqWatching")) {//get
 				List<String> vls = new ArrayList<String>() ;
@@ -1860,95 +2071,121 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
 	}
 	
-	public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;	
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-																	 append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
-		return pageList;
+	public QuestionPageList getListMailInWatch(String categoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;	
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																		 append("//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
+			return pageList;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+		return null ;
 	}
 	
-	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception{
-		Node questionHome = getQuestionHome(sessionProvider, null);
-		Node questionNode = questionHome.getNode(questionId);
-		// add new watch quesiton
-		if(isNew){
-			if(questionNode.isNodeType("exo:faqWatching")){
+	public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode = questionHome.getNode(questionId);
+			// add new watch quesiton
+			if(isNew){
+				if(questionNode.isNodeType("exo:faqWatching")){
+					List<String> emails = new ArrayList<String>() ;
+					List<String> listUsers = new ArrayList<String>() ;
+					Value[] values = questionNode.getProperty("exo:emailWatching").getValues() ;
+					Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+					for(Value vl : values) {
+							emails.add(vl.getString()) ;
+					}
+					for(Value user : users) {
+						listUsers.add(user.getString()) ;
+					}
+					if(!listUsers.contains(watch.getUser())){
+						emails.add(watch.getEmails()) ;
+						listUsers.add(watch.getUser());
+					} else {
+						int pos = listUsers.indexOf(watch.getUser());
+						emails.set(pos, emails.get(pos) + "," + watch.getEmails());
+					}
+					questionNode.setProperty("exo:emailWatching", emails.toArray(new String[]{})) ;
+					questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
+					questionNode.save() ;
+				} else {
+					questionNode.addMixin("exo:faqWatching");
+					questionNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
+					questionNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
+					questionNode.save() ;
+				}
+			// update for watch question
+			} else {
 				List<String> emails = new ArrayList<String>() ;
 				List<String> listUsers = new ArrayList<String>() ;
-				Value[] values = questionNode.getProperty("exo:emailWatching").getValues() ;
-				Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
-				for(Value vl : values) {
+				for(Value vl : questionNode.getProperty("exo:emailWatching").getValues()) {
 						emails.add(vl.getString()) ;
 				}
-				for(Value user : users) {
+				for(Value user : questionNode.getProperty("exo:userWatching").getValues()) {
 					listUsers.add(user.getString()) ;
 				}
-				if(!listUsers.contains(watch.getUser())){
-					emails.add(watch.getEmails()) ;
-					listUsers.add(watch.getUser());
-				} else {
-					int pos = listUsers.indexOf(watch.getUser());
-					emails.set(pos, emails.get(pos) + "," + watch.getEmails());
-				}
+				int pos = listUsers.indexOf(watch.getUser());
+				emails.set(pos, watch.getEmails());
 				questionNode.setProperty("exo:emailWatching", emails.toArray(new String[]{})) ;
 				questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
 				questionNode.save() ;
-			} else {
-				questionNode.addMixin("exo:faqWatching");
-				questionNode.setProperty("exo:emailWatching", new String[]{watch.getEmails()}) ;
-				questionNode.setProperty("exo:userWatching", new String[]{watch.getUser()}) ;
-				questionNode.save() ;
 			}
-		// update for watch question
-		} else {
-			List<String> emails = new ArrayList<String>() ;
-			List<String> listUsers = new ArrayList<String>() ;
-			for(Value vl : questionNode.getProperty("exo:emailWatching").getValues()) {
-					emails.add(vl.getString()) ;
-			}
-			for(Value user : questionNode.getProperty("exo:userWatching").getValues()) {
-				listUsers.add(user.getString()) ;
-			}
-			int pos = listUsers.indexOf(watch.getUser());
-			emails.set(pos, watch.getEmails());
-			questionNode.setProperty("exo:emailWatching", emails.toArray(new String[]{})) ;
-			questionNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{})) ;
-			questionNode.save() ;
-		}
-		questionHome.save();
+			questionHome.save();
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close () ;} 
+		
 	}
 	
-	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null);
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
-												append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
-		return pageList;
+	public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()). 
+													append("//element(*,exo:faqQuestion)[fn:name() = '").append(questionId).append("']");
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
+			return pageList;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception {
+	public QuestionPageList getListCategoriesWatch(String userId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null);
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
+												append("//element(*,exo:faqCategory)[(@exo:userWatching='").append(userId).append("')]");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			return pageList ;
+		}catch ( Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
+	}
+	
+	public boolean getWatchByUser(String userId, String cateId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider, null);
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-											append("//element(*,exo:faqCategory)[(@exo:userWatching='").append(userId).append("')]");
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		return pageList ;
-	}
-	
-	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception{
-		Node categoryHome = getCategoryHome(sessionProvider, null);
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		sProvider.close() ;
 		StringBuffer queryString = null;
 		queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
 											append("//element(*,exo:faqCategory)[(@exo:id='").append(cateId).
@@ -1964,45 +2201,51 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = null;
-		queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
-											append("//element(*,exo:faqQuestion)[(@exo:userWatching='").append(currentUser).append("')");
-		if(faqSetting.getDisplayMode().equals("approved")) {
-			queryString.append(" and (@exo:isApproved='true')");
-		}
-		if(!faqSetting.isAdmin()) queryString.append(" and (@exo:isActivated='true')");
-		queryString.append("]");
-		
-		queryString.append("order by ");
-		
-		if(faqSetting.isSortQuestionByVote()){
-			queryString.append("@exo:markVote descending, ");
-		}
-		
-		// order by and ascending or deascending
-		if(faqSetting.getOrderBy().equals("created")){
-			queryString.append("@exo:createdDate ");
-		} else {
-			queryString.append("@exo:title ");
-		}
-		if(faqSetting.getOrderType().equals("asc")){
-			queryString.append("ascending");
-		} else {
-			queryString.append("descending");
-		}
-		
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		
-		QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
-		return pageList ;
+	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = null;
+			queryString = new StringBuffer("/jcr:root").append(questionHome.getPath()).
+												append("//element(*,exo:faqQuestion)[(@exo:userWatching='").append(currentUser).append("')");
+			if(faqSetting.getDisplayMode().equals("approved")) {
+				queryString.append(" and (@exo:isApproved='true')");
+			}
+			if(!faqSetting.isAdmin()) queryString.append(" and (@exo:isActivated='true')");
+			queryString.append("]");
+			
+			queryString.append("order by ");
+			
+			if(faqSetting.isSortQuestionByVote()){
+				queryString.append("@exo:markVote descending, ");
+			}
+			
+			// order by and ascending or deascending
+			if(faqSetting.getOrderBy().equals("created")){
+				queryString.append("@exo:createdDate ");
+			} else {
+				queryString.append("@exo:title ");
+			}
+			if(faqSetting.getOrderType().equals("asc")){
+				queryString.append("ascending");
+			} else {
+				queryString.append("descending");
+			}
+			
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			
+			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
+			return pageList ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return null ;
 	}
 	
-	public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
-		Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
+	public void deleteMailInWatch(String categoryId, String emails) throws Exception {
+		Node watchingNode = getCategoryNodeById(categoryId) ;
 		Value[] values = watchingNode.getProperty("exo:emailWatching").getValues() ;
 		Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
 		List<String> vls = new ArrayList<String>() ;
@@ -2026,8 +2269,8 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
 	}
 	
-	public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
-		Node watchingNode = getCategoryNodeById(categoryId, sProvider) ;
+	public void UnWatch(String categoryId, String userCurrent) throws Exception {
+		Node watchingNode = getCategoryNodeById(categoryId) ;
 		Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
 		Value[] users = watchingNode.getProperty("exo:userWatching").getValues() ;
 		List<String> userAll = new ArrayList<String>();
@@ -2048,27 +2291,32 @@ public class JCRDataStorage {
 		watchingNode.getSession().save();
 	}
 	
-	public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception {
-		Node questionHome = getQuestionHome(sProvider, null);
-		Node questionNode = questionHome.getNode(questionID) ;
-		Value[] emails = questionNode.getProperty("exo:emailWatching").getValues() ;
-		Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
-		List<String> userAll = new ArrayList<String>();
-		List<String> emailAll = new ArrayList<String>() ;
-		if(questionNode.isNodeType("exo:faqWatching")) {
-			int i = 0 ;
-			for(Value user : users) {
-				if(!userCurrent.equals(user.getString())) {
-					userAll.add(user.getString()) ;
-					emailAll.add(emails[i].getString());
-				} 
-				i++ ;
+	public void UnWatchQuestion(String questionID, String userCurrent) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node questionHome = getQuestionHome(sProvider, null);
+			Node questionNode = questionHome.getNode(questionID) ;
+			Value[] emails = questionNode.getProperty("exo:emailWatching").getValues() ;
+			Value[] users = questionNode.getProperty("exo:userWatching").getValues() ;
+			List<String> userAll = new ArrayList<String>();
+			List<String> emailAll = new ArrayList<String>() ;
+			if(questionNode.isNodeType("exo:faqWatching")) {
+				int i = 0 ;
+				for(Value user : users) {
+					if(!userCurrent.equals(user.getString())) {
+						userAll.add(user.getString()) ;
+						emailAll.add(emails[i].getString());
+					} 
+					i++ ;
+				}
+				questionNode.setProperty("exo:userWatching", userAll.toArray(new String[]{})) ;
+				questionNode.setProperty("exo:emailWatching", emailAll.toArray(new String[]{})) ;
+				
+				questionHome.save() ;
 			}
-			questionNode.setProperty("exo:userWatching", userAll.toArray(new String[]{})) ;
-			questionNode.setProperty("exo:emailWatching", emailAll.toArray(new String[]{})) ;
-			
-			questionHome.save() ;
-		}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}		
 	}
 	
 	private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
@@ -2090,120 +2338,135 @@ public class JCRDataStorage {
 		return queryString.toString() ;
 	}
 	
-	public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception {
-		Node faqServiceHome = getFAQServiceHome(sProvider) ;
-		String types[] = new String[] {"faqCategory", "faqQuestion", "answer", "comment"} ;
-		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();
+	public List<FAQFormSearch> getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
-		List<String> ids = new ArrayList<String>();
-		List<String> listIdViews = listCateIdsView(sProvider);
-		for (String type : types) {
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
-			StringBuffer stringBuffer = new StringBuffer() ;
-			isOwner = false ;
-			stringBuffer.append("[");
-			if(text !=null && text.length() > 0) {
-				stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
-				isOwner = true ;
-			}
-			String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
-			if(temp != null && temp.length() > 0) { 
-				stringBuffer.append(temp) ;
-			}
-			
-			if(type.equals("faqCategory"))stringBuffer.append(" and (@exo:isView='true')");
-			else if (type.equals("faqQuestion")){
-				stringBuffer.append(" and (");
-				for(int i = 0; i < listIdViews.size(); i ++){
-					if(i > 0) stringBuffer.append(" or ");
-					stringBuffer.append("(exo:categoryId='").append(listIdViews.get(i)).append("')");
+		try {
+			Node faqServiceHome = getFAQServiceHome(sProvider) ;
+			String types[] = new String[] {"faqCategory", "faqQuestion", "answer", "comment"} ;
+			QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();			
+			List<String> ids = new ArrayList<String>();
+			List<String> listIdViews = listCateIdsView(sProvider);
+			for (String type : types) {
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
+				StringBuffer stringBuffer = new StringBuffer() ;
+				isOwner = false ;
+				stringBuffer.append("[");
+				if(text !=null && text.length() > 0) {
+					stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
+					isOwner = true ;
 				}
-				stringBuffer.append(")");
-			}
-			
-			stringBuffer.append("]") ;
-			if(isOwner) queryString.append(stringBuffer.toString()) ;
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes() ;
-			Node node ;
-			FAQFormSearch formSearch ;
-			String id;
-			while(iter.hasNext()) {
-				formSearch = new FAQFormSearch() ;
-				node = (Node)iter.nextNode();
-				id = node.getName() ;
-				if(!type.equals("faqCategory")) {
-					if(type.equals("comment") || type.equals("answer")){
-						while(!node.isNodeType("exo:faqQuestion"))
-							node = node.getParent();
-						if(ids.contains(node.getName()) || !listIdViews.contains(node.getProperty("exo:categoryId").getString())){
-							continue;
+				String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
+				if(temp != null && temp.length() > 0) { 
+					stringBuffer.append(temp) ;
+				}
+				
+				if(type.equals("faqCategory"))stringBuffer.append(" and (@exo:isView='true')");
+				else if (type.equals("faqQuestion")){
+					stringBuffer.append(" and (");
+					for(int i = 0; i < listIdViews.size(); i ++){
+						if(i > 0) stringBuffer.append(" or ");
+						stringBuffer.append("(exo:categoryId='").append(listIdViews.get(i)).append("')");
+					}
+					stringBuffer.append(")");
+				}
+				
+				stringBuffer.append("]") ;
+				if(isOwner) queryString.append(stringBuffer.toString()) ;
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				NodeIterator iter = result.getNodes() ;
+				Node node ;
+				FAQFormSearch formSearch ;
+				String id;
+				while(iter.hasNext()) {
+					node = (Node)iter.nextNode();
+					try {
+						formSearch = new FAQFormSearch() ;					
+						id = node.getName() ;
+						if(!type.equals("faqCategory")) {
+							if(type.equals("comment") || type.equals("answer")){
+								while(!node.isNodeType("exo:faqQuestion"))
+									node = node.getParent();
+								if(ids.contains(node.getName()) || !listIdViews.contains(node.getProperty("exo:categoryId").getString())){
+									continue;
+								}
+								id = node.getName();
+							}
+							ids.add(node.getName());
+							
+							formSearch.setName(node.getProperty("exo:title").getString()) ;
+							Node questionNode = getQuestionNodeById(id);
+							if(questionHasAnswer(questionNode)) {
+								formSearch.setIcon("QuestionSearch") ;
+							} else {
+								formSearch.setIcon("NotResponseSearch") ;
+							}
+						} else {
+							formSearch.setName(node.getProperty("exo:name").getString()) ;
+							formSearch.setIcon("FAQCategorySearch") ;
 						}
-						id = node.getName();
-					}
-					ids.add(node.getName());
-					
-					formSearch.setName(node.getProperty("exo:title").getString()) ;
-					Node questionNode = getQuestionNodeById(id, sProvider);
-					if(questionHasAnswer(questionNode)) {
-						formSearch.setIcon("QuestionSearch") ;
-					} else {
-						formSearch.setIcon("NotResponseSearch") ;
-					}
-				} else {
-					formSearch.setName(node.getProperty("exo:name").getString()) ;
-					formSearch.setIcon("FAQCategorySearch") ;
+						formSearch.setId(id) ;
+						formSearch.setType(type) ;
+						formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
+						FormSearchs.add(formSearch) ;
+					}catch(Exception e) {}					
 				}
-				formSearch.setId(id) ;
-				formSearch.setType(type) ;
-				formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
-				FormSearchs.add(formSearch) ;
 			}
-		}
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally { sProvider.close() ;}
 		return FormSearchs ;
 	}
 
-	public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
-		Node faqServiceHome = getFAQServiceHome(sProvider) ;
+	public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> catList = new ArrayList<Category>() ;
-		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
-		String path = eventQuery.getPath() ;
-		if(path == null || path.length() <= 0) {
-			path = faqServiceHome.getPath() ;
-		}
-		eventQuery.setPath(path) ;
-		String type = eventQuery.getType() ;
-		String queryString = eventQuery.getPathQuery() ;
-		queryString = queryString.substring(0, queryString.lastIndexOf("]")) +
-									" and (exo:isView='true')]";
+		
 		try {
+			Node faqServiceHome = getFAQServiceHome(sProvider) ;
+			
+			QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+			String path = eventQuery.getPath() ;
+			if(path == null || path.length() <= 0) {
+				path = faqServiceHome.getPath() ;
+			}
+			eventQuery.setPath(path) ;
+			String type = eventQuery.getType() ;
+			String queryString = eventQuery.getPathQuery() ;
+			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + " and (exo:isView='true')]";
+			
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
 			while (iter.hasNext()) {
-				if(!type.equals("faqQuestion")) {
-					Category category = new Category() ;
-					Node nodeObj = (Node) iter.nextNode();
-					category.setId(nodeObj.getName());
-					if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
-					if(nodeObj.hasProperty("exo:description")) category.setDescription(nodeObj.getProperty("exo:description").getString()) ;
-					if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
-					catList.add(category) ;
-				}
+				try {
+					if(!type.equals("faqQuestion")) {
+						Category category = new Category() ;
+						Node nodeObj = (Node) iter.nextNode();
+						category.setId(nodeObj.getName());
+						if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
+						if(nodeObj.hasProperty("exo:description")) category.setDescription(nodeObj.getProperty("exo:description").getString()) ;
+						if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
+						catList.add(category) ;
+					}
+				}catch(Exception e) {}				
 			}
 		} catch (Exception e) {
 			e.printStackTrace() ;
-		}
+		} finally { sProvider.close() ;}
 		return catList;
 	}
 	
-	public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+	public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> listIdViews = listCateIdsView(sProvider);
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
+		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+		sProvider.close() ;
 		Map<String, Question> questionMap = new HashMap<String, Question>();
 		Question question = null;
-		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+		
 		String path = eventQuery.getPath() ;
 		if(path == null || path.length() <= 0) {
 			path = faqServiceHome.getPath() ;
@@ -2253,7 +2516,7 @@ public class JCRDataStorage {
 				node = (Node)iter.nextNode().getParent().getParent();
 				if(!listIdViews.contains(node.getProperty("exo:categoryId").getString())) continue;
 				id = node.getName();
-				question = getQuestionById(node.getName(), sProvider);
+				question = getQuestionById(node.getName());
 				if(questionMap.isEmpty() || !questionMap.containsKey(id)){
 					questionMap.put(id, question);
 				}
@@ -2281,29 +2544,32 @@ public class JCRDataStorage {
 		return	Arrays.asList(questionMap.values().toArray(new Question[]{}));
 	}
 	
-	public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
-		Node faqServiceHome = getFAQServiceHome(sProvider) ;
+	public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> questionList = new ArrayList<Question>() ;
 		Map<String, Question> newMap = new HashMap<String, Question>();
-		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
-		String path = eventQuery.getPath() ;
-		if(path == null || path.length() <= 0) {
-			path = faqServiceHome.getPath() ;
-		}
-		eventQuery.setPath(path) ;
-		String type = eventQuery.getType() ;
-		String queryString = eventQuery.getPathQuery() ;
 		try {
+			Node faqServiceHome = getFAQServiceHome(sProvider) ;			
+			QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
+			String path = eventQuery.getPath() ;
+			if(path == null || path.length() <= 0) {
+				path = faqServiceHome.getPath() ;
+			}
+			eventQuery.setPath(path) ;
+			String type = eventQuery.getType() ;
+			String queryString = eventQuery.getPathQuery() ;
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
 			while (iter.hasNext()) {
-				if(type.equals("faqAttachment")) {
-					Node nodeObj = (Node) iter.nextNode();
-					nodeObj = (Node) nodeObj.getParent() ;
-					Question question = getQuestion(nodeObj) ;
-					newMap.put(question.getId(), question);
-				}
+				try {
+					if(type.equals("faqAttachment")) {
+						Node nodeObj = (Node) iter.nextNode();
+						nodeObj = (Node) nodeObj.getParent() ;
+						Question question = getQuestion(nodeObj) ;
+						newMap.put(question.getId(), question);
+					}
+				}catch(Exception e) {}
 			}
 		} catch (Exception e) {
 			e.printStackTrace() ;
@@ -2312,8 +2578,8 @@ public class JCRDataStorage {
 		return questionList ;
 	}
 	
-	public List<String> getCategoryPath(SessionProvider sProvider,	String categoryId) throws Exception {
-		Node nodeCate = getCategoryNodeById(categoryId, sProvider) ;
+	public List<String> getCategoryPath(String categoryId) throws Exception {
+		Node nodeCate = getCategoryNodeById(categoryId) ;
 		boolean isContinue = true ;
 		List<String> breadcums = new ArrayList<String>() ;
 		while(isContinue) {
@@ -2349,42 +2615,63 @@ public class JCRDataStorage {
 		return	messageInfo ;
 	}
 	
-	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
+	public void importData(String categoryId, InputStream inputStream, boolean isImportCategory) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		if(isImportCategory){
 			Node categoryNode = null;
 			if(categoryId != null)categoryNode = getCategoryHome(sProvider, null).getNode(categoryId);
 			else categoryNode = getCategoryHome(sProvider, null);
-			if(session == null)session = categoryNode.getSession();
+			Session session = categoryNode.getSession();
 			session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 			session.save();
 		} else {
 			Node questionHomeNode = getQuestionHome(sProvider, null);
-			if(session == null)session = questionHomeNode.getSession();
+			Session session = questionHomeNode.getSession();
 			session.importXML(questionHomeNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 			session.save();
 		}
 	}
 	
-	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
-		Node categoryHome = getCategoryHome(sProvider, null) ;	
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-				+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		if (result.getNodes().getSize() > 0) return true;
-		else return false;
+	public boolean categoryAlreadyExist(String categoryId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider, null) ;	
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+					+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			if (result.getNodes().getSize() > 0) return true;			
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+		return false;
 	}
 	
-	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception{
-		Node categoryHomeNode = getCategoryHome(sessionProvider, null);
+	private Node getCategoryById(String categoryId, SessionProvider sProvider) throws Exception {
+		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
+			Node categoryHome = getCategoryHome(sProvider, null) ;	
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
+					+ "//element(*,exo:faqCategory)[@exo:id='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			return result.getNodes().nextNode() ;
+		} else{
+			return getCategoryHome(sProvider, null);
+		}		
+	}
+	
+	public void swapCategories(String parentCateId, String cateId1, String cateId2) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	  Node categoryHomeNode = getCategoryHome(sProvider, null);
 		Node parentCate = null;
-		Node categoryNode1 = getCategoryNodeById(cateId1, sessionProvider);
-		Node categoryNode2 = getCategoryNodeById(cateId2, sessionProvider);
+		Node categoryNode1 = getCategoryById(cateId1, sProvider);
+		Node categoryNode2 = getCategoryById(cateId2, sProvider);
 		long f = categoryNode1.getProperty("exo:index").getValue().getLong();
 		long t = categoryNode2.getProperty("exo:index").getValue().getLong();
 		StringBuffer queryString = null;
-		QueryManager qm = categoryHomeNode.getSession().getWorkspace().getQueryManager();
+		QueryManager qm = categoryNode1.getSession().getWorkspace().getQueryManager();
 		NodeIterator iter = null;
 		Node cateNode = null;
 		if(!categoryNode1.getParent().equals(categoryNode2.getParent())) {
@@ -2400,15 +2687,15 @@ public class JCRDataStorage {
 				cateNode.save();
 			}
 			if(parentCate.hasProperty("exo:id")){
-				moveCategory(cateId1, parentCate.getProperty("exo:id").getValue().getString(), sessionProvider);
+				moveCategory(cateId1, parentCate.getProperty("exo:id").getValue().getString());
 			} else {
-				moveCategory(cateId1, "null", sessionProvider);
+				moveCategory(cateId1, "null");
 			}
 			parentCate.save();
 		}
 		else {
 			if(parentCateId == null) parentCate = categoryHomeNode;
-			else parentCate = getCategoryNodeById(parentCateId, sessionProvider);
+			else parentCate = getCategoryNodeById(parentCateId);
 			long l = 0;
 			if(f > t) l = 1;
 			else l = -1;
@@ -2429,15 +2716,16 @@ public class JCRDataStorage {
 		}
 	}
 	
-	public void saveTopicIdDiscussQuestion(String questionId, String topicId, SessionProvider sProvider) throws Exception{
-		Node questionHome = getQuestionHome(sProvider, null) ;
-		Node questionNode ;
+	public void saveTopicIdDiscussQuestion(String questionId, String topicId) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
+			Node questionHome = getQuestionHome(sProvider, null) ;
+			Node questionNode ;
 			questionNode = questionHome.getNode(questionId);
 			questionNode.setProperty("exo:topicIdDiscuss", topicId);
 			questionHome.save() ;
-		} catch (PathNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}finally { sProvider.close() ;}
 	}
 }

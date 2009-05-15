@@ -42,7 +42,7 @@ import org.exoplatform.services.mail.Message;
  * 					hung.nguyen@exoplatform.com
  * @since   Mar 04, 2008
  */
-public interface FAQService {
+public interface FAQService extends FAQServiceLegacy{
   
 	/**
 	 * Adds the plugin.
@@ -68,9 +68,9 @@ public interface FAQService {
 	 * @see     list category
 	 * @throws Exception the exception
 	 */
-	public void saveCategory(String parentId, Category cat, boolean isAddNew, SessionProvider sProvider) throws Exception ;  
+	public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception ;  
 	
-	public void changeStatusCategoryView(List<String> listCateIds, SessionProvider sProvider) throws Exception;
+	public void changeStatusCategoryView(List<String> listCateIds) throws Exception;
   
 	/**
    * This method should check exists of category and remove it
@@ -79,7 +79,7 @@ public interface FAQService {
 	 * @param  	sProvider is session provider
 	 * @throws Exception the exception
    */
-  public void removeCategory(String categoryId, SessionProvider sProvider) throws Exception ;
+  public void removeCategory(String categoryId) throws Exception ;
   
   /**
    * This method should lookup category via identify 
@@ -91,7 +91,7 @@ public interface FAQService {
 	 * @see     current category
 	 * @throws Exception the exception
    */
-  public Category getCategoryById(String categoryId, SessionProvider sProvider) throws Exception ;  
+  public Category getCategoryById(String categoryId) throws Exception ;  
   
   /**
    * This method should lookup all the category
@@ -102,7 +102,7 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public List<Category> getAllCategories(SessionProvider sProvider) throws Exception ;  
+  public List<Category> getAllCategories() throws Exception ;  
   
   /**
    * Get all categories of user.
@@ -117,7 +117,7 @@ public interface FAQService {
    * 
    * @throws Exception if can't found user
    */
-  public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception ;  
+  public List<String> getListCateIdByModerator(String user) throws Exception ;  
   
   /**
    * This method should lookup all sub-categories of a category
@@ -130,9 +130,9 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
   
-  public void moveCategory(String categoryId, String destCategoryId, SessionProvider sProvider) throws Exception ;
+  public void moveCategory(String categoryId, String destCategoryId) throws Exception ;
   
   /**
    * Save question after create new question or edit infor of quesiton which is existed.
@@ -149,7 +149,7 @@ public interface FAQService {
    * 
    * @throws Exception if path of question nod not found
    */
-  public Node saveQuestion(Question question, boolean isAddNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
+  public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Delete question by question's id. Check question if it's existed then remove it
@@ -159,7 +159,7 @@ public interface FAQService {
    * 
    * @throws Exception  if question not found
    */
-  public void removeQuestion(String questionId, SessionProvider sProvider) throws Exception ;
+  public void removeQuestion(String questionId) throws Exception ;
   
   /**
    * Lookup the question node via identify, convert to question object and return
@@ -171,7 +171,7 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public Question getQuestionById(String questionId, SessionProvider sProvider) throws Exception ;
+  public Question getQuestionById(String questionId) throws Exception ;
   
   /**
    * Get all questions
@@ -182,7 +182,7 @@ public interface FAQService {
    * 
    * @throws Exception  if attachment not foune
    */
-  public QuestionPageList getAllQuestions(SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getAllQuestions() throws Exception ;
   
   /**
    * Get all questisons not yet answered, the first get all questions 
@@ -195,7 +195,7 @@ public interface FAQService {
    * 
    * @throws Exception  if lost attachment
    */
-  public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception ;
+  public QuestionPageList getQuestionsNotYetAnswer(String categoryId, FAQSetting setting) throws Exception ;
   
   /**
    * Get questions are activagted and approved in the category.
@@ -210,7 +210,7 @@ public interface FAQService {
    * 
    * @throws Exception  if can't found category
    */
-  public QuestionPageList getQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
+  public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Get all questions of the category.
@@ -224,7 +224,7 @@ public interface FAQService {
    * 
    * @throws Exception    when category not found
    */
-  public QuestionPageList getAllQuestionsByCatetory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception ;
+  public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception ;
   
   /**
    * Get some informations of category: Lookup category node by category's id
@@ -242,7 +242,7 @@ public interface FAQService {
    * if not found question or lose file attach
    * @throws Exception the exception
    */
-  public long[] getCategoryInfo(String categoryId, SessionProvider sProvider, FAQSetting setting) throws Exception ;
+  public long[] getCategoryInfo(String categoryId, FAQSetting setting) throws Exception ;
   
   /**
    * Get questions in list categories.
@@ -260,7 +260,7 @@ public interface FAQService {
    * 
    * @throws Exception      the exception
    */
-  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer, SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception ;
   
   /**
    * Get path of question. For example question A is included in category C and C is child of
@@ -270,7 +270,7 @@ public interface FAQService {
    * @return	name of categories
    * @throws Exception
    */
-  public String getCategoryPathOfQuestion(String categoryId, SessionProvider sProvider) throws Exception;
+  public String getCategoryPathOfQuestion(String categoryId) throws Exception;
   
   /**
    * Get all language nodes of question node which have id is specified,
@@ -289,7 +289,7 @@ public interface FAQService {
    * 
    * @throws Exception  when question not found
    */
-  public List<QuestionLanguage>  getQuestionLanguages(String questionId, SessionProvider sProvider) throws Exception ;
+  public List<QuestionLanguage>  getQuestionLanguages(String questionId) throws Exception ;
   
   /**
    * This method should lookup languageNode of question
@@ -303,7 +303,7 @@ public interface FAQService {
    * @return 	Question list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception ;
+  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
   
   /**
    * Search question by language.
@@ -335,7 +335,7 @@ public interface FAQService {
    * 
    * @throws Exception      when question node not found
    */
-  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception ;
+  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception ;
   
   /**
    * Move all of questions to category which have id is  specified
@@ -346,7 +346,7 @@ public interface FAQService {
    * 
    * @throws Exception the exception
    */
-  public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception ;  
+  public void moveQuestions(List<String> questions, String destCategoryId) throws Exception ;  
   
   /**
    * This method to update FAQ setting.
@@ -355,7 +355,7 @@ public interface FAQService {
    * @param sProvider the session provider
    * @throws Exception the exception
    */
-  public void saveFAQSetting(FAQSetting faqSetting,String userName, SessionProvider sProvider) throws Exception;  
+  public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception;  
   
   /**
    * This function is used to allow user can watch a category. 
@@ -368,7 +368,7 @@ public interface FAQService {
    * @throws Exception the exception
    *  
    */
-  public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception ;
+  public void addWatch(String id, Watch watch)throws Exception ;
   
   /**
    * This method will get list mail of one category. User see list this mails and 
@@ -380,7 +380,7 @@ public interface FAQService {
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public QuestionPageList getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
   
   /**
    * This method will delete watch in one category 
@@ -390,7 +390,7 @@ public interface FAQService {
    * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
-  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception ;
+  public void deleteMailInWatch(String categoryId, String emails) throws Exception ;
   
   /**
    * This method will un watch in one category 
@@ -400,7 +400,7 @@ public interface FAQService {
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
-  public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception ;
+  public void UnWatch(String categoryId, String userCurrent) throws Exception ;
   
   /**
    * This method will un watch in one question 
@@ -410,7 +410,7 @@ public interface FAQService {
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
-  public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception;
+  public void UnWatchQuestion(String questionID, String userCurrent) throws Exception;
   
   /**
    * This method will return list object FAQFormSearch
@@ -424,7 +424,7 @@ public interface FAQService {
    * @see		 list categories and question was filter
    * @throws Exception the exception
    */
-  public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
+  public List<FAQFormSearch> getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate) throws Exception ;
   
   /**
    * This method will return list category when user input value search
@@ -437,7 +437,7 @@ public interface FAQService {
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
-  public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * This method should lookup all the categories node 
@@ -449,7 +449,7 @@ public interface FAQService {
    * @return Category list
    * @throws Exception the exception
    */
-  public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * This method should lookup all the categories node 
@@ -461,7 +461,7 @@ public interface FAQService {
    * @return Category list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * This method return path of category identify
@@ -470,7 +470,7 @@ public interface FAQService {
    * @return list category name is sort(path of this category)
    * @throws Exception the exception
    */
-  public List<String> getCategoryPath(SessionProvider sProvider, String categoryId) throws Exception ;
+  public List<String> getCategoryPath(String categoryId) throws Exception ;
   
   /**
    * This method will send message to address but you want send
@@ -608,7 +608,7 @@ public interface FAQService {
    * @param faqSetting	the setting of user
    * @throws Exception	when can't find user or faqSetting
    */
-  public void getUserSetting(SessionProvider sProvider, String userName, FAQSetting faqSetting) throws Exception ;
+  public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception ;
 
   public NotifyInfo getMessageInfo(String name) throws Exception  ;
   
@@ -618,7 +618,7 @@ public interface FAQService {
    * @return	return <code>true</code> if user is addmin and <code>false</code> if opposite
    * @throws Exception
    */
-  public boolean isAdminRole(String userName, SessionProvider sessionProvider) throws Exception ;
+  public boolean isAdminRole(String userName) throws Exception ;
   
   /**
    * Get all user is admin.
@@ -636,57 +636,57 @@ public interface FAQService {
  	*/
  	public void addRolePlugin(ComponentPlugin plugin) throws Exception;
  	
- 	public void addWatchQuestion(String questionId, Watch watch, boolean isNew, SessionProvider sessionProvider) throws Exception;
+ 	public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception;
 
- 	public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sessionProvider) throws Exception;
+ 	public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss) throws Exception;
  	
- 	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
+ 	public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
  	
- 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception;
+ 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception;
  	
- 	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception;
+ 	public Node getCategoryNodeById(String categoryId) throws Exception;
  	
- 	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception;
+ 	public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
  	
- 	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception;
+ 	public void importData(String categoryId, InputStream inputStream, boolean isImportCategory) throws Exception;
  	
- 	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
+ 	public boolean categoryAlreadyExist(String categoryId) throws Exception ;
  	
- 	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sessionProvider) throws Exception;
+ 	public void swapCategories(String parentCateId, String cateId1, String cateId2) throws Exception;
  	
- 	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
+ 	public Node getQuestionNodeById(String questionId) throws Exception;
  	
- 	public long getMaxindexCategory(String parentId, SessionProvider sProvider) throws Exception;
+ 	public long getMaxindexCategory(String parentId) throws Exception;
  	
- 	public void deleteAnswer(String questionId, String answerId, SessionProvider sProvider) throws Exception;
+ 	public void deleteAnswer(String questionId, String answerId) throws Exception;
  	
- 	public void deleteComment(String questionId, String commentId, SessionProvider sProvider) throws Exception;
+ 	public void deleteComment(String questionId, String commentId) throws Exception;
  	
- 	public void saveAnswer(String questionId, Answer answer, boolean isNew, SessionProvider sProvider) throws Exception;
+ 	public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception;
 	
-	public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception;
+	public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception;
 	
-	public Comment getCommentById(SessionProvider sProvider, String questionId, String commentId) throws Exception;
+	public Comment getCommentById(String questionId, String commentId) throws Exception;
 	
-	public Answer getAnswerById(String questionId, String answerid, SessionProvider sProvider) throws Exception;
+	public Answer getAnswerById(String questionId, String answerid) throws Exception;
 	
-	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception;
+	public void saveAnswer(String questionId, Answer[] answers) throws Exception;
 	
-	public JCRPageList getPageListComment(SessionProvider sProvider, String questionId) throws Exception;
+	public JCRPageList getPageListComment(String questionId) throws Exception;
 
-	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception;
+	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception;
 	
-	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception ;
+	public QuestionPageList getListCategoriesWatch(String userId) throws Exception ;
 	
-	public FileAttachment getUserAvatar(String userName, SessionProvider sessionProvider) throws Exception;
+	public FileAttachment getUserAvatar(String userName) throws Exception;
 	
-	public void saveUserAvatar(String userId, FileAttachment fileAttachment, SessionProvider sessionProvider) throws Exception;
+	public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception;
 	
-	public boolean getWatchByUser(String userId, String cateId, SessionProvider sessionProvider) throws Exception;
+	public boolean getWatchByUser(String userId, String cateId) throws Exception;
 	
-	public void setDefaultAvatar(String userName, SessionProvider sessionProvider)throws Exception;
+	public void setDefaultAvatar(String userName)throws Exception;
 	
-	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception ; 
+	public NodeIterator getQuestionsIterator() throws Exception ; 
 	
-	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception;
+	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception;
 }
