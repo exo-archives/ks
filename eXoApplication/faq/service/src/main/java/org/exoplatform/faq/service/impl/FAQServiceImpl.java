@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
@@ -1079,7 +1080,9 @@ public class FAQServiceImpl implements FAQService, Startable{
 	}
 
 	
-	
+	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
+		return jcrData_.exportData(categoryId, createZipFile);
+	}
 
 	
 }

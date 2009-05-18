@@ -87,7 +87,7 @@ public class FAQUtils {
 	 * @param sessionProvider	SessionProvider
 	 * @throws Exception
 	 */
-	public static void findCateExist(FAQService faqService_, UIFAQContainer fAQContainer, SessionProvider sessionProvider) throws Exception{
+	public static void findCateExist(FAQService faqService_, UIFAQContainer fAQContainer) throws Exception{
 		UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class) ;
 		String pathCate = "" ;
 		for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")){
@@ -96,7 +96,7 @@ public class FAQUtils {
 				continue ;
 			}
 			try {
-				faqService_.getCategoryById(path, sessionProvider);
+				faqService_.getCategoryById(path);
 				if(pathCate.trim().length() > 0) pathCate += "/" ;
 				pathCate += path ;
 			} catch (Exception pathExc) {

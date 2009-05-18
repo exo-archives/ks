@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
@@ -689,4 +690,6 @@ public interface FAQService extends FAQServiceLegacy{
 	public NodeIterator getQuestionsIterator() throws Exception ; 
 	
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception;
+	
+	public InputStream exportData(String categoryId, boolean createZipFile)  throws Exception;
 }

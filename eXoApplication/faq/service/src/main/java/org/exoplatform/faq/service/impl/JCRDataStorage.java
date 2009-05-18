@@ -17,7 +17,14 @@
 
 package org.exoplatform.faq.service.impl;
 
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -28,6 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -2724,5 +2733,72 @@ public class JCRDataStorage {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally { sProvider.close() ;}
+	}
+	
+	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
+		Node categoryNode = getCategoryNodeById(categoryId);
+		Session session = categoryNode.getSession();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
+    File file = null;
+    List<File> listFiles = new ArrayList<File>();
+    Writer writer = null;
+    if(categoryId != null){
+	    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
+	    file = new File(categoryNode.getName() + ".xml");
+	    file.deleteOnExit();
+    	file.createNewFile();
+	    writer = new BufferedWriter(new FileWriter(file));
+	    writer.write(bos.toString());
+    	writer.close();
+    	listFiles.add(file);
+    } else {
+    	NodeIterator nodeIterator = categoryNode.getNodes();
+    	Node node = null;
+    	while(nodeIterator.hasNext()){
+    		node = nodeIterator.nextNode();
+    		if(!node.isNodeType(Utils.EXO_FAQQUESTIONHOME) && !node.isNodeType("exo:faqCategory")) continue;
+    		bos = new ByteArrayOutputStream();
+    		session.exportSystemView(node.getPath(), bos, false, false ) ;
+		    file = new File(node.getName() + ".xml");
+		    file.deleteOnExit();
+	    	file.createNewFile();
+		    writer = new BufferedWriter(new FileWriter(file));
+		    writer.write(bos.toString());
+	    	writer.close();
+	    	listFiles.add(file);
+    	}
+    }
+    // get all questions to export
+    int i = 1;
+    for(String path : getListPathQuestionByCategory(categoryId)){
+    	file =  new File("Question" + i + "_" + categoryNode.getName() + ".xml");
+    	file.deleteOnExit();
+    	file.createNewFile();
+    	writer = new BufferedWriter(new FileWriter(file));
+    	bos = new ByteArrayOutputStream();
+    	session.exportSystemView(path, bos, false, false);
+    	writer.write(bos.toString());
+    	writer.close();
+    	listFiles.add(file);
+    	i ++;
+    }
+    // tao file zip:
+    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+    int byteReads;
+    byte[] buffer = new byte[4096]; // Create a buffer for copying
+    FileInputStream inputStream = null;
+    ZipEntry zipEntry = null;
+    for(File f : listFiles){
+    	inputStream = new FileInputStream(f);
+    	zipEntry = new ZipEntry(f.getPath());
+    	zipOutputStream.putNextEntry(zipEntry);
+    	while((byteReads = inputStream.read(buffer)) != -1)
+    		zipOutputStream.write(buffer, 0, byteReads);
+    	inputStream.close();
+    }
+    zipOutputStream.close();
+    file = new File("exportCategory.zip");
+    InputStream fileInputStream = new FileInputStream(file);
+    return fileInputStream;
 	}
 }
