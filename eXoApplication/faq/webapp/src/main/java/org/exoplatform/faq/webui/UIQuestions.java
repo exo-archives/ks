@@ -678,16 +678,16 @@ public class UIQuestions extends UIContainer {
 		List<Category> listResult = new ArrayList<Category>() ;
 		Stack<Category> stackCate = new Stack<Category>() ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-		Category cate = faqService_.getCategoryById(categoryId, sessionProvider) ;
+		Category cate = faqService_.getCategoryById(categoryId) ;
 		if(categoryId == null || categoryId.equals("null")) cate.setId(null);
 		listResult.add(cate) ;
-		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false)) {
+		for(Category category : faqService_.getSubCategories(categoryId, this.faqSetting_, false)) {
 			stackCate.push(category) ;
 		}
 		while(!stackCate.isEmpty()) {
 			cate = stackCate.pop() ;
 			listResult.add(cate) ;
-			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false)) {
+			for(Category category : faqService_.getSubCategories(cate.getId(), this.faqSetting_, false)) {
 				stackCate.push(category) ;
 			}
 		}

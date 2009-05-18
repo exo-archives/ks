@@ -58,50 +58,15 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	public void setCategoryId(String categoryId){
 		this.categoryId_ = categoryId;
 	}
-	
-	private boolean impotFromZipFile(ZipInputStream zipStream, Session session, FAQService service, SessionProvider sProvider) throws Exception {
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
-		byte[] data  = new byte[5120];   
-		ZipEntry entry = zipStream.getNextEntry();
-		ByteArrayInputStream inputStream = null;
-		while(entry != null) {
-			out= new ByteArrayOutputStream();
-			int available = -1;
-			while ((available = zipStream.read(data, 0, 1024)) > -1) {
-				out.write(data, 0, available); 
-			}                         
-			zipStream.closeEntry();
-			out.close();
-			
-	    if(entry.getName().indexOf("Category") >= 0){
-	    	inputStream = new ByteArrayInputStream(out.toByteArray());
-	    	DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-	    	DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-	    	Document doc = docBuilder.parse(inputStream);
-	    	NodeList list = doc.getChildNodes() ;
-	    	String categoryId = list.item(0).getAttributes().getNamedItem("sv:name").getTextContent() ;
-	    	if(service.categoryAlreadyExist(categoryId, sProvider)) return false;
-	    }
-			
-			inputStream = new ByteArrayInputStream(out.toByteArray());
-			if(entry.getName().indexOf("Question") < 0)	service.importData(this.categoryId_, session, inputStream, true, sProvider);
-			else service.importData(null, session, inputStream, false, sProvider);
-			entry = zipStream.getNextEntry();
-		}
-		zipStream.close();
-		sProvider.close();
-		return true;
-	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			UIFAQPortlet portlet = importForm.getAncestorOfType(UIFAQPortlet.class) ;
 			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			try{
-				service.getCategoryNodeById(importForm.categoryId_, sProvider);
+				service.getCategoryById(importForm.categoryId_);
 
 				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
 				
@@ -120,10 +85,8 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					return;
 				}
 				
-				Session session = null;
 				try{
-					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
-					if(!importForm.impotFromZipFile(zipInputStream, session, service, sProvider)){
+					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream())){
 						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 					} else {
@@ -136,7 +99,6 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch (ConstraintViolationException con) {
 					con.printStackTrace();
-					//Object[] args = { categoryNode.getProperty("exo:name").getString() };
 					Object[] args = { null };
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
@@ -150,7 +112,6 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				}
 				
-				//remove temp file in upload service and server
 				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
 				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			} catch (Exception e){
@@ -158,13 +119,12 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-				sProvider.close();
 			}			
 			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIFAQContainer faqContainer = portlet.getChild(UIFAQContainer.class);
 			faqContainer.getChild(UIQuestions.class).setIsNotChangeLanguage() ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

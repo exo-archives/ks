@@ -872,11 +872,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
-		importData(categoryId, inputStream, isImportCategory);
+		importData(categoryId, inputStream);
 	}
 	
-	public void importData(String categoryId, InputStream inputStream, boolean isImportCategory) throws Exception{
-		jcrData_.importData(categoryId, inputStream, isImportCategory);
+	public boolean importData(String categoryId, InputStream inputStream) throws Exception{
+		return jcrData_.importData(categoryId, inputStream);
 	}
 	
 	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
