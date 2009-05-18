@@ -1033,118 +1033,118 @@ public class JCRDataStorage {
   	}
   	return null;
   }
-	
+
 	public List<Question> searchQuestionByLangageOfText( List<Question> listQuestion, String languageSearch, String text) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> listResult = new ArrayList<Question>();
-		try {
-			Node questionHome = getQuestionHome(sProvider, null);
-			Node questionNode = null;
-			Node languageNode = null;
-			String languages = Utils.LANGUAGE_HOME;
-			text = text.toLowerCase();
-			String authorContent = new String();
-			String emailContent = new String();
-			String questionDetail = new String();
-			String questionContent = new String();
-			String responseContent[] = null;
-			for (Question question : listQuestion) {
-				try {
-					questionNode = questionHome.getNode(question.getId());
-					if (questionNode.hasNode(languages)) {
-						//languageNode = questionNode.getNode(languages);
-						languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
-						if (languageNode != null) {
-							boolean isAdd = false;
-							if (questionNode.hasProperty("exo:author"))
-								authorContent = questionNode.getProperty("exo:author").getValue().getString();
-							if (questionNode.hasProperty("exo:email"))
-								emailContent = questionNode.getProperty("exo:email").getValue().getString();
-							if (languageNode.hasProperty("exo:name"))
-								questionDetail = languageNode.getProperty("exo:name").getValue().getString();
-							if (languageNode.hasProperty("exo:responses"))
-								responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
-							if (languageNode.hasProperty("exo:title")) 
-								questionContent = languageNode.getProperty("exo:title").getString();
-							if ((questionDetail != null && questionDetail.toLowerCase().indexOf(text) >= 0)
-							    || (responseContent!= null && ArrayContentValue(responseContent, text))
-							    || (authorContent.toLowerCase().indexOf(text) >= 0)
-							    || (emailContent.toLowerCase().indexOf(text) >= 0)) {
-								isAdd = true;
-							}
-							if (isAdd) {
-								question.setQuestion(questionContent);
-								question.setAuthor(authorContent);
-								question.setEmail(emailContent);
-								question.setLanguage(languageSearch);
-								question.setDetail(questionDetail);
-								question.setAnswers(getAnswers(questionNode));
-								listResult.add(question);
-							}
-						}
+		Node questionHome = getCategoryHome(sProvider, null);
+		Node questionNode = null;
+		Node languageNode = null;
+		String languages = Utils.LANGUAGE_HOME;
+		text = text.toLowerCase();
+		String authorContent = new String();
+		String emailContent = new String();
+		String questionDetail = new String();
+		String questionContent = new String();
+		String responseContent[] = null;
+		for (Question question : listQuestion) {
+			questionNode = questionHome.getNode(question.getId());
+			if (questionNode.hasNode(languages)) {
+				//languageNode = questionNode.getNode(languages);
+				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+				if (languageNode != null) {
+					boolean isAdd = false;
+					if (questionNode.hasProperty("exo:author"))
+						authorContent = questionNode.getProperty("exo:author").getValue().getString();
+					if (questionNode.hasProperty("exo:email"))
+						emailContent = questionNode.getProperty("exo:email").getValue().getString();
+					if (languageNode.hasProperty("exo:name"))
+						questionDetail = languageNode.getProperty("exo:name").getValue().getString();
+					if (languageNode.hasProperty("exo:responses"))
+						responseContent = ValuesToStrings(languageNode.getProperty("exo:responses").getValues());
+					if (languageNode.hasProperty("exo:title")) 
+						questionContent = languageNode.getProperty("exo:title").getString();
+					 
+					if ((questionDetail != null && questionDetail.toLowerCase().indexOf(text) >= 0)
+					    || (responseContent!= null && ArrayContentValue(responseContent, text))
+					    || (authorContent.toLowerCase().indexOf(text) >= 0)
+					    || (emailContent.toLowerCase().indexOf(text) >= 0)
+					    || (questionContent != null && questionContent.trim().length() > 0 && 
+					    			questionContent.toLowerCase().indexOf(text)>=0)) {
+						isAdd = true;
 					}
-				}catch(Exception e) {}
+					if (isAdd) {
+						question.setQuestion(questionContent);
+						question.setAuthor(authorContent);
+						question.setEmail(emailContent);
+						question.setLanguage(languageSearch);
+						question.setDetail(questionDetail);
+						question.setAnswers(getAnswers(questionNode));
+						listResult.add(question);
+					}
+				}
 			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}finally { sProvider.close() ;}		
+		}
 		return listResult;
 	}
 
 	public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> listResult = new ArrayList<Question>();
-		try {
-			Node questionHome = getQuestionHome(sProvider, null);
-			Node questionNode = null;
-			Node languageNode = null;
-			String languages = Utils.LANGUAGE_HOME;
-			String questionDetail = new String();
-			String questionContent = new String();
-			Answer[] answers = null;
-			String[] responseContent = null;
-			for (Question question : listQuestion) {
-				questionNode = questionHome.getNode(question.getId());
-				if (questionNode.hasNode(languages)) {
-					languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
-					if (languageNode != null) {
-						boolean isAdd = false;
-						if (languageNode.hasProperty("exo:name")) questionDetail = languageNode.getProperty("exo:name").getString();
-						if (languageNode.hasProperty("exo:title")) questionContent = languageNode.getProperty("exo:title").getString();
-						answers = getAnswers(languageNode);
-						responseContent = new String[answers.length];
-						for (int i = 0; i < answers.length; i++) {
-							responseContent[i] = answers[i].getResponses();
-						}
-						if ((questionSearch == null || questionSearch.trim().length() < 1)
-						    && (responseSearch == null || responseSearch.trim().length() < 1)) {
-							isAdd = true;
-						} else {
-							if ((questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
-							    && (responseSearch == null || responseSearch.trim().length() < 1)) {
-								isAdd = true;
-							} else if (answers != null
-							    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))
-							    && (questionSearch == null || questionSearch.trim().length() < 1)) {
-								isAdd = true;
-							} else if (answers != null && (questionSearch != null && questionSearch.trim().length() > 0 && questionDetail.toLowerCase().indexOf(questionSearch.toLowerCase()) >= 0)
-							    && (responseSearch != null && responseSearch.trim().length() > 0 && ArrayContentValue(responseContent, responseSearch))) {
-								isAdd = true;
+		Node questionHome = getCategoryHome(sProvider, null);
+		Node questionNode = null;
+		Node languageNode = null;
+		String languages = Utils.LANGUAGE_HOME;
+		String questionDetail = new String();
+		String questionContent = new String();
+		Answer[] answers = null;
+		String[] responseContent = null;
+		for (Question question : listQuestion) {
+			questionNode = questionHome.getNode(question.getId());
+			if (questionNode.hasNode(languages)) {
+				languageNode = getLanguageNodeByLanguage(questionNode, languageSearch);
+				if (languageNode != null) {
+					boolean isAdd = false;
+					if (languageNode.hasProperty("exo:name")) questionDetail = languageNode.getProperty("exo:name").getString();
+					if (languageNode.hasProperty("exo:title")) questionContent = languageNode.getProperty("exo:title").getString();
+					answers = getAnswers(languageNode);
+					responseContent = new String[answers.length];
+					for (int i = 0; i < answers.length; i++) {
+						responseContent[i] = answers[i].getResponses();
+					}
+					if ((questionSearch == null || questionSearch.trim().length() < 1)
+					    && (responseSearch == null || responseSearch.trim().length() < 1)) {
+						isAdd = true;
+					} else {
+						if(questionSearch != null && questionSearch.trim().length() > 0){
+							questionSearch = questionSearch.toLowerCase();
+							if(responseSearch == null || responseSearch.trim().length() < 1){
+								if(questionDetail.toLowerCase().indexOf(questionSearch) >= 0 ||
+										questionContent.toLowerCase().indexOf(questionSearch) >= 0) isAdd = true;
+							}else{
+								responseSearch = responseSearch.toLowerCase();
+								if((questionDetail.toLowerCase().indexOf(questionSearch) >= 0 || questionContent.toLowerCase().indexOf(questionSearch) >= 0)
+										&&responseContent != null && ArrayContentValue(responseContent, responseSearch)){
+									isAdd = true;
+								}
+							}
+						}else{
+							if(responseSearch != null && responseSearch.trim().length() > 0){
+								responseSearch = responseSearch.toLowerCase();
+								if(responseContent != null && ArrayContentValue(responseContent, responseSearch)) isAdd = true;
 							}
 						}
-						if (isAdd) {
-							question.setLanguage(languageSearch);
-							question.setQuestion(questionContent);
-							question.setDetail(questionDetail);
-							question.setAnswers(answers);
-							listResult.add(question);
-						}
+					}
+					if (isAdd) {
+						question.setLanguage(languageSearch);
+						question.setQuestion(questionContent);
+						question.setDetail(questionDetail);
+						question.setAnswers(answers);
+						listResult.add(question);
 					}
 				}
 			}
-		}catch (Exception e) {
-			e.printStackTrace() ;
-		}finally { sProvider.close() ;}		
+		}
 		return listResult;
 	}
 
@@ -2484,24 +2484,20 @@ public class JCRDataStorage {
 			buffer.append(")]");
 			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + buffer.toString();
 		}
-		System.out.println("\n\n\n\n--------------->queryString:\n" + queryString);
-		if(eventQuery.getText() != null || eventQuery.getAuthor() != null || eventQuery.getEmail() != null || eventQuery.getQuestion() != null){
-			try {
-				Query query = qm.createQuery(queryString, Query.XPATH) ;
-				QueryResult result = query.execute() ;
-				NodeIterator iter = result.getNodes() ;
-				while (iter.hasNext()) {
-					if(type.equals("faqQuestion")) {
-						Node nodeObj = (Node) iter.nextNode();
-						if(questionMap.isEmpty() || !questionMap.containsKey(nodeObj.getName())){
-							question = getQuestion(nodeObj) ;
-							questionMap.put(nodeObj.getName(), question) ;
-						}
-					}
+		try {
+			Query query = qm.createQuery(queryString, Query.XPATH) ;
+			QueryResult result = query.execute() ;
+			NodeIterator iter = result.getNodes() ;
+			Node nodeObj = null;
+			while (iter.hasNext()) {
+				nodeObj = (Node) iter.nextNode();
+				if(questionMap.isEmpty() || !questionMap.containsKey(nodeObj.getName())){
+					question = getQuestion(nodeObj) ;
+					questionMap.put(nodeObj.getName(), question) ;
 				}
-			} catch (Exception e) {
-				e.printStackTrace() ;
 			}
+		} catch (Exception e) {
+			e.printStackTrace() ;
 		}
 		
 		// search with response 
