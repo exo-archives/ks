@@ -272,6 +272,24 @@ public class UISearchForm extends UIForm implements UISelector {
 			Calendar toDateCreated= uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATED), TODATECREATED);
 			Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
 			Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
+			try {
+				if(fromDateCreated.getTimeInMillis() > toDateCreated.getTimeInMillis()){
+					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+					String str = type;
+					if(str.equals(Utils.CATEGORY)) str = "category";
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{str}, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+      } catch (Exception e) {
+      }
+      try {
+      	if(type.equals(Utils.TOPIC) && (fromDateCreatedLastPost.getTimeInMillis() > toDateCreatedLastPost.getTimeInMillis())){
+      		UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+      		uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{"last post"}, ApplicationMessage.WARNING)) ;
+      		return ;
+      	}
+      } catch (Exception e) {
+      }
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
 			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
 			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
