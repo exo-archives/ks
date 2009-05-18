@@ -766,7 +766,7 @@ public class UIQuestions extends UIContainer {
 						return ;
 					}
 				} catch (Exception e) {
-					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class));
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					question.setIsNotChangeLanguage();
@@ -803,7 +803,7 @@ public class UIQuestions extends UIContainer {
 					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
 					try {
 						questions.setQuestions() ;
-						FAQUtils.findCateExist(faqService_, fAQContainer, sessionProvider);
+						FAQUtils.findCateExist(faqService_, fAQContainer);
 					} catch (Exception pathEx){}
 					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 					sessionProvider.close();
@@ -1039,7 +1039,7 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
@@ -1097,7 +1097,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1270,7 +1270,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				}
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1298,7 +1298,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(question.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1347,7 +1347,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1412,7 +1412,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1475,7 +1475,7 @@ public class UIQuestions extends UIContainer {
 			try{
 				faqService_.getCategoryById(questions.categoryId_, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
-				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -1506,7 +1506,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1550,7 +1550,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				};
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1613,7 +1613,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1650,7 +1650,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1706,7 +1706,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1764,7 +1764,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(questions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1802,7 +1802,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1914,7 +1914,7 @@ public class UIQuestions extends UIContainer {
 				try{
 					faqService_.getCategoryById(uiQuestions.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				}
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -2132,7 +2132,7 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}

@@ -122,7 +122,7 @@ public class UIBreadcumbs extends UIContainer {
 				categories.setPathCategory(paths);
 				uiQuestions.setCategories(categoryId) ;
 			} catch(Exception e){
-				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class), sProvider);
+				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

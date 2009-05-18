@@ -464,7 +464,7 @@ public class UICategories extends UIContainer{
 						return ;
 					}
 				} catch (Exception e) {
-					FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class));
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
@@ -507,7 +507,7 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
@@ -551,7 +551,7 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
@@ -589,7 +589,7 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(uiCategories.faqService_, uiPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
+				FAQUtils.findCateExist(uiCategories.faqService_, uiPortlet.findFirstComponentOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
@@ -618,7 +618,7 @@ public class UICategories extends UIContainer{
 						questions.setQuestions() ;
 					} catch (Exception pathEx){}
 					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
-					FAQUtils.findCateExist(uiCategories.faqService_, fAQContainer, sessionProvider);
+					FAQUtils.findCateExist(uiCategories.faqService_, fAQContainer);
 					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 					sessionProvider.close();
 					return ;
@@ -742,7 +742,7 @@ public class UICategories extends UIContainer{
 				if(watch != null)uiCategories.faqService_.addWatch(objectId, watch, sessionProvider);
 				uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
 			} catch (Exception e) {
-				FAQUtils.findCateExist(uiCategories.faqService_, container, sessionProvider);
+				FAQUtils.findCateExist(uiCategories.faqService_, container);
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -776,7 +776,7 @@ public class UICategories extends UIContainer{
 						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 					}
 				} catch (Exception e) {
-					FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class), sessionProvider);
+					FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class));
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;

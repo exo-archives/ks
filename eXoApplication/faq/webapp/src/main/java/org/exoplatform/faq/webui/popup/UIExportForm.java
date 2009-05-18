@@ -1,21 +1,6 @@
 package org.exoplatform.faq.webui.popup;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.Session;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -25,7 +10,6 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.ValidatorDataInput;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

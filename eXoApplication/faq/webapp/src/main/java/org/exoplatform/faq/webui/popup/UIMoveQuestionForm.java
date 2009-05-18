@@ -232,7 +232,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					try{
 						faqService_.getCategoryById(moveQuestionForm.categoryId_, sessionProvider);
 					}catch(Exception exc){
-						FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class), sessionProvider);
+						FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
 					}
 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
