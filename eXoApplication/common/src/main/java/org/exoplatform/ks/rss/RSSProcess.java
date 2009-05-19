@@ -191,7 +191,7 @@ public class RSSProcess extends RSSGenerate {
 					getRSSData(RSSNode, data);
 					feed = updateRSSFeed(data, postNode.getName(), entry);
 				} catch (PathNotFoundException e){
-					RSSNode = node.addNode(KS_RSS, KS_RSS_TYPE);
+					RSSNode = node.addNode(KS_RSS, FORUM_RSS_TYPE);
 					isNew = true;
 					feed = this.createNewFedd(node.getProperty("exo:name").getString(), node.getProperty("exo:createdDate").getDate().getTime());
 					feed.setLink(linkItem + node.getName());
@@ -282,7 +282,7 @@ public class RSSProcess extends RSSGenerate {
 					if(typeEvent != Event.NODE_ADDED)feed = updateRSSFeed(data, questionNode.getName(), entry);
 					else feed = updateRSSFeed(data, null, entry);
 				} catch (PathNotFoundException e){
-					RSSNode = categoryNode.addNode(KS_RSS, KS_RSS_TYPE);
+					RSSNode = categoryNode.addNode(KS_RSS, FAQ_RSS_TYPE);
 					isNew = true;
 					if(categoryNode.hasProperty("exo:createdDate"))
 						feed = this.createNewFedd("", categoryNode.getProperty("exo:createdDate").getDate().getTime());
@@ -366,12 +366,14 @@ public class RSSProcess extends RSSGenerate {
 	
 	public InputStream getRSSNode(SessionProvider sProvider, String objectId, String appType) throws Exception{
 		Node parentNode = null;
+		String rssType = "";
 		try{
 			if(appType.equals(KS_FAQ)){
 				parentNode = getCategoryNodeById(objectId, sProvider);
 				if(parentNode.hasProperty("exo:isView") && !parentNode.getProperty("exo:isView").getBoolean()){
 					return null;
 				}
+				rssType = FAQ_RSS_TYPE;
 			}else{
 				parentNode = getKSServiceHome(sProvider, FORUM_APP);
 				QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
@@ -380,6 +382,7 @@ public class RSSProcess extends RSSGenerate {
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				parentNode = result.getNodes().nextNode() ;
+				rssType = FORUM_RSS_TYPE;
 			}
 		} catch (Exception e){
 			return null;
@@ -390,7 +393,7 @@ public class RSSProcess extends RSSGenerate {
 			String feedType = "rss_2.0";
 			SyndFeed feed = new SyndFeedImpl();
 			List<SyndEntry> entries = new ArrayList<SyndEntry>();
-			RSSNode = parentNode.addNode(KS_RSS, KS_RSS_TYPE);
+			RSSNode = parentNode.addNode(KS_RSS, rssType);
 			try{
 				feed.setTitle(parentNode.getProperty("exo:name").getString());
 				if(parentNode.hasProperty("categoryNode"))feed.setDescription(parentNode.getProperty("exo:description").getString());

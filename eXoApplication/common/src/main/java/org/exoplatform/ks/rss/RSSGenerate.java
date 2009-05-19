@@ -59,7 +59,8 @@ public abstract class RSSGenerate {
 	public RSS data;
 	public int maxSize = 20;
 	
-	public final String KS_RSS_TYPE = "exo:KSRSS".intern();
+	public final String FAQ_RSS_TYPE = "exo:faqRSS".intern();
+	public final String FORUM_RSS_TYPE = "exo:forumRSS".intern();
 	public final String KS_FAQ = "faq".intern();
 	public final String KS_FORUM = "forum".intern();
 	public final String FAQ_APP = "faqApp".intern();

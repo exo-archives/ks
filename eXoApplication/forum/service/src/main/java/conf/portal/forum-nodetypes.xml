@@ -2,7 +2,7 @@
 	xmlns:jcr="http://www.jcp.org/jcr/1.0">
 	
 	
-	<nodeType name="exo:KSRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	<nodeType name="exo:forumRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 	 		<supertype>nt:base</supertype>
 	 	</supertypes>
@@ -250,7 +250,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		
-			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
@@ -347,7 +347,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			
-			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
@@ -402,7 +402,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			
-			<childNodeDefinition name="*" defaultPrimaryType="exo:KSRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumRSS" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 					<requiredPrimaryType>nt:base</requiredPrimaryType>
 				</requiredPrimaryTypes>
