@@ -109,6 +109,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).setChecked(portletPreference.isShowIconsLegend());
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).setChecked(portletPreference.isShowRules());
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).setChecked(portletPreference.isShowStatistics());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
   }
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
@@ -234,6 +235,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			editModeForm.portletPreference.setShowIconsLegend((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).getValue());
 			editModeForm.portletPreference.setShowRules((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).getValue());
 			editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowModerators((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).getValue());
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
 			try {
 				editModeForm.isSave = true;
@@ -242,13 +244,11 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 				editModeForm.portletPreference.setInvisibleCategories(listCategoryinv);
 				editModeForm.portletPreference.setInvisibleForums(listforuminv);
 				ForumUtils.savePortletPreference(editModeForm.portletPreference);
-				//ForumUtils.savePortletPreference(listCategoryId, listForumId);
 				((UIForumPortlet)editModeForm.getParent()).loadPreferences();
 				Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       } catch (Exception e) {
-	      e.printStackTrace();
 	      Object[] args = { "" };
 	      uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-fail", args, ApplicationMessage.INFO)) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
