@@ -110,11 +110,13 @@ public class UIForumPortlet extends UIPortletApplication {
 	    			removeChild(UISettingEditModeForm.class);
 		    	addChild(UIBreadcumbs.class, null, null) ;
 		  		addChild(UIForumActionBar.class, null, null).setRendered(!ForumSessionUtils.isAnonim());
-		  		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
+		  		UICategoryContainer categoryContainer = addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		  		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		  		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
 		  		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		  		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
+		  		updateIsRendered(ForumUtils.CATEGORIES);
+		  		categoryContainer.updateIsRender(true) ;
 	    	}
 	    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
 	    	if(getChild(UISettingEditModeForm.class) == null) {

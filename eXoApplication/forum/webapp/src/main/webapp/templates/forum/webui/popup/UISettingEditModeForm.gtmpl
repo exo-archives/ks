@@ -111,6 +111,7 @@
 										</div>
 									</div>
 									<% } else { %>
+									<div class="TitleMoveThreads"><%=_ctx.appRes("UISettingEditModeForm.label.SelectPanelEnable");%>:</div>
 									<div class="ShowHiddenConten UITree" style="background:#FFFFFF;height:250px;">
 										<% uiform.renderChild(uiform.FIELD_SHOW_HIDDEN_TAB) ;   %>
 									</div>
