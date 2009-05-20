@@ -79,16 +79,13 @@
 														%>
 																 	 
 																	<div class="ItemIcon $classIconItem">
-																	<a class="MenuItem" href="$link" style="display:block">
-																		<%=nameItem%>
-																		</a>
+																		<a class="MenuItem" href="$link" style="display:block"><%=nameItem%></a>
 																	</div>
 																 
 														<%	} else {%>
 																	
 																		<div class="ItemIcon $classIconItem">
-																			<a class="MenuItem" style="display:block" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteMore")%>', '<%=_ctx.appRes("UITopicContainer.confirm.SetDeleteForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}">	 
-																			<%=nameItem%></a>
+																			<a class="MenuItem" style="display:block" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsCheckedForum('UICategory', 'UIFORUMCheckAllForum', '<%=_ctx.appRes("UICategory.confirm.DeleteMoreForum")%>', '<%=_ctx.appRes("UITopicContainer.confirm.RemoveForum")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckForum")%>')){$link;}"><%=nameItem%></a>
 																		</div>
 															 	
 															<%}

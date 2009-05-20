@@ -70,7 +70,7 @@ UIForumPortlet.prototype.selectItem = function(obj) {
 	}
 } ;
 
-UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
+UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName, multiAns, onlyAns, notChecked) {
 	var total = 0;
 	var form = document.forms[formName];
 	if(form) {
@@ -85,7 +85,8 @@ UIForumPortlet.prototype.numberIsCheckedForum = function(formName, checkAllName,
 		total = total - 1;
 	}
 	if(total > 1){
-		return confirm(multiAns1 + " " + total + " " + multiAns2);
+		var text = String(multiAns);
+		return confirm(text.replace('{0}', total));
 	} else if(total == 1) {
 		return confirm(onlyAns);
 	} else {
@@ -120,12 +121,13 @@ UIForumPortlet.prototype.OneChecked = function(formName) {
 	return false;
 } ;
 
-UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns1, multiAns2, onlyAns, notChecked) {
+UIForumPortlet.prototype.numberIsChecked = function(formName, checkAllName, multiAns, onlyAns, notChecked) {
 	var divChecked = document.getElementById('divChecked'); 
 	var total = 0;
 	total = eval(divChecked.getAttribute("checked"));
 	if(total > 1){
-		return confirm(multiAns1 + " " + total + " " + multiAns2);
+		var text = String(multiAns);
+		return confirm(text.replace('{0}', total));
 	} else if(total == 1) {
 		return confirm(onlyAns);
 	} else {
