@@ -73,6 +73,13 @@ public class UIForumPortlet extends UIPortletApplication {
 	private boolean isTagRendered = false;
 	private boolean isSearchRendered = false;
 	private boolean isJumpRendered = false;
+	private boolean isShowForumJump = false;
+	private boolean isShowPoll = false;
+	private boolean isShowModerators = false;
+	private boolean isShowRules = false;
+	private boolean isShowIconsLegend = false;
+	private boolean isShowStatistics = false;
+	private boolean isShowQuickReply = false;
 	private UserProfile userProfile = null;
 	private boolean enableIPLogging = false;
 	private boolean isShowForumActionBar = false;
@@ -155,7 +162,11 @@ public class UIForumPortlet extends UIPortletApplication {
 			}
 		}
 		if(userProfile == null) updateUserProfileInfo();
-		isJumpRendered = this.userProfile.getIsShowForumJump() ;
+		if(isShowForumJump){
+			isJumpRendered = this.userProfile.getIsShowForumJump() ;
+		} else {
+			isJumpRendered = false;
+		}
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
 		if(isCategoryRendered) {
 			categoryContainer.setIsRenderJump(isJumpRendered);
@@ -198,6 +209,13 @@ public class UIForumPortlet extends UIPortletApplication {
 			useAjax = Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
 			enableIPLogging = Boolean.parseBoolean(portletPref.getValue("enableIPLogging", ""));
 			enableBanIP = Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", ""));
+			isShowForumJump = Boolean.parseBoolean(portletPref.getValue("isShowForumJump", ""));
+			isShowPoll = Boolean.parseBoolean(portletPref.getValue("isShowPoll", ""));
+			isShowModerators = Boolean.parseBoolean(portletPref.getValue("isShowModerators", ""));
+			isShowRules = Boolean.parseBoolean(portletPref.getValue("isShowRules", ""));
+			isShowQuickReply = Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", ""));
+			isShowStatistics = Boolean.parseBoolean(portletPref.getValue("isShowStatistics", ""));
+			isShowIconsLegend = Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", ""));
 			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
 			invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ""))) ;
 		} catch (Exception e) {
@@ -233,6 +251,30 @@ public class UIForumPortlet extends UIPortletApplication {
 	public boolean isShowForumActionBar() {
 	  return isShowForumActionBar;
   }
+
+	public boolean isShowPoll() {
+		return isShowPoll;
+	}
+	public boolean isShowModerators() {
+		return isShowModerators;
+	}
+
+	public boolean isShowRules() {
+		return isShowRules;
+	}
+	
+	public boolean isShowIconsLegend() {
+		return isShowIconsLegend;
+	}
+
+	public boolean isShowQuickReply() {
+		return isShowQuickReply;
+	}
+	
+	public boolean isShowStatistics() {
+		return isShowStatistics;
+	}
+
 	public boolean isUseAjax(){
 		return useAjax;
 	}

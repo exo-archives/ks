@@ -23,6 +23,7 @@ package org.exoplatform.forum;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -349,8 +350,61 @@ public class ForumUtils {
 		portletPref.store();
   }
 	
-	public static int getLimitUploadSize(){
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
+	public static SettingPortletPreference getPorletPreference() throws Exception {
+		SettingPortletPreference preference = new SettingPortletPreference();
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		preference.setShowForumActionBar(Boolean.parseBoolean(portletPref.getValue("showForumActionBar", "")));
+		preference.setForumNewPost(Integer.parseInt(portletPref.getValue("forumNewPost", "")));
+		preference.setUseAjax(Boolean.parseBoolean(portletPref.getValue("useAjax", "")));
+		preference.setEnableIPLogging(Boolean.parseBoolean(portletPref.getValue("enableIPLogging", "")));
+		preference.setEnableIPFiltering(Boolean.parseBoolean(portletPref.getValue("enableIPFiltering", "")));
+		preference.setInvisibleCategories(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
+		preference.setInvisibleForums((getListInValus(portletPref.getValue("invisibleForums", "")))) ;
+		// Show porlet
+		preference.setShowForumJump(Boolean.parseBoolean(portletPref.getValue("isShowForumJump", "")));
+		preference.setShowIconsLegend(Boolean.parseBoolean(portletPref.getValue("isShowIconsLegend", "")));
+		preference.setShowModerators(Boolean.parseBoolean(portletPref.getValue("isShowModerators", "")));
+		preference.setShowPoll(Boolean.parseBoolean(portletPref.getValue("isShowPoll", "")));
+		preference.setShowQuickReply(Boolean.parseBoolean(portletPref.getValue("isShowQuickReply", "")));
+		preference.setShowRules(Boolean.parseBoolean(portletPref.getValue("isShowRules", "")));
+		preference.setShowStatistics(Boolean.parseBoolean(portletPref.getValue("isShowStatistics", "")));
+	  return preference;
+  }
+	
+	public static void savePortletPreference(SettingPortletPreference sPreference) throws Exception {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		String listForumId = "", listCategoryId = "";
+		List<String>invisibleForums = sPreference.getInvisibleForums();
+		List<String>invisibleCategories = sPreference.getInvisibleCategories();
+		
+		if(!invisibleCategories.isEmpty()){
+			listForumId = invisibleForums.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+			listCategoryId = invisibleCategories.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+		}
+		
+		portletPref.setValue("isShowForumJump", sPreference.isShowForumJump()+ "");
+		portletPref.setValue("isShowIconsLegend",sPreference.isShowIconsLegend()+ "");
+		portletPref.setValue("isShowModerators", sPreference.isShowModerators() + "");
+		portletPref.setValue("isShowPoll", sPreference.isShowPoll() + "");
+		portletPref.setValue("isShowQuickReply", sPreference.isShowQuickReply() + "");
+		portletPref.setValue("isShowRules", sPreference.isShowRules() + "");
+		portletPref.setValue("isShowStatistics", sPreference.isShowStatistics() + "");
+		portletPref.setValue("invisibleCategories", listCategoryId);
+		portletPref.setValue("invisibleForums", listForumId);
+		portletPref.store();
+  }
+
+	public static List<String> getListInValus(String value) throws Exception {
+		List<String>list = new ArrayList<String>();
+		if(!ForumUtils.isEmpty(value)) {
+			list.addAll(Arrays.asList(ForumUtils.addStringToString(value, value)));
+		}
+		return list;
+	}
+	
+	public static int getLimitUploadSize(){		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
 		int limitMB ;
 		try {

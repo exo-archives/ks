@@ -4,6 +4,13 @@
 	import org.exoplatform.forum.webui.UIForumLinks ;
 %>
 <div class="UICategoriesSummary">	
-	<% uicomponent.renderChild(UICategoryInfo.class)%>
-	<% uicomponent.renderChild(UIForumIconState.class)%>
+	<%
+		uicomponent.setRenderChild();
+		List children = uicomponent.getChildren() ;
+		for(component in children) {
+			if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+			}
+		}
+	%>
 </div>

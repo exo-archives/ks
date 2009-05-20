@@ -39,4 +39,13 @@ public class UITopicDetailContainer extends UIContainer	{
 	public void setRederPoll(boolean isRender) throws Exception {
 	 this.isRender = isRender ;
 	}
+	
+	@SuppressWarnings("unused")
+  private boolean getRenderPoll(boolean isShow) throws Exception {
+		try {
+			if(isShow) return	this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
+    } catch (Exception e) {
+    }
+		return isShow;
+	}
 }

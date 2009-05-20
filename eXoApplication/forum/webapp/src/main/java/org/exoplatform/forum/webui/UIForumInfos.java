@@ -42,22 +42,27 @@ public class UIForumInfos extends UIContainer	{
 	}
 	
 	public void setForum(Forum forum)throws Exception {
-		this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
+		this.userProfile = forumPortlet.getUserProfile() ;
 		List<String> moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
-		boolean isLock = forum.getIsClosed() ;
-		if(!isLock) isLock = forum.getIsLock() ;
-		if(!isLock && userProfile.getUserRole()!=0) {
-			if(!moderators.contains(userProfile.getUserId())) {
-				String []listUser = forum.getCreateTopicRole() ;
-				if(listUser != null && listUser.length > 0)
-					isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+		boolean isShowRule = forumPortlet.isShowRules();
+		postRules.setRendered(isShowRule);
+		if(isShowRule) {
+			boolean isLock = forum.getIsClosed() ;
+			if(!isLock) isLock = forum.getIsLock() ;
+			if(!isLock && userProfile.getUserRole()!=0) {
+				if(!moderators.contains(userProfile.getUserId())) {
+					String []listUser = forum.getCreateTopicRole() ;
+					if(listUser != null && listUser.length > 0)
+						isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+				}
 			}
+			postRules.setLock(isLock) ;
+			postRules.setUserProfile(this.userProfile) ;
 		}
-		postRules.setLock(isLock) ;
-		postRules.setUserProfile(this.userProfile) ;
 		UIForumModerator forumModerator = getChild(UIForumModerator.class);
 		forumModerator.setModeratorsForum(moderators);
-	
+		forumModerator.setRendered(forumPortlet.isShowModerators());
 	}
 }

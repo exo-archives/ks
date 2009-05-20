@@ -170,6 +170,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isCanPost = false;
 	private boolean canCreateTopic;
 	private boolean isGetSv = true;
+	private boolean isShowQuickReply = true;
+	private boolean isShowRule = true;
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
@@ -185,7 +187,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
 	}
 	
-
+	@SuppressWarnings("unused")
+  private boolean isShowQuickReply() {
+		return isShowQuickReply;
+	}
+	
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
@@ -220,6 +226,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topicId ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		isShowQuickReply = forumPortlet.isShowQuickReply();
+		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		forumPortlet.updateAccessTopic(topicId);
 		userProfile = forumPortlet.getUserProfile() ;
@@ -235,6 +243,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		isShowQuickReply = forumPortlet.isShowQuickReply();
+		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;
@@ -257,6 +267,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+		isShowQuickReply = forumPortlet.isShowQuickReply();
+		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
 		this.topic = forumService.getTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, topic.getId(), userName) ;

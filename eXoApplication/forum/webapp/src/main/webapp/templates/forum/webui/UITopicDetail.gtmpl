@@ -1091,7 +1091,7 @@
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear:left;"><span></span></div>
 	</div>
-<% if(isCanReply){ %>
+<% if(isCanReply && uicomponent.isShowQuickReply()){ %>
 	<div class="UIAction"> 
 		<table class="ActionContainer">
 			<tbody>
@@ -1147,5 +1147,9 @@
 	sessionProvider.close();
 	%>
 <%uiform.end()%>
-<% uicomponent.renderChild(UIPostRules.class) %>
+<%
+	if(uicomponent.isShowRule) { 
+		uicomponent.renderChild(UIPostRules.class)
+	} 
+%>
 </div>

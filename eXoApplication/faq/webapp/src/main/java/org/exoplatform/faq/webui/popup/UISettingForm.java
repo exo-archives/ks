@@ -36,7 +36,10 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.portal.config.model.PageNavigation;
+import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -160,8 +163,21 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
     }
     sessionProvider.close();
   }
+	
+	private List<PageNavigation> getTreeNode(){
+		List<PageNavigation> list = new ArrayList<PageNavigation>();
+		list = Util.getUIPortal().getNavigations();
+		List<PageNode> list2 ;
+		for (PageNavigation pageNavigation : list) {
+			list2 = pageNavigation.getNodes();
+			for (PageNode pageNode : list2) {
+	      System.out.println("\n\n Node Name: " + pageNode.getName());
+      }
+    }
+		return list;
+	}
 
-	public void init() throws Exception {
+	public void init() throws Exception {getTreeNode();
 		if(isEditPortlet_){
 			setListCate();
 			

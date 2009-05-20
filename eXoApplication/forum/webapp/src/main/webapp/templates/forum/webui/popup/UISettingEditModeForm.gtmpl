@@ -3,59 +3,129 @@
 	import org.exoplatform.forum.service.Forum;
 	import org.exoplatform.forum.service.Utils ;
 %>
-<div class="UIMovePostForm UIMoveTopicForm">
+<div class="UIMovePostForm UIMoveTopicForm" style="padding:0px;">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads"><%=_ctx.appRes("UIForumPortlet.label.ChooseCategory-Forum");%>:</div>
-	<div class="UITree ScrollArea">
-		<div class="TreeContainer ParentNode">
-		<% 
-			List categories = uicomponent.getCategoryList(); 
-			int t = 0;
-			for(category in categories) {
-				String display = "display:block;" ;
-				String iconClass = "SmallGrayPlus" ;
-				String isShow = "true";
-				String categoryName = category.getCategoryName() ;
-				List forums =	uicomponent.getForumList(category.getId());
-				if(t > 0){
-				  display = "display:none;" ;
-				  iconClass = "SmallGrayMinus" ;
-				}
-				++t;
-				if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
-		%>
-			<div class="Node $iconClass">
-				<div class="ParentCheckBox" onclick='eXo.forum.UIForumPortlet.checkedNode(this);' style="float:left; padding-top:4px;"><%uicomponent.renderChild(category.getId())%></div>
-			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
-			 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
-			 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
-				</div> 			
-				<div style="clear:left;"><span></span></div>
-				<div class="ChildNodeContainer ParentNode" style="$display">
-				<% 
-					for(forum in forums) {
-						String forumName = forum.getForumName() ;
-						iconClass = "SmallGrayMinus" ;
-						display = "display:none;" ;
-							iconClass = "SmallGrayPlus" ;
-						String classForumIcon = "ThreadsIcon";
-						if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
-						if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
-				%>
-					<div class="Node">
-						<div onclick='eXo.forum.UIForumPortlet.checkedChildNode(this);' style="float:left; padding-top:3px;"><%uicomponent.renderChild(forum.getId())%></div>
-						<div class="Icon $classForumIcon"><span></span></div>
-						<div class="NodeLabel"> 
-							<div>$forumName</div>
+	<div class="UIFormTabPane" style="padding:0px;">
+		<div class="UITabPane">
+			<div class="TabPaneContent">				
+				<div class="WorkingArea">
+				
+				 	<div class="UIHorizontalTabs">
+				 		<div class="LeftHorizontalTabs">
+				 			<div class="RightHorizontalTabs">
+				 				<div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+									<%
+										String classCss = "SelectedTab" ; 
+										int i = 0;
+										for(tabconten in uiform.getChildren()){ 
+											if((tabconten.id).indexOf("forum") >= 0) continue;
+											String link = "javascript:void(0);";
+											if(uiform.tabIsSelected(i)) classCss = "SelectedTab" ;
+											else {
+												classCss = "NormalTab" ;
+												link = uicomponent.event("SelectTab",""+i) ;
+											}
+									%> 
+										<div class="UITab NormalTabStyle">
+											<div class="$classCss">
+												<div class="LeftTab">
+													<div class="RightTab">
+														<div class="MiddleTab">
+															<a href="$link"><%=_ctx.appRes("UISettingEditModeForm.label."+tabconten.id);%></a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									<%
+											i++ ;
+										}
+									%>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div style="clear:left;"><span></span></div>
+					</div><!-- UIHorizontalTabs -->
+					
+					<div class="UIForm">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+							<% 
+								String displayTab="block", display="", iconClass="", categoryName="", forumName="", classForumIcon="";
+								int j = 0, t = 0;
+								List categories = uicomponent.getCategoryList(); 
+								for(j = 0; j < 2; ++j){
+									if(uiform.tabIsSelected(j)) displayTab =	"block";
+									else {displayTab = "none";}
+							%>
+								<div style="display:$displayTab" id="UITabContent" class="UITabContent">
+									<% if(j == 0){ %>	
+									<div class="TitleMoveThreads"><%=_ctx.appRes("UISettingEditModeForm.label.ChooseCategory-Forum");%>:</div>
+									<div class="UITree ScrollArea" style="background:#FFFFFF;height:245px;">
+										<div class="TreeContainer ParentNode">
+										<% 
+											for(category in categories) {
+												display = "display:block;" ;
+												iconClass = "SmallGrayPlus" ;
+												String isShow = "true";
+												categoryName = category.getCategoryName() ;
+												List forums =	uicomponent.getForumList(category.getId());
+												if(t > 0){
+												  display = "display:none;" ;
+												  iconClass = "SmallGrayMinus" ;
+												}
+												++t;
+												if(forums.size() < 1) {iconClass = "SmallGrayPlus false"; isShow = "false";}
+										%>
+											<div class="Node $iconClass">
+												<div class="ParentCheckBox" onclick='eXo.forum.UIForumPortlet.checkedNode(this);' style="float:left; padding-top:4px;"><%uicomponent.renderChild(category.getId())%></div>
+											 	<div class="Icon CategoryNormalIcon"><span></span></div>	
+											 	<div class="NodeLabel" onclick='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+											 		<div class="NodeSelected"><a class="Cursor">$categoryName</a></div> 
+												</div> 			
+												<div style="clear:left;"><span></span></div>
+												<div class="ChildNodeContainer ParentNode" style="$display">
+												<% 
+													for(forum in forums) {
+														forumName = forum.getForumName() ;
+														iconClass = "SmallGrayMinus" ;
+														display = "display:none;" ;
+														iconClass = "SmallGrayPlus" ;
+														classForumIcon = "ThreadsIcon";
+														if(forum.getIsLock()) classForumIcon = "MoveForumLockIcon";
+														if(forum.getIsClosed())classForumIcon = "SetCloseIcon"; 
+												%>
+													<div class="Node">
+														<div onclick='eXo.forum.UIForumPortlet.checkedChildNode(this);' style="float:left; padding-top:3px;"><%uicomponent.renderChild(forum.getId())%></div>
+														<div class="Icon $classForumIcon"><span></span></div>
+														<div class="NodeLabel"> 
+															<div>$forumName</div>
+														</div>
+														<div style="clear:left;"><span></span></div>
+													</div>
+												<% } %>
+												</div>
+											</div>
+										<% } %>	
+										</div>
+									</div>
+									<% } else { %>
+									<div class="ShowHiddenConten UITree" style="background:#FFFFFF;height:250px;">
+										<% uiform.renderChild(uiform.FIELD_SHOW_HIDDEN_TAB) ;   %>
+									</div>
+									<% } %>
+								</div>
+								<% }%>
+							</div>
+						</div>
 					</div>
-				<% } %>		
-				</div>
-			</div>
-		<% } %>	
-		</div>
+				
+				</div>				
+			</div>	
+		</div>	
 	</div>
+	
 	<div class="UIAction"> 
 		<table class="ActionContainer">
 			<tr>

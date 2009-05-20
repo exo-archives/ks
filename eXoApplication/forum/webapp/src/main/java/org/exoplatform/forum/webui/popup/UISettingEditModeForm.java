@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.SettingPortletPreference;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -53,27 +54,81 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		lifecycle = UIFormLifecycle.class, 
 		template = "app:/templates/forum/webui/popup/UISettingEditModeForm.gtmpl", 
 		events = { 
-			@EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class) 
+			@EventConfig(listeners = UISettingEditModeForm.SaveActionListener.class),
+			@EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
 		}
 )
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile;
+	public static final String FIELD_SCOPED_TAB = "Scoped" ;
+	public static final String FIELD_SHOW_HIDDEN_TAB = "EnabledPanel" ;
+
+	public static final String FIELD_ISFORUMJUMP_CHECKBOX = "isShowForumJump" ;
+	public static final String FIELD_ISPOLL_CHECKBOX = "IsShowPoll" ;
+	public static final String FIELD_ISMODERATOR_CHECKBOX = "isShowModerator" ;
+	public static final String FIELD_ISQUICKREPLY_CHECKBOX = "isShowQuickReply" ;
+	public static final String FIELD_ISICONSLEGEND_CHECKBOX = "isShowIconsLegend" ;
+	public static final String FIELD_ISRULES_CHECKBOX = "isShowRules" ;
+	public static final String FIELD_ISSTATISTIC_CHECKBOX = "isShowStatistic" ;
 	private boolean isSave = false;
+	private int tabId = 0 ;
 	private static List<String>listCategoryinv = new ArrayList<String>();
 	private static List<String>listforuminv = new ArrayList<String>() ;
+	private SettingPortletPreference portletPreference;
 	public UISettingEditModeForm() {
+		UIForumInputWithActions Scoped = new UIForumInputWithActions(FIELD_SCOPED_TAB);
+		UIForumInputWithActions EnabledPanel = new UIForumInputWithActions(FIELD_SHOW_HIDDEN_TAB);
+		UIFormCheckBoxInput<Boolean> isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_ISFORUMJUMP_CHECKBOX, FIELD_ISFORUMJUMP_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> IsShowPoll = new UIFormCheckBoxInput<Boolean>(FIELD_ISPOLL_CHECKBOX, FIELD_ISPOLL_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isShowModerator = new UIFormCheckBoxInput<Boolean>(FIELD_ISMODERATOR_CHECKBOX, FIELD_ISMODERATOR_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isShowQuickReply = new UIFormCheckBoxInput<Boolean>(FIELD_ISQUICKREPLY_CHECKBOX, FIELD_ISQUICKREPLY_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isShowIconsLegend = new UIFormCheckBoxInput<Boolean>(FIELD_ISICONSLEGEND_CHECKBOX, FIELD_ISICONSLEGEND_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isShowRules = new UIFormCheckBoxInput<Boolean>(FIELD_ISRULES_CHECKBOX, FIELD_ISRULES_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isShowStatistic = new UIFormCheckBoxInput<Boolean>(FIELD_ISSTATISTIC_CHECKBOX, FIELD_ISSTATISTIC_CHECKBOX, true);
+		
+		EnabledPanel.addUIFormInput(isShowForumJump);
+		EnabledPanel.addUIFormInput(IsShowPoll);
+		EnabledPanel.addUIFormInput(isShowModerator);
+		EnabledPanel.addUIFormInput(isShowQuickReply);
+		EnabledPanel.addUIFormInput(isShowIconsLegend);
+		EnabledPanel.addUIFormInput(isShowRules);
+		EnabledPanel.addUIFormInput(isShowStatistic);
+		
+		addUIFormInput(Scoped);
+		addUIFormInput(EnabledPanel);
+		
+		setActions(new String[]{"Save"});
 	}
 
-	public void setUserProfile(UserProfile userProfile) {
+  public void setInitComponent() throws Exception {
+		UIForumInputWithActions EnabledPanel = getChildById(FIELD_SHOW_HIDDEN_TAB);
+		portletPreference = ForumUtils.getPorletPreference();
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).setChecked(portletPreference.isShowForumJump());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISPOLL_CHECKBOX).setChecked(portletPreference.isShowPoll());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).setChecked(portletPreference.isShowQuickReply());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).setChecked(portletPreference.isShowIconsLegend());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).setChecked(portletPreference.isShowRules());
+		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).setChecked(portletPreference.isShowStatistics());
+  }
+	
+	public void setUserProfile(UserProfile userProfile) throws Exception {
+		setInitComponent();
 		this.userProfile = userProfile;
 		this.isSave = false;
 	}
+	
 	private List<String> getListInValus(String value) throws Exception {
 		List<String>list = new ArrayList<String>();
 		if(!ForumUtils.isEmpty(value)) {
 			list.addAll(Arrays.asList(ForumUtils.addStringToString(value, value)));
 		}
 		return list;
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean tabIsSelected(int tabId) {
+		if(this.tabId == tabId) return true ;
+		else return false ;
 	}
 	
 	public void activate() throws Exception {}
@@ -171,13 +226,23 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 					}
 				}
 			}
-			//if(i == children.size()) {listCategoryId = ""; listForumId = "" ;}
+			UIForumInputWithActions EnabledPanel = editModeForm.getChildById(FIELD_SHOW_HIDDEN_TAB);
+			
+			editModeForm.portletPreference.setShowForumJump((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowPoll((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISPOLL_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowQuickReply((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISQUICKREPLY_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowIconsLegend((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISICONSLEGEND_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowRules((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).getValue());
+			editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
 			try {
-				ForumUtils.savePortletPreference(listCategoryId, listForumId);
 				editModeForm.isSave = true;
 				listCategoryinv = editModeForm.getListInValus(listCategoryId);
 				listforuminv = editModeForm.getListInValus(listForumId);
+				editModeForm.portletPreference.setInvisibleCategories(listCategoryinv);
+				editModeForm.portletPreference.setInvisibleForums(listforuminv);
+				ForumUtils.savePortletPreference(editModeForm.portletPreference);
+				//ForumUtils.savePortletPreference(listCategoryId, listForumId);
 				((UIForumPortlet)editModeForm.getParent()).loadPreferences();
 				Object[] args = { "" };
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.save-successfully", args, ApplicationMessage.INFO)) ;
@@ -190,4 +255,14 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
       }
 		}
 	}
+	
+	static public class SelectTabActionListener extends EventListener<UISettingEditModeForm> {
+		public void execute(Event<UISettingEditModeForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UISettingEditModeForm editModeForm = event.getSource();
+			editModeForm.tabId = Integer.parseInt(id);
+			event.getRequestContext().addUIComponentToUpdateByAjax(editModeForm.getParent()) ;
+		}
+	}
+	
 }

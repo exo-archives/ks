@@ -5,10 +5,20 @@
 %>
 <div class="UIForumInfos">
 	<div class="ThreadsStartsList RightStartsList">
-		<% uicomponent.renderChild(UIPostRules.class); %>
+		<% 
+		UIPostRules postRules = uicomponent.getChild(UIPostRules.class);
+		if(postRules.isRendered()) {
+			uicomponent.renderChild(UIPostRules.class);
+		}
+		%>
 	</div>
 	<div class="ThreadsStartsList LeftStartsList">
-		<% uicomponent.renderChild(UIForumModerator.class); %>
+		<% 
+		UIForumModerator forumModerator = uicomponent.getChild(UIForumModerator.class);
+		if(forumModerator.isRendered()) {
+			uicomponent.renderChild(UIForumModerator.class); 
+		}
+		%>
 	</div>
 	<div style="clear:right;"><span></span></div>
 </div>
