@@ -1110,7 +1110,7 @@ public class JCRDataStorage {
 	public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> listResult = new ArrayList<Question>();
-		Node questionHome = getCategoryHome(sProvider, null);
+		Node questionHome = getQuestionHome(sProvider, null);
 		Node questionNode = null;
 		Node languageNode = null;
 		String languages = Utils.LANGUAGE_HOME;
@@ -2483,7 +2483,6 @@ public class JCRDataStorage {
 		List<String> listIdViews = listCateIdsView(sProvider);
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
-		sProvider.close() ;
 		Map<String, Question> questionMap = new HashMap<String, Question>();
 		Question question = null;
 		
@@ -2556,7 +2555,7 @@ public class JCRDataStorage {
 			listQuestionAttachment.addAll(Arrays.asList(questionMap.values().toArray(new Question[]{})));
 			return listQuestionAttachment;
 		}
-		
+		sProvider.close() ;
 		return	Arrays.asList(questionMap.values().toArray(new Question[]{}));
 	}
 	

@@ -266,28 +266,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	@SuppressWarnings("unused")
-  private boolean compareTowArraies(String[] array1, String[] array2){
-		List<String> list1 = new ArrayList<String>();
-		list1.addAll(Arrays.asList(array1));
-		int count = 0;
-		for(String str : array2){
-			if(list1.contains(str)) count ++;
-		}
-		if(count == array1.length && count == array2.length) return true;
-		return false;
-	}
-	
-	@SuppressWarnings("unused")
-  private double[] getMarkVoteAnswer(List<Double> listMarkResponse){
-		double[] markVoteResponse = new double[listMarkResponse.size()];
-		int i = 0;
-		for(Double d : listMarkResponse){
-			markVoteResponse[i++] = d;
-		}
-		return markVoteResponse;
-	}
-	
 	public String getPathService(String categoryId) throws Exception {
 		String oldPath = "";
 		String path = "FAQService";
@@ -307,7 +285,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	}
 	
 	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider) throws Exception{
-	// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
+		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String topicId = question_.getTopicIdDiscuss();
 			if(topicId != null && topicId.length() > 0) {
@@ -369,7 +347,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				UIResponseForm responseForm = event.getSource() ;
 				
 				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
-				if(responseQuestionContent != null && responseQuestionContent.trim().length() >0 && validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
+				if(validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
 						Answer answer = null;
 						if(responseForm.mapAnswers.containsKey(responseForm.languageIsResponsed)){
 							answer = responseForm.mapAnswers.get(responseForm.languageIsResponsed);
@@ -439,7 +417,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				List<Answer> listAnswers = new ArrayList<Answer>();
 
 				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
-					listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
+					//listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
 					if(responseForm.answer_ == null)listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
 					else {
 						for(Answer ans : listAnswers){
@@ -481,12 +459,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					e.printStackTrace() ;
 				}
 
-				if(question_.getAnswers() == null || question_.getAnswers().length < 1) {
-					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-invalid", new String[]{question_.getLanguage()}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				}
-				
 				//cancel
 				if(!responseForm.isChildren_) {
 					questions.setIsNotChangeLanguage() ;
@@ -620,17 +592,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(language).getResponses()) ;
 				else responseForm.inputResponseQuestion_.setValue("") ;
 				sessionProvider.close();
-				/*for(QuestionLanguage questionLanguage : responseForm.listQuestionLanguage) {
-					if(questionLanguage.getLanguage().equals(language)) {
-						responseForm.questionDetail = questionLanguage.getDetail();
-						responseForm.questionContent = questionLanguage.getQuestion();
-						if(questionLanguage.getAnswers() != null && questionLanguage.getAnswers().length > 0)
-							responseForm.inputResponseQuestion_.setValue(questionLanguage.getAnswers()[0].getResponses()) ;
-						else 
-							responseForm.inputResponseQuestion_.setValue("") ;
-						break ;
-					}
-				}*/
 				event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
 			}
 		}

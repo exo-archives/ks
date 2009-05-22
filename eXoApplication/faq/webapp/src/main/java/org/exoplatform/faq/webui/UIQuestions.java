@@ -1286,41 +1286,41 @@ public class UIQuestions extends UIContainer {
 
 	static  public class ResponseQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
-			UIQuestions question = event.getSource() ; 
-			Question question2 = null ;
+			UIQuestions uiForm = event.getSource() ; 
+			Question question = null ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			boolean cateIsApprovedAnswers = false;
 			try{
-				question2 = faqService_.getQuestionById(questionId, sessionProvider);
-				cateIsApprovedAnswers = !faqService_.getCategoryById(question.categoryId_, sessionProvider).isModerateAnswers();
+				question = faqService_.getQuestionById(questionId, sessionProvider);
+				cateIsApprovedAnswers = !faqService_.getCategoryById(uiForm.categoryId_, sessionProvider).isModerateAnswers();
 			} catch(javax.jcr.PathNotFoundException e) {
 				try{
-					faqService_.getCategoryById(question.categoryId_, sessionProvider);
+					faqService_.getCategoryById(uiForm.categoryId_, sessionProvider);
 				}catch(Exception exc){
-					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class));
+					FAQUtils.findCateExist(faqService_, uiForm.getAncestorOfType(UIFAQContainer.class));
 				}
-				UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
+				UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				question.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(question.getAncestorOfType(UIFAQContainer.class)) ;
+				uiForm.setIsNotChangeLanguage() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIFAQContainer.class)) ;
 				sessionProvider.close();
 				return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} 
 			sessionProvider.close();
-			UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
+			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
-			if(questionId.equals(question.questionView_)){
-				responseForm.setQuestionId(question2, language_, cateIsApprovedAnswers) ;
+			if(questionId.equals(uiForm.questionView_)){
+				responseForm.setQuestionId(question, language_, cateIsApprovedAnswers) ;
 			} else {
-				responseForm.setQuestionId(question2, "", cateIsApprovedAnswers) ;
+				responseForm.setQuestionId(question, "", cateIsApprovedAnswers) ;
 			}
-			responseForm.setFAQSetting(question.faqSetting_);
+			responseForm.setFAQSetting(uiForm.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;
 			popupAction.activate(popupContainer, 900, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
