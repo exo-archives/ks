@@ -77,6 +77,7 @@ import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -94,7 +95,6 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.RSSEventListener;
-import org.exoplatform.services.jcr.ext.common.NodeWrapper;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -108,7 +108,6 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 /**
  * Created by The eXo Platform SARL Author : Hung Nguyen Quang
@@ -814,6 +813,7 @@ public class JCRDataStorage {
 				forumNode.setProperty("exo:postCount", 0);
 				forumNode.setProperty("exo:topicCount", 0);
 				forumNode.setProperty("exo:banIPs", new String[]{});
+				forum.setPath(forumNode.getPath());
 				long forumCount = 1;
 				if (catNode.hasProperty("exo:forumCount"))
 					forumCount = catNode.getProperty("exo:forumCount").getLong() + 1;
@@ -866,6 +866,16 @@ public class JCRDataStorage {
 			}
 			if (isModerateTopic != isNewModerateTopic) {
 				queryLastTopic(sProvider, forumNode.getPath());
+			}
+			if(isNew) {
+				PruneSetting pruneSetting = new PruneSetting();
+				String id = catNode.getName().replaceFirst(Utils.CATEGORY, Utils.PRUNESETTING);
+				String oderF = String.valueOf(forum.getForumOrder());
+				if(oderF.length() == 1) oderF = "0" + oderF;
+				id = id + oderF + String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(6);
+				pruneSetting.setId(id);
+				pruneSetting.setForumPath(forum.getPath());
+				savePruneSetting(pruneSetting);
 			}
 			{// seveProfile
 				Node userProfileHomeNode = getUserProfileHome(sProvider);
@@ -1433,15 +1443,16 @@ public class JCRDataStorage {
 		}
 	}
 
-	public JCRPageList getPageTopicOld(long date) throws Exception {
+	public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Calendar newDate = getGreenwichMeanTime();
+			if(forumPatch == null || forumPatch.length() <= 0) forumPatch = categoryHome.getPath();
 			newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			stringBuffer.append("/jcr:root").append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -1451,6 +1462,24 @@ public class JCRDataStorage {
 			return null;
 		} finally{ sProvider.close() ;}
 	}
+	
+	public long getTotalTopicOld(long date, String forumPatch) {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node categoryHome = getCategoryHome(sProvider);
+			Calendar newDate = getGreenwichMeanTime();
+			newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			return iter.getSize();
+		} catch (Exception e) {
+			return 0;
+		} finally{ sProvider.close() ;}
+  }
 
 	public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5328,5 +5357,81 @@ public class JCRDataStorage {
     	sProvider.close();
     }
 	}
+	
+	private PruneSetting getPruneSetting(Node prunNode) throws Exception {
+		PruneSetting pruneSetting = new PruneSetting();
+		pruneSetting.setId(prunNode.getName());
+		pruneSetting.setForumPath(prunNode.getParent().getPath());
+		pruneSetting.setActive(prunNode.getProperty("exo:isActive").getBoolean());
+		pruneSetting.setCategoryName(prunNode.getParent().getParent().getProperty("exo:name").getString());
+		pruneSetting.setForumName(prunNode.getParent().getProperty("exo:name").getString());
+		pruneSetting.setInActiveDay(prunNode.getProperty("exo:inActiveDay").getLong());
+		pruneSetting.setJobDay(prunNode.getProperty("exo:jobDay").getLong());
+		if(prunNode.hasProperty("exo:lastRunDate"))
+			pruneSetting.setLastRunDate(prunNode.getProperty("exo:lastRunDate").getDate().getTime());
+		return pruneSetting;
+	}
+	
+	public List<PruneSetting> getAllPruneSetting() throws Exception {
+		List<PruneSetting> prunList = new ArrayList<PruneSetting>();
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node categoryHNode = getCategoryHome(sProvider);
+			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
+			StringBuilder pathQuery = new StringBuilder();
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id descending");
+			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			while (iter.hasNext()) {
+		    Node prunNode = (Node) iter.next();
+		    prunList.add(getPruneSetting(prunNode));
+	    }
+		}finally { sProvider.close() ;}
+		return prunList;
+  }
+	
+	public void savePruneSetting(PruneSetting pruneSetting) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			String path = pruneSetting.getForumPath();
+			Node forumNode = (Node) getForumHomeNode(sProvider).getSession().getItem(path);
+			Node pruneNode;
+			try {
+				pruneNode = forumNode.getNode(pruneSetting.getId());
+				pruneNode.setProperty("exo:id", pruneSetting.getId());
+      } catch (Exception e) {
+      	pruneNode = forumNode.addNode(pruneSetting.getId(), "exo:pruneSetting");
+      }
+      pruneNode.setProperty("exo:inActiveDay", pruneSetting.getInActiveDay());
+      pruneNode.setProperty("exo:jobDay", pruneSetting.getJobDay());
+      pruneNode.setProperty("exo:isActive", pruneSetting.isActive());
+      if(pruneSetting.getLastRunDate() != null) {
+	      Calendar calendar = Calendar.getInstance();
+	      calendar.setTime(pruneSetting.getLastRunDate()) ;
+	      pruneNode.setProperty("exo:lastRunDate", calendar);
+      }
+      if (forumNode.isNew()) {
+	      forumNode.getSession().save();
+      } else {
+      	forumNode.save();
+      }
+		}finally { sProvider.close() ;}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

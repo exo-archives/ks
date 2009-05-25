@@ -462,6 +462,20 @@
 	background: url('icons/ShowHelpIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .PruneSettingIcon {
+	background: url('icons/PruneSettingIcon.gif') no-repeat left center;
+	width: 20px; height: 20px;
+}
+
+.UIForumPortlet .RunIcon {
+	background: url('icons/RunIcon.gif') no-repeat left center;
+	width: 20px; height: 20px;
+}
+
+.UIForumPortlet .ArrowLeftIcon {
+	background: url('icons/ArrowLeftIcon.gif') no-repeat left center;
+}
+
 .UIForumPortlet #PendingJob {
 	line-height:24px; white-space:nowrap;
 	height:24px; cursor:pointer;

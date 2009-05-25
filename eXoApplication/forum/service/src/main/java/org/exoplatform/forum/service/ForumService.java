@@ -234,16 +234,16 @@ public interface ForumService extends ForumServiceLegacy{
 
 	/**
 	 * Gets the page topic old.
-	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param date the date
+	 * @param forumPatch TODO
+	 * @param sProvider is the SessionProvider
 	 * 
 	 * @return the page topic old
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getPageTopicOld(long date) throws Exception;
-
+	public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
+	public long getTotalTopicOld(long date, String forumPatch) ;
 	/**
 	 * Gets the topics.
 	 * 
@@ -948,4 +948,7 @@ public interface ForumService extends ForumServiceLegacy{
   public List<String> getActiveBBCode() throws Exception;
   public BBCode getBBcode(String id) throws Exception;
   public void removeBBCode(String bbcodeId) throws Exception ;
+  
+  public List<PruneSetting> getAllPruneSetting() throws Exception;
+  public void savePruneSetting(PruneSetting pruneSetting) throws Exception;
 }

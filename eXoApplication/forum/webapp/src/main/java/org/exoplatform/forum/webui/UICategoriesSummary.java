@@ -39,7 +39,9 @@ public class UICategoriesSummary extends UIContainer	{
   private void setRenderChild() throws Exception {
 		try {
 			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-			getChild(UICategoryInfo.class).setRendered(forumPortlet.isShowStatistics());
+			UICategoryInfo categoryInfo = getChild(UICategoryInfo.class);
+			if(categoryInfo.isRendered())
+				categoryInfo.setRendered(forumPortlet.isShowStatistics());
 			getChild(UIForumIconState.class).setRendered(forumPortlet.isShowIconsLegend());
     } catch (Exception e) {
     }

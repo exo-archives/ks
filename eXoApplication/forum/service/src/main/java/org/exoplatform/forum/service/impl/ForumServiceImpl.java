@@ -52,6 +52,7 @@ import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -706,15 +707,24 @@ public class ForumServiceImpl implements ForumService, Startable{
     storage_.savePrivateMessage(privateMessage) ;
   }
 
-  public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception {
+  public JCRPageList getPageTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
   	sProvider.close() ;
-    return getPageTopicOld(date) ;
+    return getPageTopicOld(date, forumPatch) ;
   }
   
-  public JCRPageList getPageTopicOld(long date) throws Exception {
-    return storage_.getPageTopicOld(date) ;
+  public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
+    return storage_.getPageTopicOld(date, forumPatch) ;
   }
 
+  public long getTotalTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
+  	sProvider.close() ;
+  	return getTotalTopicOld(date, forumPatch);
+  }
+
+	public long getTotalTopicOld(long date, String forumPatch) {
+		return storage_.getTotalTopicOld(date, forumPatch);
+	}
+	
   public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
   	sProvider.close() ;
     return getPageTopicByUser(userName, isMod, strOrderBy);
@@ -1181,4 +1191,23 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public void removeBBCode(String bbcodeId) throws Exception {
 		storage_.removeBBCode(bbcodeId);
 	}
+
+	public List<PruneSetting> getAllPruneSetting() throws Exception {
+	  return storage_.getAllPruneSetting();
+  }
+
+	public List<PruneSetting> getAllPruneSetting(SessionProvider sProvider) throws Exception {
+		sProvider.close() ;
+	  return getAllPruneSetting();
+  }
+
+	public void savePruneSetting(PruneSetting pruneSetting) throws Exception {
+		storage_.savePruneSetting(pruneSetting);
+  }
+
+	public void savePruneSetting(SessionProvider sProvider, PruneSetting pruneSetting) throws Exception {
+		sProvider.close() ;
+		savePruneSetting(pruneSetting);
+  }
+
 }

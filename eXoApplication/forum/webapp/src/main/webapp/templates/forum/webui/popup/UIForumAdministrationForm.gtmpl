@@ -208,59 +208,108 @@
 													</tr>
 										 		</table> 
 											</div>
-									<%} else {
+									<%} else if(tabconten.id.equals(uicomponent.FIELD_AUTOPRUNE_TAB)) {
+									%>
+										<div class="AutuPruneContainer" id="AutuPruneContainer">
+											<div style="padding:0px 16px 0px 1px;">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+													<thead>
+														<tr>
+															<th style="width:120px; text-align:center">Category</th>
+															<th style="width:120px; text-align:center">Forum</th>
+															<th width="50px">Active</th>
+															<th>Last Run</th>
+															<th width="60px">Action</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="BBCodeContainer" id="TableContent">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+													<tbody>
+														<%  
+															List pruneSettings = uicomponent.getPruneSettings();
+															int t_ = 0;
+															String cateTemp = " ";
+															for(pruneSetting  in pruneSettings) {
+																String categoryName = pruneSetting.getCategoryName();
+																String forumName = pruneSetting.getForumName();
+																String pruneId = pruneSetting.getId();
+																String lastRun = "";
+																if(pruneSetting.getLastRunDate() != null){
+																	lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + "GMT+0" ;
+																}
+																String value = "false";
+																String checked = "";
+																if(pruneSetting.isActive()){
+																	checked = "checked=\"checked\"";
+																	value = "true";
+																}
+																if(t_%2 == 0) classCssInbox = "whileRow";
+																else classCssInbox = "OddRow";
+																++t_;
+																if(categoryName.equals(cateTemp)) {
+														%>
+														<tr class="$classCssInbox">
+															<td style="width:120px; text-align:center">$categoryName</th>
+															<td style="width:120px; text-align:center">$forumName</th>
+															<td width="50px"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></th>
+															<td>$lastRun</th>
+															<td width="60px">
+																<div class="ActionContainer" style="margin:0px auto; width:52px;">
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+																	</div>
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+																		 <div title="Run" class="RunIcon"><span></span></div>							
+																	</div>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+															</th>
+														</tr>
+															<% } else { %>
+														<tr class="$classCssInbox">
+															<td style="width:120px; text-align:center"><b>$categoryName</b></th>
+															<td style="width:120px; text-align:center"> </th>
+															<td width="50px"> </th>
+															<td> </th>
+															<td width="60px"> </th>
+														</tr>
+																<% if(classCssInbox.equals("whileRow")) 
+																			classCssInbox = "OddRow";
+																	 else classCssInbox = "whileRow";
+																	++t_;
+																%>
+														<tr class="$classCssInbox">
+															<td style="width:120px; text-align:center">$categoryName</th>
+															<td style="width:120px; text-align:center">$forumName</th>
+															<td width="50px"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></th>
+															<td>$lastRun</th>
+															<td width="60px">
+																<div class="ActionContainer" style="margin:0px auto; width:52px;">
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+																		 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+																	</div>
+																	<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+																		 <div title="Run" class="RunIcon"><span></span></div>							
+																	</div>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+															</th>
+														</tr>
+															<%}
+																cateTemp = categoryName; 
+															%>
+														<%} %>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<script type='text/javascript'>var cont = document.getElementById('AutuPruneContainer');var table = document.getElementById('TableContent');if((cont.offsetWidth+2 > table.offsetWidth) || (cont.offsetWidth < (table.offsetWidth + 16))){table.style.padding = "1px";table.style.width = "100%";} else {table.style.paddingRight = "16px";table.style.width = "auto";}</script>
+									 <%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}
-											if(tabconten.id.equals("activeTopicTab")){
-											continue;
-									%>	
-											<table class="UIFormGrid">
-												<tbody>						
-													<tr>
-														<td class="FieldLabel"><%=_ctx.appRes("UIForumAdministrationForm.label.activeAbout")%>:</td>
-														<td class="FieldComponent">
-															<div class="InputContent">
-																<% uiform.renderField(uiform.FIELD_ACTIVEABOUT_INPUT) ;%>
-															</div>
-															<div style="float:left; margin-left:10px; white-space:nowrap;"><%=_ctx.appRes("UIForumAdministrationForm.label.Day")%></div>
-															<div style="clear:left;"><span></span></div>
-														</td>
-													</tr>
-													<tr>
-														<td class="FieldLabel"><%=_ctx.appRes("UIForumAdministrationForm.label.setActive")%>:</td>
-														<td class="FieldComponent">
-																<% uiform.renderField(uiform.FIELD_SETACTIVE_INPUT) ;%>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-											<div class="UIAction"> 
-												<table class="ActionContainer">
-													<tr>
-														<td align="center">
-														<%	
-															 String actionLabel = _ctx.appRes("UIForumAdministrationForm.action.Run"); 
-															 String link = uiform.event("Run") ;
-														%>
-															 <div onclick="$link" class="ActionButton LightBlueStyle">
-																 <div class="ButtonLeft">
-																	 <div class="ButtonRight">
-																	 	 <div class="ButtonMiddle">
-																		 	 <a href="javascript:void(0);">$actionLabel</a>
-																	 	 </div>
-																	 </div>
-																 </div>
-															 </div>
-														 </td>
-													</tr>
-										 		</table> 
-											</div>
-											<%	
-												if(uiform.isRenderListTopic()){
-													uiform.renderChild(UIListTopicOld.class);
-												}
-											%>
-									 <%} %>
+									 %>
 								</div>
 								<%	 ++j;
 										}

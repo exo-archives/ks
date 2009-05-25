@@ -83,7 +83,7 @@ public class UIListTopicOld extends UIContainer {
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<Topic> getTopicsOld() throws Exception {
 		if(topics == null || topics.size() == 0 || isUpdate) {
-			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date);
+			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date, "");
 			if(pageList != null) {
 				pageList.setPageSize(10) ;
 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;

@@ -1,0 +1,77 @@
+<div class="UIFormForum UIAutoPruneSettingForm">
+	<% uiform.begin() %>
+	<% uiform.setInitForm(); 
+		String topicsPruned = uiform.getTopicOld();
+	%>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<div class="LabelContent"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Note");%></div>
+				<table class="UIFormGrid">
+					<tbody>						
+						<tr>
+							<td><span class="Label"><%=uicomponent.getLabel(uiform.FIELD_INACTIVEDAY_INPUT); %></span></td>
+							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_INPUT); %></td>
+							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_INACTIVEDAY_SELECTBOX); %></td>
+						</tr>
+						<tr>
+							<td><span class="Label"><%=uicomponent.getLabel(uiform.FIELD_JOBDAY_INPUT); %></span></td>
+							<td style="width:50px;"><%uiform.renderField(uiform.FIELD_JOBDAY_INPUT); %></td>
+							<td style="width:100px;"><%uiform.renderField(uiform.FIELD_JOBDAY_SELECTBOX); %></td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<div class="UIAction" style="width:100px;  float:left;"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div onclick="<%=uiform.event("Run")%>" class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+													 		<div class="ButtonMiddle">
+													 			<div class="ArrowLeftIcon" style="padding-left:24px;">
+														 			<a href="javascript:void(0);"><%=_ctx.appRes("UIAutoPruneSettingForm.label.Test");%></a>
+														 		</div>
+													 		</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+								<div class="Lightheight">$topicsPruned <%=_ctx.appRes("UIAutoPruneSettingForm.label.topicPrun");%></div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+					 String onclick = "" ;
+					 if(action.indexOf("ResetField") >= 0) onclick="eXo.forum.UIForumPortlet.resetFielForm('"+uiform.id+"')";
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft" onclick="$onclick">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">
+											$actionLabel
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -73,7 +74,8 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.DeleteBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UIForumAdministrationForm.RunActionListener.class)
+			@EventConfig(listeners = UIForumAdministrationForm.PruneSettingActionListener.class),
+			@EventConfig(listeners = UIForumAdministrationForm.RunPruneActionListener.class)
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
@@ -85,6 +87,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
 	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
+	public static final String FIELD_AUTOPRUNE_TAB = "autoPruneTab" ;
 	public static final String FIELD_BBCODE_TAB = "bbcodesTab" ;
 	public static final String IP_BAN_TAB = "ipBanTab" ;
 	
@@ -110,6 +113,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 	private UIForumPageIterator pageIterator ;
 	public UIForumAdministrationForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -119,13 +123,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	}
 	
   public void setInit() throws Exception{
+  	getPruneSettings();
+  	
 		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
-//		UIFormInputWithActions activeTopicTab = new UIFormInputWithActions(FIELD_ACTIVETOPIC_TAB);
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
 		UIFormInputWithActions ipBanTab = new UIFormInputWithActions(IP_BAN_TAB);
 		UIFormInputWithActions bbcodeTab = new UIFormInputWithActions(FIELD_BBCODE_TAB);
+		UIFormInputWithActions autoPruneTab = new UIFormInputWithActions(FIELD_AUTOPRUNE_TAB);
 		
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
@@ -208,7 +214,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(forumCensorTab) ;
 		addUIFormInput(notifyEmailTab) ;
 		addUIFormInput(bbcodeTab) ;
-		//addUIFormInput(activeTopicTab) ;
+		addUIFormInput(autoPruneTab) ;
 		if(ForumUtils.enableIPLogging()){
 			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
 			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
@@ -227,7 +233,23 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
     } catch (Exception e) {
 	    e.printStackTrace();
     }
-    
+	}
+	
+	private List<PruneSetting> getPruneSettings() throws Exception {
+		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		listPruneSetting = new ArrayList<PruneSetting>();
+		try {
+			listPruneSetting.addAll(forumService.getAllPruneSetting(sProvider));
+    } catch (Exception e) {
+    }
+		return listPruneSetting;
+	}
+	
+	private PruneSetting getPruneSetting(String pruneId) throws Exception {
+		for (PruneSetting prune : listPruneSetting) {
+	    if(prune.getId().equals(pruneId)) return prune;
+    }
+		return new PruneSetting();
 	}
 	
 	@SuppressWarnings("unused")
@@ -369,23 +391,24 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		}
 	}
 	
-	static	public class RunActionListener extends EventListener<UIForumAdministrationForm> {
+	static	public class RunPruneActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm administrationForm = event.getSource() ;
-			String activeAbout = administrationForm.getUIStringInput(FIELD_ACTIVEABOUT_INPUT).getValue() ;
-			if(!ForumUtils.isEmpty(activeAbout)) {
-				try {
-					long date = Long.parseLong(activeAbout) ;
-					if(date > 0) {
-						administrationForm.setRenderListTopic(true) ;
-						UIListTopicOld listTopicOld = administrationForm.getChild(UIListTopicOld.class);
-						listTopicOld.setDate(date) ;
-						listTopicOld.setIsUpdate(true);
-						event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			UIForumAdministrationForm uiForm = event.getSource() ;
+			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			System.out.println("\n\n id; " +  pruneId);
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			if(pruneSetting.getInActiveDay() == 0) {
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.not-set-activeDay", new Object[]{}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
+			}else {
+				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+				UIRunPruneForm pruneForm = popupAction.activate(UIRunPruneForm.class, 200) ;
+				pruneForm.setPruneSetting(pruneSetting);
+				pruneForm.setId("RunPruneForm");
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 		}
 	}
@@ -454,6 +477,21 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
+		}
+	}
+	
+	static	public class PruneSettingActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID);
+			System.out.println("\n\n id; " +  pruneId);
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAutoPruneSettingForm pruneSettingForm = popupAction.activate(UIAutoPruneSettingForm.class, 525) ;
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			pruneSettingForm.setPruneSetting(pruneSetting);
+			pruneSettingForm.setId("AutoPruneSettingForm") ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

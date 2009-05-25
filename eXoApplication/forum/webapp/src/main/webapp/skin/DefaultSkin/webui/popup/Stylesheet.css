@@ -143,6 +143,55 @@
 .UIAddBBCodeForm .FieldComponent .UIAction .ActionContainer{
 	margin: 8px 0px;
 }
+/**************************** UIAutoPruneSettingForm ****************************************/
+.UIForumPortlet .UIAutoPruneSettingForm .UIForm .HorizontalLayout {
+	padding: 10px 8px 10px 14px;
+	margin: 8px;
+} 
+
+.UIAutoPruneSettingForm .LabelContent {
+	padding: 0px 0px 10px 0px;
+}
+
+.UIAutoPruneSettingForm #inActiveDay {
+	width: 40px;
+}
+
+.UIAutoPruneSettingForm .UIForm .HorizontalLayout .selectbox {
+	width: 80px;
+}
+
+.UIAutoPruneSettingForm #jobDay {
+	width: 40px;
+}
+
+.UIAutoPruneSettingForm .Lightheight {
+	line-height: 36px;
+	float:left;
+	color: blue;
+	padding-left: 5px;
+}
+
+.UIAutoPruneSettingForm .UIFormGrid {
+	width: 100%;
+}
+
+.UIAutoPruneSettingForm .Label {
+	line-height: 24px;
+}
+
+.UIAutoPruneSettingForm .UIFormGrid .UIAction .LightBlueStyle .ButtonMiddle {
+	padding-left: 3px;
+}
+
+
+
+
+
+
+
+
+
 
 
 

@@ -59,6 +59,7 @@ public class Utils {
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
 	public final static String BBCODE = "bbcode".intern() ;
+	public final static String PRUNESETTING = "pruneSetting".intern() ;
 	public final static String RECEIVE_MESSAGE = "receive".intern() ;
 	public final static String SEND_MESSAGE = "send".intern() ;
 	

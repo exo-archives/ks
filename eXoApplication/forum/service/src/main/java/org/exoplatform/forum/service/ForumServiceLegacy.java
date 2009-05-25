@@ -97,10 +97,17 @@ public interface ForumServiceLegacy {
 	public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception;
 
 	/**
-   * @deprecated use {@link ForumService#getPageTopicOld(long date)}
+   * @param forumPatch Patch of forum Node
+	 * @deprecated use {@link ForumService#getPageTopicOld(long date, String forumPatch)}
    */
-	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date) throws Exception;
+	public JCRPageList getPageTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception;
 
+	/**
+	 * @param forumPatch Patch of forum Node
+	 * @deprecated use {@link ForumService#getTotalTopicOld(long date, String forumPatch)}
+	 */
+	public long getTotalTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception;
+	
 	/**
    * @deprecated use {@link ForumService#getTopics(String categoryId, String forumId)}
    */
@@ -511,4 +518,12 @@ public interface ForumServiceLegacy {
    * @deprecated use {@link ForumService#removeBBCode(String bbcodeId)}
    */
   public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception ;
+  /**
+   * @deprecated use {@link ForumService#getAllPruneSetting()}
+   */
+  public List<PruneSetting> getAllPruneSetting(SessionProvider sProvider) throws Exception;
+  /**
+   * @deprecated use {@link ForumService#savePruneSetting()}
+   */
+  public void savePruneSetting(SessionProvider sProvider, PruneSetting pruneSetting) throws Exception;
 }
