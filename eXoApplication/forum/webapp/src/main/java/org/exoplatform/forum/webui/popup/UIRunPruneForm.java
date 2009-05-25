@@ -93,6 +93,7 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date, uiform.pruneSetting.getForumPath());
 			List<Topic> listTopic = new ArrayList<Topic>();
 			listTopic.addAll(pageList.getPage(0));
+			if(listTopic.isEmpty()) return; 
 			for (Topic topic : listTopic) {
 	      topic.setIsActive(false);
       }
