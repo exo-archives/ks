@@ -104,6 +104,12 @@ public interface ForumServiceLegacy {
 
 	/**
 	 * @param forumPatch Patch of forum Node
+	 * @deprecated use {@link ForumService#getAllTopicsOld(long date, String forumPatch)}
+	 */
+	public List<Topic> getAllTopicsOld(SessionProvider sProvider, long date, String forumPatch) throws Exception;
+
+	/**
+	 * @param forumPatch Patch of forum Node
 	 * @deprecated use {@link ForumService#getTotalTopicOld(long date, String forumPatch)}
 	 */
 	public long getTotalTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception;

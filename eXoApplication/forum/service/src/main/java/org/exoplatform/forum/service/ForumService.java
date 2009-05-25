@@ -243,6 +243,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception;
+	public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception ;
 	public long getTotalTopicOld(long date, String forumPatch) ;
 	/**
 	 * Gets the topics.

@@ -1462,6 +1462,33 @@ public class JCRDataStorage {
 			return null;
 		} finally{ sProvider.close() ;}
 	}
+
+	public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<Topic> topics = new ArrayList<Topic>();
+		try {
+			Node categoryHome = getCategoryHome(sProvider);
+			Calendar newDate = getGreenwichMeanTime();
+			if(forumPatch == null || forumPatch.length() <= 0) forumPatch = categoryHome.getPath();
+			newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			Topic topic;
+			while (iter.hasNext()) {
+	      Node node = (Node) iter.nextNode();
+	      topic = new Topic();
+	      topic.setId(node.getName());
+	      topic.setIsActive(node.getProperty("exo:isActive").getBoolean());
+	      topics.add(topic);
+      }
+		} catch (Exception e) {
+		} finally{ sProvider.close() ;}
+		return topics;
+	}
 	
 	public long getTotalTopicOld(long date, String forumPatch) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5399,9 +5426,9 @@ public class JCRDataStorage {
 			Node pruneNode;
 			try {
 				pruneNode = forumNode.getNode(pruneSetting.getId());
-				pruneNode.setProperty("exo:id", pruneSetting.getId());
       } catch (Exception e) {
       	pruneNode = forumNode.addNode(pruneSetting.getId(), "exo:pruneSetting");
+      	pruneNode.setProperty("exo:id", pruneSetting.getId());
       }
       pruneNode.setProperty("exo:inActiveDay", pruneSetting.getInActiveDay());
       pruneNode.setProperty("exo:jobDay", pruneSetting.getJobDay());

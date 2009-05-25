@@ -90,18 +90,17 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 			UIRunPruneForm uiform = event.getSource();
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			long date = uiform.pruneSetting.getInActiveDay();
-			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date, uiform.pruneSetting.getForumPath());
-			List<Topic> listTopic = new ArrayList<Topic>();
-			listTopic.addAll(pageList.getPage(0));
-			if(listTopic.isEmpty()) return; 
-			for (Topic topic : listTopic) {
-	      topic.setIsActive(false);
-      }
 			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				forumService.modifyTopic(sProvider, listTopic, 6) ;
-				uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
-				forumService.savePruneSetting(uiform.pruneSetting);
+				List<Topic> listTopic = forumService.getAllTopicsOld(date, uiform.pruneSetting.getForumPath());
+				if(!listTopic.isEmpty()){
+					for (Topic topic : listTopic) {
+			      topic.setIsActive(false);
+		      }
+						forumService.modifyTopic(sProvider, listTopic, 6) ;
+						uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
+						forumService.savePruneSetting(uiform.pruneSetting);
+				}
 			} finally {
 				sProvider.close();
 			}

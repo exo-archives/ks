@@ -715,6 +715,15 @@ public class ForumServiceImpl implements ForumService, Startable{
   public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
     return storage_.getPageTopicOld(date, forumPatch) ;
   }
+  
+  public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
+  	return storage_.getAllTopicsOld(date, forumPatch);
+	}
+
+  public List<Topic> getAllTopicsOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
+		sProvider.close() ;
+		return getAllTopicsOld(date, forumPatch);
+	}
 
   public long getTotalTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
   	sProvider.close() ;
