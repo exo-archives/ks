@@ -16,9 +16,18 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.forum.service.Topic;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -79,6 +88,22 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 	static	public class RunActionListener extends EventListener<UIRunPruneForm> {
 		public void execute(Event<UIRunPruneForm> event) throws Exception {
 			UIRunPruneForm uiform = event.getSource();
+			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			long date = uiform.pruneSetting.getInActiveDay();
+			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date, uiform.pruneSetting.getForumPath());
+			List<Topic> listTopic = new ArrayList<Topic>();
+			listTopic.addAll(pageList.getPage(0));
+			for (Topic topic : listTopic) {
+	      topic.setIsActive(false);
+      }
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			try {
+				forumService.modifyTopic(sProvider, listTopic, 6) ;
+				uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
+				forumService.savePruneSetting(uiform.pruneSetting);
+			} finally {
+				sProvider.close();
+			}
 			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
