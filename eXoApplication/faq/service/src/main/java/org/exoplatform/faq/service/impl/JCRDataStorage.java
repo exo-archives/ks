@@ -1968,10 +1968,10 @@ public class JCRDataStorage {
 			while(iter.hasNext()) {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
-			return catList ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
-		}finally { sProvider.close() ;}
+		}
+		sProvider.close();
 		return catList ;
 	}
 	
@@ -2479,6 +2479,7 @@ public class JCRDataStorage {
 	}
 	
 	public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception {
+		boolean isSearchByLangauge = false;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> listIdViews = listCateIdsView(sProvider);
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
@@ -2491,9 +2492,11 @@ public class JCRDataStorage {
 			path = faqServiceHome.getPath() ;
 		}
 		eventQuery.setPath(path) ;
-		String type = eventQuery.getType() ;
 		String queryString = eventQuery.getPathQuery() ;
-		if(listIdViews.size() > 0 && queryString.lastIndexOf("]") > 0){
+		if(eventQuery.getLanguage() != null && eventQuery.getLanguage().trim().length() > 0) isSearchByLangauge = true;
+		
+		// When search with default language then will check category of question is scoping or not
+		if(!isSearchByLangauge && (listIdViews.size() > 0 && queryString.lastIndexOf("]") > 0)){
 			StringBuffer buffer = new StringBuffer(" and (");
 			for(int i = 0; i < listIdViews.size(); i ++){
 				if(i > 0) buffer.append(" or ");
@@ -2502,6 +2505,7 @@ public class JCRDataStorage {
 			buffer.append(")]");
 			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + buffer.toString();
 		}
+		
 		try {
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
@@ -2509,6 +2513,20 @@ public class JCRDataStorage {
 			Node nodeObj = null;
 			while (iter.hasNext()) {
 				nodeObj = (Node) iter.nextNode();
+				// when search by language, will get parent node and check with answer field
+				if(isSearchByLangauge){
+					while(!nodeObj.isNodeType("exo:faqQuestion") && !nodeObj.getName().equals(FAQ_APP)){
+						nodeObj = nodeObj.getParent();
+					}
+					if(nodeObj.getName().equals(FAQ_APP)) continue;
+					if(eventQuery.getResponse() != null){
+						queryString = "/jcr:root" + nodeObj.getPath() + "//element(*,exo:answer)[jcr:contains(@exo:responses,'"+eventQuery.getResponse()+"')]";
+						if(qm.createQuery(queryString, Query.XPATH).execute().getNodes().getSize() < 1){
+							continue;
+						}
+					}
+				}
+				
 				if(questionMap.isEmpty() || !questionMap.containsKey(nodeObj.getName())){
 					question = getQuestion(nodeObj) ;
 					questionMap.put(nodeObj.getName(), question) ;
@@ -2518,43 +2536,14 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}
 		
-		// search with response 
-		if(eventQuery.getResponse() != null && eventQuery.getResponse().trim().length() > 0){
-			StringBuffer queryStr = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:answer)")
-																							.append("[(jcr:contains(., '").append(eventQuery.getResponse()).append("'))]") ;
-			Query query = qm.createQuery(queryStr.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes() ;
-			Node node ;
-			String id = "";
-			while(iter.hasNext()) {
-				node = (Node)iter.nextNode().getParent().getParent();
-				if(!listIdViews.contains(node.getProperty("exo:categoryId").getString())) continue;
-				id = node.getName();
-				question = getQuestionById(node.getName());
-				if(questionMap.isEmpty() || !questionMap.containsKey(id)){
-					questionMap.put(id, question);
-				}
-			}
-		}
-		
-		// search with attachment
-		if(eventQuery.getAttachment() !=null && eventQuery.getAttachment().trim().length() > 0) {
-			List<Question> listQuestionAttachment = new ArrayList<Question>();
-			questionMap = new HashMap<String, Question>();
+		// filter questions which are in category is can view by scoping
+		if(isSearchByLangauge)
 			for(Question ques : questionMap.values().toArray(new Question[]{})) {
-				if(!ques.getAttachMent().isEmpty()) {
-					for(FileAttachment fileAttachment : ques.getAttachMent()){
-						String fileName = fileAttachment.getName().toUpperCase() ;
-						if(fileName.contains(eventQuery.getAttachment().toUpperCase())) {
-							questionMap.put(ques.getId(), ques);
-						} 
-					}
+				if(!listIdViews.contains(ques.getCategoryId())) {
+					questionMap.remove(ques);
 				} 
 			}
-			listQuestionAttachment.addAll(Arrays.asList(questionMap.values().toArray(new Question[]{})));
-			return listQuestionAttachment;
-		}
+		
 		sProvider.close() ;
 		return	Arrays.asList(questionMap.values().toArray(new Question[]{}));
 	}

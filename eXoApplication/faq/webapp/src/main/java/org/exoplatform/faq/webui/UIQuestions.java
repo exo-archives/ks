@@ -1088,7 +1088,7 @@ public class UIQuestions extends UIContainer {
 					answer.setMarkVotes(markVotes);
 					answer.setUsersVoteAnswer(listUserVoteAnswer.toArray(new String[]{}));
 					if(multiLanguages == null)
-						faqService_.saveAnswer(questions.questionView_, answer, false, sProvider);
+						faqService_.saveAnswer(questions.questionView_, answer, false);
 					else
 						multiLanguages.saveAnswer(questionNode, answer,language_, sProvider);
 					questions.setIsNotChangeLanguage();

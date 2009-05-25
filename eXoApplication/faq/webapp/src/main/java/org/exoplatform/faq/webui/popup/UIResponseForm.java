@@ -84,6 +84,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static final String IS_APPROVED = "IsApproved" ;
 	private static Question question_ = null ;
 	private Answer answer_ = null;
+	private boolean isNew_ = true;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	@SuppressWarnings("unused")
@@ -92,9 +93,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	// form input :
 	private UIFormSelectBox questionLanguages_ ;
-	@SuppressWarnings("deprecation")
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
-	@SuppressWarnings("unchecked")
 	private UIFormCheckBoxInput checkShowAnswer_ ;
 	private UIFormCheckBoxInput<Boolean> isApproved_ ;
 
@@ -106,9 +105,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	// form variable:
 	Map<String, Answer> mapAnswers = new HashMap<String, Answer>();
 	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
-	@SuppressWarnings("unused")
 	private String questionChanged_ = new String() ;
-	@SuppressWarnings("unused")
 	private String responseContent_ = new String () ;
 	private String languageIsResponsed = "" ;
 	private String link_ = "" ;
@@ -116,7 +113,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private FAQSetting faqSetting_;
 	private boolean cateIsApprovedAnswer_ = true;
 	
-	@SuppressWarnings("unused")
   private long currentDate = new Date().getTime();
 
 	public void activate() throws Exception { }
@@ -141,7 +137,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
     if(relations != null && relations.length > 0){
       SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       for(String relation : relations) {
-        listRelationQuestion.add(faqService.getQuestionById(relation, sessionProvider).getQuestion()) ;
+        listRelationQuestion.add(faqService.getQuestionById(relation).getQuestion()) ;
       }
       sessionProvider.close();
     }
@@ -150,6 +146,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   public void setAnswerInfor(Question question, Answer answer, String language){
   	setQuestionId(question, language, answer.getApprovedAnswers());
   	this.answer_ = answer;
+  	this.isNew_ = false;
   	inputResponseQuestion_.setValue(answer.getResponses());
   	questionLanguages_.setDisabled(true);
   	questionLanguages_.setOnChange("");
@@ -180,7 +177,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		
 		listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage() + " ( default) ", question.getLanguage()));
 		try {
-			for(QuestionLanguage language : faqService.getQuestionLanguages(questionId_, sessionProvider)){
+			for(QuestionLanguage language : faqService.getQuestionLanguages(questionId_)){
 				if(language.getLanguage().equals(languageIsResponsed)){
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
@@ -221,7 +218,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		this.setListIdQuesRela(Arrays.asList(relations)) ;
 		if(relations != null && relations.length > 0)
 			for(String relation : relations) {
-				listRelationQuestion.add(faqService.getQuestionById(relation, sessionProvider).getQuestion()) ;
+				listRelationQuestion.add(faqService.getQuestionById(relation).getQuestion()) ;
 			}
 	}
 	public List<String> getListRelation() {
@@ -271,7 +268,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		String path = "FAQService";
 		if(categoryId != null && !categoryId.equals("null")){
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			List<String> listPath = FAQUtils.getFAQService().getCategoryPath(sessionProvider, categoryId) ;
+			List<String> listPath = FAQUtils.getFAQService().getCategoryPath(categoryId) ;
 			sessionProvider.close();
 			for(int i = listPath.size() -1 ; i >= 0; i --) {
 				oldPath = oldPath + "/" + listPath.get(i);
@@ -290,11 +287,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			String topicId = question_.getTopicIdDiscuss();
 			if(topicId != null && topicId.length() > 0) {
 				ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-				Topic topic = (Topic)forumService.getObjectNameById(sessionProvider, topicId, org.exoplatform.forum.service.Utils.TOPIC);
+				Topic topic = (Topic)forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
 				if(topic != null) {
 					String []ids = topic.getPath().split("/");
 					int t = ids.length;
-					System.out.println("\n\n ======> " + ids[t-3]+" / "+ids[t-2]+" / "+topicId);
+					//System.out.println("\n\n ======> " + ids[t-3]+" / "+ids[t-2]+" / "+topicId);
 					linkForum = linkForum.replaceFirst("OBJECTID", topicId);
 					linkForum = url + linkForum;
 					Post post;
@@ -303,7 +300,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						String postId = question_.getAnswers()[i].getPostId();
 						try {
 							if(postId != null && postId.length() > 0){
-								post = forumService.getPost(sessionProvider, ids[t-3], ids[t-2], topicId, postId);
+								post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
 								if(post == null) {
 									post = new Post();
 									post.setOwner(question_.getAnswers()[i].getResponseBy());
@@ -313,11 +310,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 									post.setMessage(question_.getAnswers()[i].getResponses());
 									post.setLink(linkForum);
 									post.setIsApproved(false);
-									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
+									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								}else {
 									//post.setIsApproved(false);
 									post.setMessage(question_.getAnswers()[i].getResponses());
-									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, false, "");
+									forumService.savePost(ids[t-3], ids[t-2], topicId, post, false, "");
 								}
 							} else {
 								post = new Post();
@@ -327,7 +324,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 								post.setMessage(question_.getAnswers()[i].getResponses());
 								post.setLink(linkForum);
 								post.setIsApproved(false);
-								forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
+								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								question_.getAnswers()[i].setPostId(post.getId());
 							}
 						} catch (Exception e) {
@@ -414,29 +411,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				question_.setLink(link) ;
 				
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-				List<Answer> listAnswers = new ArrayList<Answer>();
-
+				// set answer to question for discuss forum function  
 				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
-					//listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
-					if(responseForm.answer_ == null)listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
-					else {
-						for(Answer ans : listAnswers){
-							if(ans.getId().equals(responseForm.answer_.getId())){
-								int ind = listAnswers.indexOf(ans);
-								listAnswers.remove(ind);
-								listAnswers.add(ind, responseForm.mapAnswers.get(question_.getLanguage()));
-								break;
-							}
-						}
-					}
-					question_.setAnswers(listAnswers.toArray(new Answer[]{}));
+					question_.setAnswers(new Answer[]{responseForm.mapAnswers.get(question_.getLanguage())});
 				}
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
-					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
+					if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
+						faqService.saveAnswer(question_.getId(), responseForm.mapAnswers.get(question_.getLanguage()), responseForm.isNew_);
+					}
 					MultiLanguages multiLanguages = new MultiLanguages() ;
 					String[] languages = responseForm.mapAnswers.keySet().toArray(new String[]{});
-					questionNode = faqService.getQuestionNodeById(question_.getId(), sessionProvider);
+					questionNode = faqService.getQuestionNodeById(question_.getId());
 					for(String lang : languages){
 						if(!lang.equals(question_.getLanguage())){
 							try{
@@ -446,7 +432,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 							}
 						}
 					}
-					faqService.saveQuestion(question_, false, sessionProvider,responseForm.faqSetting_) ;
+					faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
 					
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum, url, sessionProvider);
@@ -468,7 +454,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ; 
 					if(questionNode!= null && !("" + questions.getCategoryId()).equals(question_.getCategoryId())) {
 						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-						Category category = faqService.getCategoryById(question_.getCategoryId(), sessionProvider) ;
+						Category category = faqService.getCategoryById(question_.getCategoryId()) ;
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					}
@@ -580,7 +566,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					responseForm.questionDetail = responseForm.question_.getDetail();
 					responseForm.questionContent = responseForm.question_.getQuestion();
 				} else {
-					for(QuestionLanguage questionLanguage : faqService.getQuestionLanguages(responseForm.questionId_, sessionProvider)){
+					for(QuestionLanguage questionLanguage : faqService.getQuestionLanguages(responseForm.questionId_)){
 						if(questionLanguage.getLanguage().equals(language)){
 							responseForm.questionDetail = questionLanguage.getDetail();
 							responseForm.questionContent = questionLanguage.getQuestion();

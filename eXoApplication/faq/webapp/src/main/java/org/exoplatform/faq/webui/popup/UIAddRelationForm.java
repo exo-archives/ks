@@ -80,8 +80,8 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     setActions(new String[]{"Save", "Cancel"}) ;
     FAQUtils.getPorletPreference(faqSetting_);
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    faqService.getUserSetting(sessionProvider, FAQUtils.getCurrentUser(), faqSetting_);
-		Node homeNode = faqService.getCategoryNodeById(null, sessionProvider);
+    faqService.getUserSetting(FAQUtils.getCurrentUser(), faqSetting_);
+		Node homeNode = faqService.getCategoryNodeById(null);
 		if(homeNode.hasProperty("exo:name")) homeCategoryName = homeNode.getProperty("exo:name").getString();
 		else{
 			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;

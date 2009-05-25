@@ -32,47 +32,29 @@ import org.exoplatform.commons.utils.ISO8601;
  */
 public class FAQEventQuery {
 	
-	/** The type. */
 	private String type ;
-	
-	/** The text. */
 	private String text ;
-	
-	/** The name. */
 	private String name ;
-	
-	/** The is mode question. */
 	private String isModeQuestion ;
-	
-	/** The moderator. */
 	private String moderator ;
-	
-	/** The path. */
 	private String path;
-	
-	/** The author. */
 	private String author;
-	
-	/** The email. */
 	private String email ;
-	
-	/** The question. */
 	private String question;
-	
-	/** The response. */
 	private String response ;
-	
-	/** The attachment. */
 	private String attachment ;
-	
-	/** The from date. */
 	private Calendar fromDate ;
-	
-	/** The to date. */
 	private Calendar toDate ;
-	
-	/** The is and. */
+	private String language;
 	private boolean isAnd = false ;
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
 	/**
 	 * Instantiates a new fAQ event query.
@@ -330,11 +312,24 @@ public class FAQEventQuery {
 public String getPathQuery() {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
-    if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path).append("//element(*,exo:").append(type).append(")") ;
-    else  queryString.append("//element(*,exo:").append(type).append(")") ;
+    if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path);
+    
+    if((language != null && language.trim().length() > 0) || type.equals("faqQuestion")){
+  		queryString.append("//*") ;
+  	}else{
+  		queryString.append("//element(*,exo:").append(type).append(")") ;
+  	}
+    
     StringBuffer stringBuffer = new StringBuffer() ;
     stringBuffer.append("[");
+    
+    if(language != null && language.trim().length() > 0){
+    	stringBuffer.append("(exo:language='").append(language).append("')");
+    	isAnd = true;
+    }
+    
     if(text != null && text.length() > 0 ) {
+    	if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
   		isAnd = true ;
     }
@@ -368,9 +363,6 @@ public String getPathQuery() {
 	    if(question != null && question.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
 	    	stringBuffer.append("( (jcr:contains(@exo:title,'").append(question).append("')) or (jcr:contains(@exo:name, '").append(question).append("')) )") ;
-	    	isAnd = true ;
-	    }
-	    if(response != null && response.length() > 0) {
 	    	isAnd = true ;
 	    }
     } else if(type.equals("faqAttachment")) {
