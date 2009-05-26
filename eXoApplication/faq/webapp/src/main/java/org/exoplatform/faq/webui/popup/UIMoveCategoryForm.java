@@ -68,15 +68,14 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIMoveCategoryForm() throws Exception {
-		SessionProvider sProvider = FAQUtils.getSystemProvider();
-		Node homeNode = faqService_.getCategoryNodeById(null, sProvider);
-		if(homeNode.hasProperty("exo:name")) homeCategoryName = homeNode.getProperty("exo:name").getString();
-		else{
+		Category category = faqService_.getCategoryById(null);
+		if(category.getName() != null && category.getName().trim().length() > 0){ 
+			homeCategoryName = category.getName();
+		}else{
 			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 			ResourceBundle res = context.getApplicationResourceBundle() ;
 			homeCategoryName = res.getString("UIAddRelationForm.title.RootCategory");
 		}
-		sProvider.close();
 	}
 
 	public String getCategoryID() { return categoryId_; }
