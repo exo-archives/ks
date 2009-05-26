@@ -63,6 +63,7 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 	private PruneSetting pruneSetting;
 	private long topicOld = 0;
 	private boolean isTest = false;
+	private boolean isActivate = false;
 	public UIAutoPruneSettingForm() throws Exception {
 		UIFormStringInput inActiveDay = new UIFormStringInput(FIELD_INACTIVEDAY_INPUT, FIELD_INACTIVEDAY_INPUT, null);
 		UIFormStringInput jobDay = new UIFormStringInput(FIELD_JOBDAY_INPUT, FIELD_JOBDAY_INPUT, null);
@@ -89,6 +90,13 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 		setActions(new String[]{"Save", "Close"});
   }
 	
+  public boolean isActivate() {
+  	return isActivate;
+  }
+  public void setActivate(boolean isActivate) {
+  	this.isActivate = isActivate;
+  }
+
 	@SuppressWarnings("unused")
   private void setInitForm() throws Exception{
 		if(!isTest) {
@@ -152,6 +160,7 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
       } catch (Exception e) {
       }
       uiform.pruneSetting.setJobDay(date);
+      if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			forumService.savePruneSetting(uiform.pruneSetting);
 			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;

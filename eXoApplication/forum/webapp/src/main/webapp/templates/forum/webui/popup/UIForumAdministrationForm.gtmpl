@@ -210,14 +210,14 @@
 											</div>
 									<%} else if(tabconten.id.equals(uicomponent.FIELD_AUTOPRUNE_TAB)) {
 									%>
-										<div class="AutuPruneContainer" id="AutuPruneContainer">
-											<div style="padding:0px 16px 0px 1px;">
+										<div class="AutuPruneContainer">
+											<div id="AutuPruneContainer" style="padding:0px 16px 0px 1px;">
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 													<thead>
 														<tr>
 															<th style="width:120px; text-align:center">Category</th>
 															<th style="width:120px; text-align:center">Forum</th>
-															<th width="50px">Active</th>
+															<th width="40px">Active</th>
 															<th>Last Run</th>
 															<th width="60px">Action</th>
 														</tr>
@@ -253,7 +253,7 @@
 														<tr class="$classCssInbox">
 															<td style="width:120px; text-align:center">$categoryName</th>
 															<td style="width:120px; text-align:center">$forumName</th>
-															<td width="50px"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></th>
+															<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></div></th>
 															<td>$lastRun</th>
 															<td width="60px">
 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
@@ -271,7 +271,7 @@
 														<tr class="$classCssInbox">
 															<td style="width:120px; text-align:center"><b>$categoryName</b></th>
 															<td style="width:120px; text-align:center"> </th>
-															<td width="50px"> </th>
+															<td width="40px"> </th>
 															<td> </th>
 															<td width="60px"> </th>
 														</tr>
@@ -283,7 +283,7 @@
 														<tr class="$classCssInbox">
 															<td style="width:120px; text-align:center">$categoryName</th>
 															<td style="width:120px; text-align:center">$forumName</th>
-															<td width="50px"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></th>
+															<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><input type="checkbox" class="checkbox" value="$value" name="$pruneId" $checked/></div></th>
 															<td>$lastRun</th>
 															<td width="60px">
 																<div class="ActionContainer" style="margin:0px auto; width:52px;">
@@ -305,7 +305,7 @@
 												</table>
 											</div>
 										</div>
-										<script type='text/javascript'>var cont = document.getElementById('AutuPruneContainer');var table = document.getElementById('TableContent');if((cont.offsetWidth+2 > table.offsetWidth) || (cont.offsetWidth < (table.offsetWidth + 16))){table.style.padding = "1px";table.style.width = "100%";} else {table.style.paddingRight = "16px";table.style.width = "auto";}</script>
+										<script type='text/javascript'>var cont = document.getElementById('AutuPruneContainer');var table = document.getElementById('TableContent');if(table.offsetWidth > (cont.offsetWidth+5)){table.style.paddingRight = "16px";table.style.width = "auto";} else {table.style.padding = "1px";table.style.width = "100%";}</script>
 									 <%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}

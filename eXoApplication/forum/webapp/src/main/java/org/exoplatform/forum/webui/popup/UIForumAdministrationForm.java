@@ -75,7 +75,8 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.PruneSettingActionListener.class),
-			@EventConfig(listeners = UIForumAdministrationForm.RunPruneActionListener.class)
+			@EventConfig(listeners = UIForumAdministrationForm.RunPruneActionListener.class),
+			@EventConfig(listeners = UIForumAdministrationForm.ActivatePruneActionListener.class)
 		}
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
@@ -479,12 +480,32 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumPortlet.cancelAction() ;
 		}
 	}
+
+	static	public class ActivatePruneActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIForumAdministrationForm uiForm = event.getSource();
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			if(pruneSetting.getInActiveDay() == 0) {
+				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+				UIAutoPruneSettingForm pruneSettingForm = popupAction.activate(UIAutoPruneSettingForm.class, 525) ;
+				pruneSettingForm.setPruneSetting(pruneSetting);
+				pruneSettingForm.setId("AutoPruneSettingForm") ;
+				pruneSettingForm.setActivate(true);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			} else {
+				pruneSetting.setActive(true);
+				uiForm.forumService.savePruneSetting(pruneSetting);
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			}
+		}
+	}
 	
 	static	public class PruneSettingActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID);
-			System.out.println("\n\n id; " +  pruneId);
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIAutoPruneSettingForm pruneSettingForm = popupAction.activate(UIAutoPruneSettingForm.class, 525) ;

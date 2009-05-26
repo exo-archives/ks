@@ -869,8 +869,12 @@ public class JCRDataStorage {
 			}
 			if(isNew) {
 				PruneSetting pruneSetting = new PruneSetting();
-				String id = catNode.getName().replaceFirst(Utils.CATEGORY, Utils.PRUNESETTING);
-				String oderF = String.valueOf(forum.getForumOrder());
+				// set Id prune setting.
+				String id = catNode.getName().replaceFirst(Utils.CATEGORY, "");
+				String oderF = String.valueOf(catNode.getProperty("exo:categoryOrder").getString());
+				if(oderF.length() == 1) oderF = "0" + oderF;
+				id = Utils.PRUNESETTING + oderF;
+				oderF = String.valueOf(forum.getForumOrder());
 				if(oderF.length() == 1) oderF = "0" + oderF;
 				id = id + oderF + String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(6);
 				pruneSetting.setId(id);
