@@ -116,7 +116,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 		Cate parentCate = null ;
 		Cate childCate = null ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false)) {
+		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false, null)) {
 			if(category != null ) {
 				Cate cate = new Cate() ;
 				cate.setCategory(category) ;
@@ -130,7 +130,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			parentCate = listCate.get(listCate.size() - 1) ;
 			listCate.remove(parentCate) ;
 			this.listCate.add(parentCate) ;
-			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
+			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false, null)){
 				if(category != null ) {
 					childCate = new Cate() ;
 					childCate.setCategory(category) ;

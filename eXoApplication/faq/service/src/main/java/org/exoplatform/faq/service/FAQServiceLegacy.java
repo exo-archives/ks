@@ -64,9 +64,10 @@ public interface FAQServiceLegacy {
   public List<String> getListCateIdByModerator(String user, SessionProvider sProvider) throws Exception ;  
   
   /**
-   * @deprecated use {@link FAQService#getSubCategories(String categoryId, FAQSetting faqSetting)}
+   * @param userView TODO
+   * @deprecated use {@link FAQService#getSubCategories(String categoryId, FAQSetting faqSetting, List<String> userView)}
    */
-  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#moveCategory(String categoryId, String destCategoryId)}

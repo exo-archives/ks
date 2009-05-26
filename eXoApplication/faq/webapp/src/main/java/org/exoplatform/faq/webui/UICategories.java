@@ -240,9 +240,14 @@ public class UICategories extends UIContainer{
 	private void setListCate() throws Exception {
 		if(!isSwap){
 			List<Category> newList = new ArrayList<Category>();
+			String userName = FAQUtils.getCurrentUser();
+	    List<String>userPrivates = null;
+	    if(userName != null){
+	    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+	    }
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
-				newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false);
+				newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, userPrivates);
 				currentName = faqService_.getCategoryById(this.categoryId_).getName();
 			} catch(Exception e){
 				currentName = faqService_.getCategoryById(this.parentCateID_).getName();
@@ -250,7 +255,7 @@ public class UICategories extends UIContainer{
 			}
 			viewBackIcon = true;
 			if(newList.isEmpty()) {
-				newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false);
+				newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false, userPrivates);
 				viewBackIcon = false;
 			}
 			if(currentName == null || currentName.trim().length() < 1) currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
@@ -276,8 +281,13 @@ public class UICategories extends UIContainer{
 	public void resetListCate(SessionProvider sProvider) throws Exception{
 		isSwap = true;
 		listCate.clear();
-		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_, false));
-		setIsModerators(FAQUtils.getCurrentUser());
+		String userName = FAQUtils.getCurrentUser();
+    List<String>userPrivates = null;
+    if(userName != null){
+    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+    }
+		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_, false, userPrivates));
+		setIsModerators(userName);
 	}
 	
 	public List<Watch> getListWatch(String categoryId) throws Exception {
@@ -308,15 +318,20 @@ public class UICategories extends UIContainer{
 		List<Category> listResult = new ArrayList<Category>() ;
 		Stack<Category> stackCate = new Stack<Category>() ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+		String userName = FAQUtils.getCurrentUser();
+    List<String>userPrivates = null;
+    if(userName != null){
+    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+    }
 		Category cate = null ;
 		listResult.add(faqService_.getCategoryById(categoryId, sessionProvider)) ;
-		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false)) {
+		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false, userPrivates)) {
 			stackCate.push(category) ;
 		}
 		while(!stackCate.isEmpty()) {
 			cate = stackCate.pop() ;
 			listResult.add(cate) ;
-			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false)) {
+			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false, userPrivates)) {
 				stackCate.push(category) ;
 			}
 		}
@@ -452,7 +467,7 @@ public class UICategories extends UIContainer{
 					Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(currentUser)) {
-						uiPopupAction.activate(uiPopupContainer, 540, 400) ;
+						uiPopupAction.activate(uiPopupContainer, 580, 500) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
 						category.setParentId(categoryId) ;
 					} else {
@@ -473,7 +488,7 @@ public class UICategories extends UIContainer{
 				}
 				sessionProvider.close();
 			} else {
-				uiPopupAction.activate(uiPopupContainer, 540, 400) ;
+				uiPopupAction.activate(uiPopupContainer, 580, 500) ;
 				uiPopupContainer.setId("AddCategoryForm") ;
 			}
 			category.init(true) ;
@@ -507,6 +522,7 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -686,7 +702,7 @@ public class UICategories extends UIContainer{
 			try {
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					List<Category> listCate = uiCategories.faqService_.getSubCategories(null, sessionProvider, uiCategories.faqSetting_, false) ;
+					List<Category> listCate = uiCategories.faqService_.getSubCategories(null, sessionProvider, uiCategories.faqSetting_, false, null) ;
 					String cateId = null ;
 					if(listCate.size() == 1 ) {
 						for(Category cat: listCate) { cateId = cat.getId(); }

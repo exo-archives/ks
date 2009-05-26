@@ -100,7 +100,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		Cate parentCate = null ;
 		Cate childCate = null ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false)) {
+		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false, null)) {
 			if(category != null && !category.getId().equals(categoryId_)) {
 				Cate cate = new Cate() ;
 				cate.setCategory(category) ;
@@ -114,7 +114,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			parentCate = listCate.get(listCate.size() - 1) ;
 			listCate.remove(parentCate) ;
 			this.listCate.add(parentCate) ;
-			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
+			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false, null)){
 				if(category != null && !category.getId().equals(categoryId_)) {
 					childCate = new Cate() ;
 					childCate.setCategory(category) ;
@@ -153,7 +153,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			listCate.add(cateClass) ;
 			int i = 0 ;
 			while(i < listCate.size()) {
-				for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), sessionProvider, faqSetting_, false)) {
+				for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), sessionProvider, faqSetting_, false, null)) {
 					cateClass = new CateClass() ;
 					cateClass.setCategory(category) ;
 					cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;

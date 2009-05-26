@@ -35,6 +35,7 @@ public class Category {
   private String id ;
   private long index;
   private String name ;
+  private String[] userPrivate ;
   private String description ;
   private boolean isModerateQuestions = false ;
   private boolean isModerateAnswers = false ;
@@ -43,21 +44,22 @@ public class Category {
   private String[] moderators ;
   private Date createdDate ;
   
-  public boolean isView() {
-		return isView;
-	}
-
-	public void setView(boolean isView) {
-		this.isView = isView;
-	}
 
 	/**
    * Class constructor specifying id of object is created
    */
   public Category() {
     id = "Category" + IdGenerator.generate() ;
+    userPrivate = new String[] {" "};
   }
   
+  public boolean isView() {
+  	return isView;
+  }
+  
+  public void setView(boolean isView) {
+  	this.isView = isView;
+  }
   /**
    * This method get id of category object
    * 
@@ -178,4 +180,18 @@ public class Category {
 	public void setModerateAnswers(boolean isModerateAnswers) {
 		this.isModerateAnswers = isModerateAnswers;
 	}
+
+	/**
+   * @return the userPrivate
+   */
+  public String[] getUserPrivate() {
+  	return userPrivate;
+  }
+
+	/**
+   * @param userPrivate the userPrivate to set
+   */
+  public void setUserPrivate(String[] userPrivate) {
+  	this.userPrivate = userPrivate;
+  }
 }

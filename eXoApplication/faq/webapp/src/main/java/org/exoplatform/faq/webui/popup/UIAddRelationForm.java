@@ -26,6 +26,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -134,8 +135,13 @@ private void initPage() throws Exception {
     List<Cate> listCate = new ArrayList<Cate>();
     Cate parentCate = null ;
     Cate childCate = null ;
+    String userName = FAQUtils.getCurrentUser();
+    List<String>userPrivates = null;
+    if(userName != null){
+    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+    }
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, false)) {
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, false, userPrivates)) {
       if(category != null) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -150,7 +156,7 @@ private void initPage() throws Exception {
       listCate.remove(0);
       this.listCate.add(parentCate) ;
       int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false)){
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false, userPrivates)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;

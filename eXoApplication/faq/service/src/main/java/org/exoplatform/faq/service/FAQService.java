@@ -125,13 +125,13 @@ public interface FAQService extends FAQServiceLegacy{
    * and convert to category object and return list of category object
    * 
    * @param categoryId the category id
+   * @param userView TODO
    * @param sProvider the s provider
-   * 
    * @return Category list
    * 
    * @throws Exception the exception
    */
-  public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll) throws Exception ;
+  public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception ;
   
   public void moveCategory(String categoryId, String destCategoryId) throws Exception ;
   

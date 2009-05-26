@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.exoplatform.commons.utils.ISO8601;
 
@@ -43,10 +44,12 @@ public class FAQEventQuery {
 	private String question;
 	private String response ;
 	private String attachment ;
+	private List<String> userMembers;
 	private Calendar fromDate ;
 	private Calendar toDate ;
 	private String language;
 	private boolean isAnd = false ;
+	private boolean isAdmin = false ;
 
 	public String getLanguage() {
 		return language;
@@ -260,6 +263,20 @@ public class FAQEventQuery {
 	}
 	
 	/**
+   * @return the userMembers
+   */
+  public List<String> getUserMembers() {
+  	return userMembers;
+  }
+
+	/**
+   * @param userMembers the userMembers to set
+   */
+  public void setUserMembers(List<String> userMembers) {
+  	this.userMembers = userMembers;
+  }
+
+	/**
 	 * Gets the from date.
 	 * 
 	 * @return the from date
@@ -303,6 +320,20 @@ public class FAQEventQuery {
 	public boolean getIsAnd() {
 	  return this.isAnd ;
   }
+	/**
+   * @return the isAdmin
+   */
+  public boolean isAdmin() {
+  	return isAdmin;
+  }
+
+	/**
+   * @param isAdmin the isAdmin to set
+   */
+  public void setAdmin(boolean isAdmin) {
+  	this.isAdmin = isAdmin;
+  }
+
 	/**
 	 * This method is query on search 
 	 * Gets the path query.

@@ -1991,3 +1991,7 @@
 .UIFAQPortlet .ThreadsIcon {
 	background: url('background/ThreadIcon.gif') no-repeat left top;
 }
+
+.UIFAQPortlet .UIAddCategoryForm .textarea{
+	height: 55px;
+}

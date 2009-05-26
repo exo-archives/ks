@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -145,4 +146,17 @@ public class Utils {
 		}
 		return builder.toString();
   }
+	
+	static public String[] compareStr(String arr1[], String arr2[]) throws Exception {
+		List<String> list = new ArrayList<String>();
+		list.addAll(Arrays.asList(arr1));
+		if(list.isEmpty() || list.get(0).equals(" ")) return new String[]{" "};
+		for (int i = 0; i < arr2.length; i++) {
+			if(!list.contains(arr2[i])) {
+				list.add(arr2[i]);
+			}
+    }
+		return list.toArray(new String[]{});
+	}
+	
 }

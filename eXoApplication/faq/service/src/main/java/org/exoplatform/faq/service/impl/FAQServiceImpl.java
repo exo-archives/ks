@@ -316,18 +316,18 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 * else this view list category of one value parent category that you communicate categoryId 
 	 *  
 	 * @param  	categoryId is address id of the category 
-	 * @param  	sProvider
+   * @param  	sProvider
 	 * @return  List parent category or list sub category
 	 * @see     list category
 	 * @throws Exception the exception
 	 */
-	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll) throws Exception {
+	public List<Category> getSubCategories(String categoryId, SessionProvider sProvider, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception {
 		sProvider.close() ;
-		return getSubCategories(categoryId ,faqSetting, isGetAll);
+		return getSubCategories(categoryId ,faqSetting, isGetAll, userView);
 	}
 	
-	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll) throws Exception {
-		return jcrData_.getSubCategories(categoryId, faqSetting, isGetAll);
+	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception {
+		return jcrData_.getSubCategories(categoryId, faqSetting, isGetAll, userView);
 	}
 	
 	/**

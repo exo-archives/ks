@@ -27,6 +27,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
@@ -136,8 +137,13 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
     List<Cate> listCate = new ArrayList<Cate>();
     Cate parentCate = null ;
     Cate childCate = null ;
+    String userName = FAQUtils.getCurrentUser();
+    List<String>userPrivates = null;
+    if(userName != null){
+    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+    }
     SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, true)) {
+    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, true, userPrivates)) {
       if(category != null) {
         Cate cate = new Cate() ;
         cate.setCategory(category) ;
@@ -152,7 +158,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
       listCate.remove(0);
       this.listCate.add(parentCate) ;
       int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, true)){
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, true, userPrivates)){
         if(category != null) {
           childCate = new Cate() ;
           childCate.setCategory(category) ;

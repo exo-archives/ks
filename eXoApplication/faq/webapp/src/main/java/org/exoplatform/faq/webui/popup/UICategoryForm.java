@@ -68,6 +68,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	protected long index_ = 0;
 	final private static String FIELD_NAME_INPUT = "eventCategoryName" ; 
   final private static String FIELD_DESCRIPTION_INPUT = "description" ;
+  final private static String FIELD_USERPRIVATE_INPUT = "userPrivate" ;
   final private static String FIELD_MODERATOR_INPUT = "moderator" ;
   final private static String FIELD_INDEX_INPUT = "index" ;
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
@@ -91,6 +92,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     sProvider.close();
     index.setValue(String.valueOf(index_));
     inputset.addUIFormInput(index) ;
+    inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false )) ;
@@ -99,21 +101,25 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     moderator.setValue(FAQUtils.getCurrentUser());
 		moderator.addValidator(MandatoryValidator.class);
     inputset.addUIFormInput(moderator) ;
-    List<ActionData> actionData = new ArrayList<ActionData>() ;
+    List<ActionData> actionData ;
     String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
 		ActionData ad ;
-		int i = 0;
-		for(String string : strings) {
-			ad = new ActionData() ;
-			ad.setActionListener("SelectPermission") ;
-			ad.setActionName(string);
-			ad.setActionType(ActionData.TYPE_ICON) ;
-			ad.setCssIconClass(string + "Icon") ;
-			ad.setActionParameter(String.valueOf(i)) ;
-			actionData.add(ad) ;
-			++i;
+		String files[] = new String[]{FIELD_USERPRIVATE_INPUT, FIELD_MODERATOR_INPUT};
+		for (int i = 0; i < files.length; i++) {
+			int j = 0;
+			actionData = new ArrayList<ActionData>() ;
+			for(String string : strings) {
+				ad = new ActionData() ;
+				ad.setActionListener("SelectPermission") ;
+				ad.setActionName(string);
+				ad.setActionType(ActionData.TYPE_ICON) ;
+				ad.setCssIconClass(string + "Icon") ;
+				ad.setActionParameter(files[i] + "," + String.valueOf(j)) ;
+				actionData.add(ad) ;
+				++j;
+			}
+			inputset.setActionField(files[i], actionData) ; 
 		}
-		inputset.setActionField(FIELD_MODERATOR_INPUT, actionData) ; 
 		addChild(inputset) ;
 	}
 	public String getLabel(String id) {
@@ -150,6 +156,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			index_ = cat.getIndex();
 			if(oldName_ != null && oldName_.trim().length() > 0) getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			else getUIStringInput(FIELD_NAME_INPUT).setValue("Root") ;
+			String userPrivate = (Arrays.asList(cat.getUserPrivate()).toString()).replace("[", "").replace("]", "");
+			getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate) ;
+			
 			getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(index_)) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
 			getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).setChecked(cat.isModerateQuestions()) ;
@@ -238,29 +247,46 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         }
       }
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
+     
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
-      Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
-      Boolean moderateAnswer = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked() ;
-      boolean viewAuthorInfor = uiCategory.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
           ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ; 
       }
-      moderator = uiCategory.removeSpaceInString(moderator) ;
-      moderator = uiCategory.filterItemInString(moderator) ;
-      String erroUser = FAQUtils.checkValueUser(moderator) ;
+      
+      String userPrivate = uiCategory.getUIStringInput(FIELD_USERPRIVATE_INPUT).getValue() ;
+      if(userPrivate != null && userPrivate.trim().length() > 0) {
+      	userPrivate = uiCategory.removeSpaceInString(userPrivate);
+      	userPrivate = uiCategory.filterItemInString(userPrivate) ;
+      }
+      String erroUser = FAQUtils.checkValueUser(userPrivate) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
-    		Object[] args = { uiCategory.getLabel(FIELD_MODERATOR_INPUT), erroUser };
+    		Object[] args = { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser };
     		uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.user-not-found", args, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
+      moderator = uiCategory.removeSpaceInString(moderator) ;
+      moderator = uiCategory.filterItemInString(moderator) ;
+      erroUser = FAQUtils.checkValueUser(moderator) ;
+      if(!FAQUtils.isFieldEmpty(erroUser)) {
+      	Object[] args = { uiCategory.getLabel(FIELD_MODERATOR_INPUT), erroUser };
+      	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.user-not-found", args, ApplicationMessage.WARNING)) ;
+      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	return ;
+      }
+      
+      Boolean moderatequestion = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATEQUESTIONS_CHECKBOX).isChecked() ;
+      Boolean moderateAnswer = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked() ;
+      boolean viewAuthorInfor = uiCategory.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       String[] users = FAQUtils.splitForFAQ(moderator) ;
+      String userPrivates[] = FAQUtils.splitForFAQ(userPrivate) ;
       
 			Category cat = new Category();
 			cat.setName(name.trim()) ;
+			cat.setUserPrivate(userPrivates);
 			cat.setDescription(description) ;
 			cat.setCreatedDate(new Date()) ;
 			cat.setModerateQuestions(moderatequestion) ;
@@ -360,14 +386,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm categoryForm = event.getSource() ;
 			String permType = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String types[] = permType.split(",");
 			UIPopupAction childPopup = categoryForm.getAncestorOfType(UIPopupContainer.class).getChild(UIPopupAction.class) ;
 			UIGroupSelector uiGroupSelector = childPopup.activate(UIGroupSelector.class, 500) ;
-			uiGroupSelector.setType(permType) ;
+			uiGroupSelector.setType(types[1]) ;
 			if(permType.equals(UISelectComponent.TYPE_USER) ) uiGroupSelector.setId("UIUserSelector") ;
 			if(permType.equals(UISelectComponent.TYPE_MEMBERSHIP) ) uiGroupSelector.setId("UIMebershipSelector") ;
 			if(permType.equals(UISelectComponent.TYPE_GROUP) ) uiGroupSelector.setId("UIGroupSelector") ;
 			uiGroupSelector.setSelectedGroups(null) ;
-			uiGroupSelector.setComponent(categoryForm, new String[]{FIELD_MODERATOR_INPUT}) ;
+			uiGroupSelector.setComponent(categoryForm, new String[]{types[0]}) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  
 		}
 	}
