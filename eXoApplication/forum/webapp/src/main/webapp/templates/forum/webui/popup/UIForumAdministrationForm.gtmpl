@@ -1,5 +1,6 @@
 <%	
 	import org.exoplatform.forum.service.BBCode;
+	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.webui.popup.UIListTopicOld;
 	import org.exoplatform.forum.webui.popup.UIPageListPostByUser;
 	def jsManager = _ctx.getRequestContext().getJavascriptManager() ;
@@ -237,7 +238,7 @@
 																String pruneId = pruneSetting.getId();
 																String lastRun = "";
 																if(pruneSetting.getLastRunDate() != null){
-																	lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + "GMT+0" ;
+																	lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
 																}
 																String value = "false";
 																String checked = "";

@@ -870,14 +870,14 @@ public class JCRDataStorage {
 			if(isNew) {
 				PruneSetting pruneSetting = new PruneSetting();
 				// set Id prune setting.
-				String id = catNode.getName().replaceFirst(Utils.CATEGORY, "");
+				StringBuilder id = new StringBuilder();
 				String oderF = String.valueOf(catNode.getProperty("exo:categoryOrder").getString());
 				if(oderF.length() == 1) oderF = "0" + oderF;
-				id = Utils.PRUNESETTING + oderF;
+				id.append(Utils.PRUNESETTING).append(catNode.getName().replaceFirst(Utils.CATEGORY, "")).append(oderF);
 				oderF = String.valueOf(forum.getForumOrder());
 				if(oderF.length() == 1) oderF = "0" + oderF;
-				id = id + oderF + String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(6);
-				pruneSetting.setId(id);
+				id.append(oderF).append(String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(6));
+				pruneSetting.setId(id.toString());
 				pruneSetting.setForumPath(forum.getPath());
 				savePruneSetting(pruneSetting);
 			}
@@ -1486,7 +1486,9 @@ public class JCRDataStorage {
 	      Node node = (Node) iter.nextNode();
 	      topic = new Topic();
 	      topic.setId(node.getName());
+	      topic.setPath(node.getPath());
 	      topic.setIsActive(node.getProperty("exo:isActive").getBoolean());
+	      topic.setPostCount(node.getProperty("exo:postCount").getLong());
 	      topics.add(topic);
       }
 		} catch (Exception e) {

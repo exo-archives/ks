@@ -396,7 +396,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource() ;
 			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			System.out.println("\n\n id; " +  pruneId);
 			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
 			if(pruneSetting.getInActiveDay() == 0) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -495,7 +494,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 				pruneSettingForm.setActivate(true);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				pruneSetting.setActive(true);
+				pruneSetting.setActive(!pruneSetting.isActive());
 				uiForm.forumService.savePruneSetting(pruneSetting);
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 			}
