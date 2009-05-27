@@ -34,7 +34,7 @@ abstract public class JCRPageList {
 	protected List<Question> currentListPage_ ;
 	protected List currentListObject_ ;
 	protected List<Category> currentListCategory_;
-	protected List<FAQFormSearch> currentListResultSearch_ ;
+	protected List<ObjectSearchResult> currentListResultSearch_ ;
 	protected List<Watch> currentListWatch_ ;
 	private String objectRepare_ = null;
 	private long pageJump_ = 0;
@@ -169,7 +169,7 @@ abstract public class JCRPageList {
 	
 	abstract protected void populateCurrentPageResultSearch(long page, String username) throws Exception   ;
 
-	public List<FAQFormSearch> getPageResultSearch(long page, String username) throws Exception   {
+	public List<ObjectSearchResult> getPageResultSearch(long page, String username) throws Exception   {
 		checkAndSetPage(page) ;
 		populateCurrentPageResultSearch(currentPage_, username) ;
 		return currentListResultSearch_ ;

@@ -33,7 +33,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -565,47 +565,6 @@ public class FAQServiceImpl implements FAQService, Startable{
   }
   
   /**
-   * This method will return list object FAQFormSearch
-   * <p>
-   * In instance system filter categories and questions coherent value with user need search
-   * 
-   * @param  	sProvider
-   * @param		text is value user input with search.
-   * @param		fromDate, toDate is time user want search 
-   * @return	list FAQFormSearch
-   * @see		 list categories and question was filter
-   * @throws Exception the exception
-   */
-  public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception {
-  	sProvider.close() ;
-  	return getAdvancedEmpty(text, fromDate, toDate); 
-  }
-  
-  public List<FAQFormSearch> getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate) throws Exception {
-  	return jcrData_.getAdvancedEmpty(text, fromDate, toDate); 
-  }
-  
-  /**
-   * This method will return list category when user input value search
-   * <p>
-   * With many categories , it's difficult to find a category which user want to see.
-   * So to support to users can find their categories more quickly and accurate,
-   *  user can use 'Search Category' function
-   * 
-   * @param	 sProvider
-   * @param	 eventQuery is object save value in form advanced search 
-   * @throws Exception the exception
-   */
-  public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
-  	sProvider.close() ;
-  	return getAdvancedSearchCategory(eventQuery); 
-  }
-  
-  public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception {
-  	return jcrData_.getAdvancedSearchCategory(eventQuery); 
-  }
-  
-  /**
    * This method should lookup all the categories node 
    * so find category have user in moderators
    * and convert to category object and return list of category object
@@ -635,13 +594,13 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
-  public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  public List<ObjectSearchResult> getSearchResults(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	sProvider.close() ;
-  	return getAdvancedSearchQuestion(eventQuery) ;
+  	return getSearchResults(eventQuery) ;
   }
   
-  public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception {
-  	return jcrData_.getAdvancedSearchQuestion(eventQuery) ;
+  public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getSearchResults(eventQuery) ;
   }
   
   /**
@@ -1083,8 +1042,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
 		return jcrData_.exportData(categoryId, createZipFile);
 	}
-
-	
 }
 
 

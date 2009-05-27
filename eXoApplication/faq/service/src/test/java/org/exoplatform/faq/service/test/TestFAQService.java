@@ -32,7 +32,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -399,32 +399,34 @@ public class TestFAQService extends FAQServiceTestCase{
 	}
 
 	public void testSearch() throws Exception {
+		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
 
 //		quick search with text = "test"
-		List<FAQFormSearch> listQuickSearch = faqService_.getAdvancedEmpty(sProvider_, "test", null, null) ;
+		eventQueryCategory.setText("test");
+		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
 		assertEquals("Can't get all questions and catgories have \"test\" charaters in content", listQuickSearch.size(), 7) ;
 
 //		search all category and question in database
-		List<FAQFormSearch> listSearchAll = faqService_.getAdvancedEmpty(sProvider_, "", null, null) ;
+		eventQueryCategory.setText("");
+		List<ObjectSearchResult> listSearchAll = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
 		assertEquals("The number of objects (question and category) is not 8", listSearchAll.size(), 8) ;
 
 //		advance search all category in database
-		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
 		eventQueryCategory.setType("faqCategory");
-		List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
+		List<ObjectSearchResult> listAllCategroy = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
 		assertEquals("In System don't have 4 categories", listAllCategroy.size(), 4) ;
 
 //		advance search with category name = "Sub"
 		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
 		eventQuerySub.setType("faqCategory");
 		eventQuerySub.setName("Sub") ;
-		List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
+		List<ObjectSearchResult> listAllSub = faqService_.getSearchResults(sProvider_, eventQuerySub) ;
 		assertEquals("don't Have any cateogry which have \"Sub\" charater in name", listAllSub.size(), 1) ;
 
 //		advance search all question in database
 		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
 		eventQueryQuestion.setType("faqQuestion");
-		List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
+		List<ObjectSearchResult> listAllQuestion = faqService_.getSearchResults(sProvider_, eventQueryQuestion) ;
 		assertEquals(listAllQuestion.size(), 0) ;
 
 
@@ -432,7 +434,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
 		eventQueryAdvanceQuestion.setType("faqQuestion");
 		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
-		List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
+		List<ObjectSearchResult> listSearchAdvanceQuestion = faqService_.getSearchResults(sProvider_, eventQueryAdvanceQuestion) ;
 		assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
 									listSearchAdvanceQuestion.size(), 2) ;
 	}

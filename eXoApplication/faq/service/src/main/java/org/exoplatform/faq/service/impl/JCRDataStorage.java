@@ -66,7 +66,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -2392,187 +2392,76 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}		
 	}
 	
-	private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
-		StringBuffer queryString = new StringBuffer() ;
-		if(fromDate != null && toDate != null) {
-			if(isOwner) queryString.append(" and ") ;
-			queryString.append("((@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ") ;
-			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
-			isOwner = true ;
-		} else if(fromDate != null){
-			if(isOwner) queryString.append(" and ") ;
-			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
-			isOwner = true ;
-		} else if(toDate != null){
-			if(isOwner) queryString.append(" and ") ;
-			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
-			isOwner = true ;
-		}
-		return queryString.toString() ;
-	}
-	
-	public List<FAQFormSearch> getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate) throws Exception {
+	public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
+		boolean isCheckCategoryScoping = true;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<FAQFormSearch>FormSearchs = new ArrayList<FAQFormSearch>() ;
-		try {
-			Node faqServiceHome = getFAQServiceHome(sProvider) ;
-			String types[] = new String[] {"faqCategory", "faqQuestion", "answer", "comment"} ;
-			QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager();			
-			List<String> ids = new ArrayList<String>();
-			List<String> listIdViews = listCateIdsView(sProvider);
-			for (String type : types) {
-				StringBuffer queryString = new StringBuffer("/jcr:root").append(faqServiceHome.getPath()).append("//element(*,exo:").append(type).append(")");
-				StringBuffer stringBuffer = new StringBuffer() ;
-				isOwner = false ;
-				stringBuffer.append("[");
-				if(text !=null && text.length() > 0) {
-					stringBuffer.append("(jcr:contains(., '").append(text).append("'))") ;
-					isOwner = true ;
-				}
-				String temp = setDateFromTo(fromDate, toDate, "createdDate") ;
-				if(temp != null && temp.length() > 0) { 
-					stringBuffer.append(temp) ;
-				}
-				
-				if(type.equals("faqCategory"))stringBuffer.append(" and (@exo:isView='true')");
-				else if (type.equals("faqQuestion")){
-					stringBuffer.append(" and (");
-					for(int i = 0; i < listIdViews.size(); i ++){
-						if(i > 0) stringBuffer.append(" or ");
-						stringBuffer.append("(exo:categoryId='").append(listIdViews.get(i)).append("')");
-					}
-					stringBuffer.append(")");
-				}
-				
-				stringBuffer.append("]") ;
-				if(isOwner) queryString.append(stringBuffer.toString()) ;
-				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-				QueryResult result = query.execute();
-				NodeIterator iter = result.getNodes() ;
-				Node node ;
-				FAQFormSearch formSearch ;
-				String id;
-				while(iter.hasNext()) {
-					node = (Node)iter.nextNode();
-					try {
-						formSearch = new FAQFormSearch() ;					
-						id = node.getName() ;
-						if(!type.equals("faqCategory")) {
-							if(type.equals("comment") || type.equals("answer")){
-								while(!node.isNodeType("exo:faqQuestion"))
-									node = node.getParent();
-								if(ids.contains(node.getName()) || !listIdViews.contains(node.getProperty("exo:categoryId").getString())){
-									continue;
-								}
-								id = node.getName();
-							}
-							ids.add(node.getName());
-							
-							formSearch.setName(node.getProperty("exo:title").getString()) ;
-							Node questionNode = getQuestionNodeById(id);
-							if(questionHasAnswer(questionNode)) {
-								formSearch.setIcon("QuestionSearch") ;
-							} else {
-								formSearch.setIcon("NotResponseSearch") ;
-							}
-						} else {
-							formSearch.setName(node.getProperty("exo:name").getString()) ;
-							formSearch.setIcon("FAQCategorySearch") ;
-						}
-						formSearch.setId(id) ;
-						formSearch.setType(type) ;
-						formSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
-						FormSearchs.add(formSearch) ;
-					}catch(Exception e) {}					
-				}
-			}
-		}catch (Exception e) {
-			e.printStackTrace() ;
-		}finally { sProvider.close() ;}
-		return FormSearchs ;
-	}
-
-	public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<Category> catList = new ArrayList<Category>() ;
-		
-		try {
-			Node faqServiceHome = getFAQServiceHome(sProvider) ;
-			
-			QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
-			String path = eventQuery.getPath() ;
-			if(path == null || path.length() <= 0) {
-				path = faqServiceHome.getPath() ;
-			}
-			eventQuery.setPath(path) ;
-			String type = eventQuery.getType() ;
-			String queryString = eventQuery.getPathQuery() ;
-			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + " and (exo:isView='true')]";
-			
-			Query query = qm.createQuery(queryString, Query.XPATH) ;
-			QueryResult result = query.execute() ;
-			NodeIterator iter = result.getNodes() ;
-			while (iter.hasNext()) {
-				try {
-					if(!type.equals("faqQuestion")) {
-						Category category = new Category() ;
-						Node nodeObj = (Node) iter.nextNode();
-						category.setId(nodeObj.getName());
-						if(nodeObj.hasProperty("exo:name")) category.setName(nodeObj.getProperty("exo:name").getString()) ;
-						if(nodeObj.hasProperty("exo:description")) category.setDescription(nodeObj.getProperty("exo:description").getString()) ;
-						if(nodeObj.hasProperty("exo:createdDate")) category.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
-						catList.add(category) ;
-					}
-				}catch(Exception e) {}				
-			}
-		} catch (Exception e) {
-			e.printStackTrace() ;
-		} finally { sProvider.close() ;}
-		return catList;
-	}
-	
-	public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception {
-		boolean isSearchByLangauge = false;
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<String> listIdViews = listCateIdsView(sProvider);
+		List<String> listIdViews = new ArrayList<String>();
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
 		QueryManager qm = faqServiceHome.getSession().getWorkspace().getQueryManager() ;
-		Map<String, Question> questionMap = new HashMap<String, Question>();
-		Question question = null;
+		Query query = null;
+		QueryResult result = null;
+		NodeIterator iter = null;
 		
+		// check viewing permission of user:
+		StringBuffer stringBuffer = new StringBuffer("/jcr:root").append(getCategoryHome(sProvider, null).getPath()).
+																		append("//element(*,exo:faqCategory)[@exo:isView='true' ");
+		if(!eventQuery.isAdmin()) {
+			stringBuffer.append("and @exo:userPrivate=' '");
+	    if(eventQuery.getUserMembers() != null && !eventQuery.getUserMembers().isEmpty()) {
+			   for (String str : eventQuery.getUserMembers()) {
+			  	 stringBuffer.append(" or @exo:userPrivate='").append(str).append("' or @exo:moderators='").append(str).append("'");
+			   }
+		  }
+		}
+  	stringBuffer.append("]");
+  	query = qm.createQuery(stringBuffer.toString(), Query.XPATH) ;
+		result = query.execute() ;
+		iter = result.getNodes() ;
+		listIdViews.add("null");
+		while(iter.hasNext()){
+			listIdViews.add(iter.nextNode().getName());
+		}
+		
+		Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
+		ObjectSearchResult searchResult = null;
 		String path = eventQuery.getPath() ;
 		if(path == null || path.length() <= 0) {
 			path = faqServiceHome.getPath() ;
 		}
 		eventQuery.setPath(path) ;
-		String queryString = eventQuery.getPathQuery() ;
-		if(eventQuery.getLanguage() != null && eventQuery.getLanguage().trim().length() > 0) isSearchByLangauge = true;
+		String queryString = eventQuery.getQuery() ;
+		if(eventQuery.getLanguage() != null && eventQuery.getLanguage().trim().length() > 0 ||
+				eventQuery.getType().equals("categoryAndQuestion") || eventQuery.getType().equals("faqCategory"))
+			isCheckCategoryScoping = false;
 		
 		// When search with default language then will check category of question is scoping or not
-		if(!isSearchByLangauge && (listIdViews.size() > 0 && queryString.lastIndexOf("]") > 0)){
-			StringBuffer buffer = new StringBuffer(" and (");
+		if(isCheckCategoryScoping && (listIdViews.size() > 0 && queryString.lastIndexOf("]") > 0)){
+			stringBuffer = new StringBuffer(" and (");
 			for(int i = 0; i < listIdViews.size(); i ++){
-				if(i > 0) buffer.append(" or ");
-				buffer.append("exo:categoryId='").append(listIdViews.get(i)).append("'");
+				if(i > 0) stringBuffer.append(" or ");
+				stringBuffer.append("exo:categoryId='").append(listIdViews.get(i)).append("'");
 			}
-			buffer.append(")]");
-			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + buffer.toString();
+			stringBuffer.append(")]");
+			queryString = queryString.substring(0, queryString.lastIndexOf("]")) + stringBuffer.toString();
 		}
 		
 		try {
-			Query query = qm.createQuery(queryString, Query.XPATH) ;
-			QueryResult result = query.execute() ;
-			NodeIterator iter = result.getNodes() ;
+			query = qm.createQuery(queryString, Query.XPATH) ;
+			result = query.execute() ;
+			iter = result.getNodes() ;
 			Node nodeObj = null;
 			while (iter.hasNext()) {
 				nodeObj = (Node) iter.nextNode();
+				
 				// when search by language, will get parent node and check with answer field
-				if(isSearchByLangauge){
-					while(!nodeObj.isNodeType("exo:faqQuestion") && !nodeObj.getName().equals(FAQ_APP)){
+				if(!isCheckCategoryScoping && !eventQuery.getType().equals("faqCategory")){
+					while(!nodeObj.isNodeType("exo:faqQuestion") && !nodeObj.getName().equals(FAQ_APP) && !nodeObj.isNodeType("exo:faqCategory")){
 						nodeObj = nodeObj.getParent();
 					}
 					if(nodeObj.getName().equals(FAQ_APP)) continue;
-					if(eventQuery.getResponse() != null){
+					
+					// if search answer then create a new query to get all answer of this question and check
+					if(eventQuery.getResponse() != null && eventQuery.getResponse().trim().length() > 0){
 						queryString = "/jcr:root" + nodeObj.getPath() + "//element(*,exo:answer)[jcr:contains(@exo:responses,'"+eventQuery.getResponse()+"')]";
 						if(qm.createQuery(queryString, Query.XPATH).execute().getNodes().getSize() < 1){
 							continue;
@@ -2580,25 +2469,35 @@ public class JCRDataStorage {
 					}
 				}
 				
-				if(questionMap.isEmpty() || !questionMap.containsKey(nodeObj.getName())){
-					question = getQuestion(nodeObj) ;
-					questionMap.put(nodeObj.getName(), question) ;
+				if(searchMap.isEmpty() || !searchMap.containsKey(nodeObj.getName())){
+					searchResult = new ObjectSearchResult();
+					if(nodeObj.isNodeType("exo:faqQuestion")){
+						// filter questions which are in category is can view by scoping
+						if(!isCheckCategoryScoping && !listIdViews.contains(nodeObj.getProperty("exo:categoryId").getString())) {
+							continue;
+						}
+						if(questionHasAnswer(nodeObj)) {
+							searchResult.setIcon("QuestionSearch") ;
+						} else {
+							searchResult.setIcon("NotResponseSearch") ;
+						}
+						searchResult.setType("faqQuestion");
+						searchResult.setName(nodeObj.getProperty("exo:title").getString()) ;
+					} else if(nodeObj.isNodeType("exo:faqCategory")){
+						searchResult.setIcon("FAQCategorySearch") ;
+						searchResult.setName(nodeObj.getProperty("exo:name").getString()) ;
+						searchResult.setType("faqCategory");
+					}
+					searchResult.setId(nodeObj.getName());
+					searchResult.setCreatedDate(nodeObj.getProperty("exo:createdDate").getDate().getTime()) ;
+					searchMap.put(nodeObj.getName(), searchResult) ;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		
-		// filter questions which are in category is can view by scoping
-		if(isSearchByLangauge)
-			for(Question ques : questionMap.values().toArray(new Question[]{})) {
-				if(!listIdViews.contains(ques.getCategoryId())) {
-					questionMap.remove(ques);
-				} 
-			}
-		
 		sProvider.close() ;
-		return	Arrays.asList(questionMap.values().toArray(new Question[]{}));
+		return	Arrays.asList(searchMap.values().toArray(new ObjectSearchResult[]{}));
 	}
 	
 	public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception {
@@ -2614,7 +2513,7 @@ public class JCRDataStorage {
 			}
 			eventQuery.setPath(path) ;
 			String type = eventQuery.getType() ;
-			String queryString = eventQuery.getPathQuery() ;
+			String queryString = eventQuery.getQuery() ;
 			Query query = qm.createQuery(queryString, Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;

@@ -175,19 +175,9 @@ public interface FAQServiceLegacy {
   public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception;
   
   /**
-   * @deprecated use {@link FAQService#getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate)}
-   */
-  public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
-  
-  /**
-   * @deprecated use {@link FAQService#getAdvancedSearchCategory(FAQEventQuery eventQuery)}
-   */
-  public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
-  
-  /**
    * @deprecated use {@link FAQService#getAdvancedSearchQuestion(FAQEventQuery eventQuery)}
    */
-  public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  public List<ObjectSearchResult> getSearchResults(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#searchQuestionWithNameAttach(FAQEventQuery eventQuery)}

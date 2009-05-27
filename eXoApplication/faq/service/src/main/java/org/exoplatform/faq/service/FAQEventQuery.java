@@ -340,12 +340,13 @@ public class FAQEventQuery {
 	 * 
 	 * @return string the path query
 	 */
-public String getPathQuery() {
+public String getQuery() {
 		isAnd = false ;
 		StringBuffer queryString = new StringBuffer() ;
     if(path != null && path.length() > 0) queryString.append("/jcr:root").append(path);
     
-    if((language != null && language.trim().length() > 0) || type.equals("faqQuestion")){
+    if((language != null && language.trim().length() > 0 && type.equals("faqQuestion")) 
+    		|| type.equals("categoryAndQuestion")){
   		queryString.append("//*") ;
   	}else{
   		queryString.append("//element(*,exo:").append(type).append(")") ;
@@ -370,7 +371,7 @@ public String getPathQuery() {
 		  	stringBuffer.append("(jcr:contains(@exo:name, '").append(name).append("'))") ;
 		  	isAnd = true ;
 		  }
-		  if(isModeQuestion != null && isModeQuestion.length() > 0 && !isModeQuestion.equals("empty")) {
+		  if(isModeQuestion != null && isModeQuestion.length() > 0 && !isModeQuestion.equals("AllCategories")) {
 		  	if(isAnd) stringBuffer.append(" and ");
 				stringBuffer.append("(@exo:isModerateQuestions='").append(isModeQuestion).append("')") ;
 				isAnd = true ;
@@ -380,6 +381,20 @@ public String getPathQuery() {
 				stringBuffer.append("(jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
 		  	isAnd = true ;
 			}
+		  if(isAnd) stringBuffer.append(" and ");
+		  stringBuffer.append(" (@exo:isView='true')");
+		  
+			 if(!isAdmin()) {
+			    if(userMembers != null && !userMembers.isEmpty()) {
+			    	 stringBuffer.append(" and (@exo:userPrivate=' '");
+					   for (String str : userMembers) {
+					  	 stringBuffer.append(" or @exo:userPrivate='").append(str).append("' or @exo:moderators='").append(str).append("'");
+					   }
+					   stringBuffer.append(")");
+				  } else {
+				  	stringBuffer.append(" and (@exo:userPrivate=' ')");
+		      }
+			 }
     } else if(type.equals("faqQuestion")) {
 	    if(author != null && author.length() > 0) {
 	    	if(isAnd) stringBuffer.append(" and ");
@@ -425,16 +440,12 @@ public String getPathQuery() {
  */
 private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
 		StringBuffer queryString = new StringBuffer() ;
-		if(fromDate != null && toDate != null) {
-			if(isAnd) queryString.append(" and ") ;
-			queryString.append("((@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("')) and ") ;
-			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))) ") ;
-			isAnd = true ;
-		} else if(fromDate != null){
+		if(fromDate != null){
 			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
 			isAnd = true ;
-		} else if(toDate != null){
+		}
+		if(toDate != null){
 			if(isAnd) queryString.append(" and ") ;
 			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
 			isAnd = true ;

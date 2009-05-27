@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.FAQEventQuery;
+import org.exoplatform.faq.service.FAQServiceUtils;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
@@ -80,8 +82,8 @@ public class UIQuickSearch  extends UIForm {
 	}
 
 	@SuppressWarnings("unchecked")
-  public List<FAQFormSearch> getResultListQuickSearch(List<FAQFormSearch> formSearchs) throws Exception {
-		List<FAQFormSearch> listQuickSearch = new ArrayList<FAQFormSearch>();
+  public List<ObjectSearchResult> getResultListQuickSearch(List<ObjectSearchResult> formSearchs) throws Exception {
+		List<ObjectSearchResult> listQuickSearch = new ArrayList<ObjectSearchResult>();
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		String currentUser = FAQUtils.getCurrentUser() ;
 		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
@@ -91,7 +93,7 @@ public class UIQuickSearch  extends UIForm {
 			if(faqSetting_.isAdmin()) {
 				return formSearchs;
 			} else {
-				for(FAQFormSearch faqSearch : formSearchs) {
+				for(ObjectSearchResult faqSearch : formSearchs) {
 					if(faqSearch.getType().equals("faqCategory")) {
 						listQuickSearch.add(faqSearch) ;
 					} else {
@@ -113,7 +115,7 @@ public class UIQuickSearch  extends UIForm {
 				return listQuickSearch;
 			}
 		} else {
-			for(FAQFormSearch faqSearch : formSearchs) {
+			for(ObjectSearchResult faqSearch : formSearchs) {
 				if(faqSearch.getType().equals("faqCategory")) {
 					listQuickSearch.add(faqSearch) ;
 				} else {
@@ -149,10 +151,14 @@ public class UIQuickSearch  extends UIForm {
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
 				FAQService faqService = FAQUtils.getFAQService() ;
-				List<FAQFormSearch> list = null ;
+				List<ObjectSearchResult> list = null ;
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+				FAQEventQuery eventQuery = new FAQEventQuery();
+				eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+				eventQuery.setText(text);
+				eventQuery.setType("categoryAndQuestion");
 				try {
-					list = faqService.getAdvancedEmpty(sessionProvider, text, null, null);
+					list = faqService.getSearchResults(eventQuery);
 				} catch (Exception e) {
 					e.printStackTrace();
 					uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
@@ -165,7 +171,7 @@ public class UIQuickSearch  extends UIForm {
 				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 750) ;
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
 				popupContainer.setId("ResultQuickSearch") ;
-				List<FAQFormSearch> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
+				List<ObjectSearchResult> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
 				result.setFormSearchs(listQuickSearch);
 //				formStringInput.setValue("") ;
 			} else {

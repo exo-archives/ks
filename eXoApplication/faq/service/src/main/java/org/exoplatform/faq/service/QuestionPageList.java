@@ -61,7 +61,7 @@ public class QuestionPageList extends JCRPageList {
   private List<Question> listQuestions_ = null;
   
   /** The list faq form search s_. */
-  private List<FAQFormSearch> listFAQFormSearchS_ = null;
+  private List<ObjectSearchResult> listFAQFormSearchS_ = null;
   
   /** The list watchs_. */
   private List<Watch> listWatchs_ = null;
@@ -165,7 +165,7 @@ public class QuestionPageList extends JCRPageList {
    * 
    * @throws Exception the exception
    */
-  public QuestionPageList(List<FAQFormSearch> faqFormSearchs, long pageSize) throws Exception {
+  public QuestionPageList(List<ObjectSearchResult> faqFormSearchs, long pageSize) throws Exception {
   	super(pageSize) ;
   	this.listFAQFormSearchS_ = faqFormSearchs;
   	setAvailablePage(faqFormSearchs.size()) ;    
@@ -381,7 +381,7 @@ public class QuestionPageList extends JCRPageList {
 	  	position = (page - 1) * pageSize;
 	  }
 	  pageSize *= page ;
-	  currentListResultSearch_ = new ArrayList<FAQFormSearch>();
+	  currentListResultSearch_ = new ArrayList<ObjectSearchResult>();
 	  for(int i = (int)position; i < pageSize && i < this.listFAQFormSearchS_.size(); i ++){
 	  	currentListResultSearch_.add(listFAQFormSearchS_.get(i));
 	  }

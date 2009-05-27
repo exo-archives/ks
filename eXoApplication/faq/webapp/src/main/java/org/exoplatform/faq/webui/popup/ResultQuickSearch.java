@@ -19,7 +19,7 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
@@ -58,7 +58,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class ResultQuickSearch extends UIForm implements UIPopupComponent{
-	private List<FAQFormSearch> formSearchs_ = new ArrayList<FAQFormSearch>() ;
+	private List<ObjectSearchResult> formSearchs_ = new ArrayList<ObjectSearchResult>() ;
 	private String LIST_RESULT_SEARCH = "listResultSearch";
 	private UIFAQPageIterator pageIterator ;
 	private JCRPageList pageList ;
@@ -68,9 +68,9 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		this.setActions(new String[]{"Close"}) ;
 	}
 
-	public void setFormSearchs(List<FAQFormSearch> formSearchs) throws Exception {
+	public void setFormSearchs(List<ObjectSearchResult> formSearchs) throws Exception {
 		if(formSearchs != null)this.formSearchs_ = formSearchs;
-		else this.formSearchs_ = new ArrayList<FAQFormSearch>();
+		else this.formSearchs_ = new ArrayList<ObjectSearchResult>();
 		try {
 			pageList = new QuestionPageList(formSearchs_, 10);
 			pageList.setPageSize(10);
@@ -89,8 +89,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		}
 	}
 
-	public List<FAQFormSearch> getFormSearchs(){
-		formSearchs_ = new ArrayList<FAQFormSearch>();
+	public List<ObjectSearchResult> getFormSearchs(){
+		formSearchs_ = new ArrayList<ObjectSearchResult>();
 		try {
 			long pageSelected = pageIterator.getPageSelected();
 			formSearchs_.addAll(pageList.getPageResultSearch(pageSelected, FAQUtils.getCurrentUser()));

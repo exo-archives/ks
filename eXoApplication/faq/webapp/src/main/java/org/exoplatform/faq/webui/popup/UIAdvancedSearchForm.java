@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.FAQFormSearch;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
@@ -117,7 +117,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
       listLanguage.add(displayName) ;
     }
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ITEM_EMPTY, "empty")) ;
+		list.add(new SelectItemOption<String>(ITEM_EMPTY, "categoryAndQuestion")) ;
 		list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory")) ;
 		list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion")) ;
 //		list.add(new SelectItemOption<String>(ITEM_ATTACHMENT, "faqAttachment")) ;
@@ -125,7 +125,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		searchType.setOnChange("Onchange") ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
 		list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTY2, "empty2"));
+		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_EMPTY2, "AllCategories"));
 		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_TRUE, "true"));
 		list.add(new SelectItemOption<String>(ITEM_MODERATEQUESTION_FALSE, "false"));
 		UIFormSelectBox modeQuestion = new UIFormSelectBox(FIELD_ISMODERATEQUESTION, FIELD_ISMODERATEQUESTION, list) ;
@@ -242,7 +242,6 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String text = advancedSearch.getUIStringInput(FIELD_TEXT).getValue() ;
 			String categoryName = advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).getValue() ;
 			String modeQuestion = advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).getValue() ;
-			if(modeQuestion.equals("empty2")) modeQuestion = "empty" ;
 			String moderator = advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).getValue() ;
 			Calendar fromDate = advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE), FIELD_FROM_DATE) ;
 			Calendar toDate= advancedSearch.getCalendar(advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE), FIELD_TO_DATE) ;
@@ -299,13 +298,13 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			} else {
 				eventQuery.setLanguage(language);
 			}
-			eventQuery.getPathQuery() ;
+			eventQuery.getQuery() ;
 			
 			/**
 			 * Check all values are got from UIForm, if don't have any thing then view warning
 			 */
 			//if(!FAQUtils.isFieldEmpty(nameAttachment)) isEmpty = true;
-			if(!eventQuery.getIsAnd()) {
+			if(!eventQuery.getIsAnd() && (response == null || response.trim().length() < 1)) {
 				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
@@ -322,14 +321,12 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 750) ;
 			UIAdvancedSearchForm advanced = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
-			SessionProvider sProvider = FAQUtils.getSystemProvider() ;
 			
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;	
 			/**
-			 * Search category
+			 * Reset form to Search category
 			 */
 			if(type.equals("faqCategory")) {
-				resultContainer.setIsRenderedContainer(4) ;
 				advanced.setValue(true, true, true, false, false, false, false, false,false) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;
@@ -338,17 +335,13 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				advanced.getUIStringInput(FIELD_CATEGORY_MODERATOR).setValue(moderator) ;
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
-				ResultSearchCategory result = resultContainer.getChild(ResultSearchCategory.class) ;
-				List<Category> list = faqService.getAdvancedSearchCategory(eventQuery);
-				popupContainer.setId("ResultSearchCategory") ;
-				result.setListCategory(list) ;
+				
 			} 
 			/**
-			 * Search question
+			 * Reset form to search question
 			 */
 			else if(type.equals("faqQuestion")){
 				// Cache data in UIForm to reset
-				resultContainer.setIsRenderedContainer(3) ;
 				advanced.setValue(false, false, false, true, true, true, true, true,true) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;
@@ -360,40 +353,27 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
 				//advanced.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
-				
-				// get result search
-				ResultSearchQuestion result = resultContainer.getChild(ResultSearchQuestion.class) ;
-				result.setLanguage(language) ;
-				List<Question> list = new ArrayList<Question>() ;
-				if(nameAttachment != null && nameAttachment.trim().length() > 0) {
-					if(FAQUtils.isFieldEmpty(text) && FAQUtils.isFieldEmpty(question) && FAQUtils.isFieldEmpty(response) &&
-							FAQUtils.isFieldEmpty(author) && FAQUtils.isFieldEmpty(emailAddress) && (fromDate == null) && (toDate == null)) {
-						eventQuery.setType("faqAttachment") ;
-						list = faqService.searchQuestionWithNameAttach(eventQuery);
-					} else list = faqService.getAdvancedSearchQuestion(eventQuery);
-				} else list = faqService.getAdvancedSearchQuestion(eventQuery);
- 				popupContainer.setId("ResultSearchQuestion");
- 				result.setListQuestion(list); 
 			} 
-			// Search all questions and categories
+			// Reset form to search all questions and categories
 			else {
-				resultContainer.setIsRenderedContainer(2) ;
 				advanced.setValue(false, false, false, false, false, false, false, false,false) ;
 				advanced.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
 				advanced.getUIStringInput(FIELD_TEXT).setValue(text) ;
 				if(fromDate != null) advanced.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
-				try{
-					ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
-					List<FAQFormSearch> list = faqService.getAdvancedEmpty(text, fromDate, toDate) ;
-					UIQuickSearch quickSearch = uiPortlet.findFirstComponentOfType(UIQuickSearch.class) ;
-					List<FAQFormSearch> listResult = quickSearch.getResultListQuickSearch(list) ;
-					result.setFormSearchs(listResult) ;
-				}catch (Exception e){ 
-					sProvider.close();
-				}
 			}
-			sProvider.close();
+			
+			// get result search
+			resultContainer.setIsRenderedContainer(2) ;
+			try{
+				ResultQuickSearch result = resultContainer.getChild(ResultQuickSearch.class) ;
+				List<ObjectSearchResult> list = faqService.getSearchResults(eventQuery) ;
+				UIQuickSearch quickSearch = uiPortlet.findFirstComponentOfType(UIQuickSearch.class) ;
+				List<ObjectSearchResult> listResult = quickSearch.getResultListQuickSearch(list) ;
+				result.setFormSearchs(listResult) ;
+			}catch (Exception e){ 
+				e.printStackTrace();
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
