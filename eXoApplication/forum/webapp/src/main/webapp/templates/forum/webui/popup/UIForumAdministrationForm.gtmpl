@@ -225,8 +225,8 @@
 													</thead>
 												</table>
 											</div>
-											<div class="BBCodeContainer" id="TableContent">
-												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+											<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
 													<tbody>
 														<%  
 															List pruneSettings = uicomponent.getPruneSettings();
@@ -306,7 +306,7 @@
 												</table>
 											</div>
 										</div>
-										<script type='text/javascript'>var cont = document.getElementById('AutuPruneContainer');var table = document.getElementById('TableContent');if(table.offsetWidth > (cont.offsetWidth+5)){table.style.paddingRight = "16px";table.style.width = "auto";} else {table.style.padding = "1px";table.style.width = "100%";}</script>
+										<script type='text/javascript'> var grid = document.getElementById('UIGrid');var table = document.getElementById('TableContent');if(grid.offsetWidth+10 >= (table.offsetWidth)){table.style.paddingRight = "16px";table.style.width = "auto";} else {table.style.padding = "1px";table.style.width = "100%";}</script>
 									 <%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}
