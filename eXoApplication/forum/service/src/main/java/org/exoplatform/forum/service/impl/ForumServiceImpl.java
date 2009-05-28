@@ -102,7 +102,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   		storage_.initCategoryListener() ;
   		updateForumStatistic(systemSession);  		
   	}catch (Exception e) {
-  		//e.printStackTrace() ;  		
   	}finally{
   		systemSession.close() ;
   	}
@@ -110,7 +109,6 @@ public class ForumServiceImpl implements ForumService, Startable{
   	try{
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
-  		//e.printStackTrace() ;  		
   	}finally{
   		systemSession.close() ;
   	}
@@ -137,7 +135,6 @@ public class ForumServiceImpl implements ForumService, Startable{
 
 	public void stop() {}
 	
-	@SuppressWarnings("unchecked")
   public void updateForumStatistic(SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
 		updateForumStatistic() ; 	
@@ -1219,4 +1216,12 @@ public class ForumServiceImpl implements ForumService, Startable{
 		savePruneSetting(pruneSetting);
   }
 
+	public PruneSetting getPruneSetting(String forumPath) throws Exception {
+	  return storage_.getPruneSetting(forumPath);
+  }
+
+	public PruneSetting getPruneSetting(SessionProvider sProvider, String forumPath) throws Exception {
+		sProvider.close() ;
+	  return getPruneSetting(forumPath);
+  }
 }

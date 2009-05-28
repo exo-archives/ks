@@ -1234,14 +1234,14 @@ public class JCRDataStorage {
 			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
-			stringBuffer.append("[@exo:isActive='true'");
 			if (strQuery != null && strQuery.length() > 0) {
 				// @exo:isClosed,
 				// @exo:isWaiting ,
 				// @exo:isApprove
-				stringBuffer.append(" and ").append(strQuery);
+				// @exo:isActive
+				stringBuffer.append("[").append(strQuery).append("]");
 			}
-			stringBuffer.append("] order by @exo:isSticky descending");
+			stringBuffer.append(" order by @exo:isSticky descending");
 			if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
 				if (orderBy != null && orderBy.length() > 0) {
 					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
@@ -3897,7 +3897,6 @@ public class JCRDataStorage {
 		return list;
 	}
 
-	@SuppressWarnings("deprecation")
 	public Calendar getGreenwichMeanTime() {
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.setLenient(false);
@@ -4425,7 +4424,7 @@ public class JCRDataStorage {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "unused" })
 	private void updateImportedData(String path) throws Exception {
 		try {
 			Calendar cal = new GregorianCalendar();
@@ -5402,6 +5401,23 @@ public class JCRDataStorage {
 		pruneSetting.setJobDay(prunNode.getProperty("exo:jobDay").getLong());
 		if(prunNode.hasProperty("exo:lastRunDate"))
 			pruneSetting.setLastRunDate(prunNode.getProperty("exo:lastRunDate").getDate().getTime());
+		return pruneSetting;
+	}
+	
+	public PruneSetting getPruneSetting(String forumPath) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		PruneSetting pruneSetting = new PruneSetting();
+		try {
+			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
+			NodeIterator iter = forumNode.getNodes();
+			while(iter.hasNext()){
+	      Node node = (Node) iter.next();
+	      if(node.isNodeType("exo:pruneSetting")){
+	      	pruneSetting = getPruneSetting(node);
+	      	break;
+	      }
+      }
+    } finally { sProvider.close() ;}
 		return pruneSetting;
 	}
 	

@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.NodeIterator;
 
-import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.User;
 
@@ -528,6 +527,11 @@ public interface ForumServiceLegacy {
    * @deprecated use {@link ForumService#getAllPruneSetting()}
    */
   public List<PruneSetting> getAllPruneSetting(SessionProvider sProvider) throws Exception;
+
+  /**
+   * @deprecated use {@link ForumService#getPruneSetting(String forumPath)}
+   */
+  public PruneSetting getPruneSetting(SessionProvider sProvider, String forumPath) throws Exception;
   /**
    * @deprecated use {@link ForumService#savePruneSetting()}
    */

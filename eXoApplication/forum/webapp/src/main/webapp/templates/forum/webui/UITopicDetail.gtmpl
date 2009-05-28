@@ -269,8 +269,8 @@
 						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
-								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-									<div onclick="<%=uicomponent.event("AddTagTopic")%>">
+								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
@@ -280,6 +280,49 @@
 												</div>
 											</div>
 										</div>
+									</div>
+									<div id="AddTagId">
+									<% /*Begin Popup Menu*/ %>
+										<div style="position:relative; ">
+											<div class="UIPopupCategory" style="display:none; ">
+												<div class="UIRightClickPopupMenu" style="display:block; left:-120px;">
+													<div class="UIContextMenuContainer">
+														<div class="TopLeftRightClickPopupMenu">
+															<div class="TopRightRightClickPopupMenu">
+																<div class="TopCenterRightClickPopupMenu"><span></span></div>
+															</div>
+														</div>
+														<div class="MiddleLeftRightClickPopupMenu">
+															<div class="MiddleRightRightClickPopupMenu">
+																<div class="UIRightPopupMenuContainer" style="padding:5px 0px;min-width:172px;">
+																	<div class="InputPage" style="float:left;">
+																		<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
+																	</div>
+																	<div class="UIActionForum" style="float:left;">
+																		<div class="NormalButtom">
+																			<div class="ButtonLeft">
+																				<div class="ButtonRight">
+																					<div class="ButtonMiddle">
+																					 <div onclick="<%=uicomponent.event("AddTagTopic")%>">Add Tag</div>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+															</div>
+														</div>
+														<div class="BottomLeftRightClickPopupMenu">
+															<div class="BottomRightRightClickPopupMenu">
+																<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									<% /*End Popup Menu*/ %>
 									</div>
 								</div>
 							</div>

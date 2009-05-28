@@ -951,5 +951,6 @@ public interface ForumService extends ForumServiceLegacy{
   public void removeBBCode(String bbcodeId) throws Exception ;
   
   public List<PruneSetting> getAllPruneSetting() throws Exception;
+  public PruneSetting getPruneSetting(String forumPath) throws Exception;
   public void savePruneSetting(PruneSetting pruneSetting) throws Exception;
 }

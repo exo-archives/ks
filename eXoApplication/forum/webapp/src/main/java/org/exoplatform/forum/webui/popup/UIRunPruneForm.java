@@ -99,6 +99,7 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 		      }
 						forumService.modifyTopic(sProvider, listTopic, 6) ;
 						uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
+						uiform.pruneSetting.setActive(true);
 						forumService.savePruneSetting(uiform.pruneSetting);
 				}
 			} finally {

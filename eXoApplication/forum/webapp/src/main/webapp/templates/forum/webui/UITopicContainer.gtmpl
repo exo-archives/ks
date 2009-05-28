@@ -173,10 +173,16 @@
 														 			classMenu = "DisableMenuItem";
 														 			link = "javaScript: void(0)" ;
 														 		}
+														 		if(action.indexOf("ActivateTopics") >= 0){
+														 			if(!uicomponent.getIsAutoPrune()){
+														 				classMenu = "DisableMenuItem";
+														 				link = "javaScript: void(0)" ;
+														 			}
+														 		}
 														 		if(!action.equals("SetDeleteTopic")){
 														 %> 
 																		<div class="ItemIcon $classIcon">
-																			<a class="MenuItem $classMenu" href="$link" style="height:100%; width:100%">$itemLabel</a>
+																			<a class="MenuItem $classMenu" href="$link" style="display:block;">$itemLabel</a>
 																		</div>
 														 <% 
 														 		} else {%>
@@ -486,11 +492,13 @@
 									}
 									String approved = "" ;
 									if(canEdit){
-										if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)</span>" ;
+										if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor") ;
 										if(isApproveTopic && !topic.getIsApproved()) { 
-											if(approved.length() > 0) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)</span>" ;
-											else approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval")+"</span>)</span>" ;
+											if(approved.length() > 0) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending") ;
+											else approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingApproval") ;
 										}
+										if(!topic.getIsActive())approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicInactivate");
+										if(approved.length() > 0) approved = approved +"</span>)</span>";
 									}
 									
 									String actionBookmark;

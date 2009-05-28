@@ -176,11 +176,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
+	public static final String FIELD_ADD_TAG = "AddTag" ;
 	public UITopicDetail() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
+		addUIFormInput( new UIFormStringInput(FIELD_ADD_TAG, null)) ;
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
 		addChild(UIPostRules.class, null, null);
 		this.setSubmitAction("GoNumberPage") ;
@@ -712,13 +714,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddTagTopicActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			/*UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, "UITagFormContainer") ;
 			UITagForm tagForm = popupContainer.addChild(UITagForm.class, null, null) ;
 			tagForm.setTopicPathAndTagId(topicDetail.topic.getPath(), topicDetail.topic.getTagId()) ;
 			popupAction.activate(popupContainer, 240, 280) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
+			String tags = topicDetail.getUIStringInput(FIELD_ADD_TAG).getValue();
+			if(!ForumUtils.isEmpty(tags)) {
+				List<String> listTags = new ArrayList<String>();
+				listTags.addAll(Arrays.asList(tags.split(" ")));
+			}
 		}
 	}
 	

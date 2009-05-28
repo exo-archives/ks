@@ -357,7 +357,7 @@ UIForumPortlet.prototype.overVote = function(event) {
 
 
 UIForumPortlet.prototype.showPopup = function(elevent,e) {
-	var strs = ["goPageTop","goPageBottom","SearchForm"];
+	var strs = ["AddTagId","goPageTop","goPageBottom","SearchForm"];
 	for(var t = 0 ; t < strs.length; t ++) {
 		var elm = document.getElementById(strs[t]);
 		if(elm)elm.onclick = eXo.forum.UIForumPortlet.cancel ;

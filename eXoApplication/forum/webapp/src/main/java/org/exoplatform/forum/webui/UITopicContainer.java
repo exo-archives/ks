@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -77,8 +78,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.GoNumberPageActionListener.class ),	
 		@EventConfig(listeners = UITopicContainer.AddTopicActionListener.class ),	
 		@EventConfig(listeners = UITopicContainer.OpenTopicActionListener.class ),
-		@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),
-		@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),// Menu
+		@EventConfig(listeners = UITopicContainer.OpenTopicsTagActionListener.class ),// Menu
 																																									// Forum
 		@EventConfig(listeners = UITopicContainer.EditForumActionListener.class ),	
 		@EventConfig(listeners = UITopicContainer.SetLockedForumActionListener.class),
@@ -101,6 +101,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		@EventConfig(listeners = UITopicContainer.MergeTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetDeleteTopicActionListener.class),
 		@EventConfig(listeners = UITopicContainer.SetUnWaitingActionListener.class),
+		@EventConfig(listeners = UITopicContainer.ApproveTopicsActionListener.class ),
+		@EventConfig(listeners = UITopicContainer.ActivateTopicsActionListener.class ),
+		
 		@EventConfig(listeners = UITopicContainer.SetOrderByActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddWatchingActionListener.class),
 		@EventConfig(listeners = UITopicContainer.AddBookMarkActionListener.class),
@@ -167,6 +170,16 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.userProfile = forumPortlet.getUserProfile() ;
 		cleanCheckedList();
 		setForum(true);
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean getIsAutoPrune() throws Exception {
+		PruneSetting pruneSetting = new PruneSetting();
+		try {
+			pruneSetting = forumService.getPruneSetting(forum.getPath());
+    } catch (Exception e) {
+    }
+		return pruneSetting.isActive();
 	}
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
@@ -256,7 +269,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(isReload)setForum(false);
 		else isReload = true;
 		if(!isModerator) {
-			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false'");
+			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false' and @exo:isActive='true'");
 			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
 			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
 			if(!isView) {
@@ -303,7 +316,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private String[] getActionMenuTopic() throws Exception {
 		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic",
-				"SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics"}; 
+				"SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics", "ActivateTopics"}; 
 		return actions;
 	}
 	
@@ -739,6 +752,39 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
 				popupAction.activate(pageListTopicUnApprove, 500, 365) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			}
+		}
+	}	
+
+	static public class ActivateTopicsActionListener extends EventListener<UITopicContainer> {
+		public void execute(Event<UITopicContainer> event) throws Exception {
+			UITopicContainer uiTopicContainer = event.getSource();
+			List<String> topicIds = uiTopicContainer.getIdSelected() ;
+			List <Topic> topics = new ArrayList<Topic>();
+			Topic topic ;
+			for(String topicId : topicIds) {
+				topic = uiTopicContainer.getTopicByAll(topicId);
+				if(topic != null) {
+					if(topic.getIsActive()) continue ;
+					topic.setIsActive(true);
+					topics.add(topic);
+				}
+			}
+			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			if(topics.size() > 0) {
+				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+				try {
+					uiTopicContainer.forumService.modifyTopic(sProvider, topics, 6) ;
+				} finally {
+					sProvider.close();
+				}
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+//				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+//				UIPageListTopicUnApprove pageListTopicUnApprove	= popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
+//				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
+//				popupAction.activate(pageListTopicUnApprove, 500, 365) ;
+//				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 		}
 	}	
