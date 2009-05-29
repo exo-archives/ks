@@ -3023,15 +3023,16 @@ public class JCRDataStorage {
 			Tag tag = getTag(tagId);
 			List<String> userTags = new ArrayList<String>();
 			userTags.addAll(Arrays.asList(tag.getUserTag()));
-			
 			if(iter.getSize() == 1 && userTags.size() > 1){
 				if(userTags.contains(userName)){
 					userTags.remove(userName);
 					tag.setUserTag(userTags.toArray(new String[]{}));
-					saveTag(tag);
+					Node tagNode = getTagHome(sProvider).getNode(tagId);
+					tagNode.setProperty("exo:userTag", userTags.toArray(new String[]{}));
+					tagNode.save();
+					System.out.println("userTags.size(): " + userTags.size());
 				}
-			}
-			if(iter.getSize() == 1 && userTags.size() == 1) {
+			}else if(iter.getSize() == 1 && userTags.size() == 1) {
 				Node tagHomNode = getTagHome(sProvider);
 				tagHomNode.getNode(tagId).remove();
 				tagHomNode.save();
