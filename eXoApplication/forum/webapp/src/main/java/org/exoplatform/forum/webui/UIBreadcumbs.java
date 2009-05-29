@@ -106,7 +106,7 @@ public class UIBreadcumbs extends UIContainer {
 							tempPath = tempPath + "/" + string;
 						else
 							tempPath = string;
-						Object obj = forumService.getObjectNameByPath(sProvider, tempPath);
+						Object obj = forumService.getObjectNameByPath(tempPath);
 						if (obj == null) {
 							if (i == 0) {
 								isLink = true;

@@ -48,12 +48,12 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UITagForm.gtmpl",
 		events = {
-			@EventConfig(listeners = UITagForm.AddTagActionListener.class), 
-			@EventConfig(listeners = UITagForm.EditTagActionListener.class),
-			@EventConfig(listeners = UITagForm.DeleteActionListener.class),
-			@EventConfig(listeners = UITagForm.SelectedActionListener.class),
-			@EventConfig(listeners = UITagForm.SaveActionListener.class),
-			@EventConfig(listeners = UITagForm.CancelActionListener.class,phase = Phase.DECODE)
+//			@EventConfig(listeners = UITagForm.AddTagActionListener.class), 
+//			@EventConfig(listeners = UITagForm.EditTagActionListener.class),
+//			@EventConfig(listeners = UITagForm.DeleteActionListener.class),
+//			@EventConfig(listeners = UITagForm.SelectedActionListener.class),
+//			@EventConfig(listeners = UITagForm.SaveActionListener.class),
+//			@EventConfig(listeners = UITagForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
 public class UITagForm extends UIForm implements UIPopupComponent {
@@ -76,7 +76,7 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 		this.tagId = tagId ;
 		this.isUpdateList = true ;
 	}
-	
+	/*
 	@SuppressWarnings("unused")
 	private boolean getSelected(String tagId) throws Exception {
 		if(this.IdSelected.equals(tagId)) return true ;
@@ -209,5 +209,5 @@ public class UITagForm extends UIForm implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
-	}
+	}*/
 }

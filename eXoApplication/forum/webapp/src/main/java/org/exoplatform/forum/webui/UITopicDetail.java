@@ -609,13 +609,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic() throws Exception {
 		List<Tag> list = new ArrayList<Tag>();
+		List<String> listTagId = new ArrayList<String>();
 		String[] tagIds = topic.getTagId();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+		String[]temp;
+		for (int i = 0; i < tagIds.length; i++) {
+			temp = tagIds[i].split(":");
+	    if(temp[0].equals(userName)) {
+	    	listTagId.add(temp[1]);
+	    }
+    }
 		try {
-			list = this.forumService.getTagsByTopic(sProvider, tagIds);
+			list = this.forumService.getMyTagInTopic(listTagId.toArray(new String[]{}));
     } catch (Exception e) {
-    }finally{
-    	sProvider.close();
     }
 		return list;	
 	}
@@ -714,26 +719,48 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddTagTopicActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			/*UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, "UITagFormContainer") ;
-			UITagForm tagForm = popupContainer.addChild(UITagForm.class, null, null) ;
-			tagForm.setTopicPathAndTagId(topicDetail.topic.getPath(), topicDetail.topic.getTagId()) ;
-			popupAction.activate(popupContainer, 240, 280) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
-			String tags = topicDetail.getUIStringInput(FIELD_ADD_TAG).getValue();
-			if(!ForumUtils.isEmpty(tags)) {
+			String tagIds = topicDetail.getUIStringInput(FIELD_ADD_TAG).getValue();
+			if(!ForumUtils.isEmpty(tagIds)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=*':}{\"";
+				for (int i = 0; i < special.length(); i++) {
+					char c = special.charAt(i);
+					if(tagIds.indexOf(c) >= 0) {
+						UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+					}
+				}
 				List<String> listTags = new ArrayList<String>();
-				listTags.addAll(Arrays.asList(tags.split(" ")));
+				listTags.addAll(Arrays.asList(tagIds.split(" ")));
+				List<Tag> tags = new ArrayList<Tag>();
+				Tag tag;
+				for (String string : listTags) {
+	        tag = new Tag();
+	        tag.setName(string);
+	        tag.setId(Utils.TAG + string);
+	        tag.setUserTag(new String[]{topicDetail.userName});
+	        tags.add(tag);
+        }
+				try {
+					topicDetail.forumService.addTag(tags, topicDetail.userName, topicDetail.topic.getPath());
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+			} else {
+				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.empty-field", null, ApplicationMessage.WARNING)) ;
+				return ;
 			}
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
 	static public class OpenTopicsTagActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail uiTopicContainer = event.getSource() ;
+			UITopicDetail topicDetail = event.getSource() ;
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;

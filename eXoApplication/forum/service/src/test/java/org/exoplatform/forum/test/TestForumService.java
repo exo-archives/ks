@@ -475,50 +475,16 @@ public class TestForumService extends BaseForumTestCase{
 		Tag tag3 = createTag("new Tag 1");
 
 		//	Test save tag:
-		forumService_.saveTag(sProvider, tag, true);
-		forumService_.saveTag(sProvider, tag2, true);
-		forumService_.saveTag(sProvider, tag3, true);
+		forumService_.saveTag(sProvider, tag);
+		forumService_.saveTag(sProvider, tag2);
+		forumService_.saveTag(sProvider, tag3);
 		
 		//	Test get tag
 		tag = forumService_.getTag(sProvider, tag.getId());
 		assertNotNull(tag);
 		
 		//	Get all tag
-		assertEquals(3, forumService_.getTags(sProvider).size());
-		
-		//	Get tags by user:
-		assertEquals(3, forumService_.getTagsByUser(sProvider, "root").size());
-		
-		//	add topic in tag:
-		String topicPath = forumService_.getForumHomePath(sProvider);
-		topicPath = topicPath+"/"+categoryId+"/"+forumId+"/"+topicId;
-		forumService_.addTopicInTag(sProvider, tag.getId(), topicPath);
-		forumService_.addTopicInTag(sProvider, tag2.getId(), topicPath);
-		forumService_.addTopicInTag(sProvider, tag3.getId(), topicPath);
-		// getTagsByTopic
-		Topic topic = (Topic)forumService_.getObjectNameById(sProvider, topicId, Utils.TOPIC);
-		String tagIds[] = topic.getTagId();
-		List<Tag> tags = forumService_.getTagsByTopic(sProvider, tagIds);
-		assertEquals(tags.size(), 3);
-		
-		//getTopicsByTag
-		JCRPageList pagelist = forumService_.getTopicsByTag(sProvider, tag.getId(), "");
-		assertEquals(pagelist.getAvailable(), 1);
-		//	Get all topics in tag
-		assertEquals(1, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
-		
-		//	Get tag by topic
-		assertEquals(3, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
-		
-		//	Remove topic in tag:
-		forumService_.removeTopicInTag(sProvider, tag.getId(), topicPath);
-		
-		//	Get all topics in tag
-		assertEquals(0, forumService_.getTopicsByTag(sProvider, tag.getId(), null).getPage(1).size());
-
-		//	Remove tag:
-		forumService_.removeTag(sProvider, tag.getId());
-		assertEquals(2, forumService_.getTagsByTopic(sProvider, new String[]{tag.getId(), tag2.getId(), tag3.getId()}).size());
+		assertEquals(3, forumService_.getAllTags(sProvider).size());
   }
   
   public void testSearch() throws Exception {
@@ -710,10 +676,8 @@ public class TestForumService extends BaseForumTestCase{
   
   private Tag createTag(String name){
   	Tag tag = new Tag();
-  	tag.setColor("red");
-  	tag.setDescription("description for tag");
   	tag.setName(name);
-  	tag.setOwner("root");
+  	tag.setUserTag(new String[]{"root"});
   	return tag;
   }
   

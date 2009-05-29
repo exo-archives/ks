@@ -467,18 +467,12 @@
 			<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
-			<propertyDefinition name="exo:owner" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">		
-				<valueConstraints/>
-			</propertyDefinition>
 			<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition>		
-			<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>		
-			<propertyDefinition name="exo:color" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:userTag" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">		
+				<valueConstraints/>
+			</propertyDefinition>		
 		</propertyDefinitions>
 	</nodeType>	 	 	 	
 	

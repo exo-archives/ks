@@ -236,14 +236,14 @@ public interface ForumServiceLegacy {
 	public String getForumHomePath(SessionProvider sProvider) throws Exception;
 
 	/**
-   * @deprecated use {@link ForumService#addTopicInTag(String tagId, String topicPath)}
+   * @deprecated use {@link ForumService#addTag(List<Tag> tags, String userName, String topicPath)}
    */
-	public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+	public void addTag(SessionProvider sProvider, List<Tag> tags, String userName, String topicPath) throws Exception ;
 
 	/**
-   * @deprecated use {@link ForumService#removeTopicInTag(String tagId, String topicPath)}
+   * @deprecated use {@link ForumService#unTag(String tagId, String userName, String topicPath)}
    */
-	public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception;
+	public void unTag(SessionProvider sProvider, String tagId, String userName, String topicPath) throws Exception;
 
 	/**
    * @deprecated use {@link ForumService#getTag(String tagId)}
@@ -251,34 +251,24 @@ public interface ForumServiceLegacy {
 	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception;
 
 	/**
-   * @deprecated use {@link ForumService#getTags()}
+   * @deprecated use {@link ForumService#getAllTags()}
    */
-	public List<Tag> getTags(SessionProvider sProvider) throws Exception;
+	public List<Tag> getAllTags(SessionProvider sProvider) throws Exception;
 
 	/**
-   * @deprecated use {@link ForumService#getTagsByUser(String userName)}
+   * @deprecated use {@link ForumService#getMyTagInTopic(String[] tagIds)}
    */
-	public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception;
+	public List<Tag> getMyTagInTopic(SessionProvider sProvider, String[] tagIds) throws Exception;
 
 	/**
-   * @deprecated use {@link ForumService#getTagsByTopic(String[] tagIds)}
-   */
-	public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception;
+	 * @deprecated use {@link ForumService#getTopicByMyTag(String userIdAndtagId, String strOrderBy)}
+	 */
+	public JCRPageList getTopicByMyTag(SessionProvider sProvider, String userIdAndtagId, String strOrderBy) throws Exception ;
 
 	/**
-   * @deprecated use {@link ForumService#getTopicsByTag(String tagId, String strOrderBy)}
-   */
-	public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception;
-
-	/**
-   * @deprecated use {@link ForumService#saveTag(Tag newTag, boolean isNew)}
-   */
-	public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception;
-
-	/**
-   * @deprecated use {@link ForumService#removeTag(String tagId)}
-   */
-	public void removeTag(SessionProvider sProvider, String tagId) throws Exception;
+	 * @deprecated use {@link ForumService#saveTag(Tag newTag)}
+	 */
+	public void saveTag(SessionProvider sProvider, Tag newTag) throws Exception;
 
 	/**
    * @deprecated use {@link ForumService#saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan)}

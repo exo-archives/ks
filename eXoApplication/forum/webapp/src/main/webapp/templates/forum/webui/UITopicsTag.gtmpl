@@ -17,32 +17,17 @@
 %>
 <% uiform.begin() %>
 <%
-	List topics = uicomponent.getTopicsTag() ; 
 	Tag tag_ = uicomponent.getTagById() ;
+	List topics = uicomponent.getTopicsTag() ; 
 	String tagId = tag_.getId();
 	String tagName_ = tag_.getName() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
-	String description = tag_.getDescription() ;
-	if(ForumUtils.isEmpty(description)) {
-		description = " ";
-	}
 	boolean canEdit = false;
 	boolean isShowMenu = false;
-	if(userProfile.getUserRole()==0) canEdit = true;
 	if(userProfile.getUserRole() < 3) isShowMenu = true;
 %>
 <div class="UIForumContainer">
-	<div class="UIForumDescription">
-		<div class="LeftDescription">
-			<div class="RightDescription">
-				<div class="CenterDescription">
-					<span class="NameForum"><%=_ctx.appRes("UICategoryForm.label.Description");%>:</span> 
-					<span class="Description">$description</span>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div style="overflow:auto; padding-bottom:2px;">
 	  <% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl");  %>
 	  <div style="clear:right; height:0px;"><span></span></div>
@@ -56,7 +41,7 @@
 						<div class="CenterBar">
 							<div class="Title"><span style="font-weight:normal;"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:</span>$tagName_</div>
 							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
-							<% if(canEdit){ %>
+							<% if(isShowMenu){ %>
 							<div class="SeparatorLine" style="margin-right:7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -82,14 +67,6 @@
 													</div>
 													<div class="MiddleLeftRightClickPopupMenu">
 														<div class="MiddleRightRightClickPopupMenu">
-															<div class="UIRightPopupMenuContainer">
-																<div class="MenuItem" onclick="<%=uicomponent.event("EditTag");%>">	 
-																	<div class="ItemIcon EditTopicIcon "><%=_ctx.appRes("UITopicsTag.label.EditTag");%></div>
-																</div>
-																<div class="MenuItem" onclick="javaScript:if(confirm('<%=_ctx.appRes("UITopicsTag.confirm.RemoveTag");%>')){<%=uicomponent.event("RemoveTag");%>}">	 
-																	<div class="ItemIcon SetDeleteIcon"><%=_ctx.appRes("UITopicsTag.label.RemoveTag");%></div>
-																</div>
-															</div>
 															<div class="UIRightPopupMenuContainer">
 																<div class="RightClickCustomItem"><span></span></div>
 																<div class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicsTag', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveMoreTopic")%>', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){<%=uicomponent.event("RemoveTopic");%>}"> 
@@ -129,11 +106,10 @@
 								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
 								<th style="width:40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
 								<th style="width:96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
-								<th style="width:40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
 								<th style="width:130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
-								<% if(canEdit) { %>
+								<% if(isShowMenu) { %>
 								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
 								<% } %>
 							</tr>
@@ -190,7 +166,7 @@
 										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
 									String approved = "" ;
-									if(canEdit){
+									if(isShowMenu){
 										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)" ;
 										if(!topic.getIsApproved()) { 
 											if(approved.length() > 0) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPending")+"</span>)" ;
@@ -274,56 +250,6 @@
 				 							</div>
 					 					</div>
 									</td>
-									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());%> 
-										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have <%=tags.size();%> Tag!">
-											<% /*Begin Popup Menu*/ %>
-											<div style="position:relative; left:92px;">
-												<div class="UIPopupCategory" style="display:none; ">
-													<div class="UIRightClickPopupMenu" style="display:block;">
-														<div class="UIContextMenuContainer">
-															<div class="TopLeftRightClickPopupMenu">
-																<div class="TopRightRightClickPopupMenu">
-																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																</div>
-															</div>
-															<div class="MiddleLeftRightClickPopupMenu">
-																<div class="MiddleRightRightClickPopupMenu">
-																	<div class="UIRightPopupMenuContainer">
-																<%for(tag in tags) {
-																		String color = tag.getColor() ;
-																		String tagNameTitle = tag.getName() ;
-																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
-																		if(tagId.equals(tag.getId())){
-																%>
-																			<div class="MenuItem" title="$tagNameTitle">	 
-																				<div class="ItemIcon TagIcon ${color}TagIcon  DisableMenuItem">
-																					<span>$tagName</span>
-																				</div>
-																			</div>
-																<%  } else{ %>
-																			<div class="MenuItem" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
-																				<div class="ItemIcon TagIcon ${color}TagIcon">
-																					<a href="javascript:void(0);">$tagName</a>
-																				</div>
-																			</div>
-																<%  } 
-																  }%>
-																	</div>
-																</div>
-															</div>
-															<div class="BottomLeftRightClickPopupMenu">
-																<div class="BottomRightRightClickPopupMenu">
-																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<% /*End Popup Menu*/ %>
-										</div>
-									</td>
 								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>
 								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
@@ -332,7 +258,7 @@
 									</td>
 								 	<td class="Tdbox" align="center"><div>$postCount</div></td>
 									<td class="Tdbox" align="center">$postView</td>
-									<% if(canEdit) { 
+									<% if(isShowMenu) { 
 									  String checked = "";
 									  if(checkeds.contains(topicId)){
 									    checked = "checked=\"checked\"";
@@ -346,7 +272,7 @@
 						 		if(rCNB == 0){
 						 		%>
 					 				<tr>
-						 				<td colspan="10" align="center">
+						 				<td colspan="9" align="center">
 						 					<div style="margin:15px 0px 20px 0px"><strong><%=_ctx.appRes("UICategory.label.availableTheard");%></strong></div>
 						 				</td>
 						 			</tr>
@@ -354,7 +280,7 @@
 					 		} else {
 					 				%>
 					 				<tr>
-						 				<td colspan="10" align="center">
+						 				<td colspan="9" align="center">
 						 					<div style="margin:15px 0px 20px 0px"><strong><%=_ctx.appRes("UITopicContainer.label.Forumempty");%></strong></div>
 						 				</td>
 						 			</tr>

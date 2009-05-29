@@ -539,24 +539,23 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Adds the topic in tag.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param tagId the tag id
+	 * @param tags the list tag is add
 	 * @param topicPath the topic path
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void addTopicInTag(String tagId, String topicPath) throws Exception;
+	public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception ;
 
 	/**
-	 * Removes the topic in tag.
+	 * UnTag the topic in tag.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param tagId the tag id
+	 * @param userName the user id
 	 * @param topicPath the topic path
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void removeTopicInTag(String tagId, String topicPath) throws Exception;
+	public void unTag(String tagId, String userName, String topicPath) throws Exception;
 
 	/**
 	 * Gets the tag.
@@ -573,70 +572,42 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the tags.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * 
 	 * @return the tags
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Tag> getTags() throws Exception;
+	public List<Tag> getAllTags() throws Exception;
 
 	/**
 	 * Gets the tags by user.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param userName the user name
+	 * @param tagIds the list tag id of user tag in topic.
 	 * 
-	 * @return the tags by user
-	 * 
-	 * @throws Exception the exception
-	 */
-	public List<Tag> getTagsByUser(String userName) throws Exception;
-
-	/**
-	 * Gets the tags by topic.
-	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param tagIds the tag ids
-	 * 
-	 * @return the tags by topic
+	 * @return the tags by user add in topic
 	 * 
 	 * @throws Exception the exception
 	 */
-	public List<Tag> getTagsByTopic(String[] tagIds) throws Exception;
+	public List<Tag> getMyTagInTopic(String[] tagIds) throws Exception;
 
 	/**
 	 * Gets the topics by tag.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param tagId the tag id
-	 * @param strOrderBy TODO
-	 * @return the topics by tag
+	 * @param userIdAndtagId the user id and tag id (userId:tagId)
+	 * @param strOrderBy the topic order by
+	 * @return the topics by tag of user tag
 	 * 
 	 * @throws Exception the exception
 	 */
-	public JCRPageList getTopicsByTag(String tagId, String strOrderBy) throws Exception;
+	public JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception ;
 
 	/**
 	 * Save tag.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param newTag the new tag
-	 * @param isNew is the new
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void saveTag(Tag newTag, boolean isNew) throws Exception;
-
-	/**
-	 * Removes the tag.
-	 * 
-	 * @param sProvider is the SessionProvider
-	 * @param tagId the tag id
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void removeTag(String tagId) throws Exception;
+	public void saveTag(Tag newTag) throws Exception;
 
 	/**
 	 * Save user profile.

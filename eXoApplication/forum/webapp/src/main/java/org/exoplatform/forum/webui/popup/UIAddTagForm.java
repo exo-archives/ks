@@ -58,8 +58,8 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
-			@EventConfig(listeners = UIAddTagForm.SaveActionListener.class),
-			@EventConfig(listeners = UIAddTagForm.CancelActionListener.class, phase=Phase.DECODE)
+//			@EventConfig(listeners = UIAddTagForm.SaveActionListener.class),
+//			@EventConfig(listeners = UIAddTagForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UIAddTagForm extends UIForm implements UIPopupComponent {
@@ -86,14 +86,8 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 		addUIFormInput(tagColor);
 		addUIFormInput(description);
 	}
-	
-	public void setUpdateTag(Tag tag) {
-		this.isUpdate = true ;
-		this.tagId = tag.getId() ;
-		getUIStringInput(FIELD_TAGNAME_INPUT).setValue(ForumTransformHTML.unCodeHTML(tag.getName())) ;
-		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(ForumTransformHTML.unCodeHTML(tag.getDescription())) ;
-		getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
 	private Map<String, String> getColorName() throws Exception {
 		String colorsName[] = new String[] {"Blue", "Dark Golden Rod", "Green", "Yellow", "Blue Violet", "Orange","Dark Blue", "Indian Red","Dark Cyan" ,"Lawn Green", "Violet", "Red"} ;
@@ -105,13 +99,19 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 		}
 		return map ;	
 	}
+	/*
+	public void setUpdateTag(Tag tag) {
+		this.isUpdate = true ;
+		this.tagId = tag.getId() ;
+		getUIStringInput(FIELD_TAGNAME_INPUT).setValue(ForumTransformHTML.unCodeHTML(tag.getName())) ;
+		getUIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA).setValue(ForumTransformHTML.unCodeHTML(tag.getDescription())) ;
+		getUIFormSelectBoxForum(FIELD_TAGCOLOR_SELECTBOX).setValue(tag.getColor()) ;
+	}
 	
 	public void setIsTopicTag(boolean b) {
 		this.isTopicTag = b ;
 	}
 	
-	public void activate() throws Exception {}
-	public void deActivate() throws Exception {}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
 		return	findComponentById(name) ;
@@ -189,5 +189,5 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}
 		}
-	}
+	}*/
 }

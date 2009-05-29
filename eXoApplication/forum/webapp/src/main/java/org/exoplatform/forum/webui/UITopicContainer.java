@@ -384,7 +384,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
 
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		List<Tag> list = new ArrayList<Tag>();
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
@@ -395,7 +395,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     	sProvider.close();
     }
 		return list;	
-	}
+	}*/
 	
 	static public class SearchFormActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {

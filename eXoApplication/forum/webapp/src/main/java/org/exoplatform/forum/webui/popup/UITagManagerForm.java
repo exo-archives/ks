@@ -48,10 +48,10 @@ import org.exoplatform.webui.form.UIForm;
 		lifecycle = UIFormLifecycle.class,
 		template = "app:/templates/forum/webui/popup/UITagManagerForm.gtmpl",
 		events = {
-			@EventConfig(listeners = UITagManagerForm.OpenTagActionListener.class), 
-			@EventConfig(listeners = UITagManagerForm.EditTagActionListener.class), 
-			@EventConfig(listeners = UITagManagerForm.DeleteTagActionListener.class), 
-			@EventConfig(listeners = UITagManagerForm.CancelActionListener.class,phase = Phase.DECODE) 
+//			@EventConfig(listeners = UITagManagerForm.OpenTagActionListener.class), 
+//			@EventConfig(listeners = UITagManagerForm.EditTagActionListener.class), 
+//			@EventConfig(listeners = UITagManagerForm.DeleteTagActionListener.class), 
+//			@EventConfig(listeners = UITagManagerForm.CancelActionListener.class,phase = Phase.DECODE) 
 		}
 )
 public class UITagManagerForm extends UIForm implements UIPopupComponent {
@@ -66,7 +66,7 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 	public void setUpdateTag(boolean isGetTag) {
 		this.isGetTag = isGetTag;
   }
-	
+	/*
 	@SuppressWarnings("unused")
   private List<Tag> getListTags() throws Exception {
 		if(isGetTag) {
@@ -134,5 +134,5 @@ public class UITagManagerForm extends UIForm implements UIPopupComponent {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
-	}
+	}*/
 }

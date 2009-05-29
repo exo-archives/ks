@@ -519,88 +519,70 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception {
     storage_.setClosedPoll(categoryId, forumId, topicId, poll) ;
   }
+  
+  public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
+		storage_.addTag(tags, userName, topicPath);
+  }
 
-  public void addTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
-  	sProvider.close() ;
-    addTopicInTag(tagId, topicPath) ;
+	public List<Tag> getAllTags() throws Exception {
+	  return storage_.getAllTags();
+  }
+
+	public List<Tag> getMyTagInTopic(String[] tagIds) throws Exception {
+	  return storage_.getMyTagInTopic(tagIds);
+  }
+
+	public Tag getTag(String tagId) throws Exception {
+	  return storage_.getTag(tagId);
+  }
+
+	public JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception {
+	  return storage_.getTopicByMyTag(userIdAndtagId, strOrderBy);
+  }
+
+	public void saveTag(Tag newTag) throws Exception {
+		storage_.saveTag(newTag);
+  }
+
+	public void unTag(String tagId, String userName, String topicPath) throws Exception {
+		storage_.unTag(tagId, userName, topicPath);
+  }
+
+	public void addTag(SessionProvider sProvider, List<Tag> tags, String userName, String topicPath) throws Exception {
+		sProvider.close() ;
+		addTag(tags, userName, topicPath) ;
+  }
+
+	public List<Tag> getAllTags(SessionProvider sProvider) throws Exception {
+		sProvider.close() ;
+	  return getAllTags();
+  }
+
+	public List<Tag> getMyTagInTopic(SessionProvider sProvider, String[] tagIds) throws Exception {
+		sProvider.close() ;
+	  return getMyTagInTopic(tagIds);
+  }
+
+	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception {
+		sProvider.close() ;
+	  return getTag(tagId);
+  }
+
+	public JCRPageList getTopicByMyTag(SessionProvider sProvider, String userIdAndtagId, String strOrderBy) throws Exception {
+		sProvider.close() ;
+	  return getTopicByMyTag(userIdAndtagId, strOrderBy);
+  }
+
+	public void saveTag(SessionProvider sProvider, Tag newTag) throws Exception {
+		sProvider.close() ;
+		saveTag(newTag);
+  }
+
+	public void unTag(SessionProvider sProvider, String tagId, String userName, String topicPath) throws Exception {
+		sProvider.close() ;
+		unTag(tagId, userName, topicPath);
   }
   
-  public void addTopicInTag(String tagId, String topicPath) throws Exception {
-    storage_.addTopicInTag(tagId, topicPath) ;
-  }
-
-  public void removeTopicInTag(SessionProvider sProvider, String tagId, String topicPath) throws Exception {
-  	sProvider.close() ;
-    removeTopicInTag(tagId, topicPath);
-  }
-  
-  public void removeTopicInTag(String tagId, String topicPath) throws Exception {
-    storage_.removeTopicInTag(tagId, topicPath);
-  }
-
-  public Tag getTag(SessionProvider sProvider, String tagId) throws Exception {
-  	sProvider.close() ;
-    return getTag(tagId);
-  }
-  
-  public Tag getTag(String tagId) throws Exception {
-    return storage_.getTag(tagId);
-  }
-
-  public List<Tag> getTagsByUser(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-    return getTagsByUser(userName);
-  }
-  
-  public List<Tag> getTagsByUser(String userName) throws Exception {
-    return storage_.getTagsByUser(userName);
-  }
-
-  public List<Tag> getTags(SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-    return getTags();
-  }
-  
-  public List<Tag> getTags() throws Exception {
-    return storage_.getTags();
-  }
-
-  public List<Tag> getTagsByTopic(SessionProvider sProvider, String[] tagIds) throws Exception {
-  	sProvider.close() ;
-    return getTagsByTopic(tagIds);
-  }
-  
-  public List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-    return storage_.getTagsByTopic(tagIds);
-  }
-
-  public JCRPageList getTopicsByTag(SessionProvider sProvider, String tagId, String strOrderBy) throws Exception {
-  	sProvider.close() ;
-    return getTopicsByTag(tagId, strOrderBy);
-  }
-  
-  public JCRPageList getTopicsByTag(String tagId, String strOrderBy) throws Exception {
-    return storage_.getTopicsByTag(tagId, strOrderBy);
-  }
-
-  public void saveTag(SessionProvider sProvider, Tag newTag, boolean isNew) throws Exception {
-  	sProvider.close() ;
-    saveTag(newTag, isNew) ;
-  }
-  
-  public void saveTag(Tag newTag, boolean isNew) throws Exception {
-    storage_.saveTag(newTag, isNew) ;
-  }
-
-  public void removeTag(SessionProvider sProvider, String tagId) throws Exception {
-  	sProvider.close() ;
-    removeTag(tagId) ;
-  }
-  
-  public void removeTag(String tagId) throws Exception {
-    storage_.removeTag(tagId) ;
-  }
-
   /*public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
     return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
   }*/

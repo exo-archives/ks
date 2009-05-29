@@ -414,7 +414,6 @@
 								<th style="width:96px;">
 									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 								</th>
-								<th style="width:40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
 								<th style="width:130px;">
 									<div class="DownArrow1Icon">
 										<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
@@ -592,52 +591,6 @@
 							 					<div style="clear:left;"><span></span></div>
 				 							</div>
 					 					</div>
-									</td>
-									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());
-									  int sizeTag = tags.size();
-									%> 
-										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have $sizeTag Tag!">
-											<% /*Begin Popup Menu*/ 
-											if(sizeTag> 0) {
-											%>
-											<div style="position:relative;" class="FixLeftPopup">
-												<div class="UIPopupCategory" style="display:none; ">
-													<div class="UIRightClickPopupMenu" style="display:block;">
-														<div class="UIContextMenuContainer">
-															<div class="TopLeftRightClickPopupMenu">
-																<div class="TopRightRightClickPopupMenu">
-																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																</div>
-															</div>
-															<div class="MiddleLeftRightClickPopupMenu">
-																<div class="MiddleRightRightClickPopupMenu">
-																	<div class="UIRightPopupMenuContainer">
-																<%for(tag in tags) {
-																		String color = tag.getColor() ;
-																		String tagNameTitle = tag.getName() ;
-																		String tagName = ForumUtils.getSubString(tagNameTitle, 20);
-																%>
-																			<div class="MenuItem" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>" title="$tagNameTitle">	 
-																				<div class="ItemIcon TagIcon ${color}TagIcon">
-																					<span>$tagName</span>
-																				</div>
-																			</div>
-																<% } %>
-																	</div>
-																</div>
-															</div>
-															<div class="BottomLeftRightClickPopupMenu">
-																<div class="BottomRightRightClickPopupMenu">
-																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<% } /*End Popup Menu*/ %>
-										</div>
 									</td>
 								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>

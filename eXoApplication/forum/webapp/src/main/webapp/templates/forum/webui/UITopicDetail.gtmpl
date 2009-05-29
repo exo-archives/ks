@@ -113,9 +113,8 @@
 			<%
 			 	for(tag in tags) {
 			 		String tagName = tag.getName();
-			 		String color = tag.getColor();
 			%>
-				<a class="TagIcon FloatLeft ${color}TagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+				<a class="TagIcon FloatLeft BlueTagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 			<%} %>
 				<div class="ScrollButtons" style="width:35px;">
       		<div title="Previous">

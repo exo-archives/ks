@@ -61,10 +61,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		template =	"app:/templates/forum/webui/UITopicsTag.gtmpl",
 		events = {
 				@EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class),
-				@EventConfig(listeners = UITopicsTag.EditTagActionListener.class),
-				@EventConfig(listeners = UITopicsTag.OpenTopicsTagActionListener.class),
 				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class),
-				@EventConfig(listeners = UITopicsTag.RemoveTagActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
 				@EventConfig(listeners = UITopicsTag.RSSActionListener.class),
@@ -79,6 +76,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private Tag tag ;
 	private boolean isUpdateTag = true ;
 	private String strOrderBy = "";
+	private String userIdAndtagId ;
 	private UserProfile userProfile = null;
 	private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
 	public UITopicsTag() throws Exception {
@@ -90,13 +88,17 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.isUpdateTag = true ;
 		this.mapNumberPagePost.clear();
 		this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)){
+			this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
+		} else this.userIdAndtagId = tagId;
 	}
 	
-	public void setTag(Tag tag) throws Exception {
+	public void setTag(Tag tag, String userIdAndtagId) throws Exception {
 	  this.tag = tag;
 	  this.tagId = tag.getId();
 	  this.isUpdateTag = false;
 	  this.mapNumberPagePost.clear();
+	  this.userIdAndtagId = userIdAndtagId;
 	  this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   }
 	@SuppressWarnings("unused")
@@ -147,7 +149,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
-		this.pageList = forumService.getTopicsByTag(ForumSessionUtils.getSystemProvider(), this.tagId, strOrderBy) ;
+		this.pageList = forumService.getTopicByMyTag(userIdAndtagId, strOrderBy);
 		long maxTopic = this.userProfile.getMaxTopicInPage() ;
 		if(maxTopic <= 0) maxTopic = 10;
 		this.pageList.setPageSize(maxTopic) ;
@@ -168,13 +170,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	@SuppressWarnings("unused")
 	private Tag getTagById() throws Exception {
 		if(this.isUpdateTag) {
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try{
-				this.tag = forumService.getTag(sProvider, this.tagId) ;
+				this.tag = forumService.getTag(this.tagId) ;
 			}catch (Exception e) {
 				throw e;
-			}finally {
-				sProvider.close();
 			}
 			this.isUpdateTag = false ;
 		}
@@ -187,19 +186,19 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
 
-	@SuppressWarnings("unused")
-	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		List<Tag> tags = new ArrayList<Tag>();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-		try {
-			tags = this.forumService.getTagsByTopic(sProvider, tagIds);
-    } catch (Exception e) {
-    	throw e;
-    }finally {
-    	sProvider.close();
-    }
-    return tags;
-	}
+//	@SuppressWarnings("unused")
+//	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
+//		List<Tag> tags = new ArrayList<Tag>();
+//		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+//		try {
+//			tags = this.forumService.getTagsByTopic(sProvider, tagIds);
+//    } catch (Exception e) {
+//    	throw e;
+//    }finally {
+//    	sProvider.close();
+//    }
+//    return tags;
+//	}
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
@@ -277,63 +276,40 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		}
 	}
 	
-	static public class EditTagActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicsTag = event.getSource() ;
-			UIForumPortlet forumPortlet = topicsTag.getParent() ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIAddTagForm addTagForm = popupAction.createUIComponent(UIAddTagForm.class, null, null) ;
-			addTagForm.setUpdateTag(topicsTag.tag);
-			addTagForm.setIsTopicTag(true) ;
-			popupAction.activate(addTagForm, 410, 263) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}
-	
 	static public class RemoveTopicActionListener extends EventListener<UITopicsTag> {
 		public void execute(Event<UITopicsTag> event) throws Exception {
 			UITopicsTag topicsTag = event.getSource();
+			UIForumPortlet forumPortlet = topicsTag.getParent();
 			boolean hasCheck = false;
 			String topicPath = "";
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
+				String userId = topicsTag.getUserProfile().getUserId();
 				for (String topicId : topicsTag.getIdSelected()) {
 					topicPath = topicsTag.getTopic(topicId).getPath();
 					try {
-						topicsTag.forumService.removeTopicInTag(sProvider, topicsTag.tagId, topicPath);
+						topicsTag.forumService.unTag(topicsTag.tagId, userId, topicPath);
 					} catch (Exception e) {
 					}
 					hasCheck = true;
 				}
-			} finally {
-				sProvider.close();
+			}catch (Exception e) {
 			}
 			if (!hasCheck) {
 				Object[] args = {};
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING));
 			} else {
 				topicsTag.isUpdateTag = true;
+				Tag tag = topicsTag.getTagById();
+				if(tag == null || tag.getUserTag() == null || tag.getUserTag().length == 0) {
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					categoryContainer.updateIsRender(true) ;
+					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+					UIBreadcumbs uiBreadcumbs = forumPortlet.findFirstComponentOfType(UIBreadcumbs.class);
+					uiBreadcumbs.setUpdataPath(Utils.FORUM_SERVICE);
+				}
+				topicsTag.isUpdateTag = false;
 			}
-			UIForumPortlet forumPortlet = topicsTag.getParent();
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-		}
-	}
-	
-	static public class RemoveTagActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicsTag = event.getSource() ;
-			UIForumPortlet forumPortlet = topicsTag.getParent() ;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			try {
-				topicsTag.forumService.removeTag(sProvider, topicsTag.tagId) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES) ;
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			} finally {
-				sProvider.close();
-			}
 		}
 	}
 	
@@ -392,13 +368,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					Topic topic = topicTag.getTopic(topicId);
 					String path = topic.getPath();
 					path = path.substring(path.indexOf(Utils.CATEGORY));
-					/*UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
-					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-					UIAddWatchingForm addWatchingForm = popupAction.createUIComponent(UIAddWatchingForm.class, null, null) ;
-					addWatchingForm.initForm() ;
-					addWatchingForm.setPathNode(path);
-					popupAction.activate(addWatchingForm, 425, 250) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 					List<String> values = new ArrayList<String>();
 					String userName = topicTag.userProfile.getUserId();
