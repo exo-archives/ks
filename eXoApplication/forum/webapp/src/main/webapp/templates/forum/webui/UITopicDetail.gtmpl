@@ -114,7 +114,11 @@
 			 	for(tag in tags) {
 			 		String tagName = tag.getName();
 			%>
-				<a class="TagIcon FloatLeft BlueTagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+				<div class="FloatLeft">
+					<a class="TagIcon FloatLeft BlueTagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+					<div class="UntagIcon FloatLeft" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"><span></span></div>
+					<div style="clear:left;"><span></span></div>
+				</div>
 			<%} %>
 				<div class="ScrollButtons" style="width:35px;">
       		<div title="Previous">

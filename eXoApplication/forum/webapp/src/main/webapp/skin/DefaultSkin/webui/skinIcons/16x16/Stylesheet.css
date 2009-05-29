@@ -476,6 +476,16 @@
 	background: url('icons/ArrowLeftIcon.gif') no-repeat left center;
 }
 
+.UIForumPortlet .ActivateIcons {
+	background: url('icons/ActivateIcon.gif') no-repeat left center;
+}
+
+.UIForumPortlet .UntagIcon {
+	background: url('icons/UntagIcon.gif') no-repeat left center;
+	width: 12px; height: 24px;
+	cursor:pointer;
+}
+
 .UIForumPortlet #PendingJob {
 	line-height:24px; white-space:nowrap;
 	height:24px; cursor:pointer;

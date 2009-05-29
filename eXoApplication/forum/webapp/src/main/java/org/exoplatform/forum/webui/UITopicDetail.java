@@ -59,7 +59,6 @@ import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
-import org.exoplatform.forum.webui.popup.UITagForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIViewPost;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
@@ -102,6 +101,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UITopicDetail.AddPostActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.RatingTopicActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.AddTagTopicActionListener.class ),
+			@EventConfig(listeners = UITopicDetail.UnTagTopicActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.OpenTopicsTagActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.GoNumberPageActionListener.class ),
 			@EventConfig(listeners = UITopicDetail.SearchFormActionListener.class ),
@@ -719,7 +719,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddTagTopicActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			String tagIds = topicDetail.getUIStringInput(FIELD_ADD_TAG).getValue();
+			UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
+			String tagIds = stringInput.getValue();
 			if(!ForumUtils.isEmpty(tagIds)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=*':}{\"";
 				for (int i = 0; i < special.length(); i++) {
@@ -751,8 +752,19 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.empty-field", null, ApplicationMessage.WARNING)) ;
 				return ;
 			}
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			stringInput.setValue("");
+			topicDetail.isEditTopic = true;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+		}
+	}
+
+	static public class UnTagTopicActionListener extends EventListener<UITopicDetail> {
+		public void execute(Event<UITopicDetail> event) throws Exception {
+			UITopicDetail topicDetail = event.getSource() ;
+			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			topicDetail.forumService.unTag(tagId, topicDetail.userName, topicDetail.topic.getPath());
+			topicDetail.isEditTopic = true;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 	
