@@ -596,3 +596,7 @@
 .UIForumPortlet .ForumRSSFeed {
 	background: url('background/rss1.png') no-repeat left center;
 }
+
+.UIForumPortlet .UIRightClickPopupMenu a{
+	display: block;
+}

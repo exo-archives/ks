@@ -1995,3 +1995,7 @@
 .UIFAQPortlet .UIAddCategoryForm .textarea{
 	height: 55px;
 }
+
+.UIFAQPortlet .UIRightClickPopupMenu a{
+	display: block;
+}
