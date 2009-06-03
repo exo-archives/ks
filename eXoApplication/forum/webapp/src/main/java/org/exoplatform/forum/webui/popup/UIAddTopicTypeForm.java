@@ -16,11 +16,16 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -70,6 +75,13 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 	  ((UIFormInputIconSelector)getChild(UIFormInputIconSelector.class)).setSelectedIcon(topicType.getIcon());
   }
 
+	private boolean checkIsSameName(ForumService forumService, String name) throws Exception {
+		List<TopicType> topicTs = forumService.getTopicTypes();
+		for (TopicType topicT : topicTs) {
+			if(topicT.getName().equalsIgnoreCase(name)) return true;
+    }
+		return false;
+	}
 
 
 	static	public class CancelActionListener extends EventListener<UIAddTopicTypeForm> {
@@ -92,9 +104,19 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 			if(topicTypeForm.isEdit) {
 				topicType = topicTypeForm.topicType;
 			}
-			topicType.setName(typeName);
-			topicType.setIcon(typeIcon);
+			while (typeName.indexOf("  ") >= 0) {
+				typeName = StringUtils.replace(typeName, "  ", " ");
+	    }
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			if(topicTypeForm.checkIsSameName(forumService, typeName)) {
+				Object[] args = {};
+				UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameNameType", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			topicType.setName(typeName.trim());
+			topicType.setIcon(typeIcon);
 			forumService.saveTopicType(topicType);
 			topicTypeForm.isEdit = false;
 			UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
