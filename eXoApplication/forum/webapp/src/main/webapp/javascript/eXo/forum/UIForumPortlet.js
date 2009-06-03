@@ -840,6 +840,18 @@ UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
 	}
 } ;
 
+UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
+	var grid = document.getElementById(idChild);
+	var tableContent = document.getElementById(idParent);
+	if(grid.offsetWidth+10 >= (tableContent.offsetWidth)){
+		tableContent.style.paddingRight = "16px";
+		tableContent.style.width = "auto";
+	} else {
+		tableContent.style.padding = "1px";
+		tableContent.style.width = "100%";
+	}
+};
+
 UIForumPortlet.prototype.initContextMenu = function(id){
 	var cont = document.getElementById(id);
 	var uiContextMenu = eXo.ks.UIContextMenu;

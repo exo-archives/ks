@@ -5516,6 +5516,8 @@ public class JCRDataStorage {
 		  	Node nodeHome = getTopicTypeHome(sProvider);
 		  	topicType = getTopicType(nodeHome.getNode(Id));
 		  }catch (Exception e) {
+		  	topicType.setId(TopicType.DEFAULT_ID);
+		  	topicType.setName(TopicType.DEFAULT_TYPE);
 		  }finally { sProvider.close() ;}
 		return topicType;
   }
@@ -5540,6 +5542,23 @@ public class JCRDataStorage {
       }
 		}finally { sProvider.close() ;}
 	}
+	
+	public void removeTopicType(String topicTypeId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node nodeHome = getTopicTypeHome(sProvider);
+			try {
+				Node node = nodeHome.getNode(topicTypeId);
+				node.remove();
+			} catch (Exception e) {
+			}
+			if(nodeHome.isNew()) {
+				nodeHome.getSession().save();
+			} else {
+				nodeHome.save();
+			}
+		}finally { sProvider.close() ;}
+  }
 	
 	public JCRPageList getPageTopicByType(String type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 

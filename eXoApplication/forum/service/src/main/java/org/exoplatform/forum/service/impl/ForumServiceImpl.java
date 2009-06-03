@@ -1220,6 +1220,10 @@ public class ForumServiceImpl implements ForumService, Startable{
 	  return storage_.getTopicTypes();
   }
 
+	public void removeTopicType(String topicTypeId) throws Exception {
+		storage_.removeTopicType(topicTypeId);
+	}
+
 	public void saveTopicType(TopicType topicType) throws Exception {
 	  storage_.saveTopicType(topicType);
   }

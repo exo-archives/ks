@@ -83,7 +83,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UITopicForm.CancelActionListener.class,phase = Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.SelectIconActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class),
+			@EventConfig(listeners = UITopicForm.AddTypeTopicActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UITopicForm.AddValuesUserActionListener.class, phase=Phase.DECODE)
 		}
 )
@@ -238,9 +238,20 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		listTT.clear();
 		TopicType topicType = new TopicType();
 		topicType.setName(getLabel(TopicType.DEFAULT_TYPE));
+		topicType.setIcon("IconsView");
 		topicType.setId(TopicType.DEFAULT_ID);
 		listTT.add(topicType);
-		listTT.addAll(forumService.getTopicTypes());
+		List<TopicType> topicTs = forumService.getTopicTypes();
+		boolean isAdd = true;
+		for (TopicType topicT : topicTs) {
+	    if(topicT.getId().equals(TopicType.DEFAULT_ID)) {
+	    	listTT.clear();
+	    	listTT.addAll(topicTs);
+	    	isAdd = false;
+	    	break;
+	    }
+    }
+		if(isAdd) listTT.addAll(topicTs);
 	}
 	
 	public void addNewTopicType() throws Exception {

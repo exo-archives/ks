@@ -928,6 +928,7 @@ public interface ForumService extends ForumServiceLegacy{
   public List<TopicType> getTopicTypes() throws Exception;
   public TopicType getTopicType(String Id) throws Exception;
   public void saveTopicType(TopicType topicType)throws Exception;
+  public void removeTopicType(String topicTypeId) throws Exception;
   public JCRPageList getPageTopicByType(String type) throws Exception;
   
 }

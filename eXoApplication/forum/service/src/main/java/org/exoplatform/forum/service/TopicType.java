@@ -25,7 +25,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Jun 1, 2009 - 7:54:11 AM  
  */
 public class TopicType {
-	public static final String DEFAULT_TYPE = "default";
+	public static final String DEFAULT_TYPE = "Default";
 	public static final String DEFAULT_ID = Utils.TOPICTYPE + "_default";
 	
 	private String id;

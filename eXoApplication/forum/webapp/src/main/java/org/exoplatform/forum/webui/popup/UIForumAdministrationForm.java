@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -72,6 +73,9 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.AddNewBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.EditBBCodeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.DeleteBBCodeActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.AddTopicTypeActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.EditTopicTypeActionListener.class), 
+			@EventConfig(listeners = UIForumAdministrationForm.DeleteTopicTypeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.PruneSettingActionListener.class),
@@ -115,6 +119,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	private List<TopicType> listTT = new ArrayList<TopicType>();
 	List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 	private UIForumPageIterator pageIterator ;
 	public UIForumAdministrationForm() throws Exception {
@@ -252,6 +257,35 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	    if(prune.getId().equals(pruneId)) return prune;
     }
 		return new PruneSetting();
+	}
+	
+	@SuppressWarnings("unused")
+  private List<TopicType> getTopicTypes() throws Exception {
+		listTT = new ArrayList<TopicType>();
+		List<TopicType> topicTs = forumService.getTopicTypes();
+		TopicType topicType = new TopicType();
+		topicType.setIcon("IconsView");
+		topicType.setName(getLabel(TopicType.DEFAULT_TYPE));
+		topicType.setId(TopicType.DEFAULT_ID);
+		listTT.add(topicType);
+		boolean isAdd = true;
+		for (TopicType topicT : topicTs) {
+	    if(topicT.getId().equals(TopicType.DEFAULT_ID)) {
+	    	listTT.clear();
+	    	listTT.addAll(topicTs);
+	    	isAdd = false;
+	    	break;
+	    }
+    }
+		if(isAdd) listTT.addAll(topicTs);
+		return listTT;
+	}
+	
+	private TopicType getTopicType(String topicTId) throws Exception {
+		for (TopicType topicT : listTT) {
+	    if(topicT.getId().equals(topicTId)) return topicT;
+    }
+		return new TopicType();
 	}
 	
 	@SuppressWarnings("unused")
@@ -468,8 +502,42 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
-			uiForm.forumService.removeBBCode(SessionProviderFactory.createSystemProvider(), bbcId);
+			uiForm.forumService.removeBBCode(bbcId);
 			uiForm.setListBBcode();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+		}
+	}
+
+	static	public class AddTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAddTopicTypeForm topicTypeForm = popupAction.activate(UIAddTopicTypeForm.class,700);
+			topicTypeForm.setId("AddTopicTypeForm");
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class EditTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			String topicTId = event.getRequestContext().getRequestParameter(OBJECTID);
+			TopicType topicType = uiForm.getTopicType(topicTId);
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAddTopicTypeForm topicTypeForm = popupAction.activate(UIAddTopicTypeForm.class,700);
+			topicTypeForm.setId("EditTopicTypeForm");
+			topicTypeForm.setTopicType(topicType);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static	public class DeleteTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
+		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+			UIForumAdministrationForm uiForm = event.getSource();
+			String topicTypeId = event.getRequestContext().getRequestParameter(OBJECTID);
+			uiForm.forumService.removeTopicType(topicTypeId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

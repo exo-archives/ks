@@ -7,6 +7,7 @@
 	jsManager.importJavascript('eXo.forum.webservice.SearchIpBan', '/forum/javascript/') ;
 	jsManager.addJavascript('eXo.forum.webservice.SearchIpBan.init();') ;
 	List bbcodes = uiform.getListBBcode();
+	String classCssInbox = "";
 %>
 <div class="UIFormInputWithActions UIForumAdministrationForm" style="*width:97%;">	
 	<% uiform.begin() %>	
@@ -306,10 +307,76 @@
 												</table>
 											</div>
 										</div>
-										<script type='text/javascript'> var grid = document.getElementById('UIGrid');var table = document.getElementById('TableContent');if(grid.offsetWidth+10 >= (table.offsetWidth)){table.style.paddingRight = "16px";table.style.width = "auto";} else {table.style.padding = "1px";table.style.width = "100%";}</script>
+										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid')") ; %>
 									 <%} else if(tabconten.id.equals(uicomponent.FIELD_TOPICTYPEMANAGER_TAB)) { %>
-										
-										va mai day do, tinh yeu tran qua o cua. Mot ngay nang chung ta cung vui ben nhau
+										<div class="AutuPruneContainer">
+											<div id="AutuPruneContainer" style="padding:0px 16px 0px 1px;">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+													<thead>
+														<tr>
+															<th style="width:60px; text-align:center">Icon</th>
+															<th style="text-align:left">Type Name</th>
+															<th width="80px">Action</th>
+														</tr>
+													</thead>
+												</table>
+											</div>
+											<div class="BBCodeContainer" id="TableContent1" style="padding:1px;width:100%;">
+												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid1">
+													<tbody>
+													<% 
+															List topicTypes = uicomponent.getTopicTypes();
+															int k_ = 0; 
+															for(topicType in topicTypes) {
+																String topicTId = topicType.getId();
+																if(k_%2 == 0) classCssInbox = "whileRow";
+																else classCssInbox = "OddRow";
+																++k_;
+													%>
+														<tr>
+															<td style="width:60px; text-align:center"><div class="Icon16x16 <%=topicType.getIcon()%>" style="margin:auto"><span></span></div></td>
+															<td style="text-align:left"><%=topicType.getName()%></td>
+															<td width="80px">
+																<div class="ActionContainer" style="margin:0px auto; width:60px;">
+																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
+																		 <div title="Edit this topic type." class="Icon16x16 EditIcon"><span></span></div>							
+																	</div>
+																	<% if(!topicTId.equals(org.exoplatform.forum.service.TopicType.DEFAULT_ID)) {%>
+																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
+																		 <div title="Delete this topic type." class="Icon16x16 DeleteIcon"><span></span></div>							
+																	</div>
+																	<% } %>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+															</td>
+														</tr>
+													<%  } %>
+													</tbody>
+												</table>
+											</div>
+											<div class="UIAction"> 
+												<table class="ActionContainer">
+													<tr>
+														<td align="center">
+														<%	
+															 String actionLabel = "Add Topic Type"; 
+															 String link = uiform.event("AddTopicType") ;
+														%>
+															 <div onclick="$link" class="ActionButton LightBlueStyle">
+																 <div class="ButtonLeft">
+																	 <div class="ButtonRight">
+																	 	 <div class="ButtonMiddle">
+																		 	 <a href="javascript:void(0);">$actionLabel</a>
+																	 	 </div>
+																	 </div>
+																 </div>
+															 </div>
+														 </td>
+													</tr>
+										 		</table> 
+											</div>
+										</div>			
+										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent1','UIGrid1')") ; %>			
 									 <%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}
