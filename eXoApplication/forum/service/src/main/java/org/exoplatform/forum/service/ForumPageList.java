@@ -264,6 +264,7 @@ public class ForumPageList extends JCRPageList {
 		if(topicNode.hasProperty("exo:modifiedDate"))topicNew.setModifiedDate(topicNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
 		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
 		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+		topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
 		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
 		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
 		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;

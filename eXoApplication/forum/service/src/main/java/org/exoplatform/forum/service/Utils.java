@@ -49,6 +49,7 @@ public class Utils {
 	public final static String USER_PROFILES = "UserProfile".intern() ;
 	public final static String FORUM_BAN_IP = "forumBanIP".intern() ;
 	public final static String FORUM_BBCODE = "forumBBCode".intern() ;
+	public final static String TOPIC_TYPE_HOME = "TopicTypeHome".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
@@ -59,6 +60,8 @@ public class Utils {
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
 	public final static String BBCODE = "bbcode".intern() ;
+	public final static String TOPICTYPE = "topicType".intern() ;
+	
 	public final static String PRUNESETTING = "pruneSetting".intern() ;
 	public final static String RECEIVE_MESSAGE = "receive".intern() ;
 	public final static String SEND_MESSAGE = "send".intern() ;

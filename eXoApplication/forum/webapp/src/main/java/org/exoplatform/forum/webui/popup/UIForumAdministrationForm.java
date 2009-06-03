@@ -89,6 +89,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
 	public static final String FIELD_NOTIFYEMAIL_TAB = "notifyEmailTab" ;
 	public static final String FIELD_AUTOPRUNE_TAB = "autoPruneTab" ;
+	public static final String FIELD_TOPICTYPEMANAGER_TAB = "topicTypeManagerTab" ;
 	public static final String FIELD_BBCODE_TAB = "bbcodesTab" ;
 	public static final String IP_BAN_TAB = "ipBanTab" ;
 	
@@ -126,13 +127,14 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
   public void setInit() throws Exception{
   	getPruneSettings();
   	
-		this.administration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider());
+		this.administration = forumService.getForumAdministration();
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
 		UIFormInputWithActions ipBanTab = new UIFormInputWithActions(IP_BAN_TAB);
 		UIFormInputWithActions bbcodeTab = new UIFormInputWithActions(FIELD_BBCODE_TAB);
 		UIFormInputWithActions autoPruneTab = new UIFormInputWithActions(FIELD_AUTOPRUNE_TAB);
+		UIFormInputWithActions topicTypeManagerTag = new UIFormInputWithActions(FIELD_TOPICTYPEMANAGER_TAB);
 		
 		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
 																"modifiedDate",	"topicCount", "postCount"}; 
@@ -216,6 +218,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		addUIFormInput(notifyEmailTab) ;
 		addUIFormInput(bbcodeTab) ;
 		addUIFormInput(autoPruneTab) ;
+		addUIFormInput(topicTypeManagerTag) ;
 		if(ForumUtils.enableIPLogging()){
 			ipBanTab.addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
 			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
@@ -228,19 +231,17 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	
 	public void setListBBcode() throws Exception {
 		listBBCode = new ArrayList<BBCode>();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			listBBCode.addAll(forumService.getAllBBCode(sProvider));
+			listBBCode.addAll(forumService.getAllBBCode());
     } catch (Exception e) {
 	    e.printStackTrace();
     }
 	}
 	
 	private List<PruneSetting> getPruneSettings() throws Exception {
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		listPruneSetting = new ArrayList<PruneSetting>();
 		try {
-			listPruneSetting.addAll(forumService.getAllPruneSetting(sProvider));
+			listPruneSetting.addAll(forumService.getAllPruneSetting());
     } catch (Exception e) {
     }
 		return listPruneSetting;

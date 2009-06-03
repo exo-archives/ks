@@ -80,6 +80,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -237,11 +238,20 @@ public class JCRDataStorage {
 	}
 
 	private Node getBBcodeHome(SessionProvider sProvider) throws Exception {
-		//Node forumHome = getForumHomeNode(sProvider) ;
 		try {
 			return getForumDataHome(sProvider).getNode(Utils.FORUM_BBCODE);
 		} catch (PathNotFoundException e) {
 			return getForumDataHome(sProvider).addNode(Utils.FORUM_BBCODE, "exo:forumBBCodeHome");			
+		} catch(Exception e) {
+			return null ;
+		}		
+	}
+
+	private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
+		try {
+			return getForumDataHome(sProvider).getNode(Utils.TOPIC_TYPE_HOME);
+		} catch (PathNotFoundException e) {
+			return getForumDataHome(sProvider).addNode(Utils.TOPIC_TYPE_HOME, "exo:topicTypeHome");			
 		} catch(Exception e) {
 			return null ;
 		}		
@@ -1391,6 +1401,7 @@ public class JCRDataStorage {
 		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
 		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
 		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
+		topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
 		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
 		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
 		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
@@ -1687,6 +1698,7 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:modifiedBy", topic.getModifiedBy());
 			topicNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
 			topicNode.setProperty("exo:description", topic.getDescription());
+			topicNode.setProperty("exo:topicType", topic.getTopicType());
 			topicNode.setProperty("exo:icon", topic.getIcon());
 
 			topicNode.setProperty("exo:isModeratePost", topic.getIsModeratePost());
@@ -3030,7 +3042,6 @@ public class JCRDataStorage {
 					Node tagNode = getTagHome(sProvider).getNode(tagId);
 					tagNode.setProperty("exo:userTag", userTags.toArray(new String[]{}));
 					tagNode.save();
-					System.out.println("userTags.size(): " + userTags.size());
 				}
 			}else if(iter.getSize() == 1 && userTags.size() == 1) {
 				Node tagHomNode = getTagHome(sProvider);
@@ -5475,11 +5486,81 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	private TopicType getTopicType(Node node) throws Exception {
+		TopicType topicType = new TopicType();
+		topicType.setId(node.getName());
+		topicType.setName(node.getProperty("exo:name").getString());
+		topicType.setIcon(node.getProperty("exo:icon").getString());
+		return topicType;
+	}
 	
+	public List<TopicType> getTopicTypes() throws Exception {
+	  List<TopicType> listTT = new ArrayList<TopicType>();
+	  SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	  try {
+	  	Node nodeHome = getTopicTypeHome(sProvider);
+	  	NodeIterator iter = nodeHome.getNodes();
+	  	while (iter.hasNext()) {
+	      Node node = (Node) iter.next();
+	      listTT.add(getTopicType(node));
+      }
+    } catch (Exception e) {
+    }finally { sProvider.close() ;}
+	  return listTT ;
+  }
 	
+	public TopicType getTopicType(String Id) throws Exception {
+		TopicType topicType = new TopicType();
+		 SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		  try {
+		  	Node nodeHome = getTopicTypeHome(sProvider);
+		  	topicType = getTopicType(nodeHome.getNode(Id));
+		  }catch (Exception e) {
+		  }finally { sProvider.close() ;}
+		return topicType;
+  }
 	
+	public void saveTopicType(TopicType topicType)throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node nodeHome = getTopicTypeHome(sProvider);
+			Node node;
+			try {
+	      node = nodeHome.getNode(topicType.getId());
+      } catch (Exception e) {
+      	node = nodeHome.addNode(topicType.getId(), "exo:topicType");
+      	node.setProperty("exo:id",topicType.getId());
+      }
+      node.setProperty("exo:name",topicType.getName());
+      node.setProperty("exo:icon",topicType.getIcon());
+      if(nodeHome.isNew()) {
+      	nodeHome.getSession().save();
+      } else {
+      	nodeHome.save();
+      }
+		}finally { sProvider.close() ;}
+	}
 	
-	
+	public JCRPageList getPageTopicByType(String type) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
+		try {
+			Node categoryNode = getCategoryHome(sProvider);
+			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(categoryNode.getPath()).append("//element(*,exo:topic)")
+				.append("[@topicType='").append(type).append("']").append(" order by @exo:createdDate descending");
+			
+			System.out.println("\n\n qr: "  + stringBuffer.toString());
+			String pathQuery = stringBuffer.toString();
+			Query query = qm.createQuery(pathQuery, Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
+			return pagelist;
+		}catch (Exception e) {
+		}
+	  return null;
+  }
 	
 	
 	

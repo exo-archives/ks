@@ -55,6 +55,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -1205,5 +1206,21 @@ public class ForumServiceImpl implements ForumService, Startable{
 	public PruneSetting getPruneSetting(SessionProvider sProvider, String forumPath) throws Exception {
 		sProvider.close() ;
 	  return getPruneSetting(forumPath);
+  }
+
+	public JCRPageList getPageTopicByType(String type) throws Exception {
+	  return storage_.getPageTopicByType(type);
+  }
+
+	public TopicType getTopicType(String Id) throws Exception {
+	  return storage_.getTopicType(Id);
+  }
+
+	public List<TopicType> getTopicTypes() throws Exception {
+	  return storage_.getTopicTypes();
+  }
+
+	public void saveTopicType(TopicType topicType) throws Exception {
+	  storage_.saveTopicType(topicType);
   }
 }

@@ -57,8 +57,12 @@
 }
 
 .UITopicForm .HorizontalLayout .ThreadOption .UIFormGrid {
-	width: 100px;
+	width: 400px;
 	*width: 420px;
+}
+
+.UITopicForm .HorizontalLayout .ThreadOption .selectbox {
+	float: left;
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission .UIFormGrid {

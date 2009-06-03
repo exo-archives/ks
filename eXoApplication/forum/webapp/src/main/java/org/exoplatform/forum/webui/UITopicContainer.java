@@ -17,7 +17,9 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
@@ -32,6 +34,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIBanIPForumManagerForm;
@@ -130,11 +133,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private boolean isNull = false; 
 	private boolean enableIPLogging = true;
 	private boolean isReload = true;
+	@SuppressWarnings("unused")
+  private String DEFAULT_ID = TopicType.DEFAULT_ID;
 	public boolean isNull() { return isNull; }
 	public void setNull(boolean isNull) { this.isNull = isNull;}
 	public boolean isLogin() {return isLogin;}
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
-
+	private Map<String, TopicType> topicTypeM = new HashMap<String, TopicType>();
 	public UITopicContainer() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
@@ -142,7 +147,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		if(!ForumSessionUtils.isAnonim()) isLogin = true;
 	}
-	@SuppressWarnings("unused")
+	
 	private UserProfile getUserProfile() { return userProfile ;}
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		this.userProfile	= userProfile ;
@@ -178,6 +183,23 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     } catch (Exception e) {
     }
 		return pruneSetting.isActive();
+	}
+	
+	@SuppressWarnings("unused")
+  private String[] getIconTopicType(String typeId) throws Exception {
+		try {
+			TopicType topicType = topicTypeM.get(typeId);
+			if(topicType != null) {
+				return new String[]{topicType.getIcon(), topicType.getName()};
+			} else {
+				topicType = forumService.getTopicType(typeId);
+				topicTypeM.put(typeId, topicType);
+				return new String[]{topicType.getIcon(), topicType.getName()};
+			}
+    } catch (Exception e) {
+    	e.printStackTrace();
+	    return new String[]{"NormalTopicIcon", ""};
+    }
 	}
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
@@ -224,7 +246,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	public void setForum(boolean isSetModerator) throws Exception {
 		if(this.isUpdate || forum == null) {
-			this.forum = forumService.getForum(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+			this.forum = forumService.getForum(categoryId, forumId);
 			this.isUpdate = false ;
 		}
 		this.canAddNewThread = true ;
@@ -282,7 +304,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
 			strQuery.append("@exo:isApproved='true'") ;
 		}
-		this.pageList = forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), categoryId, forumId, strQuery.toString(), strOrderBy);
+		this.pageList = forumService.getPageTopic(categoryId, forumId, strQuery.toString(), strOrderBy);
 		long maxTopic = userProfile.getMaxTopicInPage() ;
 		if(maxTopic <= 0) maxTopic = 10 ;
 		try{
@@ -346,7 +368,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return null ;
 	}
 	
-	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
 		for (Topic topic : topicList) {
 			if(topic.getId().equals(topicId)) return topic ;
@@ -368,7 +389,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				if(this.forum.getIsModeratePost() || topic.getIsModeratePost()) {
 					if(!(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 				}
-				availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, topic.getId(), isApprove, "false", userLogin)	;
+				availablePost = this.forumService.getAvailablePost(this.categoryId, this.forumId, topic.getId(), isApprove, "false", userLogin)	;
 			}
 			long value = availablePost/maxPost;
 			if((value*maxPost) < availablePost) value = value + 1;
@@ -424,7 +445,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, uiTopicContainer.getUserProfile().getUserId(),
+				List<ForumSearch> list = forumService.getQuickSearch(text, type.toString(), path, uiTopicContainer.getUserProfile().getUserId(),
 																							forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), null);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
@@ -483,7 +504,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
+			topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
 			topicForm.setMod(uiTopicContainer.isModerator) ;
 			popupContainer.setId("UIAddTopicContainer") ;
 			popupAction.activate(popupContainer, 850, 500) ;
@@ -805,7 +826,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum) ;
+				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
 				topicForm.setUpdateTopic(topic, true) ;
 				topicForm.setMod(uiTopicContainer.isModerator) ;
 				popupContainer.setId("UIEditTopicContainer") ;

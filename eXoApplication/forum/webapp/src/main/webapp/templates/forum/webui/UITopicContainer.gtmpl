@@ -454,6 +454,14 @@
 									long max_page = uicomponent.getSizePost(topic) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
+									String topicType = topic.getTopicType();
+									if(topicType != null && topicType.length() > 0 && !topicType.equals(uicomponent.DEFAULT_ID)) {
+										String[]types = uicomponent.getIconTopicType(topicType);
+										iconClassTopic = types[0];
+										topicType = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicType"),types[1]);
+									} else {
+										topicType = "";
+									}
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String postNewBy = topic.getLastPostBy() ;
@@ -521,7 +529,7 @@
 													<div class="StatusIcon Stats" style="margin-left:18px;" title="This topic has a poll"><span></span></div>
 												</div>
 										<%} else {%>
-												<div class="StatusIcon $iconClassTopic">
+												<div class="StatusIcon $iconClassTopic" title="$topicType">
 													<span></span>
 												</div>
 										<%}%>
