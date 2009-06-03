@@ -20,6 +20,16 @@
 											<%uiform.renderField(uiform.FIELD_SEARCHTYPE_SELECTBOX); %>
 									</td>
 							</tr>
+						<% if(uiform.getIsSearchTopic()){ %>	
+							<tr>
+									<td class="FieldLabel">
+											<%=uicomponent.getLabel(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
+									</td>
+									<td class="FieldComponent" colspan="2">
+											<%uiform.renderField(uiform.FIELD_TOPICTYPE_SELECTBOX); %>
+									</td>
+							</tr>
+						<% } %>	
 							<tr>
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_SCOPE_RADIOBOX); %>

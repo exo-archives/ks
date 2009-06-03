@@ -13,6 +13,7 @@ public class ForumEventQuery {
 	private String type ;
 	private String keyValue ;
 	private String valueIn ;
+	private String topicType ;
 	private String path;
 	private String byUser ;
 	private String isLock;
@@ -61,6 +62,12 @@ public class ForumEventQuery {
   }
 	public void setValueIn(String valueIn) {
   	this.valueIn = valueIn;
+  }
+	public String getTopicType() {
+  	return topicType;
+  }
+	public void setTopicType(String topicType) {
+  	this.topicType = topicType;
   }
 	public String getPath() {
   	return path;
@@ -177,6 +184,13 @@ public class ForumEventQuery {
     	stringBuffer.append(")");
 			isAnd = true ;
 		}
+    if(type.equals("topic")) {
+    	if(topicType != null && topicType.length() > 0 && !topicType.equals("all")){
+    		if(isAnd) stringBuffer.append(" and ");
+    		stringBuffer.append("(@exo:topicType='").append(topicType).append("')");
+    		isAnd = true ;
+    	}
+    }
     if(isAnd) isEmpty = false;
     if(isClosed != null && isClosed.length() > 0) {
     	if(userPermission == 1){
