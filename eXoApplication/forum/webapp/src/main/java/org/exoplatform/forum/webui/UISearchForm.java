@@ -169,22 +169,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	
 	private void setTopicType() throws Exception {
 		listTT.clear();
-		TopicType topicType = new TopicType();
-		topicType.setName(getLabel(TopicType.DEFAULT_TYPE));
-		topicType.setIcon("IconsView");
-		topicType.setId(TopicType.DEFAULT_ID);
-		listTT.add(topicType);
-		List<TopicType> topicTs = forumService.getTopicTypes();
-		boolean isAdd = true;
-		for (TopicType topicT : topicTs) {
-	    if(topicT.getId().equals(TopicType.DEFAULT_ID)) {
-	    	listTT.clear();
-	    	listTT.addAll(topicTs);
-	    	isAdd = false;
-	    	break;
-	    }
-    }
-		if(isAdd) listTT.addAll(topicTs);
+		listTT.addAll(forumService.getTopicTypes());
 	}
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {

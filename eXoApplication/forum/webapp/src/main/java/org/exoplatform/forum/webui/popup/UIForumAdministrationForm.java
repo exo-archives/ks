@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -262,22 +261,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	@SuppressWarnings("unused")
   private List<TopicType> getTopicTypes() throws Exception {
 		listTT = new ArrayList<TopicType>();
-		List<TopicType> topicTs = forumService.getTopicTypes();
-		TopicType topicType = new TopicType();
-		topicType.setIcon("IconsView");
-		topicType.setName(getLabel(TopicType.DEFAULT_TYPE));
-		topicType.setId(TopicType.DEFAULT_ID);
-		listTT.add(topicType);
-		boolean isAdd = true;
-		for (TopicType topicT : topicTs) {
-	    if(topicT.getId().equals(TopicType.DEFAULT_ID)) {
-	    	listTT.clear();
-	    	listTT.addAll(topicTs);
-	    	isAdd = false;
-	    	break;
-	    }
-    }
-		if(isAdd) listTT.addAll(topicTs);
+		listTT.addAll(forumService.getTopicTypes());
 		return listTT;
 	}
 	

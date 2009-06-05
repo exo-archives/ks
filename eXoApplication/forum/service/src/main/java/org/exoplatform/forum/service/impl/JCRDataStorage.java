@@ -646,6 +646,8 @@ public class JCRDataStorage {
 			cat.setModifiedDate(cateNode.getProperty("exo:modifiedDate").getDate().getTime());
 		if (cateNode.hasProperty("exo:userPrivate"))
 			cat.setUserPrivate(ValuesToArray(cateNode.getProperty("exo:userPrivate").getValues()));
+		if (cateNode.hasProperty("exo:moderators"))
+			cat.setModerators(ValuesToArray(cateNode.getProperty("exo:moderators").getValues()));
 		if (cateNode.hasProperty("exo:forumCount"))
 			cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong());
 		if(cateNode.isNodeType("exo:forumWatching") && cateNode.hasProperty("exo:emailWatching")) 
@@ -672,6 +674,11 @@ public class JCRDataStorage {
 			catNode.setProperty("exo:modifiedBy", category.getModifiedBy());
 			catNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
 			catNode.setProperty("exo:userPrivate", category.getUserPrivate());
+			String[] moderatorCat = category.getModerators();
+			catNode.setProperty("exo:moderators", moderatorCat);
+			if(!isNew && moderatorCat.length > 0 && !moderatorCat[0].equals(" ")) {
+				updateModeratorInForums(catNode, moderatorCat);
+			}
 			if(catNode.isNew()){
 				catNode.getSession().save();
 			} else {
@@ -680,6 +687,27 @@ public class JCRDataStorage {
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}finally { sProvider.close() ;}
+	}
+	
+	private void updateModeratorInForums(Node cateNode, String[] moderatorCat) throws Exception {
+		NodeIterator iter = cateNode.getNodes();
+		List<String> list;
+		while (iter.hasNext()) {
+			list = new ArrayList<String>();
+			try{
+				Node node = iter.nextNode();
+				if(node.isNodeType("exo:forum")) {
+					list.addAll(ValuesToList(node.getProperty("exo:moderators").getValues()));
+					for (int i = 0; i < moderatorCat.length; i++) {
+	          if(!list.contains(moderatorCat[i])){
+	          	list.add(moderatorCat[i]);
+	          }
+          }
+					node.setProperty("exo:moderators", list.toArray(new String[]{}));
+				}
+			}catch(Exception e) {}	
+		}
+		cateNode.save();
 	}
 	
 	public void registerListenerForCategory(String path) throws Exception{
@@ -807,6 +835,20 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 
+	private String[] updateModeratorInForum(Node catNode, String[]mods) throws Exception {
+		List<String> list = new ArrayList<String>();
+		list.addAll(ValuesToList(catNode.getProperty("exo:moderators").getValues()));
+		if(!list.isEmpty() && !list.get(0).equals(" ")) {
+			for (int i = 0; i < mods.length; i++) {
+	      if(!list.contains(mods[i])) {
+	      	list.add(mods[i]);
+	      }
+      }
+			return list.toArray(new String[]{});
+		}
+		return mods;
+	}
+	
 	public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -851,21 +893,31 @@ public class JCRDataStorage {
 			forumNode.setProperty("exo:createTopicRole", forum.getCreateTopicRole());
 			forumNode.setProperty("exo:poster", forum.getPoster());
 
-			String[] oldModeratoForums = new String[] {};
+			String[] oldModeratoForums = new String[] {" "};
 			if (!isNew)	oldModeratoForums = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
 			String[] strModerators = forum.getModerators();
+			// set from category
+			strModerators = updateModeratorInForum(catNode, strModerators);
+			System.out.println("\n\n strModerators: " + strModerators.length);
+			boolean isEditMod = false;
+			if(Utils.isAddNewArray(oldModeratoForums, strModerators)){
+				isEditMod = true;
+			}
+			System.out.println("\n\n strModerators: " + strModerators.length);
 			forumNode.setProperty("exo:moderators", strModerators);
-			if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
-				if (catNode.hasProperty("exo:userPrivate")) {
-					List<String> listPrivate = new ArrayList<String>();
-					listPrivate.addAll(ValuesToList(catNode.getProperty("exo:userPrivate").getValues()));
-					if (listPrivate.size() > 0 && !listPrivate.get(0).equals(" ")) {
-						for (int i = 0; i < strModerators.length; i++) {
-							if (!listPrivate.contains(strModerators[i])) {
-								listPrivate.add(strModerators[i]);
+			if(isEditMod) {
+				if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
+					if (catNode.hasProperty("exo:userPrivate")) {
+						List<String> listPrivate = new ArrayList<String>();
+						listPrivate.addAll(ValuesToList(catNode.getProperty("exo:userPrivate").getValues()));
+						if (listPrivate.size() > 0 && !listPrivate.get(0).equals(" ")) {
+							for (int i = 0; i < strModerators.length; i++) {
+								if (!listPrivate.contains(strModerators[i])) {
+									listPrivate.add(strModerators[i]);
+								}
 							}
+							catNode.setProperty("exo:userPrivate", listPrivate.toArray(new String[] {}));
 						}
-						catNode.setProperty("exo:userPrivate", listPrivate.toArray(new String[] {}));
 					}
 				}
 			}
@@ -891,7 +943,7 @@ public class JCRDataStorage {
 				pruneSetting.setForumPath(forum.getPath());
 				savePruneSetting(pruneSetting);
 			}
-			{// seveProfile
+			if(isEditMod) {// seveProfile
 				Node userProfileHomeNode = getUserProfileHome(sProvider);
 				Node userProfileNode;
 				List<String> list = new ArrayList<String>();
@@ -980,7 +1032,7 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}finally{ sProvider.close() ;}
 	}
-
+	
 	public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node forumHomeNode = getCategoryHome(sProvider);

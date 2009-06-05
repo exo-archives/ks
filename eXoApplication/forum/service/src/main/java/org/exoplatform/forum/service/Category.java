@@ -32,13 +32,15 @@ public class Category {
 	 private String modifiedBy;
 	 private Date modifiedDate;
 	 private String name;
-	 private String description;	 
+	 private String description;
+	 private String[] moderators;
 	 private String[] userPrivate ;
 	 private long forumCount = 0;
 	 private String[] emailNotification;
 	 public Category(){
 		 id = Utils.CATEGORY + IdGenerator.generate() ;
 		 userPrivate = new String[] {" "};
+		 moderators = new String[] {" "};
 		 emailNotification = new String [] {} ;
 	 }
 
@@ -69,7 +71,10 @@ public class Category {
 	 public String getDescription(){return description;}	 
 	 public void setDescription(String description){this.description = description;}
 
-	 public String[] getUserPrivate(){return userPrivate;}	 
+	 public String[] getModerators() {return moderators;}
+	 public void setModerators(String[] moderators) { this.moderators = moderators;}
+
+	 public String[] getUserPrivate(){return userPrivate;}
 	 public void setUserPrivate(String[] userPrivate){this.userPrivate = userPrivate;}
 
 	 public long getForumCount() {return forumCount;}

@@ -193,12 +193,16 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				return new String[]{topicType.getIcon(), topicType.getName()};
 			} else {
 				topicType = forumService.getTopicType(typeId);
-				topicTypeM.put(typeId, topicType);
-				return new String[]{topicType.getIcon(), topicType.getName()};
+				if(!topicType.getId().equals(TopicType.DEFAULT_ID)) {
+					topicTypeM.put(typeId, topicType);
+					return new String[]{topicType.getIcon(), topicType.getName()};
+				} else {
+					return new String[]{" "};
+				}
 			}
     } catch (Exception e) {
     	e.printStackTrace();
-	    return new String[]{"NormalTopicIcon", ""};
+	    return new String[]{" "};
     }
 	}
 	

@@ -341,11 +341,9 @@
 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
 																		 <div title="Edit this topic type." class="Icon16x16 EditIcon"><span></span></div>							
 																	</div>
-																	<% if(!topicTId.equals(org.exoplatform.forum.service.TopicType.DEFAULT_ID)) {%>
 																	<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
 																		 <div title="Delete this topic type." class="Icon16x16 DeleteIcon"><span></span></div>							
 																	</div>
-																	<% } %>
 																	<div style="clear:left;"><span></span></div>
 																</div>
 															</td>

@@ -21,7 +21,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -61,6 +60,6 @@ public class UICategoryInfo extends UIContainer	{
 	}
 	
 	public ForumStatistic getForumStatistic() throws Exception {
-		return  forumService.getForumStatistic(ForumSessionUtils.getSystemProvider()) ;				
+		return  forumService.getForumStatistic() ;				
 	}
 }

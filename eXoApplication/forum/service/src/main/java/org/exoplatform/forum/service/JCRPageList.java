@@ -25,7 +25,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @since Oct 21, 2004
  * @version $Id: PageList.java,v 1.2 2004/10/25 03:36:58 tuan08 Exp $
  */
-@SuppressWarnings({ "unchecked", "unchecked" })
 abstract public class JCRPageList {
 	
 	private long pageSize_ ;

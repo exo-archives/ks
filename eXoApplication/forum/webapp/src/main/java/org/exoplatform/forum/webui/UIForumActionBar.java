@@ -144,7 +144,7 @@ public class UIForumActionBar extends UIContainer	{
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.addChild(UICategoryForm.class, null, null) ;
 			popupContainer.setId("AddCategoryForm") ;
-			popupAction.activate(popupContainer, 500, 340) ;
+			popupAction.activate(popupContainer, 500, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	

@@ -108,7 +108,7 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 				typeName = StringUtils.replace(typeName, "  ", " ");
 	    }
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			if(topicTypeForm.checkIsSameName(forumService, typeName)) {
+			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
 				Object[] args = {};
 				UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameNameType", args, ApplicationMessage.WARNING)) ;

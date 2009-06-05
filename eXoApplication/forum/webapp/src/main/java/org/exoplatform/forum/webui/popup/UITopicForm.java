@@ -147,6 +147,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		
 		setTopicType();
 		ls = new ArrayList<SelectItemOption<String>>();
+		ls.add(new SelectItemOption<String>("none", getLabel("None")));
 		for (TopicType topicType : listTT) {
 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
     }
@@ -236,22 +237,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	private void setTopicType() throws Exception {
 		listTT.clear();
-		TopicType topicType = new TopicType();
-		topicType.setName(getLabel(TopicType.DEFAULT_TYPE));
-		topicType.setIcon("IconsView");
-		topicType.setId(TopicType.DEFAULT_ID);
-		listTT.add(topicType);
-		List<TopicType> topicTs = forumService.getTopicTypes();
-		boolean isAdd = true;
-		for (TopicType topicT : topicTs) {
-	    if(topicT.getId().equals(TopicType.DEFAULT_ID)) {
-	    	listTT.clear();
-	    	listTT.addAll(topicTs);
-	    	isAdd = false;
-	    	break;
-	    }
-    }
-		if(isAdd) listTT.addAll(topicTs);
+		listTT.addAll(forumService.getTopicTypes());
 	}
 	
 	public void addNewTopicType() throws Exception {
@@ -452,6 +438,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				}
 				UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
 				String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
+				if(topicType.equals("none")) topicType = " ";
 				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
 				String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
 				Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();

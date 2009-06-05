@@ -16,8 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.organization.User;
@@ -496,4 +499,20 @@ public class Utils {
       return date2.compareTo(date1) ;
     }
   }
+	
+	public static boolean isAddNewArray(String[] a, String[]b) {
+		List<String> list = new ArrayList<String>();
+		list = Arrays.asList(b);
+		if(a.length == b.length) {
+			for (int i = 0; i < a.length; i++) {
+		    if(!list.contains(a[i])) {
+		    	return true;
+		    }
+	    }
+		} else {
+			return true;
+		}
+	  return false;
+  }
+	
 }
