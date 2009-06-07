@@ -37,6 +37,7 @@ public class UserProfile {
 	private long jobWattingForModerator = 0;
 	private boolean isOnline = false ;
 	private String[] moderateForums ; //store Ids of forum this user is moderator
+	private String[] moderateCategory ; //store Ids of category this user is moderator
 	
 	private String[] readTopic ; // for check read/unread topic
 	private Map<String, Long> lastAccessTopics = new HashMap<String, Long>() ;
@@ -116,6 +117,9 @@ public class UserProfile {
 	public void setModerateForums(String[] moderateForums) { this.moderateForums = moderateForums ;	}
 	public String[] getModerateForums() { return moderateForums ;	}
 	
+	public String[] getModerateCategory() { return moderateCategory; }
+	public void setModerateCategory(String[] moderateCategory) { this.moderateCategory = moderateCategory;}
+
 	public String[] getReadTopic(){return readTopic;}
 	public void setReadTopic(String[] readTopic){this.readTopic = readTopic;}
 

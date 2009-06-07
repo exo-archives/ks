@@ -26,6 +26,7 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -243,6 +244,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				sProvider.close();
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

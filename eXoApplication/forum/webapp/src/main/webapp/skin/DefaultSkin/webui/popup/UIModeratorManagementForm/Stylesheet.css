@@ -90,3 +90,28 @@
 .UIModeratorManagementForm #ModForums {
 	float: left;
 }
+
+.UIModeratorManagementForm #ModCategorys {
+	float: left;
+}
+
+.UIModeratorManagementForm #Signature {
+	height: 70px;
+}
+
+.UIModeratorManagementForm .ForumUserProfile .textarea {
+	height: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

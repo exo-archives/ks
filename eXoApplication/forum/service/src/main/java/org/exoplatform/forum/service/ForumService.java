@@ -102,6 +102,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public void saveCategory(Category category, boolean isNew) throws Exception;
 	
+	public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) ;
 	/**
 	 * Removes the category. Check exists of category and remove it 
 	 * 

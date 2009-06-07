@@ -682,6 +682,12 @@
 					<defaultValue> </defaultValue>
 				</defaultValues>
 			</propertyDefinition>
+			<propertyDefinition name="exo:moderateCategory" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
+			</propertyDefinition>
 			<propertyDefinition name="exo:readTopic" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 				<defaultValues>

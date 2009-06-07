@@ -137,7 +137,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIModeratorManagementForm managementForm = popupContainer.getChild(UIModeratorManagementForm.class) ;
-			managementForm.setValues(listIdSelected) ;
+			managementForm.setModForunValues(listIdSelected) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}

@@ -243,6 +243,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	public void addNewTopicType() throws Exception {
 		setTopicType();
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+		ls.add(new SelectItemOption<String>("none", getLabel("None")));
 		for (TopicType topicType : listTT) {
 			ls.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
     }

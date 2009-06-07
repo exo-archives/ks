@@ -248,6 +248,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.removeCategory(categoryId) ;
   }
 
+	public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
+		storage_.saveModOfCategory(moderatorCate, userId, isAdd);
+  }
+
   public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception {
   	sProvider.close() ;
     modifyForum(forum, type) ;
