@@ -29,6 +29,7 @@ public class UserProfile {
 	public static final String USER_GUEST = "user_gest_uoom";
 	
 	private String userId ;
+	private String screenName;
 	private String userTitle ; //Rank of user
 	private long userRole ; // values: 0: Admin ; 1: Moderator ; 2: User ; 3 guest
 	private String signature ;
@@ -209,6 +210,12 @@ public class UserProfile {
 
 	public void setLastName(String lastName) { this.lastName = lastName; }
 	public String getLastName() { return lastName; }
+
+	public String getScreenName() {
+		if(screenName == null || screenName.trim().length() == 0) screenName = userId;
+		return screenName;
+	}
+	public void setScreenName(String screenName) { this.screenName = screenName;}
 
 	public void setEmail(String email) { this.email = email; }
 	public String getEmail() { return email; }

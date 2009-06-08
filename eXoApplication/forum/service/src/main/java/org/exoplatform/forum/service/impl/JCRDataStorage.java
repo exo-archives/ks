@@ -3476,6 +3476,7 @@ public class JCRDataStorage {
 			Node profileNode = getUserProfileHome(sProvider).getNode(userName);
 			userProfile.setUserId(userName) ;
 			userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString());
+			userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
 			userProfile.setSignature(profileNode.getProperty("exo:signature").getString());
 			userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
 			userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
@@ -3498,6 +3499,7 @@ public class JCRDataStorage {
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
 		try{
 			profileNode.setProperty("exo:userTitle", userProfile.getUserTitle());
+			profileNode.setProperty("exo:screenName", userProfile.getScreenName());
 			profileNode.setProperty("exo:signature",userProfile.getSignature());
 			profileNode.setProperty("exo:isDisplaySignature", userProfile.getIsDisplaySignature()) ;
 			profileNode.setProperty("exo:isDisplayAvatar",userProfile.getIsDisplayAvatar()) ;
@@ -3544,6 +3546,7 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
 				title = newProfileNode.getProperty("exo:userTitle").getString();
+			userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
 			if (userProfileNode.hasProperty("exo:fullName"))
 				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
 			if (userProfileNode.hasProperty("exo:firstName"))
@@ -3604,6 +3607,7 @@ public class JCRDataStorage {
 				userProfile.setUserId(userName) ;
 				userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 				userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
+				userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
 				userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 				userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 				userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
@@ -3627,6 +3631,7 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName) ;
 			userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 			userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
+			userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
 			userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 			userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 			userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
@@ -3680,6 +3685,7 @@ public class JCRDataStorage {
 			}
 			newProfileNode.setProperty("exo:userRole", newUserProfile.getUserRole());
 			newProfileNode.setProperty("exo:userTitle", newUserProfile.getUserTitle());
+			newProfileNode.setProperty("exo:screenName", newUserProfile.getScreenName());
 			newProfileNode.setProperty("exo:signature", newUserProfile.getSignature());
 			newProfileNode.setProperty("exo:isAutoWatchMyTopics", newUserProfile.getIsAutoWatchMyTopics());
 			newProfileNode.setProperty("exo:isAutoWatchTopicIPost", newUserProfile.getIsAutoWatchTopicIPost());
@@ -3742,6 +3748,7 @@ public class JCRDataStorage {
 		UserProfile userProfile = new UserProfile() ;
 		userProfile.setUserId(userProfileNode.getName());
 		userProfile.setUserTitle(userProfileNode.getProperty("exo:userTitle").getString());
+		userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
 		userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
 		userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
 		userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());

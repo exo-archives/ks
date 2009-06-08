@@ -105,6 +105,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_USERBAN_FORM = "ForumUserBan" ;
 	
 	public static final String FIELD_USERID_INPUT = "ForumUserName" ;
+	public static final String FIELD_SCREENNAME_INPUT = "ScreenName" ;
 	public static final String FIELD_USERTITLE_INPUT = "ForumUserTitle" ;
 	public static final String FIELD_USERROLE_CHECKBOX = "isAdmin" ;
 	public static final String FIELD_SIGNATURE_TEXTAREA = "Signature" ;
@@ -287,6 +288,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		userId.setValue(this.userProfile.getUserId());
 		userId.setEditable(false) ;
 		userId.setEnable(false) ;
+		UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
+		String screenN = userProfile.getScreenName();
+		if(ForumUtils.isEmpty(screenN)) screenN = userProfile.getUserId();
+		screenName.setValue(screenN);
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
 		String title = this.userProfile.getUserTitle();
 		boolean isAdmin = false ;
@@ -426,6 +431,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		}
 		UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM); 
 		inputSetProfile.addUIFormInput(userId);
+		inputSetProfile.addUIFormInput(screenName);
 		inputSetProfile.addUIFormInput(userTitle);
 		inputSetProfile.addUIFormInput(userRole);
 		inputSetProfile.addUIFormInput(moderateCategorys);
@@ -562,6 +568,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
     	UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
     	String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
+    	String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue() ;
     	long userRole = 3;
     	boolean isAdmin = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_USERROLE_CHECKBOX).getValue() ;
     	if(isAdmin) userRole = 0;
@@ -702,6 +709,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
       	}
       }
     	userProfile.setUserTitle(userTitle);
+    	userProfile.setScreenName(screenName);
     	userProfile.setUserRole(userRole) ;
     	userProfile.setSignature(signature);
     	userProfile.setIsDisplaySignature(isDisplaySignature);

@@ -325,6 +325,7 @@ public class ForumPageList extends JCRPageList {
 		UserProfile userProfile = new UserProfile() ;
 		userProfile.setUserId(profileNode.getName());
 		userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString());
+		userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
 		userProfile.setFullName(profileNode.getProperty("exo:fullName").getString());
 		userProfile.setFirstName(profileNode.getProperty("exo:firstName").getString());
 		userProfile.setLastName(profileNode.getProperty("exo:lastName").getString());

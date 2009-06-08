@@ -114,6 +114,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_TIMEZONE = "timeZone" ;
 	
 	public static final String FIELD_USERID_INPUT = "ForumUserName" ;
+	public static final String FIELD_SCREENNAME_INPUT = "ScreenName" ;
 	public static final String FIELD_USERTITLE_INPUT = "ForumUserTitle" ;
 	public static final String FIELD_SIGNATURE_TEXTAREA = "Signature" ;
 	public static final String FIELD_ISDISPLAYSIGNATURE_CHECKBOX = "IsDisplaySignature" ;
@@ -149,13 +150,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked" })
 	private void initForumOption() throws Exception {
-		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ; 
 		try {
 			//String userId = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId() ;
 			String userId = ForumSessionUtils.getCurrentUser();
-			this.userProfile = forumService.getUserSettingProfile(sProvider, userId) ;
+			this.userProfile = forumService.getUserSettingProfile(userId) ;
 		} catch (Exception e) {			
 			e.printStackTrace() ;
 		}
@@ -223,6 +223,10 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		userId.setValue(this.userProfile.getUserId());
 		userId.setEditable(false) ;
 		userId.setEnable(false);
+		UIFormStringInput screenName = new UIFormStringInput(FIELD_SCREENNAME_INPUT, FIELD_SCREENNAME_INPUT, null);
+		String screenN = userProfile.getScreenName();
+		if(ForumUtils.isEmpty(screenN)) screenN = userProfile.getUserId();
+		screenName.setValue(screenN);
 		UIFormStringInput userTitle = new UIFormStringInput(FIELD_USERTITLE_INPUT, FIELD_USERTITLE_INPUT, null);
 		userTitle.setValue(this.userProfile.getUserTitle());
 		if(this.userProfile.getUserRole() > 0) {
@@ -244,6 +248,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		
 		UIFormInputWithActions inputSetProfile = new UIFormInputWithActions(FIELD_USERPROFILE_FORM);
 		inputSetProfile.addUIFormInput(userId) ;
+		inputSetProfile.addUIFormInput(screenName) ;
 		inputSetProfile.addUIFormInput(userTitle) ;
 		inputSetProfile.addUIFormInput(signature) ;
 		inputSetProfile.addUIFormInput(isDisplaySignature) ;
@@ -261,8 +266,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		inputSetOption.addUIFormInput(isShowForumJump) ;
 		
 		UIFormInputWithActions inputUserWatchManger = new UIFormInputWithActions(FIELD_USERWATCHMANGER_FORM);
-		listWatches = forumService.getWatchByUser(this.userProfile.getUserId(), sProvider);
-		sProvider.close();
+		listWatches = forumService.getWatchByUser(this.userProfile.getUserId());
 		
 		UIFormCheckBoxInput formCheckBoxRSS = null;
 		UIFormCheckBoxInput formCheckBoxEMAIL = null;
@@ -331,7 +335,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		return list ;
 	}
 	
-	@SuppressWarnings("deprecation")
 	private Date getNewDate(double timeZoneOld) {
 		Calendar	calendar = GregorianCalendar.getInstance() ;
 		calendar.setLenient(false) ;
@@ -405,6 +408,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
+			String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue() ;
 			UserProfile userProfile = uiForm.userProfile ;
 			if(userTitle == null || userTitle.trim().length() < 1){
     		userTitle = userProfile.getUserTitle();
@@ -440,6 +444,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			userProfile.setUserTitle(userTitle);
+			userProfile.setScreenName(screenName);
 			userProfile.setSignature(signature);
 			userProfile.setIsDisplaySignature(isDisplaySignature);
 			userProfile.setIsDisplayAvatar(isDisplayAvatar);
@@ -452,12 +457,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsShowForumJump(isJump);
 			userProfile.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
 			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-			try {
-				uiForm.forumService.saveUserSettingProfile(sProvider, userProfile);
-			} finally {
-				sProvider.close();
-			}
+			
+			uiForm.forumService.saveUserSettingProfile(userProfile);
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
 			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;
