@@ -189,7 +189,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				String erroUser = ForumSessionUtils.checkValueUser(moderator) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
+					Object[] args = { uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					return ;
