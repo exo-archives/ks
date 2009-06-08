@@ -625,7 +625,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	NewModerates = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
     	for (String string : NewModerates) {
 	      if(!moderateForums.contains(string)) {
-	      	if(moderateForums.get(0).equals(" ")) {
+	      	if(moderateForums.isEmpty() || moderateForums.get(0).equals(" ")) {
 	      		moderateForums = new ArrayList<String>();
 	      	}
 	      	moderateForums.add(string);
