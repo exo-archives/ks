@@ -610,6 +610,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getUserInfo(userName);
   }
   
+  public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
+  	return storage_.getUserModerator(userName, isModeCate);
+  }
+  
   public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception {
   	sProvider.close() ;
   	return getUserProfileManagement(userName);

@@ -583,7 +583,6 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
     	List<String> DeleteModerateForums = new ArrayList<String> ();
     	boolean isSetGetNewListForum = false ;
-    	SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
     	if(NewModerates.isEmpty()){
     		DeleteModerateForums = OldModerateForums;
     	} else {
@@ -594,11 +593,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     				DeleteModerateForums.add(string) ;
     			}
     		}
-    		uiForm.forumService.saveModerateOfForums(sProvider, NewModerates, userProfile.getUserId(), false);
+    		uiForm.forumService.saveModerateOfForums(NewModerates, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
     	if(DeleteModerateForums.size() > 0) {
-    		uiForm.forumService.saveModerateOfForums(sProvider, DeleteModerateForums, userProfile.getUserId(), true);
+    		uiForm.forumService.saveModerateOfForums(DeleteModerateForums, userProfile.getUserId(), true);
     		isSetGetNewListForum = true ;
     	}
     	
@@ -615,6 +614,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     			}
     		}
     		uiForm.forumService.saveModOfCategory(NewModerates, userProfile.getUserId(), true);
+    		userRole = 1;
     		isSetGetNewListForum = true ;
     	}
     	if(DeleteModerateForums.size() > 0) {
@@ -622,7 +622,15 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		isSetGetNewListForum = true ;
     	}
     	
-    	
+    	NewModerates = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
+    	for (String string : NewModerates) {
+	      if(!moderateForums.contains(string)) {
+	      	if(moderateForums.get(0).equals(" ")) {
+	      		moderateForums = new ArrayList<String>();
+	      	}
+	      	moderateForums.add(string);
+	      }
+      }
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
     	
     	if(!moderateForums.isEmpty()) {
@@ -698,7 +706,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setSignature(signature);
     	userProfile.setIsDisplaySignature(isDisplaySignature);
     	userProfile.setModerateForums(moderateForums.toArray(new String[]{}));
-    	userProfile.setModerateCategory(uiForm.listModCate.toArray(new String[]{}));
+    	userProfile.setModerateCategory(moderateCates.toArray(new String[]{}));
     	userProfile.setIsDisplayAvatar(isDisplayAvatar);
     	
     	userProfile.setTimeZone(-timeZone);
@@ -715,12 +723,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setBanCounter(banCounter);
     	userProfile.setBanReasonSummary(banReasonSummaries);
     	try {
-    		uiForm.forumService.saveUserProfile(sProvider, userProfile, true, true) ;
+    		uiForm.forumService.saveUserProfile(userProfile, true, true) ;
       } catch (Exception e) {
       	e.printStackTrace() ;
-      } finally {
-				sProvider.close();
-			}
+      } 
       if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
       	forumPortlet.updateUserProfileInfo() ;
       	userProfile = forumPortlet.getUserProfile();

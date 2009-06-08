@@ -708,7 +708,7 @@ public class JCRDataStorage {
 	        cateNode = cateHome.getNode(cateId) ;
 	        list = ValuesToList(cateNode.getProperty("exo:moderators").getValues());
 	        if(isAdd) {
-		        if(list.isEmpty()) {
+		        if(list.isEmpty() || (list.size() == 1 && list.get(0).equals(" "))) {
 		        	list = new ArrayList<String>();
 		        	list.add(userId);
 		        } else if(!list.contains(userId)) {
@@ -725,18 +725,18 @@ public class JCRDataStorage {
 	        	if(!list.isEmpty()) {
 	        		if(list.contains(userId)) {
 	        			list.remove(userId) ;
-			        	cateNode.setProperty("exo:moderators", list.toArray(new String[]{}));//exo:moderateCategory
+			        	cateNode.setProperty("exo:moderators", list.toArray(new String[]{}));//
 			        	NodeIterator iter = cateNode.getNodes();
+			        	List<String> forumIdsMod = ValuesToList(userNode.getProperty("exo:moderateForums").getValues());
 			        	while (iter.hasNext()) {
 			        		Node node = iter.nextNode();
-			    				if(node.isNodeType("exo:forum")) {
+			    				if(node.isNodeType("exo:forum")){
 			    					list = ValuesToList(node.getProperty("exo:moderators").getValues());
 			    					if(!list.isEmpty() && list.contains(userId)) {
 			    						list.remove(userId) ;
 			    						node.setProperty("exo:moderators", list.toArray(new String[]{}));
 			    					}
 			    				}
-			    				List<String> forumIdsMod = ValuesToList(userNode.getProperty("exo:moderateForums").getValues());
 			    				if(!forumIdsMod.isEmpty()) {
 			    					for (String string : forumIdsMod) {
 	                    if(string.indexOf(node.getName()) >= 0) {
@@ -1109,16 +1109,16 @@ public class JCRDataStorage {
 						if (string2.indexOf(forum.getId()) > 0) {
 							hasMod = true;
 						}
-						list.add(string2);
+						if(!string2.equals(" ")){
+							list.add(string2);
+						}
 					}
 					if (!hasMod) {
 						list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
 						userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
-						if (userProfileNode.hasProperty("exo:userRole")) {
-							if (userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
-								userProfileNode.setProperty("exo:userRole", 1);
-								userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
-							}
+						if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
+							userProfileNode.setProperty("exo:userRole", 1);
+							userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
 						}
 						getTotalJobWattingForModerator(sProvider, string);
 					}
@@ -3516,6 +3516,21 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}finally{ sProvider.close() ;}		
 	}
+	
+	public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node userProfileNode = getUserProfileHome(sProvider);
+		List<String> list = new ArrayList<String>();
+		try {
+			Node profileNode = userProfileNode.getNode(userName);
+			if(isModeCate)
+				list.addAll(ValuesToList(profileNode.getProperty("exo:moderateCategory").getValues()));
+			else
+				list.addAll(ValuesToList(profileNode.getProperty("exo:moderateForums").getValues()));
+    } catch (Exception e) {
+    }
+	  return list;
+  }
 	
 	public UserProfile getUserInfo(String userName) throws Exception {
 		UserProfile userProfile = new UserProfile();

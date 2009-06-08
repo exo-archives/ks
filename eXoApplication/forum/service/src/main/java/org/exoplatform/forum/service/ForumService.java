@@ -651,7 +651,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public UserProfile getUserInfo(String userName) throws Exception;
-
+	public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception;
 	/**
 	 * Save user bookmark.
 	 * 
