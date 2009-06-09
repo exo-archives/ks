@@ -58,6 +58,11 @@
         <value> </value>
         <read-only>false</read-only>
       </preference>
+    	<preference>
+        <name>emailMoveQuestion</name>
+        <value> </value>
+        <read-only>false</read-only>
+      </preference>
       <preference>
         <name>orderBy</name>
         <value>alphabet</value> <!--alphabet/created -->

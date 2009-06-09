@@ -312,7 +312,7 @@ public class FAQUtils {
 	}
 
 	public static boolean isFieldEmpty(String s) {
-		if (s == null || s.length() == 0) return true ;
+		if (s == null || s.trim().length() == 0) return true ;
 		return false ;    
 	}
 
@@ -417,6 +417,7 @@ public class FAQUtils {
 		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
 		faqSetting.setIsDiscussForum(Boolean.parseBoolean(portletPref.getValue("isDiscussForum", ""))) ;
 		faqSetting.setIdNameCategoryForum(portletPref.getValue("idNameCategoryForum", "")) ;
+		faqSetting.setEmailMoveQuestion(portletPref.getValue("emailMoveQuestion", ""));
 	}
 
 	public static void getEmailSetting(FAQSetting faqSetting, boolean isNew, boolean isSettingForm) {
@@ -444,9 +445,15 @@ public class FAQUtils {
 	}
 	
 	public static void getEmailMoveQuestion(FAQSetting faqSetting){
-		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-		ResourceBundle res = context.getApplicationResourceBundle() ;
-		faqSetting.setEmailMoveQuestion(res.getString("SendEmail.MoveQuetstion.Default"));
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		String str = portletPref.getValue("emailMoveQuestion", "");
+		if(isFieldEmpty(str)) {
+			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+			ResourceBundle res = context.getApplicationResourceBundle() ;
+			str = res.getString("SendEmail.MoveQuetstion.Default");
+		}
+		faqSetting.setEmailMoveQuestion(str);
 	}
 
 	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
@@ -463,6 +470,7 @@ public class FAQUtils {
 			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
+			portletPref.setValue("emailMoveQuestion", setting.getEmailMoveQuestion());
 			portletPref.store();
 		} catch (Exception e) {
 			e.printStackTrace();
