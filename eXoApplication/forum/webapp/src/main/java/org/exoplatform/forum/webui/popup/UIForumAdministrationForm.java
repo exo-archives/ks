@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -33,7 +32,6 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -51,6 +49,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
+import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
@@ -111,6 +110,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ENABLEHEADERSUBJECT_CHECKBOX = "enableHeaderSubject" ;
 	public static final String FIELD_HEADERSUBJECT_INPUT = "headerSubject" ;
 	public static final String FIELD_NOTIFYEMAIL_TEXTAREA = "notifyEmail" ;
+	public static final String FIELD_NOTIFYEMAILMOVED_TEXTAREA = "notifyEmailMoved" ;
 	
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
@@ -189,6 +189,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
 		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
 		notifyEmail.setValue(value);
+		value = administration.getNotifyEmailMoved();
+		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
+		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
+		notifyEmailMoved.setValue(value);
+		
 		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
 		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
 		UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
@@ -211,6 +216,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		notifyEmailTab.addUIFormInput(enableHeaderSubject);
 		notifyEmailTab.addUIFormInput(headerSubject);
 		notifyEmailTab.addUIFormInput(notifyEmail) ;
+		notifyEmailTab.addUIFormInput(notifyEmailMoved) ;
 		
 		forumCensorTab.addUIFormInput(censorKeyword) ;
 		
@@ -231,6 +237,25 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			ipBanTab.addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT4, null)).setMaxLength(3));
 			addUIFormInput(ipBanTab);
 		}
+		
+		
+		List<ActionData> actions = new ArrayList<ActionData>() ;
+		ActionData ad = new ActionData() ;
+		ad.setActionListener("GetDefaultMail") ;
+		ad.setActionParameter(FIELD_NOTIFYEMAIL_TEXTAREA) ;
+		ad.setCssIconClass("Refresh") ;
+		ad.setActionName("TitleResetMail");
+		actions.add(ad) ;
+		notifyEmailTab.setActionField(FIELD_NOTIFYEMAIL_TEXTAREA, actions);
+		
+		actions = new ArrayList<ActionData>() ;
+		ad = new ActionData() ;
+		ad.setActionListener("GetDefaultMail") ;
+		ad.setActionParameter(FIELD_NOTIFYEMAILMOVED_TEXTAREA) ;
+		ad.setCssIconClass("Refresh") ;
+		ad.setActionName("TitleResetMail");
+		actions.add(ad) ;
+		notifyEmailTab.setActionField(FIELD_NOTIFYEMAILMOVED_TEXTAREA, actions);
 	}
 	
 	public void setListBBcode() throws Exception {
@@ -362,12 +387,19 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			boolean enableHeaderSubject = (Boolean)notifyEmailTab.getUIFormCheckBoxInput(FIELD_ENABLEHEADERSUBJECT_CHECKBOX).getValue();
 			String headerSubject = notifyEmailTab.getUIStringInput(FIELD_HEADERSUBJECT_INPUT).getValue();
 			String notifyEmail = ((UIFormWYSIWYGInput)notifyEmailTab.getChildById(FIELD_NOTIFYEMAIL_TEXTAREA)).getValue() ;
+			String notifyEmailMoved = ((UIFormWYSIWYGInput)notifyEmailTab.getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA)).getValue() ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
 				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", null, ApplicationMessage.WARNING)) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{FIELD_NOTIFYEMAIL_TEXTAREA}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				return;
+			}
+			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
+				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{FIELD_NOTIFYEMAILMOVED_TEXTAREA}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				return;
 			}
 			ForumAdministration forumAdministration = administrationForm.administration ;
@@ -379,9 +411,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumAdministration.setEnableHeaderSubject(enableHeaderSubject) ;
 			forumAdministration.setHeaderSubject(headerSubject);
 			forumAdministration.setNotifyEmailContent(notifyEmail) ;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
+			forumAdministration.setNotifyEmailMoved(notifyEmailMoved);
 			try {
-				administrationForm.forumService.saveForumAdministration(sProvider, forumAdministration) ;
+				administrationForm.forumService.saveForumAdministration(forumAdministration) ;
 			} catch (Exception e) {
 			}
 			UIFormInputWithActions bbcodeTab = administrationForm.getChildById(FIELD_BBCODE_TAB) ;
@@ -400,12 +432,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
       }
 			if(!bbCodes.isEmpty()){
 				try {
-					administrationForm.forumService.saveBBCode(sProvider, bbCodes);
+					administrationForm.forumService.saveBBCode(bbCodes);
 	      } catch (Exception e) {
 	      }
 	      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsGetSv(true);
 			}
-			sProvider.close();
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -435,9 +466,16 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	static	public class GetDefaultMailActionListener extends EventListener<UIForumAdministrationForm> {
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
-			UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
-																																				getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
-			areaInput.setValue(uiForm.getLabel("notifyEmailContentDefault"));
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			if(id.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
+				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
+																																					getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
+				areaInput.setValue(uiForm.getLabel("notifyEmailContentDefault"));
+			} else {
+				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
+				getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA);
+				areaInput.setValue(uiForm.getLabel("EmailToAuthorMoved"));
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}

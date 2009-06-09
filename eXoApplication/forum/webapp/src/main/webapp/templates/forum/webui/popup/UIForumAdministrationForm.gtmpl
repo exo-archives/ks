@@ -124,16 +124,10 @@
 											</div>
 										</center>
 									<%}else if(tabconten.id.equals(uicomponent.FIELD_NOTIFYEMAIL_TAB)){
-											String linkReset = uicomponent.event("GetDefaultMail") ;
-											String titleReset = uicomponent.getLabel("TitleResetMail");
 									%>
-											<div style="float:left; white-space:nowrap; width:95%;">
+											<div style="white-space:none; width:100%;">
 												<%uiform.renderChild(tabconten.id) ;%>
 											</div>
-											<div onclick="$linkReset" title="$titleReset" style="cursor:pointer;">
-												<div class="Refresh"><span></span></div>
-											</div>
-											<div style="clear:left;"><span></span></div>
 									<%} else if(tabconten.id.equals(uicomponent.FIELD_BBCODE_TAB)) {%>
 											<div style="padding:0px 16px 0px 1px;">
 												<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">

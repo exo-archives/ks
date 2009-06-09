@@ -551,7 +551,7 @@
 .UIForumPortlet .Refresh {
   background:transparent url(background/refresh.png) no-repeat center bottom;
 	float:left;
-	margin-top: 80px;
+	margin-top: 16px;
 	height:16px;
 	width:16px;
 }

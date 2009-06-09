@@ -37,7 +37,6 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -108,7 +107,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	
 	private void setCategories() throws Exception {
 		this.categories = new ArrayList<Category>();
-		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
+		for (Category category : this.forumService.getCategories()) {
 			if(this.userProfile.getUserRole() == 1) {
 				String []list = category.getUserPrivate() ; 
 				if(list != null && list.length > 0 && !list[0].equals(" ")){
@@ -134,7 +133,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
-		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
+		for(Forum forum : this.forumService.getForums(categoryId, "")) {
 			if(forum.getId().equalsIgnoreCase(this.forumId)) continue ;
 			if(this.userProfile.getUserRole() == 1){
 				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
@@ -154,7 +153,6 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 			UIMoveTopicForm uiForm = event.getSource() ;
 			String forumPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			if(!ForumUtils.isEmpty(forumPath)) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
@@ -169,7 +167,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 					link = url + link;
 					link = link.replaceFirst("private", "public");
 					//
-					uiForm.forumService.moveTopic(sProvider , uiForm.topics , forumPath, res.getString("UIMoveTopicForm.msg.EmailToAuthorTopic"), link) ;
+					uiForm.forumService.moveTopic(uiForm.topics , forumPath, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					if(uiForm.isFormTopic) {
@@ -195,8 +193,6 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMoveTopicForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return;
-        } finally {
-        	sProvider.close();
         }
 			}
 		}

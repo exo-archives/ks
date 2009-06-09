@@ -29,6 +29,7 @@ public class ForumAdministration {
 	private String censoredKeyword ;
 	private String headerSubject = "";
 	private String notifyEmailContent;
+	private String notifyEmailMoved;
 	private boolean enableHeaderSubject;
 	
 
@@ -46,30 +47,35 @@ public class ForumAdministration {
 	public void setForumSortBy(String forumSortBy) {
   	this.forumSortBy = forumSortBy;
   }
+	
 	public String getForumSortByType() {
   	return forumSortByType;
   }
 	public void setForumSortByType(String forumSortByType) {
   	this.forumSortByType = forumSortByType;
   }
+	
 	public String getTopicSortBy() {
   	return topicSortBy;
   }
 	public void setTopicSortBy(String topicSortBy) {
   	this.topicSortBy = topicSortBy;
   }
+	
 	public String getTopicSortByType() {
   	return topicSortByType;
   }
 	public void setTopicSortByType(String topicSortByType) {
   	this.topicSortByType = topicSortByType;
   }
+	
 	public String getCensoredKeyword() {
   	return censoredKeyword;
   }
 	public void setCensoredKeyword(String censoredKeyword) {
   	this.censoredKeyword = censoredKeyword;
   }
+	
 	public String getNotifyEmailContent() {
 		return notifyEmailContent;
 	}
@@ -77,10 +83,16 @@ public class ForumAdministration {
 		this.notifyEmailContent = notifyEmailContent;
 	}
 
+	public String getNotifyEmailMoved() {
+  	return notifyEmailMoved;
+  }
+	public void setNotifyEmailMoved(String notifyEmailMoved) {
+  	this.notifyEmailMoved = notifyEmailMoved;
+  }
+
 	public String getHeaderSubject() {
   	return headerSubject;
   }
-
 	public void setHeaderSubject(String headerSubject) {
   	this.headerSubject = headerSubject;
   }
@@ -88,7 +100,6 @@ public class ForumAdministration {
 	public boolean getEnableHeaderSubject() {
   	return enableHeaderSubject;
   }
-
 	public void setEnableHeaderSubject(boolean enableHeaderSubject) {
   	this.enableHeaderSubject = enableHeaderSubject;
   }

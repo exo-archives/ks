@@ -27,6 +27,11 @@
 }
 
 .UIForumAdministrationForm .notifyEmailTab .FieldComponent {
+  width: 450px;
+}
+
+.UIForumAdministrationForm .notifyEmailTab .FieldComponent div{
+  float: left;
   width: 430px;
 }
 

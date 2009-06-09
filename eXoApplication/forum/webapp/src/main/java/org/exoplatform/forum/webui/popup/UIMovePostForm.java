@@ -38,7 +38,6 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -99,7 +98,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	
 	private void setCategories() throws Exception {
 		this.categories = new ArrayList<Category>();
-		for (Category category : this.forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
+		for (Category category : this.forumService.getCategories()) {
 			if(this.userProfile.getUserRole() == 1) {
 				String []list = category.getUserPrivate();
 				if(list !=  null && list.length > 0 && !list[0].equals(" ")){
@@ -125,7 +124,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
-		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
+		for(Forum forum : this.forumService.getForums(categoryId, "")) {
 			if(this.userProfile.getUserRole() == 1){
 				String []moderators = forum.getModerators();
 				if(!ForumServiceUtils.hasPermission(moderators, this.userProfile.getUserId())){
@@ -140,7 +139,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Topic> getTopics(String categoryId, String forumId, boolean isMode) throws Exception {
 		List<Topic> topics = new ArrayList<Topic>() ;
-		List<Topic> topics_ = this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId);
+		List<Topic> topics_ = this.forumService.getTopics(categoryId, forumId);
 		for(Topic topic : topics_) {
 			if(topic.getId().equalsIgnoreCase(this.topicId)) continue ;
 			if(this.userProfile.getUserRole() == 1){
@@ -159,7 +158,6 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 			UIMovePostForm uiForm = event.getSource() ;
 			String topicPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			if(!ForumUtils.isEmpty(topicPath)) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 				// set link
 					PortalRequestContext portalContext = Util.getPortalRequestContext();
@@ -174,7 +172,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					//
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
-					uiForm.forumService.movePost(sProvider, uiForm.posts, topicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
+					uiForm.forumService.movePost(uiForm.posts, topicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;
@@ -192,8 +190,6 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMovePostForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return ;
-        }finally {
-        	sProvider.close();
         }
 			}
 		}

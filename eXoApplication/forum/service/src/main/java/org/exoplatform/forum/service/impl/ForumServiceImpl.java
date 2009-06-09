@@ -212,6 +212,27 @@ public class ForumServiceImpl implements ForumService, Startable{
 		}		
 	}
 	
+	public void saveEmailUserProfile(String userId, String email) throws Exception{
+		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
+		try{
+			Node profileHome = storage_.getUserProfileHome(sysSession) ;
+			if(profileHome.hasNode(userId)) {
+				Node profile = profileHome.getNode(userId) ;
+				if(profile.hasProperty("exo:email")) {
+					if(!profile.getProperty("exo:email").equals(email)){
+						profile.setProperty("exo:email", email) ;
+						profileHome.save() ;
+					}
+				}else{
+					profile.setProperty("exo:email", email) ;
+					profileHome.save() ;
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
 		sProvider.close() ;
 		saveCategory(category, isNew);

@@ -462,6 +462,7 @@ public class JCRDataStorage {
 			forumAdminNode.setProperty("exo:enableHeaderSubject", forumAdministration.getEnableHeaderSubject());
 			forumAdminNode.setProperty("exo:headerSubject", forumAdministration.getHeaderSubject());
 			forumAdminNode.setProperty("exo:notifyEmailContent", forumAdministration.getNotifyEmailContent());
+			forumAdminNode.setProperty("exo:notifyEmailMoved", forumAdministration.getNotifyEmailMoved());
 			if(forumAdminNode.isNew()) {
 				forumAdminNode.getSession().save();
 			} else {
@@ -494,6 +495,8 @@ public class JCRDataStorage {
 					forumAdministration.setHeaderSubject(forumAdminNode.getProperty("exo:headerSubject").getString());
 				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
 					forumAdministration.setNotifyEmailContent(forumAdminNode.getProperty("exo:notifyEmailContent").getString());
+				if (forumAdminNode.hasProperty("exo:notifyEmailMoved"))
+					forumAdministration.setNotifyEmailMoved(forumAdminNode.getProperty("exo:notifyEmailMoved").getString());
 				return forumAdministration;
 			} catch (PathNotFoundException e) {
 				return forumAdministration;
@@ -2023,7 +2026,15 @@ public class JCRDataStorage {
 						}
 					}
 				}
+				if(node.hasProperty("exo:notifyEmailMoved")) {
+					String str = node.getProperty("exo:notifyEmailMoved").getString();
+					if(str != null && str.trim().length() > 0){
+						mailContent = str;
+					}
+				}
 			} catch (Exception e) {		}
+			mailContent =  StringUtils.replace(mailContent, "$OBJECT_TYPE", Utils.TOPIC);
+			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.FORUM);
 			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 			// ----------------------- finish ----------------------
 			
@@ -2062,7 +2073,7 @@ public class JCRDataStorage {
 				
 				// send mail to author topic after move topic:
 				message.setSubject(headerSubject + objectName + topic.getTopicName());
-				message.setBody(mailContent.replace("$topicName_", topic.getTopicName()).replace("$forumName_", forumName).replace("$link_", link.replaceFirst("pathId", topic.getId())));
+				message.setBody(mailContent.replace("$OBJECT_NAME", topic.getTopicName()).replace("$OBJECT_PARENT_NAME", forumName).replace("$LINK", link.replaceFirst("pathId", topic.getId())));
 				List<String> fullNameEmailOwnerTopic = getFullNameAndEmail(sProvider, topic.getOwner());
 				fullNameEmailOwnerTopic.remove(0);
 				sendEmailNotification(fullNameEmailOwnerTopic, message);
@@ -3017,15 +3028,24 @@ public class JCRDataStorage {
 						}
 					}
 				}
+				if(node.hasProperty("exo:notifyEmailMoved")) {
+					String str = node.getProperty("exo:notifyEmailMoved").getString();
+					if(str != null && str.trim().length() > 0){
+						mailContent = str;
+					}
+				}
 			} catch (Exception e) {		}
+			mailContent =  StringUtils.replace(mailContent, "$OBJECT_TYPE", Utils.POST);
+			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.TOPIC);
+			
 			link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
 			for(Post post : posts){
 				message = new Message();
 				message.setMimeType("text/html");
 				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 				message.setSubject(headerSubject + objectName);
-				message.setBody(mailContent.replace("$postContent_", post.getMessage())
-								.replace("$topicName_", topicName).replace("$link_", link));
+				message.setBody(mailContent.replace("$OBJECT_NAME", post.getName())
+								.replace("$OBJECT_PARENT_NAME", topicName).replace("$LINK", link));
 				List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, post.getOwner());
 				fullNameEmailOwnerPost.remove(0);
 				sendEmailNotification(fullNameEmailOwnerPost, message);

@@ -133,22 +133,4 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

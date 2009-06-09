@@ -20,7 +20,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
@@ -36,48 +35,41 @@ public class NewUserListener extends UserEventListener {
   }
 
   public void postSave(User user, boolean isNew) throws Exception {
-    if(!isNew) return ;
-    SessionProvider sysSession = SessionProvider.createSystemProvider();
-    ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-    //Update forum statistic
-    try{    	    	
-    	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
-      statistic.setNewMembers(user.getFullName()) ;
-      statistic.setMembersCount(statistic.getMembersCount() + 1) ;
-      fservice.saveForumStatistic(sysSession, statistic) ;
-    }catch(Exception e) {
-    	e.printStackTrace() ;
-    }finally{
-    	sysSession.close() ;
-    }
-    
-    //Create Profile
-    sysSession = SessionProvider.createSystemProvider();
-    try{
-    	fservice.createUserProfile(sysSession, user) ;
-    }catch(Exception e) {
-    	e.printStackTrace() ;
-    }finally{
-    	sysSession.close() ;
+  	ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+    if(isNew) {
+	    //Update forum statistic
+	    try{    	    	
+	    	ForumStatistic statistic = fservice.getForumStatistic() ;
+	      statistic.setNewMembers(user.getFullName()) ;
+	      statistic.setMembersCount(statistic.getMembersCount() + 1) ;
+	      fservice.saveForumStatistic(statistic) ;
+	    }catch(Exception e) {
+	    	e.printStackTrace() ;
+	    }
+	    //Create Profile
+	    try{
+	    	fservice.createUserProfile(user) ;
+	    }catch(Exception e) {
+	    	e.printStackTrace() ;
+	    }
+    } else {
+    	fservice.saveEmailUserProfile(user.getUserName(), user.getEmail());
     }
   }
 
   @Override
   public void postDelete(User user) throws Exception {
-    SessionProvider sysSession = SessionProvider.createSystemProvider(); 
     ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
     try{
-    	ForumStatistic statistic = fservice.getForumStatistic(sysSession) ;
+    	ForumStatistic statistic = fservice.getForumStatistic() ;
       if(user.getUserName().equals(statistic.getNewMembers())) {
-      	fservice.updateForumStatistic(sysSession) ;
+      	fservice.updateForumStatistic() ;
       }else {
       	statistic.setMembersCount(statistic.getMembersCount() - 1) ;
-        fservice.saveForumStatistic(sysSession, statistic) ;
+        fservice.saveForumStatistic(statistic) ;
       }      
     }catch(Exception e) {
     	e.printStackTrace() ;
-    }finally{
-    	sysSession.close() ;
     }
   }
 }

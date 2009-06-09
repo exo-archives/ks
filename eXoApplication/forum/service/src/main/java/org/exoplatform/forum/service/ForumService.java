@@ -621,7 +621,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
-
+	public void saveEmailUserProfile(String userId, String email) throws Exception;
+	
 	/**
 	 * Gets the user profile.
 	 * 
