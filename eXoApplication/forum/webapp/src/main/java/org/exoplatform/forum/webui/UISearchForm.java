@@ -294,7 +294,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			Calendar fromDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(FROMDATECREATEDLASTPOST), FROMDATECREATEDLASTPOST);
 			Calendar toDateCreatedLastPost = uiForm.getCalendar(uiForm.getUIFormDateTimePicker(TODATECREATEDLASTPOST), TODATECREATEDLASTPOST);
 			try {
-				if(fromDateCreated.getTimeInMillis() > toDateCreated.getTimeInMillis()){
+				if(fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()){
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					String str = type;
 					if(str.equals(Utils.CATEGORY)) str = "category";

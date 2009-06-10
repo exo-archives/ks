@@ -23,14 +23,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.FileAttachment;
-import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuickSearch;
@@ -250,13 +247,21 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String language = advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).getValue() ;
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
+			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
+			try {
+				if(fromDate.getTimeInMillis() >= toDate.getTimeInMillis()){
+					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-from-less-than-to", new String[]{}, ApplicationMessage.WARNING)) ;
+					return ;
+				}
+      } catch (Exception e) {
+      }
+			
 			//String nameAttachment = advancedSearch.getUIStringInput(FIELD_ATTACHMENT).getValue();
 			String nameAttachment = "";
 			
 			/**
 			 * Check validation of data inputed
 			 */
-			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
 			if(advancedSearch.getFromDate() != null && advancedSearch.getToDate() != null) {
 				if(advancedSearch.getFromDate().after(advancedSearch.getToDate())){
 					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.date-time-invalid", null)) ;

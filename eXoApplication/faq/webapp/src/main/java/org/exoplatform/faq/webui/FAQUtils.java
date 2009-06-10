@@ -444,7 +444,7 @@ public class FAQUtils {
 		faqSetting.setEmailSettingContent(emailContent) ;
 	}
 	
-	public static void getEmailMoveQuestion(FAQSetting faqSetting){
+	public static String getEmailMoveQuestion(FAQSetting faqSetting){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		String str = portletPref.getValue("emailMoveQuestion", "");
@@ -454,6 +454,7 @@ public class FAQUtils {
 			str = res.getString("SendEmail.MoveQuetstion.Default");
 		}
 		faqSetting.setEmailMoveQuestion(str);
+		return str;
 	}
 
 	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
@@ -471,6 +472,7 @@ public class FAQUtils {
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
 			portletPref.setValue("emailMoveQuestion", setting.getEmailMoveQuestion());
+			
 			portletPref.store();
 		} catch (Exception e) {
 			e.printStackTrace();

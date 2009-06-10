@@ -179,7 +179,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		for (PageNavigation pageNavigation : list) {
 			list2 = pageNavigation.getNodes();
 			for (PageNode pageNode : list2) {
-	      System.out.println("\n\n Node Name: " + pageNode.getName());
+	    //  System.out.println("\n\n Node Name: " + pageNode.getName());
       }
     }
 		return list;
@@ -216,8 +216,12 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			EmailEditQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, EMAIL_DEFAULT_EDIT_QUESTION, ""))
 																															.setValue(faqSetting_.getEmailSettingContent()));
 			
+			String defEmailMove = faqSetting_.getEmailMoveQuestion();
+			if(defEmailMove == null || defEmailMove.trim().length() <= 0) {
+				defEmailMove = FAQUtils.getEmailMoveQuestion(faqSetting_);
+			}
 			EmailMoveQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_MOVE_QUESTION, EMAIL_MOVE_QUESTION, ""))
-					.setValue(faqSetting_.getEmailMoveQuestion()));
+					.setValue(defEmailMove));
 			
 			DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));;
@@ -388,6 +392,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				}
 				faqSetting.setIsDiscussForum(isDiscus);
 				settingForm.idForumName.clear();
+				System.out.println("\n\n emailMoveQuestion " + emailMoveQuestion); 
 				faqSetting.setEmailMoveQuestion(emailMoveQuestion);
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
@@ -466,11 +471,17 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 											formInputWithActions.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
 											.getChildById(EMAIL_DEFAULT_ADD_QUESTION);
 				input.setValue(emailContent);
-			} else {
+			} else if (id.equals("1")) {
 				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
 				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
 											formInputWithActions.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
 											.getChildById(EMAIL_DEFAULT_EDIT_QUESTION);
+				input.setValue(emailContent);
+			} else {
+				emailContent =  res.getString("SendEmail.MoveQuetstion.Default");
+				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
+						formInputWithActions.getChildById(settingForm.SET_EMAIL_MOVE_QUESTION_TAB))
+						.getChildById(EMAIL_MOVE_QUESTION);
 				input.setValue(emailContent);
 			}
 			

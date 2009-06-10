@@ -8,11 +8,11 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
-	jsmanager.importJavascript('eXo.core.JSON') ;
-	//jsmanager.importJavascript('eXo.core.Cometd') ;
-	jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
-	jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
-
+	if(userProfile.getUserRole() <= 1) {
+		jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
+		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
+	}
 %>
 <div class="UIForumActionBar" style="height:auto" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
@@ -122,7 +122,7 @@
 									} else {
 										newMessage = newMessage + "&nbsp;" ;
 									}
-									if(uicomponent.userProfile.getUserRole() <= 1) {
+									if(userProfile.getUserRole() <= 1) {
 										int total = uicomponent.getTotalJobWattingForModerator();
 								%>
 									<div class="SeparatorLine" style="float:right;width:auto; padding:0px 5px;">
