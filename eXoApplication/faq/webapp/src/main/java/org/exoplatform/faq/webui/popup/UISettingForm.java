@@ -217,7 +217,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 																															.setValue(faqSetting_.getEmailSettingContent()));
 			
 			String defEmailMove = faqSetting_.getEmailMoveQuestion();
-			if(defEmailMove == null || defEmailMove.trim().length() <= 0) {
+			if(defEmailMove == null || defEmailMove.trim().length() <= 10) {
 				defEmailMove = FAQUtils.getEmailMoveQuestion(faqSetting_);
 			}
 			EmailMoveQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_MOVE_QUESTION, EMAIL_MOVE_QUESTION, ""))
@@ -392,7 +392,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				}
 				faqSetting.setIsDiscussForum(isDiscus);
 				settingForm.idForumName.clear();
-				System.out.println("\n\n emailMoveQuestion " + emailMoveQuestion); 
 				faqSetting.setEmailMoveQuestion(emailMoveQuestion);
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
