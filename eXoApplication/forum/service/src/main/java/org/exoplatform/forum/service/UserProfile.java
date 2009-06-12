@@ -45,6 +45,10 @@ public class UserProfile {
 	private String[] readForum ; // for check read/unread forum
 	private Map<String, Long> lastAccessForums = new HashMap<String, Long>() ;
 	private String[] bookmark ;
+	private String[] lastReadPostOfTopic;
+	private String[] lastReadPostOfForum;
+	private Map<String, String> lastPostIdReadOfTopic = new HashMap<String, String>();
+	private Map<String, String> lastPostIdReadOfForum = new HashMap<String, String>();
 	
 	private Date joinedDate = null;
 	private Date lastLoginDate = null;
@@ -87,6 +91,8 @@ public class UserProfile {
 		bookmark = new String[] {} ;
 		banReasonSummary = new String[] {} ;
 		collapCategories = new String[] {} ;
+		lastReadPostOfTopic = new String[] {" "} ;
+		lastReadPostOfForum = new String[] {" "} ;
 		Date dateHost = new Date() ;
 		timeZone = (double)dateHost.getTimezoneOffset()/ 60 ;
 		shortDateformat = "MM/dd/yyyy";
@@ -193,6 +199,38 @@ public class UserProfile {
   public String[] getBookmark() {return bookmark;}
 	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
 
+	public String[] getLastReadPostOfTopic() { return lastReadPostOfTopic;}
+	public void setLastReadPostOfTopic(String[] lastReadPostOfTopic) { 
+		this.lastReadPostOfTopic = lastReadPostOfTopic; 
+		lastPostIdReadOfTopic = Utils.arrayToMap(lastReadPostOfTopic);
+	}
+
+	public String getLastPostIdReadOfTopic(String topicId) {
+		if(lastPostIdReadOfTopic.containsKey(topicId))
+			return lastPostIdReadOfTopic.get(topicId);
+		else return "";
+  }
+	public void addLastPostIdReadOfTopic(String topicId, String postId) {
+		lastPostIdReadOfTopic.put(topicId, postId);
+		lastReadPostOfTopic = Utils.mapToArray(lastPostIdReadOfTopic);
+	}
+	
+	public String[] getLastReadPostOfForum() {return lastReadPostOfForum; }
+	public void setLastReadPostOfForum(String[] lastReadPostOfForum) { 
+		this.lastReadPostOfForum = lastReadPostOfForum; 
+		lastPostIdReadOfForum = Utils.arrayToMap(lastReadPostOfForum);
+	}
+
+	public String getLastPostIdReadOfForum(String forumId) {
+		if(lastPostIdReadOfForum.containsKey(forumId))
+			return lastPostIdReadOfForum.get(forumId);
+		else return "";
+	}
+	public void addLastPostIdReadOfForum(String forumId, String postId) {
+		lastPostIdReadOfForum.put(forumId, postId);
+		lastReadPostOfForum = Utils.mapToArray(lastPostIdReadOfForum);
+	}
+	
 	public boolean getIsOnline() { return isOnline; }
 	public void setIsOnline(boolean isOnline) { this.isOnline = isOnline; }
 

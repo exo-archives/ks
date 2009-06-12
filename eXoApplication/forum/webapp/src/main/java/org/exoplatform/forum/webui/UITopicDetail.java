@@ -172,6 +172,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isGetSv = true;
 	private boolean isShowQuickReply = true;
 	private boolean isShowRule = true;
+	private String lastPoistIdSave = "";
+	private String lastPostId = "";
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
@@ -194,6 +196,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return isShowQuickReply;
 	}
 	
+	public String getLastPostId() {
+  	return lastPostId;
+  }
+
+	public void setLastPostId(String lastPost) {
+  	this.lastPostId = lastPost;
+  }
+
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
@@ -452,17 +462,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isEditTopic = isEditTopic ;
 	}
 
-	@SuppressWarnings("unused")
 	private Topic getTopic() throws Exception {
-		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try {
 			if(this.isEditTopic || this.topic == null) {
-				this.topic = forumService.getTopic(sProvider, categoryId, forumId, topicId, UserProfile.USER_GUEST) ;
+				this.topic = forumService.getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST) ;
 				this.isEditTopic = false ;
 			}
 			return this.topic ;
 		} catch (Exception e) {
-			sProvider.close();
 		}
 		return null ;
 	}
@@ -574,6 +581,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		List<Post> posts = new ArrayList<Post>();  
 		if(this.pageList == null) return posts ;
 		try {
+			try {
+				if(!ForumUtils.isEmpty(lastPostId)){
+					long maxPost = this.userProfile.getMaxPostInPage();
+					long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
+					this.pageSelect =  (long)index/maxPost;
+					lastPostId = "";
+				}
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
 			posts = this.pageList.getPage(this.pageSelect) ;
 			if(posts == null) posts = new ArrayList<Post>(); 
 			List<String> userNames = new ArrayList<String>() ;
@@ -586,6 +603,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					addUIFormInput(new UIFormCheckBoxInput(post.getId(), post.getId(), false) );
 				}
 				this.IdLastPost = post.getId() ;
+			}
+			if(!lastPoistIdSave.equals(IdLastPost)) {
+				lastPoistIdSave = IdLastPost;
+				userProfile.addLastPostIdReadOfForum(forumId, topicId+"/"+IdLastPost);
+				userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
+				UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.getUserProfile().addLastPostIdReadOfForum(forumId, topicId+"/"+IdLastPost);
+				forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost);
+				forumService.saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
 			}
 			//updateUserProfiles
 			if(userNames.size() > 0) {
@@ -606,7 +632,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return posts ;
 	}
 	
-	@SuppressWarnings("unused")
+		@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic() throws Exception {
 		List<Tag> list = new ArrayList<Tag>();
 		List<String> listTagId = new ArrayList<String>();

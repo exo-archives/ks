@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIRSSForm;
@@ -62,7 +63,8 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
 			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
 			@EventConfig(listeners = UICategories.RSSActionListener.class),
-			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class)
+			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class),
+			@EventConfig(listeners = UICategories.OpenLastReadTopicActionListener.class)
 		}
 )
 public class UICategories extends UIContainer	{
@@ -123,6 +125,11 @@ public class UICategories extends UIContainer	{
 	public boolean getUseAjax() {
 	  return useAjax;
   }
+	
+	@SuppressWarnings("unused")
+  private String getLastReadPostOfForum(String forumId) throws Exception {
+		return userProfile.getLastPostIdReadOfForum(forumId);
+	}
 	
 	private boolean isCollapCategories(String categoryId) {
 		if(collapCategories.contains(categoryId)) return true;
@@ -368,7 +375,7 @@ public class UICategories extends UIContainer	{
 			String path = context.getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
 			Forum forum = categories.getForumById(id[0], id[1]);
-			Topic topic = categories.getLastTopic(path) ;
+			Topic topic = categories.getLastTopic(id[2]) ;
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };
@@ -385,6 +392,39 @@ public class UICategories extends UIContainer	{
 				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
 				uiTopicDetail.setIdPostView("lastpost") ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
+				categories.maptopicLast.clear() ;
+			}
+			context.addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+
+	static public class OpenLastReadTopicActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories categories = event.getSource();
+			WebuiRequestContext context = event.getRequestContext() ; 
+			String path = context.getRequestParameter(OBJECTID)	;//cateid/forumid/topicid/postid/
+			String []id = path.trim().split("/");
+			Forum forum = categories.getForumById(id[0], id[1]);
+			Topic topic = (Topic)categories.forumService.getObjectNameById(id[2], Utils.TOPIC);
+			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
+			if(topic == null) {
+				Object[] args = { "" };
+				UIApplication uiApp = categories.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
+				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} else {
+				forumPortlet.updateIsRendered(ForumUtils.FORUM);
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+				uiForumContainer.setIsRenderChild(false) ;
+				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+				uiTopicDetail.setUpdateForum(forum) ;
+				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
+				uiTopicDetail.setIdPostView(id[id.length-1]) ;
+				uiTopicDetail.setLastPostId(id[id.length-1]);
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 				categories.maptopicLast.clear() ;

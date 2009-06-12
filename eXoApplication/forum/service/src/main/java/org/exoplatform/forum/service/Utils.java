@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.organization.User;
@@ -513,6 +515,26 @@ public class Utils {
 			return true;
 		}
 	  return false;
+  }
+	
+	public static String[] mapToArray(Map<String, String> map) {
+		if (map.isEmpty()) return new String[]{" "};
+		String[] strs = new String[map.size()];
+		String str = map.toString().replace(" ", "").replace("{", "").replace("}", "");
+		str = str.replace(",", ";").replace("=", ",");
+		strs = str.split(";");
+	  return strs;
+  }
+	
+	public static Map<String, String> arrayToMap(String[] strs) {
+		Map<String, String> map = new HashMap<String, String>();
+		String[] arr;
+		for (int i = 0; i < strs.length; i++) {
+			arr = strs[i].split(",");
+			if(arr.length == 2)
+				map.put(arr[0], arr[1]);
+    }
+		return map;
   }
 	
 }

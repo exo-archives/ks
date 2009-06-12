@@ -44,6 +44,7 @@ import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -83,6 +84,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UICategory.RemoveForumActionListener.class),
 				@EventConfig(listeners = UICategory.OpenForumLinkActionListener.class),
 				@EventConfig(listeners = UICategory.OpenLastTopicLinkActionListener.class),
+				@EventConfig(listeners = UICategory.OpenLastReadTopicActionListener.class),
 				@EventConfig(listeners = UICategory.AddBookMarkActionListener.class),
 				@EventConfig(listeners = UICategory.AddWatchingActionListener.class),
 				@EventConfig(listeners = UICategory.RSSActionListener.class),
@@ -122,6 +124,10 @@ public class UICategory extends UIForm	{
 	
   private int getDayForumNewPost() {
 		return dayForumNewPost;
+	}
+  
+  private String getLastReadPostOfForum(String forumId) throws Exception {
+		return userProfile.getLastPostIdReadOfForum(forumId);
 	}
   
 	public void update(Category category, List<Forum> forums) throws Exception {
@@ -548,10 +554,47 @@ public class UICategory extends UIForm	{
 			Topic topic = uiCategory.getTopic(id[1]) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
 			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic) ;
-			uiTopicDetail.setIdPostView("lastpost") ;
+			String lastPostId = "";
+			uiTopicDetail.setLastPostId(lastPostId);
+			if(lastPostId == null || lastPostId.length() < 0) lastPostId = "lastpost";
+			uiTopicDetail.setIdPostView(lastPostId) ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[0], topic.getId()) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[0] + " "));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static public class OpenLastReadTopicActionListener extends EventListener<UICategory> {
+		public void execute(Event<UICategory> event) throws Exception {
+			UICategory uiCategory = event.getSource();
+			WebuiRequestContext context = event.getRequestContext() ; 
+			String path = context.getRequestParameter(OBJECTID)	;//cateid/forumid/topicid/postid/
+			String []id = path.trim().split("/");
+			Topic topic = (Topic)uiCategory.forumService.getObjectNameById(id[2], Utils.TOPIC);
+			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+			if(topic == null) {
+				Object[] args = { "" };
+				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
+				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} else {
+				forumPortlet.updateIsRendered(ForumUtils.FORUM);
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+				uiForumContainer.setIsRenderChild(false) ;
+				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
+				uiTopicDetail.setUpdateForum(uiCategory.getForum(id[1])) ;
+				uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[1], topic) ;
+				String lastPostId = id[3];
+				uiTopicDetail.setLastPostId(lastPostId);
+				if(lastPostId == null || lastPostId.length() < 0) lastPostId = "lastpost";
+				uiTopicDetail.setIdPostView(lastPostId) ;
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[1], topic.getId()) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[1] + " "));
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			}
+			context.addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	

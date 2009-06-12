@@ -355,6 +355,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
+	public long getLastReadIndex(String path) throws Exception;
 	/**
 	 * Gets the page post by user.
 	 * 
@@ -664,7 +665,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception;
-
+	
+	public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception;
 	/**
 	 * Save user collapCategories.
 	 * 

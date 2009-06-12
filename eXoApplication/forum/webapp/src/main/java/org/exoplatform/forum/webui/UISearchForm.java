@@ -296,9 +296,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			try {
 				if(fromDateCreated.getTimeInMillis() >= toDateCreated.getTimeInMillis()){
 					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					String str = type;
-					if(str.equals(Utils.CATEGORY)) str = "category";
-					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{str}, ApplicationMessage.WARNING)) ;
+					uiApp.addMessage(new ApplicationMessage("UISearchForm.msg.erro-from-less-then-to", new String[]{}, ApplicationMessage.WARNING)) ;
 					return ;
 				}
       } catch (Exception e) {

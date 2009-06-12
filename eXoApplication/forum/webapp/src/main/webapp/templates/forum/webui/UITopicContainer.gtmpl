@@ -444,6 +444,7 @@
 								String uiformId = uiform.id;
 								int i = 0;
 								Date postDate = new Date();
+								String lastPostIdRead = "";
 								for(topic in topics){
 									postDate = topic.getLastPostDate();
 									boolean isLockTopic = topic.getIsLock() ;
@@ -451,6 +452,7 @@
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
+									lastPostIdRead = uicomponent.getLastPostIdReadOfTopic(topicId);
 									long max_page = uicomponent.getSizePost(topic) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
@@ -539,9 +541,14 @@
 									
 									<!-- --------------------------------- View name of topic ------------------------------------------------- -->
 									<td>
-										<div>
+										<div style="line-height:16px;">
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
+										<% } 
+											 if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
+													String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
+										%>
+												<div class="ScrollRightButton" title="Go to last read post."><a href="$lastPostLink" style="display:block;line-height:16px;">&nbsp;</a></div>
 										<% } %>
 											<div style="float:left">
 												<% ++rCNB; %>

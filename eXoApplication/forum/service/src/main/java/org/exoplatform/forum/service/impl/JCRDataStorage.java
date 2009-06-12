@@ -2088,6 +2088,28 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	public long getLastReadIndex(String path) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;	
+		try {
+			Node catNode = getCategoryHome(sProvider);
+			Node postNode = catNode.getNode(path);
+			if(postNode != null) {
+				Calendar cal = postNode.getProperty("exo:createdDate").getDate();
+				StringBuilder builder = new StringBuilder();
+				builder.append("/jcr:root").append(postNode.getParent().getPath()).append("/element(*,exo:post)").
+								append("[(@exo:createdDate <= xs:dateTime('").append(ISO8601.format(cal)).append("'))]");
+				
+				QueryManager qm = postNode.getSession().getWorkspace().getQueryManager();
+				Query query = qm.createQuery(builder.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				NodeIterator iter = result.getNodes();
+				return iter.getSize();
+			}
+    } catch (Exception e) {
+    }
+	  return 0;
+  }
+	
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		try {
@@ -3445,7 +3467,9 @@ public class JCRDataStorage {
 			userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
 			userProfile.setIsAutoWatchMyTopics(profileNode.getProperty("exo:isAutoWatchMyTopics").getBoolean());
 			userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
-			
+			userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+			userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+
 			userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
 			if(profileNode.hasProperty("exo:collapCategories"))
 				userProfile.setCollapCategories(ValuesToArray(profileNode.getProperty("exo:collapCategories").getValues()));
@@ -3536,7 +3560,37 @@ public class JCRDataStorage {
 			profileNode.save();
 		}catch(Exception e) {
 			e.printStackTrace() ;
-		}finally{ sProvider.close() ;}		
+		}finally{ sProvider.close() ;}
+	}
+	
+	public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
+		try {
+			if(isOfForum.equals("true")) {
+				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+			} else if(isOfForum.equals("false")){
+				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+			} else {
+				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+			}
+    } catch (Exception e) {
+    }finally{ sProvider.close() ;}
+	  return userProfile;
+  }
+
+	public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node profileHome = getUserProfileHome(sProvider);
+		Node profileNode = profileHome.getNode(userId);
+		try {
+			profileNode.setProperty("exo:lastReadPostOfForum", lastReadPostOfForum);
+			profileNode.setProperty("exo:lastReadPostOfTopic", lastReadPostOfTopic);
+			profileHome.save();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{ sProvider.close() ;}
 	}
 	
 	public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
@@ -5816,7 +5870,6 @@ public class JCRDataStorage {
 			stringBuffer.append("/jcr:root").append(categoryNode.getPath()).append("//element(*,exo:topic)")
 				.append("[@topicType='").append(type).append("']").append(" order by @exo:createdDate descending");
 			
-			System.out.println("\n\n qr: "  + stringBuffer.toString());
 			String pathQuery = stringBuffer.toString();
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();

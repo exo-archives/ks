@@ -417,6 +417,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getPost(categoryId, forumId, topicId, postId);
   }
 
+  public long getLastReadIndex(String path) throws Exception {
+  	return storage_.getLastReadIndex(path);
+  }
+  
   public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
   	sProvider.close() ;
     return getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
@@ -642,6 +646,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public UserProfile getUserProfileManagement(String userName) throws Exception {
   	return storage_.getUserProfileManagement(userName);
+  }
+  
+  public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
+  	storage_.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
   }
   
   public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {

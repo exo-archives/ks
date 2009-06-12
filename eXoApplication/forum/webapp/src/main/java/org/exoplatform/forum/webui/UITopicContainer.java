@@ -158,6 +158,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
+	@SuppressWarnings("unused")
+  private String getLastPostIdReadOfTopic(String topicId) throws Exception {
+		return userProfile.getLastPostIdReadOfTopic(topicId);
+	}
+	
 	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;
@@ -537,7 +542,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			try {
 				Topic topic = uiTopicContainer.getTopic(temp[0]) ;
-				//boolean isReadTopic = ForumUtils.isStringInStrings(uiTopicContainer.userProfile.getReadTopic(), topic.getId());
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
@@ -547,8 +551,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiTopicContainer.categoryId+"/"+ uiTopicContainer.forumId + " "));
 				if(temp[2].equals("true")) {
 					uiTopicDetail.setIdPostView("lastpost") ;
-				} else {
+				} else if(temp[2].equals("false")){
 					uiTopicDetail.setIdPostView("top") ;
+				} else {
+					uiTopicDetail.setIdPostView(temp[2]) ;
+					uiTopicDetail.setLastPostId(temp[2]);
 				}
 				if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
 					uiTopicContainer.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;

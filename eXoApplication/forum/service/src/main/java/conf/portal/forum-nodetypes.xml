@@ -706,6 +706,18 @@
 					<defaultValue> </defaultValue>
 				</defaultValues>
 			</propertyDefinition>
+			<propertyDefinition name="exo:lastReadPostOfTopic" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
+			</propertyDefinition>
+			<propertyDefinition name="exo:lastReadPostOfForum" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+				<defaultValues>
+					<defaultValue> </defaultValue>
+				</defaultValues>
+			</propertyDefinition>
 			<propertyDefinition name="exo:isAutoWatchMyTopics" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 				<defaultValues>
