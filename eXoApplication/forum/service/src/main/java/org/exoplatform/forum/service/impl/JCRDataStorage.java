@@ -2073,7 +2073,7 @@ public class JCRDataStorage {
 				
 				// send mail to author topic after move topic:
 				message.setSubject(headerSubject + objectName + topic.getTopicName());
-				message.setBody(mailContent.replace("$OBJECT_NAME", topic.getTopicName()).replace("$OBJECT_PARENT_NAME", forumName).replace("$LINK", link.replaceFirst("pathId", topic.getId())));
+				message.setBody(mailContent.replace("$OBJECT_NAME", topic.getTopicName()).replace("$OBJECT_PARENT_NAME", forumName).replace("$VIEWPOST_LINK", link.replaceFirst("pathId", topic.getId())));
 				List<String> fullNameEmailOwnerTopic = getFullNameAndEmail(sProvider, topic.getOwner());
 				fullNameEmailOwnerTopic.remove(0);
 				sendEmailNotification(fullNameEmailOwnerTopic, message);
@@ -2609,7 +2609,8 @@ public class JCRDataStorage {
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
-					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2749,7 +2750,8 @@ public class JCRDataStorage {
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", owner);
-					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink()+"/"+post.getId()+ "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2773,7 +2775,8 @@ public class JCRDataStorage {
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-					content_ = StringUtils.replace(content_, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() +"/"+post.getId()+ "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailListForum, message);
@@ -2797,7 +2800,8 @@ public class JCRDataStorage {
 					formatter = new SimpleDateFormat("MM/dd/yyyy");
 					content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
 					content = StringUtils.replace(content, "$POSTER", post.getOwner());
-					content = StringUtils.replace(content, "$LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content = StringUtils.replace(content, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+					content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
 					
 					message.setBody(content);
 					sendEmailNotification(emailListCategory, message);
@@ -3067,7 +3071,7 @@ public class JCRDataStorage {
 				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 				message.setSubject(headerSubject + objectName);
 				message.setBody(mailContent.replace("$OBJECT_NAME", post.getName())
-								.replace("$OBJECT_PARENT_NAME", topicName).replace("$LINK", link));
+								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
 				List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, post.getOwner());
 				fullNameEmailOwnerPost.remove(0);
 				sendEmailNotification(fullNameEmailOwnerPost, message);
