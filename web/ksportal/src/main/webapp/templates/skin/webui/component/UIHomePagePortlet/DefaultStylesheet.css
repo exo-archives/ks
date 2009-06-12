@@ -26,7 +26,7 @@
 
 .UIBannerPortlet .BannerTitle_{
 	float: left;
-	background: #fff url('DefaultSkin/background/BannerTitle.gif') no-repeat top left;
+	background: #fff url('DefaultSkin/background/BannerTitle.jpg') no-repeat top left;
 	width: 300px; height: 80px;
 }
 
