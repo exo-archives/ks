@@ -33,7 +33,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
-import org.exoplatform.forum.webui.popup.UITagManagerForm;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -61,7 +60,6 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.TagManagerActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class)
@@ -251,19 +249,5 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 650, 450) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
-	
-	static public class TagManagerActionListener extends EventListener<UIForumActionBar> {
-		public void execute(Event<UIForumActionBar> event) throws Exception {
-			UIForumActionBar uiActionBar = event.getSource() ;
-			UIForumPortlet forumPortlet = uiActionBar.getParent();
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UITagManagerForm managerForm = popupContainer.addChild(UITagManagerForm.class, null, null) ;
-			managerForm.setUpdateTag(true);
-			popupContainer.setId("TagManagerForm") ;
-			popupAction.activate(popupContainer, 630, 360) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}	
+	}
 }
