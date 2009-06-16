@@ -344,7 +344,6 @@
 
 /*********************************Navigation Portlet**********************************/
 
-
 .UINavigationPortlet {
   !position: relative;
 }
@@ -513,20 +512,24 @@
 .UIHorizontalTabs .UITab .NormalNavigationTab {
   line-height: 33px; 
   margin-left: 1px;
+  margin-top: 0px;
 }
 
 .UIHorizontalTabs .UITab .NormalNavigationTab .LeftTab {
   line-height: 33px;
   padding-left: 2px;
+  background: none;
 }
 
 .UIHorizontalTabs .UITab .NormalNavigationTab .RightTab {
   line-height: 33px; 
+  background: none;
   padding-right: 2px;
 }
 
 .UIHorizontalTabs .UITab .NormalNavigationTab .MiddleTab {
   line-height: 33px;
+  background: none;
   text-align: center;
   padding: 2px 8px 0;
 }
@@ -551,34 +554,35 @@
 .UIHorizontalTabs .UITab .HighlightNavigationTab {
   line-height: 22px; 
   margin-left: 1px;
+  margin-top: 0px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
   line-height: 33px; 
-  background: none;
-  padding-left: 2px;
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat left -1px;
+  padding-left: 4px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
   line-height: 33px; 
-  padding-right: 2px;
-  background: none;
+  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat right -1px;
+  padding-right: 4px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
-  line-height: 33px; 
+  line-height: 33px;
+  background: url('DefaultSkin/background/NavigationTab.gif') repeat-x left -33px;
   text-align: center;
-  padding: 2px 8px 0;
-  background: none;
+  padding: 2px 8px 0px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .TabIcon {
-  color: #fff;
+  color: #f57a00;
   line-height: 31px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab a {
-  color: #fff;
+  color: #f57a00;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .DropDownArrowIcon {
@@ -590,8 +594,10 @@
 /*###############-Selected Navigation Tab-################*/
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab {
-  line-height: 33px; 
+  line-height: 22px; 
   margin-left: 1px; 
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
@@ -631,80 +637,81 @@
 /*###########################-- NormalTabStyle --############################*/
 
 .UIHorizontalTabs .NormalTabStyle .NormalTab {
-  line-height: 24px; 
+  line-height: 25px; 
   margin-right: 1px; 
   color: #202020; 
   font-weight: normal;
 }
 
 .UIHorizontalTabs .NormalTabStyle .NormalTab a {
-	line-height: 24px;
+	line-height: 25px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .NormalTab .LeftTab {
   padding-left: 12px; 
-  line-height: 24px;
+  line-height: 25px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -24px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .NormalTab .RightTab {
-  line-height: 24px;
+  line-height: 25px;
   padding-right: 3px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -24px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .NormalTab .MiddleTab {
-  line-height: 24px;
+  line-height: 25px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -48px;
   cursor: pointer;
   padding: 0px 4px 0px 4px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .HighlightTab {
-  line-height: 24px;
+  line-height: 25px;
   margin-right: 1px;
-  color: #0666d2; font-weight: normal;
+  color: #0666d2; 
+  font-weight: normal;
 }
 
 .UIHorizontalTabs .NormalTabStyle .HighlightTab .LeftTab {
-  line-height: 24px;
+  line-height: 25px;
   padding-left: 12px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -72px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .HighlightTab .RightTab {
-  line-height: 24px;
+  line-height: 25px;
   padding-right: 3px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -72px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .HighlightTab .MiddleTab {
-  line-height: 24px;
+  line-height: 25px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -96px;
   cursor: pointer;
   padding: 0px 4px 0px 4px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .SelectedTab {
-  line-height: 24px;
+  line-height: 25px;
   margin-right: 1px;
   color: #307dcc; 
 }
 
 .UIHorizontalTabs .NormalTabStyle .SelectedTab .LeftTab {
-  line-height: 24px;
+  line-height: 25px;
   padding-left: 15px; 
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat left -120px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .SelectedTab .RightTab {
-  line-height: 24px;
+  line-height: 25px;
   padding-right: 3px; 
   background: url('DefaultSkin/background/NormalTabStyle.gif') no-repeat right -120px;
 }
 
 .UIHorizontalTabs .NormalTabStyle .SelectedTab .MiddleTab {
-  line-height: 24px;
+  line-height: 25px;
   background: url('DefaultSkin/background/NormalTabStyle.gif') repeat-x center -144px;
   cursor: pointer;
   font-weight: normal;
@@ -827,7 +834,8 @@
   background: url('DefaultSkin/background/MessageTabDialog.gif') repeat-x center -155px;
   cursor: pointer;
   padding: 0px 8px 0px 4px;
-  color: #058ee6;  font-weight: normal;
+  color: #058ee6; 
+  font-weight: normal;
 }
 
 .UIHorizontalTabs .MessageTabDialog .SelectedTab  div:hover{
@@ -836,7 +844,8 @@
 
 .UIHorizontalTabs .MessageTabDialog .SelectedTab .TabIcon {
   float: left;
-  width: 32px; height: 21px;
+  width: 32px;
+  height: 21px;
   margin-top: 4px;
 }
 
@@ -1091,11 +1100,15 @@
 }
 
 .UIBreadcumbsPortlet {
-  margin: 0 0 3px 0;
+  margin: 0px;
+  height: 25px;
+  padding: 0px;
 }
 
 .UIBreadcumbs {
-  line-height: 25px ;
+  line-height: 25px;
+  height: 25px;
+  padding: 0px;
 }
 
 .UIBreadcumbs a {
