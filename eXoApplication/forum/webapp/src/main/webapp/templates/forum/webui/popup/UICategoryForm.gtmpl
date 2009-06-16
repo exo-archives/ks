@@ -1,29 +1,8 @@
-<%	
-	import org.exoplatform.web.application.JavascriptManager;	
-	def rcontext = _ctx.getRequestContext() ;
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableTexarea();");
-%>
-<div class="UIForumForm">	
+<div class="UIForumForm UICategoryForm">	
 	<% uiform.begin() %>	
-	<div class="UIForm AddForumInCategpry">
-		<div class="HorizontalLayout">
-			<table class="UIFormGrid">
-				<tbody>
-					<tr>
-						<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_CATEGORY_SELECTBOX)%>:</td>
-						<td class="FieldComponent">
-							<% uiform.renderChild(uiform.FIELD_CATEGORY_SELECTBOX) %>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
-			<div class="TabPaneContent">
+			<div class="TabPaneContent" style="padding:0px;">
 				
 				<div class="WorkingArea">
 					 <div class="UIHorizontalTabs">
@@ -34,7 +13,6 @@
 										<%String classCss = "SelectedTab" ; 
 										int i = 0;
 										for(tabconten in uiform.getChildren()){ 
-											if(tabconten.id.equals("Category")) continue ;
 											String link = "javascript:void(0);";
 											if(uiform.getIsSelected(i)) classCss = "SelectedTab" ;
 											else {
@@ -67,7 +45,6 @@
 									String display =	"block";
 									int j = 0;
 									for(tabconten in uiform.getChildren()){
-										if(tabconten.id.equals("Category")) continue ;
 										if(uiform.getIsSelected(j))display =	"block";
 										else display = "none";
 								%>

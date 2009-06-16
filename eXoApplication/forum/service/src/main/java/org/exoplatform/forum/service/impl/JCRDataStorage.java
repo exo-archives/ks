@@ -655,12 +655,21 @@ public class JCRDataStorage {
 			cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong());
 		if(cateNode.isNodeType("exo:forumWatching") && cateNode.hasProperty("exo:emailWatching")) 
 			cat.setEmailNotification(ValuesToArray(cateNode.getProperty("exo:emailWatching").getValues()));
+		if (cateNode.hasProperty("exo:viewer"))
+			cat.setViewer(ValuesToArray(cateNode.getProperty("exo:viewer").getValues()));
+		if (cateNode.hasProperty("exo:createTopicRole"))
+			cat.setCreateTopicRole(ValuesToArray(cateNode.getProperty("exo:createTopicRole").getValues()));
+		if (cateNode.hasProperty("exo:poster"))
+			cat.setPoster(ValuesToArray(cateNode.getProperty("exo:poster").getValues()));
+		
 		return cat;
 	}
 
 	public void saveCategory(Category category, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String[] oldcategoryMod = new String[]{""};
+		List<String> presentPoster = new ArrayList<String>();
+		List<String> presentViewer = new ArrayList<String>();
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node catNode;
@@ -672,6 +681,8 @@ public class JCRDataStorage {
 			} else {
 				catNode = categoryHome.getNode(category.getId());
 				oldcategoryMod = ValuesToArray(catNode.getProperty("exo:moderators").getValues());
+				presentPoster = ValuesToList(catNode.getProperty("exo:poster").getValues());
+				presentViewer = ValuesToList(catNode.getProperty("exo:viewer").getValues());
 			}
 			catNode.setProperty("exo:name", category.getCategoryName());
 			catNode.setProperty("exo:categoryOrder", category.getCategoryOrder());
@@ -679,12 +690,41 @@ public class JCRDataStorage {
 			catNode.setProperty("exo:modifiedBy", category.getModifiedBy());
 			catNode.setProperty("exo:modifiedDate", getGreenwichMeanTime());
 			catNode.setProperty("exo:userPrivate", category.getUserPrivate());
+			
+			catNode.setProperty("exo:createTopicRole", category.getCreateTopicRole());
+			catNode.setProperty("exo:poster", category.getPoster());
+			catNode.setProperty("exo:viewer", category.getViewer());
+			
 			String[] moderatorCat = category.getModerators();
 			catNode.setProperty("exo:moderators", moderatorCat);
+			// Set Moderator by this category for forums children
 			if(!isNew && moderatorCat.length > 0 && !moderatorCat[0].equals(" ")) {
 				updateModeratorInForums(sProvider, catNode, moderatorCat);
 			}
+			// Edit profile of moderator in this category
 			updateUserProfileModInCategory(sProvider, catNode, oldcategoryMod, moderatorCat, category, isNew);
+			// Set can view and can post by this category for topics children
+			List<String> listV = new ArrayList<String>();
+			listV.addAll(Arrays.asList(category.getPoster()));
+			if(!isNew && Utils.isAddNewList(presentPoster, listV)){
+				List<String> list = new ArrayList<String>();
+				for (String string : presentPoster) {
+	        if(listV.contains(string)) listV.remove(string);
+	        else list.add(string);
+        }
+				setPermissionByCategory(catNode, list, listV, "exo:canPost");
+			}
+			listV = new ArrayList<String>();
+			listV.addAll(Arrays.asList(category.getViewer()));
+			if(!isNew && Utils.isAddNewList(presentViewer, listV)){
+				List<String> list = new ArrayList<String>();
+				for (String string : presentPoster) {
+					if(listV.contains(string)) listV.remove(string);
+					else list.add(string);
+				}
+				setPermissionByCategory(catNode, list, listV, "exo:canView");
+			}
+			
 			if(catNode.isNew()){
 				catNode.getSession().save();
 			} else {
@@ -855,6 +895,33 @@ public class JCRDataStorage {
     }
 	}
 	
+	private void setPermissionByCategory(Node catNode, List<String> remov, List<String> addNew, String property) throws Exception {
+		QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryBuffer = new StringBuffer();
+		queryBuffer.append("/jcr:root").append(catNode.getPath()).append("//element(*,exo:topic)[@").append(property).append(" != ' ']");
+		Query query = qm.createQuery(queryBuffer.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		List<String> list;
+		while (iter.hasNext()) {
+	    Node topicNode = (Node) iter.next();
+	    list = ValuesToList(topicNode.getProperty(property).getValues());
+	    list = removeAndAddNewInList(remov, addNew, list);
+	    if(list.isEmpty()) list.add(" ");
+	    topicNode.setProperty(property, getStringsInList(list));
+	    System.out.println("\n\n " + topicNode.getProperty("exo:name").getValue() + " : " + list.toString());
+    }
+	}
+	
+	private List<String> removeAndAddNewInList(List<String> remov, List<String> addNew, List<String> present) {
+		for (String string : remov) {
+			if(present.contains(string)) present.remove(string);
+    }
+		for (String string : addNew) {
+			if(!present.contains(string)) present.add(string);
+		}
+		return present;
+	}
 	
 	public void registerListenerForCategory(String path) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1914,8 +1981,12 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:isSticky", topic.getIsSticky());
 			topicNode.setProperty("exo:isWaiting", topic.getIsWaiting());
 			topicNode.setProperty("exo:isActive", topic.getIsActive());
-			topicNode.setProperty("exo:canView", topic.getCanView());
-			topicNode.setProperty("exo:canPost", topic.getCanPost());
+			String[] strs = topic.getCanView();
+			if(strs == null || strs.length == 0) strs = new String []{" "};
+			topicNode.setProperty("exo:canView", strs);
+			strs = topic.getCanPost();
+			if(strs == null || strs.length == 0) strs = new String []{" "};
+			topicNode.setProperty("exo:canPost", strs);
 			topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating());
 			topicNode.setProperty("exo:voteRating", topic.getVoteRating());
 			topicNode.setProperty("exo:numberAttachments", topic.getNumberAttachment());
@@ -4879,63 +4950,67 @@ public class JCRDataStorage {
 
 	public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node categoryHome = getCategoryHome(sProvider);
-		String string = categoryHome.getPath();
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		sProvider.close() ;
-		String pathQuery = "";
-		StringBuffer buffer = new StringBuffer();
-		int l = paths.length;
-		if (l > 0) {
-			buffer.append(" and (");
-			for (int i = 0; i < l; i++) {
-				if (i > 0)
-					buffer.append(" or ");
-				String str = getPath(("/" + Utils.FORUM), paths[i]);
-				buffer.append("@exo:path='").append(str).append("'");
-			}
-			buffer.append(")");
-		}
-		StringBuffer stringBuffer = new StringBuffer();
-		Query query ;
 		List<ForumSearch> list = new ArrayList<ForumSearch>();
-		NodeIterator iter;
-		QueryResult result;
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
-			.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery = stringBuffer.toString();
-		query = qm.createQuery(pathQuery, Query.XPATH);
-		result = query.execute();
-		iter = result.getNodes();
-		ForumSearch forumSearch ;
-		while (iter.hasNext()) {
-			forumSearch = new ForumSearch();
-			Node node = (Node) iter.next();
-			forumSearch.setId(node.getName());
-			forumSearch.setPath(node.getPath());
-			forumSearch.setType(Utils.TOPIC);
-			forumSearch.setName(node.getProperty("exo:name").getString());
-			forumSearch.setContent(node.getProperty("exo:description").getString());
-			forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
-			list.add(forumSearch);
-		}
-		stringBuffer = new StringBuffer();
-		stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
-			.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending");
-		pathQuery = stringBuffer.toString();
-		query = qm.createQuery(pathQuery, Query.XPATH);
-		result = query.execute();
-		iter = result.getNodes();
-		while (iter.hasNext()) {
-			forumSearch = new ForumSearch();
-			Node node = (Node) iter.next();
-			forumSearch.setId(node.getName());
-			forumSearch.setPath(node.getPath());
-			forumSearch.setType(Utils.POST);
-			forumSearch.setName(node.getProperty("exo:name").getString());
-			forumSearch.setContent(node.getProperty("exo:message").getString());
-			forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
-			list.add(forumSearch);
+		try {
+			Node categoryHome = getCategoryHome(sProvider);
+			String string = categoryHome.getPath();
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			String pathQuery = "";
+			StringBuffer buffer = new StringBuffer();
+			int l = paths.length;
+			if (l > 0) {
+				buffer.append(" and (");
+				for (int i = 0; i < l; i++) {
+					if (i > 0)
+						buffer.append(" or ");
+					String str = getPath(("/" + Utils.FORUM), paths[i]);
+					buffer.append("@exo:path='").append(str).append("'");
+				}
+				buffer.append(")");
+			}
+			StringBuffer stringBuffer = new StringBuffer();
+			Query query ;
+			NodeIterator iter;
+			QueryResult result;
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)")
+				.append("[(@exo:isApproved='false' or @exo:isWaiting='true')").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery = stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			ForumSearch forumSearch ;
+			while (iter.hasNext()) {
+				forumSearch = new ForumSearch();
+				Node node = (Node) iter.next();
+				forumSearch.setId(node.getName());
+				forumSearch.setPath(node.getPath());
+				forumSearch.setType(Utils.TOPIC);
+				forumSearch.setName(node.getProperty("exo:name").getString());
+				forumSearch.setContent(node.getProperty("exo:description").getString());
+				forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
+				list.add(forumSearch);
+			}
+			stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:post)")
+				.append("[(@exo:isApproved='false' or @exo:isHidden='true')").append(buffer).append("] order by @exo:modifiedDate descending");
+			pathQuery = stringBuffer.toString();
+			query = qm.createQuery(pathQuery, Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			while (iter.hasNext()) {
+				forumSearch = new ForumSearch();
+				Node node = (Node) iter.next();
+				forumSearch.setId(node.getName());
+				forumSearch.setPath(node.getPath());
+				forumSearch.setType(Utils.POST);
+				forumSearch.setName(node.getProperty("exo:name").getString());
+				forumSearch.setContent(node.getProperty("exo:message").getString());
+				forumSearch.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
+				list.add(forumSearch);
+			}
+		}catch (Exception e) {
+		}finally {
+			sProvider.close();
 		}
 		return list;
 	}

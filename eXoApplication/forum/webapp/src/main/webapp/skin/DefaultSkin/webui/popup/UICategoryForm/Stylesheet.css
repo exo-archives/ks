@@ -1,11 +1,4 @@
 .UIForumPortlet .UICategoryForm {
-	background: #f7f7f7;
-	margin: 8px;
-	border: 1px solid #c7c7c7;
-}
-
-.UIForumPortlet .UICategoryForm .UIForm {
-	border: 1px solid white;
 }
 
 .UIForumPortlet .UICategoryForm .HorizontalLayout {
@@ -19,6 +12,11 @@
 
 .UIForumPortlet .UICategoryForm .HorizontalLayout textarea {
 	height:54px;
+	width:235px;
+}
+
+.UIForumPortlet .UICategoryForm #PermissionTab textarea {
+	height:50px;
 	width:235px;
 }
 

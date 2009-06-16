@@ -419,6 +419,15 @@
 			<propertyDefinition name="exo:moderators" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:createTopicRole" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:poster" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:viewer" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>
+			</propertyDefinition>
 			<propertyDefinition name="exo:categoryOrder" requiredType="Long" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>

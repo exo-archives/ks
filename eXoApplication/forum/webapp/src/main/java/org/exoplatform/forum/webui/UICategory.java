@@ -256,7 +256,7 @@ public class UICategory extends UIForm	{
 			UICategoryForm categoryForm = popupContainer.addChild(UICategoryForm.class, null, null) ;
 			categoryForm.setCategoryValue(uiCategory.getCategory(), true) ;
 			popupContainer.setId("EditCategoryForm") ;
-			popupAction.activate(popupContainer, 500, 400) ;
+			popupAction.activate(popupContainer, 550, 350) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			uiCategory.isEditCategory = true ;
 		}

@@ -516,6 +516,20 @@ public class Utils {
 		}
 	  return false;
   }
+
+	public static boolean isAddNewList(List<String> a, List<String> b) {
+		if(a.size() == b.size()) {
+			for (String s : b) {
+				if(!a.contains(s)) {
+					return true;
+				}
+			}
+		} else {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	public static String[] mapToArray(Map<String, String> map) {
 		if (map.isEmpty()) return new String[]{" "};

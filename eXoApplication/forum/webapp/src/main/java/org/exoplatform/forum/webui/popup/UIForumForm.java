@@ -114,7 +114,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setMode(boolean isMode) {this.isMode = isMode;}
 	
 	public void initForm() throws Exception {
-		List<Category> categorys = forumService.getCategories(ForumSessionUtils.getSystemProvider());
+		List<Category> categorys = forumService.getCategories();
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		for (Category category :categorys) {
 			list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId())) ;

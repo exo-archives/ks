@@ -29,11 +29,11 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -54,24 +54,34 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+		template = "app:/templates/forum/webui/popup/UICategoryForm.gtmpl",
 		events = {
 			@EventConfig(listeners = UICategoryForm.SaveActionListener.class), 
 			@EventConfig(listeners = UICategoryForm.AddPrivateActionListener.class, phase=Phase.DECODE),
-			@EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase=Phase.DECODE)
+			@EventConfig(listeners = UICategoryForm.CancelActionListener.class, phase=Phase.DECODE),
+			@EventConfig(listeners = UICategoryForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
 )
 public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector{
-	private String categoryId = "";
-	public static final String CATEGORY_FORM = "category" ;
-
+	public static final String CATEGORY_DETAIL_TAB = "DetailTab"; 
+	public static final String CATEGORY_PERMISSION_TAB = "PermissionTab"; 
+	
 	public static final String FIELD_CATEGORYTITLE_INPUT = "CategoryTitle" ;
 	public static final String FIELD_CATEGORYORDER_INPUT = "CategoryOrder" ;
 	public static final String FIELD_DESCRIPTION_INPUT = "Description" ;
-	public static final String FIELD_MODERAROR_MULTIVALUE = "moderators" ;
 	public static final String FIELD_USERPRIVATE_MULTIVALUE = "UserPrivate" ;
 	
+	public static final String FIELD_MODERAROR_MULTIVALUE = "moderators" ;
+	public static final String FIELD_VIEWER_MULTIVALUE = "Viewer" ;
+	public static final String FIELD_POSTABLE_MULTIVALUE = "Postable" ;
+	public static final String FIELD_TOPICABLE_MULTIVALUE = "Topicable" ;
+	
+	private String categoryId = "";
+	private int id = 0 ;
 	public UICategoryForm() throws Exception {
+		UIFormInputWithActions detailTab = new UIFormInputWithActions(CATEGORY_DETAIL_TAB);
+		UIFormInputWithActions permissionTab = new UIFormInputWithActions(CATEGORY_PERMISSION_TAB);
+		
 		UIFormStringInput categoryTitle = new UIFormStringInput(FIELD_CATEGORYTITLE_INPUT, FIELD_CATEGORYTITLE_INPUT, null);
 		categoryTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput categoryOrder = new UIFormStringInput(FIELD_CATEGORYORDER_INPUT, FIELD_CATEGORYORDER_INPUT, "0");
@@ -79,15 +89,22 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null);
 
 		UIFormTextAreaInput userPrivate = new UIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE, FIELD_USERPRIVATE_MULTIVALUE, null);
-		UIFormTextAreaInput moderators = new UIFormTextAreaInput(FIELD_MODERAROR_MULTIVALUE, FIELD_MODERAROR_MULTIVALUE, null);
 		
-		UIFormInputWithActions uicategory = new UIFormInputWithActions(CATEGORY_FORM);
-		uicategory.addUIFormInput(categoryTitle);
-		uicategory.addUIFormInput(categoryOrder);
-		uicategory.addUIFormInput(userPrivate);
-		uicategory.addUIFormInput(moderators);
-		uicategory.addUIFormInput(description);
+		UIFormTextAreaInput moderators = new UIFormTextAreaInput(FIELD_MODERAROR_MULTIVALUE, FIELD_MODERAROR_MULTIVALUE, null);
+		UIFormTextAreaInput viewer = new UIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE, FIELD_VIEWER_MULTIVALUE, null) ;
+		UIFormTextAreaInput postable = new UIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE, FIELD_POSTABLE_MULTIVALUE, null);
+		UIFormTextAreaInput topicable = new UIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE, FIELD_TOPICABLE_MULTIVALUE, null);
+		
+		detailTab.addUIFormInput(categoryTitle);
+		detailTab.addUIFormInput(categoryOrder);
+		detailTab.addUIFormInput(userPrivate);
+		detailTab.addUIFormInput(description);
 
+		permissionTab.addUIFormInput(moderators);
+		permissionTab.addUIFormInput(topicable);
+		permissionTab.addUIFormInput(postable);
+		permissionTab.addUIFormInput(viewer);
+		
 		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
 		List<ActionData>actions = new ArrayList<ActionData>() ;
 		
@@ -102,23 +119,35 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			actions.add(ad) ;
 			++i;
 		}
-		uicategory.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
-		actions = new ArrayList<ActionData>() ;
-		i = 0;
-		for(String string : strings) {
-			ad = new ActionData() ;
-			ad.setActionListener("AddPrivate") ;
-			ad.setActionParameter(String.valueOf(i)+","+FIELD_MODERAROR_MULTIVALUE) ;
-			ad.setCssIconClass(string + "Icon") ;
-			ad.setActionName(string);
-			actions.add(ad) ;
-			++i;
-		}
-		uicategory.setActionField(FIELD_MODERAROR_MULTIVALUE, actions);
+		detailTab.setActionField(FIELD_USERPRIVATE_MULTIVALUE, actions);
 		
-		addUIFormInput(uicategory) ;	
+		for (int j = 0; j < getChildIds().length; j++) {
+	    String field = getChildIds()[j];
+	    actions = new ArrayList<ActionData>() ;
+	    i = 0;
+	    for(String string : strings) {
+	    	ad = new ActionData() ;
+	    	ad.setActionListener("AddPrivate") ;
+	    	ad.setActionParameter(String.valueOf(i)+","+field) ;
+	    	ad.setCssIconClass(string + "Icon") ;
+	    	ad.setActionName(string);
+	    	actions.add(ad) ;
+	    	++i;
+	    }
+	    permissionTab.setActionField(field, actions);
+    }
+		
+		addUIFormInput(detailTab) ;	
+		addUIFormInput(permissionTab) ;	
 		this.setActions(new String[]{"Save","Cancel"}) ;
 	}
+	
+	@SuppressWarnings("unused")
+	private boolean getIsSelected(int id) {
+		if(this.id == id) return true ;
+		return false ;
+	}
+	private String [] getChildIds() {return new String[] {FIELD_MODERAROR_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE,FIELD_VIEWER_MULTIVALUE} ;}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
@@ -130,9 +159,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			getUIStringInput(FIELD_CATEGORYORDER_INPUT).setValue(Long.toString(category.getCategoryOrder())) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(ForumTransformHTML.unCodeHTML(category.getDescription())) ;
 			String userPrivate = ForumUtils.unSplitForForum(category.getUserPrivate());
-			getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(userPrivate) ;
 			String moderator = ForumUtils.unSplitForForum(category.getModerators());
+			String topicAble = ForumUtils.unSplitForForum(category.getCreateTopicRole());
+			String poster = ForumUtils.unSplitForForum(category.getPoster());
+			String viewer = ForumUtils.unSplitForForum(category.getViewer());
+			getUIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE).setValue(userPrivate) ;
 			getUIFormTextAreaInput(FIELD_MODERAROR_MULTIVALUE).setValue(moderator) ;
+			getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).setValue(topicAble) ;
+			getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).setValue(poster) ;
+			getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).setValue(viewer) ;
 		}
 	}
 
@@ -185,10 +220,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			moderator = ForumUtils.removeSpaceInString(moderator) ;
 			moderator = ForumUtils.removeStringResemble(moderator) ;
 			String []moderators = ForumUtils.splitForForum(moderator);
+			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(!ForumUtils.isEmpty(moderator)) {
 				String erroUser = ForumSessionUtils.checkValueUser(moderator) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					Object[] args = { uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -206,7 +241,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(!ForumUtils.isEmpty(userPrivate)) {
 				String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -214,6 +248,41 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				}
 			} else {userPrivates = new String[]{" "};}
 
+			UIFormInputWithActions catPermission = uiForm.getChildById(CATEGORY_PERMISSION_TAB);
+			String topicable = catPermission.getUIFormTextAreaInput(FIELD_TOPICABLE_MULTIVALUE).getValue() ; 
+			String postable = catPermission.getUIFormTextAreaInput(FIELD_POSTABLE_MULTIVALUE).getValue() ; 
+			String viewer = catPermission.getUIFormTextAreaInput(FIELD_VIEWER_MULTIVALUE).getValue() ;
+			
+			topicable = ForumUtils.removeSpaceInString(topicable) ;
+			postable = ForumUtils.removeSpaceInString(postable) ;
+			viewer = ForumUtils.removeSpaceInString(viewer) ;
+			
+			String erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+			erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+			if(!ForumUtils.isEmpty(erroUser)) {
+				Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			erroUser = ForumSessionUtils.checkValueUser(postable) ;
+			if(!ForumUtils.isEmpty(erroUser)) {
+				Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			erroUser = ForumSessionUtils.checkValueUser(viewer) ;
+			if(!ForumUtils.isEmpty(erroUser)) {
+				Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			
+			String []setTopicable = ForumUtils.splitForForum(topicable) ;
+			String []setPostable = ForumUtils.splitForForum(postable);
+			String []setViewer = ForumUtils.splitForForum(viewer) ;
 			
 			String userName = ForumSessionUtils.getCurrentUser();
 			Category cat = new Category();
@@ -226,27 +295,40 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModifiedDate(new Date()) ;
 			cat.setUserPrivate(userPrivates) ;
 			cat.setModerators(moderators) ;
+			cat.setCreateTopicRole(setTopicable);
+			cat.setPoster(setPostable);
+			cat.setViewer(setViewer);			
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
 				if(!ForumUtils.isEmpty(uiForm.categoryId)) {
 					cat.setId(uiForm.categoryId) ;
-					forumService.saveCategory(sProvider, cat, false);
+					forumService.saveCategory(cat, false);
 				} else {
-					forumService.saveCategory(sProvider, cat, true);
+					forumService.saveCategory(cat, true);
 				}
 			} catch (Exception e) {
-				sProvider.close();
-				throw e;
-			}finally {
-				sProvider.close();
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+		}
+	}
+	
+	static	public class SelectTabActionListener extends EventListener<UICategoryForm> {
+		public void execute(Event<UICategoryForm> event) throws Exception {
+			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			UICategoryForm uiForm = event.getSource();
+			uiForm.id = Integer.parseInt(id);
+			UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
+			if(uiForm.id == 1) {
+				popupWindow.setWindowSize(550, 440) ;
+			}else {
+				popupWindow.setWindowSize(550, 350) ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
 		}
 	}
 	
