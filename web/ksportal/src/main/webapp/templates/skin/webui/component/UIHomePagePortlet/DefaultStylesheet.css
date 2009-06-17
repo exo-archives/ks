@@ -541,6 +541,7 @@
 
 .UIHorizontalTabs .UITab .NormalNavigationTab a {
   color: #fff;
+  margin: 0px;
 }
 
 .UIHorizontalTabs .UITab .NormalNavigationTab .DropDownArrowIcon {
@@ -583,6 +584,7 @@
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab a {
   color: #f57a00;
+  margin: 0px;
 }
 
 .UIHorizontalTabs .UITab .HighlightNavigationTab .DropDownArrowIcon {
@@ -626,6 +628,7 @@
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab a {
   color: #f57a00;
+  margin: 0px;
 }
 
 .UIHorizontalTabs .UITab .SelectedNavigationTab .DropDownArrowIcon {
