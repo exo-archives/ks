@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -56,6 +58,13 @@ public class UIForumInfos extends UIContainer	{
 					String []listUser = forum.getCreateTopicRole() ;
 					if(listUser != null && listUser.length > 0)
 						isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+					if(isLock || listUser == null || listUser.length == 0 || listUser[0].equals(" ")){
+						ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+						listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopic");
+						if(listUser != null && listUser.length > 0 && !listUser[0].equals(" ")){
+							isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+						}
+					}
 				}
 			}
 			postRules.setLock(isLock) ;

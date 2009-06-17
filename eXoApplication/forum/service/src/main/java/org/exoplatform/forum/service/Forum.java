@@ -74,7 +74,13 @@ public class Forum {
 	 * Calculate the category id	base on the forum id
 	 * @return The category id
 	 */
-	public String getCategoryId(){return null;}
+	public String getCategoryId(){
+		if(path != null && path.length() > 0) {
+			String[] arr = path.split("/");
+			return arr[arr.length - 2];
+		}
+		return null;
+	}
 	
 	public String getOwner(){return owner;}
 	public void setOwner(String owner){this.owner = owner;}

@@ -326,7 +326,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(uiForm.id == 1) {
 				popupWindow.setWindowSize(550, 440) ;
 			}else {
-				popupWindow.setWindowSize(550, 350) ;
+				popupWindow.setWindowSize(550, 380) ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
 		}

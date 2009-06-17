@@ -251,6 +251,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getCategory(categoryId);
   }
 
+  public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
+  	return storage_.getPermissionTopicByCategory(categoryId, type);
+  }
+  
   public List<Category> getCategories(SessionProvider sProvider) throws Exception {
   	sProvider.close() ;
     return getCategories();

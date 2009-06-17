@@ -628,6 +628,22 @@ public class JCRDataStorage {
 			return null;
 		}finally{ sProvider.close() ;} 
 	}
+	
+	public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
+		String[] canCreated = new String[]{" "};
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node cateNode = getCategoryHome(sProvider).getNode(categoryId);
+			if (type.equals("createTopic") && cateNode.hasProperty("exo:createTopicRole"))
+				canCreated = ValuesToArray(cateNode.getProperty("exo:createTopicRole").getValues());
+			if (type.equals("viewer") && cateNode.hasProperty("exo:viewer"))
+				canCreated = ValuesToArray(cateNode.getProperty("exo:viewer").getValues());
+			if (type.equals("poster") && cateNode.hasProperty("exo:poster"))
+				canCreated = ValuesToArray(cateNode.getProperty("exo:poster").getValues());
+		} catch (Exception e) {
+		}finally{ sProvider.close() ;} 
+		return canCreated;
+  }
 
 	private Category getCategory(Node cateNode) throws Exception {
 		Category cat = new Category();
@@ -909,7 +925,6 @@ public class JCRDataStorage {
 	    list = removeAndAddNewInList(remov, addNew, list);
 	    if(list.isEmpty()) list.add(" ");
 	    topicNode.setProperty(property, getStringsInList(list));
-	    System.out.println("\n\n " + topicNode.getProperty("exo:name").getValue() + " : " + list.toString());
     }
 	}
 	
@@ -918,7 +933,7 @@ public class JCRDataStorage {
 			if(present.contains(string)) present.remove(string);
     }
 		for (String string : addNew) {
-			if(!present.contains(string)) present.add(string);
+			if(!present.contains(string) && string.trim().length() > 0) present.add(string);
 		}
 		return present;
 	}

@@ -45,7 +45,6 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -421,7 +420,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
 			editReason = ForumTransformHTML.enCodeHTML(editReason);
 			if(t > 0 && k != 0 && !checksms.equals("null")) {
-				ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+				ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration() ;
 				boolean isOffend = false ; 
 				boolean hasForumMod = false ;
 				if(!uiForm.isMod()) {
@@ -520,12 +519,18 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				if(!ForumUtils.isEmpty(canPost)) {
 					temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
 					temp = temp + "," + userName;
+					String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "poster");
+					if(arr != null && arr.length > 0 && !arr[0].equals(" "))
+						temp = temp + "," + ForumUtils.unSplitForForum(arr);
 				}
 				if(ForumUtils.isEmpty(temp)) temp = canPost;
 				String[]canPosts = ForumUtils.addStringToString(canPost, temp);
 				if(!ForumUtils.isEmpty(canView)) {
 					temp = ForumUtils.unSplitForForum(uiForm.forum.getViewer());
 					canView = canView + "," + temp;
+					String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "viewer");
+					if(arr != null && arr.length > 0 && !arr[0].equals(" "))
+						temp = temp + "," + ForumUtils.unSplitForForum(arr);
 				}
 				canView = ForumUtils.removeSpaceInString(canView) ;
 				String[]canViews = ForumUtils.addStringToString(canPost, canView);
@@ -533,18 +538,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setCanView(canViews);
 				topicNew.setCanPost(canPosts);
 				topicNew.setIsApproved(!hasForumMod) ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				if(!ForumUtils.isEmpty(uiForm.topicId)) {
 					topicNew.setId(uiForm.topicId);
 					topicNew.setEditReason(editReason) ;
 					try {
-						uiForm.forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
+						uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
 						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						topicDetail.setIsEditTopic(true) ;
-					} catch (PathNotFoundException e) {e.printStackTrace();
+					} catch (PathNotFoundException e) {
 						// hung.hoang add
-						sProvider.close();
 						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 						return ;						
@@ -559,16 +562,14 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							remoteAddr = request.getRemoteAddr();
 						}
 						topicNew.setRemoteAddr(remoteAddr);
-						uiForm.forumService.saveTopic(sProvider, uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+						uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 						if(userProfile.getIsAutoWatchMyTopics()) {
 							List<String> values = new ArrayList<String>();
 							values.add(userProfile.getEmail());
 							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
-							uiForm.forumService.addWatch(sProvider, 1, path, values, userName) ;
+							uiForm.forumService.addWatch(1, path, values, userName) ;
 						}
 					} catch (PathNotFoundException e) {
-						e.printStackTrace();
-						sProvider.close();
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 						categoryContainer.updateIsRender(true) ;

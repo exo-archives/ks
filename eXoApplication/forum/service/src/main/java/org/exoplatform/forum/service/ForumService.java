@@ -91,6 +91,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public Category getCategory(String categoryId) throws Exception;
 	
+	public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception;
 	/**
 	 * Save category. Check exists category, if not to create new else update exists category
 	 * 
