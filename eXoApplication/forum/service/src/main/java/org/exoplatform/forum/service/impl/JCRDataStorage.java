@@ -2696,7 +2696,7 @@ public class JCRDataStorage {
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
 					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2837,7 +2837,7 @@ public class JCRDataStorage {
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", owner);
 					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink()+"/"+post.getId()+ "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -2862,7 +2862,7 @@ public class JCRDataStorage {
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
 					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() +"/"+post.getId()+ "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailListForum, message);
@@ -2887,7 +2887,7 @@ public class JCRDataStorage {
 					content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
 					content = StringUtils.replace(content, "$POSTER", post.getOwner());
 					content = StringUtils.replace(content, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+					content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
 					
 					message.setBody(content);
 					sendEmailNotification(emailListCategory, message);
