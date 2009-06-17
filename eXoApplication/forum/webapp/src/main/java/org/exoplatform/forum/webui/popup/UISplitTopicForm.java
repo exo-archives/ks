@@ -173,7 +173,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						
 						forumService.saveTopic(sProvider, categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-						forumService.movePost(sProvider, posts, destTopicPath, true, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link);
+						forumService.movePost(sProvider, posts, destTopicPath, true, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link);
 					} catch (Exception e) {
 						sProvider.close();
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

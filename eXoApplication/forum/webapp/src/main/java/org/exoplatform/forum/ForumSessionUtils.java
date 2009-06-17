@@ -88,9 +88,8 @@ public class ForumSessionUtils {
 	
 	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
 		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-		SessionProvider sessionProvider = getSystemProvider();
 		try{
-			ForumAttachment attachment = forumService.getUserAvatar(userName, sessionProvider);
+			ForumAttachment attachment = forumService.getUserAvatar(userName);
 			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
 			if(url == null || url.trim().length() < 1){
 				ForumContact contact = getPersonalContact(userName) ;
@@ -99,8 +98,6 @@ public class ForumSessionUtils {
 				}
 			}
 		}catch (Exception e){
-		}finally {
-			sessionProvider.close();
 		}
 		return url;
 	}
@@ -131,7 +128,6 @@ public class ForumSessionUtils {
 		return groupIds;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static PageList getPageListUser() throws Exception {
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 		return organizationService.getUserHandler().getUserPageList(0);
@@ -166,7 +162,6 @@ public class ForumSessionUtils {
 		return false ;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static boolean hasGroupIdAndMembershipId(String str, OrganizationService organizationService) throws Exception {
 		if(str.indexOf(":") >= 0) { //membership
 			String[] array = str.split(":") ;
