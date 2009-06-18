@@ -967,11 +967,11 @@
 																					<%
 																					if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
 																					%>
-																						<div style="padding:3px;">$res</div>
+																						<div style="padding:3px; width: 70%; overflow: auto;">$res</div>
 																					<%
 																					} else {
 																					%>
-																						<div style="color:gray;padding:3px;">$res</div>
+																						<div style="color:gray;padding:3px; width: 70%; overflow: auto;">$res</div>
 																					<%} %>
 																					<div style="float:left; color:#721d95;">$date</div>
 																				</div>
