@@ -35,16 +35,11 @@
 											<div class="DecoratorMC">
 												<div class="TryNowIcon">
 													<div class="ForumIcon">
-														<div style="float:right; cursor:pointer;">
-															<a href="$forumuri" style="width:93px; height:80px; display:block;"><span></span></a>
-														</div>
-														<div class="ForumLabel" style="float:left">
+														<div class="ForumLabel">
 															<div class="Title"><a href="$forumuri">Forum</a></div>
 															<div class="Label">It's time to open discussion with your</div>
 															<div class="Label">portal audience!</div>
 														</div>
-														
-														<div style="clear:both;"><span></span></div>
 													</div>
 												</div>
 												<div style="margin:0px 0px 0px 90px;">
@@ -70,16 +65,11 @@
 											<div class="DecoratorMC">
 												<div class="TryNowIcon">
 													<div class="FAQIcon">
-														<div style="float:right; cursor:pointer;">
-															<a href="$faquri" style="width:93px; height:80px; display:block;"><span></span></a>
-														</div>
-														<div class="FAQLabel" style="float:left">
+														<div class="FAQLabel">
 															<div class="Title"><a href="$faquri">FAQ</a></div>
 															<div class="Label">Capture and manage key knowledge </div>
 															<div class="Label">efficiently in FAQ.</div>
 														</div>
-														
-														<div style="clear: both;"><span></span></div>
 													</div>
 												</div>
 												<div style="margin:0px 0px 0px 90px;">

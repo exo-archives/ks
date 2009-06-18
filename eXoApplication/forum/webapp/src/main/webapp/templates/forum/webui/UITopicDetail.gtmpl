@@ -16,6 +16,9 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/') ;
+	jsmanager.addJavascript('eXo.forum.webservice.SearchTagName.init();') ;
+	
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
@@ -273,7 +276,7 @@
 						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
-								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -301,6 +304,9 @@
 																<div class="UIRightPopupMenuContainer" style="padding:5px 0px;min-width:172px;">
 																	<div class="InputPage" style="float:left;">
 																		<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
+																		<div class="SearchTagName" id="searchTagName" inputId="<%=uicomponent.FIELD_ADD_TAG%>">
+																			<div class="TagNameItem Selected"></div>
+																		</div>
 																	</div>
 																	<div class="UIActionForum" style="float:left;">
 																		<div class="NormalButtom">
@@ -349,7 +355,7 @@
 						<%}%>
 							<div class="SeparatorLine"><span></span></div>
 							<div class="ContentAction">
-								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">									
+								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 											<div class="LeftOverButton" title="<%=_ctx.appRes(uiformId + ".title.SearchInThisThread");%>">
 												<div class="RightOverButton">

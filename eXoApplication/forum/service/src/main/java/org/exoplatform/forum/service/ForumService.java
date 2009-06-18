@@ -571,7 +571,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public Tag getTag(String tagId) throws Exception;
-
+	public List<String> getAllTagName(String strQuery) throws Exception ;
+	
 	/**
 	 * Gets the tags.
 	 * 

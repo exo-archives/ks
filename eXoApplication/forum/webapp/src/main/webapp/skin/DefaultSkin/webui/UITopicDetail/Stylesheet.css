@@ -1,23 +1,25 @@
-.UITopicDetail {}
+.UITopicDetail {
+	
+}
 
 .UITopicDetail .ButtomAndPageListContainer {
 	margin: 0px 0px 1px 0px;
 }
 
 .UITopicDetail .PostReplyIcon {
-	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px ;
+	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px;
 }
 
 .UITopicDetail .QuotePostIcon {
-	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px ;
+	background: url('icons/16x16/PostReplyIcon.gif') no-repeat left 2px;
 }
 
 .UITopicDetail .PrivatePostPostIcon {
-	background: url('icons/16x16/PrivatePostIcon.gif') no-repeat left 2px ;
+	background: url('icons/16x16/PrivatePostIcon.gif') no-repeat left 2px;
 }
 
 .UITopicDetail .PrintPostIcon {
-	background: url('icons/16x16/PrintPostIcon.gif') no-repeat left ;
+	background: url('icons/16x16/PrintPostIcon.gif') no-repeat left;
 }
 
 .UITopicDetail .IPIcon {
@@ -25,8 +27,9 @@
 	width: 16px;
 	height: 16px;
 	cursor: pointer;
-	background: url('icons/16x16/IPIcon.gif') no-repeat left ;
+	background: url('icons/16x16/IPIcon.gif') no-repeat left;
 }
+
 /********************************* PostsInThreadContainer ************************************/
 .UITopicDetail .PostsInThreadContainer {
 	margin: 0px;
@@ -35,6 +38,7 @@
 .UITopicDetail .ToolbarActionsContainer {
 	padding-right: 10px;
 }
+
 .UITopicDetail .PostsInThreadContainer .ForumToolbar {
 	border-bottom: solid 1px #b7b7b7;
 }
@@ -42,7 +46,8 @@
 .UITopicDetail .ForumToolbar .SearchIcon {
 	background-repeat: no-repeat;
 	background-position: left center;
-	width: auto; height: auto;
+	width: auto;
+	height: auto;
 }
 
 .UITopicDetail .ForumToolbar .ToolIcon {
@@ -65,13 +70,14 @@
 	margin: 0px 2px;
 	display: block;
 }
+
 /*************************************** ContentContainer ************************************/
 .UITopicDetail .PostContentContainer .PostContent {
-	min-height: 130px ;
+	min-height: 130px;
 }
 
-*html .UITopicDetail .PostContentContainer .PostContent {
-	height: 130px ;
+* html .UITopicDetail .PostContentContainer .PostContent {
+	height: 130px;
 }
 
 .UITopicDetail .PostContentContainer .Signature {
@@ -81,7 +87,7 @@
 .UITopicDetail .TablePost {
 	border-collapse: separate;
 	border: 1px solid #c4c4c4;
-	table-layout:fixed;
+	table-layout: fixed;
 }
 
 .UITopicDetail .MemberContainer {
@@ -92,10 +98,10 @@
 
 .UITopicDetail .MemberContent {
 	padding: 10px 0px 0px 15px;
-}	
+}
 
 .UITopicDetail .MemberContent .State {
-	float: left;	
+	float: left;
 	width: 16px;
 	height: 20px;
 	cursor: pointer;
@@ -106,13 +112,15 @@
 }
 
 .UITopicDetail .MemberContent .BusyIcon {
-	background: url('../skinIcons/16x16/icons/BusyIcon.gif') no-repeat center;
+	background: url('../skinIcons/16x16/icons/BusyIcon.gif') no-repeat
+		center;
 }
 
 .UITopicDetail .MemberContent .Name {
 	float: left;
 	color: #135bbe;
-	font-size: 14px; font-weight: bold;
+	font-size: 14px;
+	font-weight: bold;
 	line-height: 20px;
 	padding: 0px 5px;
 }
@@ -120,7 +128,8 @@
 .UITopicDetail .MemberContent .Action {
 	background: url('icons/16x16/DropDownIcon.gif') no-repeat center 4px;
 	float: left;
-	width: 16px; height: 20px;
+	width: 16px;
+	height: 20px;
 	cursor: pointer;
 }
 
@@ -155,7 +164,8 @@
 }
 
 .UITopicDetail .PostViewContainer .PostViewIcon {
-	font-weight: bold; font-size: 12px;
+	font-weight: bold;
+	font-size: 12px;
 	font-family: arial;
 	line-height: 20px;
 	padding-left: 20px;
@@ -171,15 +181,18 @@
 }
 
 .UITopicDetail .PostViewContainer .PostContent table {
-	border-collapse:separate;
+	border-collapse: separate;
 }
 
 .UITopicDetail .PostViewContainer a {
 	color: blue;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle {
-	background: #e7e7e7 url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif') no-repeat 3px center;
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentTitle
+	{
+	background: #e7e7e7
+		url('/forum/skin/DefaultSkin/webui/skinIcons/16x16/icons/AttachmentIcon.gif')
+		no-repeat 3px center;
 	padding-left: 20px;
 	line-height: 25px;
 	font-weight: bold;
@@ -202,15 +215,16 @@
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentIcon {
 	float: left;
-	height: 20px; 
+	height: 20px;
 	width: 20px;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel {
+.UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentLabel
+	{
 	color: #1555b5;
 	line-height: 20px;
 	font-weight: bold;
-	float:left;
+	float: left;
 }
 
 .UITopicDetail .PostViewContainer .AttachmentContainer .AttachmentInfo {
@@ -230,11 +244,13 @@
 	cursor: pointer;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MaxView {
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MaxView
+	{
 	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
 }
 
-.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MiniView {
+.UITopicDetail .PostViewContainer .AttachmentContainer .Action .MiniView
+	{
 	background: url('icons/16x16/ViewIcon.gif') no-repeat left center;
 }
 
@@ -264,51 +280,57 @@
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer {
-	border: solid 1px #e1e1e1 ;
-	background: #f4f4f4 ;
+	border: solid 1px #e1e1e1;
+	background: #f4f4f4;
 	padding-top: 10px;
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer .RatingInfoContainer {
-	border: solid 1px #e1e1e1 ;
+	border: solid 1px #e1e1e1;
 	width: 130px;
 	margin: auto;
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer .OptionsContainer {
-	border: solid 1px #ffffff ;
+	border: solid 1px #ffffff;
 	padding-left: 7px;
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer .RatedVote {
-	float: left ;
-	background: url('../skinIcons/16x16/icons/SmallGreyStar.gif') no-repeat center;
-	height: 22px;	width: 22px;
+	float: left;
+	background: url('../skinIcons/16x16/icons/SmallGreyStar.gif') no-repeat
+		center;
+	height: 22px;
+	width: 22px;
 	cursor: pointer;
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer .OverVote {
-	float: left ;
-	background: url('../skinIcons/16x16/icons/SmallYellowStar.gif') no-repeat center;
-	height: 22px;	width: 22px;
+	float: left;
+	background: url('../skinIcons/16x16/icons/SmallYellowStar.gif')
+		no-repeat center;
+	height: 22px;
+	width: 22px;
 	cursor: pointer;
 }
 
 .UIForumPortlet .UIRatingForm .VoteFormContainer .NormalVote {
-	float: left ;
-	background: url('../skinIcons/16x16/icons/SmallGreyStar.gif') no-repeat center;
-	height: 22px;	width: 22px;
+	float: left;
+	background: url('../skinIcons/16x16/icons/SmallGreyStar.gif') no-repeat
+		center;
+	height: 22px;
+	width: 22px;
 	cursor: pointer;
 }
 
 .UIForumPortlet .ContentNotPost {
 	padding: 20px;
-	border: solid 1px #b7b7b7 ;
-	border-top: none ;
+	border: solid 1px #b7b7b7;
+	border-top: none;
 }
 
 .UITopicDetail .EmptyContent {
-	border: 1px outset ;
+	border: 1px outset;
 	line-height: 30px;
 	margin-bottom: 6px;
 	text-align: center;
@@ -318,7 +340,6 @@
 /*----------------------ForumQuickReply-----------------------*/
 .UITopicDetail .ActionContainer {
 	width: 100%;
-	
 }
 
 .UITopicDetail .ForumQuickReply {
@@ -345,3 +366,37 @@
 	height: 25px;
 	padding: 10px 0px 0px 0px;
 }
+
+.SearchTagName {
+	position: absolute;
+	visibility: hidden;
+	border: solid 1px #b7b7b7;
+	background: white;
+	width: 98px;
+	overflow: hidden; 
+	padding : 1px 0px 4px 0px;
+}
+
+.SearchTagName .TagNameItem {
+	padding: 0px 2px 0px 4px;
+}
+
+.SearchTagName .Selected {
+	background: #3366CC;
+	color: white;
+}
+
+.SearchTagName .OverItem {
+	background: #c1e7fa;
+	color: black;
+}
+
+
+
+
+
+
+
+
+
+

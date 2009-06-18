@@ -2687,6 +2687,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 					}
+					String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
 					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
 					Date createdDate = topic.getCreatedDate();
@@ -2696,7 +2697,7 @@ public class JCRDataStorage {
 					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 					content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
 					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "\">click here</a><br/>");
+					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "\">click here</a><br/>");
 					
 					message.setBody(content_);
 					sendEmailNotification(emailList, message);
@@ -3397,6 +3398,27 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 	
+	public List<String> getAllTagName(String keyValue) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<String> tagNames = new ArrayList<String>();
+		try {
+			Node tagHome = getTagHome(sProvider);
+			QueryManager qm = tagHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root" + tagHome.getPath() + "//element(*,exo:forumTag)[jcr:contains(@exo:name, '").append(keyValue).append("*')]");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();			
+			while (iter.hasNext()) {
+				try {
+					tagNames.add(((Node)iter.nextNode()).getProperty("exo:name").getString());
+				}catch(Exception e) {}				
+			}
+			return tagNames;
+		}catch(Exception e) {
+			return tagNames;
+		}finally { sProvider.close() ;}
+  }
+	
 	public List<Tag> getAllTags() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Tag> tags = new ArrayList<Tag>();
@@ -3416,7 +3438,6 @@ public class JCRDataStorage {
 		}catch(Exception e) {
 			return tags;
 		}finally { sProvider.close() ;}
-		
 	}
 
 	private Tag getTagNode(Node tagNode) throws Exception {
