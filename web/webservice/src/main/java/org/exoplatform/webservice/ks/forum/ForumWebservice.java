@@ -103,23 +103,21 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/filterTagNameForum/{strTagName}/")
+  @URITemplate("/ks/forum/filterTagNameForum/{userAndTopicId}/{strTagName}/")
   @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response filterTagNameForum(@URIParam("strTagName") String str) throws Exception {
+  public Response filterTagNameForum(@URIParam("strTagName") String str, @URIParam("userAndTopicId") String userAndTopicId) throws Exception {
   	CacheControl cacheControl = new CacheControl();
   	cacheControl.setNoCache(true);
   	cacheControl.setNoStore(true);
   	ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   	if(str.equals(" ")){
   		ipsToJson.clear() ;
-  	} else if(!str.equals(strQuery)){
+  	} else {
   		ipsToJson.clear() ;
-  		System.out.println("\n\n key: " + str);
-  		List<String> banIps = forumService.getAllTagName(str);
+  		List<String> banIps = forumService.getAllTagName(str, userAndTopicId);
   		for(String ip : banIps) {
   			if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
   		}
-  		strQuery = str ;
   	}    
   	return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }

@@ -55,11 +55,13 @@ function SearchTagName() {
 SearchTagName.prototype.init = function(userName) {
 	var DOMUtil = eXo.core.DOMUtil;
 	this.parentNode = document.getElementById('searchTagName');
+	if(!this.parentNode) return;
 	var searchInputId =  this.parentNode.getAttribute("inputId");
 	this.searchTagNameNode = document.getElementById(searchInputId);
 	if (!this.searchTagNameNode) {
 		return;
 	}
+	this.searchTagNameNode.value = "";
   this.searchTagNameNode.onkeydown = this.searchIpBanWrapper;
 };
 
@@ -68,6 +70,7 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 	if(key == 13){
 		eXo.forum.webservice.SearchTagName.searchTagNameNode.focus();
 		eXo.forum.webservice.SearchTagName.parentNode.style.visibility = "hidden";
+		eXo.forum.webservice.SearchTagName.searchTagName(' ');
 		return;
 	}
 	if(key == 38 || key == 40){
@@ -95,7 +98,7 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 				eXo.forum.webservice.SearchTagName.setValueInput(items[0]);
 			}
 		}
-	}else {
+	}else if(key > 40 || key == 8) {
 		window.setTimeout(eXo.forum.webservice.SearchTagName.searchIpBanTimeout, 50);
 	}
 };
@@ -103,9 +106,11 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 SearchTagName.prototype.setValueInput = function(elm) {
 	elm.className = "TagNameItem Selected";
 	var str = String(this.searchTagNameNode.value);
-	str = str.substring(0, str.lastIndexOf(' '))
-	if(str.length == 0) str = elm.innerHTML ;
-	else str = str + " " + elm.innerHTML;
+	str = str.substring(0, str.lastIndexOf(' '));
+	var value = String(elm.innerHTML);
+	value = value.substring(0, value.indexOf(' '));
+	if(str.length == 0) str = value ;
+	else str = str + " " + value;
 	this.searchTagNameNode.value = str;
 };
 
@@ -118,11 +123,14 @@ SearchTagName.prototype.searchTagName = function(keyword) {
 	keyword =  String(keyword);
 	var strs = keyword.split(" ");
 	if(strs.length >= 1)keyword = strs[strs.length-1];
-	keyword = keyword || 'all';
-	var url = '/portal/rest/ks/forum/filterTagNameForum/' + keyword + '/';
-	this.url_ = url;
-  var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
-  this.ajaxWrapper(handler, url, 'GET');
+	keyword = keyword || ' ';
+	var userAndTopicId = this.parentNode.getAttribute("userAndTopicId");
+	if(userAndTopicId){
+		var url = '/portal/rest/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
+		this.url_ = url;
+	  var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
+	  this.ajaxWrapper(handler, url, 'GET');
+	}
 }
 
 SearchTagName.prototype._ajaxUpdate = function(ajaxHandler, state, requestObject, action) {
@@ -180,6 +188,7 @@ SearchTagName.prototype.buildItemNode = function(ip) {
 	var itemNode = document.createElement('div');
 	itemNode.className = 'TagNameItem';
 	itemNode.innerHTML = ip;
+	ip = ip.substring(0, ip.indexOf(' '));
 	this.searchTagNameNode;
 	itemNode.onclick = function() {
 		var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value);
@@ -189,12 +198,21 @@ SearchTagName.prototype.buildItemNode = function(ip) {
 		eXo.forum.webservice.SearchTagName.searchTagNameNode.value = str;
 		eXo.forum.webservice.SearchTagName.searchTagNameNode.focus();
 		eXo.forum.webservice.SearchTagName.parentNode.style.visibility = "hidden";
+		eXo.forum.webservice.SearchTagName.searchTagName(' ');
 	}
 	itemNode.onmouseover =  function() {
-		this.className = 'TagNameItem OverItem';
+		if(this.className === 'TagNameItem'){
+			this.className = 'TagNameItem OverItem';
+		} else {
+			this.className = 'TagNameItem OverItem Slect';
+		}
   }
 	itemNode.onmouseout =  function() {
-		this.className = 'TagNameItem';
+		if(this.className === 'TagNameItem OverItem'){
+			this.className = 'TagNameItem';
+		} else {
+			this.className = 'TagNameItem Selected';
+		}
 	}
 	return itemNode;
 };

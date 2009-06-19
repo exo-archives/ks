@@ -3375,6 +3375,8 @@ public class JCRDataStorage {
 					userTags.remove(userName);
 					tag.setUserTag(userTags.toArray(new String[]{}));
 					Node tagNode = getTagHome(sProvider).getNode(tagId);
+					long count = tagNode.getProperty("exo:useCount").getLong();
+					if(count > 1)tagNode.setProperty("exo:useCount", count - 1);
 					tagNode.setProperty("exo:userTag", userTags.toArray(new String[]{}));
 					tagNode.save();
 				}
@@ -3398,19 +3400,54 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 	
-	public List<String> getAllTagName(String keyValue) throws Exception {
+	public List<String> getAllTagName(String keyValue, String userAndTopicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> tagNames = new ArrayList<String>();
 		try {
 			Node tagHome = getTagHome(sProvider);
+			Node categoryHome = getCategoryHome(sProvider);
 			QueryManager qm = tagHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root" + tagHome.getPath() + "//element(*,exo:forumTag)[jcr:contains(@exo:name, '").append(keyValue).append("*')]");
+			StringBuffer queryString = new StringBuffer();
+			int t = userAndTopicId.indexOf(",");
+			String userId = userAndTopicId.substring(0, t);
+			String topicId = userAndTopicId.substring(t+1);
+			queryString.append("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:topic)[exo:id='").append(topicId).append("']");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();			
+			NodeIterator iter = result.getNodes();
+			StringBuilder builder = new StringBuilder();
+			if(iter.getSize() > 0){
+				Node node = (Node)iter.nextNode();
+				if(node.hasProperty("exo:tagId")){
+					t = 0;
+					for (String string : ValuesToList(node.getProperty("exo:tagId").getValues())) {
+						String[]temp = string.split(":");
+				    if(temp.length == 2 && temp[0].equals(userId)) {
+				    	if(t == 0)builder.append("@exo:id != '").append(temp[1]).append("'");
+				    	else builder.append(" and @exo:id != '").append(temp[1]).append("'");
+				    	t = 1;
+				    }
+          }
+				}
+			}
+			
+			queryString = new StringBuffer();
+			queryString.append("/jcr:root").append(tagHome.getPath()).append("//element(*,exo:forumTag)[(jcr:contains(@exo:name, '").append(keyValue).append("*'))");
+			if(builder.length() > 0){
+				queryString.append(" and (").append(builder).append(")");
+			}
+			queryString.append("]order by @exo:useCount descending, @exo:name ascending ");
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			String str = "";
 			while (iter.hasNext()) {
 				try {
-					tagNames.add(((Node)iter.nextNode()).getProperty("exo:name").getString());
+					Node node = (Node)iter.nextNode();
+					str = node.getProperty("exo:name").getString();
+					str = str + "  <font color=\"Salmon\">(" + node.getProperty("exo:useCount").getString() + ")</font>";
+					tagNames.add(str);
+					if(tagNames.size() == 10) break;
 				}catch(Exception e) {}				
 			}
 			return tagNames;
@@ -3445,6 +3482,7 @@ public class JCRDataStorage {
 			newTag.setId(tagNode.getName());
 			newTag.setUserTag(ValuesToArray(tagNode.getProperty("exo:userTag").getValues()));
 			newTag.setName(tagNode.getProperty("exo:name").getString());
+			newTag.setUseCount(tagNode.getProperty("exo:useCount").getLong());
 		return newTag;
 	}
 
@@ -3508,12 +3546,15 @@ public class JCRDataStorage {
 					userTags.add(newTag.getUserTag()[0]);
 					newTagNode.setProperty("exo:userTag", userTags.toArray(new String[]{}));
 				}
+				long count = newTagNode.getProperty("exo:useCount").getLong();
+				newTagNode.setProperty("exo:useCount", count + 1);
       } catch (Exception e) {
       	String id = Utils.TAG + newTag.getName();
       	newTagNode = tagHome.addNode(id, "exo:forumTag");
       	newTagNode.setProperty("exo:id", id);
       	newTagNode.setProperty("exo:userTag", newTag.getUserTag());
       	newTagNode.setProperty("exo:name", newTag.getName());
+      	newTagNode.setProperty("exo:useCount", 1);
       }
 			if(tagHome.isNew()) {
 				tagHome.getSession().save();

@@ -30,6 +30,7 @@ public class Tag {
 	private String id ;
 	private String name ;
 	private String[] userTag ;
+	private long useCount = 0;
 	public Tag() {
 		id = Utils.TAG + IdGenerator.generate() ;
 	}
@@ -45,5 +46,13 @@ public class Tag {
   }
   public void setUserTag(String[] userTag) {
   	this.userTag = userTag;
+  }
+
+	public long getUseCount() {
+  	return useCount;
+  }
+
+	public void setUseCount(long useCount) {
+  	this.useCount = useCount;
   }
 }
