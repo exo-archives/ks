@@ -726,7 +726,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception;
-
+	
+	public String getScreenName(String userName) throws Exception ;
 	/**
 	 * Gets the advanced search.
 	 * 
@@ -767,7 +768,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void userLogin(String userId, String userName) throws Exception;
+	public void userLogin(String userId) throws Exception;
 
 	/**
 	 * User logout.

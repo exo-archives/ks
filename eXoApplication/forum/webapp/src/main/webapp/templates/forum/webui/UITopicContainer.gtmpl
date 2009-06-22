@@ -468,8 +468,11 @@
 									}
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
+									topicBy = uicomponent.getScreenName(topicBy);
 									String postNewBy = topic.getLastPostBy() ;
-									
+									if(!ForumUtils.isEmpty(postNewBy)) {
+										postNewBy = uicomponent.getScreenName(postNewBy);
+									}
 									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
 									String title = "TitleNorman";
 									String newPost = "NoNew"; 

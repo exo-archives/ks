@@ -39,9 +39,7 @@ public class AuthenticationLoginListener extends Listener<ConversationRegistry, 
 	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-  	OrganizationService oservice = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
   	String userId = event.getData().getIdentity().getUserId() ;
-  	String userFullName = oservice.getUserHandler().findUserByName(userId).getFullName() ; 
-  	fservice.userLogin(userId, userFullName) ;
+  	fservice.userLogin(userId) ;
 	}	
 }

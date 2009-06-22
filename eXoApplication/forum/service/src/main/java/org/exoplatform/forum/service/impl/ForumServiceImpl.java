@@ -74,7 +74,7 @@ import org.picocontainer.Startable;
  */
 public class ForumServiceImpl implements ForumService, Startable{
   private JCRDataStorage storage_ ;
-  private final Map<String, String> onlineUsers_ = new ConcurrentHashMap<String, String>() ;
+  private final List<String> onlineUserList_ = new ArrayList<String>();
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
@@ -873,9 +873,11 @@ public class ForumServiceImpl implements ForumService, Startable{
     return storage_.getJobWattingForModeratorByUser(userId);
   }
 
-  public void userLogin(String userId, String userName) throws Exception {
+  public void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
-    onlineUsers_.put(userId, userName) ;
+    if(!onlineUserList_.contains(userId)) {
+    	onlineUserList_.add(userId);
+    }
     SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
     try {
     	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
@@ -885,13 +887,13 @@ public class ForumServiceImpl implements ForumService, Startable{
     	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
     	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
   		if(array.length > 1) {
-    		int ol = onlineUsers_.size() ;
+    		int ol = onlineUserList_.size() ;
     		if(ol > Integer.parseInt(array[0].trim())) {
-    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + GregorianCalendar.getInstance().getTime().toString()) ;
+    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
       		statisticNode.save() ;
     		}
     	}else {
-    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + GregorianCalendar.getInstance().getTime().toString()) ;
+    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
     		statisticNode.save() ;
     	}    	
     }catch(Exception e) {
@@ -900,12 +902,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public void userLogout(String userId) throws Exception {
-    onlineUsers_.remove(userId) ;		
+  	if(onlineUserList_.contains(userId)){
+  		onlineUserList_.remove(userId) ;
+  	}
   }
 
   public boolean isOnline(String userId) throws Exception {
     try{
-      if(onlineUsers_.containsKey(userId) &&  onlineUsers_.get(userId) != null) return true ;			
+      if(onlineUserList_.contains(userId)) return true ;			
     }	catch (Exception e) {
       e.printStackTrace() ;
     }
@@ -913,12 +917,7 @@ public class ForumServiceImpl implements ForumService, Startable{
   }
 
   public List<String> getOnlineUsers() throws Exception {
-    List<String> users = new ArrayList<String>() ;
-    Set<String> keys = onlineUsers_.keySet() ;
-    for(String key : keys) {
-      users.add(onlineUsers_.get(key)) ;
-    }
-    return users ;
+    return onlineUserList_ ;
   }
 
   public String getLastLogin() throws Exception {
@@ -1015,6 +1014,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   
   public UserProfile getQuickProfile(String userName) throws Exception {
   	return storage_.getQuickProfile(userName) ;
+  }
+  
+  public String getScreenName(String userName) throws Exception {
+  	return storage_.getScreenName(userName);
   }
   
   public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {

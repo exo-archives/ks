@@ -404,7 +404,8 @@ public class ForumUtils {
 		return list;
 	}
 	
-	public static int getLimitUploadSize(){		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
+	public static int getLimitUploadSize(){		
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences();
 		int limitMB ;
 		try {

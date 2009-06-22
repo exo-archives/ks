@@ -299,6 +299,7 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 								topicNewPostTitle = topicNewPost.getTopicName();
 								lastPostBy = topicNewPost.getLastPostBy();
+								lastPostBy = uicomponent.getScreenName(lastPostBy);
 								date.setTime(topicNewPost.getLastPostDate().getTime() - setTime);
 								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;

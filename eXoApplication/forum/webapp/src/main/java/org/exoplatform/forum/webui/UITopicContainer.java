@@ -210,6 +210,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     }
 	}
 	
+	@SuppressWarnings("unused")
+  private String getScreenName(String userName) throws Exception {
+		return forumService.getScreenName(userName);
+	}
+	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {

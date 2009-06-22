@@ -747,7 +747,7 @@ public class JCRDataStorage {
 				catNode.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			throw e;
 		}finally { sProvider.close() ;}
 	}
 	
@@ -3384,7 +3384,12 @@ public class JCRDataStorage {
 				Node tagHomNode = getTagHome(sProvider);
 				tagHomNode.getNode(tagId).remove();
 				tagHomNode.save();
-			} 
+			} else if(iter.getSize() > 1) {
+				Node tagNode = getTagHome(sProvider).getNode(tagId);
+				long count = tagNode.getProperty("exo:useCount").getLong();
+				if(count > 1)tagNode.setProperty("exo:useCount", count - 1);
+				tagNode.save();
+			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		} finally { sProvider.close() ;}
@@ -3657,6 +3662,22 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}		
 		return userProfile ;
 	}
+	
+	public String getScreenName(String userName) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		String screenName = userName;
+		try {
+			Node userProfileHome = getUserProfileHome(sProvider);
+			screenName = (userProfileHome.getNode(userName)).getProperty("exo:screenName").getString() ;
+			if(screenName == null || screenName.trim().length() <= 0) {
+				screenName = userName;
+			}
+		} catch (Exception e) {
+		} finally {
+			sProvider.close();
+		}
+	  return screenName;
+  }
 	
 	private boolean isBanIp(String ip) throws Exception {
 		List<String> banList = getBanList() ;

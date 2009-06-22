@@ -130,6 +130,10 @@ public class UICategory extends UIForm	{
 		return userProfile.getLastPostIdReadOfForum(forumId);
 	}
   
+  private String getScreenName(String userName) throws Exception {
+		return forumService.getScreenName(userName);
+	}
+	
 	public void update(Category category, List<Forum> forums) throws Exception {
 		this.category = category ;
 		if(forums == null) {
@@ -149,20 +153,16 @@ public class UICategory extends UIForm	{
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				this.category = forumService.getCategory(sProvider, this.categoryId);
+				this.category = forumService.getCategory(this.categoryId);
 			}catch (Exception e) {
 				e.printStackTrace();
-			}finally {
-				sProvider.close();
 			}
 			this.isEditCategory = true ;
 		}
 		return this.category ;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean isShowForum(String id) {
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
@@ -173,18 +173,14 @@ public class UICategory extends UIForm	{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private List<Forum> getForumList() throws Exception {
+  private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				this.forums = forumService.getForums(sProvider, this.categoryId, strQuery);
+				this.forums = forumService.getForums(this.categoryId, strQuery);
 			}catch (Exception e) {
 				e.printStackTrace();
-			}finally {
-				sProvider.close();
 			}
 			this.isEditForum = false ;
 			this.getAncestorOfType(UICategoryContainer.class).getChild(UICategories.class).setIsgetForumList(true) ;
@@ -210,7 +206,6 @@ public class UICategory extends UIForm	{
 		this.isEditForum = isEdit ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Forum getForum(String forumId) throws Exception {
 		for(Forum forum : this.forums) {
 			if(forum.getId().equals(forumId)) return forum;
@@ -218,17 +213,13 @@ public class UICategory extends UIForm	{
 		return null ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		Topic topic;
 		try {
-			topic = forumService.getTopicByPath(ForumSessionUtils.getSystemProvider(), topicPath, true) ;
+			topic = forumService.getTopicByPath(topicPath, true) ;
 		}catch (Exception e) {
 			topic = null;
 			e.printStackTrace();
-		}finally {
-			sProvider.close();
 		}
 		if(topic != null) {
 			String topicId = topic.getId() ;
@@ -269,11 +260,9 @@ public class UICategory extends UIForm	{
 			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			categoryContainer.updateIsRender(true) ;
 			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
-				uiCategory.forumService.removeCategory(sProvider, uiCategory.categoryId) ;
-			} finally {
-				sProvider.close();
+				uiCategory.forumService.removeCategory(uiCategory.categoryId) ;
+			} catch (Exception e) {
 			}
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
@@ -348,16 +337,14 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					for (Forum forum : forums) {
 						if(forum.getIsLock()) continue ;
 						forum.setIsLock(true) ;
-						uiCategory.forumService.modifyForum(sProvider, forum, 2);
+						uiCategory.forumService.modifyForum(forum, 2);
 					}
 					uiCategory.isEditForum = true ;
-				} finally {
-					sProvider.close();
+				} catch (Exception e) {
 				}
 			} else {
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
@@ -381,16 +368,14 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					for (Forum forum : forums) {
 						if(!forum.getIsLock()) continue ;
 						forum.setIsLock(false) ;
-						uiCategory.forumService.modifyForum(sProvider, forum, 2);
+						uiCategory.forumService.modifyForum(forum, 2);
 					}
 					uiCategory.isEditForum = true ;
-				} finally {
-					sProvider.close();
+				} catch (Exception e) {
 				}
 			} else {
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
@@ -414,15 +399,13 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					for (Forum forum : forums) {
 						forum.setIsClosed(false) ;
-						uiCategory.forumService.modifyForum(sProvider, forum, 1);
+						uiCategory.forumService.modifyForum(forum, 1);
 					}
 					uiCategory.isEditForum = true ;
-				} finally {
-					sProvider.close();
+				}catch (Exception e) {
 				}
 			} 
 			if(forums.size() == 0) {
@@ -445,15 +428,13 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if(forums.size() > 0) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					for (Forum forum : forums) {
 						forum.setIsClosed(true) ;
-						uiCategory.forumService.modifyForum(sProvider, forum, 1);
+						uiCategory.forumService.modifyForum(forum, 1);
 					}
 					uiCategory.isEditForum = true ;
-				} finally {
-					sProvider.close();
+				} catch (Exception e) {
 				}
 			} 
 			if(forums.size() <= 0) {
@@ -504,15 +485,13 @@ public class UICategory extends UIForm	{
 				}
 			}
 			if((forums.size() > 0)) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					for (Forum forum : forums) {
-						uiCategory.forumService.removeForum(sProvider, uiCategory.categoryId, forum.getId()) ;
+						uiCategory.forumService.removeForum(uiCategory.categoryId, forum.getId()) ;
 					}
 					uiCategory.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setUpdateForumLinks() ;
 					uiCategory.isEditForum = true ;
-				} finally {
-					sProvider.close();
+				} catch (Exception e) {
 				}
 			} else {
 				Object[] args = { };
@@ -636,7 +615,7 @@ public class UICategory extends UIForm	{
 				UICategories categories = categoryContainer.getChild(UICategories.class);
 				categories.setIsRenderChild(true) ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				List<ForumSearch> list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type.toString(), path, uiCategory.userProfile.getUserId(),
+				List<ForumSearch> list = forumService.getQuickSearch(text, type.toString(), path, uiCategory.userProfile.getUserId(),
 																				forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				UIForumListSearch listSearchEvent = categories.getChild(UIForumListSearch.class) ;
 				listSearchEvent.setListSearchEvent(list) ;
@@ -673,12 +652,9 @@ public class UICategory extends UIForm	{
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topicId;
 				}
 				String userName = uiContainer.userProfile.getUserId() ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+					uiContainer.forumService.saveUserBookmark(userName, path, true) ;
 				}catch (Exception e) {
-				} finally {
-					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateUserProfileInfo() ;
@@ -690,12 +666,11 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory category = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			List<String> values = new ArrayList<String>();
 			String userName = category.userProfile.getUserId();
 			try {
 				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
-				category.forumService.addWatch(sProvider, 1, path, values, ForumSessionUtils.getCurrentUser()) ;
+				category.forumService.addWatch(1, path, values, ForumSessionUtils.getCurrentUser()) ;
 				category.isEditCategory = true;
 				Object[] args = { };
 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
@@ -708,8 +683,6 @@ public class UICategory extends UIForm	{
 				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			}finally {
-				sProvider.close();
 			}
 		}
 	}
@@ -782,11 +755,9 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiForm = event.getSource();
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String currentUser = ForumSessionUtils.getCurrentUser();
-			if(currentUser != null){
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-				uiForm.forumService.addWatch(sProvider, -1, cateId, null, currentUser);
-				sProvider.close();
+			String userId = uiForm.getUserProfile().getUserId();
+			if(!userId.equals(UserProfile.USER_GUEST)){
+				uiForm.forumService.addWatch(-1, cateId, null, userId);
 			}
 			String rssLink = uiForm.getRSSLink(cateId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

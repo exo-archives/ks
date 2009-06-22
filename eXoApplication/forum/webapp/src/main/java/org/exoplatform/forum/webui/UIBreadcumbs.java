@@ -238,7 +238,6 @@ public class UIBreadcumbs extends UIContainer {
 							id = path.split("/") ;
 						}
 						if(topic != null) {
-							System.out.println("\n\n topic: " + topic.getTopicName());
 							forumPortlet.updateIsRendered(ForumUtils.FORUM);
 							Forum forum = breadcums.forumService.getForum(id[0], id[1]) ;
 							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;

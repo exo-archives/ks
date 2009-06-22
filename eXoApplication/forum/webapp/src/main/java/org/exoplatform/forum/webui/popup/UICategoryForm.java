@@ -26,7 +26,11 @@ import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UIBreadcumbs;
+import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
+import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -309,6 +313,15 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					forumService.saveCategory(cat, true);
 				}
 			} catch (Exception e) {
+				Object[] args = { };
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
 			}
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;

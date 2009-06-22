@@ -24,11 +24,12 @@
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	String createdDate = "";
 	
-	if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
-	if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ; 
-	
+	fullName = uiform.getScreenName(userName);
+	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {
+		if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
+		if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ;
+	} 
 	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
-	
 	
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();

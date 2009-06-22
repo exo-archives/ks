@@ -103,6 +103,11 @@ public class UICategories extends UIContainer	{
 	}
 	
 	@SuppressWarnings("unused")
+  private String getScreenName(String userName) throws Exception {
+		return forumService.getScreenName(userName);
+	}
+	
+	@SuppressWarnings("unused")
   private UserProfile getUserProfile() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		useAjax = forumPortlet.isUseAjax();

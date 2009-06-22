@@ -111,9 +111,9 @@ public class TestForumService extends BaseForumTestCase{
 			}
     }
   	//	Add user login 
-  	forumService_.userLogin(USER_ROOT, USER_ROOT);
-  	forumService_.userLogin(USER_JOHN, USER_JOHN);
-  	forumService_.userLogin(USER_DEMO, USER_DEMO);
+  	forumService_.userLogin(USER_ROOT);
+  	forumService_.userLogin(USER_JOHN);
+  	forumService_.userLogin(USER_DEMO);
   	
   	//	Get all user online:
   	assertEquals("Get all user online", 3, forumService_.getOnlineUsers().size());

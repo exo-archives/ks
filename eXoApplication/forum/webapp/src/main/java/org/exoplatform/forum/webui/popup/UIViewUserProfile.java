@@ -76,6 +76,11 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return forumService.isOnline(userId) ;
 	}
 	
+	@SuppressWarnings("unused")
+  private String getScreenName(String userName) throws Exception {
+		return forumService.getScreenName(userName);
+	}
+	
 	public void setUserProfile(UserProfile userProfile) {
 		this.userProfile = userProfile ;
 	}

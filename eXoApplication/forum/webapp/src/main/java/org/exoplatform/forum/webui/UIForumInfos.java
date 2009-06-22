@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -71,7 +72,16 @@ public class UIForumInfos extends UIContainer	{
 			postRules.setUserProfile(this.userProfile) ;
 		}
 		UIForumModerator forumModerator = getChild(UIForumModerator.class);
-		forumModerator.setModeratorsForum(moderators);
+		if(forumPortlet.isShowModerators()) {
+			List<String> list = new ArrayList<String>();
+			if(!moderators.isEmpty() && !moderators.get(0).equals(" ")) {
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				for (String string : moderators) {
+			    list.add(forumService.getScreenName(string));
+		    }
+			}
+			forumModerator.setModeratorsForum(list);
+		}
 		forumModerator.setRendered(forumPortlet.isShowModerators());
 	}
 }

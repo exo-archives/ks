@@ -16,13 +16,17 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -46,11 +50,52 @@ public class UICategoryInfo extends UIContainer	{
 
 	@SuppressWarnings("unused")
 	private List<String> getUserOnline() throws Exception {
-		List<String> list = this.forumService.getOnlineUsers() ;
-		//this.mostUserOnline_ = list.size() ;
-		return	list;
+		List<String> list = new ArrayList<String>() ;
+		for (String string : this.forumService.getOnlineUsers()) {
+	    list.add(getScreenName(string));
+    }
+		return list;
 	}
 
+  private String getScreenName(String userName) throws Exception {
+		return forumService.getScreenName(userName);
+	}
+	
+	@SuppressWarnings("unused")
+  private String getMostUsersOnline(String s, String at) throws Exception {
+		if(ForumUtils.isEmpty(s)) return "";
+		try {
+	    String []strs = s.split(",");
+	    long l = Long.parseLong(strs[1].replace("at", "").trim());
+	    Calendar calendar = GregorianCalendar.getInstance();
+	    UserProfile userProfile = new UserProfile();
+	    String userId = ForumSessionUtils.getCurrentUser();
+	    try {
+	    	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+	    	userProfile = forumPortlet.getUserProfile();
+      } catch (Exception e) {
+      	userProfile = forumService.getDefaultUserProfile(userId, "");
+      }
+      double timeZone = userProfile.getTimeZone();
+      long zone = (long)(userProfile.getTimeZone()*3600000) ;
+      calendar.setTimeInMillis(l - zone);
+      StringBuilder builder = new StringBuilder();
+      
+      if(ForumUtils.isEmpty(at)) at = "at";
+      builder.append(strs[0]).append(", ").append(at).append(" ");
+      builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
+      if(userId == null || userId.length() == 0) {
+      	if(timeZone >= 0)
+      		builder.append(" GMT+").append(timeZone);
+      	else builder.append(" GMT").append(String.valueOf(timeZone));
+      }
+      s = builder.toString();
+    } catch (Exception e) {
+    	s = s.replace("at", at);
+    }
+		return s;
+	}
+	
 	public Calendar getInstanceTempCalendar() { 
 		Calendar	calendar = GregorianCalendar.getInstance() ;
 		calendar.setLenient(false) ;

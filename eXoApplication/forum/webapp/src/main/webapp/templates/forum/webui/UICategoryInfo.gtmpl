@@ -8,7 +8,9 @@
 	String posts = String.valueOf(forumStatistic.getPostCount());
 	String members = String.valueOf(forumStatistic.getMembersCount());
 	String newMember = forumStatistic.getNewMembers();
-	String mostUserOnline = forumStatistic.getMostUsersOnline();
+	newMember = uicomponent.getScreenName(newMember);
+	String at = _ctx.appRes("UICategoryInfo.label.at");
+	String mostUserOnline = uicomponent.getMostUsersOnline(forumStatistic.getMostUsersOnline(), at);
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar">
