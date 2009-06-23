@@ -1,0 +1,72 @@
+<div class="UIFAQListPortlet">
+	<div class="FAQListBar">
+		eXo FAQ List
+	</div>
+	<div class="FAQListContainer">
+		<div class="FAQListIcon">
+			eXo Questions
+		</div>
+		<ol>           
+          <li><a class="FAQList" href="#">What is eXo Platform announcing today with the eXo / JBoss partnership?</a> </li>
+          <li><a class="FAQList" href="#">What does this partnership with Red Hat mean for eXo?</a> </li>
+          <li><a class="FAQList" href="#">How can I restrict my search?</a> </li>
+          <li><a class="FAQList" href="#">What will be eXo Platform’s role with the new project? </a> </li>
+          <li><a class="FAQList" href="#">How does the eXo community benefit?</a> </li>
+        </ol>
+        <div class="FAQListIcon">
+			FAQ about the eXo
+		</div>
+		<ol>             
+          <li><a class="FAQList" href="#">What is eXo Platform announcing today with the eXo / JBoss partnership?</a> </li>
+          <li><a class="FAQList" href="#">What does this partnership with Red Hat mean for eXo?</a> </li>
+          <li><a class="FAQList" href="#">How can I restrict my search?</a> </li>
+          <li><a class="FAQList" href="#">What will be eXo Platform’s role with the new project? </a> </li>
+          <li><a class="FAQList" href="#">How does the eXo community benefit?</a> </li>
+        </ol>
+        <div style="margin-bottom: 20px;">
+			My question is not answered here.<a class="FAQList" href="#">Where can</a>|<a class="FAQList" href="#">send my question?</a>
+		</div>
+		<div class="FAQAnswerbar">
+			eXo Questions
+		</div>
+		<div class="FAQAnswerContainer">
+			<div class="FAQAnswerIcon">
+				What is eXo Platform announcing today with the eXo / JBoss partnership?
+			</div>
+			<div class="Answer">
+				<p class="TextStyle">
+					After more than six years in development, our eXo Portal project is merging with the JBoss Community Portal to create a new open source project. In addition, eXo Platform is contributing a new project, eXo JCR, to the JBoss Community. This is our implementation of the Java Content Repository spec (JSR-170). It is a key component in the new portal project and in eXo’s existing open source projects.
+				</p>
+			</div>
+			<div class="FAQAnswerIcon">
+				What does this partnership with Red Hat mean for eXo?
+			</div>
+			<div class="Answer">
+				<p class="TextStyle">
+					After more than six years in development, our eXo Portal project is merging with the JBoss Community Portal to create a new open source project. In addition, eXo Platform is contributing a new project, eXo JCR, to the JBoss Community. This is our implementation of the Java Content Repository spec (JSR-170). It is a key component in the new portal project and in eXo’s existing open source projects.
+				</p>
+			</div>
+		</div>
+		<div class="FAQAnswerbar">
+			FAQ about the eXo
+		</div>
+		<div class="FAQAnswerContainer"
+			<div class="FAQAnswerIcon">
+				What is eXo Platform announcing today with the eXo / JBoss partnership?
+			</div>
+			<div class="Answer">
+				<p class="TextStyle">
+					After more than six years in development, our eXo Portal project is merging with the JBoss Community Portal to create a new open source project. In addition, eXo Platform is contributing a new project, eXo JCR, to the JBoss Community. This is our implementation of the Java Content Repository spec (JSR-170). It is a key component in the new portal project and in eXo’s existing open source projects.
+				</p>
+			</div>
+			<div class="FAQAnswerIcon">
+				What does this partnership with Red Hat mean for eXo?
+			</div>
+			<div class="Answer">
+				<p class="TextStyle">
+					After more than six years in development, our eXo Portal project is merging with the JBoss Community Portal to create a new open source project. In addition, eXo Platform is contributing a new project, eXo JCR, to the JBoss Community. This is our implementation of the Java Content Repository spec (JSR-170). It is a key component in the new portal project and in eXo’s existing open source projects.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
