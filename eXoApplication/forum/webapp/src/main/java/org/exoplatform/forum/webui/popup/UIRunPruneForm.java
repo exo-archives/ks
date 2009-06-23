@@ -57,10 +57,10 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 		
   }
 	
-	public void setPruneSetting(PruneSetting pruneSetting) {
+	public void setPruneSetting(PruneSetting pruneSetting) throws Exception{
 		this.pruneSetting = pruneSetting ;
 		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		this.topicOld = forumService.getTotalTopicOld(pruneSetting.getInActiveDay(), this.pruneSetting.getForumPath());
+		this.topicOld = forumService.checkPrune(pruneSetting);
 	}
 	
 	public long getTopicOld() {
@@ -87,22 +87,18 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIRunPruneForm> event) throws Exception {
 			UIRunPruneForm uiform = event.getSource();
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			long date = uiform.pruneSetting.getInActiveDay();
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-			try {
-				List<Topic> listTopic = forumService.getAllTopicsOld(date, uiform.pruneSetting.getForumPath());
-				if(!listTopic.isEmpty()){
-					for (Topic topic : listTopic) {
-			      topic.setIsActive(false);
-		      }
-						forumService.modifyTopic(sProvider, listTopic, 6) ;
-						uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
-						uiform.pruneSetting.setActive(true);
-						forumService.savePruneSetting(uiform.pruneSetting);
-				}
-			} finally {
-				sProvider.close();
-			}
+			/*long date = uiform.pruneSetting.getInActiveDay();
+			List<Topic> listTopic = forumService.getAllTopicsOld(date, uiform.pruneSetting.getForumPath());
+			if(!listTopic.isEmpty()){
+				for (Topic topic : listTopic) {
+		      topic.setIsActive(false);
+	      }
+				forumService.modifyTopic(listTopic, 6) ;
+				uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
+				uiform.pruneSetting.setActive(true);
+				//forumService.savePruneSetting(uiform.pruneSetting);
+			}*/
+			forumService.runPrune(uiform.pruneSetting) ;
 			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;

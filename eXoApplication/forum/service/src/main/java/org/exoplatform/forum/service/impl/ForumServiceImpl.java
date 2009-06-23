@@ -21,11 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -129,6 +125,12 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}
   	try{
   		storage_.addRSSEventListenner();
+  	} catch (Exception e){
+  		e.printStackTrace();
+  	}
+  	// initialize auto prune schedules
+  	try{
+  		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
   		e.printStackTrace();
   	}
@@ -1255,7 +1257,19 @@ public class ForumServiceImpl implements ForumService, Startable{
 		sProvider.close() ;
 	  return getPruneSetting(forumPath);
   }
-
+	
+	public void runPrune(PruneSetting pSetting) throws Exception {
+		storage_.runPrune(pSetting) ;
+	}
+	
+	public void runPrune(String forumPath) throws Exception {
+		storage_.runPrune(forumPath) ;
+	}
+	
+	public long checkPrune(PruneSetting pSetting) throws Exception {
+		return storage_.checkPrune(pSetting) ;
+	}
+	
 	public JCRPageList getPageTopicByType(String type) throws Exception {
 	  return storage_.getPageTopicByType(type);
   }

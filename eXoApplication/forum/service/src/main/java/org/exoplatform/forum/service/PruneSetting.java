@@ -32,7 +32,7 @@ public class PruneSetting {
 	private String forumPath;
 	private String forumName;
 	private long inActiveDay = 0;	
-	private long jobDay = 0;
+	private long periodTime = 0;
 	private Date lastRunDate = null;
 	private boolean isActive = false ;
 	
@@ -80,12 +80,12 @@ public class PruneSetting {
   	this.inActiveDay = inActiveDay;
   }
 
-	public long getJobDay() {
-  	return jobDay;
+	public long getPeriodTime() {
+  	return periodTime;
   }
 
-	public void setJobDay(long jobDay) {
-  	this.jobDay = jobDay;
+	public void setPeriodTime(long time) {
+  	this.periodTime = time;
   }
 
 	public Date getLastRunDate() {

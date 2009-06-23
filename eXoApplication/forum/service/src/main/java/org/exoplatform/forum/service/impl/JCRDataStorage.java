@@ -94,6 +94,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -209,6 +210,22 @@ public class JCRDataStorage {
 		}finally{
 			sProvider.close() ;	
 		}
+	}
+	
+	protected void initAutoPruneSchedules() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node categoryHNode = getCategoryHome(sProvider);
+			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
+			StringBuilder pathQuery = new StringBuilder();
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) [@exo:isActive = 'true'] order by @exo:createdDate descending");
+			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			while (iter.hasNext()) {
+		    addOrRemoveSchedule(getPruneSetting(iter.nextNode())) ;
+	    }
+		}finally { sProvider.close() ;}
 	}
 	
 	public boolean isAdminRole(String userName) throws Exception {
@@ -5846,7 +5863,7 @@ public class JCRDataStorage {
 			NodeIterator iter = result.getNodes();
 			String tagName = "";
 			while (iter.hasNext()) {
-		    Node bbcNode = (Node) iter.next();
+		    Node bbcNode = iter.nextNode();
 		    tagName = bbcNode.getProperty("exo:tagName").getString();
 		    if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
 		    bbcodes.add(tagName);
@@ -5894,7 +5911,7 @@ public class JCRDataStorage {
 		pruneSetting.setCategoryName(prunNode.getParent().getParent().getProperty("exo:name").getString());
 		pruneSetting.setForumName(prunNode.getParent().getProperty("exo:name").getString());
 		pruneSetting.setInActiveDay(prunNode.getProperty("exo:inActiveDay").getLong());
-		pruneSetting.setJobDay(prunNode.getProperty("exo:jobDay").getLong());
+		pruneSetting.setPeriodTime(prunNode.getProperty("exo:periodTime").getLong());
 		if(prunNode.hasProperty("exo:lastRunDate"))
 			pruneSetting.setLastRunDate(prunNode.getProperty("exo:lastRunDate").getDate().getTime());
 		return pruneSetting;
@@ -5907,7 +5924,7 @@ public class JCRDataStorage {
 			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
 			NodeIterator iter = forumNode.getNodes();
 			while(iter.hasNext()){
-	      Node node = (Node) iter.next();
+	      Node node = iter.nextNode();
 	      if(node.isNodeType("exo:pruneSetting")){
 	      	pruneSetting = getPruneSetting(node);
 	      	break;
@@ -5924,12 +5941,12 @@ public class JCRDataStorage {
 			Node categoryHNode = getCategoryHome(sProvider);
 			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id descending");
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:createdDate descending");
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
 			while (iter.hasNext()) {
-		    Node prunNode = (Node) iter.next();
+		    Node prunNode = iter.nextNode();
 		    prunList.add(getPruneSetting(prunNode));
 	    }
 		}finally { sProvider.close() ;}
@@ -5949,19 +5966,88 @@ public class JCRDataStorage {
       	pruneNode.setProperty("exo:id", pruneSetting.getId());
       }
       pruneNode.setProperty("exo:inActiveDay", pruneSetting.getInActiveDay());
-      pruneNode.setProperty("exo:jobDay", pruneSetting.getJobDay());
+      pruneNode.setProperty("exo:periodTime", pruneSetting.getPeriodTime());
       pruneNode.setProperty("exo:isActive", pruneSetting.isActive());
       if(pruneSetting.getLastRunDate() != null) {
 	      Calendar calendar = Calendar.getInstance();
 	      calendar.setTime(pruneSetting.getLastRunDate()) ;
 	      pruneNode.setProperty("exo:lastRunDate", calendar);
       }
-      if (forumNode.isNew()) {
-	      forumNode.getSession().save();
-      } else {
-      	forumNode.save();
-      }
+      if (pruneNode.isNew())  forumNode.save();
+      else pruneNode.save();
+      addOrRemoveSchedule(pruneSetting) ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
 		}finally { sProvider.close() ;}
+	}
+	
+	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
+		Calendar cal = new GregorianCalendar();
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); //
+		//String name = String.valueOf(cal.getTime().getTime()) ;
+		Class clazz = Class.forName("org.exoplatform.forum.service.user.AutoPruneJob");
+		JobInfo info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
+		ExoContainer container = ExoContainerContext.getCurrentContainer();
+		JobSchedulerService schedulerService = 
+			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+		schedulerService.removeJob(info);
+		if(pSetting.isActive()) {
+			info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
+			info.setDescription(pSetting.getForumPath()) ;
+			schedulerService.addPeriodJob(info, periodInfo);
+			System.out.println("\n\n>>>>Activated " + info.getJobName());
+		}
+	}
+	
+	public void runPrune(String forumPath) throws Exception {
+		runPrune(getPruneSetting(forumPath)) ;
+	}
+	
+	public void runPrune(PruneSetting pSetting) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node forumHome = getForumHomeNode(sProvider) ;
+			Node forumNode = (Node)forumHome.getSession().getItem(pSetting.getForumPath()) ;
+			Calendar newDate = getGreenwichMeanTime();			
+			newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
+			QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			System.out.println("======> Forums found:" + iter.getSize());
+			while(iter.hasNext()){
+				Node topic = iter.nextNode() ;
+				topic.setProperty("exo:isActive", false) ;				
+			}
+			forumNode.save() ;
+		//update last run for prune setting
+			Node setting = forumNode.getNode(pSetting.getId()) ;			
+			setting.setProperty("exo:lastRunDate", getGreenwichMeanTime()) ;
+			setting.save() ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
+	}
+	
+	public long checkPrune(PruneSetting pSetting) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node forumHome = getForumHomeNode(sProvider) ;
+			Node forumNode = (Node)forumHome.getSession().getItem(pSetting.getForumPath()) ;
+			Calendar newDate = getGreenwichMeanTime();
+			newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
+			QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			return result.getNodes().getSize() ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally{ sProvider.close();}
+		return 0 ;
 	}
 	
 	private TopicType getTopicType(Node node) throws Exception {

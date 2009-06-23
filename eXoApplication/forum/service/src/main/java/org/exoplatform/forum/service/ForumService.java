@@ -931,6 +931,9 @@ public interface ForumService extends ForumServiceLegacy{
   public List<PruneSetting> getAllPruneSetting() throws Exception;
   public PruneSetting getPruneSetting(String forumPath) throws Exception;
   public void savePruneSetting(PruneSetting pruneSetting) throws Exception;
+  public void runPrune(PruneSetting pSetting) throws Exception ;	
+  public void runPrune(String forumPath) throws Exception ;
+	public long checkPrune(PruneSetting pSetting) throws Exception ;
   
   public List<TopicType> getTopicTypes() throws Exception;
   public TopicType getTopicType(String Id) throws Exception;
