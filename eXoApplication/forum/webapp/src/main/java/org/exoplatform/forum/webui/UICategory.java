@@ -41,8 +41,6 @@ import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -63,7 +61,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
  * Aus 01, 2007 2:48:18 PM 
  */
 
-@SuppressWarnings({ "unused", "unchecked" })
+@SuppressWarnings({ "unused", "unchecked"})
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/forum/webui/UICategory.gtmpl",
@@ -158,9 +156,9 @@ public class UICategory extends UIForm	{
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
-			this.isEditCategory = true ;
+			this.isEditCategory = false ;
 		}
-		return this.category ;
+		return category ;
 	}
 	
 	private boolean isShowForum(String id) {
@@ -705,12 +703,19 @@ public class UICategory extends UIForm	{
 	static public class ExportCategoryActionListener extends EventListener<UICategory> {
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
-			Category category = uiCategory.getCategory();
+			uiCategory.isEditCategory = true;
 			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+			Category category = uiCategory.getCategory();
 			if(category == null){
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 				return;
 			}
@@ -730,7 +735,21 @@ public class UICategory extends UIForm	{
 			UIForumPortlet forumPortlet = category.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIImportForm importForm = popupAction.createUIComponent(UIImportForm.class, null, null) ;
-			importForm.setPath(category.getCategory().getPath());
+			Category cate = category.getCategory();
+			if(cate == null){
+				UIApplication uiApp = category.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+				return;
+			}
+			importForm.setPath(cate.getPath());
 			popupAction.activate(importForm, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

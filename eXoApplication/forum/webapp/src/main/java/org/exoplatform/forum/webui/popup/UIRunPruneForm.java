@@ -17,15 +17,9 @@
 package org.exoplatform.forum.webui.popup;
 
 
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.PruneSetting;
-import org.exoplatform.forum.service.Topic;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
