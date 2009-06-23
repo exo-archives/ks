@@ -1999,3 +1999,67 @@
 .UIFAQPortlet .UIRightClickPopupMenu a{
 	display: block;
 }
+
+
+
+
+/*********************FAQ List Portlet***************************/
+.UIFAQListPortlet {
+	padding: 6px;
+	margin: 4px 0px 4px 4px;
+	border: 1px solid #d7d7d7;
+	background: white;
+}
+
+.UIFAQListPortlet .FAQListBar {
+	background: #6a90b6;
+	padding: 4px 0px 4px 14px;
+	font-weight: bold;
+	color: white;
+}
+
+.UIFAQListPortlet .FAQListContainer {
+	padding:18px 4px 4px 12px;
+}
+
+.UIFAQListPortlet .FAQListContainer .FAQListIcon{
+	background: url('background/FAQListIcon.gif') no-repeat left 5px;
+	padding-left: 16px;
+	font-weight: bold;
+}
+
+.UIFAQListPortlet .FAQListContainer .FAQList {
+	line-height: 20px;
+	color: #0b51bb;
+	text-decoration: underline;
+}
+
+.UIFAQListPortlet .FAQAnswerbar {
+	background: #cedeee;
+	padding: 4px 0px 4px 14px;
+	font-weight: bold;
+}
+
+.UIFAQListPortlet .FAQAnswerContainer {
+	padding:18px 4px 4px 12px;
+}
+
+.UIFAQListPortlet .FAQAnswerContainer .Answer{
+	padding-left: 20px;
+}
+
+.UIFAQListPortlet .FAQAnswerContainer .TextStyle{
+	margin:6px;
+}
+
+.UIFAQListPortlet .FAQAnswerContainer .FAQAnswerIcon{
+	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
+	padding-left: 16px;
+	font-weight: bold;
+}
+
+.UIFAQListPortlet .FAQAnswerContainer .FAQAnswerIcon{
+	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
+	padding-left: 16px;
+	font-weight: bold;
+}
