@@ -377,14 +377,13 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				boolean isParentDelete = false;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				boolean isNew = false;
 				try {
 					if(!ForumUtils.isEmpty(uiForm.postId)) {
 						if(uiForm.isQuote || uiForm.isMP) {
 							post.setRemoteAddr(remoteAddr) ;
 							try {
-								uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+								uiForm.forumService.savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 								isNew = true;
 							} catch (PathNotFoundException e) {
 								isParentDelete = true;
@@ -396,7 +395,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							post.setModifiedDate(new Date()) ;
 							post.setEditReason(editReason) ;
 							try {
-								uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
+								uiForm.forumService.savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
 							} catch (PathNotFoundException e) {
 								isParentDelete = true;
 							}
@@ -405,7 +404,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					} else {
 						post.setRemoteAddr(remoteAddr) ;
 						try {
-							uiForm.forumService.savePost(sProvider, uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
+							uiForm.forumService.savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 							isNew = true;
 						} catch (PathNotFoundException e) {
 							isParentDelete = true;
@@ -417,14 +416,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 							List<String> values = new ArrayList<String>();
 							values.add(userProfile.getEmail());
 							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId;
-							uiForm.forumService.addWatch(sProvider, 1, path, values, userProfile.getUserId()) ;
+							uiForm.forumService.addWatch(1, path, values, userProfile.getUserId()) ;
 						}
 					}
 					uiForm.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  uiForm.topicId) ;
 					forumPortlet.getUserProfile().setLastTimeAccessTopic(uiForm.topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 				} catch (Exception e) {
-				} finally {
-					sProvider.close();
 				}
 				uiForm.isMP = uiForm.isQuote = false;
 				if(isParentDelete){

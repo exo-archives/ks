@@ -731,7 +731,7 @@ public class JCRDataStorage {
 			String[] moderatorCat = category.getModerators();
 			catNode.setProperty("exo:moderators", moderatorCat);
 			// Set Moderator by this category for forums children
-			if(!isNew && moderatorCat.length > 0 && !moderatorCat[0].equals(" ")) {
+			if(!isNew && Utils.isAddNewArray(moderatorCat, oldcategoryMod)) {
 				updateModeratorInForums(sProvider, catNode, moderatorCat);
 			}
 			// Edit profile of moderator in this category
@@ -1295,6 +1295,7 @@ public class JCRDataStorage {
 						List<String> moderators = ForumServiceUtils.getUserPermission(cateMods);
 						if(moderators.contains(userName)) continue;
 					}
+					System.out.println("\n\n isDelete " + isDelete + "  path: " + path + "\n " + userName);
 					if (forumNode.hasProperty("exo:moderators")) {
 						String[] oldUserNamesModerate = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
 						List<String> list = new ArrayList<String>();
@@ -1303,6 +1304,7 @@ public class JCRDataStorage {
 								list.add(string);
 							}
 						}
+						System.out.println("\n\n path " + path + "  list: " + list.toString() + "\n ");
 						forumNode.setProperty("exo:moderators", getStringsInList(list));
 					}
 				} else {
@@ -1819,7 +1821,7 @@ public class JCRDataStorage {
 			newDate.setTimeInMillis(newDate.getTimeInMillis() - date * 86400000);
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			stringBuffer.append("/jcr:root").append(forumPatch).append("//element(*,exo:topic)[@exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("') and @exo:isActive='true'] order by @exo:createdDate ascending");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -2519,6 +2521,7 @@ public class JCRDataStorage {
 			if (listFileName.contains(postAttachmentNode.getName()))continue;
 			postAttachmentNode.remove();
 		}
+		boolean sendAlertJob = true;
 		if (isNew) {
 			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
 			long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
@@ -2528,7 +2531,6 @@ public class JCRDataStorage {
 			// set InfoPost for Forum
 			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
 			boolean isSetLastPost = true;
-			boolean sendAlertJob = true;
 			boolean isFistPost = false;
 			if(topicNode.getProperty("exo:isClosed").getBoolean()) {
 				sendAlertJob = false;
@@ -2539,13 +2541,7 @@ public class JCRDataStorage {
 				if (isSetLastPost) {
 					if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 						isFistPost = true;
-						// set InfoPost for Topic
-						if (!post.getIsHidden()) {
-							topicNode.setProperty("exo:postCount", topicPostCount);
-							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-							topicNode.setProperty("exo:lastPostDate", calendar);
-							topicNode.setProperty("exo:lastPostBy", post.getOwner());
-						}
+						// set InfoPost for Forum
 						if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 							forumNode.setProperty("exo:postCount", forumPostCount);
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
@@ -2554,17 +2550,15 @@ public class JCRDataStorage {
 							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 							sendAlertJob = false;
 						}
+						// set InfoPost for Topic
+						if (!post.getIsHidden()) {
+							topicNode.setProperty("exo:postCount", topicPostCount);
+							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+							topicNode.setProperty("exo:lastPostDate", calendar);
+							topicNode.setProperty("exo:lastPostBy", post.getOwner());
+						}
 					} else {
-						if (post.getIsApproved()) {
-							// set InfoPost for Topic
-							if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
-								forumNode.setProperty("exo:postCount", forumPostCount);	
-								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-								topicNode.setProperty("exo:postCount", topicPostCount);
-								topicNode.setProperty("exo:lastPostDate", calendar);
-								topicNode.setProperty("exo:lastPostBy", post.getOwner());
-							}
-						} 
+						 
 						if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 							if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 								if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
@@ -2581,6 +2575,19 @@ public class JCRDataStorage {
 								sendAlertJob = false;
 							} 
 						}
+						
+						if (post.getIsApproved()) {
+							// set InfoPost for Topic
+							if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
+								forumNode.setProperty("exo:postCount", forumPostCount);	
+								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+								topicNode.setProperty("exo:postCount", topicPostCount);
+								topicNode.setProperty("exo:lastPostDate", calendar);
+								topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							} 
+							if(post.getIsHidden()) sendAlertJob = true;
+						}else if(!sendAlertJob) sendAlertJob = true;
+						
 					}
 				} else {
 					postNode.setProperty("exo:isActiveByTopic", false);
@@ -2593,15 +2600,8 @@ public class JCRDataStorage {
 				}
 			} catch (Exception e) {
 			}
+			
 			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
-			if(sendAlertJob) {
-				List<String>userIdsp = new ArrayList<String>();
-				if(forumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
-				}
-				userIdsp.addAll(getAllAdministrator(sProvider));
-				getTotalJobWatting(userIdsp);
-			}
 		} else {
 			long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
 			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
@@ -2611,6 +2611,14 @@ public class JCRDataStorage {
 			forumNode.getSession().save();
 		} else {
 			forumNode.save();
+		}
+		if(sendAlertJob) {
+			List<String>userIdsp = new ArrayList<String>();
+			if(forumNode.hasProperty("exo:moderators")) {
+				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+			}
+			userIdsp.addAll(getAllAdministrator(sProvider));
+			getTotalJobWatting(userIdsp);
 		}
 		sProvider.close() ;
 	}
@@ -2989,8 +2997,8 @@ public class JCRDataStorage {
 				}
 				if (isGetLastPost){
 					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
-					getTotalJobWatting(userIdsp) ;
 				}
+				getTotalJobWatting(userIdsp) ;
 			} catch (PathNotFoundException e) {
 				e.printStackTrace();
 			}
