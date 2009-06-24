@@ -1,0 +1,80 @@
+<%  
+	import org.exoplatform.faq.info.CategoryInfo;
+	import org.exoplatform.faq.info.UIViewer;
+%>
+<div id="$uicomponent.id" class="UIFAQViewerPortlet">
+<%  
+	List categoryInfos = uicomponent.getCategoryInfoList();
+	CategoryInfo cateInfo = new CategoryInfo();
+	if(!categoryInfos.isEmpty()) {
+		cateInfo = categoryInfos.get(0);
+	}
+	String path = cateInfo.getPath();
+	String []ids = path.split("/");
+	List navPath = cateInfo.getPathName();
+%>
+	<div class="FAQListBar">
+		<a href="<%=uicomponent.event("ChangePath", "home")%>">Home</a>
+		<% 
+		int i = 0;
+		String link = ids[0];
+		for(pathName in navPath) {
+			if(i < ids.length && i > 0)
+				link = link + "/" + ids[i];
+			if(i < (ids.length-2)){
+		%>
+			<span> >> <a href="<%=uicomponent.event("ChangePath", link);%>">$pathName</a></span>
+		<%} else { %>
+			<span> >> </span><span><b>$pathName</b></span>
+		<%}
+		++i;
+		}%>
+	</div>
+	<div class="FAQListContainer">
+		<% 
+		for(categoryInfo in categoryInfos){ 
+			String categoryName = categoryInfo.getName();
+			List questionInfos = categoryInfo.getQuestionInfos();
+			List subCategories = categoryInfo.getSubCateInfos();
+		%>
+		<div class="FAQListIcon">
+			<span><b>$categoryName</b><a name="<%=categoryInfo.getId();%>"></a> </span>
+			<%if(!subCategories.isEmpty()) {%>
+				<span>[</span>
+			<%} 
+				int j = 0;
+				for(subCategory in subCategories) { 
+					String subCateName = subCategory.getName();
+					String subPath = subCategory.getPath();
+			%>
+				<a href="<%=uicomponent.event("ChangePath", "subPath")%>">$subCateName</a>
+			<%  if(j != (subCategories.size-1)) {%>
+				<span> | </span>
+			<%	}
+					++j;
+				} 
+			  if(!subCategories.isEmpty()) {
+			%>
+				<span>]</span>
+			<% } %>
+		</div>
+			<ol>
+				<%for(questionInfo in questionInfos) { 
+						String question =  questionInfo.getQuestion();
+						String id = questionInfo.getId();
+				%>
+				<li><a class="FAQList" href="#${id}">$question</a> </li>
+				<% } %>
+		</ol>
+		<% } %>
+		<div style="margin-bottom: 20px;">
+			My question is not answered here.<a class="FAQList" href="#">Where can</a>|<a class="FAQList" href="#">send my question?</a>
+		</div>
+	</div>
+	<%  
+		uicomponent.renderChild(UIViewer.class);
+	%>
+</div>
+
+
+<link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />

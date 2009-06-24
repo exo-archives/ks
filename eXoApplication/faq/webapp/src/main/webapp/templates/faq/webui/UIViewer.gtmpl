@@ -1,0 +1,36 @@
+<div class="FAQListContainer">
+	<%  
+		List categoryInfos = uicomponent.getCategoryInfoList();
+	%>
+	<%for(categoryInfo in categoryInfos) { 
+			String categoryName = categoryInfo.getName();
+			List questionInfos = categoryInfo.getQuestionInfos();
+			String id = categoryInfo.getId();
+	%>
+	<div class="FAQAnswerbar">
+		<span>$categoryName</span>
+	</div>
+	<div class="FAQAnswerContainer">
+		<%for(questionInfo in questionInfos) {
+				String question = questionInfo.getQuestion();
+				List answers = questionInfo.getAnswers();
+				String qsId = questionInfo.getId();
+		%>
+		<div class="QuestionContent">
+			<div class="FAQAnswerIcon">$question<a name="${qsId}">&nbsp;</a></div>
+			<div class="Answer">
+				<ol>
+				<%for(answer in answers){ %>
+					<li><span class="TextStyle">${answer}</span></li>
+				<%} %>
+				</ol>
+			</div>
+		</div>
+		<%} %>
+		<div style="height:18px;">
+			<a class="BackTopIcon" href="#${id}">&nbsp;</a>
+			<div style="clear:right;"><span></span></div>
+		</div>
+	</div>
+	<% } %>
+</div>

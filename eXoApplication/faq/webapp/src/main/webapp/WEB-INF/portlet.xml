@@ -90,4 +90,31 @@
 			</preference>
     </portlet-preferences>  
   </portlet>
+  
+  <portlet>
+		<description xml:lang="EN">FAQ Viewer Portlet</description>
+		<portlet-name>FAQViewerPortlet</portlet-name>
+		<display-name xml:lang="EN">FAQ Viewer Portlet</display-name>
+		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
+		
+		<init-param>
+			<name>webui.configuration</name>
+			<value>/WEB-INF/conf/portlet/faq/FAQViewerPortlet/webui/configuration.xml</value>
+		</init-param>
+
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<resource-bundle>locale.portlet.faq.FAQViewerPortlet</resource-bundle>
+		<portlet-info>
+			<title>FAQ Viewer Portlet</title>
+			<short-title>FAQ List Portlet</short-title>
+			<keywords>faq viewer</keywords>
+		</portlet-info>
+	
+		<portlet-preferences></portlet-preferences>
+
+	</portlet>
 </portlet-app>
