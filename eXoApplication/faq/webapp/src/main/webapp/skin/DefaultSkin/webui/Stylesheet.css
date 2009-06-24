@@ -2014,6 +2014,14 @@
 .UIFAQListPortlet .FAQListBar {
 	background: #6a90b6;
 	padding: 4px 0px 4px 14px;
+	color: white;
+}
+
+.UIFAQListPortlet .FAQListBar .FAQBarLableNormal {
+	color: white;
+}
+
+.UIFAQListPortlet .FAQListBar .FAQBarLableHiline {
 	font-weight: bold;
 	color: white;
 }
@@ -2025,7 +2033,15 @@
 .UIFAQListPortlet .FAQListContainer .FAQListIcon{
 	background: url('background/FAQListIcon.gif') no-repeat left 5px;
 	padding-left: 16px;
+}
+
+.UIFAQListPortlet .FAQListContainer .FAQListIcon .FAQLableNormal {
 	font-weight: bold;
+}
+
+
+.UIFAQListPortlet .FAQListContainer .FAQListIcon .FAQLableLink {
+	color: #0B51BB;
 }
 
 .UIFAQListPortlet .FAQListContainer .FAQList {
@@ -2050,12 +2066,6 @@
 
 .UIFAQListPortlet .FAQAnswerContainer .TextStyle{
 	margin:6px;
-}
-
-.UIFAQListPortlet .FAQAnswerContainer .FAQAnswerIcon{
-	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
-	padding-left: 16px;
-	font-weight: bold;
 }
 
 .UIFAQListPortlet .FAQAnswerContainer .FAQAnswerIcon{
