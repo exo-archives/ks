@@ -166,15 +166,15 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 	static	public class RunActionListener extends EventListener<UIAutoPruneSettingForm> {
 		public void execute(Event<UIAutoPruneSettingForm> event) throws Exception {
 			UIAutoPruneSettingForm uiform = event.getSource();
-			long date = 0;
+			
 			String date_ = uiform.getUIStringInput(FIELD_INACTIVEDAY_INPUT).getValue();
 			String type = uiform.getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).getValue();
-			try {
-				date =  uiform.convertDay(type, Long.parseLong(date_));
-      } catch (Exception e) {
-      }
+			long date =  uiform.convertDay(type, Long.parseLong(date_));
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			uiform.topicOld = forumService.getTotalTopicOld(date, uiform.pruneSetting.getForumPath());
+			//uiform.topicOld = forumService.getTotalTopicOld(date, uiform.pruneSetting.getForumPath());
+			PruneSetting setting = uiform.pruneSetting ;
+			setting.setInActiveDay(date) ;
+			uiform.topicOld = forumService.checkPrune(setting) ;
 			uiform.pruneSetting.setInActiveDay(date);
 			uiform.isTest = true;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiform);

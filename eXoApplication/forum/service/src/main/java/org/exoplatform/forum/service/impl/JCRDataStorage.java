@@ -5991,7 +5991,7 @@ public class JCRDataStorage {
 	
 	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
-		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); //
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, 60000); // pSetting.getPeriodTime()
 		//String name = String.valueOf(cal.getTime().getTime()) ;
 		Class clazz = Class.forName("org.exoplatform.forum.service.user.AutoPruneJob");
 		JobInfo info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
