@@ -1,10 +1,10 @@
 <div class="UIFAQListPortlet">
 	<div class="FAQListBar">
-		eXo FAQ List
+		<a class="FAQBarLableNormal" href="#"> eXo FAQ List </a> >> <a class="FAQBarLableHiline" href="#">eXo platform SEA </a>
 	</div>
 	<div class="FAQListContainer">
 		<div class="FAQListIcon">
-			eXo Questions
+			<a class="FAQLableNormal" href="#"> eXo Questions </a>[<a class="FAQLableLink" href="#"> Company </a>|<a class="FAQLableLink" href="#"> People</a>|<a class="FAQLableLink" href="#"> Address</a>]
 		</div>
 		<ol>           
           <li><a class="FAQList" href="#">What is eXo Platform announcing today with the eXo / JBoss partnership?</a> </li>
@@ -14,7 +14,7 @@
           <li><a class="FAQList" href="#">How does the eXo community benefit?</a> </li>
         </ol>
         <div class="FAQListIcon">
-			FAQ about the eXo
+        	<a class="FAQLableNormal" href="#"> FAQ about the eXo </a>[<a class="FAQLableLink" href="#"> Company </a>|<a class="FAQLableLink" href="#"> People</a>|<a class="FAQLableLink" href="#"> Address</a>]
 		</div>
 		<ol>             
           <li><a class="FAQList" href="#">What is eXo Platform announcing today with the eXo / JBoss partnership?</a> </li>
