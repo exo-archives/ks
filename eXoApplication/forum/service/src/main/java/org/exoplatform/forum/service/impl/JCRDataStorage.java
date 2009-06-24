@@ -94,7 +94,6 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -801,41 +800,47 @@ public class JCRDataStorage {
 	        	if(!list.isEmpty()) {
 	        		if(list.contains(userId)) {
 	        			list.remove(userId) ;
-			        	cateNode.setProperty("exo:moderators", list.toArray(new String[]{}));//
-			        	NodeIterator iter = cateNode.getNodes();
+	        			if(list.isEmpty()) list.add(" ");
+			        	cateNode.setProperty("exo:moderators", getStringsInList(list));//
+			        	/*NodeIterator iter = cateNode.getNodes();
 			        	List<String> forumIdsMod = ValuesToList(userNode.getProperty("exo:moderateForums").getValues());
+			        	List<String> newForumIdMod = new ArrayList<String>();
+			        	newForumIdMod.addAll(forumIdsMod);
+			        	System.out.println("\n\n forumIdsMod1: " + forumIdsMod.toString());
 			        	while (iter.hasNext()) {
 			        		Node node = iter.nextNode();
 			    				if(node.isNodeType("exo:forum")){
 			    					list = ValuesToList(node.getProperty("exo:moderators").getValues());
+			    					System.out.println("\n\n forumMode: " + list.toString());
 			    					if(!list.isEmpty() && list.contains(userId)) {
 			    						list.remove(userId) ;
+			    						if(list.isEmpty()) list.add(" ");
 			    						node.setProperty("exo:moderators", list.toArray(new String[]{}));
 			    					}
 			    				}
-			    				if(!forumIdsMod.isEmpty()) {
-			    					for (String string : forumIdsMod) {
-	                    if(string.indexOf(node.getName()) >= 0) {
-	                    	forumIdsMod.remove(string);
-	                    }
+		    					for (String string : forumIdsMod) {
+                    if(string.indexOf(node.getName()) >= 0) {
+                    	newForumIdMod.remove(string);
+                    	System.out.println("\n\n string: " + string);
                     }
-			    					if(forumIdsMod.isEmpty()){
-			    						userNode.setProperty("exo:userRole", 2);
-			    						forumIdsMod = new ArrayList<String>();
-			    						forumIdsMod.add(" ");
-			    					}
-			    					userNode.setProperty("exo:moderateForums", getStringsInList(forumIdsMod));
-			    				}
+                  }
 			        	}
+			        	if(newForumIdMod.isEmpty()){
+			        		userNode.setProperty("exo:userRole", 2);
+			        		newForumIdMod = new ArrayList<String>();
+			        		newForumIdMod.add(" ");
+			        	}
+			        	System.out.println("\n\n forumIdsMod2: ");
+			        	System.out.println(newForumIdMod.toString());
+			        	userNode.setProperty("exo:moderateForums", getStringsInList(newForumIdMod));*/
 	        		}
 	        	}
-	        	userHome.save();
 	        }
-	        cateHome.save();
         } catch (Exception e) {
         }
-	      
       }
+			userHome.save();
+			cateHome.save();
 	    
     } catch (Exception e) {
     }finally { sProvider.close() ;}

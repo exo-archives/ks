@@ -251,6 +251,11 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		return listId;
 	}
 	
+	private String getCategoryId(String str) {
+		str = str.substring((str.lastIndexOf('(')+1), str.lastIndexOf('/')) ;
+		return str;
+	}
+	
 	private List<String> getModerateList(List<String> forumsModerate) {
 		List<String> list = new ArrayList<String>() ;
 		for (String string : forumsModerate) {
@@ -580,27 +585,64 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
       List<String> moderateForums = new ArrayList<String>() ;
     	if(!ForumUtils.isEmpty(moderateForum)) {
-        moderateForums = uiForm.listModerate ;
+        moderateForums.addAll(uiForm.listModerate);
     	} 
     	List<String> moderateCates = new ArrayList<String>() ;
-    	moderateCates = uiForm.listModCate ;
+    	moderateCates.addAll(uiForm.listModCate) ;
 
-    	List<String> NewModerates = new ArrayList<String> ();
-    	NewModerates = uiForm.getModerateList(moderateForums);
-    	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
+    	List<String> NewModerators = new ArrayList<String> ();
+    	List<String> categoryIdsMod = new ArrayList<String> ();
+    	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateCategory())) ;
     	List<String> DeleteModerateForums = new ArrayList<String> ();
     	boolean isSetGetNewListForum = false ;
-    	if(NewModerates.isEmpty()){
+    	// set moderator category
+    	NewModerators = uiForm.getModerateList(moderateCates);
+    	categoryIdsMod.addAll(NewModerators);
+    	if(NewModerators.isEmpty()){
     		DeleteModerateForums = OldModerateForums;
     	} else {
     		for (String string : OldModerateForums) {
-    			if(NewModerates.contains(string)) {
-    				NewModerates.remove(string);
+    			if(NewModerators.contains(string)) {
+    				NewModerators.remove(string);
     			} else {
     				DeleteModerateForums.add(string) ;
     			}
     		}
-    		uiForm.forumService.saveModerateOfForums(NewModerates, userProfile.getUserId(), false);
+    		uiForm.forumService.saveModOfCategory(NewModerators, userProfile.getUserId(), true);
+    		userRole = 1;
+    		isSetGetNewListForum = true ;
+    	}
+    	if(DeleteModerateForums.size() > 0) {
+    		uiForm.forumService.saveModOfCategory(DeleteModerateForums, userProfile.getUserId(), false);
+    		isSetGetNewListForum = true ;
+    	}
+    	// merger moderator category with moderator forum
+    	OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
+    	NewModerators = uiForm.forumService.getUserModerator(userProfile.getUserId(), true);
+    	for (String string : NewModerators) {
+	      if(!ForumUtils.isEmpty(string) && !moderateForums.contains(string)) {
+	      	if(categoryIdsMod.contains(uiForm.getCategoryId(string))){
+	      		if(moderateForums.isEmpty() || moderateForums.get(0).equals(" ")) {
+	      			moderateForums = new ArrayList<String>();
+	      		}
+	      		moderateForums.add(string);
+	      	}
+	      }
+      }
+    	NewModerators = uiForm.getModerateList(moderateForums);
+    	
+    	DeleteModerateForums =  new ArrayList<String>();
+    	if(NewModerators.isEmpty()){
+    		DeleteModerateForums = OldModerateForums;
+    	} else {
+    		for (String string : OldModerateForums) {
+    			if(NewModerators.contains(string)) {
+    				NewModerators.remove(string);
+    			} else {
+    				DeleteModerateForums.add(string) ;
+    			}
+    		}
+    		uiForm.forumService.saveModerateOfForums(NewModerators, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
     	if(DeleteModerateForums.size() > 0) {
@@ -608,39 +650,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		isSetGetNewListForum = true ;
     	}
     	
-    	OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateCategory())) ;
-    	NewModerates = uiForm.getModerateList(moderateCates);
-    	if(NewModerates.isEmpty()){
-    		DeleteModerateForums = OldModerateForums;
-    	} else {
-    		for (String string : OldModerateForums) {
-    			if(NewModerates.contains(string)) {
-    				NewModerates.remove(string);
-    			} else {
-    				DeleteModerateForums.add(string) ;
-    			}
-    		}
-    		uiForm.forumService.saveModOfCategory(NewModerates, userProfile.getUserId(), true);
-    		userRole = 1;
-    		isSetGetNewListForum = true ;
-    	}
-    	if(DeleteModerateForums.size() > 0) {
-    		uiForm.forumService.saveModOfCategory(NewModerates, userProfile.getUserId(), false);
-    		isSetGetNewListForum = true ;
-    	}
-    	
-    	NewModerates = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
-    	for (String string : NewModerates) {
-	      if(!moderateForums.contains(string)) {
-	      	if(moderateForums.isEmpty() || moderateForums.get(0).equals(" ")) {
-	      		moderateForums = new ArrayList<String>();
-	      	}
-	      	moderateForums.add(string);
-	      }
-      }
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
-    	
-    	if(!moderateForums.isEmpty()) {
+    	if(!moderateForums.isEmpty() && !moderateForums.get(0).equals(" ")) {
     		if(userRole >= 2) userRole = 1;
     	} else {
     		if(userRole >= 1) userRole = 2;
