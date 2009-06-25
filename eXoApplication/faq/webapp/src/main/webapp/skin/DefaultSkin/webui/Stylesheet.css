@@ -2032,7 +2032,7 @@
 }
 
 .UIFAQViewerPortlet .FAQListContainer {
-	padding:18px 4px 4px 12px;
+	padding:0px 4px 4px 12px;
 }
 
 .UIFAQViewerPortlet .FAQListContainer .FAQListIcon{
@@ -2066,7 +2066,7 @@
 }
 
 .UIFAQViewerPortlet .FAQAnswerContainer {
-	padding:16px 0px 4px 12px;
+	padding:4px 0px 4px 12px;
 }
 
 .UIFAQViewerPortlet .FAQAnswerContainer .Answer{
@@ -2083,7 +2083,7 @@
 
 .UIFAQViewerPortlet .FAQAnswerContainer ol{
 	margin: 4px 0px 0px 0px;
-	padding: 0px 0px 0px 16px;
+	padding: 0px 0px 0px 12px;
 }
 
 .UIFAQViewerPortlet .FAQAnswerContainer .FAQAnswerIcon{
@@ -2096,4 +2096,12 @@
 	width: 21px; height: 18px;
 	float: right;
 	display: block;
+}
+
+.UIFAQViewerPortlet .FAQListQuestionContent {
+	padding: 8px 0px 10px 12px;
+}
+
+.UIFAQViewerPortlet p {
+	margin: 3px 0px;
 }

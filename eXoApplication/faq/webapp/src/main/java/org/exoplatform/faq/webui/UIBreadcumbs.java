@@ -19,7 +19,6 @@ package org.exoplatform.faq.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

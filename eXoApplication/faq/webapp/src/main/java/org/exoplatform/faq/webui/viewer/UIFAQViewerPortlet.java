@@ -16,20 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.viewer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.CategoryInfo;
-import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.QuestionInfo;
-import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS

@@ -22,8 +22,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.QuestionInfo;
-import org.exoplatform.faq.service.SubCategoryInfo;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -45,17 +44,11 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIViewer extends UIContainer {
 	private FAQService fAqService;
-	private String path = "home";
+	private String path = Utils.CATEGORY_HOME;
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
 		
-	@SuppressWarnings("unused")
-  private List<CategoryInfo> getCategoryInfoList() throws Exception {
-		List<CategoryInfo> categoryInfos = this.getCategoryInfoList(path);
-		return categoryInfos;
-	}
-
 	static public class ChangePathActionListener extends EventListener<UIViewer> {
 		public void execute(Event<UIViewer> event) throws Exception {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -65,29 +58,60 @@ public class UIViewer extends UIContainer {
 		}
 	}
 	
+	@SuppressWarnings("unused")
+  private List<String> arrangeList(List<String> list) {
+		List<String> newList = new ArrayList<String>();
+		for (int i = (list.size()-1); i >= 0; i--) {
+			newList.add(list.get(i));
+		}
+		return newList;
+	} 
 	
-	public List<CategoryInfo> getCategoryInfoList(String path) throws Exception {
-		List<CategoryInfo> listCateInfo = new ArrayList<CategoryInfo>();
-		CategoryInfo categoryInfo;
+	@SuppressWarnings("unused")
+  private CategoryInfo getCategoryInfo() throws Exception {
+		CategoryInfo categoryInfo = new CategoryInfo();
+		try {
+			categoryInfo = this.fAqService.getCategoryInfo(this.path);
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+		/*
+		SubCategoryInfo childCategoryInfo;
 		QuestionInfo questionInfo = new QuestionInfo();
 		SubCategoryInfo subCategoryInfo = new SubCategoryInfo();
 		List<SubCategoryInfo> subCateList = new ArrayList<SubCategoryInfo>();
+		List<SubCategoryInfo> childCateList = new ArrayList<SubCategoryInfo>();
 		List<String> answers = new ArrayList<String>();
-		List<QuestionInfo> questionInfos;
+		List<QuestionInfo> questionInfos =  new ArrayList<QuestionInfo>();
+		
+		for (int i = 0; i < 5; i++) {
+			questionInfo = new QuestionInfo();
+			questionInfo.setId("quesitonId" + i);
+			questionInfo.setQuestion("Question number " + (i+1) + " of this cate");
+			answers = new ArrayList<String>();
+			for (int j = 0; j < 4; j++) {
+				answers.add(" Answer number " + (j+1) + " of question "+(i+1)+" of this category ");
+			}
+			questionInfo.setAnswers(answers);
+			questionInfos.add(questionInfo);
+    }
+		//category add question
+		categoryInfo.setQuestionInfos(questionInfos);
 		
 		List<String> pathName = new ArrayList<String>();
 		pathName.add("Cate Parent0");
 		pathName.add("Cate Parent1");
 		pathName.add("Cate Parent2");
 		path = "cate0/cate1/cate2/cate";// set
+		//set PathName
+		categoryInfo.setPathName(pathName);
+		categoryInfo.setPath(path);
 		for (int i = 0; i < 3; i++) {
-			categoryInfo = new CategoryInfo();
-			categoryInfo.setId("categoryId" + i);
-			categoryInfo.setPath(path);
-			categoryInfo.setName("Category " + (i+1));
-			// set parent Name (Category 1/Category2/...)
-			categoryInfo.setPathName(pathName);
-			// get Question list of this category
+			childCategoryInfo = new SubCategoryInfo();
+			childCategoryInfo.setId("categoryId" + i);
+			childCategoryInfo.setPath(path+"/"+"categoryId" + i);
+			childCategoryInfo.setName("Category " + (i+1));
+			// get Question list of child category
 			questionInfos = new ArrayList<QuestionInfo>();
 			for (int j = 0; j < 3; j++) {
 				questionInfo = new QuestionInfo();
@@ -101,20 +125,22 @@ public class UIViewer extends UIContainer {
 				questionInfo.setAnswers(answers);
 				questionInfos.add(questionInfo);
 			}
-			categoryInfo.setQuestionInfos(questionInfos);
-			// get SubCategory list of this category
-			subCateList = new ArrayList<SubCategoryInfo>();
+			childCategoryInfo.setQuestionInfos(questionInfos);
+			// get SubCategory list of child category
+			childCateList = new ArrayList<SubCategoryInfo>();
 			for (int j = 0; j < 3; j++) {
 				subCategoryInfo = new SubCategoryInfo();
 				subCategoryInfo.setName("Sub cate " + (j+1) + " of cate " + (i+1));
 				subCategoryInfo.setPath(path+"/" + "childCat"+j);
-				subCateList.add(subCategoryInfo);
+				childCateList.add(subCategoryInfo);
       }
-			categoryInfo.setSubCateInfos(subCateList);
+			childCategoryInfo.setSubCateInfos(childCateList);
 			
-			listCateInfo.add(categoryInfo);
+			subCateList.add(childCategoryInfo);
 		}
-		return listCateInfo;
+		categoryInfo.setSubCateInfos(subCateList);
+		*/
+		return categoryInfo;
 	}
 	
 	

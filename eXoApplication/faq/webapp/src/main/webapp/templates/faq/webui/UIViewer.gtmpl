@@ -1,43 +1,58 @@
 <%  
 	import org.exoplatform.faq.service.CategoryInfo;
+	import org.exoplatform.faq.service.Utils;
 %>
-<div class="FAQListContainer">
+<div class="FAQListContainer" id="$uicomponent.id">
 	<%  
-	List categoryInfos = uicomponent.getCategoryInfoList();
-	CategoryInfo cateInfo = new CategoryInfo();
-	if(!categoryInfos.isEmpty()) {
-		cateInfo = categoryInfos.get(0);
-	}
-	String path = cateInfo.getPath();
-	String []ids = path.split("/");
-	List navPath = cateInfo.getPathName();
+	CategoryInfo cateInfo = uicomponent.getCategoryInfo();
+	if(cateInfo != null) {
+		List subCategoryInfos = cateInfo.getSubCateInfos();
+		List questionCates = cateInfo.getQuestionInfos();
+		
+		String path = cateInfo.getPath();
+		
+		String []ids = path.split("/");
+		List navPath = cateInfo.getPathName();
+		navPath = uicomponent.arrangeList(navPath);
 %>
 	<div class="FAQListBar">
-		<a href="<%=uicomponent.event("ChangePath", "home")%>">Home</a>
 		<% 
 		int i = 0;
 		String link = ids[0];
 		for(pathName in navPath) {
+			if(pathName.equals(Utils.CATEGORY_HOME)){ pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);}
 			if(i < ids.length && i > 0)
 				link = link + "/" + ids[i];
-			if(i < (ids.length-2)){
+			if(i < (ids.length-1)){
 		%>
-			<span> >> <a href="<%=uicomponent.event("ChangePath", link);%>">$pathName</a></span>
+			<span><a href="<%=uicomponent.event("ChangePath", link);%>">$pathName</a> >> </span>
 		<%} else { %>
-			<span> >> </span><span><b>$pathName</b></span>
+			<span><b>$pathName</b></span>
 		<%}
 		++i;
 		}%>
 	</div>
+	<div class="FAQListQuestionContent">
+	<%for(questionCate in questionCates) { 
+			String question_ =  questionCate.getQuestion();
+			question_ = question_.replaceAll("<br/>", " ");
+		  String id_ = questionCate.getId();
+	%>
+		<div class="FAQListIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
+	<% } %>
+	</div>
+	
 	<div class="FAQListContainer">
 		<% 
-		for(categoryInfo in categoryInfos){ 
+		for(categoryInfo in subCategoryInfos){ 
 			String categoryName = categoryInfo.getName();
 			List questionInfos = categoryInfo.getQuestionInfos();
 			List subCategories = categoryInfo.getSubCateInfos();
 		%>
 		<div class="FAQListIcon">
-			<span><b>$categoryName</b><a name="<%=categoryInfo.getId();%>"></a> </span>
+			<span>
+				<b><a href="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>"><font color="black">$categoryName</font></a></b>
+			</span>
 			<%if(!subCategories.isEmpty()) {%>
 				<span>[</span>
 			<%} 
@@ -46,7 +61,7 @@
 					String subCateName = subCategory.getName();
 					String subPath = subCategory.getPath();
 			%>
-				<a href="<%=uicomponent.event("ChangePath", "subPath")%>">$subCateName</a>
+				<a href="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
 			<%  if(j != (subCategories.size-1)) {%>
 				<span> | </span>
 			<%	}
@@ -66,12 +81,33 @@
 				<% } %>
 		</ol>
 		<% } %>
-		<div style="margin-bottom: 20px;">
+		<div style="margin-bottom:2px;">
 			My question is not answered here.<a class="FAQList" href="#">Where can</a>|<a class="FAQList" href="#">send my question?</a>
 		</div>
 	</div>
 	
-	<%for(categoryInfo in categoryInfos) { 
+	<div class="FAQAnswerContainer FAQListQuestionContent" style="padding:4px 0px 0px 0px;">
+	<%for(questionCate in questionCates) { 
+			String question_ =  questionCate.getQuestion();
+		  String id_ = questionCate.getId();
+		  List answers_ = questionCate.getAnswers();
+	%>
+		<div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
+		<div class="Answer" style="margin:3px 0px;">
+			<ol>
+			<%for(answer in answers_){ %>
+				<li><span class="TextStyle">${answer}</span></li>
+			<%} %>
+			</ol>
+		</div>
+		<div style="height:18px;">
+			<a class="BackTopIcon" href="#name${id_}">&nbsp;</a>
+			<div style="clear:right;"><span></span></div>
+		</div>
+	<% } %>
+	</div>
+	
+	<%for(categoryInfo in subCategoryInfos) { 
 			String categoryName = categoryInfo.getName();
 			List questionInfos = categoryInfo.getQuestionInfos();
 			String id = categoryInfo.getId();
@@ -86,7 +122,7 @@
 				String qsId = questionInfo.getId();
 		%>
 		<div class="QuestionContent">
-			<div class="FAQAnswerIcon">$question<a name="${qsId}">&nbsp;</a></div>
+			<div class="FAQAnswerIcon"><a name="${qsId}">$question</a></div>
 			<div class="Answer">
 				<ol>
 				<%for(answer in answers){ %>
@@ -102,4 +138,7 @@
 		</div>
 	</div>
 	<% } %>
+<% } else { %>
+	FAQPortlet is empty !
+<% } %>
 </div>

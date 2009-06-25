@@ -28,7 +28,7 @@ import java.util.List;
 public class QuestionInfo {
 	private String id;
 	private String question;
-	private List<String> answers;
+	private List<String> answers = new ArrayList<String>();
 	
 	public QuestionInfo() {}
 

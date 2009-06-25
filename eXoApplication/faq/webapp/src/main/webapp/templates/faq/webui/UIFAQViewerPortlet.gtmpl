@@ -1,9 +1,9 @@
 <%
 	import org.exoplatform.faq.webui.viewer.UIViewer;
 %>
+<link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />
 <div id="$uicomponent.id" class="UIFAQViewerPortlet">
 	<%  
 		uicomponent.renderChild(UIViewer.class);
 	%>
 </div>
-<link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />

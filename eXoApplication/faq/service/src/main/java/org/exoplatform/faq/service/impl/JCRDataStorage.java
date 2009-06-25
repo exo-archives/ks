@@ -29,7 +29,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -42,10 +41,8 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
@@ -80,10 +77,8 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
@@ -2828,8 +2823,21 @@ public class JCRDataStorage {
   		categoryInfo.setId(categoryNode.getName()) ;
   		String path = categoryNode.getPath() ;
   		categoryInfo.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-  		categoryInfo.setName(categoryNode.getProperty("exo:name").getString()) ;
-  		
+  		if(categoryNode.hasProperty("exo:name"))
+  			categoryInfo.setName(categoryNode.getProperty("exo:name").getString()) ;
+  		else categoryInfo.setName(categoryNode.getName());
+  		// set Path Name
+  		Node node = categoryNode;
+  		List<String> pathName = new ArrayList<String>();
+  		String categoryName ;
+  		while (node.isNodeType("exo:faqCategory")) {
+  			if(node.hasProperty("exo:name"))
+  				categoryName = node.getProperty("exo:name").getString();
+  			else categoryName = node.getName();
+  			pathName.add(categoryName);
+  			node = node.getParent();
+      }
+  		categoryInfo.setPathName(pathName);
   		//declare question info  		
   		categoryInfo.setQuestionInfos(getQuestionInfo(categoryNode)) ;
   		
@@ -2855,7 +2863,7 @@ public class JCRDataStorage {
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}finally{ sProvider.close() ;}
-  	return null ;
+  	return categoryInfo ;
   }
   
   private List<SubCategoryInfo> getSubCategoryInfo(Node category) throws Exception {
@@ -2893,7 +2901,7 @@ public class JCRDataStorage {
 				question = iter.nextNode() ;
 				questionInfo = new QuestionInfo() ;
 				try{
-					questionInfo.setQuestion(question.getProperty("exo:name").getString()) ;
+					questionInfo.setQuestion(question.getProperty("exo:title").getString()) ;
 					questionInfo.setId(question.getName()) ;
 					if(question.hasNode(Utils.ANSWER_HOME)) {
 						List<String> answers = new ArrayList<String> () ;
