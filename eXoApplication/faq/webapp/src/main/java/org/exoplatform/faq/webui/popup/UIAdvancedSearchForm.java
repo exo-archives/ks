@@ -27,7 +27,6 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuickSearch;

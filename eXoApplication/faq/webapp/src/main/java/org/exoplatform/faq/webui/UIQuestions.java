@@ -32,7 +32,6 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;

@@ -15,8 +15,6 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.webui;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
@@ -25,7 +23,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.ObjectSearchResult;
-import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;

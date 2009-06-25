@@ -26,7 +26,6 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
-//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;

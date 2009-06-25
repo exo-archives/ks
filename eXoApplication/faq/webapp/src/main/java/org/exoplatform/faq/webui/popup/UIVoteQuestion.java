@@ -25,7 +25,6 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;

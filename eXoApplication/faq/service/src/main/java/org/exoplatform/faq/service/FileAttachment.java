@@ -23,7 +23,6 @@ import javax.jcr.Session;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 
 /**

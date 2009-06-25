@@ -16,13 +16,10 @@
  */
 package org.exoplatform.faq.service.test;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,11 +29,11 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Watch;
@@ -44,7 +41,6 @@ import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.faq.service.impl.MultiLanguages;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.mail.Message;
 
 /**
  * Created by The eXo Platform SARL

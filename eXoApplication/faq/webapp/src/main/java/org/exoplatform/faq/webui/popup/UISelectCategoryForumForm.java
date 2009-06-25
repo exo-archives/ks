@@ -24,7 +24,6 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;

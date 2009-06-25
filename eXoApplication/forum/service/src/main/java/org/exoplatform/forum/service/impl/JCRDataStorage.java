@@ -905,7 +905,7 @@ public class JCRDataStorage {
 				List<String>pathForums = new ArrayList<String>();
 				NodeIterator iter = catNode.getNodes();
 				while (iter.hasNext()) {
-		      Node node = (Node) iter.next();
+		      Node node = iter.nextNode();
 		      if(node.isNodeType("exo:forum")) {
 		      	pathForums.add(categoryId + "/" + node.getName());
 		      }
@@ -942,7 +942,7 @@ public class JCRDataStorage {
 		NodeIterator iter = result.getNodes();
 		List<String> list;
 		while (iter.hasNext()) {
-	    Node topicNode = (Node) iter.next();
+	    Node topicNode = iter.nextNode();
 	    list = ValuesToList(topicNode.getProperty(property).getValues());
 	    list = removeAndAddNewInList(remov, addNew, list);
 	    if(list.isEmpty()) list.add(" ");
@@ -1805,7 +1805,7 @@ public class JCRDataStorage {
 			NodeIterator iter = result.getNodes();
 			Topic topic;
 			while (iter.hasNext()) {
-	      Node node = (Node) iter.nextNode();
+	      Node node = iter.nextNode();
 	      topic = new Topic();
 	      topic.setId(node.getName());
 	      topic.setPath(node.getPath());
@@ -4655,7 +4655,7 @@ public class JCRDataStorage {
 			ForumSearch forumSearch;
 			while (iter.hasNext()) {
 				forumSearch = new ForumSearch();
-				Node nodeObj = (Node) iter.nextNode();
+				Node nodeObj = iter.nextNode();
 				
 				forumSearch.setId(nodeObj.getName());
 				forumSearch.setName(nodeObj.getProperty("exo:name").getString());
@@ -4711,7 +4711,7 @@ public class JCRDataStorage {
 		ForumSearch forumSearch;		
 		while (iter.hasNext()) {
 			forumSearch = new ForumSearch();
-			Node nodeObj = (Node) iter.nextNode();
+			Node nodeObj = iter.nextNode();
 			forumSearch.setId(nodeObj.getName());
 			forumSearch.setName(nodeObj.getProperty("exo:name").getString());
 			forumSearch.setType(type);
@@ -5109,7 +5109,7 @@ public class JCRDataStorage {
 			ForumSearch forumSearch ;
 			while (iter.hasNext()) {
 				forumSearch = new ForumSearch();
-				Node node = (Node) iter.next();
+				Node node = iter.nextNode();
 				forumSearch.setId(node.getName());
 				forumSearch.setPath(node.getPath());
 				forumSearch.setType(Utils.TOPIC);
@@ -5127,7 +5127,7 @@ public class JCRDataStorage {
 			iter = result.getNodes();
 			while (iter.hasNext()) {
 				forumSearch = new ForumSearch();
-				Node node = (Node) iter.next();
+				Node node = iter.nextNode();
 				forumSearch.setId(node.getName());
 				forumSearch.setPath(node.getPath());
 				forumSearch.setType(Utils.POST);
@@ -5773,7 +5773,7 @@ public class JCRDataStorage {
 		NodeIterator iter = result.getNodes();
 		List<String>list = new ArrayList<String>();
 		while (iter.hasNext()) {
-			Node userNode = (Node) iter.next();
+			Node userNode = iter.nextNode();
 			list.add(userNode.getName());
 		}
 		return list;
@@ -5856,7 +5856,7 @@ public class JCRDataStorage {
 			NodeIterator iter = bbCodeHome.getNodes();
 			while (iter.hasNext()) {
 		    try{
-		    	Node bbcNode = (Node) iter.next();
+		    	Node bbcNode = iter.nextNode();
 			    bbcodes.add(getBBCodeNode(bbcNode));
 		    }catch(Exception e) {}				
 	    }			
@@ -6078,7 +6078,7 @@ public class JCRDataStorage {
 	  	Node nodeHome = getTopicTypeHome(sProvider);
 	  	NodeIterator iter = nodeHome.getNodes();
 	  	while (iter.hasNext()) {
-	      Node node = (Node) iter.next();
+	      Node node = iter.nextNode();
 	      listTT.add(getTopicType(node));
       }
     } catch (Exception e) {

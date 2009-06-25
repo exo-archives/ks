@@ -28,7 +28,6 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
