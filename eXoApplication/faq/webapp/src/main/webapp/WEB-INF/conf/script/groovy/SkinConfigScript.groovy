@@ -6,6 +6,13 @@ SkinService.addSkin(
 ) ;
 
 SkinService.addSkin(
+    "faq/UIFAQViewerPortlet",
+    "Default",
+    "/faq/skin/DefaultSkin/webui/Stylesheet.css",
+    ServletContext
+) ;
+
+SkinService.addSkin(
     "faq/FAQPortlet",
     "Mac",
     "/faq/skin/MacSkin/webui/Stylesheet.css",

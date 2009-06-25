@@ -14,37 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.faq.info;
+package org.exoplatform.faq.webui.viewer;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.CategoryInfo;
+import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.QuestionInfo;
+import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPortletApplication;
+import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * Jun 24, 2009 - 4:32:48 AM  
+ * Jun 24, 2009 - 2:26:16 AM  
  */
 
 @ComponentConfig(
-		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
-		events = {
-				
-		}
+   lifecycle = UIApplicationLifecycle.class,
+   template = "app:/templates/faq/webui/UIFAQViewerPortlet.gtmpl"
 )
-public class UIViewer extends UIContainer {
-	private List<CategoryInfo> categoryInfos = new ArrayList<CategoryInfo>();
-	public UIViewer() {
+
+public class UIFAQViewerPortlet extends UIPortletApplication{
+	public UIFAQViewerPortlet() throws Exception {
+		addChild(UIViewer.class, null, null);
   }
 	
-	public List<CategoryInfo> getCategoryInfoList() {
-	  return categoryInfos;
-  }
-	
-	public void setCategoryInfoList(List<CategoryInfo> categoryInfos) {
-		this.categoryInfos = categoryInfos;
-  }
 }

@@ -14,17 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.faq.info;
+package org.exoplatform.faq.webui.viewer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.QuestionInfo;
+import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIPortletApplication;
-import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
+import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 
@@ -32,43 +34,36 @@ import org.exoplatform.webui.event.EventListener;
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * Jun 24, 2009 - 2:26:16 AM  
+ * Jun 24, 2009 - 4:32:48 AM  
  */
 
 @ComponentConfig(
-	   lifecycle = UIApplicationLifecycle.class,
-	   template = "app:/templates/faq/webui/UIFAQViewerPortlet.gtmpl",
-	   events = {
-	  	 @EventConfig(listeners = UIFAQViewerPortlet.ChangePathActionListener.class)
-	   }
+		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
+		events = {
+		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
+		}
 )
-
-public class UIFAQViewerPortlet extends UIPortletApplication{
+public class UIViewer extends UIContainer {
 	private FAQService fAqService;
 	private String path = "home";
-	public UIFAQViewerPortlet() throws Exception {
-		addChild(UIViewer.class, null, null);
-	  fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
+	public UIViewer() {
+		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
-	
+		
 	@SuppressWarnings("unused")
   private List<CategoryInfo> getCategoryInfoList() throws Exception {
 		List<CategoryInfo> categoryInfos = this.getCategoryInfoList(path);
-		getChild(UIViewer.class).setCategoryInfoList(categoryInfos);
 		return categoryInfos;
 	}
 
-	static public class ChangePathActionListener extends EventListener<UIFAQViewerPortlet> {
-		public void execute(Event<UIFAQViewerPortlet> event) throws Exception {
+	static public class ChangePathActionListener extends EventListener<UIViewer> {
+		public void execute(Event<UIViewer> event) throws Exception {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQViewerPortlet viewerPortlet = event.getSource();
-			viewerPortlet.path = path;
-			event.getRequestContext().addUIComponentToUpdateByAjax(viewerPortlet);
+			UIViewer viewer = event.getSource();
+			viewer.path = path;
+			event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
 		}
 	}
-	
-	
-	
 	
 	
 	public List<CategoryInfo> getCategoryInfoList(String path) throws Exception {
@@ -121,15 +116,6 @@ public class UIFAQViewerPortlet extends UIPortletApplication{
 		}
 		return listCateInfo;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }
