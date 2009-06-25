@@ -81,7 +81,7 @@
 				<% } %>
 		</ol>
 		<% } %>
-		<div style="margin-bottom:2px;">
+		<div style="margin-bottom:2px; display:none;">
 			My question is not answered here.<a class="FAQList" href="#">Where can</a>|<a class="FAQList" href="#">send my question?</a>
 		</div>
 	</div>
