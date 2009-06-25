@@ -26,12 +26,20 @@ import java.util.List;
  * Jun 24, 2009 - 3:34:44 AM  
  */
 public class SubCategoryInfo {
+	private String id;
 	private String path;
 	private String name;
 	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
 	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
 	
 	public SubCategoryInfo() {}
+	
+	public String getId() {
+  	return id;
+  }
+	public void setId(String id) {
+  	this.id = id;
+  }
 	
 	public String getPath() {
   	return path;
@@ -45,5 +53,19 @@ public class SubCategoryInfo {
   }
 	public void setName(String name) {
   	this.name = name;
+  }
+	
+	public List<QuestionInfo> getQuestionInfos() {
+  	return questionInfos;
+  }
+	public void setQuestionInfos(List<QuestionInfo> questionInfos) {
+  	this.questionInfos = questionInfos;
+  }
+
+	public List<SubCategoryInfo> getSubCateInfos() {
+  	return subCateInfos;
+  }
+	public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
+  	this.subCateInfos = subCateInfos;
   }
 }
