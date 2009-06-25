@@ -2781,7 +2781,7 @@ public class JCRDataStorage {
 	}
 	
 	//will be remove
-	public Node getQuestionNodeByIdò(String path) throws Exception {
+	public Node getQuestionNodeById(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			return getFAQServiceHome(sProvider).getNode(path) ;
