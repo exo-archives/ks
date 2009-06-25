@@ -31,6 +31,10 @@ public class Answer {
 	/** The id. */
 	private String id;
 	
+	private String path ;
+	
+	private String language ;
+	
 	private boolean isNew;
   
   /** The responses. */
@@ -38,6 +42,8 @@ public class Answer {
   
   /** The response by. */
   private String responseBy = null ;
+  
+  private String fullName = null ;
   
   /** The date response. */
   private Date dateResponse = null ;
@@ -84,6 +90,22 @@ public class Answer {
 		return id;
 	}
 	
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
 	/**
 	 * Sets the id.
 	 * 
@@ -120,6 +142,14 @@ public class Answer {
 		return responseBy;
 	}
 	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
 	/**
 	 * Sets the response by.
 	 * 

@@ -30,7 +30,6 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -94,9 +93,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
     	voteQuestion.question_.setUsersVote(listUsers.toArray(new String[]{}));
     	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     	FAQUtils.getEmailSetting(voteQuestion.faqSetting_, false, false);
-    	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    	faqService_.saveQuestion(voteQuestion.question_, false, sessionProvider, voteQuestion.faqSetting_);
-    	sessionProvider.close();
+    	faqService_.saveQuestion(voteQuestion.question_, false, voteQuestion.faqSetting_);
     	UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
@@ -111,23 +108,18 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIVoteQuestion> event) throws Exception {
 			UIVoteQuestion voteQuestion = event.getSource() ;
 			double markVote = Double.parseDouble(event.getRequestContext().getRequestParameter(OBJECTID));
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			MultiLanguages multiLanguages = new MultiLanguages();
 			Answer answer =  null;
 			if(voteQuestion.language_ != null && voteQuestion.language_.trim().length() > 0 && 
 					!voteQuestion.language_.equals(voteQuestion.question_.getLanguage())){
-				answer = multiLanguages.getAnswerById(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider),
-																										voteQuestion.answerId_, voteQuestion.language_);
+				answer = faqService_.getAnswerById(voteQuestion.question_.getPath(), voteQuestion.answerId_, voteQuestion.language_);
 				answer.setMarksVoteAnswer(markVote);
-				multiLanguages.saveAnswer(faqService_.getQuestionNodeById(voteQuestion.question_.getId(), sessionProvider), 
-																	answer, voteQuestion.language_, sessionProvider);
+				faqService_.saveAnswer(voteQuestion.question_.getPath(), answer, voteQuestion.language_);
 			} else {
-				answer = faqService_.getAnswerById(voteQuestion.question_.getId(), voteQuestion.answerId_, sessionProvider);
+				answer = faqService_.getAnswerById(voteQuestion.question_.getPath(), voteQuestion.answerId_);
 				answer.setMarksVoteAnswer(markVote);
-				faqService_.saveAnswer(voteQuestion.question_.getId(), answer, false, sessionProvider);
+				faqService_.saveAnswer(voteQuestion.question_.getPath(), answer, false);
 			}
-			sessionProvider.close();
 			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;

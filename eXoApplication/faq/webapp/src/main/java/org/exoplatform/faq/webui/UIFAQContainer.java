@@ -19,7 +19,7 @@ package org.exoplatform.faq.webui;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -41,31 +41,28 @@ public class UIFAQContainer extends UIContainer  {
   	currentUser_ = FAQUtils.getCurrentUser() ;
   	faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		if(currentUser_ != null && currentUser_.trim().length() > 0){
 			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
-				if(faqService_.isAdminRole(currentUser_, sessionProvider)) faqSetting_.setIsAdmin("TRUE");
+				if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
 				else faqSetting_.setIsAdmin("FALSE");
 			}
-			faqService_.getUserSetting(sessionProvider, currentUser_, faqSetting_);
+			faqService_.getUserSetting(currentUser_, faqSetting_);
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
 		}
   	
-    addChild(UIBreadcumbs.class, null, null).setRendered(true) ; 
+		UIBreadcumbs uiBreadcumbs = addChild(UIBreadcumbs.class, null, null).setRendered(true) ;
+		uiBreadcumbs.setUpdataPath(Utils.CATEGORY_HOME) ;
     UIQuestions uiQuestions = addChild(UIQuestions.class, null, null).setRendered(true) ;    
     uiQuestions.setFAQService(faqService_);
     uiQuestions.setFAQSetting(faqSetting_);
-    try{
-    	uiQuestions.viewAuthorInfor = faqService_.getCategoryById(null, sessionProvider).isViewAuthorInfor();
-    } catch (Exception e){
-    	e.printStackTrace();
-    	uiQuestions.viewAuthorInfor = false;
-    }
+    uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(null);
+    if(uiQuestions.getCategoryId() == null) uiQuestions.setCategories(Utils.CATEGORY_HOME) ;
+    
     UICategories uiCategories = addChild(UICategories.class, null, null).setRendered(true);
     uiCategories.setFAQSetting(faqSetting_);
     uiCategories.setFAQService(faqService_);
-    sessionProvider.close();
+    if(uiCategories.getCategoryPath() == null) uiCategories.setPathCategory(Utils.CATEGORY_HOME) ;
   } 
   
   public FAQSetting getFAQSetting(){return faqSetting_;}

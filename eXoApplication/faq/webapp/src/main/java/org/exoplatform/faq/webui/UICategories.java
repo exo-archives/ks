@@ -18,15 +18,16 @@ package org.exoplatform.faq.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
+import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UIExportForm;
@@ -38,7 +39,6 @@ import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -82,15 +82,15 @@ public class UICategories extends UIContainer{
 	private String FILTER_OPEN_QUESTIONS = "openQuestions";
 	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
 	public String parentCateID_ = null;
-	private String categoryId_ = null;
+	private String categoryId_;
 	private boolean isSwap = false;
-	private String currentName = "";
+	private String currentCategoryName = "";
 	private boolean viewBackIcon = false;
 	private List<Category> listCate = new ArrayList<Category>() ;
-	private List<String> listCateId_ = new ArrayList<String>() ;
-	private List<Boolean> categoryModerators = new ArrayList<Boolean>() ;
-	private boolean canEditQuestion = false ;
-	private boolean isModeratorSubCate = false ;
+	Map<String, Boolean> categoryMod = new HashMap<String, Boolean>(); 
+	
+	//private boolean canEditQuestion = false ;
+	private boolean isModerator = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
 	private String[] firstActionCateUnWatch_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
@@ -118,13 +118,11 @@ public class UICategories extends UIContainer{
 	@SuppressWarnings("unused")
 	private long[] getCategoryInfo() {
 		long[] result = new long[]{0, 0, 0, 0} ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
-			result = faqService_.getCategoryInfo(categoryId_, sessionProvider, faqSetting_) ;
+			result = faqService_.getCategoryInfo(categoryId_, faqSetting_) ;
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		sessionProvider.close();
 		return result ;
 	}
 
@@ -132,108 +130,40 @@ public class UICategories extends UIContainer{
 	private List<Category> getListCate(){
 		return this.listCate ;
 	}
-
-	public void setPathCategory(String pathCategory){
-		String[] listIds = pathCategory.split("/");
-		this.categoryId_ = listIds[listIds.length - 1];
-		if(listIds.length > 1){
-			if(listIds.length > 2)this.parentCateID_ = listIds[listIds.length - 2];
-			else this.parentCateID_ = null;
-		}else{
-			this.categoryId_ = null;
-			this.parentCateID_ = null;
-		}
-		this.font_weight = new String[]{"bold", "none", "none"};;
-	}
-
-	private void setIsModerators(String currentUser_) {
-		//categoryModerators.clear() ;
-		isModeratorSubCate = false;
-		canEditQuestion = false ;
-		
-		if(faqSetting_.isAdmin()) {
-			canEditQuestion = true ;
-			isModeratorSubCate = true;
-		} else {
-			if(categoryId_ == null || categoryId_.trim().length() < 1) {
-				listCateId_.clear() ;
-			} else {
-				if(!listCateId_.contains(categoryId_)) {
-					try {
-						if(listCateId_.isEmpty() || 
-							 !getPathService(categoryId_).equals(getPathService(listCateId_.get(listCateId_.size() - 1))))
-								listCateId_.add(categoryId_) ;
-						else listCateId_.set(listCateId_.size() - 1, categoryId_);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					int pos = listCateId_.indexOf(categoryId_) ;
-					for(int i = pos + 1; i < listCateId_.size() ; i ++) {
-						listCateId_.remove(i) ;
-					}
-				}
-			}
-			if(listCateId_.size() > 0){
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-				int i = 0;
-				for(String cateIdProcess : listCateId_) {
-					try {
-						if(faqService_.getCategoryById(cateIdProcess, sessionProvider).getModeratorsCategory().contains(currentUser_)){
-							canEditQuestion = true ;
-							//if(i < listCateId_.size() - 1) isModeratorSubCate = true;
-							if(i < listCateId_.size()) isModeratorSubCate = true;
-							break ;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					i ++;
-				}
-				sessionProvider.close();
-			}
-
-			if(!isModeratorSubCate) {
-				categoryModerators.clear() ;
-				for(Category category : listCate) {
-					try {
-						if(category.getModeratorsCategory().contains(currentUser_)) {
-							categoryModerators.add(true) ;
-						}else {
-							categoryModerators.add(false) ;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			} else if(viewBackIcon) {
-				categoryModerators.clear() ;
-				for(int i = 0; i < listCate.size(); i ++){
-					categoryModerators.add(true);
-				}
-			}
-
-		}
+	
+	public String getCategoryPath() { return categoryId_ ;}
+	public void setPathCategory(String categoryPath){
+		//System.out.println("categoryPath ===>" + categoryPath) ;
+		this.categoryId_ = categoryPath;
+		if(categoryPath.indexOf("/") >= 0)	this.parentCateID_ = categoryPath.substring(0, categoryPath.lastIndexOf("/")) ;
+		else this.parentCateID_ = categoryPath ; 
+		//System.out.println("categoryId_ ===>" + categoryId_) ;
+		//System.out.println("parentCateID_ ===>" + parentCateID_) ;
+		this.font_weight = new String[]{"bold", "none", "none"};
 	}
 	
-	public boolean getCanEditQuestions(){
-		return this.canEditQuestion;
+	private void setIsModerators(String currentUser_) throws Exception{
+		categoryMod.clear() ;
+		if(faqSetting_.isAdmin()) isModerator = true;
+		if(!isModerator) isModerator = faqService_.isCategoryModerator(categoryId_, currentUser_);
+		if(!isModerator) {
+			for(Category cat : listCate) {
+				categoryMod.put(cat.getId(), faqService_.isCategoryModerator(cat.getPath(), currentUser_)) ;
+			}
+		}		
 	}
+	
+	private boolean isCategoryModerator(String categoryId) {
+		if(isModerator) return isModerator ;
+		return categoryMod.get(categoryId) ;
+	}	
 	
 	public String getCurrentName() {
-	  return currentName;
+	  return currentCategoryName;
   }
 	
-	private boolean isWatched(String cateId){
-		try{
-			SessionProvider sProvider = FAQUtils.getSystemProvider();
-			boolean isWatched = faqService_.getWatchByUser(currentUser, cateId, sProvider);
-			sProvider.close();
-			return isWatched;
-				
-		} catch (Exception e){
-			return false;
-		}
+	private boolean isWatched(String cateId) {
+		return faqService_.isUserWatched(currentUser, cateId);		
 	}
 	
 	@SuppressWarnings("unused")
@@ -245,12 +175,11 @@ public class UICategories extends UIContainer{
 	    if(userName != null){
 	    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
 	    }
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try{
 				newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, userPrivates);
-				currentName = faqService_.getCategoryById(this.categoryId_).getName();
+				currentCategoryName = faqService_.getCategoryById(this.categoryId_).getName();
 			} catch(Exception e){
-				currentName = faqService_.getCategoryById(this.parentCateID_).getName();
+				currentCategoryName = faqService_.getCategoryById(this.parentCateID_).getName();
 				e.printStackTrace();
 			}
 			viewBackIcon = true;
@@ -258,12 +187,11 @@ public class UICategories extends UIContainer{
 				newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false, userPrivates);
 				viewBackIcon = false;
 			}
-			if(currentName == null || currentName.trim().length() < 1) currentName = FAQUtils.getResourceBundle("UIBreadcumbs.label.eXoFAQ");
+			if(currentCategoryName == null || currentCategoryName.trim().length() < 1) currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIFAQContainer.class).getChild(UIBreadcumbs.class);
 			this.listCate.clear();
 			listCate.addAll(newList);
 			String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
-			sessionProvider.close();
 			setIsModerators(FAQUtils.getCurrentUser());
 		}
 		isSwap = false;
@@ -278,7 +206,7 @@ public class UICategories extends UIContainer{
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
-	public void resetListCate(SessionProvider sProvider) throws Exception{
+	public void resetListCate() throws Exception{
 		isSwap = true;
 		listCate.clear();
 		String userName = FAQUtils.getCurrentUser();
@@ -286,86 +214,16 @@ public class UICategories extends UIContainer{
     if(userName != null){
     	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
     }
-		listCate.addAll(faqService_.getSubCategories(parentCateID_, sProvider, faqSetting_, false, userPrivates));
+		listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, false, userPrivates));
 		setIsModerators(userName);
 	}
 	
-	public List<Watch> getListWatch(String categoryId) throws Exception {
-		List<Watch> watchList_ = new ArrayList<Watch>() ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		watchList_ = faqService_.getListMailInWatch(categoryId, sessionProvider).getAllWatch() ;
-		sessionProvider.close();
-		return watchList_ ;
-	}
-	
-	/*public Boolean checkUserWatch(String categoryId) throws Exception {
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-		if(!FAQUtils.isFieldEmpty(FAQUtils.getCurrentUser())){
-			List<Watch> listWatch = faqService_.getListMailInWatch(categoryId, sessionProvider).getAllWatch() ;
-			if(listWatch.size()>0) {
-				List<String> users = new ArrayList<String>() ;
-				for(Watch watch : listWatch) {
-					users.add(watch.getUser());
-				}
-				if(users.contains(FAQUtils.getCurrentUser())) return true;
-			}
-		}
-		sessionProvider.close();
-		return false ;
+	/*public List<Watch> getListWatch(String categoryId) throws Exception {
+		return faqService_.getListMailInWatch(categoryId).getAllWatch() ;		
 	}*/
 	
-	private List<Category> getAllSubCategory(String categoryId) throws Exception {
-		List<Category> listResult = new ArrayList<Category>() ;
-		Stack<Category> stackCate = new Stack<Category>() ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-		String userName = FAQUtils.getCurrentUser();
-    List<String>userPrivates = null;
-    if(userName != null){
-    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
-    }
-		Category cate = null ;
-		listResult.add(faqService_.getCategoryById(categoryId, sessionProvider)) ;
-		for(Category category : faqService_.getSubCategories(categoryId, sessionProvider, this.faqSetting_, false, userPrivates)) {
-			stackCate.push(category) ;
-		}
-		while(!stackCate.isEmpty()) {
-			cate = stackCate.pop() ;
-			listResult.add(cate) ;
-			for(Category category : faqService_.getSubCategories(cate.getId(), sessionProvider, this.faqSetting_, false, userPrivates)) {
-				stackCate.push(category) ;
-			}
-		}
-		sessionProvider.close();
-		return listResult ;
-	}
-	
-	public String cutCaret(String name) {
-		StringBuffer string = new StringBuffer();
-		char c;
-		for (int i = 0; i < name.length(); i++) {
-			c = name.charAt(i) ;
-			if(c == 47) continue ;
-			string.append(c) ;
-		}
-		return string.toString();
-	}
-	
-	public String getPathService(String categoryId) throws Exception {
-		String oldPath = "";
-		String path = "FAQService";
-		if(categoryId != null && !categoryId.equals("null")){
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
-			sessionProvider.close();
-			for(int i = listPath.size() -1 ; i >= 0; i --) {
-				oldPath = oldPath + "/" + listPath.get(i);
-			}
-			path += oldPath ;
-			oldPath = path.substring(0, path.lastIndexOf("/")) ;
-		} else {
-			oldPath = path;
-		}
-		return oldPath ;
+	private boolean hasWatch(String categoryPath) {
+		return faqService_.hasWatch(categoryPath) ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -383,8 +241,8 @@ public class UICategories extends UIContainer{
 	private String[] getActionCategoryWithUser(String cateId) {
 		try {
 			if(FAQUtils.getCurrentUser() != null){
-				if(!isWatched(cateId)) return userActionsCate_ ;
-				else return userActionsCateUnWatch_;
+				if(isWatched(cateId)) return userActionsCateUnWatch_;
+				else return userActionsCate_ ;
 			}
 			else return new String[]{userActionsCate_[0]};
 		} catch (Exception e) {
@@ -405,49 +263,20 @@ public class UICategories extends UIContainer{
 			questions.backPath_ = "" ;
 			questions.language_ = "";
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			try {
-				if(categoryId != null && !categoryId.equals("FAQService") && !categoryId.equals("null")){
-					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider).isViewAuthorInfor() ;
-					questions.setCategoryId(categoryId) ;
-				} else {
-					questions.viewAuthorInfor = uiCategories.faqService_.getCategoryById(null, sessionProvider).isViewAuthorInfor() ;;
-					questions.setCategoryId(null) ;
-					categoryId = "FAQService";
-				}
+				questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
+				questions.setCategoryId(categoryId) ;
 			} catch (Exception e) {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				questions.setIsNotChangeLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				sessionProvider.close();
 				return ;
 			}
-			sessionProvider.close();
-			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-			String oldPath = breadcumbs.getPaths() ;
-			if(oldPath != null && oldPath.trim().length() > 0) {
-				if(!oldPath.contains(categoryId)) {
-					if(oldPath.indexOf("/") > 0){
-						String parentCateId = oldPath.substring(oldPath.lastIndexOf("/")  + 1);
-						for(Category category : uiCategories.listCate){
-							if(category.getId().equals(parentCateId)){
-								oldPath = oldPath.substring(0, oldPath.lastIndexOf("/"));
-								break;
-							}
-						}
-					}
-					else oldPath = "FAQService";
-					questions.newPath_ = oldPath + "/" +categoryId ;
-					questions.setPath(questions.newPath_) ;
-					breadcumbs.setUpdataPath(questions.newPath_);
-				}else {
-					oldPath = oldPath.substring(0, oldPath.indexOf(categoryId) + categoryId.length());
-					breadcumbs.setUpdataPath(oldPath);
-				}
-			} else breadcumbs.setUpdataPath(categoryId);
-			uiCategories.setPathCategory(breadcumbs.getPaths());
+			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;			
+			breadcumbs.setUpdataPath(categoryId);
+			uiCategories.setPathCategory(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 		}
 	}
@@ -455,27 +284,25 @@ public class UICategories extends UIContainer{
 	static	public class AddCategoryActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			String parentCategoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UICategoryForm category = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-			if(!FAQUtils.isFieldEmpty(categoryId)) {
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
+			if(!FAQUtils.isFieldEmpty(parentCategoryId)) {
 				try {
-					Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
+					Category cate = uiCategories.faqService_.getCategoryById(parentCategoryId) ;
 					String currentUser = FAQUtils.getCurrentUser() ;
 					if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(currentUser)) {
 						uiPopupAction.activate(uiPopupContainer, 580, 500) ;
 						uiPopupContainer.setId("SubCategoryForm") ;
-						category.setParentId(categoryId) ;
+						category.setParentId(parentCategoryId) ;
+						category.updateAddNew(true) ;
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						//question.setIsNotChangeLanguage();
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-						sessionProvider.close();
 						return ;
 					}
 				} catch (Exception e) {
@@ -483,15 +310,12 @@ public class UICategories extends UIContainer{
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-					sessionProvider.close();
 					return ;
 				}
-				sessionProvider.close();
 			} else {
 				uiPopupAction.activate(uiPopupContainer, 580, 500) ;
 				uiPopupContainer.setId("AddCategoryForm") ;
 			}
-			category.init(true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
@@ -504,16 +328,14 @@ public class UICategories extends UIContainer{
 			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			try {
-				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
+				Category category = uiCategories.faqService_.getCategoryById(categoryId) ;
 				String currentUser = FAQUtils.getCurrentUser() ;
-				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(currentUser)) {
+				if(uiCategories.faqSetting_.isAdmin() || category.getModeratorsCategory().contains(currentUser)) {
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-					uiCategoryForm.init(false);
-					Category category = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider);
+					uiCategoryForm.updateAddNew(false);
 					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
@@ -528,7 +350,6 @@ public class UICategories extends UIContainer{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
-			sessionProvider.close();
 		}
 	}
 	
@@ -536,40 +357,30 @@ public class UICategories extends UIContainer{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction uiPopupAction = faqPortlet.getChild(UIPopupAction.class) ; 
+			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			try {
-				Category cate = uiCategories.faqService_.getCategoryById(categoryId) ;
-				String parentCateId = null;
-				if(uiCategories.viewBackIcon)parentCateId = uiCategories.categoryId_;
-				else parentCateId = uiCategories.parentCateID_;
-				if(uiCategories.faqSetting_.isAdmin() || uiCategories.canEditQuestion 
-					|| cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					Category category = uiCategories.faqService_.getCategoryById(categoryId);
-					if (category != null) {
-						UIPopupContainer uiPopupContainer = uiPopupAction.activate(UIPopupContainer.class,550) ;	
-						uiPopupContainer.setId("FAQEditSubCategoryForm") ;
-						UICategoryForm categoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
-						categoryForm.init(false) ;
-						categoryForm.setParentId(parentCateId) ;
-						categoryForm.setCategoryValue(category, true) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-					} else {
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					}
+				Category category = uiCategories.faqService_.getCategoryById(categoryId) ;
+				String currentUser = FAQUtils.getCurrentUser() ;
+				if(uiCategories.faqSetting_.isAdmin() || category.getModeratorsCategory().contains(currentUser)) {
+					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
+					uiPopupContainer.setId("EditCategoryForm") ;
+					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
+					uiCategoryForm.updateAddNew(false);
+					uiCategoryForm.setCategoryValue(category, true) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.erroDonotHavePermissionEdit", null, ApplicationMessage.WARNING)) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class));
+				e.printStackTrace();
+				FAQUtils.findCateExist(uiCategories.faqService_, uiCategories.getAncestorOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
 		}
 	}
@@ -580,24 +391,10 @@ public class UICategories extends UIContainer{
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
 			try {
-				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
+				Category cate = uiCategories.faqService_.getCategoryById(categoryId) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					List<Category> listCate = uiCategories.getAllSubCategory(categoryId) ;
-					FAQSetting faqSetting = new FAQSetting();
-					faqSetting.setDisplayMode(FAQUtils.DISPLAYBOTH);
-					faqSetting.setOrderBy("alphabet");
-					faqSetting.setOrderType("asc");
-					for(Category category : listCate) {
-						String id = category.getId() ;
-						List<Question> listQuestion = uiCategories.faqService_.getAllQuestionsByCatetory(id, sessionProvider, faqSetting).getAll() ;
-						for(Question ques: listQuestion) {
-							String questionId = ques.getId() ;
-							uiCategories.faqService_.removeQuestion(questionId, sessionProvider) ;
-						}
-					}
-					uiCategories.faqService_.removeCategory(categoryId, sessionProvider) ;
+					uiCategories.faqService_.removeCategory(categoryId) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -607,7 +404,6 @@ public class UICategories extends UIContainer{
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
@@ -620,25 +416,15 @@ public class UICategories extends UIContainer{
 			questions.isChangeLanguage = false ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = uiCategories.getAncestorOfType(UIFAQPortlet.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			if(categoryId != null){
-				try {
-					uiCategories.faqService_.getCategoryById(categoryId, sessionProvider);
-				} catch (Exception e) {
-					UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					try {
-						questions.setQuestions() ;
-					} catch (Exception pathEx){}
-					UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
-					FAQUtils.findCateExist(uiCategories.faqService_, fAQContainer);
-					event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-					sessionProvider.close();
-					return ;
-				}
+			if(!uiCategories.faqService_.isExisting(categoryId)){
+				UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;
+				FAQUtils.findCateExist(uiCategories.faqService_, fAQContainer);
+				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
+				return ;
 			}
-			sessionProvider.close();
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
@@ -675,7 +461,7 @@ public class UICategories extends UIContainer{
 		}
 	}
 
-	static	public class ImportActionListener extends EventListener<UICategories> {
+	static public class ImportActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -690,70 +476,18 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
-	static	public class MoveCategoryActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
-			UICategories uiCategories = event.getSource() ; 
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
-			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
-			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider() ;
-			try {
-				Category cate = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider) ;
-				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-					List<Category> listCate = uiCategories.faqService_.getSubCategories(null, sessionProvider, uiCategories.faqSetting_, false, null) ;
-					String cateId = null ;
-					if(listCate.size() == 1 ) {
-						for(Category cat: listCate) { cateId = cat.getId(); }
-					} 
-					if(listCate.size() > 1 || listCate.size() == 1 && !categoryId.equals(cateId)) {
-						UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
-						popupContainer.setId("MoveCategoryForm") ;
-						uiMoveCategoryForm.setCategoryID(categoryId) ;
-						uiMoveCategoryForm.setFAQSetting(uiCategories.faqSetting_) ;
-						uiMoveCategoryForm.setListCate() ;
-						popupAction.activate(popupContainer, 600, 400) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					} else {
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					}
-				} else {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				}
-			} catch (Exception e) {
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-			} finally{
-				sessionProvider.close();
-			}
-		}
-	}
-	
 	static	public class WatchActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			try {
 				Watch watch = new Watch();
 				String userName = FAQUtils.getCurrentUser();
 				watch.setUser(userName);
 				watch.setEmails(FAQUtils.getEmailUser(userName));
-				for(Watch watch2 : uiCategories.faqService_.getListMailInWatch(objectId, sessionProvider).getAllWatch()){
-					if(watch2.getEmails().equals(watch.getEmails()) && watch.getUser().equals(userName)){
-						watch = null;
-						break;
-					}
-				}
-				if(watch != null)uiCategories.faqService_.addWatch(objectId, watch, sessionProvider);
+				uiCategories.faqService_.addWatchCategory(categoryId, watch);
 				uiApplication.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null, ApplicationMessage.INFO)) ;
 			} catch (Exception e) {
 				FAQUtils.findCateExist(uiCategories.faqService_, container);
@@ -761,58 +495,35 @@ public class UICategories extends UIContainer{
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
-			sessionProvider.close();
 		}
 	}
 	
 	static	public class WatchManagerActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
-			String objectID = event.getRequestContext().getRequestParameter(OBJECTID);
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			// watch manager for category
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			if(objectID.indexOf("Question") < 0){
-				try {
-					Category cate = uiCategories.faqService_.getCategoryById(objectID, sessionProvider) ;
-					if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
-						UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-						UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
-						UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
-						popupContainer.setId("WatchManager") ;
-						watchManager.setCategoryID(objectID) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					} else {
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					}
-				} catch (Exception e) {
-					FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class));
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				}
-
-				// watch question manager
-			} else {
-				try {
-					uiCategories.faqService_.getQuestionById(objectID, sessionProvider) ;
+			try {
+				//if(uiCategories.faqSetting_.isAdmin() || uiCategories.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
 					UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 					UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
 					UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
 					popupContainer.setId("WatchManager") ;
-					watchManager.setQuestionID(objectID) ;
+					watchManager.setCategoryID(categoryId) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-				} catch (Exception e) {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				/*} else {
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				}
+				}*/
+			} catch (Exception e) {
+				FAQUtils.findCateExist(uiCategories.faqService_, faqPortlet.findFirstComponentOfType(UIFAQContainer.class));
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			}
-			sessionProvider.close();
 		}
 	}
 	
@@ -821,15 +532,12 @@ public class UICategories extends UIContainer{
 			UICategories uiCategories = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				uiCategories.faqService_.getCategoryById(cateId, sessionProvider) ;
-				uiCategories.faqService_.UnWatch(cateId, sessionProvider,FAQUtils.getCurrentUser()) ;
+				uiCategories.faqService_.unWatchCategory(cateId, FAQUtils.getCurrentUser()) ;
 			} catch (Exception e) {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
@@ -840,16 +548,14 @@ public class UICategories extends UIContainer{
 			String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
 			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				uiCategories.faqService_.swapCategories(uiCategories.parentCateID_, objectIds[0], objectIds[1], sessionProvider);
-				uiCategories.resetListCate(sessionProvider);
+				uiCategories.faqService_.swapCategories(objectIds[0], objectIds[1]);
+				//uiCategories.resetListCate();
 			} catch (Exception e) {
 				e.printStackTrace();
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
 		}
 	}
@@ -875,16 +581,17 @@ public class UICategories extends UIContainer{
 			String typeFilter = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class) ;
 			UIQuestions questions = container.findFirstComponentOfType(UIQuestions.class);
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			int pos = 0;
 			if(typeFilter.equals(uiCategories.FILTER_OPEN_QUESTIONS)){
-				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(sessionProvider, uiCategories.categoryId_, uiCategories.faqSetting_);
+				boolean mode = false ;
+				if( uiCategories.faqSetting_.getDisplayMode().equals("Approved")) mode = true ;
+				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(uiCategories.categoryId_, mode);
 				pos = 1;
 			} else if (typeFilter.equals(uiCategories.FILTER_PENDING_QUESTIONS)){
-				questions.pageList = uiCategories.faqService_.getPendingQuestionsByCategory(uiCategories.categoryId_, sessionProvider, uiCategories.faqSetting_);
+				questions.pageList = uiCategories.faqService_.getPendingQuestionsByCategory(uiCategories.categoryId_, uiCategories.faqSetting_);
 				pos = 2;
 			} else {
-				questions.pageList = uiCategories.faqService_.getQuestionsByCatetory(uiCategories.categoryId_, sessionProvider, uiCategories.faqSetting_);
+				questions.pageList = uiCategories.faqService_.getQuestionsByCatetory(uiCategories.categoryId_, uiCategories.faqSetting_);
 				pos = 0;
 			}
 			for(int i = 0; i < 3; i ++){
@@ -899,69 +606,71 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
+	static	public class MoveCategoryActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiCategories = event.getSource() ; 
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			System.out.println("MoveCategoryActionListener. categoryId ===> " + categoryId);
+			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
+			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
+			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			try {
+				//if(uiCategories.faqSetting_.isAdmin() || uiCategories.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
+					/*if(uiCategories.faqService_.existingCategories()  <= 1 ) {
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					} */
+					UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
+					popupContainer.setId("MoveCategoryForm") ;
+					uiMoveCategoryForm.setCategoryID(categoryId) ;
+					uiMoveCategoryForm.setFAQSetting(uiCategories.faqSetting_) ;
+					uiMoveCategoryForm.setListCate() ;
+					popupAction.activate(popupContainer, 600, 400) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+					
+				/*} else {
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+				}*/
+			} catch (Exception e) {
+				e.printStackTrace() ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			} 
+		}
+	}
+	
 	static	public class MoveCategoryIntoActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
 			String[] objectIds = event.getRequestContext().getRequestParameter(OBJECTID).split(",");
 			String categoryId = objectIds[0];
 			String destCategoryId = objectIds[1];
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				Category category = uiCategories.faqService_.getCategoryById(destCategoryId, sessionProvider);
+				Category category = uiCategories.faqService_.getCategoryById(destCategoryId);
 				List<String> usersOfNewCateParent = new ArrayList<String>();
 				usersOfNewCateParent.addAll(Arrays.asList(category.getModerators())) ;
-				boolean canMove = false;
-				if(uiCategories.faqSetting_.isAdmin() || uiCategories.canEditQuestion){
-					canMove = true;
-				} else {
-					String userId = FAQUtils.getCurrentUser();
-					if(usersOfNewCateParent.contains(userId)) canMove = true;
-					else {
-						List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(userId);
-						for(String user : usersOfNewCateParent){
-							if(currentUser.contains(user)) {
-								canMove = true;
-								break;
-							}
-						}
-					}
-				}
-				
-				if(!canMove){
+				String user = FAQUtils.getCurrentUser() ;
+				if(uiCategories.faqSetting_.isAdmin() || (uiCategories.faqService_.isCategoryModerator(categoryId, user) && 
+						uiCategories.faqService_.isCategoryModerator(destCategoryId, user))){
+					uiCategories.faqService_.moveCategory(categoryId, destCategoryId) ;					
+				}else{
 					UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
 																		new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					sessionProvider.close();
 					return;
 				}
-				
-				uiCategories.faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
-				
-				category = uiCategories.faqService_.getCategoryById(categoryId, sessionProvider);
-				for(String usr : category.getModerators()){
-					if(!usersOfNewCateParent.contains(usr)) usersOfNewCateParent.add(usr);
-				}
-				category.setModerators(usersOfNewCateParent.toArray(new String[]{}));
-				uiCategories.faqService_.saveCategory(destCategoryId, category, false, sessionProvider);
-				/*for(CateClass cateClass : uiCategories.getListObjCategory(destCategoryId)) {
-					List<String> newUserList = new ArrayList<String>() ;
-					newUserList.addAll(usersOfNewCateParent) ;
-					for(String user : cateClass.getCategory().getModerators()) {
-						if(!newUserList.contains(user)) {
-							newUserList.add(user) ;
-						}
-					}
-					cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
-					uiCategories.faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, sessionProvider) ;
-				}*/
 			}catch (Exception e) {
 				e.printStackTrace();
 				UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
 			//questions.setListObject() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories.getAncestorOfType(UIFAQContainer.class)) ;
 		}

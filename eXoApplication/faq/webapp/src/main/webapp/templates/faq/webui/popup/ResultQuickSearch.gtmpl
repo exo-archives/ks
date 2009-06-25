@@ -24,40 +24,40 @@
  										</thead>
  										<tbody>
  										<% 
- 										List formSearchs = uicomponent.getFormSearchs() ; 
- 										if(formSearchs != null && formSearchs.size() > 0){
- 											for(formSearch in formSearchs) {
-												String Id = formSearch.getId();
-												String name = formSearch.getName() ;
+ 										List searchResults = uicomponent.getSearchResults() ; 
+ 										if(searchResults != null && searchResults.size() > 0){
+ 											for(result in searchResults) {
+												String Id = result.getId();
+												String name = result.getName() ;
 												Format formatter = new SimpleDateFormat("MM/dd/yyyy ");
-						 						String date = formatter.format(formSearch.getCreatedDate());
-						 						String icon = formSearch.getIcon() ;
-						 						String link = uicomponent.event("Link",Id);
+						 						String date = formatter.format(result.getCreatedDate());
+						 						String icon = result.getIcon() ;
+						 						String categoryLink = uicomponent.event("OpenCategory",Id);
 						 						String linkQuestion = uicomponent.event("LinkQuestion",Id);
  										 %>
  											<tr class="EvenRow">
  												<td class="text" style="width:30px; text-align:center"><div class="$icon"><span></span></div></td>
  												<%
+ 												String title = name;
 												if(name.length()>90) {
-													String title = name ;
 													title = FAQUtils.getTitle(title) ; 
 													name = FAQUtils.getSubString(name, 90);
- 												%>
- 												<td class="text" style="text-align:left"><a href="$link" title="$title">$name</a></td>
- 												<%
-												} else {
- 												%>
- 												<td class="text" style="text-align:left"><a href="$link">$name</a></td>
- 												<%}%>
- 												<td class="text" style="width:90px; text-align:center">$date</td>
- 												<td style="width:30px; text-align:center">
- 												<% if(Id.indexOf("ategory")> 0) {
+ 												}%>
+ 												
+ 												<% if(result.getType().equals("faqCategory")) {
  												 %>
- 													<div onclick="$link"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 												 	<td class="text" style="text-align:left"><a href="$categoryLink" title="$title">$name</a></td>
+ 												 	<td class="text" style="width:90px; text-align:center">$date</td>
+ 													<td style="width:30px; text-align:center">
+ 														<div onclick="$categoryLink"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 													</td>	
  													<% } else { %>
- 													<div onclick="$linkQuestion"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 													<td class="text" style="text-align:left"><a href="$linkQuestion" title="$title">$name</a></td>
+ 												 	<td class="text" style="width:90px; text-align:center">$date</td>
+ 													<td style="width:30px; text-align:center">
+ 														<div onclick="$linkQuestion"><div class="CheckIcon" style="margin:0px auto;"></div></div>
+ 													</td>
  													<% } %>
- 												</td>
  											</tr>
  											<% 
  												}

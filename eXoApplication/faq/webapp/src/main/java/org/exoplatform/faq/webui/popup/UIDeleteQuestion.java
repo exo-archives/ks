@@ -19,11 +19,9 @@ package org.exoplatform.faq.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -85,11 +83,8 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   static public class OkActionListener extends EventListener<UIDeleteQuestion> {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
-      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-      try{
-        deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getId(), sessionProvider) ;
-      } catch (Exception e) { }
-      sessionProvider.close();
+      //SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+      deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getPath()) ;
       if(!deleteQuestion.isManagement_) {
         UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

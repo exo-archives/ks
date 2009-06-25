@@ -1,5 +1,6 @@
 <% 
 	import org.exoplatform.faq.webui.FAQUtils;
+	import org.exoplatform.faq.service.Utils;
 	import org.exoplatform.web.application.JavascriptManager;
 
 	JavascriptManager jsmanager = _ctx.getRequestContext().getJavascriptManager();
@@ -20,32 +21,31 @@
 									String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
 									String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
 									String title = "" ;
-									if(namePath.equals(uicomponent.FIELD_EXOFAQ_LABEL)){
-										namePath = _ctx.appRes("UIBreadcumbs.label.eXoFAQ") ;
-									}
-									if(t < uicomponent.getMaxPath()) {
-										if(namePath.length() > 30) {
-											title = namePath ;
-											title = FAQUtils.getTitle(title) ; 
-											namePath = FAQUtils.getSubString(namePath,30);
-							%>
-											<a href="$url" onclick="$link; return false;" class="Selected ControlButton" title="$title">$namePath</a>
-										<% } else { %>
-											<a href="$url" onclick="$link; return false;" class="Selected ControlButton">$namePath</a>
-										<% } %>
-										<div class="RightArrowIcon ControlButton"><span></span></div>
-							 <% } else {
-							 			if(namePath.length() > 30) {
-											title = namePath ;
-											title = FAQUtils.getTitle(title) ; 
-											namePath = FAQUtils.getSubString(namePath,30);
-							%>
-											<div class="Selected ControlButton" title="$title">$namePath </div>
-										<% } else { %>
-											<div class="Selected ControlButton">$namePath</div>
-										<% } 
-									} %>
-						  <% t = t + 1 ;
+									if(namePath.equals(Utils.CATEGORY_HOME)){
+										namePath = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME) ;
+									}else {
+										if(t < uicomponent.getMaxPath()) {
+											if(namePath.length() > 30) {
+												title = FAQUtils.getTitle(namePath) ; 
+												namePath = FAQUtils.getSubString(namePath,30);
+											%>
+												<a href="$url" onclick="$link; return false;" class="Selected ControlButton" title="$title">$namePath</a>
+											<% } else { %>
+												<a href="$url" onclick="$link; return false;" class="Selected ControlButton">$namePath</a>
+											<% } %>
+											<div class="RightArrowIcon ControlButton"><span></span></div>
+								 <% } else {
+								 			if(namePath.length() > 30) {
+												title = FAQUtils.getTitle(namePath) ; 
+												namePath = FAQUtils.getSubString(namePath,30);
+								%>
+												<div class="Selected ControlButton" title="$title">$namePath </div>
+											<% } else { %>
+												<div class="Selected ControlButton">$namePath</div>
+											<% } 
+										}
+									}									
+						  	t = t + 1 ;
 						  } %>
 						 <div class="ScrollButtons" style="width:35px;_width:50px;padding: 4px 1px 0px 1px;">
 							<div title="Previous">

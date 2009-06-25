@@ -26,22 +26,22 @@ import java.util.List;
  * May 3, 2008 ,1:48:11 AM 
  */
 public class ValidatorDataInput {
-  private List<String> typeImage = Arrays.asList(new String[]{"gif", "jpg", "jpeg", "tiff", "bmp", "png", "tif"}) ;
+  static private List<String> typeImage = Arrays.asList(new String[]{"gif", "jpg", "jpeg", "tiff", "bmp", "png", "tif"}) ;
   
-  public boolean isNotEmptyInput(String inputString) {
+  public static boolean isNotEmptyInput(String inputString) {
     if(inputString == null || inputString.trim().length() < 1)
       return false ;
     return true ;
   }
   
-  public boolean isImage(String fileName) {
+  public static boolean isImage(String fileName) {
     String fileType = fileName.substring(fileName.lastIndexOf(".") + 1) ;
     if(typeImage.contains(fileType.toLowerCase()))
       return true ;
     return false ;
   }
   
-  public boolean fckContentIsNotEmpty(String input) {
+  public static boolean fckContentIsNotEmpty(String input) {
   	if(input == null || input.trim().length() < 1) return false;
     input = input.replaceAll("<p>", "") ;
     input = input.replaceAll("</p>", "") ;

@@ -40,6 +40,8 @@ public class Comment {
   /** The comment by. */
   private String commentBy;
   
+  private String fullName;
+  
   /** The date comment. */
   private Date dateComment;
   
@@ -96,6 +98,14 @@ public class Comment {
 		return commentBy;
 	}
 	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
 	/**
 	 * Sets the comment by.
 	 * 

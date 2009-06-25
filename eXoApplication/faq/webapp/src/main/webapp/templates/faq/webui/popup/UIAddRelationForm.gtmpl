@@ -1,6 +1,7 @@
 <% 
 	import org.exoplatform.faq.service.Category;
 	import org.exoplatform.faq.service.Question;
+	import org.exoplatform.faq.service.Utils;
 	String compId = uicomponent.getId() ; 
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
@@ -16,7 +17,7 @@
     int n = listCate.size() ;
     int i = 0 ;
     int id = 0 ;
-   %>
+   %>   
    	<div class="FAQCategoryTreeView" id="FAQCate$i">
 			<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
 				<%=uicomponent.homeCategoryName%>
@@ -25,7 +26,7 @@
 		<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
 			<div style="margin-top:10px; display:block;" id="FAQViewChild$i">
 	    <%
-	      for(Question question : uicomponent.getQuestions(null)) {%>
+	      for(Question question : uicomponent.getQuestions(Utils.CATEGORY_HOME)) {%>
 		    	<div id="FAQCate$i" style="margin:5px;">
 		        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 		    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
@@ -46,7 +47,7 @@
 					</div>
 					<div style=" display:none; padding-left:30px ; margin-top:10px;" id="FAQViewChild$i">
 						<div style="margin-top:10px;" id="FAQViewChild$i">
-			    	<%for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
+						<%for(Question question : uicomponent.getQuestions(stackCateid.pop())) {%>
 					    	<div id="FAQCate$i" style="margin:5px;">
 					        	<% uiform.renderField(uicomponent.getChildById(question.getId())) %>
 					    			<%= question.getQuestion().replaceAll("<p>", "").replaceAll("</p>", "");%>
@@ -90,8 +91,8 @@
 			    		<%}%>
 		          </div>
 	    <%
-	        } else {%>
-	     		<%for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
+	        } else {
+						for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
 	    				</div>
 	     		<%}%>
 					 <div class="Icon FAQCategoryTreeView">
@@ -111,7 +112,6 @@
 	        }
 	      }
 	    }%>
-	    </div>
 	    <%
 	    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
 	    	</div>

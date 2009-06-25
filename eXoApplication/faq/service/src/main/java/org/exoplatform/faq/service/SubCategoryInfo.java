@@ -68,4 +68,5 @@ public class SubCategoryInfo {
 	public void setSubCateInfos(List<SubCategoryInfo> subCateInfos) {
   	this.subCateInfos = subCateInfos;
   }
+
 }

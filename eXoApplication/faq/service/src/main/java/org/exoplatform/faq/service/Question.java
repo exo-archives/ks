@@ -93,15 +93,21 @@ public class Question {
   
   /** The emails watch. */
   private String[] emailsWatch = null;
+ 
+  private QuestionLanguage[] multiLanguages;
   
   /** The path topic discuss. */
   private String topicIdDiscuss;
+  
+  private String path;
   
   /**
    * Class constructor specifying id of object is created.
    */
   public Question() {
     id = "Question" + IdGenerator.generate() ;
+    relations = new String[]{} ;
+    multiLanguages = new QuestionLanguage[]{} ;
   }
   
   /**
@@ -466,6 +472,17 @@ public class Question {
 	 */
 	public void setComments(Comment[] comments) {
 		this.comments = comments;
+	}
+
+	public void setPath(String path) { this.path = path ;}
+	public String getPath() { return path ;}
+
+	public void setMultiLanguages(QuestionLanguage[] multiLanguages) {
+		this.multiLanguages = multiLanguages;
+	}
+
+	public QuestionLanguage[] getMultiLanguages() {
+		return multiLanguages;
 	}
 }
 

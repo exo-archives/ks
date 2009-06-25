@@ -30,7 +30,7 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -108,26 +108,24 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				faqService.getCategoryById(categoryId, sessionProvider) ;
+				faqService.isExisting(categoryId) ;
 			} catch (Exception e) {
 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				sessionProvider.close();
 				return ;
 			}
 			uiQuestions.setCategories(categoryId) ;
 			uiQuestions.setIsNotChangeLanguage() ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 			breadcumbs.setUpdataPath(null) ;
-			String oldPath = "" ;
+			/*String oldPath = "" ;
 			List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
 			for(int i = listPath.size() -1 ; i >= 0; i --) {
 				oldPath = oldPath + "/" + listPath.get(i);
-			}
-			String newPath ="FAQService"+oldPath ;
+			}*/
+			String newPath ="FAQService" + "/" + categoryId ;
 			uiQuestions.setPath(newPath) ;
 			breadcumbs.setUpdataPath(newPath);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
@@ -136,7 +134,6 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 			faqPortlet.cancelAction() ;
-			sessionProvider.close();
 		}
 	}
 

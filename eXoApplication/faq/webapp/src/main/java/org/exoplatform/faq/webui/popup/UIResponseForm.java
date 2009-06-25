@@ -44,7 +44,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -73,7 +72,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIResponseForm.CancelActionListener.class),
 			@EventConfig(listeners = UIResponseForm.AddRelationActionListener.class),
 			@EventConfig(listeners = UIResponseForm.RemoveRelationActionListener.class),
-			@EventConfig(listeners = UIResponseForm.ChangeQuestionActionListener.class)
+			@EventConfig(listeners = UIResponseForm.ChangeLanguageActionListener.class)
 		}
 )
 
@@ -83,8 +82,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
 	private static final String IS_APPROVED = "IsApproved" ;
 	private static Question question_ = null ;
-	private Answer answer_ = null;
-	private boolean isNew_ = true;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	@SuppressWarnings("unused")
@@ -104,17 +101,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	// form variable:
 	Map<String, Answer> mapAnswers = new HashMap<String, Answer>();
+	Map<String, QuestionLanguage> languageMap = new HashMap<String, QuestionLanguage>();
 	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
-	private String questionChanged_ = new String() ;
-	private String responseContent_ = new String () ;
-	private String languageIsResponsed = "" ;
+	private String currentLanguage = "" ;
 	private String link_ = "" ;
-	private boolean isChildren_ = false ;
+	private boolean isChildOfQuestionManager_ ;
 	private FAQSetting faqSetting_;
-	private boolean cateIsApprovedAnswer_ = true;
-	
-  private long currentDate = new Date().getTime();
-
+	private boolean isAnswerApproved = true;
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 
@@ -122,7 +115,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	public void setLink(String link) { this.link_ = link;}
 	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_= faqSetting;}
 	public UIResponseForm() throws Exception {
-		isChildren_ = false ;
+		isChildOfQuestionManager_ = false ;
 		inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "") ;
 
 		checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
@@ -130,58 +123,51 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		this.setActions(new String[]{"Save", "Cancel"}) ;
 	}
 
-  @SuppressWarnings("unused")
-	private void setListRelation() throws Exception {
-    String[] relations = question_.getRelations() ;
-    this.setListIdQuesRela(Arrays.asList(relations)) ;
-    if(relations != null && relations.length > 0){
-      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-      for(String relation : relations) {
-        listRelationQuestion.add(faqService.getQuestionById(relation).getQuestion()) ;
-      }
-      sessionProvider.close();
-    }
-  }
-  
   public void setAnswerInfor(Question question, Answer answer, String language){
   	setQuestionId(question, language, answer.getApprovedAnswers());
-  	this.answer_ = answer;
-  	this.isNew_ = false;
+  	mapAnswers.clear() ;
+  	mapAnswers.put(answer.getLanguage(), answer) ;
   	inputResponseQuestion_.setValue(answer.getResponses());
-  	questionLanguages_.setDisabled(true);
-  	questionLanguages_.setOnChange("");
+  	listLanguageToReponse.clear() ;
+  	listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
+  	questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
+		questionLanguages_.setSelectedValues(new String[]{answer.getLanguage()}) ;
   }
 
 	@SuppressWarnings("unchecked")
-  public void setQuestionId(Question question, String languageViewed, boolean cateIsApprovedAnswer){
-		this.cateIsApprovedAnswer_ = cateIsApprovedAnswer;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+  public void setQuestionId(Question question, String languageViewed, boolean isAnswerApp){
+		this.isAnswerApproved = isAnswerApp;
 		try{
 			questionDetail = question.getDetail();
 			questionContent = question.getQuestion();
-			if(listQuestIdRela!= null && !listQuestIdRela.isEmpty()) {
-				listRelationQuestion.clear() ;
-				listQuestIdRela.clear() ;
-			}
+			listRelationQuestion.clear() ;
+			listQuestIdRela.clear() ;
 			question_ = question ;
 			if(languageViewed != null && languageViewed.trim().length() > 0) {
-				languageIsResponsed = languageViewed ;
+				currentLanguage = languageViewed ;
 			} else {
-				languageIsResponsed = question.getLanguage();
+				currentLanguage = question.getLanguage();
 			}
-			this.setListRelation(sessionProvider);
+			this.setListRelation();
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		this.questionId_ = question.getId() ;
+		this.questionId_ = question.getPath() ;
 		
-		listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage() + " ( default) ", question.getLanguage()));
+		listLanguageToReponse.add(new SelectItemOption<String>(question.getLanguage() + " (default) ", question.getLanguage()));
+		QuestionLanguage defaultLanguage = new QuestionLanguage() ;
+		defaultLanguage.setLanguage(question.getLanguage()) ;
+		defaultLanguage.setQuestion(question.getQuestion()) ;
+		defaultLanguage.setDetail(question.getDetail()) ;
+		defaultLanguage.setState(QuestionLanguage.VIEW) ;
+		languageMap.put(defaultLanguage.getLanguage(), defaultLanguage) ;
 		try {
 			for(QuestionLanguage language : faqService.getQuestionLanguages(questionId_)){
-				if(language.getLanguage().equals(languageIsResponsed)){
+				if(language.getLanguage().equals(currentLanguage)){
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
 				}
+				languageMap.put(language.getLanguage(), language) ;
 				listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
 			}
 		} catch (Exception e) {
@@ -190,16 +176,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		
 		checkShowAnswer_.setChecked(question_.isActivated()) ;
 		isApproved_.setChecked(question_.isApproved()) ;
-		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, getListLanguageToReponse()) ;
-		questionLanguages_.setSelectedValues(new String[]{languageIsResponsed}) ;
-		questionLanguages_.setOnChange("ChangeQuestion") ;
+		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
+		questionLanguages_.setSelectedValues(new String[]{currentLanguage}) ;
+		questionLanguages_.setOnChange("ChangeLanguage") ;
 
 		addChild(inputResponseQuestion_) ;
 		addChild(questionLanguages_) ;
 		addChild(isApproved_) ;
 		addChild(checkShowAnswer_) ;
 		
-		sessionProvider.close();
 	}
 	
 	@SuppressWarnings("unused")
@@ -210,10 +195,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private String getLanguageIsResponse() {
-		return this.languageIsResponsed ;
+		return this.currentLanguage ;
 	}
 
-	private void setListRelation(SessionProvider sessionProvider) throws Exception {
+	private void setListRelation() throws Exception {
 		String[] relations = question_.getRelations() ;
 		this.setListIdQuesRela(Arrays.asList(relations)) ;
 		if(relations != null && relations.length > 0)
@@ -223,11 +208,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	}
 	public List<String> getListRelation() {
 		return listRelationQuestion ; 
-	}
-
-	@SuppressWarnings("unused")
-	private List<SelectItemOption<String>> getListLanguageToReponse() {
-		return listLanguageToReponse ;
 	}
 
 	public List<String> getListIdQuesRela() {
@@ -251,8 +231,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		return this.listRelationQuestion ;
 	}
 
-	public void setIsChildren(boolean isChildren) {
-		this.isChildren_ = isChildren ;
+	public void updateChildOfQuestionManager(boolean isChild) {
+		this.isChildOfQuestionManager_ = isChild ;
 		this.removeChildById(RESPONSE_CONTENT) ; 
 		this.removeChildById(QUESTION_LANGUAGE) ;
 		this.removeChildById(IS_APPROVED) ;
@@ -263,25 +243,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	public String getPathService(String categoryId) throws Exception {
-		String oldPath = "";
-		String path = "FAQService";
-		if(categoryId != null && !categoryId.equals("null")){
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			List<String> listPath = FAQUtils.getFAQService().getCategoryPath(categoryId) ;
-			sessionProvider.close();
-			for(int i = listPath.size() -1 ; i >= 0; i --) {
-				oldPath = oldPath + "/" + listPath.get(i);
-			}
-			path += oldPath ;
-			oldPath = path.substring(0, path.lastIndexOf("/")) ;
-		} else {
-			oldPath = path;
-		}
-		return oldPath ;
-	}
-	
-	private void updateDiscussForum(String linkForum, String url, SessionProvider sessionProvider) throws Exception{
+	private void updateDiscussForum(String linkForum, String url) throws Exception{
 		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String topicId = question_.getTopicIdDiscuss();
@@ -336,37 +298,40 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 	}
 
-	// action :
 		static public class SaveActionListener extends EventListener<UIResponseForm> {
 			@SuppressWarnings("unchecked")
 			public void execute(Event<UIResponseForm> event) throws Exception {
-				ValidatorDataInput validatorDataInput = new ValidatorDataInput() ;
 				UIResponseForm responseForm = event.getSource() ;
-				
+				String language = responseForm.questionLanguages_.getValue() ;
+				//System.out.println("language ==========>" + language);
 				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
-				if(validatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {
-						Answer answer = null;
-						if(responseForm.mapAnswers.containsKey(responseForm.languageIsResponsed)){
-							answer = responseForm.mapAnswers.get(responseForm.languageIsResponsed);
-							answer.setResponses(responseQuestionContent);
-						} else {
-							if(responseForm.answer_ == null) {
-								answer = new Answer();
-								answer.setDateResponse(new Date());
-								answer.setResponseBy(FAQUtils.getCurrentUser());
-								answer.setNew(true);
-							}	else {
-								answer = responseForm.answer_;
-								answer.setNew(false);
-							}
-							answer.setActivateAnswers(true);
-							answer.setApprovedAnswers(responseForm.cateIsApprovedAnswer_);
-							answer.setResponses(responseQuestionContent);
-						}
-						responseForm.mapAnswers.put(responseForm.languageIsResponsed, answer);
+				Answer answer;
+				if(ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {						
+					if(responseForm.mapAnswers.containsKey(language)){
+						answer = responseForm.mapAnswers.get(language);
+						answer.setResponses(responseQuestionContent);
+						answer.setNew(true) ;
+						//System.out.println(" =====Not empty=====>");
+					} else {
+						answer = new Answer();
+						answer.setDateResponse(new Date());
+						String currentUser = FAQUtils.getCurrentUser() ;
+						answer.setResponseBy(currentUser);
+						answer.setFullName(FAQUtils.getFullName(currentUser)) ;
+						answer.setNew(true);
+						answer.setActivateAnswers(true);
+						answer.setApprovedAnswers(responseForm.isAnswerApproved);
+						answer.setResponses(responseQuestionContent);
+						answer.setLanguage(language) ;
+						//System.out.println(" =====empty=====>");
+					}
+					responseForm.mapAnswers.put(language, answer);
 				} else{
-					if(responseForm.mapAnswers.containsKey(responseForm.languageIsResponsed))
-						responseForm.mapAnswers.remove(responseForm.languageIsResponsed);
+					if(responseForm.mapAnswers.containsKey(language)){
+						answer = responseForm.mapAnswers.get(language);
+						answer.setNew(false) ;
+						responseForm.mapAnswers.put(language, answer) ;
+					}
 				}
 
 				if(responseForm.mapAnswers.isEmpty()){
@@ -378,16 +343,13 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				
 				// set relateion of question:
 				question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
-
 				// set show question:
 				question_.setApproved(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(IS_APPROVED)).isChecked()) ;
 				question_.setActivated(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(SHOW_ANSWER)).isChecked()) ;
 
-				Node questionNode = null ;
-
 				//link
 				UIFAQPortlet portlet = responseForm.getAncestorOfType(UIFAQPortlet.class) ;
-				UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+				UIQuestions uiQuestions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 				
 				//Link Question to send mail 
 				String link = responseForm.getLink().replaceFirst("UIResponseForm", "UIQuestions").replaceFirst("AddRelation", "ViewQuestion").replaceAll("&amp;", "&");
@@ -404,38 +366,27 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String path = "" ;
-				path = responseForm.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+				path = question_.getPath() ;
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", path);
 				link = url + link;
 				question_.setLink(link) ;
 				
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				// set answer to question for discuss forum function  
 				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
 					question_.setAnswers(new Answer[]{responseForm.mapAnswers.get(question_.getLanguage())});
 				}
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
-					if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
-						faqService.saveAnswer(question_.getId(), responseForm.mapAnswers.get(question_.getLanguage()), responseForm.isNew_);
-					}
-					MultiLanguages multiLanguages = new MultiLanguages() ;
-					String[] languages = responseForm.mapAnswers.keySet().toArray(new String[]{});
-					questionNode = faqService.getQuestionNodeById(question_.getId());
-					for(String lang : languages){
-						if(!lang.equals(question_.getLanguage())){
-							try{
-								multiLanguages.saveAnswer(questionNode, responseForm.mapAnswers.get(lang), lang, sessionProvider);
-							} catch (Exception e){
-								e.printStackTrace();
-							}
-						}
-					}
+					//save answers and question
+					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
+					//System.out.println("answers.getlang() =========>" + answers[0].getLanguage());
+					faqService.saveAnswer(question_.getPath(), answers) ;
+					question_.setMultiLanguages(new QuestionLanguage[]{}) ;
 					faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
 					
 					// author: Vu Duy Tu. Make discuss forum
-					responseForm.updateDiscussForum(linkForum, url, sessionProvider);
+					responseForm.updateDiscussForum(linkForum, url);
 				} catch (PathNotFoundException e) {
 					e.printStackTrace();
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
@@ -446,16 +397,16 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 
 				//cancel
-				if(!responseForm.isChildren_) {
-					questions.setIsNotChangeLanguage() ;
+				if(!responseForm.isChildOfQuestionManager_) {
+					uiQuestions.setIsNotChangeLanguage() ;
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ; 
-					if(questionNode!= null && !("" + questions.getCategoryId()).equals(question_.getCategoryId())) {
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ; 
+					if(!uiQuestions.getCategoryId().equals(question_.getCategoryId())) {
 						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-						Category category = faqService.getCategoryById(question_.getCategoryId()) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
+						//Category category = faqService.getCategoryById(question_.getCategoryId()) ;
+						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{""}, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					}
 				} else {
@@ -463,13 +414,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
 					if(questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
 						questionForm.setIsChildOfManager(true) ;
-						questionForm.setQuestionId(question_) ;
+						questionForm.setQuestion(question_) ;
 					}
 					questionManagerForm.isResponseQuestion = false ;
 					UIPopupContainer popupContainer = questionManagerForm.getParent() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				}
-				sessionProvider.close();
 			}
 		}
 
@@ -477,7 +427,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm response = event.getSource() ;
 				UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
-				if(!response.isChildren_) {
+				if(!response.isChildOfQuestionManager_) {
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -529,55 +479,53 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			}
 		}
 
-		static public class ChangeQuestionActionListener extends EventListener<UIResponseForm> {
+		static public class ChangeLanguageActionListener extends EventListener<UIResponseForm> {
 			@SuppressWarnings("static-access")
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm responseForm = event.getSource() ;
-				String language = responseForm.questionLanguages_.getValue() ;
-				if(responseForm.languageIsResponsed != null && language.equals(responseForm.languageIsResponsed)) return ;
-				
+				String newLanguage = responseForm.questionLanguages_.getValue() ;
 				String responseContent = responseForm.inputResponseQuestion_.getValue() ;
-				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				String user = FAQUtils.getCurrentUser();
-				Answer answer = null;
-				if(validatorDataInput.fckContentIsNotEmpty(responseContent)){
-					if(responseForm.mapAnswers.containsKey(responseForm.languageIsResponsed)){
-						answer = responseForm.mapAnswers.get(responseForm.languageIsResponsed);
+				Answer answer;
+				//System.out.println(">>>>>>>>>>> New lang:" + newLanguage);
+				//System.out.println(">>>>>>>>>>> cur lang:" + responseForm.currentLanguage);
+				if(ValidatorDataInput.fckContentIsNotEmpty(responseContent)){
+					if(responseForm.mapAnswers.containsKey(responseForm.currentLanguage)){
+						answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
 						answer.setResponses(responseContent);
 					} else {
 						answer = new Answer();
 						answer.setNew(true);
 						answer.setActivateAnswers(true);
-						answer.setApprovedAnswers(responseForm.cateIsApprovedAnswer_);
+						answer.setApprovedAnswers(responseForm.isAnswerApproved);
 						answer.setDateResponse(new Date());
 						answer.setResponseBy(user);
 						answer.setResponses(responseContent);
+						answer.setLanguage(responseForm.currentLanguage) ;
 					}
-					responseForm.mapAnswers.put(responseForm.languageIsResponsed, answer);
+					responseForm.mapAnswers.put(responseForm.currentLanguage, answer);
 				} else {
-					if(responseForm.mapAnswers.containsKey(responseForm.languageIsResponsed)){
-						responseForm.mapAnswers.remove(responseForm.languageIsResponsed);
+					if(responseForm.mapAnswers.containsKey(responseForm.currentLanguage)){
+						answer = responseForm.mapAnswers.get(responseForm.currentLanguage);
+						answer.setNew(false) ;
+						responseForm.mapAnswers.put(responseForm.currentLanguage, answer) ;
 					}
 				}
 				
-				responseForm.languageIsResponsed = language ;
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-				if(language.equals(responseForm.question_.getLanguage())){
+				//get Question by language
+				responseForm.currentLanguage = newLanguage ;
+				if(newLanguage.equals(responseForm.question_.getLanguage())){
 					responseForm.questionDetail = responseForm.question_.getDetail();
 					responseForm.questionContent = responseForm.question_.getQuestion();
 				} else {
-					for(QuestionLanguage questionLanguage : faqService.getQuestionLanguages(responseForm.questionId_)){
-						if(questionLanguage.getLanguage().equals(language)){
-							responseForm.questionDetail = questionLanguage.getDetail();
-							responseForm.questionContent = questionLanguage.getQuestion();
-							break;
-						}
-					}
+					responseForm.questionDetail = responseForm.languageMap.get(newLanguage).getDetail();
+					responseForm.questionContent = responseForm.languageMap.get(newLanguage).getQuestion();
 				}
-				if(responseForm.mapAnswers.containsKey(language))
-					responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(language).getResponses()) ;
+				
+				//get answer by language
+				if(responseForm.mapAnswers.containsKey(newLanguage))
+					responseForm.inputResponseQuestion_.setValue(responseForm.mapAnswers.get(newLanguage).getResponses()) ;
 				else responseForm.inputResponseQuestion_.setValue("") ;
-				sessionProvider.close();
 				event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
 			}
 		}

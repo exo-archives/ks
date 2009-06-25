@@ -17,24 +17,16 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -49,7 +41,6 @@ import org.exoplatform.webui.form.UIForm;
  * Aus 01, 2007 2:48:18 PM 
  */
 
-@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UIMoveCategoryForm.gtmpl",
@@ -61,21 +52,12 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
-	private String homeCategoryName = "";
+	private String homeCategoryName;
 	private FAQSetting faqSetting_ ;
-	@SuppressWarnings("unused")
-	private static List<String> listCateSelected = new ArrayList<String>() ;
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIMoveCategoryForm() throws Exception {
-		Category category = faqService_.getCategoryById(null);
-		if(category.getName() != null && category.getName().trim().length() > 0){ 
-			homeCategoryName = category.getName();
-		}else{
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-			ResourceBundle res = context.getApplicationResourceBundle() ;
-			homeCategoryName = res.getString("UIAddRelationForm.title.RootCategory");
-		}
+		homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME) ;
 	}
 
 	public String getCategoryID() { return categoryId_; }
@@ -96,79 +78,32 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	}
 
 	public void setListCate() throws Exception {
-		List<Cate> listCate = new ArrayList<Cate>() ;
-		Cate parentCate = null ;
-		Cate childCate = null ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, false, null)) {
-			if(category != null && !category.getId().equals(categoryId_)) {
-				Cate cate = new Cate() ;
-				cate.setCategory(category) ;
-				cate.setDeft(0) ;
-				listCate.add(cate) ;
-			}
+		/*List<Cate> listCate = new ArrayList<Cate>() ;
+		Cate cate ;
+		for(Category category : faqService_.getSubCategories(null, faqSetting_, false, null)) {
+			cate = new Cate() ;
+			cate.setCategory(category) ;
+			cate.setDeft(0) ;
+			listCate.add(cate) ;
 		}
-
+		Cate parentCate;
+		Cate childCate;
 		while (!listCate.isEmpty()) {
 			parentCate = new Cate() ;
 			parentCate = listCate.get(listCate.size() - 1) ;
 			listCate.remove(parentCate) ;
 			this.listCate.add(parentCate) ;
-			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false, null)){
-				if(category != null && !category.getId().equals(categoryId_)) {
-					childCate = new Cate() ;
-					childCate.setCategory(category) ;
-					childCate.setDeft(parentCate.getDeft() + 1) ;
-					listCate.add(childCate) ;
-				}
+			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getPath(), faqSetting_, false, null)){
+				childCate = new Cate() ;
+				childCate.setCategory(category) ;
+				childCate.setDeft(parentCate.getDeft() + 1) ;
+				listCate.add(childCate) ;
 			}
-		}
+		}*/
+		this.listCate.addAll(faqService_.listingCategoryTree()) ;
 		String orderType = faqSetting_.getOrderType() ;
 		if(orderType.equals("asc")) faqSetting_.setOrderType("desc") ;
 		else faqSetting_.setOrderType("asc") ;
-		sessionProvider.close();
-	}
-
-	@SuppressWarnings("unused")
-	private List<Question> getQuestions(String cateId) {
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		try {
-			List<Question> listQues = faqService_.getQuestionsByCatetory(cateId, sessionProvider, faqSetting_).getAll() ;
-			sessionProvider.close();
-			return listQues;
-		} catch (Exception e) {
-			sessionProvider.close();
-			e.printStackTrace();
-			return null ;
-		}
-	}
-
-	public List<CateClass> getListObjCategory (String newParentId) {
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		try {
-			List<CateClass> listCate = new ArrayList<CateClass>() ;
-			CateClass cateClass = new CateClass() ;
-			cateClass.setCategory(faqService_.getCategoryById(this.categoryId_, sessionProvider)) ;
-			cateClass.setCateParentId(newParentId) ;
-			listCate.add(cateClass) ;
-			int i = 0 ;
-			while(i < listCate.size()) {
-				for(Category category : faqService_.getSubCategories(listCate.get(i).getCategory().getId(), sessionProvider, faqSetting_, false, null)) {
-					cateClass = new CateClass() ;
-					cateClass.setCategory(category) ;
-					cateClass.setCateParentId(listCate.get(i).getCategory().getId()) ;
-					listCate.add(cateClass) ;
-				}
-				i ++ ;
-			}
-			sessionProvider.close();
-			return listCate ;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sessionProvider.close();
-		}
-		return null ;
 	}
 
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
@@ -177,67 +112,23 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
 			String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			String categoryId = moveCategory.getCategoryID() ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				if(destCategoryId.equals("null")) {
-					if(moveCategory.faqSetting_.isAdmin()){
-						faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
-					} else {
-						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", new Object[]{"/"}, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						sessionProvider.close();
-						return;
-					}
-				} else {
-					Category category = faqService_.getCategoryById(destCategoryId, sessionProvider);
-					List<String> usersOfNewCateParent = Arrays.asList(category.getModerators()) ;
-					boolean canMove = false;
-					if(moveCategory.faqSetting_.isAdmin()){
-						canMove = true;
-					} else {
-						String userId = FAQUtils.getCurrentUser();
-						if(usersOfNewCateParent.contains(userId)) canMove = true;
-						else {
-							List<String> currentUser = FAQServiceUtils.getAllGroupAndMembershipOfUser(userId);
-							for(String user : usersOfNewCateParent){
-								if(currentUser.contains(user)) {
-									canMove = true;
-									break;
-								}
-							}
-						}
-					}
-					
-					if(!canMove){
-						UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
-																			new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						sessionProvider.close();
-						return;
-					}
-					
-					faqService_.moveCategory(categoryId, destCategoryId, sessionProvider) ;
-					for(CateClass cateClass : moveCategory.getListObjCategory(destCategoryId)) {
-						List<String> newUserList = new ArrayList<String>() ;
-						newUserList.addAll(usersOfNewCateParent) ;
-						for(String user : cateClass.getCategory().getModerators()) {
-							if(!newUserList.contains(user)) {
-								newUserList.add(user) ;
-							}
-						}
-						cateClass.getCategory().setModerators(newUserList.toArray(new String[]{})) ;
-						faqService_.saveCategory(cateClass.getParentId(), cateClass.getCategory(), false, sessionProvider) ;
-					}
+				boolean canMove = moveCategory.faqSetting_.isAdmin();
+				if(!canMove) canMove = faqService_.isCategoryModerator(destCategoryId, FAQUtils.getCurrentUser()) ;
+				if(canMove){
+					faqService_.moveCategory(categoryId, destCategoryId) ;
+				}else {
+					UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
+																		new Object[]{"destination"}, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					return;
 				}
 			}catch (Exception e) {
 				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
-			//questions.setListObject() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			faqPortlet.cancelAction() ;
 		}
@@ -249,26 +140,4 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 			faqPortlet.cancelAction() ;
 		}
 	}
-
-	private class CateClass {
-		Category category_ ;
-		String cateParentId_ ;
-
-		public CateClass() {} ;
-
-		public void setCategory(Category category) {
-			category_ = category ;
-		}
-		public void setCateParentId (String cateId) {
-			this.cateParentId_ = cateId ;
-		}
-
-		public Category getCategory(){
-			return this.category_ ;
-		}
-		public String getParentId() {
-			return this.cateParentId_ ;
-		}
-	}
-
 }

@@ -17,10 +17,10 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
-
-import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
@@ -29,14 +29,12 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -62,6 +60,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
 	private String homeCategoryName = "";
   private List<Question> listQuestion = new ArrayList<Question>() ;
   private List<String> quesIdsSelect = new ArrayList<String>() ;
+  Map<String, List<Question>> mapQuestion_ = new HashMap<String, List<Question>>();
   private String questionId_ ;
   private FAQSetting faqSetting_ = new FAQSetting();
   public void activate() throws Exception { }
@@ -69,27 +68,19 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   
   @SuppressWarnings("unused")
   private static List<String> listCateSelected = new ArrayList<String>() ;
-  private List<Cate> listCate = new ArrayList<Cate>() ;
+  private List<Cate> listCategory_ = new ArrayList<Cate>() ;
   private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   
   @SuppressWarnings("unused")
   private List<Cate> getListCate(){
-    return this.listCate ;
+    return this.listCategory_ ;
   }
   
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     FAQUtils.getPorletPreference(faqSetting_);
     faqService.getUserSetting(FAQUtils.getCurrentUser(), faqSetting_);
-		Category category = faqService.getCategoryById(null);
-		if(category.getName() != null && category.getName().trim().length() > 0){ 
-			homeCategoryName = category.getName();
-		}else{
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-			ResourceBundle res = context.getApplicationResourceBundle() ;
-			homeCategoryName = res.getString("UIAddRelationForm.title.RootCategory");
-		}
-    setListCate() ;
+    
   }
   
   public void setFAQSetting(FAQSetting faqSetting){
@@ -97,8 +88,10 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   }
   
   public void setRelationed(List<String> listRelation) {
-    quesIdsSelect = listRelation ;
-    try {
+    quesIdsSelect = listRelation ;    
+    try{ 
+    	homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
+    	setListCate(Utils.CATEGORY_HOME) ;
       initPage() ;
     } catch (Exception e) {
       e.printStackTrace();
@@ -110,77 +103,70 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   }
   
   @SuppressWarnings("unchecked")
-private void initPage() throws Exception {
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    List<String> listIds = new ArrayList<String>();
-    listIds.add("null");
-    for(Cate cate : listCate){
+  private void initPage() throws Exception {
+  	List<String> listIds = new ArrayList<String>();
+  	listIds.add(Utils.CATEGORY_HOME) ;
+    for(Cate cate : listCategory_){
     	listIds.add(cate.getCategory().getId());
     }
-    listQuestion.addAll(faqService.getQuestionsByListCatetory(listIds, false, sessionProvider).getAll());
+    listQuestion.addAll(faqService.getQuickQuestionsByListCatetory(listIds, false));  
     UIFormCheckBoxInput checkQuestion ;
+    //List<Question> questions;
     for(Question question : listQuestion) {
-      if(quesIdsSelect.contains(question.getId())) {
-        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false).setChecked(true) ;
+    	System.out.println("questionName ===>" + question.getQuestion());
+    	mapQuestion_.get(question.getCategoryId()).add(question);    	
+    	//questions.add(question);
+    	//mapQuestion_.put(question.getCategoryId(), questions);
+    	if(quesIdsSelect.contains(question.getPath())) {
+        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false).setChecked(true) ;        
       } else {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
       }
-      if(question.getId().equals(questionId_)) checkQuestion.setEnable(false) ;
+      if(question.getPath().equals(questionId_)) checkQuestion.setEnable(false) ;
       addChild(checkQuestion) ;
     }
-    sessionProvider.close();
   }
   
-  private void setListCate() throws Exception {
-    List<Cate> listCate = new ArrayList<Cate>();
-    Cate parentCate = null ;
-    Cate childCate = null ;
+  private void setListCate(String path) throws Exception {
+    //List<Cate> listCate = new ArrayList<Cate>();
     String userName = FAQUtils.getCurrentUser();
     List<String>userPrivates = null;
     if(userName != null){
     	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
     }
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService.getSubCategories(null, sessionProvider, faqSetting_, false, userPrivates)) {
-      if(category != null) {
-        Cate cate = new Cate() ;
-        cate.setCategory(category) ;
-        cate.setDeft(0) ;
-        listCate.add(cate) ;
-      }
+    this.listCategory_.clear() ;
+    this.listCategory_.addAll(faqService.listingCategoryTree()) ;
+    mapQuestion_.put(Utils.CATEGORY_HOME, new ArrayList<Question>()) ;
+    for(Cate cat : listCategory_) {
+    	mapQuestion_.put(cat.getCategory().getId(), new ArrayList<Question>()) ;
     }
     
+    /*Cate cate ;    
+    for(Category category : faqService.getSubCategories(path, faqSetting_, false, userPrivates)) {
+    	cate = new Cate();
+      cate.setCategory(category) ;
+      cate.setDeft(0) ;
+      listCate.add(cate) ;      
+    }
+    Cate parentCate ;
+    Cate childCate ;
     while (!listCate.isEmpty()) {
       parentCate = new Cate() ;
       parentCate = listCate.get(0);
       listCate.remove(0);
-      this.listCate.add(parentCate) ;
+      this.listCategory_.add(parentCate) ;
+      mapQuestion_.put(parentCate.getCategory().getId(), new ArrayList<Question>()) ;
       int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, false, userPrivates)){
-        if(category != null) {
-          childCate = new Cate() ;
-          childCate.setCategory(category) ;
-          childCate.setDeft(parentCate.getDeft() + 1) ;
-          listCate.add(i ++, childCate) ;
-        }
+      for(Category category : faqService.getSubCategories(parentCate.getCategory().getPath(), faqSetting_, false, userPrivates)){
+        childCate = new Cate() ;
+        childCate.setCategory(category) ;
+        childCate.setDeft(parentCate.getDeft() + 1) ;
+        listCate.add(i ++, childCate) ;
       }
-    }
-    sessionProvider.close();
+    }*/
   }
   
-  @SuppressWarnings("unused")
-  private List<Question> getQuestions(String cateId) {
-	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    try {
-      List<Question> listQues = faqService.getQuestionsByCatetory(cateId, sessionProvider, faqSetting_).getAll() ;
-      sessionProvider.close();
-      return listQues;
-    } catch (Exception e) {
-      e.printStackTrace();
-      sessionProvider.close();
-      return null ;
-    }
-  }
+  private List<Question> getQuestions(String cateId) { return mapQuestion_.get(cateId) ; }
   
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
     @SuppressWarnings("static-access")
@@ -194,34 +180,23 @@ private void initPage() throws Exception {
         responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
       }
       
-      List<String> listQuestionId = new ArrayList<String>() ;
+      List<String> listQuestionPath = new ArrayList<String>() ;
       for(Question question : addRelationForm.listQuestion) {
         if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
-          listQuestionId.add(question.getId()) ;
+          listQuestionPath.add(question.getPath()) ;
         }
       }
-      responseForm.setListIdQuesRela(listQuestionId) ;
+      responseForm.setListIdQuesRela(listQuestionPath) ;
       
-      List<String> listOption = new ArrayList<String>() ;
-      SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-      boolean someQuestionIsDeleted = false;
-      for(String id : listQuestionId) {
-      	try{
-      		String contentQue = faqService.getQuestionById(id, sessionProvider).getQuestion() ;
-      		listOption.add(contentQue) ;
-      	} catch(Exception e){
-      		e.printStackTrace();
-      		someQuestionIsDeleted = true;
-      	}
-      }
-      sessionProvider.close();
-      responseForm.setListRelationQuestion(listOption) ;
+      List<String> contents = faqService.getQuestionContents(listQuestionPath) ;
+      
+      responseForm.setListRelationQuestion(contents) ;
       //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
-      if(someQuestionIsDeleted){
+      /*if(someQuestionIsDeleted){
 	      UIApplication uiApplication = addRelationForm.getAncestorOfType(UIApplication.class) ;
 	      uiApplication.addMessage(new ApplicationMessage("UIAddRelationForm.msg.question-id-moved", new Object[]{}, ApplicationMessage.WARNING)) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-      }
+      }*/
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

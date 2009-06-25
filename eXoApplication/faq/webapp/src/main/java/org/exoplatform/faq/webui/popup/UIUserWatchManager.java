@@ -32,7 +32,6 @@ import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,7 +53,6 @@ import org.exoplatform.webui.form.UIFormTabPane;
 		events = {
 				@EventConfig(listeners = UIUserWatchManager.LinkActionListener.class),
 				@EventConfig(listeners = UIUserWatchManager.UnWatchActionListener.class),
-				@EventConfig(listeners = UIUserWatchManager.ChangeTabActionListener.class),
 				@EventConfig(listeners = UIUserWatchManager.CancelActionListener.class)
 		}
 )
@@ -74,7 +72,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	private String emailAddress;
 	
 	@SuppressWarnings("unused")
-	private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
+	//private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
 		super("UIUswerWatchManager");
@@ -97,17 +95,8 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	
   public List<Category> getListCategory() throws Exception {return getListCategoriesWatch() ;}
 	
-  public String getPathService(String categoryId) throws Exception {
-  	String oldPath = "";
-  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		List<String> listPath = FAQUtils.getFAQService().getCategoryPath(sessionProvider, categoryId) ;
-		for(int i = listPath.size() -1 ; i >= 0; i --) {
-    	Category category = FAQUtils.getFAQService().getCategoryById(listPath.get(i), sessionProvider);
-    	if(oldPath.equals("")) oldPath = category.getName();
-    	else oldPath = oldPath + " > " + category.getName();
-    }
-		sessionProvider.close();
-    return oldPath ;
+  public String getCategoriesName(String categoryId) throws Exception {  	
+    return FAQUtils.getFAQService().getParentCategoriesName(categoryId) ;
   }  
   
   public static String getSubString(String str, int max) {
@@ -130,45 +119,36 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   
   @SuppressWarnings("unused")
   private List<Category> getListCategoriesWatch(){
-  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
   	try{
   		if(pageListCates == null){
-  			pageListCates = faqService_.getListCategoriesWatch(FAQUtils.getCurrentUser(), sessionProvider);
+  			pageListCates = faqService_.getWatchedCategoryByUser(FAQUtils.getCurrentUser());
   			pageListCates.setPageSize(5);
   			pageIteratorCates = this.getChildById(LIST_CATES_WATCHED);
   			pageIteratorCates.updatePageList(pageListCates);
   		}
-  		
   		long pageSelect = pageIteratorCates.getPageSelected() ;
   		List<Category> listCategories = new ArrayList<Category>();
-  		try {
-  			listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(pageSelect, null)) ;
-  			if(listCategories.isEmpty()){
-  				UIFAQPageIterator pageIterator = null ;
-  				while(listCategories.isEmpty() && pageSelect > 1) {
-  					pageIterator = this.getChildById(LIST_CATES_WATCHED) ;
-  					listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(--pageSelect, null)) ;
-  					pageIterator.setSelectPage(pageSelect) ;
-  				}
-  			}
-  		} catch (Exception e) {
-  			e.printStackTrace();
-  		}
-  		sessionProvider.close();
+			listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(pageSelect, null)) ;
+			if(listCategories.isEmpty()){
+				UIFAQPageIterator pageIterator = null ;
+				while(listCategories.isEmpty() && pageSelect > 1) {
+					pageIterator = this.getChildById(LIST_CATES_WATCHED) ;
+					listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(--pageSelect, null)) ;
+					pageIterator.setSelectPage(pageSelect) ;
+				}
+			}
   		return listCategories;
   	}catch (Exception e){
   		e.printStackTrace();
-  		sessionProvider.close();
   		return null;
   	}
   }
   
   @SuppressWarnings("unused")
 	private List<Question> getListQuestionsWatch(){
-  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
   	try{
   		if(pageListQues == null){
-	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser(), sessionProvider);
+	  		pageListQues = faqService_.getListQuestionsWatch(faqSetting_, FAQUtils.getCurrentUser());
 	  		pageListQues.setPageSize(5);
 	  		pageIteratorQues = this.getChildById(LIST_QUESTIONS_WATCHED);
 	  		pageIteratorQues.updatePageList(pageListQues);
@@ -176,26 +156,20 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   		
   		long pageSelect = pageIteratorQues.getPageSelected() ;
       List<Question> listQuestion_ = new ArrayList<Question>();
-      try {
-        listQuestion_.addAll(this.pageListQues.getPage(pageSelect, null)) ;
-        if(listQuestion_.isEmpty()){
-	        UIFAQPageIterator pageIterator = null ;
-	        while(listQuestion_.isEmpty() && pageSelect > 1) {
-	          pageIterator = this.getChildById(LIST_QUESTIONS_WATCHED) ;
-	          listQuestion_.addAll(this.pageListQues.getPage(--pageSelect, null)) ;
-	          pageIterator.setSelectPage(pageSelect) ;
-	        }
+      listQuestion_.addAll(this.pageListQues.getPage(pageSelect, null)) ;
+      if(listQuestion_.isEmpty()){
+        UIFAQPageIterator pageIterator = null ;
+        while(listQuestion_.isEmpty() && pageSelect > 1) {
+          pageIterator = this.getChildById(LIST_QUESTIONS_WATCHED) ;
+          listQuestion_.addAll(this.pageListQues.getPage(--pageSelect, null)) ;
+          pageIterator.setSelectPage(pageSelect) ;
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
-  		sessionProvider.close();
   		return listQuestion_;
   	}catch (Exception e){
   		e.printStackTrace();
-  		sessionProvider.close();
-  		return null;
   	}
+  	return null;
   }
   
   @SuppressWarnings("unused")
@@ -215,10 +189,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			try {
-				faqService_.getCategoryById(categoryId, sessionProvider) ;
-      } catch (Exception e) {
+      if(!faqService_.isExisting(categoryId)) {
         UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -234,12 +205,12 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 	    UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
 	    breadcumbs.setUpdataPath(null) ;
-      String oldPath = "" ;
+      /*String oldPath = "" ;
 	    List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
 	    for(int i = listPath.size() -1 ; i >= 0; i --) {
 	    	oldPath = oldPath + "/" + listPath.get(i);
-	    }
-	    String newPath = "FAQService"+oldPath ;
+	    }*/
+	    String newPath = "FAQService/" + categoryId ;
 	    uiQuestions.setPath(newPath) ;
 	    breadcumbs.setUpdataPath(newPath) ;
 			categories.setPathCategory(breadcumbs.getPaths());
@@ -247,64 +218,39 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 	    uiPortlet.cancelAction() ;
-	    sessionProvider.close();
 		}
 	}
 	
 	static	public class UnWatchActionListener extends EventListener<UIUserWatchManager> {
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
-			String objectID = event.getRequestContext().getRequestParameter(OBJECTID);
+			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			if(objectID.indexOf("Question") < 0){
-				try {
-					faqService_.getCategoryById(objectID, sessionProvider) ;
-	      } catch (Exception e) {
-	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
-	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-	        uiQuestions.setIsNotChangeLanguage();
-	        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
-	        popupAction.deActivate() ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-	        return ;
-	      }
-				faqService_.UnWatch(objectID, sessionProvider,FAQUtils.getCurrentUser()) ;
-			} else {
-				try {
-					faqService_.getQuestionById(objectID, sessionProvider) ;
-	      } catch (Exception e) {
-	        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
-	        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-	        uiQuestions.setIsNotChangeLanguage();
-	        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
-	        popupAction.deActivate() ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
-	        return ;
-	      }
-				faqService_.UnWatchQuestion(objectID, sessionProvider,FAQUtils.getCurrentUser());
-			}
-			
-			sessionProvider.close();
-			
+			if(!faqService_.isExisting(categoryId)) {
+        UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
+        uiQuestions.setIsNotChangeLanguage();
+        UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
+        popupAction.deActivate() ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
+        return ;
+      }
+			faqService_.unWatchCategory(categoryId,FAQUtils.getCurrentUser()) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
 	}
 	
-	static	public class ChangeTabActionListener extends EventListener<UIUserWatchManager> {
+	/*static	public class ChangeTabActionListener extends EventListener<UIUserWatchManager> {
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
 			int id = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
 			watchManager.tabSelect = id;
 			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;
 		}
-	}
+	}*/
 	
 	static	public class CancelActionListener extends EventListener<UIUserWatchManager> {
 		public void execute(Event<UIUserWatchManager> event) throws Exception {

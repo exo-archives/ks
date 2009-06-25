@@ -32,7 +32,7 @@ import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -115,14 +115,13 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			ResultSearchQuestion resultSearch = event.getSource() ;
 			FAQService faqService = FAQUtils.getFAQService() ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				faqService.getQuestionById(questionId, sessionProvider) ;
+				faqService.isExisting(questionId) ;
 			} catch (Exception e) {
 				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				sessionProvider.close();
 				return ;
 			}
 			UIResultContainer uiResultContainer = resultSearch.getParent() ;
@@ -132,7 +131,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			viewQuestion.setLanguage(language_) ;
 			viewQuestion.setId("UIPopupViewQuestion") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			sessionProvider.close();
 		}
 	}
 
@@ -141,17 +139,15 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			ResultSearchQuestion resultSearch = event.getSource() ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			try {
-				Question question = faqService.getQuestionById(questionId, sessionProvider) ;
-				String categoryId = question.getCategoryId() ;
+				Question question = faqService.getQuestionById(questionId) ;
+				String categoryId = faqService.getCategoryPathOf(questionId) ;
 				UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				uiQuestions.pageList.setObjectRepare_(questionId);
-				if(!categoryId.equals("null")) uiQuestions.setCategories(categoryId) ;
-				else uiQuestions.setCategories(null) ;
+				uiQuestions.pageList.setObjectId(questionId);
+				uiQuestions.setCategories(categoryId) ;
 				uiQuestions.setQuestions();
-				uiQuestions.questionView_ = questionId ;
+				uiQuestions.viewingQuestionId_ = questionId ;
 				int pos = 0 ;
 				for(Question question2 : uiQuestions.listQuestion_) {
 					if(question2.getId().equals(questionId)) {
@@ -167,7 +163,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 //				questionLanguage.setAnswers(question.getAnswers()) ;
 				questionLanguage.setLanguage(question.getLanguage()) ;
 				uiQuestions.listQuestionLanguage.add(questionLanguage) ;
-				uiQuestions.listQuestionLanguage.addAll(faqService.getQuestionLanguages(question.getId(), sessionProvider)) ;
+				uiQuestions.listQuestionLanguage.addAll(faqService.getQuestionLanguages(questionId)) ;
 				for(QuestionLanguage language : uiQuestions.listQuestionLanguage) {
 					uiQuestions.listLanguage.add(language.getLanguage()) ;
 					if(language.getLanguage().equals(language_)) {
@@ -181,14 +177,14 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 				breadcumbs.setUpdataPath(null) ;
-				String oldPath = "" ;
+				/*String oldPath = "" ;
 				if(!categoryId.equals("null")){
 					List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
 					for(int i = listPath.size() -1 ; i >= 0; i --) {
 						oldPath = oldPath + "/" + listPath.get(i);
 					}
-				}
-				String newPath = "FAQService"+oldPath ;
+				}*/
+				String newPath = "FAQService" + "/" + categoryId ;
 				uiQuestions.setPath(newPath) ;
 				breadcumbs.setUpdataPath(newPath);
 				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
@@ -201,7 +197,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
 		}
 	}
 

@@ -41,7 +41,6 @@ import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -136,40 +135,13 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	}
 	
 	private void setListCate() throws Exception {
-    List<Cate> listCate = new ArrayList<Cate>();
-    Cate parentCate = null ;
-    Cate childCate = null ;
     String userName = FAQUtils.getCurrentUser();
     List<String>userPrivates = null;
     if(userName != null){
     	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
     }
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    for(Category category : faqService_.getSubCategories(null, sessionProvider, faqSetting_, true, userPrivates)) {
-      if(category != null) {
-        Cate cate = new Cate() ;
-        cate.setCategory(category) ;
-        cate.setDeft(0) ;
-        listCate.add(cate) ;
-      }
-    }
-    
-    while (!listCate.isEmpty()) {
-      parentCate = new Cate() ;
-      parentCate = listCate.get(0);
-      listCate.remove(0);
-      this.listCate.add(parentCate) ;
-      int i = 0;
-      for(Category category : faqService_.getSubCategories(parentCate.getCategory().getId(), sessionProvider, faqSetting_, true, userPrivates)){
-        if(category != null) {
-          childCate = new Cate() ;
-          childCate.setCategory(category) ;
-          childCate.setDeft(parentCate.getDeft() + 1) ;
-          listCate.add(i ++, childCate) ;
-        }
-      }
-    }
-    sessionProvider.close();
+    this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree()) ;
+
   }
 	
 	private List<PageNavigation> getTreeNode(){
@@ -292,12 +264,11 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			
 			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 			
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			avatarUrl = FAQUtils.getFileSource(faqService_.getUserAvatar(FAQUtils.getCurrentUser(), sessionProvider), getApplicationComponent(DownloadService.class)) ;
+			avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
+																													.getUserAvatar(FAQUtils.getCurrentUser()), getApplicationComponent(DownloadService.class)) ;
 			
 			if(avatarUrl == null || avatarUrl.trim().length() < 1)
 				avatarUrl = Utils.DEFAULT_AVATAR_URL;
-			sessionProvider.close();
 		}
 	}
 	
@@ -330,9 +301,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UISettingForm settingForm = event.getSource() ;			
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
-			SessionProvider sessionProvider = SessionProvider.createSystemProvider();
 			if(settingForm.isEditPortlet_){
-				
 				UIFormInputWithActions inputWithActions = settingForm.getChildById(settingForm.CATEGORY_SCOPING);
 				List<String> listCateIds = new ArrayList<String>();
 				UIFormCheckBoxInput<Boolean> checkBoxInput = null;
@@ -351,7 +320,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 						settingForm.listCate.get(i).getCategory().setView(checkBoxInput.isChecked());
 					}
 				}
-				if(listCateIds != null && listCateIds.size() > 0)settingForm.faqService_.changeStatusCategoryView(listCateIds, sessionProvider);
+				if(listCateIds != null && listCateIds.size() > 0)settingForm.faqService_.changeStatusCategoryView(listCateIds);
 				
 				inputWithActions = settingForm.getChildById(settingForm.DISPLAY_TAB);
 				faqSetting.setDisplayMode(((UIFormSelectBox)inputWithActions.getChildById(settingForm.DISPLAY_MODE)).getValue());
@@ -400,18 +369,17 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
 				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
-				settingForm.faqService_.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser(), sessionProvider) ;
+				settingForm.faqService_.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser()) ;
 				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
-				categories.resetListCate(sessionProvider);
+				categories.resetListCate();
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
-			sessionProvider.close();
 			return ;
 		}
 	}
@@ -445,9 +413,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser(), sessionProvider);
-			sessionProvider.close();
+			settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
 			settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent()) ;
 		}

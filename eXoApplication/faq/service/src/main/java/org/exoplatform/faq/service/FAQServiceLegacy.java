@@ -17,7 +17,6 @@
 package org.exoplatform.faq.service;
 
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -132,12 +131,12 @@ public interface FAQServiceLegacy {
   /**
    * @deprecated use {@link FAQService#searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text)}
    */
-  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception ;
+  //public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch)}
    */
-  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception ;
+  //public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#moveQuestions(List<String> questions, String destCategoryId)}
@@ -157,12 +156,12 @@ public interface FAQServiceLegacy {
   /**
    * @deprecated use {@link FAQService#getListMailInWatch(String categoryId)}
    */
-  public QuestionPageList getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
+  //public QuestionPageList getListMailInWatch(String categoryId,  SessionProvider sProvider) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#deleteMailInWatch(String categoryId, String emails)}
    */
-  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception ;
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String user) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#unWatch(String categoryId, String userCurrent)}
@@ -175,14 +174,25 @@ public interface FAQServiceLegacy {
   public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception;
   
   /**
+   * @deprecated use {@link FAQService#getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate)}
+   */
+  //public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception ;
+  
+  /**
+   * @deprecated use {@link FAQService#getAdvancedSearchCategory(FAQEventQuery eventQuery)}
+   */
+  //public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  
+  /**
+
    * @deprecated use {@link FAQService#getAdvancedSearchQuestion(FAQEventQuery eventQuery)}
    */
-  public List<ObjectSearchResult> getSearchResults(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  //public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#searchQuestionWithNameAttach(FAQEventQuery eventQuery)}
    */
-  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
+  //public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * @deprecated use {@link FAQService#getCategoryPath(String categoryId)}
@@ -214,7 +224,7 @@ public interface FAQServiceLegacy {
  	/**
    * @deprecated use {@link FAQService#getListMailInWatchQuestion(String questionId)}
    */
- 	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
+ 	//public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception;
  	
  	/**
    * @deprecated use {@link FAQService#getListQuestionsWatch(FAQSetting faqSetting, String currentUser)}
@@ -229,7 +239,7 @@ public interface FAQServiceLegacy {
  	/**
    * @deprecated use {@link FAQService#getListPathQuestionByCategory(String categoryId)}
    */
- 	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception;
+ 	//public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception;
  	
  	/**
    * @deprecated use {@link FAQService#importData(String categoryId, InputStream inputStream, boolean isImportCategory)}
@@ -239,7 +249,7 @@ public interface FAQServiceLegacy {
  	/**
    * @deprecated use {@link FAQService#categoryAlreadyExist(String categoryId)}
    */
- 	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
+ 	//public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception ;
  	
  	/**
    * @deprecated use {@link FAQService#swapCategories(String parentCateId, String cateId1, String cateId2)}
@@ -249,7 +259,7 @@ public interface FAQServiceLegacy {
  	/**
    * @deprecated use {@link FAQService#getQuestionNodeById(String questionId)}
    */
- 	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
+ 	//public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception;
  	
  	/**
    * @deprecated use {@link FAQService#getMaxindexCategory(String parentId)}

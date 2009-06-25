@@ -16,20 +16,14 @@
  */
 package org.exoplatform.faq.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.Session;
-import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.mail.Message;
 
 /**
@@ -196,7 +190,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception  if lost attachment
    */
-  public QuestionPageList getQuestionsNotYetAnswer(String categoryId, FAQSetting setting) throws Exception ;
+  public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception ;
   
   /**
    * Get questions are activagted and approved in the category.
@@ -304,7 +298,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return 	Question list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
+  //public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception ;
   
   /**
    * Search question by language.
@@ -336,7 +330,7 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @throws Exception      when question node not found
    */
-  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception ;
+  //public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception ;
   
   /**
    * Move all of questions to category which have id is  specified
@@ -369,7 +363,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @throws Exception the exception
    *  
    */
-  public void addWatch(String id, Watch watch)throws Exception ;
+  public void addWatchCategory(String id, Watch watch)throws Exception ;
   
   /**
    * This method will get list mail of one category. User see list this mails and 
@@ -381,7 +375,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
+  //public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
   
   /**
    * This method will delete watch in one category 
@@ -391,7 +385,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
-  public void deleteMailInWatch(String categoryId, String emails) throws Exception ;
+  public void deleteCategoryWatch(String categoryId, String user) throws Exception ;
   
   /**
    * This method will un watch in one category 
@@ -401,7 +395,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
-  public void UnWatch(String categoryId, String userCurrent) throws Exception ;
+  public void unWatchCategory(String categoryId, String userCurrent) throws Exception ;
   
   /**
    * This method will un watch in one question 
@@ -411,7 +405,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @param	 userCurrent is user current then you un watch
    * @throws Exception the exception
    */
-  public void UnWatchQuestion(String questionID, String userCurrent) throws Exception;
+  public void unWatchQuestion(String questionID, String userCurrent) throws Exception;
   
   /**
    * This method will return list category when user input value search
@@ -436,7 +430,11 @@ public interface FAQService extends FAQServiceLegacy{
    * @return Category list
    * @throws Exception the exception
    */
+
+  //public List<Question> getAdvancedSearchQuestion(FAQEventQuery eventQuery) throws Exception ;
+
   public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception ;
+
   
   /**
    * This method should lookup all the categories node 
@@ -448,7 +446,7 @@ public interface FAQService extends FAQServiceLegacy{
    * @return Category list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception ;
+  //public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception ;
   
   /**
    * This method return path of category identify
@@ -467,106 +465,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void sendMessage(Message message) throws Exception ;
   
-  /**
-   * Get all languages is supported for this node.
-   * 
-   * @param node the node
-   * 
-   * @return the supported languages
-   * 
-   * @throws Exception the exception
-   */
-  public List<String> getSupportedLanguages(Node node) throws Exception ;
-  
-  /**
-   * Set default language for the node, if default language is not
-   * <code>default</code> then swap default with this language node
-   * 
-   * @param node the node
-   * @param language the language
-   * 
-   * @throws Exception the exception
-   */
-  public void setDefault(Node node, String language) throws Exception ;
-  
-  /**
-   * Add language for the node, if param <code>isDefault</code> is <code>true</code> then
-   * this language is set default language for the node, opposite then this language is
-   * child node.
-   * 
-   * @param node the node
-   * @param inputs the inputs
-   * @param language the language
-   * @param isDefault the is default
-   * 
-   * @throws Exception the exception
-   */
-  public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception ;
-  
-  /**
-   * Add language for the node, if param <code>isDefault</code> is <code>true</code> then
-   * this language is set default language for the node, opposite then this language is
-   * child node. And set type for this language node is <code>nodeType</code>
-   * 
-   * @param node the node
-   * @param inputs the inputs
-   * @param language the language
-   * @param isDefault the is default
-   * @param nodeType the node type
-   * 
-   * @throws Exception the exception
-   */
-  public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception ;
-  
-  /**
-   * Adds the file language.
-   * 
-   * @param node        he node
-   * @param value       the value
-   * @param mimeType    the mime type
-   * @param language    the language
-   * @param isDefault   the is default
-   * 
-   * @throws Exception  the exception
-   */
-  public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception ;
-  
-  /**
-   * Adds the file language.
-   * 
-   * @param node the node
-   * @param language the language
-   * @param mappings the mappings
-   * @param isDefault the is default
-   * 
-   * @throws Exception the exception
-   */
-  public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception ;
-  
-  /**
-   * Get the name of language which is default of the node
-   * 
-   * @param node        the node
-   * 
-   * @return            the name of default language
-   * 
-   * @throws Exception  the exception
-   */
-  public String getDefault(Node node) throws Exception ;
-  
-  /**
-   * Get language node which have name is <code>language</code> and all properties of
-   * this language node.
-   * 
-   * @param node        the node
-   * @param language    the name of language
-   * 
-   * @return            language node which have name is <code>language</code>
-   * 
-   * @throws Exception the exception
-   */
-  public Node getLanguage(Node node, String language) throws Exception ;
-  
+    
   /**
    * Add language for question node, this function only use for Question node, 
    * and language node is added not default.
@@ -627,21 +526,21 @@ public interface FAQService extends FAQServiceLegacy{
 
  	public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss) throws Exception;
  	
- 	public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
+ 	//public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception;
  	
  	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception;
  	
  	public Node getCategoryNodeById(String categoryId) throws Exception;
  	
- 	public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
+ 	//public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
  	
  	public boolean importData(String categoryId, InputStream inputStream) throws Exception;
  	
- 	public boolean categoryAlreadyExist(String categoryId) throws Exception ;
+ 	//public boolean categoryAlreadyExist(String categoryId) throws Exception ;
  	
- 	public void swapCategories(String parentCateId, String cateId1, String cateId2) throws Exception;
+ 	public void swapCategories(String cateId1, String cateId2) throws Exception;
  	
- 	public Node getQuestionNodeById(String questionId) throws Exception;
+ 	//public Node getQuestionNodeById(String questionId) throws Exception;
  	
  	public long getMaxindexCategory(String parentId) throws Exception;
  	
@@ -663,13 +562,13 @@ public interface FAQService extends FAQServiceLegacy{
 
 	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception;
 	
-	public QuestionPageList getListCategoriesWatch(String userId) throws Exception ;
+	public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception ;
 	
 	public FileAttachment getUserAvatar(String userName) throws Exception;
 	
 	public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception;
 	
-	public boolean getWatchByUser(String userId, String cateId) throws Exception;
+	public boolean isUserWatched(String userId, String cateId) ;
 	
 	public void setDefaultAvatar(String userName)throws Exception;
 	
@@ -678,4 +577,66 @@ public interface FAQService extends FAQServiceLegacy{
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception;
 	
 	public InputStream exportData(String categoryId, boolean createZipFile)  throws Exception;
+	
+	public boolean isExisting(String path) ;
+	
+	public String getCategoryPathOf(String id) throws Exception ;
+	
+	public List<String> getQuestionContents(List<String> paths) throws Exception ;
+	
+	public boolean isModerateAnswer(String id) throws Exception ; 
+	
+	public Node getQuestionNodeByIdò(String path) throws Exception ;
+	
+	public String getParentCategoriesName(String path) throws Exception ;
+	
+	public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
+	
+	public boolean isCategoryModerator(String categoryPath, String user) throws Exception  ;
+	
+	//Multi language apis
+	public void addLanguage(String questionPath, QuestionLanguage language) throws Exception ;
+  
+  public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception  ;
+  
+  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception ;
+  
+  public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception ;
+  
+  public Comment getCommentById(String questionPath, String commentId, String language) throws Exception ;
+  
+  public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception ;
+  
+  public void saveAnswer(String questionPath, Answer answer, String languge) throws Exception ;
+  
+  public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception ;
+  
+  public void saveComment(String questionPath, Comment comment, String languge) throws Exception;  
+  
+  public void removeLanguage(String questionPath, List<String> listLanguage) ;
+  
+  public void voteAnswer(String answerPath, String userName, boolean isUp) throws Exception ;
+  
+  public void voteQuestion(String questionPath, String userName, int number) throws Exception ;
+  
+  public String[] getModeratorsOf(String path) throws Exception ;
+  
+  public void unVoteQuestion(String questionPath, String userName) throws Exception ;
+  
+  public boolean isViewAuthorInfo(String id) throws Exception ; 
+  
+  public long existingCategories() throws Exception ;
+  
+  public String getCategoryNameOf(String categoryPath) throws Exception ;
+  
+  public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception ;
+  
+  public List<Cate> listingCategoryTree() throws Exception ;
+  
+  public List<Watch> getWatchByCategory(String categoryId) throws Exception  ;
+  
+  public boolean hasWatch(String categoryPath) ;
+  
+  public CategoryInfo getCategoryInfo(String categoryPath) throws Exception ;
+  
 }

@@ -43,6 +43,7 @@ public class Category {
   private boolean isView = true;
   private String[] moderators ;
   private Date createdDate ;
+  private String path ;
   
 
 	/**
@@ -180,7 +181,10 @@ public class Category {
 	public void setModerateAnswers(boolean isModerateAnswers) {
 		this.isModerateAnswers = isModerateAnswers;
 	}
-
+	
+	public void setPath(String path) { this.path = path ;}
+	public String getPath() { return path ;}
+	
 	/**
    * @return the userPrivate
    */

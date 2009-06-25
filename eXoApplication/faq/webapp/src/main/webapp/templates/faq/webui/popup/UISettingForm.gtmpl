@@ -313,7 +313,7 @@ if(!uicomponent.isEditPortlet_){
 										    	</div>
 										    </div>
 										    <%
-										    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+										    for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
 										    		</div>
 										    	</div>
 										  	<%
@@ -329,8 +329,6 @@ if(!uicomponent.isEditPortlet_){
 						<%}%>
 					</div>
 				</div>
-				
-				
 				<div class="UIAction">
 					<table class="ActionContainer" style="text-algin:center">
 						<tr>

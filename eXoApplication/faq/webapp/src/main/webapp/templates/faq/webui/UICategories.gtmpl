@@ -1,6 +1,7 @@
 <%
 	import org.exoplatform.web.application.JavascriptManager; 
 	import org.exoplatform.faq.service.Category;
+	import org.exoplatform.faq.service.Utils;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.FAQUtils;
 	String compId = uicomponent.getId() ; 
@@ -12,11 +13,11 @@
 	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
 	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
-	if(uicomponent.faqSetting_.isAdmin() || uicomponent.isModeratorSubCate)
-	jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
+	if(uicomponent.isModerator)	jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
+	
 	//jsmanager.addJavascript('eXo.faq.UIContextMenu.init("'+compId+'") ;') ;
 	String [] categoryAction;
-	boolean canEdit = false;
+	
 %>
 <div id="$uicomponent.id" style="padding:0px 5px 2px 5px; line-height:28px;">
 	<div>
@@ -51,7 +52,7 @@
 			<a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_QUESTIONS)%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
 			<a id="uicategoriesCateInfors1" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
 			<%
-			if(uicomponent.canEditQuestion){%>
+			if(uicomponent.isModerator){%>
 				<a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
 			<%}%>
 		</div>
@@ -70,8 +71,7 @@
 		<div class="FAQContainer"  style="height:290px; margin-bottom:5px; overflow:auto;_width:187px;">
 			<div class="UICategories">
 				<%
-		     if(uicomponent.parentCateID_ != null || 
-		     		(uicomponent.parentCateID_ == null && uicomponent.categoryId_ != null && uicomponent.viewBackIcon)){%>
+		     if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
 		       <div>
 		         <div class="FAQBack" onclick="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>">
 			        <a href="<%=uicomponent.event("OpenCategory", uicomponent.parentCateID_)%>"></a>
@@ -80,35 +80,26 @@
 		    <%}%>
 				<div style="padding:4px 0px 0px 0px;">
 				<%
-					List listCate = uicomponent.getListCate() ;
-					List listCateModerator = uicomponent.categoryModerators ;
 					String classCss = "";
 					int i = 0;
-					for(category in listCate){
-						if(category.getId().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
+					boolean canEdit = false;
+					for(category in uicomponent.getListCate()){
+						if(category.getPath().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
-						
-						if(uicomponent.faqSetting_.isAdmin()) canEdit = true;
-						else if(listCateModerator.get(i))canEdit = true;
-						else canEdit = false;
+						canEdit = uicomponent.isCategoryModerator(category.getId()) ; 
 				%>
 						<div class="FAQTmpCategory"><span></span></div>
-						<div id="<%=category.getId()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
+						<div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
 							<div unselectable="on">
 								
-								<a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getId())%>">
+								<a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
 									<%=FAQUtils.getSubString(category.getName(), 20);%>
 								</a>
 								<%
-								String linkWacth = uicomponent.event("WatchManager", category.getId());
-								if(canEdit) {
-									if(uicomponent.getListWatch(category.getId()).size() > 0) {
-								%>
+								String linkWacth = uicomponent.event("WatchManager", category.getPath());
+								if(canEdit && uicomponent.hasWatch(category.getPath())) {%>
 										<a href="$linkWacth" title="<%= _ctx.appRes("UIQuestions.title.watch-manager"); %>" class="WatchManager">&nbsp;</a>
-								<%
-									}
-								}
-								%>
+								<%}%>
 								
 								<!-- action of this category -->
 								<div class="UIFAQPopupCategory" id="UIFAQPopupCategories$i" style="display:none;">
@@ -118,15 +109,15 @@
 													<div class="UIRightPopupMenuContainer" style="margin:0px;">
 														<%
 															if(canEdit) {
-																categoryAction = uicomponent.getActionCategory(category.getId()) ;
+																categoryAction = uicomponent.getActionCategory(category.getPath()) ;
 															} else {
-																categoryAction = uicomponent.getActionCategoryWithUser(category.getId()) ;
+																categoryAction = uicomponent.getActionCategoryWithUser(category.getPath()) ;
 															}
 															
 															for(viewAction in categoryAction) {
-																String linkView = uicomponent.event(viewAction, category.getId()) ;
+																String linkView = uicomponent.event(viewAction, category.getPath()) ;
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																if(category.getId().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || 
+																if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || 
 																		viewAction.equals("EditCategory") || viewAction.equals("MoveCategory")))
 																	continue;
 														%>
@@ -141,7 +132,7 @@
 															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
 															<div class="MenuItem">
 																<div class="IconItem FAQRSS">
-																	<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getId()))%>"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
+																	<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getPath()))%>"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
 																</div>
 															</div>
 														<%}%>

@@ -33,7 +33,8 @@ public class CategoryInfo {
 	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
 	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
 	
-	public CategoryInfo() {}
+	public CategoryInfo() {
+	}
 
 	public String getId() {
   	return id;

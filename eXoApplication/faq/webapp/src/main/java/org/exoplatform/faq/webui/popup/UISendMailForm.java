@@ -33,7 +33,6 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -130,9 +129,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 		}
 	}
 
-	public void setUpdateQuestion(String questionId, String language) throws Exception {
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-    Question question = FAQUtils.getFAQService().getQuestionById(questionId, sessionProvider) ;
+	public void setUpdateQuestion(String questionPath, String language) throws Exception {
+    Question question = FAQUtils.getFAQService().getQuestionById(questionPath) ;
     if(language.equals("")) language = question.getLanguage() ;
     @SuppressWarnings("unused")
     String email = "" ;
@@ -152,7 +150,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     questionLanguage.setComments(question.getComments());
     
     listQuestionLanguage.add(questionLanguage) ;
-    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionId, sessionProvider)) {
+    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionPath)) {
     	String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     	questionLanguage2.setDetail(quest2) ;
       listQuestionLanguage.add(questionLanguage2) ;
@@ -162,8 +160,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage quesLanguage : listQuestionLanguage) {
       listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
     }
-    
-    sessionProvider.close();
     
     addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
     addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
@@ -325,9 +321,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
       for (int i = 0 ; i < toAddresses.length; i++) {
         if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
       }
-      
       sendMailForm.listAnotherEmail.addAll(emailList);
-      
       List<User> toUser = sendMailForm.getToUsers() ;
       if (toUser != null && toUser.size() > 0) {
         List<User> userList = new ArrayList<User>();

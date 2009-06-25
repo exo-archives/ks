@@ -9,7 +9,7 @@
 		<div class="UITabPane">
 			<div style="padding:2px;">
 	    	<div class="WorkingArea">
-					<%/*%>
+					<%/* RECOMMENT TAB FOR WATCH QUESTION%>
 		     	<div class="UIHorizontalTabs" >
 		     	  <div class="LeftHorizontalTabs">
 		     	    <div class="RightHorizontalTabs">
@@ -40,7 +40,7 @@
 					    </div>
 					  </div>
 		      </div>
-		      <%*/%>
+		      <% END RECOMMENT TAB FOR WATCH QUESTION */%>
 		      <% uiform.begin() %>
 	        <input type="hidden" id="<%=uicomponent.RENDER_TAB%>" name="<%=uicomponent.RENDER_TAB%>" value="$uicomponent.selectedTabId">
 					<div style="background-color:#F3F3F3;">
@@ -75,8 +75,8 @@
 						 							List<Category> listCate = uicomponent.getListCategory() ;
 						 							if(listCate.size() > 0){
 						 								for(String cate : listCate ) {
-						 									categoryId = cate.getId() ;
-						 									path = uicomponent.getPathService(categoryId)
+						 									categoryId = cate.getPath() ;
+						 									path = uicomponent.getCategoriesName(categoryId)
 						 									String unWatch = uicomponent.event("UnWatch", categoryId);
 						 									String link = uicomponent.event("Link",categoryId);
 						 							 %>
@@ -127,7 +127,7 @@
  							
  							<!-- manager for watch question -->
  							<%
- 							/*
+ 							/* RECOMMENT MANAGE WATCH QUESTION
  							%>
  							<div class="UITabContent"  style="display:$display2;">
  								<div class="UIForm">
@@ -146,7 +146,7 @@
 						 							List<Question> listQuestion = uicomponent.getListQuestionsWatch() ;
 						 							if(listQuestion != null && listQuestion.size() > 0){
 						 								for(Question question : listQuestion ) {
-						 									questionID = question.getId() ;
+						 									questionID = question.getPath() ;
 						 									questionContent = question.getQuestion();
 						 									String unWatch = uicomponent.event("UnWatch", questionID);
 						 									String link = uicomponent.event("Link", questionID);
@@ -188,7 +188,7 @@
 						 			</div>
 					 			</div>
  							</div>
- 							<%*/%>
+ 							<% END RECOMMENT MANAGE WATCH QUESTION */%>
  						</div>
 					</div>
 					

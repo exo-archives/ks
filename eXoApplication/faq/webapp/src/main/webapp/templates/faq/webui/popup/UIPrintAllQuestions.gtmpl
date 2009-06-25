@@ -1,5 +1,4 @@
 <%
-	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.service.Answer;
 	import org.exoplatform.faq.service.Comment;
@@ -18,8 +17,7 @@
 		<div style="padding:5px; border: 1px solid gray; margin:10px 5px;">		
 			<%
 			java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-			for(Question question : uicomponent.getListQuestion(sessionProvider)){
+			for(Question question : uicomponent.getListQuestion()){
 				questionContent = question.getQuestion();
 				String responseBy = "..." ;
 				String date = "..." ;
@@ -44,7 +42,7 @@
 													if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 												%>				
 													<div class="AvatarContainer">
-														<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
+														<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor())%>" alt="Avatar"/></div>
 													</div>
 												<%}%>
 												<!-- ========================================= view author's infor ================================ -->
@@ -154,7 +152,7 @@
 								
 								<!-- ===================================== View response content ==================================================== -->
 								<% 
-								List answers = uicomponent.getListAnswers(question.getId(), sessionProvider);
+								List answers = uicomponent.getListAnswers(question.getPath());
 								String classResponsse = "";
 								if(answers.size() > 0)classResponsse = "ResponseExternal";
 								%>
@@ -180,8 +178,7 @@
 															}
 															String fileType = fileAttachment.getMimeType();
 															String fileWorkSpace = fileAttachment.getWorkspace();
-															ValidatorDataInput validate = new ValidatorDataInput();
-															String linkImage = uicomponent.getFileSource(fileAttachment);
+															ValidatorDataInput validate = new ValidatorDataInput();															
 															String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 															if(validate.isImage(fileName)) {
 																String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
@@ -314,7 +311,7 @@
 																				if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																				%>				
 																				<div class="AvatarContainer" style="margin-top:0px;">
-																					<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy(), sessionProvider)%>" width="63px" alt="Avatar"/></div>
+																					<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy())%>" width="63px" alt="Avatar"/></div>
 																				</div>
 																				<%}%>
 																				<div class="AuthorInfor" style="text-align:center">
@@ -392,7 +389,7 @@
 										<!-- ============================== View question's commnets ============================================== -->
 										<%
 										if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-											List comments = uicomponent.getListComments(question.getId(), sessionProvider);
+											List comments = uicomponent.getListComments(question.getPath());
 											String classComment = "";
 											if(comments.size() > 0) {
 												classComment = "CommentExternal";
@@ -424,7 +421,7 @@
 																					if(uicomponent.faqSetting_.isEnableViewAvatar()) {
 																					%>				
 																					<div class="AvatarContainer" style="margin-top:0px;">
-																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
+																						<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy())%>" width="63" alt="Avatar"/></div>
 																					</div>
 																					<%}%>
 																					<div class="AuthorInfor" style="text-align:center">
@@ -469,7 +466,6 @@
 				</div>
 			<%
 			}
-			sessionProvider.close();
 			%>
 		</div>
 		

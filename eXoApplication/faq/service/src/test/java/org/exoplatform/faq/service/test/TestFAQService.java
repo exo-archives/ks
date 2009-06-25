@@ -236,8 +236,8 @@ public class TestFAQService extends FAQServiceTestCase{
 //		Get category by id
 		assertNotNull("Category have not been added", faqService_.getCategoryById(cate1.getId(), sProvider_)) ;
 		
-//		Check category is already exist
-		assertEquals("This category is't already exist", faqService_.categoryAlreadyExist(cate2.getId(), sProvider_), true);
+//		Check category is already exist - removed
+		//assertEquals("This category is't already exist", faqService_.categoryAlreadyExist(cate2.getId(), sProvider_), true);
 		
 //		get infor of root category:
 		assertEquals("Have two categories in root category", faqService_.getCategoryInfo(null, sProvider_, faqSetting_)[0], 2);
@@ -385,12 +385,12 @@ public class TestFAQService extends FAQServiceTestCase{
 		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), sProvider_, faqSetting_).getAll() ;
 		assertEquals("the number of question in category which contain question 1 is not 4", listQuestionByCategory.size(), 4) ;
 
-//		Get list paths of all question in category
-		List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId(), sessionProvider);
-		assertEquals("In Category 1 have more than 4 questions, because can't move question 2 to category 2", listPaths.size(), 4);
+//		Get list paths of all question in category - removed
+		//List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId(), sessionProvider);
+		//assertEquals("In Category 1 have more than 4 questions, because can't move question 2 to category 2", listPaths.size(), 4);
 
-//		Get question node by id
-		assertNotNull("Question1 is not already existing in system", faqService_.getQuestionNodeById(question1.getId(), sessionProvider));
+//		Get question node by id - removed
+		//assertNotNull("Question1 is not already existing in system", faqService_.getQuestionNodeById(question1.getId(), sessionProvider));
 
 //		remove question
 		faqService_.removeQuestion(question5.getId(), sProvider_);
@@ -403,40 +403,41 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //		quick search with text = "test"
 		eventQueryCategory.setText("test");
-		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
+		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQueryCategory) ;
 		assertEquals("Can't get all questions and catgories have \"test\" charaters in content", listQuickSearch.size(), 7) ;
 
 //		search all category and question in database
 		eventQueryCategory.setText("");
-		List<ObjectSearchResult> listSearchAll = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
+		List<ObjectSearchResult> listSearchAll = faqService_.getSearchResults(eventQueryCategory) ;
 		assertEquals("The number of objects (question and category) is not 8", listSearchAll.size(), 8) ;
 
-//		advance search all category in database
-		eventQueryCategory.setType("faqCategory");
-		List<ObjectSearchResult> listAllCategroy = faqService_.getSearchResults(sProvider_, eventQueryCategory) ;
-		assertEquals("In System don't have 4 categories", listAllCategroy.size(), 4) ;
+//		advance search all category in database - removed
+		//FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
+		//eventQueryCategory.setType("faqCategory");
+		//List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
+		//assertEquals("In System don't have 4 categories", listAllCategroy.size(), 4) ;
 
-//		advance search with category name = "Sub"
+//		advance search with category name = "Sub" - removed
 		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
 		eventQuerySub.setType("faqCategory");
 		eventQuerySub.setName("Sub") ;
-		List<ObjectSearchResult> listAllSub = faqService_.getSearchResults(sProvider_, eventQuerySub) ;
-		assertEquals("don't Have any cateogry which have \"Sub\" charater in name", listAllSub.size(), 1) ;
+		//List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
+		//assertEquals("don't Have any cateogry which have \"Sub\" charater in name", listAllSub.size(), 1) ;
 
-//		advance search all question in database
+//		advance search all question in database - removed
 		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
 		eventQueryQuestion.setType("faqQuestion");
-		List<ObjectSearchResult> listAllQuestion = faqService_.getSearchResults(sProvider_, eventQueryQuestion) ;
-		assertEquals(listAllQuestion.size(), 0) ;
+		//List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
+		//assertEquals(listAllQuestion.size(), 0) ;
 
 
-//		advance search with category name = "Sub"
+//		advance search with category name = "Sub" - removed
 		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
 		eventQueryAdvanceQuestion.setType("faqQuestion");
 		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
-		List<ObjectSearchResult> listSearchAdvanceQuestion = faqService_.getSearchResults(sProvider_, eventQueryAdvanceQuestion) ;
-		assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
-									listSearchAdvanceQuestion.size(), 2) ;
+		//List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
+		//assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
+									//listSearchAdvanceQuestion.size(), 2) ;
 	}
 
 	public void testAnswer() throws Exception{
@@ -520,18 +521,18 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_DEMO, "maivanha1610@yahoo.com"), sProvider_) ;
 		faqService_.addWatch(cateWatch.getId(), createNewWatch(USER_JOHN, "john@localhost.com"), sProvider_) ;
 
-//		get email watch		
-		JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
-		pageList.setPageSize(5);
-		listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
-		assertEquals("Can't add watched into category \"Cate to test watch", listWatchs.size(), 3) ;
+//		get email watch - removed		
+		//JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
+		//pageList.setPageSize(5);
+		//listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
+		//assertEquals("Can't add watched into category \"Cate to test watch", listWatchs.size(), 3) ;
 
-//		Delete email watch
-		faqService_.deleteMailInWatch(cateWatch.getId(), sProvider_, "john@localhost.com");
+//		Delete email watch - removed
+		/*faqService_.deleteMailInWatch(cateWatch.getId(), sProvider_, "john@localhost.com");
 		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		assertEquals("Can't delete one email in list",
-								pageList.getPageListWatch(1, USER_ROOT).size(), 2) ;
+								pageList.getPageListWatch(1, USER_ROOT).size(), 2) ;*/
 
 //		Check category is watched by user
 		assertEquals("User root didn't watch this category", 
@@ -540,12 +541,12 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get all categories are watched by user
 		assertNotNull("user root have not watched some categories", faqService_.getListCategoriesWatch(USER_ROOT, sProvider_));
 
-//		UnWatch category
-		faqService_.UnWatch(cateWatch.getId(), sProvider_, USER_DEMO);
+//		UnWatch category - removed
+		/*faqService_.UnWatch(cateWatch.getId(), sProvider_, USER_DEMO);
 		pageList = faqService_.getListMailInWatch(cateWatch.getId(), sProvider_) ;
 		pageList.setPageSize(5);
 		assertEquals("User demo have not unWatched, this category only have one watch by Root", 
-									pageList.getPageListWatch(1, USER_ROOT).size(), 1) ;
+									pageList.getPageListWatch(1, USER_ROOT).size(), 1) ;*/
 	}
 
 	public void testQuestionMultilanguage() throws Exception{
@@ -556,8 +557,8 @@ public class TestFAQService extends FAQServiceTestCase{
 
 //		Add question language for question
 		MultiLanguages multiLanguages = new MultiLanguages();
-		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
-		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
+		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
+		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
 
 //		Get all question language :
 		assertEquals(faqService_.getQuestionLanguages(question.getId(), sProvider_).size(), 2);
@@ -569,17 +570,17 @@ public class TestFAQService extends FAQServiceTestCase{
 		Question question = createQuestion(category);
 		faqService_.saveQuestion(question, true, sProvider_, faqSetting_);
 		MultiLanguages multiLanguages = new MultiLanguages();
-		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
-		multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
+		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("Viet Nam"));
+		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId(), sProvider_), createQuestionLanguage("French"));
 
 //		Search question language 
-		assertEquals("don't have any question have VietNamese", faqService_.searchQuestionByLangageOfText(faqService_.getQuestionsByCatetory(category.getId(), 
+		/*assertEquals("don't have any question have VietNamese", faqService_.searchQuestionByLangageOfText(faqService_.getQuestionsByCatetory(category.getId(), 
 																																							sProvider_, faqSetting_).getAll(),
-																													"Viet Nam", "Viet Nam", sProvider_).size(),1);
-		assertEquals("don't have any question have \"Viet Nam\" charaters in content", 
+																													"Viet Nam", "Viet Nam", sProvider_).size(),1);*/
+		/*assertEquals("don't have any question have \"Viet Nam\" charaters in content", 
 								faqService_.searchQuestionByLangage(faqService_.getQuestionsByCatetory(category.getId(),
 										sProvider_, faqSetting_).getAll(),
-								"Viet Nam", "Viet Nam", null, sProvider_).size(),1);
+								"Viet Nam", "Viet Nam", null, sProvider_).size(),1);*/
 	}
 
 	public void testUserSetting() throws Exception {

@@ -15,25 +15,21 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.faq.webui;
-
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.FAQServiceUtils;
-import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,76 +64,15 @@ public class UIQuickSearch  extends UIForm {
 		String currentUser = FAQUtils.getCurrentUser() ;
 		FAQUtils.getPorletPreference(faqSetting_);
 		if(currentUser != null && currentUser.trim().length() > 0){
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
-				if(faqService_.isAdminRole(currentUser, sessionProvider)) faqSetting_.setIsAdmin("TRUE");
+				if(faqService_.isAdminRole(currentUser)) faqSetting_.setIsAdmin("TRUE");
 				else faqSetting_.setIsAdmin("FALSE");
 			}
-			faqService_.getUserSetting(sessionProvider, currentUser, faqSetting_);
-			sessionProvider.close();
+			faqService_.getUserSetting(currentUser, faqSetting_);
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
 		}
 		this.setSubmitAction(this.event("Search")) ;
-	}
-
-	@SuppressWarnings("unchecked")
-  public List<ObjectSearchResult> getResultListQuickSearch(List<ObjectSearchResult> formSearchs) throws Exception {
-		List<ObjectSearchResult> listQuickSearch = new ArrayList<ObjectSearchResult>();
-		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		String currentUser = FAQUtils.getCurrentUser() ;
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-		Question question = null;
-		String categoryIdOfQuestion = null;
-		if(faqSetting_.getDisplayMode().equals("both")) {
-			if(faqSetting_.isAdmin()) {
-				return formSearchs;
-			} else {
-				for(ObjectSearchResult faqSearch : formSearchs) {
-					if(faqSearch.getType().equals("faqCategory")) {
-						listQuickSearch.add(faqSearch) ;
-					} else {
-						question = faqService.getQuestionById(faqSearch.getId(), sessionProvider) ;
-						categoryIdOfQuestion = question.getCategoryId() ;
-						if(!categoryIdOfQuestion.equals("null")){
-							if(Arrays.asList(faqService.getCategoryById(categoryIdOfQuestion, sessionProvider).getModeratorsCategory())
-									.contains(currentUser)) {
-								listQuickSearch.add(faqSearch) ;
-							} else {
-								if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-							}
-						} else {
-							if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-						}
-					}
-				}
-				sessionProvider.close();
-				return listQuickSearch;
-			}
-		} else {
-			for(ObjectSearchResult faqSearch : formSearchs) {
-				if(faqSearch.getType().equals("faqCategory")) {
-					listQuickSearch.add(faqSearch) ;
-				} else {
-					question = faqService.getQuestionById(faqSearch.getId(), sessionProvider) ;
-					categoryIdOfQuestion = question.getCategoryId() ;
-					if(!categoryIdOfQuestion.equals("null")){
-						if(question.isApproved()){
-							if(faqSetting_.isAdmin() || Arrays.asList(faqService.getCategoryById(categoryIdOfQuestion, sessionProvider).getModeratorsCategory())
-									.contains(currentUser)) {
-								listQuickSearch.add(faqSearch) ;
-							} else {
-								if(question.isActivated()) listQuickSearch.add(faqSearch) ;
-							}
-						}
-					} else {
-						if((question.isApproved() && question.isActivated()) || faqSetting_.isAdmin()) listQuickSearch.add(faqSearch) ;
-					}
-				}
-			}
-			sessionProvider.close();
-			return listQuickSearch;
-		}
 	}
 
 	static public class SearchActionListener extends EventListener<UIQuickSearch> {
@@ -152,9 +87,9 @@ public class UIQuickSearch  extends UIForm {
 			if(text != null && text.trim().length() > 0) {
 				FAQService faqService = FAQUtils.getFAQService() ;
 				List<ObjectSearchResult> list = null ;
-				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				FAQEventQuery eventQuery = new FAQEventQuery();
 				eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+				
 				eventQuery.setText(text);
 				eventQuery.setType("categoryAndQuestion");
 				try {
@@ -163,16 +98,13 @@ public class UIQuickSearch  extends UIForm {
 					e.printStackTrace();
 					uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
-					sessionProvider.close();
 					return ;
-				} finally {
-					sessionProvider.close();
 				}
 				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 750) ;
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
 				popupContainer.setId("ResultQuickSearch") ;
-				List<ObjectSearchResult> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
-				result.setFormSearchs(listQuickSearch);
+				//List<ObjectSearchResult> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
+				result.setSearchResults(list);
 //				formStringInput.setValue("") ;
 			} else {
 				uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
@@ -192,7 +124,7 @@ public class UIQuickSearch  extends UIForm {
 			resultContainer.setIsRenderedContainer(1) ;
 			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
 			resultContainer.setId("AdvanceSearchForm") ;
-			uiAdvancedSearchForm.setValue(false, false, false, false, false, false, false, false,false) ;
+			uiAdvancedSearchForm.setIsQuickSearch() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

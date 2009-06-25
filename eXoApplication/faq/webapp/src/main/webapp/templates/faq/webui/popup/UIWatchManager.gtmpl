@@ -1,3 +1,7 @@
+<%
+	import org.exoplatform.faq.service.Watch ;
+%>
+
 <div class="UIWatchManager $uicomponent.id" style="padding:8px;">
 		<% uiform.begin() %>
 		<div class="UIForm">
@@ -22,18 +26,12 @@
 	 							String linkDelete = "";
 	 							String linkEdit = "";
 	 							if(watchs.size() > 0){
-	 								for(String watch : watchs ) {
+	 								for(Watch watch : watchs ) {
 	 									user = watch.getUser() ;
 	 									email = watch.getEmails() ;
 	 									total = user + " (" + email + ")" ;
-	 									if(uicomponent.questionID_ == null){
-	 										linkEdit = uicomponent.event("EditEmail", user+"/"+email);
-	 										linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", email);
-	 									} else {
-	 										linkEdit = uicomponent.event("EditEmail", user);
-	 										linkDelete = uicomponent.event("DeleteWatchQuesiton", "$uicomponent.id", user);
-	 									}
-	 									
+ 										linkEdit = uicomponent.event("EditEmail", user);
+ 										linkDelete = uicomponent.event("DeleteEmail", "$uicomponent.id", user);
 	 							 %>
 		 								<tr>
 		 									<td valign="top" align="left">$user</td>
@@ -45,16 +43,12 @@
 		 										%>
 		 									</td>
 		 									<td align="center" valign="top">
-		 										<%
-		 										if(uicomponent.questionID_ == null ){
-						 							String linkCurrent = uicomponent.event("Link", categoryId)
+		 										<%		 										
+						 							String linkCurrent = uicomponent.event("OpenCategory", categoryId)
 						 						%>
-			 										<div onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left; cursor:pointer;">
-			 											<div class="LinkWatchIcon"><span></span></div>
-			 										</div>
-		 										<%
-		 										}
-		 										%>
+		 										<div onclick="$linkCurrent" title="<%= _ctx.appRes("UIWatchManager.title.link"); %>" style="float:left; cursor:pointer;">
+		 											<div class="LinkWatchIcon"><span></span></div>
+		 										</div>		 										
 		 										<div onclick="$linkEdit" title="<%= _ctx.appRes("UIWatchManager.title.edit-watch"); %>" style="float:left; cursor:pointer;">
 		 											<div class="EditWatchIcon"><span></span></div>
 		 										</div>

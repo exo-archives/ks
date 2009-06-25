@@ -36,7 +36,7 @@ abstract public class JCRPageList {
 	protected List<Category> currentListCategory_;
 	protected List<ObjectSearchResult> currentListResultSearch_ ;
 	protected List<Watch> currentListWatch_ ;
-	private String objectRepare_ = null;
+	private String objectId_ = null;
 	private long pageJump_ = 0;
 
 	/**
@@ -49,12 +49,12 @@ abstract public class JCRPageList {
 		pageSize_ = pageSize ;
 	}
 
-	public String getObjectRepare_() {
-		return objectRepare_;
+	public String getObjectId() {
+		return objectId_;
 	}
 
-	public void setObjectRepare_(String objectRepare_) {
-		this.objectRepare_ = objectRepare_;
+	public void setObjectId(String id) {
+		this.objectId_ = id;
 	}
 
 	/**

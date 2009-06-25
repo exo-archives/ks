@@ -16,28 +16,26 @@
  */
 package org.exoplatform.faq.service.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
-import javax.jcr.Value;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
-import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JCRPageList;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
@@ -125,11 +123,12 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 */
 	public QuestionPageList getQuestionsNotYetAnswer(SessionProvider sProvider, String categoryId, FAQSetting setting) throws Exception {
 		sProvider.close() ;
-	  return getQuestionsNotYetAnswer(categoryId, setting);
+		if( setting.getDisplayMode().equals("Approved")) return getQuestionsNotYetAnswer(categoryId, true);
+		return getQuestionsNotYetAnswer(categoryId, false);
 	}
 	
-	public QuestionPageList getQuestionsNotYetAnswer(String categoryId, FAQSetting setting) throws Exception {
-	  return jcrData_.getQuestionsNotYetAnswer(categoryId, setting);
+	public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception {
+	  return jcrData_.getQuestionsNotYetAnswer(categoryId, isApproved);
 	}
 	
 	/**
@@ -238,13 +237,13 @@ public class FAQServiceImpl implements FAQService, Startable{
 	  return jcrData_.getQuestionsByListCatetory(listCategoryId, isNotYetAnswer);
 	}
 	
-	public String getCategoryPathOfQuestion(String categoryId, SessionProvider sProvider) throws Exception{
+	public String getCategoryPathOfQuestion(String questionPath, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
-		return getCategoryPathOfQuestion(categoryId);
+		return getCategoryPathOfQuestion(questionPath);
 	}
 	
-	public String getCategoryPathOfQuestion(String categoryId) throws Exception{
-		return jcrData_.getCategoryPathOfQuestion(categoryId);
+	public String getCategoryPathOfQuestion(String questionPath) throws Exception{
+		return jcrData_.getCategoryPathOfQuestion(questionPath);
 	}
   
 	/**
@@ -277,14 +276,14 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @return 	Question list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception {
+  /*public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text, SessionProvider sProvider) throws Exception {
   	sProvider.close() ;
     return searchQuestionByLangageOfText(listQuestion, languageSearch, text) ;
   }
   
   public List<Question> searchQuestionByLangageOfText(List<Question> listQuestion, String languageSearch, String text) throws Exception {
     return jcrData_.searchQuestionByLangageOfText(listQuestion, languageSearch, text) ;
-  }
+  }*/
   
   /**
    * This method should lookup languageNode of question
@@ -299,14 +298,14 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @return 	Question list
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
+  /*public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch, SessionProvider sProvider) throws Exception {
   	sProvider.close() ;
     return searchQuestionByLangage(listQuestion, languageSearch, questionSearch, responseSearch) ;
   }
   
   public List<Question> searchQuestionByLangage(List<Question> listQuestion, String languageSearch, String questionSearch, String responseSearch) throws Exception {
     return jcrData_.searchQuestionByLangage(listQuestion, languageSearch, questionSearch, responseSearch) ;
-  }
+  }*/
 
   /**
 	 * Returns an list category that can then be view on the screen.
@@ -430,7 +429,15 @@ public class FAQServiceImpl implements FAQService, Startable{
 	}
 	
 	public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
-		return jcrData_.saveQuestion(question, isAddNew, faqSetting) ;
+		Node questionNode = jcrData_.saveQuestion(question, isAddNew, faqSetting) ;
+		for(QuestionLanguage lang : question.getMultiLanguages()) {
+			if(lang.getState().equals(QuestionLanguage.ADD_NEW) || lang.getState().equals(QuestionLanguage.EDIT)) {
+				MultiLanguages.addLanguage(questionNode, lang) ;
+			}else if (lang.getState().equals(QuestionLanguage.DELETE)) {
+				MultiLanguages.removeLanguage(questionNode, lang) ;
+			}
+		}
+		return questionNode ;
 	}
   
   /**
@@ -487,11 +494,11 @@ public class FAQServiceImpl implements FAQService, Startable{
    */
   public void addWatch(String id, Watch watch, SessionProvider sProvider)throws Exception {
   	sProvider.close() ;
-  	addWatch(id, watch) ;
+  	addWatchCategory(id, watch) ;
   }
   
-  public void addWatch(String id, Watch watch)throws Exception {
-  	jcrData_.addWatch(id, watch) ;
+  public void addWatchCategory(String id, Watch watch)throws Exception {
+  	jcrData_.addWatchCategory(id, watch) ;
   }
   
   /**
@@ -504,14 +511,14 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @see			list email where user manager	
    * @throws Exception the exception				
    */
-  public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
+  /*public QuestionPageList getListMailInWatch(String categoryId, SessionProvider sProvider) throws Exception {
   	sProvider.close() ;
     return getListMailInWatch(categoryId); 
   }
   
   public QuestionPageList getListMailInWatch(String categoryId) throws Exception {
     return jcrData_.getListMailInWatch(categoryId); 
-  }
+  }*/
   
   /**
    * This function will delete watch in one category 
@@ -521,13 +528,13 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @param	 emails is location current of one watch with user want delete 
    * @throws Exception the exception
    */
-  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String emails) throws Exception {
+  public void deleteMailInWatch(String categoryId, SessionProvider sProvider, String user) throws Exception {
   	sProvider.close() ;
-  	deleteMailInWatch(categoryId, emails);
+  	deleteCategoryWatch(categoryId, user);
   }
   
-  public void deleteMailInWatch(String categoryId, String emails) throws Exception {
-  	jcrData_.deleteMailInWatch(categoryId, emails);
+  public void deleteCategoryWatch(String categoryId, String user) throws Exception {
+  	jcrData_.deleteCategoryWatch(categoryId, user);
   }
   
   /**
@@ -540,11 +547,11 @@ public class FAQServiceImpl implements FAQService, Startable{
    */
   public void UnWatch(String categoryId, SessionProvider sProvider, String userCurrent) throws Exception {
   	sProvider.close() ;
-  	UnWatch(categoryId, userCurrent);
+  	unWatchCategory(categoryId, userCurrent);
   }
   
-  public void UnWatch(String categoryId, String userCurrent) throws Exception {
-  	jcrData_.UnWatch(categoryId, userCurrent);
+  public void unWatchCategory(String categoryId, String userCurrent) throws Exception {
+  	jcrData_.unWatchCategory(categoryId, userCurrent);
   }
   
   /**
@@ -557,12 +564,53 @@ public class FAQServiceImpl implements FAQService, Startable{
    */
   public void UnWatchQuestion(String questionID, SessionProvider sProvider, String userCurrent) throws Exception {
   	sProvider.close() ;
-  	UnWatchQuestion(questionID, userCurrent);
+  	unWatchQuestion(questionID, userCurrent);
   }
   
-  public void UnWatchQuestion(String questionID, String userCurrent) throws Exception {
-  	jcrData_.UnWatchQuestion(questionID, userCurrent);
+  public void unWatchQuestion(String questionID, String userCurrent) throws Exception {
+  	jcrData_.unWatchQuestion(questionID, userCurrent);
   }
+  
+  /**
+   * This method will return list object FAQFormSearch
+   * <p>
+   * In instance system filter categories and questions coherent value with user need search
+   * 
+   * @param  	sProvider
+   * @param		text is value user input with search.
+   * @param		fromDate, toDate is time user want search 
+   * @return	list FAQFormSearch
+   * @see		 list categories and question was filter
+   * @throws Exception the exception
+   */
+ /* public List<FAQFormSearch> getAdvancedEmpty(SessionProvider sProvider, String text, Calendar fromDate, Calendar toDate) throws Exception {
+  	sProvider.close() ;
+  	return getAdvancedEmpty(text, fromDate, toDate); 
+  }
+  
+  public List<FAQFormSearch> getAdvancedEmpty(String text, Calendar fromDate, Calendar toDate) throws Exception {
+  	return jcrData_.getAdvancedEmpty(text, fromDate, toDate); 
+  }*/
+  
+  /**
+   * This method will return list category when user input value search
+   * <p>
+   * With many categories , it's difficult to find a category which user want to see.
+   * So to support to users can find their categories more quickly and accurate,
+   *  user can use 'Search Category' function
+   * 
+   * @param	 sProvider
+   * @param	 eventQuery is object save value in form advanced search 
+   * @throws Exception the exception
+   */
+  /*public List<Category> getAdvancedSearchCategory(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+  	sProvider.close() ;
+  	return getAdvancedSearchCategory(eventQuery); 
+  }
+  
+  public List<Category> getAdvancedSearchCategory(FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getAdvancedSearchCategory(eventQuery); 
+  }*/
   
   /**
    * This method should lookup all the categories node 
@@ -594,10 +642,18 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
+
+  /*public List<Question> getAdvancedSearchQuestion(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+
   public List<ObjectSearchResult> getSearchResults(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+
   	sProvider.close() ;
   	return getSearchResults(eventQuery) ;
   }
+  
+  public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
+  	return jcrData_.getSearchResults(eventQuery) ;
+  }*/
   
   public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.getSearchResults(eventQuery) ;
@@ -614,14 +670,14 @@ public class FAQServiceImpl implements FAQService, Startable{
    * @param	 eventQuery is object save value in form advanced search 
    * @throws Exception the exception
    */
-  public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
+ /* public List<Question> searchQuestionWithNameAttach(SessionProvider sProvider, FAQEventQuery eventQuery) throws Exception {
   	sProvider.close() ;
   	return searchQuestionWithNameAttach(eventQuery) ;
   }
   
   public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception {
   	return jcrData_.searchQuestionWithNameAttach(eventQuery) ;
-  }
+  }*/
   
   /**
    * This method return path of category identify
@@ -649,106 +705,7 @@ public class FAQServiceImpl implements FAQService, Startable{
   	jcrData_.sendMessage(message) ;
   }
   
-  /**
-   * Adds the file language.
-   * 
-   * @param node the node
-   * @param value the value
-   * @param mimeType the mine type
-   * @param language the language
-   * @param isDefault the is default
-   * 
-   * @throws Exception the exception
-   */
-	public void addFileLanguage(Node node, Value value, String mimeType, String language, boolean isDefault) throws Exception {
-		multiLanguages_.addFileLanguage(node, value, mimeType, language, isDefault) ;		
-	}
-	
-	/**
-   * Adds the file language.
-   * 
-   * @param node the node
-   * @param language the language
-   * @param mappings the mappings
-   * @param isDefault the is default
-   * 
-   * @throws Exception the exception
-   */
-	public void addFileLanguage(Node node, String language, Map mappings, boolean isDefault) throws Exception {
-		multiLanguages_.addFileLanguage(node, language, mappings, isDefault) ;
-	}
-	
-	/**
-   * Adds the language.
-   * 
-   * @param node the node
-   * @param inputs the inputs
-   * @param language the language
-   * @param isDefault the is default
-   * @throws Exception the exception
-   */
-	public void addLanguage(Node node, Map inputs, String language, boolean isDefault) throws Exception {
-		multiLanguages_.addLanguage(node, inputs, language, isDefault) ;
-	}
-	
-	/**
-   * Adds the language.
-   * 
-   * @param node the node
-   * @param inputs the inputs
-   * @param language the language
-   * @param isDefault the is default
-   * @param nodeType the node type
-   * @throws Exception the exception
-   */
-	public void addLanguage(Node node, Map inputs, String language, boolean isDefault, String nodeType) throws Exception {
-		multiLanguages_.addLanguage(node, inputs, language, isDefault, nodeType) ;
-	}
-	
-	/**
-   * Gets the default.
-   * 
-   * @param node the node
-   * @return the default
-   * @throws Exception the exception
-   */
-	public String getDefault(Node node) throws Exception {
-		return multiLanguages_.getDefault(node);
-	}
-	
-	/**
-   * Gets the language.
-   * 
-   * @param node the node
-   * @param language the language
-   * @return the language
-   * @throws Exception the exception
-   */
-	public Node getLanguage(Node node, String language) throws Exception {
-		return multiLanguages_.getLanguage(node, language);
-	}
-	
-	/**
-   * Gets the supported languages.
-   * 
-   * @param node the node
-   * @return the supported languages
-   * @throws Exception the exception
-   */
-	public List<String> getSupportedLanguages(Node node) throws Exception {
-		return multiLanguages_.getSupportedLanguages(node);
-	}
-	
-	/**
-   * Sets the default.
-   * 
-   * @param node the node
-   * @param language the language
-   * @throws Exception the exception
-   */
-	public void setDefault(Node node, String language) throws Exception {
-		multiLanguages_.setDefault(node, language) ;
-	}
+  
 	
 	/**
    * Adds the language node, when question have multiple language, 
@@ -802,14 +759,14 @@ public class FAQServiceImpl implements FAQService, Startable{
 		jcrData_.addWatchQuestion(questionId, watch, isNew);
 	}
 	
-	public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
+	/*public QuestionPageList getListMailInWatchQuestion(String questionId, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
 		return getListMailInWatchQuestion(questionId);
 	}
 	
 	public QuestionPageList getListMailInWatchQuestion(String questionId) throws Exception {
 		return jcrData_.getListMailInWatchQuestion(questionId);
-	}
+	}*/
 	
 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
@@ -820,14 +777,14 @@ public class FAQServiceImpl implements FAQService, Startable{
 		return jcrData_.getListQuestionsWatch(faqSetting, currentUser);
 	}
 	
-	public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
+	/*public List<String> getListPathQuestionByCategory(String categoryId, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
 		return getListPathQuestionByCategory(categoryId);
 	}
 	
 	public List<String> getListPathQuestionByCategory(String categoryId) throws Exception{
 		return jcrData_.getListPathQuestionByCategory(categoryId);
-	}
+	}*/
 	
 	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
@@ -838,32 +795,36 @@ public class FAQServiceImpl implements FAQService, Startable{
 		return jcrData_.importData(categoryId, inputStream);
 	}
 	
-	public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
+	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
+		return jcrData_.exportData(categoryId, createZipFile);
+	}
+	
+	/*public boolean categoryAlreadyExist(String categoryId, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
 		return categoryAlreadyExist(categoryId);
 	}
 	
 	public boolean categoryAlreadyExist(String categoryId) throws Exception {
 		return jcrData_.categoryAlreadyExist(categoryId);
-	}
+	}*/
 	
 	public void swapCategories(String parentCateId, String cateId1, String cateId2, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
-		swapCategories(parentCateId, cateId1, cateId2);
+		swapCategories(cateId1, cateId2);
 	}
 	
-	public void swapCategories(String parentCateId, String cateId1, String cateId2) throws Exception{
-		jcrData_.swapCategories(parentCateId, cateId1, cateId2);
+	public void swapCategories(String cateId1, String cateId2) throws Exception{
+		jcrData_.swapCategories(cateId1, cateId2);
 	}
 	
-	public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
+	/*public Node getQuestionNodeById(String questionId, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
 		return getQuestionNodeById(questionId);
 	}
 	
 	public Node getQuestionNodeById(String questionId) throws Exception{
 		return jcrData_.getQuestionNodeById(questionId);
-	}
+	}*/
 
 	public void saveTopicIdDiscussQuestion(String questionId, String pathDiscuss, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
@@ -966,11 +927,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public QuestionPageList getListCategoriesWatch(String userId, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
-		return getListCategoriesWatch(userId);
+		return getWatchedCategoryByUser(userId);
 	}
 	
-	public QuestionPageList getListCategoriesWatch(String userId) throws Exception {
-		return jcrData_.getListCategoriesWatch(userId);
+	public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception {
+		return jcrData_.getWatchedCategoryByUser(userId);
 	}
 	
 	public FileAttachment getUserAvatar(String userName, SessionProvider sProvider) throws Exception{
@@ -1002,11 +963,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public boolean getWatchByUser(String userId, String cateId, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
-		return getWatchByUser(userId, cateId);
+		return isUserWatched(userId, cateId);
 	}
 	
-	public boolean getWatchByUser(String userId, String cateId) throws Exception{
-		return jcrData_.getWatchByUser(userId, cateId);
+	public boolean isUserWatched(String userId, String cateId) {
+		return jcrData_.isUserWatched(userId, cateId);
 	}
 	
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, SessionProvider sProvider, FAQSetting faqSetting) throws Exception{
@@ -1036,12 +997,211 @@ public class FAQServiceImpl implements FAQService, Startable{
 	
 	public NodeIterator getQuestionsIterator() throws Exception {
 		return jcrData_.getQuestionsIterator() ;
-	}
-
+	}	
 	
-	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
-		return jcrData_.exportData(categoryId, createZipFile);
+	public boolean isExisting(String path) {
+		return jcrData_.isExisting(path) ;
 	}
+	
+	public String getCategoryPathOf(String id) throws Exception {
+		return jcrData_.getCategoryPathOf(id) ;
+	}
+	
+	public List<String> getQuestionContents(List<String> paths) throws Exception {
+		return jcrData_.getQuestionContents(paths) ;
+	}
+	
+	public Node getQuestionNodeByIdò(String path) throws Exception {
+		return jcrData_.getQuestionNodeByIdò(path) ;
+	}
+	
+	public boolean isModerateAnswer(String id) throws Exception {
+		return jcrData_.isModerateAnswer(id) ;
+	}
+	
+	public String getParentCategoriesName(String path) throws Exception {
+		return jcrData_.getParentCategoriesName(path) ;
+	}
+	
+	public QuestionPageList getListMailInWatch(String categoryId) throws Exception {
+		return jcrData_.getListMailInWatch(categoryId) ;
+	}
+	
+	public boolean isCategoryModerator(String categoryPath, String user) throws Exception {
+		return jcrData_.isCategoryModerator(categoryPath, user) ;
+	}
+	
+	public void addLanguage(String questionPath, QuestionLanguage language) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.addLanguage(questionNode, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void deleteAnswerQuestionLang(String questionPath, String answerId, String language) throws Exception{  	
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.deleteAnswerQuestionLang(questionNode, answerId, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void deleteCommentQuestionLang(String questionPath, String commentId, String language) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.deleteCommentQuestionLang(questionNode, commentId, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public QuestionLanguage getQuestionLanguageByLanguage(String questionPath, String language) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      return MultiLanguages.getQuestionLanguageByLanguage(questionNode, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+    return null ;
+  }
+  
+  public Comment getCommentById(String questionPath, String commentId, String language) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      return MultiLanguages.getCommentById(questionNode, commentId, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+    return null ;
+  }
+  
+  public Answer getAnswerById(String questionPath, String answerid, String language) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      return MultiLanguages.getAnswerById(questionNode, answerid, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+    return null ;
+  }
+  
+  
+  
+  public void saveAnswer(String questionPath, Answer answer, String language) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.saveAnswer(questionNode, answer, language) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void saveAnswer(String questionPath, QuestionLanguage questionLanguage) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.saveAnswer(questionNode, questionLanguage) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void saveComment(String questionPath, Comment comment, String languge) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.saveComment(questionNode, comment, languge) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  
+  public void removeLanguage(String questionPath, List<String> listLanguage) {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.removeLanguage(questionNode, listLanguage) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }  
+  
+  public void voteAnswer(String answerPath, String userName, boolean isUp) throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node answerNode = jcrData_.getFAQServiceHome(sProvider).getNode(answerPath) ;
+      MultiLanguages.voteAnswer(answerNode, userName, isUp) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void voteQuestion(String questionPath, String userName, int number) throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.voteQuestion(questionNode, userName, number) ;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  }
+  
+  public void unVoteQuestion(String questionPath, String userName) throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
+      MultiLanguages.unVoteQuestion(questionNode, userName);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }finally {sProvider.close() ;}
+  } 	
+  
+  public String[] getModeratorsOf(String path) throws Exception{
+  	return jcrData_.getModeratorsOf(path) ;
+  }
+  
+  public boolean isViewAuthorInfo(String id) throws Exception {
+  	return jcrData_.isViewAuthorInfo(id) ;
+  }
+  
+  public long existingCategories() throws Exception {
+  	return jcrData_.existingCategories() ;
+  }
+  
+  public String getCategoryNameOf(String categoryPath) throws Exception { 
+  	return jcrData_.getCategoryNameOf(categoryPath) ;
+  }
+  
+  public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception { 
+  	return jcrData_.getQuickQuestionsByListCatetory(listCategoryId, isNotYetAnswer) ;
+  }
+  
+  public List<Cate> listingCategoryTree() throws Exception {
+  	return jcrData_.listingCategoryTree() ;
+  }
+  
+  public List<Watch> getWatchByCategory(String categoryId) throws Exception {
+  	return jcrData_.getWatchByCategory(categoryId);
+  }
+  
+  public boolean hasWatch(String categoryPath) {
+  	return jcrData_.hasWatch(categoryPath) ;
+  }
+  
+  public CategoryInfo getCategoryInfo(String categoryPath) throws Exception {
+  	return jcrData_.getCategoryInfo(categoryPath) ;
+  }
 }
 
 

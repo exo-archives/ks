@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.faq.service.Category;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -43,52 +43,43 @@ import org.exoplatform.webui.event.EventListener;
 )
 public class UIBreadcumbs extends UIContainer {
 	private List<String> breadcumbs_ = new ArrayList<String>();
-	public List<String> paths_ = new ArrayList<String>();
-	private String path_ = "FAQService" ;
+	public List<String> pathList_ = new ArrayList<String>();
+	private String currentPath_ = Utils.CATEGORY_HOME ;
 	public static final String FIELD_FAQHOME_BREADCUMBS = "faqHome" ;
-	public static final String FIELD_EXOFAQ_LABEL = "eXoFAQ".intern();
 	private static final String QUICK_SEARCH = "QuickSearch";
 	
 	public UIBreadcumbs()throws Exception {
-		breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
-		paths_.add("FAQService") ;
 		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 	}
 
 	public void setUpdataPath(String path) throws Exception {
-		if(path != null && path.trim().length() > 0 ) {
+		if(path != null && path.trim().length() > 0  && !path.equals(Utils.CATEGORY_HOME) ) {
 			String temp[] = path.split("/") ;
-			this.path_ = path ;
-			paths_.clear() ;
+			pathList_.clear() ;
 			breadcumbs_.clear() ;
-			paths_.add("FAQService") ;
-			String oldPath = "FAQService" ;
-			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			String subPath = "" ;
 			for (String string : temp) {
-				if(string.equals("FAQService")) continue ;
-				oldPath = oldPath + "/" + string;
-				Category category = FAQUtils.getFAQService().getCategoryById(string, sessionProvider) ;
-				String categoryName = category.getName() ;
-				breadcumbs_.add(categoryName) ;
-				paths_.add(oldPath) ;
+				if(subPath.length() > 0) subPath = subPath + "/" + string ;
+				else subPath = string ;
+				breadcumbs_.add(FAQUtils.getFAQService().getCategoryNameOf(subPath)) ;
+				pathList_.add(subPath) ;
 			}
-			sessionProvider.close();
 		} else {
-			paths_.clear() ;
+			pathList_.clear() ;
 			breadcumbs_.clear() ;
-			paths_.add("FAQService") ;
-			breadcumbs_.add(FIELD_EXOFAQ_LABEL) ;
+			pathList_.add(Utils.CATEGORY_HOME) ;
+			breadcumbs_.add(Utils.CATEGORY_HOME) ;
 		}
+		currentPath_ = path ;
 	}
 
 	@SuppressWarnings("unused")
 	public String getPath(int index) {
-		return this.paths_.get(index) ;
+		return this.pathList_.get(index) ;
 	}
 
 	public String getPaths() {
-		return this.path_;
+		return this.currentPath_;
 	}
 	@SuppressWarnings("unused")
 	private int getMaxPath() {
@@ -108,7 +99,6 @@ public class UIBreadcumbs extends UIContainer {
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
-			SessionProvider sProvider = FAQUtils.getSystemProvider();
 			String categoryId = null;
 			try{
 				if(!paths.equals("FAQService")){
@@ -117,7 +107,7 @@ public class UIBreadcumbs extends UIContainer {
 					uiQuestions.backPath_ = "" ;
 					uiQuestions.language_ = "";
 				}
-				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().getCategoryById(categoryId, sProvider).isViewAuthorInfor();
+				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(categoryId);
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);
 				uiQuestions.setCategories(categoryId) ;
@@ -127,7 +117,6 @@ public class UIBreadcumbs extends UIContainer {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sProvider.close();
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 		}
 	}

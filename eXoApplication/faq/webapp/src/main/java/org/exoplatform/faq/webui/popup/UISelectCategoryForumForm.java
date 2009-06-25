@@ -25,7 +25,6 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -56,28 +55,18 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
   }
 	
   public void setListCategory() throws Exception {
-	  SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-	  try {
-	  	listcate = forumService.getCategories(sProvider);
-	  } catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			sProvider.close();
-		}
+  	listcate = forumService.getCategories();
 	}
 	
   List<Forum> getForums(String categoryId) {
   	List<Forum>listForum = new ArrayList<Forum>();
 		if (categoryId != null && categoryId.trim().length() > 0) {
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
 				String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
-				listForum = forumService.getForums(sProvider, categoryId, strQuery);
+				listForum = forumService.getForums(categoryId, strQuery);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				sProvider.close();
-			}
+			} 
 		}
 		return listForum;
 	}

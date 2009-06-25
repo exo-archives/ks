@@ -97,8 +97,8 @@ public class FAQServiceUtils {
   }
   
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-  	List<String> listOfUser = new ArrayList<String>();
-		listOfUser.add(userId);
+  	List<String> userGroupMembership = new ArrayList<String>();
+		userGroupMembership.add(userId);
 		String value = "";
 		String id = "";
 		Membership membership = null;
@@ -108,11 +108,11 @@ public class FAQServiceUtils {
 			id = id.replace("Membership[", "").replace("]", "");
 			membership = organizationService_.getMembershipHandler().findMembership(id);
 			value = membership.getGroupId();
-			listOfUser.add(value);
+			userGroupMembership.add(value);
 			value = membership.getMembershipType() + ":" + value;
-			listOfUser.add(value);
+			userGroupMembership.add(value);
 		}
-		return listOfUser;
+		return userGroupMembership;
   }
   
   /**

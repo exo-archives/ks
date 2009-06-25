@@ -4,14 +4,11 @@
 	import org.exoplatform.faq.service.Question;
 	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
 	import org.exoplatform.webui.form.UIFormInputWithActions;
-	import org.exoplatform.faq.webui.FAQUtils;
-	import org.exoplatform.services.jcr.ext.common.SessionProvider;
+	import org.exoplatform.faq.webui.FAQUtils;	
 %>
 
 <div class="FAQUIQuestionInfo $uicomponent.id">
-	<% uiform.begin() %>
-	<%
-	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+	<% uiform.begin() 
 	Map<String, String> mapPath = new HashMap<String, String>();
 	%>
   <div class="UIFormTabPane">
@@ -80,7 +77,6 @@
             	<div class="HorizontalLayout">
             
               	<div class="UITabContentContainer">
-	              
 	              	<!-- ================================================== All questions ====================================== -->
 	              	<div class="UITabContent UIIETabContent" style="display:$displayEdit;" id="UITabContent"> 
 					          <div style="display:block;">
@@ -102,11 +98,11 @@
 																String linkEdit = "" ;
 																String actionChangeStatus = "";
 																for(Question question in questionList) {
-																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
-																	linkEdit = uicomponent.event("EditQuestion", question.getId()) ;
-																	actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getId()) ;
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
+																	linkEdit = uicomponent.event("EditQuestion", question.getPath()) ;
+																	actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "approved" + "/" + question.getPath()) ;
 																	if(!mapPath.containsKey(question.getCategoryId()))
-																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(sessionProvider,question.getCategoryId()));
+																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(question.getPath()));
 																%>
 																	<tr>
 																		<td class="text"><%=question.getQuestion().replaceFirst("<p>", "") ;%></td>
@@ -128,7 +124,7 @@
 																		</td>
 																		<td class="text" style="text-align:center;">
 																		<%
-																		actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getId()) ;
+																		actionChangeStatus = uicomponent.event("ChangeQuestionStatus", "activate" + "/" + question.getPath()) ;
 																		if(question.isActivated()) {%>
 																				<div class="TrueIcon">
 																					<div onclick="$actionChangeStatus" title="<%=_ctx.appRes(uicomponent.getName() + ".title." + "UnActivated")%>" style="cursor:pointer;">
@@ -178,9 +174,8 @@
 											</div>
 									<%}%>	
 										</div>
-
 	              	</div>
-	              	
+	              	<!-- end all question-->
 	              	<!-- =================================================== Pending questions ====================================== -->
 	              	<div class="UITabContent UIIETabContent" style="display:$displayResponse" id="UITabContent">
 					          <div style="display:block;"  >
@@ -204,10 +199,10 @@
 																String linkDelete = "" ;
 																String linkEdit = "" ;
 																for(Question question in questionNotAnswered) {
-																	linkDelete = uicomponent.event("DeleteQuestion", question.getId()) ;
-																	linkResponse = uicomponent.event("ResponseQuestion", question.getId()) ;
+																	linkDelete = uicomponent.event("DeleteQuestion", question.getPath()) ;
+																	linkResponse = uicomponent.event("ResponseQuestion", question.getPath()+"/"+question.getLanguage()) ;
 																	if(!mapPath.containsKey(question.getCategoryId()))
-																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(sessionProvider,question.getCategoryId()));
+																		mapPath.put(question.getCategoryId(), uicomponent.getCategoryPath(question.getPath()));
 																%>
 																	<tr>
 																		<td class="text" style="text-align:left"><%=question.getQuestion().replaceFirst("<p>", "")%></td>
@@ -216,7 +211,7 @@
 																		<%
 																			String linkResponseByLanguage = "";
 																			for(String language :question.getLanguagesNotYetAnswered().split(",")){
-																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getId() + "/" + language ) ;
+																				linkResponseByLanguage = uicomponent.event("ResponseQuestion", question.getPath() + "/" + language ) ;
 																		%>
 																			<div onclick="$linkResponseByLanguage" style="float:left; cursor:pointer" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "ResponseQuestion")%>">
 																				<div style="padding:0px 4px 4px 0px;">- &nbsp;$language</div>
@@ -262,6 +257,8 @@
 										</div>
 
 									</div>
+									
+	              	<!-- end pending question -->
 								
 								</div>
 							
@@ -278,7 +275,6 @@
 		</div>
     
     </div>  
-  </div>
-	<%sessionProvider.close();%>
+  </div>	
 	<%uiform.end()%>
 </div>

@@ -31,6 +31,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -90,7 +91,7 @@ public class FAQUtils {
 	public static void findCateExist(FAQService faqService_, UIFAQContainer fAQContainer) throws Exception{
 		UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class) ;
 		String pathCate = "" ;
-		for(String path : breadcumbs.paths_.get(breadcumbs.paths_.size() - 1).split("/")){
+		for(String path : breadcumbs.pathList_.get(breadcumbs.pathList_.size() - 1).split("/")){
 			if(path.equals("FAQService")){
 				pathCate = path ;
 				continue ;
@@ -188,9 +189,7 @@ public class FAQUtils {
 		if(profile.getAttribute("user.business-info.telecom.mobile.number") != null)contact.setMobile(profile.getAttribute("user.business-info.telecom.mobile.number"));
 		if(profile.getAttribute("user.business-info.telecom.telephone.number") != null)contact.setPhone(profile.getAttribute("user.business-info.telecom.telephone.number"));
 		if(profile.getAttribute("user.home-info.online.uri") != null)contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
-		SessionProvider sessionProvider = getSystemProvider();
-		FileAttachment fileAttachment = faqService.getUserAvatar(userId, sessionProvider);
-		sessionProvider.close();
+		FileAttachment fileAttachment = faqService.getUserAvatar(userId);
 		if(fileAttachment == null || fileAttachment.getSize() == 0){
 			if(profile.getAttribute("user.other-info.avatar.url") != null)contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
 		} else {
@@ -383,27 +382,21 @@ public class FAQUtils {
 	}
 
 	public static String getSubString(String str, int max) {
-		if(!isFieldEmpty(str)) {
-			int l = str.length() ;
-			if(l > max) {
-				str = str.substring(0, (max-3)) ;
-				int space = str.lastIndexOf(" ");
-				if(space > 0)
-					str = str.substring(0, space) + "...";
-				else str = str + "..." ;
-			}
+		if(str.length() > max) {
+			String newStr = str.substring(0, (max-3)) ;	
+			return newStr.trim() + "..." ;
 		}
 		return str ;
 	}
 
 	public static String getTitle(String text) {
-		int i = 0 ;
+		/*int i = 0 ;
 		while (i < text.length()) {
 			if(text.codePointAt(i) < 10) continue;
 			if (text.charAt(i) == '"'  ) text = text.replace((text.charAt(i)) + "", "&quot;") ;
 			else i ++ ;
-		}
-		return text ;
+		}*/	
+		return StringUtils.replace(text, "\"", "&quot;");		
 	}
 
 	public static void getPorletPreference(FAQSetting faqSetting) {
@@ -537,9 +530,9 @@ public class FAQUtils {
 		}
 		return null;
 	}
-
+	
 	public static String getFileSource(FileAttachment attachment, DownloadService dservice){
-		//DownloadService dservice = getApplicationComponent(DownloadService.class) ;
+		if(dservice == null)dservice = (DownloadService)PortalContainer.getComponent(DownloadService.class) ;
 		try {
 			InputStream input = attachment.getInputStream() ;
 			String fileName = attachment.getName() ;
@@ -547,9 +540,9 @@ public class FAQUtils {
 				fileName = "avatar." + attachment.getMimeType();
 			//String fileName = attachment.getNodeName() ;
 			return getFileSource(input, fileName, dservice);
-		} catch (Exception e) {
-			return null;
+		} catch (Exception e) {			
 		}
+		return null;
 	}
 	
 	public static String convertLinkToForum(String s){

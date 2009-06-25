@@ -34,7 +34,6 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -76,21 +75,16 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	
 	private String getQuestionRelationById(String questionId) {
 		Question question = new Question();
-		SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+		//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
-			question = faqService_.getQuestionById(questionId, sessionProvider);
+			question = faqService_.getQuestionById(questionId);
 			if(question != null) {
-				sessionProvider.close();
 				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
-			} else {
-				sessionProvider.close();
-				return "" ;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			sessionProvider.close();
-			return "" ;
 		}
+		return "" ;
 	}
 	
 	@SuppressWarnings("unused")  
@@ -107,18 +101,17 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		return null;
 	}
 
-	private String getFileSource(FileAttachment attachment) throws Exception {
+	/*private String getFileSource(FileAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		try {
 			InputStream input = attachment.getInputStream() ;
 			String fileName = attachment.getName() ;
 			//String fileName = attachment.getNodeName() ;
 			return getFileSource(input, fileName, dservice);
-		} catch (Exception e) {
-			e.printStackTrace() ;
-			return null;
+		} catch (Exception e) {			
 		}
-	}
+		return null;
+	}*/
 
 	public String getRepository() throws Exception {
 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
@@ -130,12 +123,11 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
 	}
 	
-	private String getAvatarUrl(String userId, SessionProvider sessionProvider){
-		String url = "";
+	private String getAvatarUrl(String userId){
 		try{
-			url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId, sessionProvider), getApplicationComponent(DownloadService.class));
-		} catch (Exception e){}
-		if(url != null && url.trim().length() > 0) return url;
+			return FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+		} catch (Exception e){
+		}
 		return Utils.DEFAULT_AVATAR_URL;
 	}
 	
@@ -165,25 +157,25 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		if(!canEditQuestion) canEditQuestion = canEdit;
 	}
 	
-	public List<Question> getListQuestion(SessionProvider sProvider){
+	public List<Question> getListQuestion(){
 		try{
-			return faqService_.getQuestionsByCatetory(categoryId, sProvider, faqSetting_).getAll();
+			return faqService_.getQuestionsByCatetory(categoryId, faqSetting_).getAll();
 		} catch(Exception e){
 			return new ArrayList<Question>();
 		}
 	}
 	
-	public List<Answer> getListAnswers(String questionId, SessionProvider sProvider){
+	public List<Answer> getListAnswers(String questionId){
 		try{
-			return faqService_.getPageListAnswer(sProvider, questionId, false).getPageItem(0);
+			return faqService_.getPageListAnswer(questionId, false).getPageItem(0);
 		} catch(Exception e){
 			return new ArrayList<Answer>();
 		}
 	}
 	
-	public List<Comment> getListComments(String questionId, SessionProvider provider){
+	public List<Comment> getListComments(String questionId){
 		try{
-			return faqService_.getPageListComment(provider, questionId).getPageItem(0);
+			return faqService_.getPageListComment(questionId).getPageItem(0);
 		} catch(Exception e){
 			return new ArrayList<Comment>();
 		}

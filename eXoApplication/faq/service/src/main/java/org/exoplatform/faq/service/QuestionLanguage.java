@@ -31,25 +31,36 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * @since   Jul 11, 2007
  */
 public class QuestionLanguage {
+	final public static String VIEW = "0".intern() ;
+	final public static String EDIT = "1".intern() ;
+	final public static String ADD_NEW = "2".intern() ;
+	final public static String DELETE = "3".intern() ;
+	
 	private String id;
 	
   /** The language. */
-  private String language = " " ;
+  private String language ;
   
   private Answer[] answers;
   
   private Comment[] comments;
   
   /** The question. */
-  private String detail = " " ;
+  private String detail ;
   
-  private String question = " ";
+  private String question ;
+  
+  private String state ;  
   
   /**
    * class constructor.
    */
   public QuestionLanguage() {
   	id = "Language" + IdGenerator.generate() ;
+  	state = ADD_NEW ;
+  	question = " " ;
+  	language = " "  ;
+  	detail = " "  ;
   }
   
 	/**
@@ -110,6 +121,14 @@ public class QuestionLanguage {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getState() {
+		return state;
 	}
 }
 

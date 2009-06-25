@@ -36,7 +36,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+//import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -65,16 +65,16 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 )
 
 public class UICommentForm extends UIForm implements UIPopupComponent {
-	private String languageSelected = null;
-	private Question question_ = new Question();
-	private Comment comment = new Comment();
-  private String questionContent = new String();
-	private String questionDetail = new String();
+	private String languageSelected ;
+	private Question question_ ;
+	private Comment comment ;
+  private String questionContent ;
+	private String questionDetail  ;
 	private String currentUser_ = "";
 	private final String TITLE_USERNAME = "UserName";
 	private final String COMMENT_CONTENT = "CommentContent";
 	private boolean isAddNew = false;
-	private FAQSetting faqSetting_ = null;
+	private FAQSetting faqSetting_ ;
 	
 	private String link_ = "";
 
@@ -94,47 +94,26 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
   	return questionDetail;
   }
 	
-	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String languageView) throws Exception{
-		if(languageView.trim().length() > 0) languageSelected = languageView;
-		else languageSelected = question.getLanguage();
-		
-		this.question_ = question;
-		this.questionContent = question.getQuestion();
-		this.questionDetail = question.getDetail();
-		this.faqSetting_ = faqSetting;
-		FAQUtils.getEmailSetting(faqSetting_, false, false);
-		
+	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String language) throws Exception{
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		SessionProvider sProvider = FAQUtils.getSystemProvider();
-		if(languageView.trim().length() < 1 || languageView.equals(question.getLanguage())) {
-			if(!commentId.equals("new")){
-				comment = faqService.getCommentById(sProvider, question.getId(), commentId);
-				isAddNew = false;
-			} else {
-				comment = new Comment();
-				comment.setNew(true);
-				comment.setCommentBy(FAQUtils.getCurrentUser());
-				isAddNew = true;
-			}
-		} else {
-			MultiLanguages multiLanguages = new MultiLanguages();
-			Node questionNode = faqService.getQuestionNodeById(question.getId(), sProvider);
-			QuestionLanguage questionLanguage = multiLanguages.getQuestionLanguageByLanguage(questionNode, languageView);
+		if(language.trim().length() > 0){
+			languageSelected = language;
+			QuestionLanguage questionLanguage = faqService.getQuestionLanguageByLanguage(question.getPath(), language);
 			this.questionContent = questionLanguage.getQuestion();
 			this.questionDetail = questionLanguage.getDetail();
-			if(!commentId.equals("new")){
-				comment = multiLanguages.getCommentById(questionNode, commentId, languageView);
-				isAddNew = false;
-			} else {
-				comment = new Comment();
-				comment.setNew(true);
-				comment.setCommentBy(FAQUtils.getCurrentUser());
-				isAddNew = true;
-			}
+		} 
+		else{
+			this.questionContent = question.getQuestion();
+			this.questionDetail = question.getDetail();
+			languageSelected = question.getLanguage();
 		}
-		((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
-		
-		sProvider.close();
+		this.question_ = question;		
+		this.faqSetting_ = faqSetting;
+		FAQUtils.getEmailSetting(faqSetting_, false, false);
+		if(!commentId.equals("new")) {
+			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
+			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
+		}
 	}
 	
 	public void setLink(String link) { this.link_ = link;}
@@ -155,14 +134,23 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UICommentForm> event) throws Exception {
 			UICommentForm commentForm = event.getSource() ;
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
-			FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-			try{
-				commentForm.question_ = faqService_.getQuestionById(commentForm.question_.getId(), sessionProvider);
-				
+      ValidatorDataInput validatorDataInput = new ValidatorDataInput();
+      if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
+				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return;
+			}
+      if(!faqService.isExisting(commentForm.question_.getPath())){
+				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      }
+			try{								
 				//link
 	      String link = commentForm.getLink().replaceFirst("UICommentForm", "UIQuestions").replaceFirst("Cancel", "ViewQuestion").replaceAll("&amp;", "&");
 	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
@@ -178,96 +166,87 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				String path = "" ;
-				if(FAQUtils.isFieldEmpty(commentForm.question_.getId())) path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
-				else path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
+				
+				//TODO will be die
+				/*if(FAQUtils.isFieldEmpty(commentForm.question_.getId())) path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
+				else path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;*/
+				path = commentForm.question_.getPath() ;
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", path);
 				link = url + link;
-				
 				commentForm.question_.setLink(link) ;
-				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-				if(comment != null && comment.trim().length() > 0 && validatorDataInput.fckContentIsNotEmpty(comment)){
-					commentForm.comment.setComments(comment);
-					String topicId = commentForm.question_.getTopicIdDiscuss();
-					if(topicId != null && topicId.length() > 0) {
-						ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-						Topic topic = (Topic)forumService.getObjectNameById(sessionProvider, topicId, Utils.TOPIC);
-						if(topic != null) {
-							String []ids = topic.getPath().split("/");
-							int t = ids.length;
-							linkForum = linkForum.replaceFirst("OBJECTID", topicId);
-							linkForum = url + linkForum;
-							if(commentForm.isAddNew) {
-								Post post = new Post();
-								post.setOwner(commentForm.currentUser_);
-								post.setIcon("ViewIcon");
-								post.setName("Re: " + commentForm.question_.getQuestion());
-								post.setMessage(comment);
-								post.setLink(linkForum);
-								post.setIsApproved(false);
+				if(commentForm.comment != null) {
+					commentForm.comment.setNew(false) ;
+				}else {
+					commentForm.comment = new Comment() ;
+					commentForm.comment.setNew(true) ;
+				}
+				commentForm.comment.setComments(comment);
+				//For discuss in forum
+				String topicId = commentForm.question_.getTopicIdDiscuss();
+				if(topicId != null && topicId.length() > 0) {
+					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+					Topic topic = (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC);
+					if(topic != null) {
+						String []ids = topic.getPath().split("/");
+						int t = ids.length;
+						linkForum = linkForum.replaceFirst("OBJECTID", topicId);
+						linkForum = url + linkForum;
+						if(commentForm.isAddNew) {
+							Post post = new Post();
+							post.setOwner(commentForm.currentUser_);
+							post.setIcon("ViewIcon");
+							post.setName("Re: " + commentForm.question_.getQuestion());
+							post.setMessage(comment);
+							post.setLink(linkForum);
+							post.setIsApproved(false);
+							try {
+								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
+								System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
+	            } catch (Exception e) {
+	              e.printStackTrace();
+	            }
+							commentForm.comment.setPostId(post.getId());
+						} else {
+							String postId = commentForm.comment.getPostId();
+							if(postId != null && postId.length() > 0) {
 								try {
-									forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, true, "");
-									System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
-		            } catch (Exception e) {
+									Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
+									boolean isNew = false;
+									if(post == null){
+										post = new Post();
+										isNew = true;
+										post.setOwner(commentForm.currentUser_);
+										post.setIcon("ViewIcon");
+										post.setName("Re: " + commentForm.question_.getQuestion());
+										commentForm.comment.setPostId(post.getId());
+										post.setLink(linkForum);
+									}else{
+										post.setModifiedBy(commentForm.currentUser_);
+									}
+									post.setIsApproved(false);
+									post.setMessage(comment);
+									forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
+	              } catch (Exception e) {
 		              e.printStackTrace();
-		            }
-								commentForm.comment.setPostId(post.getId());
-							} else {
-								String postId = commentForm.comment.getPostId();
-								if(postId != null && postId.length() > 0) {
-									try {
-										Post post = forumService.getPost(sessionProvider, ids[t-3], ids[t-2], topicId, postId);
-										boolean isNew = false;
-										if(post == null){
-											post = new Post();
-											isNew = true;
-											post.setOwner(commentForm.currentUser_);
-											post.setIcon("ViewIcon");
-											post.setName("Re: " + commentForm.question_.getQuestion());
-											commentForm.comment.setPostId(post.getId());
-											post.setLink(linkForum);
-										}else{
-											post.setModifiedBy(commentForm.currentUser_);
-										}
-										post.setIsApproved(false);
-										post.setMessage(comment);
-										forumService.savePost(sessionProvider, ids[t-3], ids[t-2], topicId, post, isNew, "");
-		              } catch (Exception e) {
-			              e.printStackTrace();
-		              }
-								}
+	              }
 							}
 						}
 					}
-					try{
-						if(commentForm.languageSelected == null || commentForm.languageSelected.trim().length() < 0 ||
-								commentForm.languageSelected.equals(commentForm.question_.getLanguage())){
-							faqService_.saveComment(commentForm.question_.getId(), commentForm.comment, commentForm.isAddNew, sessionProvider);
-							faqService_.saveQuestion(commentForm.question_, false, sessionProvider, commentForm.faqSetting_);
-						} else {
-							MultiLanguages multiLanguages = new MultiLanguages();
-							multiLanguages.saveComment(faqService_.getQuestionNodeById(commentForm.question_.getId(), sessionProvider), 
-																				 commentForm.comment, commentForm.languageSelected, sessionProvider);
-						}
-					}catch(Exception e){
-						UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					}
-				} else {
-					UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
-	        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
-	        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-	        sessionProvider.close();
-	        return;
 				}
+				
+				String language = "";
+				if(!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) language = commentForm.languageSelected ;  
+				String currentUser = FAQUtils.getCurrentUser() ;
+				commentForm.comment.setCommentBy(currentUser) ;
+				commentForm.comment.setFullName(FAQUtils.getFullName(currentUser)) ;
+				faqService.saveComment(commentForm.question_.getPath(), commentForm.comment, language);
 			} catch(Exception e){
 				e.printStackTrace();
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			sessionProvider.close();
       questions.setIsNotChangeLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;

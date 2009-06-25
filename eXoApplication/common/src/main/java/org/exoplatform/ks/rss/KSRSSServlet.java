@@ -19,8 +19,6 @@ package org.exoplatform.ks.rss;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.jcr.Node;
-import javax.jcr.Session;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -28,8 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -43,12 +39,13 @@ public class KSRSSServlet extends HttpServlet {
 	public void service(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
     String pathInfo = request.getPathInfo() ;
     String[] arrayInfo = pathInfo.toString().split("/") ;
     try{
       String appType = arrayInfo[1];
       String objectId = pathInfo.replaceFirst("/" + appType + "/", "") ;
-      SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+      
       RSSProcess process = new RSSProcess(sessionProvider, appType);
       InputStream is = null;
       if(arrayInfo.length == 3){
@@ -63,8 +60,8 @@ public class KSRSSServlet extends HttpServlet {
       ServletOutputStream os = response.getOutputStream();
       os.write(buf);
     }catch(Exception e) {
+    	e.printStackTrace() ;
       throw new ServletException(e) ;
-    }finally{
-    }    		
+    }finally{ sessionProvider.close() ; }    		
 	}  
 }

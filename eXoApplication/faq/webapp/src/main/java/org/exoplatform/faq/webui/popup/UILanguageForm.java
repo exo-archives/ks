@@ -50,7 +50,7 @@ import org.exoplatform.webui.form.UIForm;
 public class UILanguageForm extends UIForm implements UIPopupComponent	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<String> listLocaldName = new ArrayList<String>() ;
-  private List<String> LANGAUGE_SELECT = new ArrayList<String>() ;
+  private List<String> LANGUAGE_SELECT = new ArrayList<String>() ;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -72,8 +72,8 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
 	}
   
   public void setListSelected(List<String> language) {
-    this.LANGAUGE_SELECT.clear();
-    this.LANGAUGE_SELECT.addAll(language);
+    this.LANGUAGE_SELECT.clear();
+    this.LANGUAGE_SELECT.addAll(language);
   }
   
   @SuppressWarnings("unused")
@@ -88,24 +88,24 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
   
   @SuppressWarnings("unused")
   private List<String> getListSelected(){
-    return this.LANGAUGE_SELECT ;
+    return this.LANGUAGE_SELECT ;
   }
 	
 	static public class SelectedLanguageActionListener extends EventListener<UILanguageForm> {
 	  public void execute(Event<UILanguageForm> event) throws Exception {
       UILanguageForm languageForm = event.getSource() ;
       String languageIsSelect = event.getRequestContext().getRequestParameter(OBJECTID) ;
-      if(languageForm.LANGAUGE_SELECT.contains(languageIsSelect)){
-        if(languageForm.LANGAUGE_SELECT.indexOf(languageIsSelect) > 0) {
-          languageForm.LANGAUGE_SELECT.remove(languageIsSelect) ;
+      if(languageForm.LANGUAGE_SELECT.contains(languageIsSelect)){
+        if(languageForm.LANGUAGE_SELECT.indexOf(languageIsSelect) > 0) {
+          languageForm.LANGUAGE_SELECT.remove(languageIsSelect) ;
         } else {
           UIApplication uiApplication = languageForm.getAncestorOfType(UIApplication.class) ;
           uiApplication.addMessage(new ApplicationMessage("UILanguageForm.msg.language-is-default", null, ApplicationMessage.WARNING)) ;
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           return ;
         }
-      } else if(!languageForm.LANGAUGE_SELECT.contains(languageIsSelect)){
-        languageForm.LANGAUGE_SELECT.add(languageIsSelect) ;
+      } else if(!languageForm.LANGUAGE_SELECT.contains(languageIsSelect)){
+        languageForm.LANGUAGE_SELECT.add(languageIsSelect) ;
       }
       event.getRequestContext().addUIComponentToUpdateByAjax(languageForm) ;
 	  }
@@ -122,7 +122,7 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
         UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
         questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
       }
-      questionForm.setListLanguage(languageForm.LANGAUGE_SELECT) ;
+      //questionForm.setListLanguage(languageForm.LANGUAGE_SELECT) ;
       questionForm.initPage(true) ;
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;

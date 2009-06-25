@@ -28,9 +28,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupWindow;
@@ -74,11 +72,11 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   
   public Question getViewQuestion() {
   	Question question = null;
-  	SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+  	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
-	    question = faqService_.getQuestionById(questionId_, sessionProvider);
+	    question = faqService_.getQuestionById(questionId_);
 	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_, sessionProvider)) ;
+	    listQuestionLanguage.addAll(faqService_.getQuestionLanguages(questionId_)) ;
 	    for(QuestionLanguage questionLanguage : listQuestionLanguage) {
 	    	if(questionLanguage.getLanguage().equals(language_)) {
 	    		question.setDetail(questionLanguage.getDetail()) ;
@@ -89,7 +87,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
     } catch (Exception e) {
 	    e.printStackTrace();
     }
-    sessionProvider.close();
+    //sessionProvider.close();
   	return question;
   }
   
@@ -105,22 +103,16 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   
   public String getQuestionRelationById(String questionId) {
     Question question = new Question();
-    SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+    //SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
-      question = faqService_.getQuestionById(questionId, sessionProvider);
+      question = faqService_.getQuestionById(questionId);
       if(question != null) {
-      	sessionProvider.close();
         return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
-      } else {
-      	sessionProvider.close();
-        return "" ;
       }
     } catch (Exception e) {
-      sessionProvider.close();
-      return "" ;
-    } finally {
-    	sessionProvider.close();
+    	e.printStackTrace() ;
     }
+    return "" ;
   }
   
   @SuppressWarnings("unused")
