@@ -15,6 +15,10 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
 package org.exoplatform.faq.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -24,6 +28,8 @@ package org.exoplatform.faq.service;
 public class SubCategoryInfo {
 	private String path;
 	private String name;
+	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
+	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
 	
 	public SubCategoryInfo() {}
 	
