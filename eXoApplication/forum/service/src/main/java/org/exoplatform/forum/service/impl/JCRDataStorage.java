@@ -5996,7 +5996,7 @@ public class JCRDataStorage {
 	
 	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
-		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, 60000); // pSetting.getPeriodTime()
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); // pSetting.getPeriodTime()
 		//String name = String.valueOf(cal.getTime().getTime()) ;
 		Class clazz = Class.forName("org.exoplatform.forum.service.user.AutoPruneJob");
 		JobInfo info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
@@ -6029,7 +6029,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			System.out.println("======> Forums found:" + iter.getSize());
+			//System.out.println("======> Topics found:" + iter.getSize());
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
 				topic.setProperty("exo:isActive", false) ;				
