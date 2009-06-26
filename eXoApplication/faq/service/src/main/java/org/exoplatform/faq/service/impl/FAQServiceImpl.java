@@ -1011,8 +1011,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 		return jcrData_.getQuestionContents(paths) ;
 	}
 	
-	public Node getQuestionNodeByIdò(String path) throws Exception {
-		return jcrData_.getQuestionNodeByIdò(path) ;
+	public Node getQuestionNodeById(String path) throws Exception {
+		return jcrData_.getQuestionNodeById(path) ;
 	}
 	
 	public boolean isModerateAnswer(String id) throws Exception {

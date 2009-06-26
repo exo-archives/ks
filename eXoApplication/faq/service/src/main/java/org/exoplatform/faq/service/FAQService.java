@@ -586,7 +586,7 @@ public interface FAQService extends FAQServiceLegacy{
 	
 	public boolean isModerateAnswer(String id) throws Exception ; 
 	
-	public Node getQuestionNodeByIdò(String path) throws Exception ;
+	public Node getQuestionNodeById(String path) throws Exception ;
 	
 	public String getParentCategoriesName(String path) throws Exception ;
 	
