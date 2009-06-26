@@ -2935,7 +2935,7 @@ public class JCRDataStorage {
   			categoryInfo.setSubCateInfos(subList) ;
   		}
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  		categoryInfo = new CategoryInfo() ;
   	}finally{ sProvider.close() ;}
   	return categoryInfo ;
   }

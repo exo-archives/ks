@@ -61,8 +61,12 @@ public class UIViewer extends UIContainer {
 	@SuppressWarnings("unused")
   private List<String> arrangeList(List<String> list) {
 		List<String> newList = new ArrayList<String>();
-		for (int i = (list.size()-1); i >= 0; i--) {
-			newList.add(list.get(i));
+		if(list.isEmpty() || list.size() == 0){
+			newList.add(Utils.CATEGORY_HOME);
+		} else {
+			for (int i = (list.size()-1); i >= 0; i--) {
+				newList.add(list.get(i));
+			}
 		}
 		return newList;
 	} 
@@ -75,71 +79,6 @@ public class UIViewer extends UIContainer {
     } catch (Exception e) {
     	e.printStackTrace();
     }
-		/*
-		SubCategoryInfo childCategoryInfo;
-		QuestionInfo questionInfo = new QuestionInfo();
-		SubCategoryInfo subCategoryInfo = new SubCategoryInfo();
-		List<SubCategoryInfo> subCateList = new ArrayList<SubCategoryInfo>();
-		List<SubCategoryInfo> childCateList = new ArrayList<SubCategoryInfo>();
-		List<String> answers = new ArrayList<String>();
-		List<QuestionInfo> questionInfos =  new ArrayList<QuestionInfo>();
-		
-		for (int i = 0; i < 5; i++) {
-			questionInfo = new QuestionInfo();
-			questionInfo.setId("quesitonId" + i);
-			questionInfo.setQuestion("Question number " + (i+1) + " of this cate");
-			answers = new ArrayList<String>();
-			for (int j = 0; j < 4; j++) {
-				answers.add(" Answer number " + (j+1) + " of question "+(i+1)+" of this category ");
-			}
-			questionInfo.setAnswers(answers);
-			questionInfos.add(questionInfo);
-    }
-		//category add question
-		categoryInfo.setQuestionInfos(questionInfos);
-		
-		List<String> pathName = new ArrayList<String>();
-		pathName.add("Cate Parent0");
-		pathName.add("Cate Parent1");
-		pathName.add("Cate Parent2");
-		path = "cate0/cate1/cate2/cate";// set
-		//set PathName
-		categoryInfo.setPathName(pathName);
-		categoryInfo.setPath(path);
-		for (int i = 0; i < 3; i++) {
-			childCategoryInfo = new SubCategoryInfo();
-			childCategoryInfo.setId("categoryId" + i);
-			childCategoryInfo.setPath(path+"/"+"categoryId" + i);
-			childCategoryInfo.setName("Category " + (i+1));
-			// get Question list of child category
-			questionInfos = new ArrayList<QuestionInfo>();
-			for (int j = 0; j < 3; j++) {
-				questionInfo = new QuestionInfo();
-				questionInfo.setId("quesitonId" + i + "" + j);
-				questionInfo.setQuestion("Question number " + (j+1) + " of cate" + (i+1));
-				// get Answers of this question
-				answers = new ArrayList<String>();
-				for (int t = 0; t < 4; t++) {
-					answers.add(" Answer number " + (t+1) + " of question number " + (j+1));
-        }
-				questionInfo.setAnswers(answers);
-				questionInfos.add(questionInfo);
-			}
-			childCategoryInfo.setQuestionInfos(questionInfos);
-			// get SubCategory list of child category
-			childCateList = new ArrayList<SubCategoryInfo>();
-			for (int j = 0; j < 3; j++) {
-				subCategoryInfo = new SubCategoryInfo();
-				subCategoryInfo.setName("Sub cate " + (j+1) + " of cate " + (i+1));
-				subCategoryInfo.setPath(path+"/" + "childCat"+j);
-				childCateList.add(subCategoryInfo);
-      }
-			childCategoryInfo.setSubCateInfos(childCateList);
-			
-			subCateList.add(childCategoryInfo);
-		}
-		categoryInfo.setSubCateInfos(subCateList);
-		*/
 		return categoryInfo;
 	}
 	

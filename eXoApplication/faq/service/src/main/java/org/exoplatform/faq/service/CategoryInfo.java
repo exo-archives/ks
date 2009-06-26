@@ -29,11 +29,16 @@ public class CategoryInfo {
 	private String id;
 	private String path;
 	private String name;
-	private List<String> pathName = new ArrayList<String>();
+	private List<String> pathName;
 	private List<QuestionInfo> questionInfos = new ArrayList<QuestionInfo>();
 	private List<SubCategoryInfo> subCateInfos = new ArrayList<SubCategoryInfo>();
 	
 	public CategoryInfo() {
+		id = Utils.CATEGORY_HOME;
+		path = id ;
+		name = id ;
+		pathName = new ArrayList<String>();
+		pathName.add(id);
 	}
 
 	public String getId() {

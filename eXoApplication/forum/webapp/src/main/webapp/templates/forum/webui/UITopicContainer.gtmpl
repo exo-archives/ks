@@ -173,11 +173,11 @@
 														 			classMenu = "DisableMenuItem";
 														 			link = "javaScript: void(0)" ;
 														 		}
-														 		if(action.indexOf("ActivateTopics") >= 0){
-														 			if(!uicomponent.getIsAutoPrune()){
-														 				classMenu = "DisableMenuItem";
-														 				link = "javaScript: void(0)" ;
-														 			}
+														 		//if(action.indexOf("ActivateTopics") >= 0){
+														 		//	if(!uicomponent.getIsAutoPrune()){
+														 		//		classMenu = "DisableMenuItem";
+														 		//		link = "javaScript: void(0)" ;
+														 		//	}
 														 		}
 														 		if(!action.equals("SetDeleteTopic")){
 														 %> 

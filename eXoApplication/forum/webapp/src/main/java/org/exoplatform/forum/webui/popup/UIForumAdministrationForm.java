@@ -312,9 +312,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<String> getListIpBan() throws Exception{
 		listIpBan = new ArrayList<String>();
-		ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		try {
-			listIpBan.addAll(fservice.getBanList());
+			listIpBan.addAll(forumService.getBanList());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

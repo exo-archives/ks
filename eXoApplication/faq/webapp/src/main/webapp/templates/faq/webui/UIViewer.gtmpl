@@ -10,24 +10,33 @@
 		List questionCates = cateInfo.getQuestionInfos();
 		
 		String path = cateInfo.getPath();
-		
+		if(path == null || path.length() == 0){
+			path = Utils.CATEGORY_HOME;
+		}
 		String []ids = path.split("/");
 		List navPath = cateInfo.getPathName();
+		if(navPath.isEmpty() || navPath.size() == 0) {
+		
+		}
 		navPath = uicomponent.arrangeList(navPath);
 %>
 	<div class="FAQListBar">
 		<% 
 		int i = 0;
-		String link = ids[0];
+		String link = ids[0], viewName;
 		for(pathName in navPath) {
 			if(pathName.equals(Utils.CATEGORY_HOME)){ pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);}
+			viewName = pathName;
+			if(pathName.length() > 17){
+				viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 17);
+			}
 			if(i < ids.length && i > 0)
 				link = link + "/" + ids[i];
 			if(i < (ids.length-1)){
 		%>
-			<span><a href="<%=uicomponent.event("ChangePath", link);%>">$pathName</a> >> </span>
+			<span><a href="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
 		<%} else { %>
-			<span><b>$pathName</b></span>
+			<span title="$pathName"><b>$viewName</b></span>
 		<%}
 		++i;
 		}%>
