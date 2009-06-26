@@ -2337,14 +2337,15 @@ public class JCRDataStorage {
 	
 	public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		eventQuery.setViewingCategories(getViewableCategoryIds(sProvider)) ;
 		Node categoryHome = getCategoryHome(sProvider, null) ;
-		Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
+			//System.out.println("result ====>" + iter.getSize());
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
@@ -2354,41 +2355,97 @@ public class JCRDataStorage {
 				return results ;
 			} else if(eventQuery.getType().equals("faqQuestion")){ // Question search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
-				Map<String, Node> mapQuestionNode = new HashMap<String, Node>();
-				Map<String, Node> mapLanguageNode = new HashMap<String, Node>();
-				Map<String, Node> mapAnswerNode = new HashMap<String, Node>();
+				Map<String, Node> mergeQuestion = new HashMap<String, Node>();
+				Map<String, Node> mergeQuestion2 = new HashMap<String, Node>();
+				List<Node> listQuestion = new ArrayList<Node>();
+				List<Node> listLanguage = new ArrayList<Node>();
+				List<Node> listAnswer = new ArrayList<Node>();
 				while(iter.hasNext()){
-					nodeObj = (Node) iter.nextNode();
-					if(nodeObj.isNodeType("exo:faqQuestion")) mapQuestionNode.put(nodeObj.getName(), nodeObj) ;
-					if(nodeObj.isNodeType("exo:faqLanguage")) mapLanguageNode.put(nodeObj.getProperty("exo:questionId").getString(), nodeObj) ;
-					if(nodeObj.isNodeType("exo:answer")) mapAnswerNode.put(nodeObj.getProperty("exo:questionId").getString(), nodeObj) ;
+					nodeObj = iter.nextNode();
+					if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
+					if(nodeObj.isNodeType("exo:faqLanguage")) listLanguage.add(nodeObj) ;
+					if(nodeObj.isNodeType("exo:answer")) listAnswer.add(nodeObj) ;
 				}
-				if(eventQuery.isQuestionLevelSearch() && eventQuery.isAnswerLevelSearch()) {					
-					for(String key : mapQuestionNode.keySet()) {
-						if(mapLanguageNode.containsKey(key) && mapAnswerNode.containsKey(key)) {
-							results.add(getResultObj(mapQuestionNode.get(key))) ;
+				/*System.out.println("mapQuestionNode=>" + listQuestion.size());
+				System.out.println("mapLanguageNode=>" + listLanguage.size());
+				System.out.println("mapAnswerNode=>" + listAnswer.size());
+				System.out.println("eventQuery.isQuestionLevelSearch()=>" + eventQuery.isQuestionLevelSearch());
+				System.out.println("eventQuery.isAnswerLevelSearch()=>" + eventQuery.isAnswerLevelSearch());
+				System.out.println("eventQuery.isLanguageLevelSearch()=>" + eventQuery.isLanguageLevelSearch());*/
+				
+				if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
+				if(eventQuery.isAnswerLevelSearch() && listAnswer.isEmpty()) return results ;
+				if(eventQuery.isLanguageLevelSearch() && listLanguage.isEmpty()) return results ;
+				
+				boolean isInitiated = false ;
+				if(eventQuery.isQuestionLevelSearch()) {
+				//directly return because there is only one this type of search
+					if(!eventQuery.isLanguageLevelSearch() || !eventQuery.isAnswerLevelSearch()) {
+						for(Node node : listQuestion) {
+							results.add(getResultObj(node)) ;
 						}
+						return results ;
 					}
-					return results ;					
-				}else if (eventQuery.isQuestionLevelSearch()){
-					for(Node node : mapQuestionNode.values()) {
-						results.add(getResultObj(node)) ;						
+					// merging results
+					isInitiated = true ;
+					for(Node node : listQuestion) {
+						mergeQuestion.put(node.getName(), node) ;
 					}
-					return results ;
-				}else if (eventQuery.isAnswerLevelSearch()){
-					Session session = categoryHome.getSession();
-					for(Node node : mapAnswerNode.values()) { // put question to results
-						String path = node.getPath() ;
-						int index = path.indexOf("/Question") ;
-						path = path.substring(0, index + 41);
-						results.add(getResultObj((Node)session.getItem(path))) ;						
+				} 
+				if(eventQuery.isLanguageLevelSearch()) {
+				//directly return because there is only one this type of search 
+					if(!eventQuery.isQuestionLevelSearch() || !eventQuery.isAnswerLevelSearch()) {
+						for(Node node : listLanguage) {
+							results.add(getResultObj(node)) ;
+						}
+						return results ;
 					}
-					return results ;
+					
+				// merging results
+					if(isInitiated) {
+						for(Node node : listLanguage) {
+							String id = node.getProperty("exo:questionId").getString() ;
+							if(mergeQuestion.containsKey(id)) {
+								mergeQuestion2.put(id, mergeQuestion.get(id)) ;
+							}							
+						}
+					}else {
+						for(Node node : listLanguage) {
+							mergeQuestion2.put(node.getProperty("exo:questionId").getString(), node) ;
+						}						
+						isInitiated = true ;
+					}					
+				} 
+				
+				if(eventQuery.isAnswerLevelSearch()) {
+					//directly return because there is only one this type of search
+					if(!eventQuery.isLanguageLevelSearch() || !eventQuery.isQuestionLevelSearch()) {
+						for(Node node : listAnswer) {
+							results.add(getResultObj(node)) ;
+						}
+						return results ;
+					}
+				// merging results
+					if(isInitiated) {
+						if(mergeQuestion2.isEmpty()) return results ;
+						for(Node node : listAnswer) {
+							String id = node.getProperty("exo:questionId").getString() ;
+							if(mergeQuestion2.containsKey(id)) {
+								results.add(getResultObj(node));
+							}							
+						}
+					}else {
+						for(Node node : listAnswer) {
+							results.add(getResultObj(node));
+						}
+					}					
 				}
+				return results ;
 				
 			} else if(eventQuery.getType().equals("categoryAndQuestion")){ // Quick search
 				String nodePath = "";
 				Session session = categoryHome.getSession();
+				Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
 				while (iter.hasNext()) {
 					nodeObj = (Node) iter.nextNode();
 					nodePath = nodeObj.getPath();
@@ -2401,33 +2458,50 @@ public class JCRDataStorage {
 					}					
 					if(!searchMap.containsKey(nodeObj.getName()))	searchMap.put(nodeObj.getName(), getResultObj(nodeObj)) ;					
 				}
+				return	Arrays.asList(searchMap.values().toArray(new ObjectSearchResult[]{}));
 			}			
 		} catch (Exception e) {
 			e.printStackTrace() ;
-		}
-		sProvider.close() ;
-		return	Arrays.asList(searchMap.values().toArray(new ObjectSearchResult[]{}));
+		} finally {sProvider.close() ;}
+		return new ArrayList<ObjectSearchResult> () ;
 	}
 	
 	private ObjectSearchResult getResultObj(Node node) throws Exception {
-		ObjectSearchResult searchResult = new ObjectSearchResult() ;
-		if(node.isNodeType("exo:faqQuestion")){
-			if(questionHasAnswer(node)) {
-				searchResult.setIcon("QuestionSearch") ;
-			} else {
-				searchResult.setIcon("NotResponseSearch") ;
+		ObjectSearchResult objectResult = new ObjectSearchResult() ;
+		if(node.isNodeType("exo:faqCategory")){
+			objectResult.setIcon("FAQCategorySearch") ;
+			objectResult.setName(node.getProperty("exo:name").getString()) ;
+			objectResult.setType("faqCategory");
+			String path = node.getPath() ;
+			objectResult.setId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+			objectResult.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
+		} else {
+			if(node.isNodeType("exo:faqQuestion")) {
+				if(questionHasAnswer(node)) {
+					objectResult.setIcon("QuestionSearch") ;
+				} else {
+					objectResult.setIcon("NotResponseSearch") ;
+				}
+				objectResult.setName(node.getProperty("exo:title").getString()) ;
+				String path = node.getPath() ;
+				objectResult.setId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+				objectResult.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
+			}else{
+				objectResult.setIcon("QuestionSearch") ;
+				String nodePath = node.getPath() ;
+				//if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") > nodePath.indexOf("/Question")){
+				nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
+				Node questionNode = (Node) node.getSession().getItem(nodePath);
+				objectResult.setName(questionNode.getProperty("exo:title").getString()) ;
+				String path = questionNode.getPath() ;
+				objectResult.setId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
+				objectResult.setCreatedDate(questionNode.getProperty("exo:createdDate").getDate().getTime()) ;
+				//}				
 			}
-			searchResult.setType("faqQuestion");
-			searchResult.setName(node.getProperty("exo:title").getString()) ;			
-		} else if(node.isNodeType("exo:faqCategory")){
-			searchResult.setIcon("FAQCategorySearch") ;
-			searchResult.setName(node.getProperty("exo:name").getString()) ;
-			searchResult.setType("faqCategory");			
+			objectResult.setType("faqQuestion");			
 		}
-		String path = node.getPath() ;
-		searchResult.setId(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
-		searchResult.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime()) ;
-		return searchResult ; 
+		
+		return objectResult ; 
 	}
 	/*public List<Question> searchQuestionWithNameAttach(FAQEventQuery eventQuery) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;

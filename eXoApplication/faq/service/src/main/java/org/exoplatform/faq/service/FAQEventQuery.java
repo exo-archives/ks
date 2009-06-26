@@ -54,7 +54,9 @@ public class FAQEventQuery {
 	private boolean isAdmin = false ;
 	private List<String> viewingCategories ;
 	private boolean isQuestionLevelSearch = false ;
+	private boolean isLanguageLevelSearch = false ;
 	private boolean isAnswerLevelSearch = false ;
+	private boolean isSearchOnDefaultLanguage = false ;
 
 	public String getLanguage() {
 		return language;
@@ -400,74 +402,94 @@ public String getQuery() throws Exception {
 			
 		 //######################### Question Search ###############################   
     } else if(type.equals("faqQuestion")) { 
+    	//## (questionSearch (or|and) languageSearch or answerSearch) and CategoryScoping and fulltextSearch ##
     	queryString = new StringBuilder() ;
+    	isQuestionLevelSearch = false ;
+    	isAnswerLevelSearch = false ;
     	isAnd = false ;
   		queryString.append("/jcr:root").append(path);
-      queryString.append("//*") ;
+      queryString.append("//* [") ;
   		
   		//search on main questions
-  		StringBuffer questionSearch = new StringBuffer("(") ;
+  		StringBuilder questionSearch = new StringBuilder("(") ;
   		isAnd = false ;
   		if(author != null && author.length() > 0) {
 	    	if(isAnd) questionSearch.append(" and ");
-	    	questionSearch.append("(jcr:contains(@exo:author, '").append(author).append("'))") ;
+	    	questionSearch.append("jcr:contains(@exo:author, '").append(author).append("')") ;
 	    	isAnd = true ;
 	    }
   		if(email != null && email.length() > 0) {
 	    	if(isAnd) questionSearch.append(" and ");
-	    	questionSearch.append("(jcr:contains(@exo:email, '").append(email).append("'))") ;
+	    	questionSearch.append("jcr:contains(@exo:email, '").append(email).append("')") ;
 	    	isAnd = true ;
 	    }
   		if(fromDate != null){
-  			if(isAnd) queryString.append(" and ") ;
-  			queryString.append("(@exo:createdDate").append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
+  			if(isAnd) questionSearch.append(" and ") ;
+  			questionSearch.append("(@exo:createdDate").append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
   			isAnd = true ;
   		}
   		if(toDate != null){
-  			if(isAnd) queryString.append(" and ") ;
-  			queryString.append("(@exo:createdDate").append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
+  			if(isAnd) questionSearch.append(" and ") ;
+  			questionSearch.append("(@exo:createdDate").append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
   			isAnd = true ;
   		}
   		questionSearch.append(")") ;
-  		if(questionSearch.length() > 2) isQuestionLevelSearch = true ;
+  		if(questionSearch.length() > 2 || isSearchOnDefaultLanguage) isQuestionLevelSearch = true ;
   		
   		//search on language questions
-  		StringBuffer questionLanguageSearch = new StringBuffer("(") ;
-  		questionLanguageSearch.append("(exo:language='").append(language).append("')");
+  		StringBuilder questionLanguageSearch = new StringBuilder("") ;  		
   		if(question != null && question.length() > 0) {
-  			questionLanguageSearch.append(" and ( (jcr:contains(@exo:title,'").append(question).append("')) or (jcr:contains(@exo:name, '").append(question).append("')) )") ;
+  			questionLanguageSearch.append("((exo:language='").append(language).append("')");
+  			questionLanguageSearch.append(" and ( jcr:contains(@exo:title,'").append(question).append("') or jcr:contains(@exo:name, '").append(question).append("') )") ;
+  			questionLanguageSearch.append(")") ;
+  			if (isSearchOnDefaultLanguage) isLanguageLevelSearch = false ;
+  			else isLanguageLevelSearch = true ;
 	    }
-  		questionLanguageSearch.append(")") ;  		
+  		  		
   		
   		//search on answers
-  		StringBuffer answerSearch = new StringBuffer("(") ;
-  		answerSearch.append("(exo:responseLanguage='").append(language).append("')");
+  		StringBuilder answerSearch = new StringBuilder("") ;  		
   		if (response != null && response.length() > 0) {
-  			answerSearch.append(" and jcr:contains(@exo:responses,'" + response + "')") ;
-  		}
-  		answerSearch.append(")") ;
-  		if(answerSearch.length() > 2) isAnswerLevelSearch = true ;
+  			answerSearch.append("( exo:responseLanguage='").append(language).append("'");
+  			answerSearch.append(" and jcr:contains(@exo:responses,'" + response + "')") ;  			
+  			answerSearch.append(")") ;
+  			isAnswerLevelSearch = true ;
+  		}  		
+  		
+  		//if(answerSearch.length() > 2) isAnswerLevelSearch = true ;
   		//search on category scoping
-  		StringBuffer searchCategoryScoping = new StringBuffer("(") ;
+  		StringBuilder searchCategoryScoping = new StringBuilder("(") ;  		
   		for(String category : getViewingCategories()) {
-  			if(searchCategoryScoping.length() > 1) answerSearch.append(" or ");
-  			answerSearch.append("(exo:categoryId='").append(category).append("')");
+  			if(searchCategoryScoping.length() > 1) searchCategoryScoping.append(" or ");
+  			searchCategoryScoping.append("exo:categoryId='").append(category).append("'");
   		}
   		searchCategoryScoping.append(")") ;
   		
   		boolean isAdd = false ;
   		if( questionSearch.length() > 2) {
-  			queryString.append("(").append(questionSearch.toString()) ;
+  			System.out.println("questionSearch" + questionSearch.toString());
+  			queryString.append("(").append(questionSearch.toString()) ;  			
   			isAdd = true ;
   		}
-  		if(questionLanguageSearch.length() > 2) {
-  			if(isAdd) {
-  				queryString.append(" or ").append(questionLanguageSearch.toString()) ;
-  			}else {
-  				queryString.append("(").append(questionLanguageSearch.toString()) ;
-  				isAdd = true ;
-  			}
+  		if(questionLanguageSearch.length() > 0) {
+  			if(isSearchOnDefaultLanguage()) {
+    			
+    			if(isAdd) {
+    				queryString.append(" and ").append(questionLanguageSearch.toString()) ;
+    			}else {
+    				queryString.append("(").append(questionLanguageSearch.toString()) ;
+    				isAdd = true ;
+    			}  			
+    		}else {
+    			if(isAdd) {
+    				queryString.append(" or ").append(questionLanguageSearch.toString()) ;
+    			}else {
+    				queryString.append("(").append(questionLanguageSearch.toString()) ;
+    				isAdd = true ;
+    			}
+    		}
   		}
+  		
   		if(answerSearch.length() > 2) {
   			if(isAdd) {
   				queryString.append(" or ").append(answerSearch.toString()) ;
@@ -477,14 +499,21 @@ public String getQuery() throws Exception {
   			}
   		}
   		
+  		if (isAdd)queryString.append(")") ;
+  		
   		if(isAdd) {
-  			queryString.append(") and (").append(searchCategoryScoping.toString()).append(")") ;
+  			queryString.append(" and ").append(searchCategoryScoping.toString()) ;
   		} else {
   			queryString.append(searchCategoryScoping.toString()) ;
+  			isAdd = true ;
   		}
   		
   		if(text != null && text.length() > 0 ) {
-      	queryString.append(" and (jcr:contains(., '").append(text).append("'))") ;    		
+  			if(isAdd){
+  				queryString.append(" and  jcr:contains(., '").append(text).append("')") ;
+  			}else {
+  				queryString.append("jcr:contains(., '").append(text).append("')") ;
+  			}   		
       }
   		queryString.append("]") ;
   		
@@ -516,7 +545,7 @@ public String getQuery() throws Exception {
   		}
 	    queryString.append("]");
     }
-		System.out.println("queryString.toString()>>>>>" + queryString.toString());
+		//System.out.println("queryString.toString()>>>>>" + queryString.toString());
 	  return queryString.toString();
   }
 	
@@ -531,20 +560,6 @@ public String getQuery() throws Exception {
  * 
  * @return the string
  */
-private String setDateFromTo(Calendar fromDate, Calendar toDate, String property) {
-		StringBuffer queryString = new StringBuffer() ;
-		if(fromDate != null){
-			if(isAnd) queryString.append(" and ") ;
-			queryString.append("(@exo:").append(property).append(" >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;
-			isAnd = true ;
-		}
-		if(toDate != null){
-			if(isAnd) queryString.append(" and ") ;
-			queryString.append("(@exo:").append(property).append(" <= xs:dateTime('").append(ISO8601.format(toDate)).append("'))") ;
-			isAnd = true ;
-		}
-		return queryString.toString() ;
-	}
 
 	public void setViewingCategories(List<String> viewingCategories) {
 		this.viewingCategories = viewingCategories;
@@ -560,6 +575,22 @@ private String setDateFromTo(Calendar fromDate, Calendar toDate, String property
 	
 	public boolean isAnswerLevelSearch() throws Exception{
 		return isAnswerLevelSearch ;
+	}
+
+	public void setSearchOnDefaultLanguage(boolean isSearchOnDefaultLanguage) {
+		this.isSearchOnDefaultLanguage = isSearchOnDefaultLanguage;
+	}
+
+	public boolean isSearchOnDefaultLanguage() {
+		return isSearchOnDefaultLanguage;
+	}
+
+	public void setLanguageLevelSearch(boolean isLanguageLevelSearch) {
+		this.isLanguageLevelSearch = isLanguageLevelSearch;
+	}
+
+	public boolean isLanguageLevelSearch() {
+		return isLanguageLevelSearch;
 	}
 }
 

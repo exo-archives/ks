@@ -108,9 +108,8 @@
 	    			<div style="clear:left;"><span></span></div>
 	    		</div>
     <%
-        } else {
-        
-          for(int j = 0 ; j < (-1*sub); j ++) {
+        } else {        
+          for(int j = 1 ; j < (-1*sub); j ++) {
           %>
             </div>
      			<%}%>
@@ -141,7 +140,7 @@
       }      
       i ++ ;
     }
-    for(i = 0 ; i < listCate.get(n - 1).getDeft() ; i ++) {
+    for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {
     %>
       </div>
   	<%}%>
