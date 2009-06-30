@@ -301,7 +301,7 @@
 												</table>
 											</div>
 										</div>
-										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid')") ; %>
+										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid');") ; %>
 									 <%} else if(tabconten.id.equals(uicomponent.FIELD_TOPICTYPEMANAGER_TAB)) { %>
 										<div class="AutuPruneContainer">
 											<div id="AutuPruneContainer" style="padding:0px 16px 0px 1px;">
@@ -368,7 +368,7 @@
 										 		</table> 
 											</div>
 										</div>			
-										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent1','UIGrid1')") ; %>			
+										<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent1','UIGrid1');") ; %>			
 									 <%} else {
 											uiform.renderChild(tabconten.id) ; 
 										}
