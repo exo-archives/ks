@@ -576,6 +576,10 @@ public class ForumServiceImpl implements ForumService, Startable{
 		return storage_.getAllTagName(strQuery, userAndTopicId);
 	}
 
+	public List<String> getTagNameInTopic(String userAndTopicId) throws Exception {
+		return storage_.getTagNameInTopic(userAndTopicId);
+	}
+	
 	public JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception {
 	  return storage_.getTopicByMyTag(userIdAndtagId, strOrderBy);
   }

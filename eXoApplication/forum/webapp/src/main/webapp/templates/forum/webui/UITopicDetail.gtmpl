@@ -304,7 +304,7 @@
 																<div class="UIRightPopupMenuContainer" style="padding:5px 0px;min-width:172px;">
 																	<div class="InputPage" style="float:left;">
 																		<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-																		<div class="SearchTagName" id="searchTagName" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
+																		<div class="SearchTagName" id="searchTagName" linkSupmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
 																			<div class="TagNameItem Selected"></div>
 																		</div>
 																	</div>

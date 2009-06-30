@@ -56,6 +56,7 @@ SearchTagName.prototype.init = function(userName) {
 	var DOMUtil = eXo.core.DOMUtil;
 	this.parentNode = document.getElementById('searchTagName');
 	if(!this.parentNode) return;
+	this.parentNode.style.visibility = "hidden";
 	var searchInputId =  this.parentNode.getAttribute("inputId");
 	this.searchTagNameNode = document.getElementById(searchInputId);
 	if (!this.searchTagNameNode) {
@@ -63,14 +64,30 @@ SearchTagName.prototype.init = function(userName) {
 	}
 	this.searchTagNameNode.value = "";
   this.searchTagNameNode.onkeydown = this.searchIpBanWrapper;
+  this.searchTagNameNode.onclick = this.supmitForm;
+};
+
+SearchTagName.prototype.supmitForm = function(event) {
+	var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value)
+	if(eXo.forum.webservice.SearchTagName.parentNode.style.visibility === "hidden" && str.trim().length === 0) {
+		eXo.forum.webservice.SearchTagName.searchTagName('onclickForm');
+	}
 };
 
 SearchTagName.prototype.searchIpBanWrapper = function(event) {
 	var key = eXo.core.Keyboard.getKeynum(event);
 	if(key == 13){
-		eXo.forum.webservice.SearchTagName.searchTagNameNode.focus();
-		eXo.forum.webservice.SearchTagName.parentNode.style.visibility = "hidden";
-		eXo.forum.webservice.SearchTagName.searchTagName(' ');
+		var object = eXo.forum.webservice.SearchTagName;
+		var str = String(object.searchTagNameNode.value);
+		if(object.parentNode.style.visibility === "visible"){
+			object.searchTagNameNode.focus();
+			object.parentNode.style.visibility = "hidden";
+			object.searchTagName(' ');
+		} else if(str.trim().length > 0){
+			var linkSupmit = String(object.parentNode.getAttribute('linkSupmit'));
+			linkSupmit = linkSupmit.replace("javascript:", "");
+			eval(linkSupmit);
+		}
 		return;
 	}
 	if(key == 38 || key == 40){
@@ -120,7 +137,7 @@ SearchTagName.prototype.searchIpBanTimeout = function() {
 
 SearchTagName.prototype.searchTagName = function(keyword) {
 	// Get data from service, url: /ks/forum/filterTagNameForum/{strTagName}/
-	keyword =  String(keyword);
+	keyword = String(keyword);
 	var strs = keyword.split(" ");
 	if(strs.length >= 1)keyword = strs[strs.length-1];
 	keyword = keyword || ' ';

@@ -28,6 +28,7 @@ import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.BBCodeData;
@@ -757,8 +758,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						return ;
 					}
 				}
+				while (tagIds.indexOf("  ") > 0) {
+	        tagIds = StringUtils.replace(tagIds, "  ", " ");
+        }
 				List<String> listTags = new ArrayList<String>();
-				listTags.addAll(Arrays.asList(tagIds.split(" ")));
+				for (String string : Arrays.asList(tagIds.split(" "))) {
+					if(!listTags.contains(string) && !ForumUtils.isEmpty(string)) {
+						listTags.add(string);
+					}
+        }
 				List<Tag> tags = new ArrayList<Tag>();
 				Tag tag;
 				for (String string : listTags) {
@@ -1615,7 +1623,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
-			if(checksms != null && checksms.trim().length() > 3) {
+			if(checksms != null && checksms.trim().length() > 0) {
 				StringBuffer buffer = new StringBuffer();
 				for (int j = 0; j < message.length(); j++) {
 					char c = message.charAt(j); 
@@ -1706,8 +1714,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			List<String> listIp = topicDetail.forum.getBanIP();
 			if(listIp == null || listIp.size()  == 0) listIp = new ArrayList<String>();
 			listIp.add(ip);topicDetail.forum.setBanIP(listIp);
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			if(!topicDetail.forumService.addBanIPForum(sProvider, ip, (topicDetail.categoryId + "/" + topicDetail.forumId))){
+			if(!topicDetail.forumService.addBanIPForum(ip, (topicDetail.categoryId + "/" + topicDetail.forumId))){
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
@@ -1720,17 +1727,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddBookMarkActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource();
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
 				Topic topic = topicDetail.getTopic();
 				StringBuffer buffer = new StringBuffer();
 				buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(topic.getId()) ;
 				String userName = topicDetail.userProfile.getUserId() ;
-				topicDetail.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
+				topicDetail.forumService.saveUserBookmark(userName, buffer.toString(), true) ;
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateUserProfileInfo() ;
 			} catch (Exception e) {
-				sProvider.close();
 			}
 		}
 	}
@@ -1741,12 +1746,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			topicDetail.isEditTopic = true;
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			List<String> values = new ArrayList<String>();
 			String userName = topicDetail.userProfile.getUserId();
 			try {
 				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
-				topicDetail.forumService.addWatch(sProvider, 1, buffer.toString(), values, ForumSessionUtils.getCurrentUser()) ;
+				topicDetail.forumService.addWatch(1, buffer.toString(), values, ForumSessionUtils.getCurrentUser()) ;
 				Object[] args = { };
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
@@ -1758,8 +1762,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			}finally {
-				sProvider.close();
 			}
 		}
 	}
@@ -1771,9 +1773,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String currentUser = ForumSessionUtils.getCurrentUser();
 			if(currentUser != null){
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-				uiForm.forumService.addWatch(sProvider, -1, topicId, null, currentUser);
-				sProvider.close();
+				uiForm.forumService.addWatch(-1, topicId, null, currentUser);
 			}
 			String rssLink = uiForm.getRSSLink(topicId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

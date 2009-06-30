@@ -37,7 +37,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
+		//template =	"app:/templates/faq/webui/UIViewer.gtmpl",
 		events = {
 		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
 		}
@@ -60,6 +60,7 @@ public class UIViewer extends UIContainer {
 	
 	@SuppressWarnings("unused")
   private List<String> arrangeList(List<String> list) {
+//		getTemplate()
 		List<String> newList = new ArrayList<String>();
 		if(list.isEmpty() || list.size() == 0){
 			newList.add(Utils.CATEGORY_HOME);

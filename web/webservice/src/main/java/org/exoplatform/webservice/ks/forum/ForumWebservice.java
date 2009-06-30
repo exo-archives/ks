@@ -112,6 +112,12 @@ public class ForumWebservice implements ResourceContainer {
   	ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
   	if(str.equals(" ")){
   		ipsToJson.clear() ;
+  	} else if(str.equals("onclickForm")){
+  		ipsToJson.clear() ;
+  		List<String> banIps = forumService.getTagNameInTopic(userAndTopicId);
+  		for(String ip : banIps) {
+  			ipsToJson.add(new BanIP(ip)) ;
+  		}
   	} else {
   		ipsToJson.clear() ;
   		List<String> banIps = forumService.getAllTagName(str, userAndTopicId);

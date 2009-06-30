@@ -3435,6 +3435,84 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 	
+	public List<String> getTagNameInTopic(String userAndTopicId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<String> tagNames = new ArrayList<String>();
+		try {
+			Node tagHome = getTagHome(sProvider);
+			Node categoryHome = getCategoryHome(sProvider);
+			QueryManager qm = tagHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer();
+			int t = userAndTopicId.indexOf(",");
+			String userId = userAndTopicId.substring(0, t);
+			String topicId = userAndTopicId.substring(t+1);
+			queryString.append("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:topic)[exo:id='").append(topicId).append("']");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			StringBuilder builder = new StringBuilder();
+			StringBuilder builder1 = new StringBuilder();
+			if(iter.getSize() > 0){
+				Node node = (Node)iter.nextNode();
+				if(node.hasProperty("exo:tagId")){
+					boolean b = true;t = 0;
+					List<String> list = new ArrayList<String>(); 
+					for (String string : ValuesToList(node.getProperty("exo:tagId").getValues())) {
+						String[]temp = string.split(":");
+				    if(temp.length == 2) {
+				    	if(temp[0].equals(userId)) {
+					    	if(t == 0)builder.append("(@exo:id != '").append(temp[1]).append("'");
+					    	else builder.append(" and @exo:id != '").append(temp[1]).append("'");
+					    	list.add(temp[1]);
+					    	t = 1;
+				    	} else if(!list.contains(temp[1])) {
+				    		if(b)builder1.append(" (@exo:id='").append(temp[1]).append("'");
+					    	else builder1.append(" or @exo:id='").append(temp[1]).append("'");
+				    		b = false;
+				    	}
+				    }
+          }
+					if(!b) builder1.append(")");
+					if(t == 1) builder.append(")");
+				}
+			}
+			
+			queryString = new StringBuffer();
+			queryString.append("/jcr:root").append(tagHome.getPath()).append("//element(*,exo:forumTag)");
+			boolean isQr = false;
+			if(builder.length() > 0){
+				queryString.append("[").append(builder);
+				isQr = true;
+			}
+			if(builder1.length() > 0) {
+				if(isQr){
+					queryString.append(" and ").append(builder1);
+				} else {
+					queryString.append("[").append(builder1);
+					isQr = true;
+				}
+			}
+			if(isQr)queryString.append("]");
+			queryString.append("order by @exo:useCount descending, @exo:name ascending ");
+			query = qm.createQuery(queryString.toString(), Query.XPATH);
+			result = query.execute();
+			iter = result.getNodes();
+			String str = "";
+			while (iter.hasNext()) {
+				try {
+					Node node = (Node)iter.nextNode();
+					str = node.getProperty("exo:name").getString();
+					str = str + "  <font color=\"Salmon\">(" + node.getProperty("exo:useCount").getString() + ")</font>";
+					tagNames.add(str);
+					if(tagNames.size() == 10) break;
+				}catch(Exception e) {}				
+			}
+			return tagNames;
+		}catch(Exception e) {
+			return tagNames;
+		}finally { sProvider.close() ;}
+	}
+	
 	public List<String> getAllTagName(String keyValue, String userAndTopicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> tagNames = new ArrayList<String>();

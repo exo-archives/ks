@@ -708,7 +708,7 @@ public class UICategory extends UIForm	{
 			Category category = uiCategory.getCategory();
 			if(category == null){
 				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);

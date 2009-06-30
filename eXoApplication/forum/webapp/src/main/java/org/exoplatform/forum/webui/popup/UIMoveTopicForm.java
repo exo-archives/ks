@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumContainer;
+import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -175,6 +176,8 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class) ;
 						forumContainer.setIsRenderChild(false) ;
 						String[] temp = forumPath.split("/") ;
+						UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
+						forumDescription.setForumIds(temp[temp.length - 2], temp[temp.length - 1]);
 						topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					} else {

@@ -252,7 +252,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	}
 	
 	private String getCategoryId(String str) {
-		str = str.substring((str.lastIndexOf('(')+1), str.lastIndexOf('/')) ;
+		try {
+			System.out.println("\n\n str: " + str);
+			str = str.substring((str.lastIndexOf('(')+1), str.lastIndexOf('/')) ;
+    } catch (Exception e) {
+	    
+    }
 		return str;
 	}
 	
