@@ -865,6 +865,7 @@ public class JCRDataStorage {
 	          }
           }
 					strModerators = getStringsInList(list);
+					System.out.println("\n\n moderator in forum " + list.toString() + "\n\n oldModeratoForums: " + oldModeratoForums.length);
 					node.setProperty("exo:moderators", strModerators);
 					forum.setId(node.getName());
 					forum.setForumName(node.getProperty("exo:name").getString());
@@ -1204,9 +1205,11 @@ public class JCRDataStorage {
 		Node userProfileNode;
 		List<String> list = new ArrayList<String>();
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
+		System.out.println("\n\n setModeratorForum: " + forum.getForumName());
 		if (moderators.size() > 0) {
 			for (String string : moderators) {
 				string = string.trim();
+				System.out.println("\n\n " + string);
 				list = new ArrayList<String>();
 				try {
 					userProfileNode = userProfileHomeNode.getNode(string);
@@ -1220,8 +1223,10 @@ public class JCRDataStorage {
 							list.add(string2);
 						}
 					}
+					System.out.println("\n\n list " + list.toString());
 					if (!hasMod) {
 						list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
+						System.out.println("\n\n has Mod list: " + list.toString());
 						userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
 						if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
 							userProfileNode.setProperty("exo:userRole", 1);
@@ -1247,12 +1252,14 @@ public class JCRDataStorage {
 		// remove
 		if (!isNew) {
 			List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldModeratoForums);
+			System.out.println("\n\n oldmoderators: " + oldmoderators);
 			for (String string : oldmoderators) {
 				boolean isDelete = true;
 				if (moderators.contains(string)) {
 					isDelete = false;
 				}
 				if (isDelete) {
+					System.out.println("\n\n delete: " + string);
 					try {
 						list = new ArrayList<String>();
 						userProfileNode = userProfileHomeNode.getNode(string);
@@ -3504,7 +3511,7 @@ public class JCRDataStorage {
 					str = node.getProperty("exo:name").getString();
 					str = str + "  <font color=\"Salmon\">(" + node.getProperty("exo:useCount").getString() + ")</font>";
 					tagNames.add(str);
-					if(tagNames.size() == 10) break;
+					if(tagNames.size() == 5) break;
 				}catch(Exception e) {}				
 			}
 			return tagNames;
@@ -3560,7 +3567,7 @@ public class JCRDataStorage {
 					str = node.getProperty("exo:name").getString();
 					str = str + "  <font color=\"Salmon\">(" + node.getProperty("exo:useCount").getString() + ")</font>";
 					tagNames.add(str);
-					if(tagNames.size() == 10) break;
+					if(tagNames.size() == 5) break;
 				}catch(Exception e) {}				
 			}
 			return tagNames;
@@ -4045,7 +4052,7 @@ public class JCRDataStorage {
 			newProfileNode.setProperty("exo:isAutoWatchMyTopics", newUserProfile.getIsAutoWatchMyTopics());
 			newProfileNode.setProperty("exo:isAutoWatchTopicIPost", newUserProfile.getIsAutoWatchTopicIPost());
 
-			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
+//			newProfileNode.setProperty("exo:moderateForums", newUserProfile.getModerateForums());
 			newProfileNode.setProperty("exo:moderateCategory", newUserProfile.getModerateCategory());
 			Calendar calendar = getGreenwichMeanTime();
 			if (newUserProfile.getLastLoginDate() != null)
