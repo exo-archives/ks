@@ -39,29 +39,39 @@ public class KSRSSServlet extends HttpServlet {
 	public void service(HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
     String pathInfo = request.getPathInfo() ;
-    String[] arrayInfo = pathInfo.toString().split("/") ;
+    pathInfo = pathInfo.substring(1) ;
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
     try{
-      String appType = arrayInfo[1];
-      String objectId = pathInfo.replaceFirst("/" + appType + "/", "") ;
-      
+      String appType = pathInfo.substring(0, pathInfo.indexOf("/"));
+      String objectId = pathInfo.substring(pathInfo.indexOf("/") + 1) ;
       RSSProcess process = new RSSProcess(sessionProvider, appType);
       InputStream is = null;
-      if(arrayInfo.length == 3){
+      if(appType.equals("faq")) {
       	is = process.getRSSNode(sessionProvider, objectId, appType) ;
 	      response.setContentType("text/xml") ;
-      } else {
-      	is = process.getRSSOfMultiObjects(objectId.split("/"), sessionProvider);
+      }else { 
+      	if(objectId.indexOf("/") > 0) {
+      		is = process.getRSSOfMultiObjects(objectId.split("/"), sessionProvider);
+      	}else {
+      		is = process.getRSSNode(sessionProvider, objectId, appType) ;
+  	      response.setContentType("text/xml") ;
+      	}      	
       }
-      sessionProvider.close();
-      byte[] buf = new byte[is.available()];
-      is.read(buf);
-      ServletOutputStream os = response.getOutputStream();
-      os.write(buf);
+      if(is != null) {
+      	byte[] buf = new byte[is.available()];
+        is.read(buf);
+        ServletOutputStream os = response.getOutputStream();
+        os.write(buf);
+      }else {
+      	byte[] buf = new byte[]{Byte.parseByte("This category is hidden or you haven't got permission to view!")};
+      	ServletOutputStream os = response.getOutputStream();
+        os.write(buf) ;
+      }
+      
     }catch(Exception e) {
     	e.printStackTrace() ;
-      throw new ServletException(e) ;
-    }finally{ sessionProvider.close() ; }    		
+      //throw new ServletException(e) ;
+    }finally {sessionProvider.close() ;}    		
 	}  
 }

@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ks.rss;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,13 +23,11 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-//import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 public class RSSEventListener implements EventListener{
 	private NodeHierarchyCreator nodeHierarchyCreator_;
+	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
 	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
@@ -38,13 +35,15 @@ public class RSSEventListener implements EventListener{
 	
 	public RSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
 		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
-		RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
+		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
 		workspace_ = ws ;
 		repository_ = repo ;
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }
   public String getRepository(){ return repository_ ; }
+  public String getPath(){ return path_ ; }
+  public void setPath(String path){  path_  = path ; }
   
 	public void onEvent(EventIterator evIter){		
 		try{
@@ -54,12 +53,16 @@ public class RSSEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				path = ev.getPath();
-				if(listPropertyNotGetEvent.contains(path.substring(path.lastIndexOf("/") + 1))) continue;
+				
+				//if(listPropertyNotGetEvent.contains(path.substring(path.lastIndexOf("/") + 1))) continue;
 				if(ev.getType() == Event.NODE_ADDED){
+					//System.out.println("\n\n ==> Event.NODE_ADDED");
 					process.generateRSS(ev.getPath(), Event.NODE_ADDED);
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
+					//System.out.println("\n\n ==> Event.PROPERTY_CHANGED");
 					process.generateRSS(path.substring(0, path.lastIndexOf("/")), Event.PROPERTY_CHANGED);
 				}else if(ev.getType() == Event.NODE_REMOVED) {
+					//System.out.println("\n\n ==> Event.NODE_REMOVED");					
 					process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
 				}
 				break ;								
@@ -70,3 +73,4 @@ public class RSSEventListener implements EventListener{
 	}
   
 }
+

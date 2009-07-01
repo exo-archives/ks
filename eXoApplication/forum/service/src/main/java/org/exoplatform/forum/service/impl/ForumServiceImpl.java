@@ -115,14 +115,14 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
-  	systemSession = SessionProvider.createSystemProvider() ;
+  	//?
   	try{
   		storage_.evaluateActiveUsers("");
   	}catch (Exception e) {
   		e.printStackTrace() ;  		
-  	}finally{
-  		systemSession.close() ;
   	}
+  	
+  	//init RSS generate listener 
   	try{
   		storage_.addRSSEventListenner();
   	} catch (Exception e){

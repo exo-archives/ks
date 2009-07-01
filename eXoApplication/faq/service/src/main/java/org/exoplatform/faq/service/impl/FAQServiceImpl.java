@@ -981,7 +981,7 @@ public class FAQServiceImpl implements FAQService, Startable{
 
 	public void start() {
 		try{
-			jcrData_.checkEvenListen();
+			jcrData_.reInitRSSEvenListener();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

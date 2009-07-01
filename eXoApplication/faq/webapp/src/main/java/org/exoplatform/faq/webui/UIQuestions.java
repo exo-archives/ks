@@ -637,9 +637,9 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQRSSForm") ;
-			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			UIRSSForm exportRss = popupContainer.addChild(UIRSSForm.class, null, null) ;
 			popupAction.activate(popupContainer, 560, 170) ;
-			exportForm.setRSSLink(rssLink);
+			exportRss.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

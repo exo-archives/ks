@@ -28,6 +28,7 @@ import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -67,11 +68,12 @@ public abstract class RSSGenerate {
 	public final String FORUM_APP = "ForumService".intern();
 	
 	public RSSGenerate(NodeHierarchyCreator nodeHierarchyCreator){
-		if(nodeHierarchyCreator != null && nodeHierarchyCreator_ == null) nodeHierarchyCreator_ = nodeHierarchyCreator;
+		nodeHierarchyCreator_ = nodeHierarchyCreator;
 		data = new RSS();
 	}
 
 	public Node getKSServiceHome(SessionProvider sProvider, String serviceType) throws Exception {
+		if(nodeHierarchyCreator_ == null) nodeHierarchyCreator_ = (NodeHierarchyCreator)PortalContainer.getInstance().getComponent(NodeHierarchyCreator.class) ;
 		return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
 	}
 
@@ -92,7 +94,7 @@ public abstract class RSSGenerate {
 	 * @return						category node
 	 * @throws Exception
 	 */
-	public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
+	/*public Node getCategoryNodeById(String categoryId, SessionProvider sProvider) throws Exception {
 		Node categoryHome = appHomeNode.getNode("catetories");	
 		if(categoryId != null && categoryId.trim().length() > 0 && !categoryId.equals("null") && !categoryId.equals("FAQService")){
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -104,7 +106,7 @@ public abstract class RSSGenerate {
 		} else{
 			return categoryHome;
 		}
-	}
+	}*/
 	
 	/**
 	 * Get one node in FORUM application by id

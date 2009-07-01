@@ -43,6 +43,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
@@ -77,8 +78,10 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
@@ -104,6 +107,7 @@ public class JCRDataStorage {
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+	private Map<String, RSSEventListener> rssListenerMap_ = new HashMap<String, RSSEventListener> () ;
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
 	private final String ADMIN_="ADMIN".intern();
 	private final String FAQ_RSS = "ks.rss";
@@ -351,27 +355,47 @@ public class JCRDataStorage {
 		return null ;
 	}	
 	
-	protected void addListennerForNode(Node node) throws Exception{
-		/*String wsName = node.getSession().getWorkspace().getName() ;
-		RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
-		RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-		ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-		observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,node.getPath(), true, null, null, false) ;
-		RSSEventListener addQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-		observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,node.getPath(), false, null, null, false) ;
-		RSSEventListener removeQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-		observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,node.getPath(), true, null, null, false) ;*/
+	protected void addRSSListener(Node node) throws Exception{
+		try{
+			if(rssListenerMap_.containsKey(node.getPath())) return ;
+			String wsName = node.getSession().getWorkspace().getName() ;
+			String path = node.getPath() ;
+			RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
+			//RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
+			//changePropertyListener.setPath(path) ;
+			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+			//observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,path, true, null, null, false) ;
+			
+			RSSEventListener questionRSS = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
+			questionRSS.setPath(path) ;
+			observation.addEventListener(questionRSS, Event.NODE_ADDED + Event.PROPERTY_CHANGED + Event.NODE_REMOVED,
+					                         path, true, null, null, false) ;
+			rssListenerMap_.put(path, questionRSS) ;
+			//RSSEventListener removeQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
+			//removeQuestionListener.setPath(path) ;
+			//observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,path , true, null, null, false) ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
 	}
 	
-	public void checkEvenListen() throws Exception{
+	public void reInitRSSEvenListener() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node questionHomeNode = getFAQServiceHome(sProvider) ;
-		sProvider.close();
-		ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
-		EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
-		if(listenerIterator.hasNext()){
-			return;
-		} else {
+		Node faqHome = getFAQServiceHome(sProvider) ;
+		QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()).append("//element(*,exo:faqQuestionHome)") ;
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes() ;
+		rssListenerMap_.clear() ;
+		while(iter.hasNext()) {
+			addRSSListener(iter.nextNode()) ;			
+		}
+		//ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
+		//EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
+		//if(listenerIterator.hasNext()){
+		//	return;
+		//} else {
 			/*String wsName = questionHomeNode.getSession().getWorkspace().getName() ;
 			RepositoryImpl repo = (RepositoryImpl)questionHomeNode.getSession().getRepository() ;
 			RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
@@ -380,8 +404,8 @@ public class JCRDataStorage {
 			observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,questionHomeNode.getPath(), false, null, null, false) ;
 			RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
 			observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,questionHomeNode.getPath(), false, null, null, false) ;*/
-			addListennerForNode(questionHomeNode);
-		}
+			//addListennerForNode(questionHomeNode);
+		//}
 	}
 	
 	private Node getCategoryHome(SessionProvider sProvider, String username) throws Exception {
@@ -670,7 +694,7 @@ public class JCRDataStorage {
     	String qId = quesNode.getName() ;
   		String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
     	String defaultLang = quesNode.getProperty("exo:language").getString() ;
-    	System.out.println("defaultLang >>>>>>>> " + defaultLang) ;
+    	//System.out.println("defaultLang >>>>>>>> " + defaultLang) ;
     	
     	for(Answer answer : answers){
     		if(answer.getLanguage().equals(defaultLang)){
@@ -680,7 +704,7 @@ public class JCRDataStorage {
         		answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
         	}
     		}else { //answer for other languages
-    			System.out.println("answer.getLanguage() >>>>>>>> " + answer.getLanguage()) ;
+    			//System.out.println("answer.getLanguage() >>>>>>>> " + answer.getLanguage()) ;
     			Node langNode = getLanguageNodeByLanguage(quesNode, answer.getLanguage()) ;
     			try{
         		answerHome = langNode.getNode(Utils.ANSWER_HOME);
@@ -689,7 +713,7 @@ public class JCRDataStorage {
         	}        	
     		}
     		saveAnswer(answer, answerHome, qId, categoryId) ;
-    		System.out.println("====> LanguageSaved:"+answer.getLanguage()) ;
+    		//System.out.println("====> LanguageSaved:"+answer.getLanguage()) ;
     	}
     	quesNode.save() ;
     }catch (Exception e) {
@@ -1135,6 +1159,7 @@ public class JCRDataStorage {
 					questionHome = category.getNode(Utils.QUESTION_HOME) ;
 				}catch(PathNotFoundException ex) {
 					questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+					addRSSListener(questionHome) ;
 				}
 				questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
 				/*if(!question.getCategoryId().equals(Utils.CATEGORY_HOME)) {

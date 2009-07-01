@@ -44,7 +44,7 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.SyndFeedOutput;
 
 public class RSSProcess extends RSSGenerate {
-	public static String cateid = null;
+	//public static String cateid = null;
 	protected String linkItem = "";
 	
 	public RSSProcess(InitParams params) throws Exception{
@@ -242,7 +242,8 @@ public class RSSProcess extends RSSGenerate {
 					questionNode = questionNode.getParent().getParent();
 				
 				String categoreDescription = "";
-				categoryNode = getCategoryNodeById(questionNode.getProperty("exo:categoryId").getString(), sProvider);
+				//categoryNode = getCategoryNodeById(questionNode.getProperty("exo:categoryId").getString(), sProvider);
+				categoryNode = questionNode.getParent().getParent() ;
 				if(categoryNode.hasProperty("exo:description")) categoreDescription = categoryNode.getProperty("exo:description").getString();
 				else categoreDescription = "eXo link:" + eXoLink;
 				
@@ -267,8 +268,9 @@ public class RSSProcess extends RSSGenerate {
 				description = new SyndContentImpl();
 				description.setType(descriptionType);
 				description.setValue(questionNode.getProperty("exo:name").getString() + ". " + content);
-				
-				linkItem += questionNode.getProperty("exo:categoryId").getString() + "/" + questionNode.getName() + "/0";
+				String questionPath = questionNode.getPath() ; 
+				//linkItem += questionNode.getProperty("exo:categoryId").getString() + "/" + questionNode.getName() + "/0";
+					linkItem += questionPath.substring(questionPath.indexOf("/categories/") + 1) ;
 				entry = createNewEntry(questionNode.getName(), questionNode.getProperty("exo:title").getString(), 
 																linkItem, listContent, description, questionNode.getProperty("exo:createdDate").getDate().getTime(),
 																questionNode.getProperty("exo:author").getString());
@@ -305,19 +307,21 @@ public class RSSProcess extends RSSGenerate {
 				data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
 				addNodeRSS(categoryNode, RSSNode, data, isNew);
 			} else {
-				categoryNode = getCategoryNodeById(cateid, sProvider);
+				//categoryNode = getCategoryNodeById(cateid, sProvider);
 				if(path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0){
 					if(path.indexOf("/faqCommentHome") > 0) path = path.substring(0, path.indexOf("/faqCommentHome"));
 					else path = path.substring(0, path.indexOf("/faqAnswerHome"));
 					this.generateFAQRSS(path, Event.PROPERTY_CHANGED, sProvider);
 				} else {
-					if(categoryNode.hasProperty("exo:description"))
-						removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, categoryNode.getProperty("exo:description").getString());
-					else
-						removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, " ");
-					cateid = null;
+					String categoryPath = path.substring(0, path.indexOf("/questions/")) ;
+					categoryNode = (Node)appHomeNode.getSession().getItem(categoryPath) ;
+					while(!categoryNode.isNodeType("exo:faqCategory")) {
+						categoryNode = categoryNode.getParent() ;
+					}
+					removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, "");
+					//cateid = null;
 				}
-			}
+			}			
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}finally{
@@ -369,10 +373,10 @@ public class RSSProcess extends RSSGenerate {
 		String rssType = "";
 		try{
 			if(appType.equals(KS_FAQ)){
-				parentNode = getCategoryNodeById(objectId, sProvider);
-				if(parentNode.hasProperty("exo:isView") && !parentNode.getProperty("exo:isView").getBoolean()){
+				parentNode = getKSServiceHome(sProvider, FAQ_APP).getNode(objectId) ;
+				/*if(!parentNode.getProperty("exo:isView").getBoolean()){
 					return null;
-				}
+				}*/
 				rssType = FAQ_RSS_TYPE;
 			}else{
 				parentNode = getKSServiceHome(sProvider, FORUM_APP);
@@ -385,6 +389,7 @@ public class RSSProcess extends RSSGenerate {
 				rssType = FORUM_RSS_TYPE;
 			}
 		} catch (Exception e){
+			e.printStackTrace() ;
 			return null;
 		}
 		Node RSSNode = null;
