@@ -442,7 +442,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setLink(link);
 				if(whenNewPost){
 					User user = ForumSessionUtils.getUserByUserId(userName);
-					System.out.println("\n\n email: " + user.getEmail());
 					String email = user.getEmail();
 					if(ForumUtils.isEmpty(email)){
 						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.email-not-exist", null, ApplicationMessage.WARNING)) ;
