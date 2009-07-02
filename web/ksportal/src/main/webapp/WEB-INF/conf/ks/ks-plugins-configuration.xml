@@ -45,7 +45,20 @@
   
 	<external-component-plugins>
 		<target-component>org.exoplatform.faq.service.FAQService</target-component>		
-		
+		<component-plugin>
+      <name>add.template.plugin</name>
+			<set-method>addTemplatePlugin</set-method>
+			<type>org.exoplatform.faq.service.TemplatePlugin</type>
+			<description>Add template for viewer portlet</description>
+  		<init-params>
+        <value-param>
+  				<name>viewerTemplate</name>
+  				<description>Default template for viewer portlet</description>
+  				<value>war:/conf/ks/faq/templates/FAQViewerPortlet.gtmpl</value>
+  			</value-param>
+      </init-params>
+    </component-plugin>
+    
 		<component-plugin>
 			<name>add.role.rules.plugin</name>
 			<set-method>addRolePlugin</set-method>
@@ -56,7 +69,7 @@
 					<name>role</name>
 					<description>name of the role</description>
 					<value>ADMIN</value>
-				</value-param>
+				</value-param>				
 				<values-param>
 					<name>rules</name>
 					<description>rules of the role</description>

@@ -16,6 +16,7 @@
  */
 package org.exoplatform.faq.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Cate;
@@ -39,6 +41,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
+import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -59,9 +62,12 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	private MultiLanguages multiLanguages_ ;
+	private TemplatePlugin template_ ;
+	private ConfigurationManager configManager_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
 	
-	public FAQServiceImpl(NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
+	public FAQServiceImpl(ConfigurationManager configManager, NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
+		configManager_ = configManager ;
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
 	}
@@ -74,6 +80,34 @@ public class FAQServiceImpl implements FAQService, Startable{
 		jcrData_.addRolePlugin(plugin) ;
 	}
 	
+	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
+		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
+	}
+	public void start() {
+		try{
+			jcrData_.reInitRSSEvenListener();			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		try{
+			initViewerTemplate() ;			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+
+	public void stop() {}
+	
+	private void initViewerTemplate() throws Exception {
+		if(getTemplate() == null) {
+			InputStream in = configManager_.getInputStream(template_.getPath()) ;
+			byte[] data = new byte[in.available()] ;
+			in.read(data) ;
+			saveTemplate(new String(data)) ;
+		}
+		configManager_ = null ;
+		template_ = null ;
+	}
 	/**
 	 * This method get all admin in FAQ
 	 * @return userName list
@@ -978,16 +1012,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception{
 		return jcrData_.getPendingQuestionsByCategory(categoryId, faqSetting);
 	}
-
-	public void start() {
-		try{
-			jcrData_.reInitRSSEvenListener();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void stop() {}
 	
 	// For migrate data
 	public NodeIterator getQuestionsIterator(SessionProvider sProvider) throws Exception {

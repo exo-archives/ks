@@ -41,7 +41,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
+		//template =	"app:/templates/faq/webui/UIViewer.gtmpl",
 		events = {
 		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
 		}
