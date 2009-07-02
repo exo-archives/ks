@@ -78,7 +78,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					return;
 				}				
 				try{
-					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream())){
+					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)){
 						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-fail", null, ApplicationMessage.WARNING));
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 					} else {
