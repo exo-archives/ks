@@ -534,7 +534,7 @@ public interface FAQService extends FAQServiceLegacy{
  	
  	//public List<String> getListPathQuestionByCategory(String categoryId) throws Exception;
  	
- 	public boolean importData(String categoryId, InputStream inputStream) throws Exception;
+ 	public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception;
  	
  	//public boolean categoryAlreadyExist(String categoryId) throws Exception ;
  	

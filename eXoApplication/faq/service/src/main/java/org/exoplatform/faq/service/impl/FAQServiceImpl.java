@@ -791,8 +791,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 		importData(categoryId, inputStream);
 	}
 	
-	public boolean importData(String categoryId, InputStream inputStream) throws Exception{
-		return jcrData_.importData(categoryId, inputStream);
+	public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception{
+		return jcrData_.importData(categoryId, inputStream, isZip);
 	}
 	
 	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
