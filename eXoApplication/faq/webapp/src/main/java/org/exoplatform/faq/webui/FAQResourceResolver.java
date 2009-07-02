@@ -15,10 +15,10 @@ public class FAQResourceResolver extends ResourceResolver{
 
 	@Override
 	public InputStream getInputStream(String url) throws Exception {
+		System.out.println("url ====>" + url);
 		ExoContainer container = ExoContainerContext.getCurrentContainer() ;
 		FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ;
-		//get template from faq service
-		byte[] data = new byte[]{} ;
+		byte[] data = faqService.getTemplate() ;
 		return new ByteArrayInputStream(data) ;		
 	}
 

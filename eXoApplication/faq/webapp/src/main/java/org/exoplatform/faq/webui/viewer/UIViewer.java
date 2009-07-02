@@ -23,6 +23,10 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.webui.FAQResourceResolver;
+import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.resolver.ResourceResolver;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -37,30 +41,20 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		//template =	"app:/templates/faq/webui/UIViewer.gtmpl",
+		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
 		events = {
 		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UIViewer extends UIContainer {
 	private FAQService fAqService;
 	private String path = Utils.CATEGORY_HOME;
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
-		
-	static public class ChangePathActionListener extends EventListener<UIViewer> {
-		public void execute(Event<UIViewer> event) throws Exception {
-			String path = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIViewer viewer = event.getSource();
-			viewer.path = path;
-			event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
-		}
-	}
 	
-	@SuppressWarnings("unused")
   private List<String> arrangeList(List<String> list) {
-//		getTemplate()
 		List<String> newList = new ArrayList<String>();
 		if(list.isEmpty() || list.size() == 0){
 			newList.add(Utils.CATEGORY_HOME);
@@ -72,16 +66,32 @@ public class UIViewer extends UIContainer {
 		return newList;
 	} 
 	
-	@SuppressWarnings("unused")
+  public ResourceResolver getTemplateResourceResolver(WebuiRequestContext context, String template) {
+  	return new FAQResourceResolver() ;
+  }
+  
+  public String getTemplate() {
+  	return "FAQViewerTemplate" ;
+  }
+  
   private CategoryInfo getCategoryInfo() throws Exception {
 		CategoryInfo categoryInfo = new CategoryInfo();
+		List<String> list = new ArrayList<String>();
+		list = FAQUtils.getCategoriesIdViewer();
 		try {
-			categoryInfo = this.fAqService.getCategoryInfo(this.path);
+			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
     } catch (Exception e) {
     	e.printStackTrace();
     }
 		return categoryInfo;
 	}
 	
-	
+	static public class ChangePathActionListener extends EventListener<UIViewer> {
+		public void execute(Event<UIViewer> event) throws Exception {
+			String path = event.getRequestContext().getRequestParameter(OBJECTID);
+			UIViewer viewer = event.getSource();
+			viewer.path = path;
+			event.getRequestContext().addUIComponentToUpdateByAjax(viewer);
+		}
+	}
 }

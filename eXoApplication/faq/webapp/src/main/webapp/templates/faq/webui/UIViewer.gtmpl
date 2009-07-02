@@ -2,7 +2,112 @@
 	import org.exoplatform.faq.service.CategoryInfo;
 	import org.exoplatform.faq.service.Utils;
 %>
-<div class="FAQListContainer" id="$uicomponent.id">
+
+<style type="text/css">
+.UIFAQViewerPortlet {
+	padding: 6px;
+	margin: 4px;
+	border: 1px solid #d7d7d7;
+	background: white;
+}
+
+.UIFAQViewerPortlet .FAQViewerBar {
+	background: #6a90b6;
+	padding: 4px 0px 4px 14px;
+	color: white;
+}
+
+.UIFAQViewerPortlet .FAQViewerBar a{
+	color: white;
+	cursor: pointer;
+}
+
+.UIFAQViewerPortlet .FAQViewerBar .FAQBarLableNormal {
+	color: white;
+}
+
+.UIFAQViewerPortlet .FAQViewerBar .FAQBarLableHiline {
+	font-weight: bold;
+	color: white;
+}
+
+.UIFAQViewerPortlet .FAQViewerContainer {
+	padding:0px 4px 4px 12px;
+}
+
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon{
+	background: url('background/FAQListIcon.gif') no-repeat left 5px;
+	padding-left: 16px;
+}
+
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon a{
+	color: #0B51BB;
+}
+
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
+	font-weight: bold;
+}
+
+
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableLink {
+	color: #0B51BB;
+}
+
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewer {
+	line-height: 20px;
+	color: #0b51bb;
+	text-decoration: underline;
+}
+
+.UIFAQViewerPortlet .FAQAnswerbar {
+	background: #cedeee;
+	padding: 4px 0px 4px 14px;
+	font-weight: bold;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer {
+	padding:4px 0px 4px 12px;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer .Answer{
+	padding-left: 20px;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer .TextStyle{
+	margin:1px 0px;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer .QuestionContent{
+	padding-top: 6px;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer ol{
+	margin: 4px 0px 0px 0px;
+	padding: 0px 0px 0px 12px;
+}
+
+.UIFAQViewerPortlet .FAQAnswerContainer .FAQAnswerIcon{
+	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
+	padding-left: 16px;
+	font-weight: bold;
+}
+.UIFAQViewerPortlet .BackTopIcon {
+	background: url('background/BackTopIcon18x21.gif') no-repeat right;
+	width: 21px; height: 18px;
+	float: right;
+	display: block;
+}
+
+.UIFAQViewerPortlet .FAQViewerQuestionContent {
+	padding: 8px 0px 10px 12px;
+}
+
+.UIFAQViewerPortlet p {
+	margin: 3px 0px;
+}
+
+</style>
+<div class="FAQViewerContainer" id="$uicomponent.id">
 	<%  
 	CategoryInfo cateInfo = uicomponent.getCategoryInfo();
 	if(cateInfo != null) {
@@ -20,7 +125,7 @@
 		}
 		navPath = uicomponent.arrangeList(navPath);
 %>
-	<div class="FAQListBar">
+	<div class="FAQViewerBar">
 		<% 
 		int i = 0;
 		String link = ids[0], viewName;
@@ -41,24 +146,24 @@
 		++i;
 		}%>
 	</div>
-	<div class="FAQListQuestionContent">
+	<div class="FAQViewerQuestionContent">
 	<%for(questionCate in questionCates) { 
 			String question_ =  questionCate.getQuestion();
 			question_ = question_.replaceAll("<br/>", " ");
 		  String id_ = questionCate.getId();
 	%>
-		<div class="FAQListIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
+		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
 	<% } %>
 	</div>
 	
-	<div class="FAQListContainer">
+	<div class="FAQViewerContainer">
 		<% 
 		for(categoryInfo in subCategoryInfos){ 
 			String categoryName = categoryInfo.getName();
 			List questionInfos = categoryInfo.getQuestionInfos();
 			List subCategories = categoryInfo.getSubCateInfos();
 		%>
-		<div class="FAQListIcon">
+		<div class="FAQViewerIcon">
 			<span>
 				<b><a href="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>"><font color="black">$categoryName</font></a></b>
 			</span>
@@ -86,16 +191,13 @@
 						String question =  questionInfo.getQuestion();
 						String id = questionInfo.getId();
 				%>
-				<li><a class="FAQList" href="#${id}">$question</a> </li>
+				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
 				<% } %>
 		</ol>
 		<% } %>
-		<div style="margin-bottom:2px; display:none;">
-			My question is not answered here.<a class="FAQList" href="#">Where can</a>|<a class="FAQList" href="#">send my question?</a>
-		</div>
 	</div>
 	
-	<div class="FAQAnswerContainer FAQListQuestionContent" style="padding:4px 0px 0px 0px;">
+	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
 	<%for(questionCate in questionCates) { 
 			String question_ =  questionCate.getQuestion();
 		  String id_ = questionCate.getId();

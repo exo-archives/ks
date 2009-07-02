@@ -20,6 +20,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -399,6 +401,26 @@ public class FAQUtils {
 		return StringUtils.replace(text, "\"", "&quot;");		
 	}
 
+	public static List<String> getCategoriesIdViewer() throws Exception{
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		String str = portletPref.getValue("displayCategories", "");
+		List<String> list = new ArrayList<String>();
+		if (!isFieldEmpty(str)) {
+	    list.addAll(Arrays.asList(str.split(",")));
+    }
+	  return list;
+  }
+
+	public static void saveCategoriesIdViewer(List<String> list) throws Exception{
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		String str = list.toString();
+		str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
+		portletPref.setValue("displayCategories", str);
+		portletPref.store();
+	}
+	
 	public static void getPorletPreference(FAQSetting faqSetting) {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;

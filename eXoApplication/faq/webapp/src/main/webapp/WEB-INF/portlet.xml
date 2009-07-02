@@ -105,6 +105,7 @@
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
+      <portlet-mode>edit</portlet-mode>
 		</supports>
 		<supported-locale>en</supported-locale>
 		<resource-bundle>locale.portlet.faq.FAQViewerPortlet</resource-bundle>
@@ -114,7 +115,13 @@
 			<keywords>faq viewer</keywords>
 		</portlet-info>
 	
-		<portlet-preferences></portlet-preferences>
+		<portlet-preferences>
+			<preference>
+        <name>displayCategories</name>
+        <value> </value><!-- listing categoryId show in viewer portlet (cate1,cate2,...) -->
+        <read-only>false</read-only>
+      </preference>
+		</portlet-preferences>
 
 	</portlet>
 </portlet-app>

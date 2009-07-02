@@ -16,7 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.viewer;
 
+import javax.portlet.PortletMode;
+
+import org.exoplatform.faq.webui.popup.UIViewerSettingForm;
+import org.exoplatform.webui.application.WebuiApplication;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
@@ -37,4 +44,35 @@ public class UIFAQViewerPortlet extends UIPortletApplication{
 		addChild(UIViewer.class, null, null);
   }
 	
+	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+    PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
+    if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+    	if(getChild(UIViewer.class) == null){
+    		if(getChild(UIViewerSettingForm.class) != null) {
+    			removeChild(UIViewerSettingForm.class);
+    		}
+    		if(getChild(UIViewer.class) == null) {
+    			addChild(UIViewer.class, null, null) ;
+    		}
+    	} 
+    }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+    	try{
+    		if(getChild(UIViewer.class) != null) {
+    			removeChild(UIViewer.class);
+    		}
+    		if(getChild(UIViewerSettingForm.class) == null) {
+    			addChild(UIViewerSettingForm.class, null, null) ;
+    		}
+    	} catch (Exception e) { e.printStackTrace();}
+    }
+    super.processRender(app, context) ;
+  }
+	
+	 public void renderPopupMessages() throws Exception {
+	    UIPopupMessages popupMess = getUIPopupMessages();
+	    if(popupMess == null)  return ;
+	    WebuiRequestContext  context =  WebuiRequestContext.getCurrentInstance() ;
+	    popupMess.processRender(context);
+	  }
+	 
 }

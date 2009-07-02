@@ -2003,105 +2003,62 @@
 
 
 
-/*********************FAQ List Portlet***************************/
-.UIFAQViewerPortlet {
+/*********************FAQ Viewer Portlet***************************/
+.UIViewerSettingForm {
 	padding: 6px;
 	margin: 4px;
 	border: 1px solid #d7d7d7;
 	background: white;
 }
 
-.UIFAQViewerPortlet .FAQListBar {
-	background: #6a90b6;
-	padding: 4px 0px 4px 14px;
-	color: white;
+.UIViewerSettingForm .CategoryIcon {
+	background: url('background/CategoryIcon.png') no-repeat 17px;
+	float: left;
+	height: 15px;
+	margin: 0px 2px;
+	width: 36px;
+	padding-top: 2px;
 }
 
-.UIFAQViewerPortlet .FAQListBar a{
-	color: white;
-	cursor: pointer;
+.UIViewerSettingForm .LabelNameCategory {
+	float: left;
+	line-height: 15px;
 }
 
-.UIFAQViewerPortlet .FAQListBar .FAQBarLableNormal {
-	color: white;
+.UIViewerSettingForm .TextAreContent {
+	width: 100%;
+	margin: auto;
 }
 
-.UIFAQViewerPortlet .FAQListBar .FAQBarLableHiline {
-	font-weight: bold;
-	color: white;
+.UIViewerSettingForm .ViewQuestionsAtMove {
+	 margin:5px 0px ;
+	 padding:10px 0px;
+	 border: 3px double #b7b7b7;
 }
 
-.UIFAQViewerPortlet .FAQListContainer {
-	padding:0px 4px 4px 12px;
+.UIViewerSettingForm .TabContentContainer {
+	 border: 1px solid white;
+	 border-top: none;
 }
 
-.UIFAQViewerPortlet .FAQListContainer .FAQListIcon{
-	background: url('background/FAQListIcon.gif') no-repeat left 5px;
-	padding-left: 16px;
+.UIViewerSettingForm .UIAction {
+	 background: #F7F7F7;
+	 padding: 6px 0px 10px 0px;
 }
 
-.UIFAQViewerPortlet .FAQListContainer .FAQListIcon a{
-	color: #0B51BB;
+.UIViewerSettingForm .UITabPane .UITabContentContainer .UITabContent {
+	 border: none;
 }
 
-.UIFAQViewerPortlet .FAQListContainer .FAQListIcon .FAQLableNormal {
-	font-weight: bold;
+.UIViewerSettingForm #FAQRootChildren {
+	 padding-left:30px; 
+	 margin:10px 0px;
+}
+
+.UIViewerSettingForm #ContentTemplate {
+	width: 99.5%;
+	height: 650px;
+	margin: auto;
 }
 
 
-.UIFAQViewerPortlet .FAQListContainer .FAQListIcon .FAQLableLink {
-	color: #0B51BB;
-}
-
-.UIFAQViewerPortlet .FAQListContainer .FAQList {
-	line-height: 20px;
-	color: #0b51bb;
-	text-decoration: underline;
-}
-
-.UIFAQViewerPortlet .FAQAnswerbar {
-	background: #cedeee;
-	padding: 4px 0px 4px 14px;
-	font-weight: bold;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer {
-	padding:4px 0px 4px 12px;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer .Answer{
-	padding-left: 20px;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer .TextStyle{
-	margin:1px 0px;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer .QuestionContent{
-	padding-top: 6px;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer ol{
-	margin: 4px 0px 0px 0px;
-	padding: 0px 0px 0px 12px;
-}
-
-.UIFAQViewerPortlet .FAQAnswerContainer .FAQAnswerIcon{
-	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
-	padding-left: 16px;
-	font-weight: bold;
-}
-.UIFAQViewerPortlet .BackTopIcon {
-	background: url('background/BackTopIcon18x21.gif') no-repeat right;
-	width: 21px; height: 18px;
-	float: right;
-	display: block;
-}
-
-.UIFAQViewerPortlet .FAQListQuestionContent {
-	padding: 8px 0px 10px 12px;
-}
-
-.UIFAQViewerPortlet p {
-	margin: 3px 0px;
-}

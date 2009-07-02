@@ -3,7 +3,12 @@
 %>
 <link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />
 <div id="$uicomponent.id" class="UIFAQViewerPortlet">
-	<%  
-		uicomponent.renderChild(UIViewer.class);
+	<%
+		List children = uicomponent.getChildren() ;
+    for(component in children) {
+      if(component.isRendered()){
+				uicomponent.renderChild(component.getClass()) ; 
+      }
+    }
 	%>
 </div>
