@@ -786,9 +786,9 @@ public class FAQServiceImpl implements FAQService, Startable{
 		return jcrData_.getListPathQuestionByCategory(categoryId);
 	}*/
 	
-	public void importData(String categoryId, Session session, InputStream inputStream, boolean isImportCategory, SessionProvider sProvider) throws Exception{
+	public void importData(String categoryId, Session session, InputStream inputStream, boolean isZip, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
-		importData(categoryId, inputStream);
+		importData(categoryId, inputStream, isZip);
 	}
 	
 	public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception{
