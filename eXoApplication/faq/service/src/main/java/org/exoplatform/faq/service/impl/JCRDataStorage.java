@@ -37,6 +37,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -414,6 +415,7 @@ public class JCRDataStorage {
 			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
 		} catch (PathNotFoundException ex) {
 			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
+			categoryHome.setProperty("exo:name", "Root") ;
 			faqServiceHome.save() ;
 			return categoryHome ;
 		}
@@ -1430,21 +1432,24 @@ public class JCRDataStorage {
 	public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
 		SessionProvider sProvider =	SessionProvider.createSystemProvider() ;
 		try {
-			Node categoryHome = getCategoryHome(sProvider, null) ;
-			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = null;
 			String id ;
-			if(categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) id = Utils.CATEGORY_HOME ;
+			if(categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) {
+				id = Utils.CATEGORY_HOME ;
+				categoryId = Utils.CATEGORY_HOME ;
+			}
 			else id = categoryId.substring(categoryId.lastIndexOf("/") + 1) ;
+			Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId) ;
+			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			//if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 			if(faqSetting.getDisplayMode().equals("approved")) {
-				queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
+				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
+													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
 																				append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
 																				append("]");
 			} else {
-				queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-													append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
+				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
+													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
 													append(" and (@exo:isActivated='true')").
 													append("]");
 			}
@@ -1778,6 +1783,9 @@ public class JCRDataStorage {
 			if(cat.isNodeType("exo:faqCategory")) {
 				cate = new Cate() ;
 				cate.setCategory(getCategory(cat)) ;
+				System.out.println("path ==>" + cate.getCategory().getPath());
+				System.out.println("name ==>" + cate.getCategory().getName());
+				System.out.println("deep ==>" + i);
 		    cate.setDeft(i) ;
 		    cateList.add(cate) ;
 				if(cat.hasNodes()) {
@@ -2676,17 +2684,17 @@ public class JCRDataStorage {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
     File file = null;
     List<File> listFiles = new ArrayList<File>();
-    Writer writer = null;
-    if(categoryId != null){
+    //Writer writer = null;
+    //if(categoryId != null){
 	    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
 	    file = new File(categoryNode.getName() + ".xml");
 	    file.deleteOnExit();
     	file.createNewFile();
-	    writer = new BufferedWriter(new FileWriter(file));
+    	Writer writer = new BufferedWriter(new FileWriter(file));
 	    writer.write(bos.toString());
     	writer.close();
     	listFiles.add(file);
-    } else {
+    /*} else {
     	NodeIterator nodeIterator = categoryNode.getNodes();
     	Node node = null;
     	while(nodeIterator.hasNext()){
@@ -2702,7 +2710,7 @@ public class JCRDataStorage {
 	    	writer.close();
 	    	listFiles.add(file);
     	}
-    }
+    }*/
     // get all questions to export
     // recheck when view this method
     /*int i = 1;
@@ -2738,7 +2746,7 @@ public class JCRDataStorage {
     return fileInputStream;
 	}
 	
-	private boolean impotFromZipFile(String cateId, ZipInputStream zipStream) throws Exception {
+	/*private boolean importFromZipFile(String cateId, ZipInputStream zipStream) throws Exception {
 		ByteArrayOutputStream out= new ByteArrayOutputStream();
 		byte[] data	= new byte[5120];	 
 		ZipEntry entry = zipStream.getNextEntry();
@@ -2769,9 +2777,9 @@ public class JCRDataStorage {
 		zipStream.close();
 		return true;
 	}
-
-	private void importData(String categoryId, InputStream inputStream, boolean isImportCategory) throws Exception{
-		/*SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+*/
+	/*private void importData(String categoryId, InputStream inputStream, boolean isImportCategory) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		if(isImportCategory){
 			Node categoryNode = null;
 			if(categoryId != null)categoryNode = getCategoryHome(sProvider, null).getNode(categoryId);
@@ -2785,16 +2793,44 @@ public class JCRDataStorage {
 			session.importXML(questionHomeNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 			session.save();
 		}
-		sProvider.close();*/
-	}
+		sProvider.close();
+	}*/
 	
-	public boolean importData(String categoryId, InputStream inputStream) throws Exception{
-		ZipInputStream zipInputStream = new ZipInputStream(inputStream);
-		if(!impotFromZipFile(categoryId, zipInputStream)){
-			return false; // import successful
-		} else {
-			return true; // import false
-		}
+	public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			if(isZip){ // Import from zipfile
+				ZipInputStream zipStream = new ZipInputStream(inputStream) ;
+				ZipEntry entry ;
+				while((entry = zipStream.getNextEntry()) != null) {
+					ByteArrayOutputStream out= new ByteArrayOutputStream();
+					int available = -1;
+					byte[] data = new byte[2048];
+					while ((available = zipStream.read(data, 0, 1024)) > -1) {
+						out.write(data, 0, available); 
+					}												 
+					zipStream.closeEntry();
+					out.close();
+					InputStream input = new ByteArrayInputStream(out.toByteArray());
+					Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
+					Session session = categoryNode.getSession();
+					session.importXML(categoryNode.getPath(), input, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+					session.save();										
+				}
+				zipStream.close();
+				return true ;
+			} else { // import from xml
+				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
+				Session session = categoryNode.getSession();
+				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+				session.save();
+				return true ;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally{ sProvider.close() ;}	
+		return false ;
 	}
 	
 	public boolean isExisting(String path) {

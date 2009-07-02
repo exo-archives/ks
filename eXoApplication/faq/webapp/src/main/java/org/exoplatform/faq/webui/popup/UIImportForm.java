@@ -33,7 +33,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 
 public class UIImportForm extends UIForm implements UIPopupComponent{
 	private final String FILE_UPLOAD = "FileUpload";
-	private String categoryId_ = new String();
+	private String categoryId_ ;
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 
@@ -67,15 +67,19 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				String fileName = uploadInput.getUploadResource().getFileName();
 				MimeTypeResolver mimeTypeResolver = new MimeTypeResolver();
 				String mimeType = mimeTypeResolver.getMimeType(fileName);
-				if (!"application/zip".equals(mimeType)) {
+				boolean isZip = false ;
+				if("application/zip".equals(mimeType)){
+					isZip = true ;					
+				}else if ("text/xml".equals(mimeType)){
+					isZip = false ;
+				}else{
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 					return;
-				}
-				
+				}				
 				try{
 					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream())){
-						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
+						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-fail", null, ApplicationMessage.WARNING));
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 					} else {
 						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
