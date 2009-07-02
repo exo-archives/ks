@@ -637,6 +637,13 @@ public interface FAQService extends FAQServiceLegacy{
   
   public boolean hasWatch(String categoryPath) ;
   
-  public CategoryInfo getCategoryInfo(String categoryPath) throws Exception ;
+  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception ;
   
+  public byte[] getTemplate() throws Exception ;
+  public void saveTemplate(String str) throws Exception;
+
+
 }
+
+
+

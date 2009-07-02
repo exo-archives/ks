@@ -308,7 +308,20 @@
 			</childNodeDefinition>		
 			
     </childNodeDefinitions>
-  </nodeType>	
+  </nodeType>
+  	
+  <nodeType name="exo:templateHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>
+   <childNodeDefinitions>
+     <childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+       <requiredPrimaryTypes>
+         <requiredPrimaryType>nt:file</requiredPrimaryType>
+       </requiredPrimaryTypes>
+     </childNodeDefinition>     
+    </childNodeDefinitions>
+  </nodeType>
   
   <nodeType name="exo:faqCategoryHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
    <supertypes>

@@ -1199,9 +1199,17 @@ public class FAQServiceImpl implements FAQService, Startable{
   	return jcrData_.hasWatch(categoryPath) ;
   }
   
-  public CategoryInfo getCategoryInfo(String categoryPath) throws Exception {
-  	return jcrData_.getCategoryInfo(categoryPath) ;
+  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception {
+  	return jcrData_.getCategoryInfo(categoryPath, categoryIdScoped) ;
   }
+  
+  public byte[] getTemplate() throws Exception {
+  	return jcrData_.getTemplate();
+  }
+  public void saveTemplate(String str) throws Exception {
+  	jcrData_.saveTemplate(str);
+  }
+  
 }
 
 

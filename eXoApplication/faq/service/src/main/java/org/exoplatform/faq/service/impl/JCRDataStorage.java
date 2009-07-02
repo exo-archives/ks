@@ -17,6 +17,7 @@
 
 package org.exoplatform.faq.service.impl;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -420,6 +422,71 @@ public class JCRDataStorage {
 			return categoryHome ;
 		}
 	}
+	
+	private Node getTemplateHome(SessionProvider sProvider) throws Exception {
+		Node faqServiceHome = getFAQServiceHome(sProvider) ;
+		try {
+			return faqServiceHome.getNode(Utils.TEMPLATE_HOME) ;
+		} catch (PathNotFoundException ex) {
+			Node categoryHome = faqServiceHome.addNode(Utils.TEMPLATE_HOME, "exo:templateHome") ;
+			faqServiceHome.save() ;
+			return categoryHome ;
+		}
+	}
+	
+	public byte[] getTemplate() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node templateHome = getTemplateHome(sProvider);
+			Node fileNode = templateHome.getNode("UIFAQViewer");
+			if (fileNode.isNodeType("nt:file")) {
+				Node contentNode = fileNode.getNode("jcr:content");
+				InputStream inputStream = contentNode.getProperty("jcr:data").getStream();
+				byte[] data = new byte[inputStream.available()];
+				inputStream.read(data) ;
+				inputStream.close();
+				return data;
+			}
+    } catch (Exception e) {
+    } finally {
+    	sProvider.close();
+    }
+	  return null;
+  }
+	
+	public void saveTemplate(String str) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node templateHome = getTemplateHome(sProvider);
+			Node fileNode ;
+			try {
+	      fileNode = templateHome.getNode("UIFAQViewer");
+      } catch (Exception e) {
+	      fileNode = templateHome.addNode("UIFAQViewer","nt:file");
+      }
+			Node nodeContent = null;
+			InputStream inputStream = null;
+			byte []byte_ = str.getBytes();
+			inputStream = new ByteArrayInputStream(byte_);
+			try {
+				nodeContent = fileNode.addNode("jcr:content", "nt:resource");
+      } catch (Exception e) {
+      	nodeContent = fileNode.getNode("jcr:content");
+      }
+			nodeContent.setProperty("jcr:mimeType", "gtmpl");
+			nodeContent.setProperty("jcr:data", inputStream);
+			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+			if(templateHome.isNew()){
+				templateHome.getSession().save();
+			} else {
+				templateHome.save();
+			}
+    } catch (Exception e) {
+    	e.printStackTrace();
+    } finally {
+    	sProvider.close();
+    }
+  }
 	
 	protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{
 		if(bools == null) return new Value[]{node.getSession().getValueFactory().createValue(true)};
@@ -2950,7 +3017,7 @@ public class JCRDataStorage {
 		return null ;
   }
   
-  public CategoryInfo getCategoryInfo(String categoryPath) throws Exception {
+  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception {
   	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
   	CategoryInfo categoryInfo = new CategoryInfo() ;
   	try {
@@ -2985,12 +3052,14 @@ public class JCRDataStorage {
   			while (subIter.hasNext()){
   				sub = subIter.nextNode() ;
   				if(sub.isNodeType("exo:faqCategory")) {
-  					subCat = new SubCategoryInfo() ;
-  					subCat.setName(sub.getProperty("exo:name").getString()) ;  					
-  					subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
-  					subCat.setSubCateInfos(getSubCategoryInfo(sub)) ;
-  					subCat.setQuestionInfos(getQuestionInfo(sub)) ;
-  					subList.add(subCat) ;
+  					if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){  						
+	  					subCat = new SubCategoryInfo() ;
+	  					subCat.setName(sub.getProperty("exo:name").getString()) ;  					
+	  					subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
+	  					subCat.setSubCateInfos(getSubCategoryInfo(sub)) ;
+	  					subCat.setQuestionInfos(getQuestionInfo(sub)) ;
+	  					subList.add(subCat) ;
+  					}
   				}
   			}
   			categoryInfo.setSubCateInfos(subList) ;

@@ -45,7 +45,7 @@ public class FAQSetting {
 	private String orderBy ;
 	
 	/** The order type. */
-	private String orderType ;
+	private String orderType = ORDERBY_TYPE_ASC;
 	
 	/** The sort question by vote. */
 	private boolean sortQuestionByVote = false;
