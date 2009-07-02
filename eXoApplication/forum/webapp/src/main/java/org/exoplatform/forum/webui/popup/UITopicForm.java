@@ -35,7 +35,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -45,6 +44,7 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -441,8 +441,15 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				topicNew.setDescription(message);
 				topicNew.setLink(link);
 				if(whenNewPost){
-					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
-					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
+					User user = ForumSessionUtils.getUserByUserId(userName);
+					System.out.println("\n\n email: " + user.getEmail());
+					String email = user.getEmail();
+					if(ForumUtils.isEmpty(email)){
+						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.email-not-exist", null, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						return;
+					}
+					topicNew.setIsNotifyWhenAddPost(email);
 				} else {
 					topicNew.setIsNotifyWhenAddPost("");
 				}

@@ -23,7 +23,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -52,6 +51,10 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	private ForumContact contact = null;
 	private ForumService forumService ;
 	
+	public UIViewUserProfile() {
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	}
+
 	public ForumContact getContact(String userId) throws Exception {
 		if(contact == null) {
 			contact = getPersonalContact(userId) ;
@@ -61,10 +64,6 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 
 	public void setContact(ForumContact contact) {
 		this.contact = contact;
-	}
-
-	public UIViewUserProfile() {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
 	@SuppressWarnings("unused")
@@ -94,11 +93,7 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	}
 	
 	private ForumContact getPersonalContact(String userId) throws Exception {
-		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
-		if(contact == null) {
-			contact = new ForumContact() ;
-		}
-		return contact ;
+		return ForumSessionUtils.getPersonalContact(userId) ;
 	}
 	
 	@SuppressWarnings("unused")
@@ -122,11 +117,6 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
 				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
 	}
-	/*@SuppressWarnings("unused")
-	private User getUser() {
-		User user = this.userProfile.getUser() ;
-		return user;
-	}*/
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

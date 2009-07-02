@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -217,11 +218,12 @@ public class ForumSessionUtils {
 	
 	public static ForumContact getPersonalContact(String userId) throws Exception {
 		try {
-			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
+			ContactProvider provider = (ContactProvider) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContactProvider.class) ;
 			return provider.getForumContact(userId);
 		}catch (Exception e) {
-			return new ForumContact();
+			e.printStackTrace() ;			
 		}
+		return null ;
 	}
 	
 	public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {
