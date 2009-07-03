@@ -3483,7 +3483,9 @@ public class JCRDataStorage {
 					if(t == 1) builder.append(")");
 				}
 			}
-			
+			if(builder1.length() == 0){
+				return tagNames;
+			}
 			queryString = new StringBuffer();
 			queryString.append("/jcr:root").append(tagHome.getPath()).append("//element(*,exo:forumTag)");
 			boolean isQr = false;

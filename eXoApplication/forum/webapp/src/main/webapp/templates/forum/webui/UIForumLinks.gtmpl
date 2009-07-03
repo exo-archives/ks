@@ -16,13 +16,13 @@
 								<% uicomponent.renderChild(uiform.FIELD_FORUMLINK_SELECTBOX); %>
 							</td>
 							<td>
-								<div class="UIActionForum" onclick="script:scroll(0,0)">
+								<div class="UIActionForum" onclick="<%=uicomponent.event("Select")%>;script:scroll(0,0);">
 									<div class="NormalButtom">
 										<div class="ButtonLeft">
 											<div class="ButtonRight">
 												<div class="ButtonMiddle">
 												 <div style="padding:0px 10px;">
-												 	<a href="<%=uicomponent.event("Select")%>"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
+												 	<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Go");%></a>
 													</div>
 												</div>
 											</div>

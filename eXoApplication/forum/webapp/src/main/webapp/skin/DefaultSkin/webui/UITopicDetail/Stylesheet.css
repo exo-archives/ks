@@ -367,7 +367,7 @@
 	padding: 10px 0px 0px 0px;
 }
 
-.SearchTagName {
+.UITopicDetail .SearchTagName {
 	position: absolute;
 	visibility: hidden;
 	border: solid 1px #b7b7b7;
@@ -377,16 +377,21 @@
 	padding : 1px 0px 4px 0px;
 }
 
-.SearchTagName .TagNameItem {
+.UITopicDetail .SearchTagName {
+	*top: 28px;
+	*left: 9px;
+}
+
+.UITopicDetail .SearchTagName .TagNameItem {
 	padding: 0px 2px 0px 4px;
 }
 
-.SearchTagName .Selected {
+.UITopicDetail .SearchTagName .Selected {
 	background: #3366CC;
 	color: white;
 }
 
-.SearchTagName .OverItem {
+.UITopicDetail .SearchTagName .OverItem {
 	background: #c1e7fa;
 	color: black;
 }
