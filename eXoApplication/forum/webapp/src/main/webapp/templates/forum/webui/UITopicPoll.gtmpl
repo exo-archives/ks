@@ -22,7 +22,7 @@
 			Date today = new Date() ;
 			timeOut = timeOut*86400000 ;
 			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
-			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),dateOut);
+			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),dateOut) + " GMT+0";
 			if(dateOut.getTime() < today.getTime()) {
 				timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
 				isAgain = false ;
