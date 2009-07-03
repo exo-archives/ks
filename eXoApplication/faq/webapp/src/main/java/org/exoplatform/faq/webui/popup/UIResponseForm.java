@@ -437,23 +437,23 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				
 				SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 				List<Answer> listAnswers = new ArrayList<Answer>();
-
-				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
-					listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
-					if(responseForm.answer_ == null)listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
-					else {
-						for(Answer ans : listAnswers){
-							if(ans.getId().equals(responseForm.answer_.getId())){
-								int ind = listAnswers.indexOf(ans);
-								listAnswers.remove(ind);
-								listAnswers.add(ind, responseForm.mapAnswers.get(question_.getLanguage()));
-								break;
-							}
-						}
-					}
-					question_.setAnswers(listAnswers.toArray(new Answer[]{}));
-				}
-				try{
+        try{
+  				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
+  					listAnswers.addAll(Arrays.asList(faqService.getQuestionById(responseForm.questionId_, sessionProvider).getAnswers()));
+  					if(responseForm.answer_ == null)listAnswers.add(responseForm.mapAnswers.get(question_.getLanguage()));
+  					else {
+  						for(Answer ans : listAnswers){
+  							if(ans.getId().equals(responseForm.answer_.getId())){
+  								int ind = listAnswers.indexOf(ans);
+  								listAnswers.remove(ind);
+  								listAnswers.add(ind, responseForm.mapAnswers.get(question_.getLanguage()));
+  								break;
+  							}
+  						}
+  					}
+  					question_.setAnswers(listAnswers.toArray(new Answer[]{}));
+  				}
+				
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					faqService.saveAnswer(question_.getId(), question_.getAnswers(), sessionProvider);
 					MultiLanguages multiLanguages = new MultiLanguages() ;
