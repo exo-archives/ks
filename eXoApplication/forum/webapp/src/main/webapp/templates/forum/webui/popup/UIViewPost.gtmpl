@@ -15,7 +15,10 @@
 	String messager = uicomponent.getReplaceByBBCode(post.getMessage());
 	String classIcon = post.getIcon() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
-	String postCreatedDate = ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()),post.getCreatedDate());	
+	long timeZone = (long)(userProfile.getTimeZone()*3600000) ;
+	Date dateView = new Date();
+	dateView.setTime(post.getCreatedDate().getTime() - timeZone);
+	String postCreatedDate = ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), dateView);	
 	List attachments = post.getAttachments() ;
 %>
 <div class="UIViewPost" id="SizeImage">
