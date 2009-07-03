@@ -15,7 +15,6 @@ public class FAQResourceResolver extends ResourceResolver{
 
 	@Override
 	public InputStream getInputStream(String url) throws Exception {
-		System.out.println("url ====>" + url);
 		ExoContainer container = ExoContainerContext.getCurrentContainer() ;
 		FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ;
 		byte[] data = faqService.getTemplate() ;

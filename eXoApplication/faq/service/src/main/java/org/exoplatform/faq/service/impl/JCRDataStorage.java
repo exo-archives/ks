@@ -17,7 +17,6 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,13 +45,10 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
-import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -92,8 +87,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 /**
  * Created by The eXo Platform SARL
@@ -1850,9 +1843,9 @@ public class JCRDataStorage {
 			if(cat.isNodeType("exo:faqCategory")) {
 				cate = new Cate() ;
 				cate.setCategory(getCategory(cat)) ;
-				System.out.println("path ==>" + cate.getCategory().getPath());
+				/*System.out.println("path ==>" + cate.getCategory().getPath());
 				System.out.println("name ==>" + cate.getCategory().getName());
-				System.out.println("deep ==>" + i);
+				System.out.println("deep ==>" + i);*/
 		    cate.setDeft(i) ;
 		    cateList.add(cate) ;
 				if(cat.hasNodes()) {
@@ -3054,6 +3047,7 @@ public class JCRDataStorage {
   				if(sub.isNodeType("exo:faqCategory")) {
   					if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){  						
 	  					subCat = new SubCategoryInfo() ;
+	  					subCat.setId(sub.getName());
 	  					subCat.setName(sub.getProperty("exo:name").getString()) ;  					
 	  					subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
 	  					subCat.setSubCateInfos(getSubCategoryInfo(sub)) ;
