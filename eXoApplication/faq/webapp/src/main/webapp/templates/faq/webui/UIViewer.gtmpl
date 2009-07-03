@@ -36,7 +36,7 @@
 }
 
 .UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon{
-	background: url('background/FAQListIcon.gif') no-repeat left 5px;
+	background: url('/faq/skin/DefaultSkin/webui/background/FAQListIcon.gif') no-repeat left 5px;
 	padding-left: 16px;
 }
 
@@ -87,12 +87,12 @@
 }
 
 .UIFAQViewerPortlet .FAQAnswerContainer .FAQAnswerIcon{
-	background: url('background/FAQAnswerIcon.gif') no-repeat left 5px;
+	background: url('/faq/skin/DefaultSkin/webui/background/FAQAnswerIcon.gif') no-repeat left 5px;
 	padding-left: 16px;
 	font-weight: bold;
 }
 .UIFAQViewerPortlet .BackTopIcon {
-	background: url('background/BackTopIcon18x21.gif') no-repeat right;
+	background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
 	width: 21px; height: 18px;
 	float: right;
 	display: block;
@@ -108,7 +108,7 @@
 
 </style>
 <div class="FAQViewerContainer" id="$uicomponent.id">
-	<%  
+	<%	
 	CategoryInfo cateInfo = uicomponent.getCategoryInfo();
 	if(cateInfo != null) {
 		List subCategoryInfos = cateInfo.getSubCateInfos();
@@ -130,16 +130,23 @@
 		int i = 0;
 		String link = ids[0], viewName;
 		for(pathName in navPath) {
-			if(pathName.equals(Utils.CATEGORY_HOME)){ pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);}
+			if(pathName.equals(Utils.CATEGORY_HOME)){ 
+				pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
+				link = Utils.CATEGORY_HOME;
+			}
 			viewName = pathName;
 			if(pathName.length() > 17){
 				viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 17);
 			}
 			if(i < ids.length && i > 0)
 				link = link + "/" + ids[i];
-			if(i < (ids.length-1)){
+			if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+				if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
 		%>
+			<span><a href="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+				<%} else { %>
 			<span><a href="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+				<%} %>
 		<%} else { %>
 			<span title="$pathName"><b>$viewName</b></span>
 		<%}
@@ -148,9 +155,9 @@
 	</div>
 	<div class="FAQViewerQuestionContent">
 	<%for(questionCate in questionCates) { 
-			String question_ =  questionCate.getQuestion();
+			String question_ =	questionCate.getQuestion();
 			question_ = question_.replaceAll("<br/>", " ");
-		  String id_ = questionCate.getId();
+			String id_ = questionCate.getId();
 	%>
 		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
 	<% } %>
@@ -176,19 +183,19 @@
 					String subPath = subCategory.getPath();
 			%>
 				<a href="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
-			<%  if(j != (subCategories.size-1)) {%>
+			<%	if(j != (subCategories.size-1)) {%>
 				<span> | </span>
 			<%	}
 					++j;
 				} 
-			  if(!subCategories.isEmpty()) {
+				if(!subCategories.isEmpty()) {
 			%>
 				<span>]</span>
 			<% } %>
 		</div>
 			<ol>
 				<%for(questionInfo in questionInfos) { 
-						String question =  questionInfo.getQuestion();
+						String question =	questionInfo.getQuestion();
 						String id = questionInfo.getId();
 				%>
 				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
@@ -199,9 +206,9 @@
 	
 	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
 	<%for(questionCate in questionCates) { 
-			String question_ =  questionCate.getQuestion();
-		  String id_ = questionCate.getId();
-		  List answers_ = questionCate.getAnswers();
+			String question_ =	questionCate.getQuestion();
+			String id_ = questionCate.getId();
+			List answers_ = questionCate.getAnswers();
 	%>
 		<div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
 		<div class="Answer" style="margin:3px 0px;">
@@ -212,7 +219,7 @@
 			</ol>
 		</div>
 		<div style="height:18px;">
-			<a class="BackTopIcon" href="#name${id_}">&nbsp;</a>
+			<a class="BackTopIcon" href="#name${id_}"> </a>
 			<div style="clear:right;"><span></span></div>
 		</div>
 	<% } %>
@@ -244,7 +251,7 @@
 		</div>
 		<%} %>
 		<div style="height:18px;">
-			<a class="BackTopIcon" href="#${id}">&nbsp;</a>
+			<a class="BackTopIcon" href="#${id}"> </a>
 			<div style="clear:right;"><span></span></div>
 		</div>
 	</div>
