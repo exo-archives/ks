@@ -2439,200 +2439,204 @@ public class JCRDataStorage {
 
 	public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
-		Node forumNode = CategoryNode.getNode(forumId);
-		Node topicNode = forumNode.getNode(topicId);
-		Node postNode;
-		Calendar calendar = getGreenwichMeanTime();
-		if (isNew) {
-			postNode = topicNode.addNode(post.getId(), "exo:post");
-			postNode.setProperty("exo:id", post.getId());
-			postNode.setProperty("exo:path", forumId);
-			postNode.setProperty("exo:owner", post.getOwner());
-			post.setCreatedDate(calendar.getTime());
-			postNode.setProperty("exo:createdDate", calendar);
-			postNode.setProperty("exo:userPrivate", post.getUserPrivate());
-			postNode.setProperty("exo:isActiveByTopic", true);
-			postNode.setProperty("exo:link", post.getLink());
-			if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-				postNode.setProperty("exo:isFirstPost", true);
-			} else {
-				postNode.setProperty("exo:isFirstPost", false);
-			}
-//		 TODO: Thinking for update forum and user profile by node observation?
-			
-			Node userProfileNode = getUserProfileHome(sProvider);			
-			Node newProfileNode;
-			try {
-				newProfileNode = userProfileNode.getNode(post.getOwner());
-				long totalPostByUser = 0;
-				totalPostByUser = newProfileNode.getProperty("exo:totalPost").getLong();
-				newProfileNode.setProperty("exo:totalPost", totalPostByUser + 1);
-			} catch (PathNotFoundException e) {
-				newProfileNode = userProfileNode.addNode(post.getOwner(), Utils.USER_PROFILES_TYPE);
-				newProfileNode.setProperty("exo:userId", post.getOwner());
-				newProfileNode.setProperty("exo:userTitle", Utils.USER);
-				if(isAdminRole(post.getOwner())) {
-					newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
+		try {
+			Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
+			Node forumNode = CategoryNode.getNode(forumId);
+			Node topicNode = forumNode.getNode(topicId);
+			Node postNode;
+			Calendar calendar = getGreenwichMeanTime();
+			if (isNew) {
+				postNode = topicNode.addNode(post.getId(), "exo:post");
+				postNode.setProperty("exo:id", post.getId());
+				postNode.setProperty("exo:path", forumId);
+				postNode.setProperty("exo:owner", post.getOwner());
+				post.setCreatedDate(calendar.getTime());
+				postNode.setProperty("exo:createdDate", calendar);
+				postNode.setProperty("exo:userPrivate", post.getUserPrivate());
+				postNode.setProperty("exo:isActiveByTopic", true);
+				postNode.setProperty("exo:link", post.getLink());
+				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+					postNode.setProperty("exo:isFirstPost", true);
+				} else {
+					postNode.setProperty("exo:isFirstPost", false);
 				}
-				newProfileNode.setProperty("exo:totalPost", 1);
-			}
-			newProfileNode.setProperty("exo:lastPostDate", calendar);
-			if(userProfileNode.isNew()) {
-				userProfileNode.getSession().save();
-			} else {
-				userProfileNode.save();
-			}
-			
-		} else {
-			postNode = topicNode.getNode(post.getId());
-		}
-		if (post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
-			postNode.setProperty("exo:modifiedBy", post.getModifiedBy());
-			postNode.setProperty("exo:modifiedDate", calendar);
-			postNode.setProperty("exo:editReason", post.getEditReason());
-		}
-		postNode.setProperty("exo:name", post.getName());
-		postNode.setProperty("exo:message", post.getMessage());
-		postNode.setProperty("exo:remoteAddr", post.getRemoteAddr());
-		postNode.setProperty("exo:icon", post.getIcon());
-		postNode.setProperty("exo:isApproved", post.getIsApproved());
-		postNode.setProperty("exo:isHidden", post.getIsHidden());
-		long numberAttach = 0;
-		List<String> listFileName = new ArrayList<String>();
-		List<ForumAttachment> attachments = post.getAttachments();
-		if (attachments != null) {
-			Iterator<ForumAttachment> it = attachments.iterator();
-			for (ForumAttachment attachment : attachments) {
-				++numberAttach;
-				BufferAttachment file = null;
-				listFileName.add(attachment.getId());
+	//		 TODO: Thinking for update forum and user profile by node observation?
+				
+				Node userProfileNode = getUserProfileHome(sProvider);			
+				Node newProfileNode;
 				try {
-					file = (BufferAttachment) it.next();
-					Node nodeFile = null;
-					if (!postNode.hasNode(file.getId())) nodeFile = postNode.addNode(file.getId(), "exo:forumAttachment");
-					else nodeFile = postNode.getNode(file.getId());
-					//Fix permission node
-					ForumServiceUtils.reparePermissions(nodeFile, "any");
-					nodeFile.setProperty("exo:fileName", file.getName());
-					Node nodeContent = null;
-					if (!nodeFile.hasNode("jcr:content")) {
-						nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
-						nodeContent.setProperty("jcr:mimeType", file.getMimeType());
-						nodeContent.setProperty("jcr:data", file.getInputStream());
-						nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+					newProfileNode = userProfileNode.getNode(post.getOwner());
+					long totalPostByUser = 0;
+					totalPostByUser = newProfileNode.getProperty("exo:totalPost").getLong();
+					newProfileNode.setProperty("exo:totalPost", totalPostByUser + 1);
+				} catch (PathNotFoundException e) {
+					newProfileNode = userProfileNode.addNode(post.getOwner(), Utils.USER_PROFILES_TYPE);
+					newProfileNode.setProperty("exo:userId", post.getOwner());
+					newProfileNode.setProperty("exo:userTitle", Utils.USER);
+					if(isAdminRole(post.getOwner())) {
+						newProfileNode.setProperty("exo:userTitle",Utils.ADMIN);
 					}
-				} catch (Exception e) {
+					newProfileNode.setProperty("exo:totalPost", 1);
+				}
+				newProfileNode.setProperty("exo:lastPostDate", calendar);
+				if(userProfileNode.isNew()) {
+					userProfileNode.getSession().save();
+				} else {
+					userProfileNode.save();
+				}
+				
+			} else {
+				postNode = topicNode.getNode(post.getId());
+			}
+			if (post.getModifiedBy() != null && post.getModifiedBy().length() > 0) {
+				postNode.setProperty("exo:modifiedBy", post.getModifiedBy());
+				postNode.setProperty("exo:modifiedDate", calendar);
+				postNode.setProperty("exo:editReason", post.getEditReason());
+			}
+			postNode.setProperty("exo:name", post.getName());
+			postNode.setProperty("exo:message", post.getMessage());
+			postNode.setProperty("exo:remoteAddr", post.getRemoteAddr());
+			postNode.setProperty("exo:icon", post.getIcon());
+			postNode.setProperty("exo:isApproved", post.getIsApproved());
+			postNode.setProperty("exo:isHidden", post.getIsHidden());
+			long numberAttach = 0;
+			List<String> listFileName = new ArrayList<String>();
+			List<ForumAttachment> attachments = post.getAttachments();
+			if (attachments != null) {
+				Iterator<ForumAttachment> it = attachments.iterator();
+				for (ForumAttachment attachment : attachments) {
+					++numberAttach;
+					BufferAttachment file = null;
+					listFileName.add(attachment.getId());
+					try {
+						file = (BufferAttachment) it.next();
+						Node nodeFile = null;
+						if (!postNode.hasNode(file.getId())) nodeFile = postNode.addNode(file.getId(), "exo:forumAttachment");
+						else nodeFile = postNode.getNode(file.getId());
+						//Fix permission node
+						ForumServiceUtils.reparePermissions(nodeFile, "any");
+						nodeFile.setProperty("exo:fileName", file.getName());
+						Node nodeContent = null;
+						if (!nodeFile.hasNode("jcr:content")) {
+							nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
+							nodeContent.setProperty("jcr:mimeType", file.getMimeType());
+							nodeContent.setProperty("jcr:data", file.getInputStream());
+							nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+						}
+					} catch (Exception e) {
+					}
 				}
 			}
-		}
-		NodeIterator postAttachments = postNode.getNodes();
-		Node postAttachmentNode = null;
-		while (postAttachments.hasNext()) {
-			postAttachmentNode = postAttachments.nextNode();
-			if (listFileName.contains(postAttachmentNode.getName()))continue;
-			postAttachmentNode.remove();
-		}
-		boolean sendAlertJob = true;
-		if (isNew) {
-			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
-			long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
-			if (topicPostCount == 0) {
-				topicNode.setProperty("exo:postCount", topicPostCount);
+			NodeIterator postAttachments = postNode.getNodes();
+			Node postAttachmentNode = null;
+			while (postAttachments.hasNext()) {
+				postAttachmentNode = postAttachments.nextNode();
+				if (listFileName.contains(postAttachmentNode.getName()))continue;
+				postAttachmentNode.remove();
 			}
-			// set InfoPost for Forum
-			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
-			boolean isSetLastPost = true;
+			boolean sendAlertJob = true;
 			boolean isFistPost = false;
-			if(topicNode.getProperty("exo:isClosed").getBoolean()) {
-				sendAlertJob = false;
-				postNode.setProperty("exo:isActiveByTopic", false);
-			} else {
-				if (isSetLastPost && topicNode.getProperty("exo:isWaiting").getBoolean()) isSetLastPost = false;
-				if (isSetLastPost) isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
-				if (isSetLastPost) {
-					if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-						isFistPost = true;
-						// set InfoPost for Forum
-						if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-							forumNode.setProperty("exo:postCount", forumPostCount);
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-							sendAlertJob = false;
-						} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-							forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-							sendAlertJob = false;
-						}
-						// set InfoPost for Topic
-						if (!post.getIsHidden()) {
-							topicNode.setProperty("exo:postCount", topicPostCount);
-							topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-							topicNode.setProperty("exo:lastPostDate", calendar);
-							topicNode.setProperty("exo:lastPostBy", post.getOwner());
-						}
-					} else {
-						 
-						if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
-							if (topicNode.getProperty("exo:isApproved").getBoolean()) {
+			if (isNew) {
+				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() + 1;
+				long newNumberAttach = topicNode.getProperty("exo:numberAttachments").getLong() + numberAttach;
+				if (topicPostCount == 0) {
+					topicNode.setProperty("exo:postCount", topicPostCount);
+				}
+				// set InfoPost for Forum
+				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() + 1;
+				boolean isSetLastPost = true;
+				if(topicNode.getProperty("exo:isClosed").getBoolean()) {
+					sendAlertJob = false;
+					postNode.setProperty("exo:isActiveByTopic", false);
+				} else {
+					if (isSetLastPost && topicNode.getProperty("exo:isWaiting").getBoolean()) isSetLastPost = false;
+					if (isSetLastPost) isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
+					if (isSetLastPost) {
+						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+							isFistPost = true;
+							// set InfoPost for Forum
+							if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+								forumNode.setProperty("exo:postCount", forumPostCount);
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								sendAlertJob = false;
+							} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
+								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								sendAlertJob = false;
+							}
+							// set InfoPost for Topic
+							if (!post.getIsHidden()) {
+								topicNode.setProperty("exo:postCount", topicPostCount);
+								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+								topicNode.setProperty("exo:lastPostDate", calendar);
+								topicNode.setProperty("exo:lastPostBy", post.getOwner());
+							}
+						} else {
+							 
+							if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+								if (topicNode.getProperty("exo:isApproved").getBoolean()) {
+									if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
+										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+										sendAlertJob = false;
+									} 
+								} 
+							} else {
 								if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
+								} else if (post.getIsApproved()) {
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+									sendAlertJob = false;
 								} 
-							} 
-						} else {
-							if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-								sendAlertJob = false;
-							} else if (post.getIsApproved()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-								sendAlertJob = false;
-							} 
+							}
+							
+							if (post.getIsApproved()) {
+								// set InfoPost for Topic
+								if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
+									forumNode.setProperty("exo:postCount", forumPostCount);	
+									topicNode.setProperty("exo:numberAttachments", newNumberAttach);
+									topicNode.setProperty("exo:postCount", topicPostCount);
+									topicNode.setProperty("exo:lastPostDate", calendar);
+									topicNode.setProperty("exo:lastPostBy", post.getOwner());
+								} 
+								if(post.getIsHidden()) sendAlertJob = true;
+							}else if(!sendAlertJob) sendAlertJob = true;
+							
 						}
-						
-						if (post.getIsApproved()) {
-							// set InfoPost for Topic
-							if (!post.getIsHidden() && post.getUserPrivate().length != 2) {
-								forumNode.setProperty("exo:postCount", forumPostCount);	
-								topicNode.setProperty("exo:numberAttachments", newNumberAttach);
-								topicNode.setProperty("exo:postCount", topicPostCount);
-								topicNode.setProperty("exo:lastPostDate", calendar);
-								topicNode.setProperty("exo:lastPostBy", post.getOwner());
-							} 
-							if(post.getIsHidden()) sendAlertJob = true;
-						}else if(!sendAlertJob) sendAlertJob = true;
-						
+					} else {
+						postNode.setProperty("exo:isActiveByTopic", false);
+						sendAlertJob = true;
 					}
-				} else {
-					postNode.setProperty("exo:isActiveByTopic", false);
-					sendAlertJob = true;
 				}
+				if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
+			} else {
+				long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
+				topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
+			}
+			postNode.setProperty("exo:numberAttach", numberAttach);
+			if(isNew) {
+				forumNode.getSession().save();
+			} else {
+				forumNode.save();
 			}
 			try {
-				if(!isFistPost) {
+				if(!isFistPost && isNew) {
 					sendNotification(topicNode, null, post, defaultEmailContent, true);
 				}
 			} catch (Exception e) {
 			}
-			
-			if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
-		} else {
-			long temp = topicNode.getProperty("exo:numberAttachments").getLong() - postNode.getProperty("exo:numberAttach").getLong();
-			topicNode.setProperty("exo:numberAttachments", (temp + numberAttach));
-		}
-		postNode.setProperty("exo:numberAttach", numberAttach);
-		if(forumNode.isNew()) {
-			forumNode.getSession().save();
-		} else {
-			forumNode.save();
-		}
-		if(sendAlertJob) {
-			List<String>userIdsp = new ArrayList<String>();
-			if(forumNode.hasProperty("exo:moderators")) {
-				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+			if(sendAlertJob) {
+				List<String>userIdsp = new ArrayList<String>();
+				if(forumNode.hasProperty("exo:moderators")) {
+					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+				}
+				userIdsp.addAll(getAllAdministrator(sProvider));
+				getTotalJobWatting(userIdsp);
 			}
-			userIdsp.addAll(getAllAdministrator(sProvider));
-			getTotalJobWatting(userIdsp);
-		}
-		sProvider.close() ;
+		} catch (Exception e) {
+			e.printStackTrace();
+    }finally {
+    	sProvider.close() ;
+    }
 	}
 
 	private void sendNotification(Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
@@ -2642,297 +2646,311 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
-		} catch (Exception e) {
-		}
-		String content = "";
-		if (forumAdminNode != null) {
-			if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
-				content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
-			if (forumAdminNode.hasProperty("exo:enableHeaderSubject")) {
-				if(forumAdminNode.getProperty("exo:enableHeaderSubject").getBoolean()){
-					if (forumAdminNode.hasProperty("exo:headerSubject")) {
-						headerSubject = forumAdminNode.getProperty("exo:headerSubject").getString() + " ";
+			String content = "";
+			if (forumAdminNode != null) {
+				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
+					content = forumAdminNode.getProperty("exo:notifyEmailContent").getString();
+				if (forumAdminNode.hasProperty("exo:enableHeaderSubject")) {
+					if(forumAdminNode.getProperty("exo:enableHeaderSubject").getBoolean()){
+						if (forumAdminNode.hasProperty("exo:headerSubject")) {
+							headerSubject = forumAdminNode.getProperty("exo:headerSubject").getString() + " ";
+						}
 					}
 				}
+			} else if(defaultEmailContent != null && defaultEmailContent.length() > 0) {
+				content = defaultEmailContent;
+			} else {
+				content = Utils.DEFAULT_EMAIL_CONTENT ;
 			}
-		} else if(defaultEmailContent != null && defaultEmailContent.length() > 0) {
-			content = defaultEmailContent;
-		} else {
-			content = Utils.DEFAULT_EMAIL_CONTENT ;
-		}
-		List<String> listUser = new ArrayList<String>();
-		List<String> emailList = new ArrayList<String>();
-		//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
-		Node userProfileHome = null;
-		userProfileHome = getUserProfileHome(sProvider);
-    
-		int count = 0;
-		if(post == null) {
-			objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "] " + topic.getTopicName();
-			while (true) {
-				emailList = new ArrayList<String>();
-				if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
-					// set Category Private
-					Node categoryNode = null ;
-					if(node.isNodeType("exo:forumCategory")) {
-						categoryNode = node;
-					} else {
-						categoryNode = node.getParent() ;
+			List<String> listUser = new ArrayList<String>();
+			List<String> emailList = new ArrayList<String>();
+			//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
+			Node userProfileHome = null;
+			userProfileHome = getUserProfileHome(sProvider);
+	    
+			int count = 0;
+			if(post == null) {
+				objectName = "["+node.getParent().getProperty("exo:name").getString() + "][" + node.getProperty("exo:name").getString() + "] " + topic.getTopicName();
+				while (true) {
+					emailList = new ArrayList<String>();
+					if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
+						// set Category Private
+						Node categoryNode = null ;
+						if(node.isNodeType("exo:forumCategory")) {
+							categoryNode = node;
+						} else {
+							categoryNode = node.getParent() ;
+						}
+						if(categoryNode.hasProperty("exo:userPrivate"))
+							listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+		
+						if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+							if(node.hasProperty("exo:emailWatching")){
+								List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+								int i = 0;
+								for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+									if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
+										emailList.add(emails.get(i));
+									}
+									i++;
+								}
+							}
+						} else {
+							if(node.hasProperty("exo:emailWatching"))
+								emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+						}
 					}
-					if(categoryNode.hasProperty("exo:userPrivate"))
-						listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
-	
-					if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
-						if(node.hasProperty("exo:emailWatching")){
+					if (node.hasProperty("exo:notifyWhenAddTopic")) {
+						List<String> notyfys = ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues());
+						if(!notyfys.isEmpty()) {
+							emailList.addAll(notyfys);
+						}
+					}
+					if (emailList.size() > 0) {
+						Message message = new Message();
+						message.setMimeType("text/html");
+						String owner = topic.getOwner();
+						try {
+							Node userNode = userProfileHome.getNode(owner);
+							String email = userNode.getProperty("exo:email").getString();
+							String fullName = userNode.getProperty("exo:fullName").getString();
+							if(email != null && email.length() > 0) {
+								message.setFrom(fullName + "<" + email + ">");
+							}
+						} catch (Exception e) {
+						}
+						String content_ = node.getProperty("exo:name").getString();
+						if(node.isNodeType("exo:forum")){
+							message.setSubject(headerSubject + objectName);
+							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
+						} else {
+							message.setSubject(headerSubject + objectName);
+							content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+							content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+						}
+						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
+						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+						Date createdDate = topic.getCreatedDate();
+						Format formatter = new SimpleDateFormat("HH:mm");
+						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+						formatter = new SimpleDateFormat("MM/dd/yyyy");
+						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+						content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "\">click here</a><br/>");
+						
+						message.setBody(content_);
+						sendEmailNotification(emailList, message);
+					}
+					if(node.isNodeType("exo:forumCategory") || count > 1) break;
+					++ count;
+					node = node.getParent();
+				}
+			} else {
+				if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
+					/*
+					 * check is approved, is activate by topic and is not hidden before send mail
+					 */
+					Node forumNode = node.getParent();
+					Node categoryNode = forumNode.getParent() ;
+					objectName = "["+categoryNode.getProperty("exo:name").getString() + "][" + forumNode.getProperty("exo:name").getString() + "] " ;
+					boolean isSend = false;
+					if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
+						isSend = true;
+						List<String> listCanViewInTopic = new ArrayList<String>(); 
+						listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
+						if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
+							listUser.addAll(Arrays.asList(post.getUserPrivate()));
+						}
+						if((listUser.isEmpty() || listUser.size() == 1)){
+							if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")) {
+								listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
+								listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
+							}
+							// set Category Private
+							if(categoryNode.hasProperty("exo:userPrivate"))
+								listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+							if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+								if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
+									listUser = combineListToList(listUser, listCanViewInTopic);
+									if(listUser.isEmpty() || listUser.get(0).equals(" ")) isSend = false;
+								}
+							} else listUser = listCanViewInTopic;
+						}
+					}
+					if (node.isNodeType("exo:forumWatching") && node.hasProperty("exo:emailWatching") && isSend) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
 							List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 							int i = 0;
 							for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
 								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
 									emailList.add(emails.get(i));
-								}
+								} 
 								i++;
 							}
+						} else {
+							emailList = ValuesToList(node.getProperty("exo:emailWatching").getValues());
 						}
-					} else {
-						if(node.hasProperty("exo:emailWatching"))
-							emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
 					}
-				}
-				if (node.hasProperty("exo:notifyWhenAddTopic")) {
-					emailList.addAll(ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues()));
-				}
-				if (emailList.size() > 0) {
-					Message message = new Message();
-					message.setMimeType("text/html");
-					String owner = topic.getOwner();
+					List<String>emailListForum = new ArrayList<String>();
+					//Owner Notify
+					if(isApprovePost) {
+						String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
+						String owner = node.getProperty("exo:owner").getString();
+						if(ownerTopicEmail != null && ownerTopicEmail.trim().length() > 0) {
+							try {
+								Node userOwner = userProfileHome.getNode(owner);
+								ownerTopicEmail =  userOwner.getProperty("exo:email").getString();
+		          } catch (Exception e) {
+		          	e.printStackTrace();
+		          }
+						}
+						String []users = post.getUserPrivate();
+						if(users != null && users.length == 2) {
+							if (ownerTopicEmail.trim().length() > 0 && (users[0].equals(owner) || users[1].equals(owner))) { 
+								emailList.add(ownerTopicEmail);
+							}
+							owner = forumNode.getProperty("exo:owner").getString();
+							if (forumNode.hasProperty("exo:notifyWhenAddPost") && (users[0].equals(owner) || users[1].equals(owner))) { 
+								emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+								
+							}
+						} else {
+							if (ownerTopicEmail.trim().length() > 0) { 
+								emailList.add(ownerTopicEmail);
+							}
+							if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
+								emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+							}
+						}
+					}
+					/*
+					 * check is approved, is activate by topic and is not hidden before send mail
+					 */
+					if (forumNode.isNodeType("exo:forumWatching") && forumNode.hasProperty("exo:emailWatching") && isSend) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
+							List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
+							int i = 0;
+							for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
+									emailListForum.add(emails.get(i));
+								} 
+								i++;
+							}
+						} else {
+							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+						}
+					}
+					
+					List<String>emailListCategory = new ArrayList<String>();
+					if (categoryNode.isNodeType("exo:forumWatching") && categoryNode.hasProperty("exo:emailWatching") && isSend) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
+							List<String> emails = ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
+							int i = 0;
+							for (String user : ValuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
+									emailListCategory.add(emails.get(i));
+								} 
+								i++;
+							}
+						} else {
+							emailListCategory.addAll(ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues()));
+						}
+					}
+					
+					String email = "";
+					String fullName = "";
+					String owner =post.getOwner();
 					try {
 						Node userNode = userProfileHome.getNode(owner);
-						String email = userNode.getProperty("exo:email").getString();
-						String fullName = userNode.getProperty("exo:fullName").getString();
-						if(email != null && email.length() > 0) {
-							message.setFrom(fullName + "<" + email + ">");
-						}
+						email = userNode.getProperty("exo:email").getString();
+						fullName = userNode.getProperty("exo:fullName").getString();
 					} catch (Exception e) {
 					}
-					String content_ = node.getProperty("exo:name").getString();
-					if(node.isNodeType("exo:forum")){
-						message.setSubject(headerSubject + objectName);
+					String content_ = "";
+					if (emailList.size() > 0) {
+						Message message = new Message();
+						if(email != null && email.length() > 0) {
+							message.setFrom(fullName + " <" + email + ">");
+						}
+						message.setMimeType("text/html");
+						content_ = node.getProperty("exo:name").getString();
+						message.setSubject(headerSubject + objectName +	content_);
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
+						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						Date createdDate = post.getCreatedDate();
+						Format formatter = new SimpleDateFormat("HH:mm");
+						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+						formatter = new SimpleDateFormat("MM/dd/yyyy");
+						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+						content_ = StringUtils.replace(content_, "$POSTER", owner);
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
+						
+						message.setBody(content_);
+						sendEmailNotification(emailList, message);
+					}
+					if (emailListForum.size() > 0) {
+						Message message = new Message();
+						if(email != null && email.length() > 0) {
+							message.setFrom(fullName + " <" + email + ">");
+						}
+						message.setMimeType("text/html");
+						String forumName = forumNode.getProperty("exo:name").getString();
+						content_ = node.getProperty("exo:name").getString();
+						message.setSubject(headerSubject + objectName +	content_);
+						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-					} else {
-						message.setSubject(headerSubject + objectName);
-						content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
+						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						Date createdDate = post.getCreatedDate();
+						Format formatter = new SimpleDateFormat("HH:mm");
+						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
+						formatter = new SimpleDateFormat("MM/dd/yyyy");
+						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "\">click here</a><br/>");
+						
+						message.setBody(content_);
+						sendEmailNotification(emailListForum, message);
 					}
-					String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
-					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
-					Date createdDate = topic.getCreatedDate();
-					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
-					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
-					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "\">click here</a><br/>");
-					
-					message.setBody(content_);
-					sendEmailNotification(emailList, message);
-				}
-				if(node.isNodeType("exo:forumCategory") || count > 1) break;
-				++ count;
-				node = node.getParent();
-			}
-		} else {
-			if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
-				/*
-				 * check is approved, is activate by topic and is not hidden before send mail
-				 */
-				Node forumNode = node.getParent();
-				Node categoryNode = forumNode.getParent() ;
-				objectName = "["+categoryNode.getProperty("exo:name").getString() + "][" + forumNode.getProperty("exo:name").getString() + "] " ;
-				boolean isSend = false;
-				if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
-					isSend = true;
-					List<String> listCanViewInTopic = new ArrayList<String>(); 
-					listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
-					if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
-						listUser.addAll(Arrays.asList(post.getUserPrivate()));
-					}
-					if((listUser.isEmpty() || listUser.size() == 1)){
-						if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")) {
-							listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
-							listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
+					if (emailListCategory.size() > 0) {
+						Message message = new Message();
+						if(email != null && email.length() > 0) {
+							message.setFrom(fullName + " <" + email + ">");
 						}
-						// set Category Private
-						if(categoryNode.hasProperty("exo:userPrivate"))
-							listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
-						if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
-							if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
-								listUser = combineListToList(listUser, listCanViewInTopic);
-								if(listUser.isEmpty() || listUser.get(0).equals(" ")) isSend = false;
-							}
-						} else listUser = listCanViewInTopic;
+						message.setMimeType("text/html");
+						String categoryName = categoryNode.getProperty("exo:name").getString();
+						content_ = node.getProperty("exo:name").getString();
+						message.setSubject(headerSubject + objectName +	content_);
+						content = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+						content = StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
+						content = StringUtils.replace(content, "$ADD_TYPE", "Post");
+						content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						Date createdDate = post.getCreatedDate();
+						Format formatter = new SimpleDateFormat("HH:mm");
+						content = StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
+						formatter = new SimpleDateFormat("MM/dd/yyyy");
+						content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
+						content = StringUtils.replace(content, "$POSTER", post.getOwner());
+						content = StringUtils.replace(content, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
+						
+						message.setBody(content);
+						sendEmailNotification(emailListCategory, message);
 					}
-				}
-				if (node.isNodeType("exo:forumWatching") && node.hasProperty("exo:emailWatching") && isSend) {
-					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-						List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
-						int i = 0;
-						for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
-							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
-								emailList.add(emails.get(i));
-							} 
-							i++;
-						}
-					} else {
-						emailList = ValuesToList(node.getProperty("exo:emailWatching").getValues());
-					}
-				}
-				List<String>emailListForum = new ArrayList<String>();
-				//Owner Notify
-				if(isApprovePost) {
-					String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
-					String []users = post.getUserPrivate();
-					if(users != null && users.length == 2) {
-						String owner = node.getProperty("exo:owner").getString();
-						if (ownerTopicEmail.trim().length() > 0 && (users[0].equals(owner) || users[1].equals(owner))) { 
-							emailList.add(ownerTopicEmail);
-						}
-						owner = forumNode.getProperty("exo:owner").getString();
-						if (forumNode.hasProperty("exo:notifyWhenAddPost") && (users[0].equals(owner) || users[1].equals(owner))) { 
-							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
-						}
-					} else {
-						if (ownerTopicEmail.trim().length() > 0) { 
-							emailList.add(ownerTopicEmail);
-						}
-						if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
-						}
-					}
-				}
-				/*
-				 * check is approved, is activate by topic and is not hidden before send mail
-				 */
-				if (forumNode.isNodeType("exo:forumWatching") && forumNode.hasProperty("exo:emailWatching") && isSend) {
-					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-						List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
-						int i = 0;
-						for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
-								emailListForum.add(emails.get(i));
-							} 
-							i++;
-						}
-					} else {
-						emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
-					}
-				}
-				
-				List<String>emailListCategory = new ArrayList<String>();
-				if (categoryNode.isNodeType("exo:forumWatching") && categoryNode.hasProperty("exo:emailWatching") && isSend) {
-					if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-						List<String> emails = ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
-						int i = 0;
-						for (String user : ValuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
-							if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
-								emailListCategory.add(emails.get(i));
-							} 
-							i++;
-						}
-					} else {
-						emailListCategory.addAll(ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues()));
-					}
-				}
-				
-				String email = "";
-				String fullName = "";
-				String owner =post.getOwner();
-				try {
-					Node userNode = userProfileHome.getNode(owner);
-					email = userNode.getProperty("exo:email").getString();
-					fullName = userNode.getProperty("exo:fullName").getString();
-				} catch (Exception e) {
-				}
-				String content_ = "";
-				if (emailList.size() > 0) {
-					Message message = new Message();
-					if(email != null && email.length() > 0) {
-						message.setFrom(fullName + " <" + email + ">");
-					}
-					message.setMimeType("text/html");
-					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +	content_);
-					content_ = StringUtils.replace(content, "$OBJECT_NAME", content_);
-					content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
-					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
-					Date createdDate = post.getCreatedDate();
-					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
-					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ = StringUtils.replace(content_, "$POSTER", owner);
-					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
-					
-					message.setBody(content_);
-					sendEmailNotification(emailList, message);
-				}
-				if (emailListForum.size() > 0) {
-					Message message = new Message();
-					if(email != null && email.length() > 0) {
-						message.setFrom(fullName + " <" + email + ">");
-					}
-					message.setMimeType("text/html");
-					String forumName = forumNode.getProperty("exo:name").getString();
-					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +	content_);
-					content_ = StringUtils.replace(content, "$OBJECT_NAME", forumName);
-					content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
-					content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-					content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
-					Date createdDate = post.getCreatedDate();
-					Format formatter = new SimpleDateFormat("HH:mm");
-					content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
-					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-					content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-					content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "\">click here</a><br/>");
-					
-					message.setBody(content_);
-					sendEmailNotification(emailListForum, message);
-				}
-				if (emailListCategory.size() > 0) {
-					Message message = new Message();
-					if(email != null && email.length() > 0) {
-						message.setFrom(fullName + " <" + email + ">");
-					}
-					message.setMimeType("text/html");
-					String categoryName = categoryNode.getProperty("exo:name").getString();
-					content_ = node.getProperty("exo:name").getString();
-					message.setSubject(headerSubject + objectName +	content_);
-					content = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
-					content = StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
-					content = StringUtils.replace(content, "$ADD_TYPE", "Post");
-					content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
-					Date createdDate = post.getCreatedDate();
-					Format formatter = new SimpleDateFormat("HH:mm");
-					content = StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
-					formatter = new SimpleDateFormat("MM/dd/yyyy");
-					content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
-					content = StringUtils.replace(content, "$POSTER", post.getOwner());
-					content = StringUtils.replace(content, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-					content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
-					
-					message.setBody(content);
-					sendEmailNotification(emailListCategory, message);
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sProvider.close() ;
 		}
-		sProvider.close() ;
 	}
 
 	public void modifyPost(List<Post> posts, int type) throws Exception {
@@ -3771,6 +3789,7 @@ public class JCRDataStorage {
 					if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
 						profileNode.setProperty("exo:isBanned", false);
 						profileNode.save();
+						userProfile.setIsBanned(false) ;
 					}
 				}
 			} else if(ip != null) {
@@ -4138,7 +4157,16 @@ public class JCRDataStorage {
 		userProfile.setMaxTopicInPage(userProfileNode.getProperty("exo:maxTopic").getLong());
 		userProfile.setIsShowForumJump(userProfileNode.getProperty("exo:isShowForumJump").getBoolean());
 		userProfile.setIsBanned(userProfileNode.getProperty("exo:isBanned").getBoolean());
-		if(userProfileNode.hasProperty("exo:banUntil"))userProfile.setBanUntil(userProfileNode.getProperty("exo:banUntil").getLong());
+		if (userProfile.getIsBanned()) {
+			if(userProfileNode.hasProperty("exo:banUntil")) {
+				userProfile.setBanUntil(userProfileNode.getProperty("exo:banUntil").getLong());
+				if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+					userProfileNode.setProperty("exo:isBanned", false);
+					userProfileNode.save();
+					userProfile.setIsBanned(false) ;
+				}
+			}
+		}
 		if(userProfileNode.hasProperty("exo:banReason"))userProfile.setBanReason(userProfileNode.getProperty("exo:banReason").getString());
 		if(userProfileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(userProfileNode.getProperty("exo:banCounter").getString()));
 		if(userProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToArray(userProfileNode.getProperty("exo:banReasonSummary").getValues()));
