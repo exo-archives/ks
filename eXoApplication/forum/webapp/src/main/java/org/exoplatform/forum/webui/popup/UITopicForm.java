@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
@@ -41,6 +42,7 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -386,224 +388,268 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		}
 	}
 	
+	private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
+		try {
+			this.forum = (Forum)forumService.getObjectNameById(forum.getId(), Utils.FORUM);
+			if(this.forum.getIsClosed() || this.forum.getIsLock()) return false;
+			if(userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
+				String[] canCreadTopic = forum.getCreateTopicRole();
+				if(canCreadTopic != null && canCreadTopic.length > 0 && !canCreadTopic[0].equals(" ")){
+					return ForumServiceUtils.hasPermission(canCreadTopic, userProfile.getUserId());
+				}
+			}
+    } catch (Exception e) {
+    	throw e;
+    }
+    return true;
+	}
+	
 	static	public class SubmitThreadActionListener extends EventListener<UITopicForm> {
 		public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			int t = 0, k = 1 ;
-			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
-			UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
-			String topicTitle = "	" + stringInputTitle.getValue();
-			topicTitle = topicTitle.trim() ;
-			int maxText = ForumUtils.MAXTITLE ;
+			UserProfile userProfile = forumPortlet.getUserProfile();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-			if(topicTitle.length() > maxText) {
-				Object[] args = { uiForm.getLabel(FIELD_TOPICTITLE_INPUT), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return ;
-			}
-			String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
-			if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
-				Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return ;
-			}
-			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
-			message = StringUtils.replace(message, "'", "&apos;");
-			checksms = checksms.replaceAll("&nbsp;", " ") ;
-			t = checksms.trim().length() ;
-			if(topicTitle.length() <= 0 && topicTitle.equals("null")) {k = 0;}
-			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
-			editReason = ForumTransformHTML.enCodeHTML(editReason);
-			if(t > 0 && k != 0 && !checksms.equals("null")) {
-				ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration() ;
-				boolean isOffend = false ; 
-				boolean hasForumMod = false ;
-				if(!uiForm.isMod()) {
-					String stringKey = forumAdministration.getCensoredKeyword() ;
-					if(!ForumUtils.isEmpty(stringKey)) {
-						stringKey = stringKey.toLowerCase() ;
-						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-						checksms = checksms.toLowerCase();
-						for (String string : censoredKeyword) {
-							if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-							if(topicTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-						}
-					}
-					if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
-				}
-				UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
-				String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
-				if(topicType.equals("none")) topicType = " ";
-				String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
-				String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
-				Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
-				Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
-				Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
-				UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
-				String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
-				String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
-				canPost = ForumUtils.removeSpaceInString(canPost);
-				canPost = ForumUtils.removeStringResemble(canPost);
-				canView = ForumUtils.removeSpaceInString(canView);
-				canView = ForumUtils.removeStringResemble(canView);
-				String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
-				if(!ForumUtils.isEmpty(erroUser)) {
-					Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					return ;
-				}
-				erroUser = ForumSessionUtils.checkValueUser(canView) ;
-				if(!ForumUtils.isEmpty(erroUser)) {
-					Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					return ;
-				}
-				// set link
-				PortalRequestContext portalContext = Util.getPortalRequestContext();
-				String url = portalContext.getRequest().getRequestURL().toString();
-				url = url.replaceFirst("http://", "") ;
-				url = url.substring(0, url.indexOf("/")) ;
-				url = "http://" + url;
-				String link = uiForm.getLink();
-				link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
-				link = link.replaceFirst("pathId", uiForm.topic.getId()) ;
-				link = url + link;
-				link = link.replaceFirst("private", "public");
-				//
-				UserProfile userProfile = forumPortlet.getUserProfile();
-				String userName = userProfile.getUserId() ;
-				Topic topicNew = uiForm.topic;
-				topicNew.setOwner(userName);
-				topicNew.setTopicName(topicTitle);
-				topicNew.setCreatedDate(new Date());
-				topicNew.setModifiedBy(userName);
-				topicNew.setModifiedDate(new Date());
-				topicNew.setLastPostBy(userName);
-				topicNew.setLastPostDate(new Date());
-				topicNew.setDescription(message);
-				topicNew.setTopicType(topicType);
-				topicNew.setLink(link);
-				if(whenNewPost){
-					ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
-					topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
-				} else {
-					topicNew.setIsNotifyWhenAddPost("");
-				}
-				topicNew.setIsModeratePost(moderatePost);
-				topicNew.setIsWaiting(isOffend) ;
-				topicNew.setAttachments(uiForm.attachments_) ;
-				if(topicState.equals("closed")) {
-					topicNew.setIsClosed(true);
-				}else{
-					topicNew.setIsClosed(false);
-				}
-				if(topicStatus.equals("locked")) {
-					topicNew.setIsLock(true) ;
-				}else {
-					topicNew.setIsLock(false) ;
-				}
-				topicNew.setIsSticky(sticky);
-				
-				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
-				topicNew.setIcon(uiIconSelector.getSelectedIcon());
-				//topicNew.setAttachmentFirstPost(0) ;
-				canPost = ForumUtils.removeSpaceInString(canPost) ;
-				String temp = "" ;
-				if(!ForumUtils.isEmpty(canPost)) {
-					temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
-					temp = temp + "," + userName;
-					String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "poster");
-					if(arr != null && arr.length > 0 && !arr[0].equals(" "))
-						temp = temp + "," + ForumUtils.unSplitForForum(arr);
-				}
-				if(ForumUtils.isEmpty(temp)) temp = canPost;
-				String[]canPosts = ForumUtils.addStringToString(canPost, temp);
-				if(!ForumUtils.isEmpty(canView)) {
-					temp = ForumUtils.unSplitForForum(uiForm.forum.getViewer());
-					canView = canView + "," + temp;
-					String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "viewer");
-					if(arr != null && arr.length > 0 && !arr[0].equals(" "))
-						temp = temp + "," + ForumUtils.unSplitForForum(arr);
-				}
-				canView = ForumUtils.removeSpaceInString(canView) ;
-				String[]canViews = ForumUtils.addStringToString(canPost, canView);
-								
-				topicNew.setCanView(canViews);
-				topicNew.setCanPost(canPosts);
-				topicNew.setIsApproved(!hasForumMod) ;
-				if(!ForumUtils.isEmpty(uiForm.topicId)) {
-					topicNew.setId(uiForm.topicId);
-					topicNew.setEditReason(editReason) ;
-					try {
-						uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
-						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
-						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-						topicDetail.setIsEditTopic(true) ;
-					} catch (PathNotFoundException e) {
-						// hung.hoang add
-						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+			try {
+				if(uiForm.checkForumHasAddTopic(userProfile)) {
+					int t = 0, k = 1 ;
+					UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB);
+					UIFormStringInput stringInputTitle = threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT) ; 
+					String topicTitle = "	" + stringInputTitle.getValue();
+					topicTitle = topicTitle.trim() ;
+					int maxText = ForumUtils.MAXTITLE ;
+					if(topicTitle.length() > maxText) {
+						Object[] args = { uiForm.getLabel(FIELD_TOPICTITLE_INPUT), String.valueOf(maxText) };
+						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-						return ;						
-					}					
-				} else {
-					topicNew.setVoteRating(0.0) ;
-					topicNew.setUserVoteRating(new String[] {}) ;
-					try {
-						String remoteAddr = "";
-						if(forumPortlet.isEnableIPLogging()) {
-							PortletRequestImp request = event.getRequestContext().getRequest();
-							remoteAddr = request.getRemoteAddr();
+						return ;
+					}
+					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
+					if(!ForumUtils.isEmpty(editReason) && editReason.length() > maxText) {
+						Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
+						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
+						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						return ;
+					}
+					String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
+					message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
+					String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+					message = StringUtils.replace(message, "'", "&apos;");
+					checksms = checksms.replaceAll("&nbsp;", " ") ;
+					t = checksms.trim().length() ;
+					if(topicTitle.length() <= 0 && topicTitle.equals("null")) {k = 0;}
+					topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
+					editReason = ForumTransformHTML.enCodeHTML(editReason);
+					if(t > 0 && k != 0 && !checksms.equals("null")) {
+						ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration() ;
+						boolean isOffend = false ; 
+						boolean hasForumMod = false ;
+						if(!uiForm.isMod()) {
+							String stringKey = forumAdministration.getCensoredKeyword() ;
+							if(!ForumUtils.isEmpty(stringKey)) {
+								stringKey = stringKey.toLowerCase() ;
+								String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
+								checksms = checksms.toLowerCase();
+								for (String string : censoredKeyword) {
+									if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+									if(topicTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+								}
+							}
+							if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
 						}
-						topicNew.setRemoteAddr(remoteAddr);
-						uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
-						if(userProfile.getIsAutoWatchMyTopics()) {
-							List<String> values = new ArrayList<String>();
-							values.add(userProfile.getEmail());
-							String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
-							uiForm.forumService.addWatch(1, path, values, userName) ;
+						UIForumInputWithActions threadOption = uiForm.getChildById(FIELD_THREADOPTION_TAB);
+						String topicType = threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).getValue();
+						if(topicType.equals("none")) topicType = " ";
+						String topicState = threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).getValue();
+						String topicStatus = threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).getValue();
+						Boolean moderatePost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).getValue();
+						Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
+						Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
+						UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
+						String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
+						String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
+						canPost = ForumUtils.removeSpaceInString(canPost);
+						canPost = ForumUtils.removeStringResemble(canPost);
+						canView = ForumUtils.removeSpaceInString(canView);
+						canView = ForumUtils.removeStringResemble(canView);
+						String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
+						if(!ForumUtils.isEmpty(erroUser)) {
+							Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
+							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+							return ;
 						}
-					} catch (PathNotFoundException e) {
-						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-						categoryContainer.updateIsRender(true) ;
-						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
-						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+						erroUser = ForumSessionUtils.checkValueUser(canView) ;
+						if(!ForumUtils.isEmpty(erroUser)) {
+							Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
+							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
+							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+							return ;
+						}
+						// set link
+						PortalRequestContext portalContext = Util.getPortalRequestContext();
+						String url = portalContext.getRequest().getRequestURL().toString();
+						url = url.replaceFirst("http://", "") ;
+						url = url.substring(0, url.indexOf("/")) ;
+						url = "http://" + url;
+						String link = uiForm.getLink();
+						link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
+						link = link.replaceFirst("pathId", uiForm.topic.getId()) ;
+						link = url + link;
+						link = link.replaceFirst("private", "public");
+						//
+						Topic topicNew = uiForm.topic;
+						String userName = userProfile.getUserId() ;
+						topicNew.setOwner(userName);
+						topicNew.setTopicName(topicTitle);
+						topicNew.setCreatedDate(new Date());
+						topicNew.setModifiedBy(userName);
+						topicNew.setModifiedDate(new Date());
+						topicNew.setLastPostBy(userName);
+						topicNew.setLastPostDate(new Date());
+						topicNew.setDescription(message);
+						topicNew.setTopicType(topicType);
+						topicNew.setLink(link);
+						if(whenNewPost){
+							ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
+							topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
+						} else {
+							topicNew.setIsNotifyWhenAddPost("");
+						}
+						topicNew.setIsModeratePost(moderatePost);
+						topicNew.setIsWaiting(isOffend) ;
+						topicNew.setAttachments(uiForm.attachments_) ;
+						if(topicState.equals("closed")) {
+							topicNew.setIsClosed(true);
+						}else{
+							topicNew.setIsClosed(false);
+						}
+						if(topicStatus.equals("locked")) {
+							topicNew.setIsLock(true) ;
+						}else {
+							topicNew.setIsLock(false) ;
+						}
+						topicNew.setIsSticky(sticky);
+						
+						UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
+						topicNew.setIcon(uiIconSelector.getSelectedIcon());
+						//topicNew.setAttachmentFirstPost(0) ;
+						canPost = ForumUtils.removeSpaceInString(canPost) ;
+						String temp = "" ;
+						if(!ForumUtils.isEmpty(canPost)) {
+							temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
+							temp = temp + "," + userName;
+							String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "poster");
+							if(arr != null && arr.length > 0 && !arr[0].equals(" "))
+								temp = temp + "," + ForumUtils.unSplitForForum(arr);
+						}
+						if(ForumUtils.isEmpty(temp)) temp = canPost;
+						String[]canPosts = ForumUtils.addStringToString(canPost, temp);
+						if(!ForumUtils.isEmpty(canView)) {
+							temp = ForumUtils.unSplitForForum(uiForm.forum.getViewer());
+							canView = canView + "," + temp;
+							String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "viewer");
+							if(arr != null && arr.length > 0 && !arr[0].equals(" "))
+								temp = temp + "," + ForumUtils.unSplitForForum(arr);
+						}
+						canView = ForumUtils.removeSpaceInString(canView) ;
+						String[]canViews = ForumUtils.addStringToString(canPost, canView);
+										
+						topicNew.setCanView(canViews);
+						topicNew.setCanPost(canPosts);
+						topicNew.setIsApproved(!hasForumMod) ;
+						if(!ForumUtils.isEmpty(uiForm.topicId)) {
+							topicNew.setId(uiForm.topicId);
+							topicNew.setEditReason(editReason) ;
+							try {
+								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
+								forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
+								UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+								topicDetail.setIsEditTopic(true) ;
+							} catch (PathNotFoundException e) {
+								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+								UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+								categoryContainer.updateIsRender(true) ;
+								categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
+								forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+								forumPortlet.cancelAction() ;
+								uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+								event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+								event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+								return ;						
+							}					
+						} else {
+							topicNew.setVoteRating(0.0) ;
+							topicNew.setUserVoteRating(new String[] {}) ;
+							try {
+								String remoteAddr = "";
+								if(forumPortlet.isEnableIPLogging()) {
+									PortletRequestImp request = event.getRequestContext().getRequest();
+									remoteAddr = request.getRemoteAddr();
+								}
+								topicNew.setRemoteAddr(remoteAddr);
+								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+								if(userProfile.getIsAutoWatchMyTopics()) {
+									List<String> values = new ArrayList<String>();
+									values.add(userProfile.getEmail());
+									String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
+									uiForm.forumService.addWatch(1, path, values, userName) ;
+								}
+							} catch (PathNotFoundException e) {
+								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+								UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+								categoryContainer.updateIsRender(true) ;
+								categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
+								forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+								forumPortlet.cancelAction() ;
+								uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+								event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+								event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+								return;
+							}					
+						}
+						uiForm.topic = new Topic();
 						forumPortlet.cancelAction() ;
-						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
-						return;
-					}					
-				}
-				uiForm.topic = new Topic();
-				forumPortlet.cancelAction() ;
-				if(isOffend || hasForumMod) {
-					Object[] args = { "" };
-					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
-					else {
-						args = new Object[]{ "forum", "thread" };
-						uiApp.addMessage(new ApplicationMessage("MessageThread.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+						if(isOffend || hasForumMod) {
+							Object[] args = { "" };
+							if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
+							else {
+								args = new Object[]{ "forum", "thread" };
+								uiApp.addMessage(new ApplicationMessage("MessageThread.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+							}
+							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						}
+						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+					} else {
+						if(k == 0) {
+							Object[] args = new String[] {uiForm.getLabel(FIELD_TOPICTITLE_INPUT)} ;
+							if(t <= 0) args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+						} else if(t <= 0) {
+							Object[] args = { "Message" };
+							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
+						}
 					}
+				} else {
+					forumPortlet.cancelAction() ;
+					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+					topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum);
+					uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+					return;
 				}
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-			} else {
-				if(k == 0) {
-					Object[] args = new String[] {uiForm.getLabel(FIELD_TOPICTITLE_INPUT)} ;
-					if(t <= 0) args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t <= 0) {
-					Object[] args = { "Message" };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
-				}
-			}
+			} catch (Exception e) {
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ; 
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
+				forumPortlet.cancelAction() ;
+				uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+      }
 		}
 	}
 	
