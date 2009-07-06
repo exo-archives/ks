@@ -37,7 +37,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
@@ -299,6 +298,21 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
     return true;
 	}
 	
+	private String[] getCensoredKeyword() throws Exception {
+		ForumAdministration forumAdministration = forumService.getForumAdministration() ;
+		String stringKey = forumAdministration.getCensoredKeyword();
+		if(stringKey != null && stringKey.length() > 0) {
+			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
+			if(stringKey.contains(",")){ 
+				stringKey.replaceAll(";", ",") ;
+				return stringKey.trim().split(",") ;
+			} else { 
+				return stringKey.trim().split(";") ;
+			}
+		}
+		return new String[]{};
+	}
+	
 	static	public class SubmitPostActionListener extends EventListener<UIPostForm> {
 		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
@@ -337,7 +351,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      		PortletRequestImp request = event.getRequestContext().getRequest();
 	      		remoteAddr = request.getRemoteAddr();
 	      	}
-	      	ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration() ;
 	      	checksms = checksms.replaceAll("&nbsp;", " ") ;
 	      	t = checksms.length() ;
 	      	postTitle = postTitle.trim();
@@ -349,17 +362,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      		boolean isOffend = false ; 
 	      		boolean hasTopicMod = false ;
 	      		if(!uiForm.isMod()) {
-	      			String stringKey = forumAdministration.getCensoredKeyword();
-	      			if(!ForumUtils.isEmpty(stringKey)) {
-	      				stringKey = stringKey.toLowerCase() ;
-	      				String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-	      				checksms = checksms.toLowerCase().trim();
-	      				for (String string : censoredKeyword) {
-	      					if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-	      					if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-	      				}
-	      			}
-	      			
+      				String []censoredKeyword = uiForm.getCensoredKeyword() ;
+      				checksms = checksms.toLowerCase().trim();
+      				for (String string : censoredKeyword) {
+      					if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+      					if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
+      				}
 	      			if(post.getUserPrivate() != null && post.getUserPrivate().length == 2)isPP = true;
 	      			if((!uiForm.isMP || !isPP) && uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 	      		}

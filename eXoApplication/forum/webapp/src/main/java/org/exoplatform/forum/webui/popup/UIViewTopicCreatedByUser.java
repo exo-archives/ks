@@ -40,17 +40,17 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIViewTopicCreatedByUser extends UIForm implements UIPopupComponent	{
-	public void activate() throws Exception { }
+	public UIViewTopicCreatedByUser() throws Exception{
+		addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser") ;
+	}
 
+	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 	
 	public void setUserId(String userId){
 		this.getChild(UIPageListTopicByUser.class).setUserName(userId);
 	}
 	
-	public UIViewTopicCreatedByUser() throws Exception{
-		addChild(UIPageListTopicByUser.class, null, "UIPageListTopicByUser") ;
-	}
 	
 	static public class CloseActionListener extends EventListener<UIViewTopicCreatedByUser> {
 		public void execute(Event<UIViewTopicCreatedByUser> event) throws Exception {

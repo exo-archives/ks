@@ -403,6 +403,21 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
     }
     return true;
 	}
+
+	private String[] getCensoredKeyword() throws Exception {
+		ForumAdministration forumAdministration = forumService.getForumAdministration() ;
+		String stringKey = forumAdministration.getCensoredKeyword();
+		if(stringKey != null && stringKey.length() > 0) {
+			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
+			if(stringKey.contains(",")){ 
+				stringKey.replaceAll(";", ",") ;
+				return stringKey.trim().split(",") ;
+			} else { 
+				return stringKey.trim().split(";") ;
+			}
+		}
+		return new String[]{};
+	}
 	
 	static	public class SubmitThreadActionListener extends EventListener<UITopicForm> {
 		public void execute(Event<UITopicForm> event) throws Exception {
@@ -441,19 +456,14 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
 					editReason = ForumTransformHTML.enCodeHTML(editReason);
 					if(t > 0 && k != 0 && !checksms.equals("null")) {
-						ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration() ;
 						boolean isOffend = false ; 
 						boolean hasForumMod = false ;
 						if(!uiForm.isMod()) {
-							String stringKey = forumAdministration.getCensoredKeyword() ;
-							if(!ForumUtils.isEmpty(stringKey)) {
-								stringKey = stringKey.toLowerCase() ;
-								String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-								checksms = checksms.toLowerCase();
-								for (String string : censoredKeyword) {
-									if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-									if(topicTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-								}
+							String []censoredKeyword = uiForm.getCensoredKeyword() ;
+							checksms = checksms.toLowerCase();
+							for (String string : censoredKeyword) {
+								if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
+								if(topicTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
 							}
 							if(uiForm.forum != null) hasForumMod = uiForm.forum.getIsModerateTopic() ;
 						}

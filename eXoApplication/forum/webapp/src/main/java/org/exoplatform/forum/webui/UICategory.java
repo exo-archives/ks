@@ -254,14 +254,14 @@ public class UICategory extends UIForm	{
 	static public class DeleteCategoryActionListener extends EventListener<UICategory> {
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource() ;			
-			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
-			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-			categoryContainer.updateIsRender(true) ;
-			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 			try{
 				uiCategory.forumService.removeCategory(uiCategory.categoryId) ;
 			} catch (Exception e) {
 			}
+			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+			categoryContainer.updateIsRender(true) ;
+			forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
