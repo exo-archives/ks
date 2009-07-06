@@ -235,18 +235,19 @@ public class RSSProcess extends RSSGenerate {
 				linkItem += "?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ViewQuestion&" +
 											"objectId=";
 				Node questionNode = (Node)appHomeNode.getSession().getItem(path) ;
-				if(!questionNode.isNodeType("exo:faqQuestion") && !questionNode.isNodeType("exo:answer") && 
-						!questionNode.isNodeType("exo:comment")) 
-					return;
-				else if(questionNode.isNodeType("exo:answer") || questionNode.isNodeType("exo:comment"))
+				if(!questionNode.isNodeType("exo:faqQuestion") && !questionNode.isNodeType("exo:answer") 
+						&& !questionNode.isNodeType("exo:comment")) return;
+				else if(questionNode.isNodeType("exo:answer") || questionNode.isNodeType("exo:comment")) {
 					questionNode = questionNode.getParent().getParent();
-				
+					if(!questionNode.isNodeType("exo:faqQuestion")) return ; // Worked on other languages
+				}
 				String categoreDescription = "";
 				//categoryNode = getCategoryNodeById(questionNode.getProperty("exo:categoryId").getString(), sProvider);
 				categoryNode = questionNode.getParent().getParent() ;
 				if(categoryNode.hasProperty("exo:description")) categoreDescription = categoryNode.getProperty("exo:description").getString();
 				else categoreDescription = "eXo link:" + eXoLink;
 				
+				System.out.println("questionNode=========>"+ questionNode.getPath());
 				if(!questionNode.getProperty("exo:isActivated").getBoolean() || 
 						!questionNode.getProperty("exo:isApproved").getBoolean()){
 					removeRSSItem(questionNode.getName(), categoryNode, categoreDescription);

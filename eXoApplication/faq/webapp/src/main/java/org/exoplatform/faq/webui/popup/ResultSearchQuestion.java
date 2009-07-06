@@ -143,18 +143,19 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				String categoryId = faqService.getCategoryPathOf(questionId) ;
 				UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				uiQuestions.pageList.setObjectId(questionId);
-				uiQuestions.setCategories(categoryId) ;
+				//uiQuestions.pageList.setObjectId(questionId);
+				uiQuestions.setCategoryId(categoryId) ;
 				uiQuestions.setQuestions();
-				uiQuestions.viewingQuestionId_ = questionId ;
-				int pos = 0 ;
-				for(Question question2 : uiQuestions.listQuestion_) {
+				//uiQuestions.viewingQuestionId_ = questionId ;
+				uiQuestions.viewQuestion(question) ;
+				//int pos = 0 ;
+				/*for(Question question2 : uiQuestions.listQuestion_) {
 					if(question2.getId().equals(questionId)) {
 						pos = uiQuestions.listQuestion_.indexOf(question2) ;
 						break ;
 					}
-				}
-				uiQuestions.listQuestionLanguage.clear() ;
+				}*/
+				/*uiQuestions.listQuestionLanguage.clear() ;
 				uiQuestions.listLanguage.clear() ;
 				QuestionLanguage questionLanguage = new QuestionLanguage() ;
 				questionLanguage.setId(question.getId());
@@ -170,12 +171,12 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 						uiQuestions.listQuestion_.get(pos).setLanguage(language.getLanguage()) ;
 //						uiQuestions.listQuestion_.get(pos).setAnswers(language.getAnswers()) ;
 					}
-				}
-				uiQuestions.isChangeLanguage = true ;
-				uiQuestions.setLanguageView(language_);
+				}*/
+				//uiQuestions.isChangeLanguage = true ;
+				uiQuestions.setLanguageView(FAQUtils.getDefaultLanguage());
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-				breadcumbs.setUpdataPath(null) ;
+				//breadcumbs.setUpdataPath(null) ;
 				/*String oldPath = "" ;
 				if(!categoryId.equals("null")){
 					List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
@@ -183,11 +184,11 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 						oldPath = oldPath + "/" + listPath.get(i);
 					}
 				}*/
-				String newPath = "FAQService" + "/" + categoryId ;
-				uiQuestions.setPath(newPath) ;
-				breadcumbs.setUpdataPath(newPath);
+				//String newPath = "FAQService" + "/" + categoryId ;
+				uiQuestions.setPath(categoryId) ;
+				breadcumbs.setUpdataPath(categoryId);
 				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
-				categories.setPathCategory(breadcumbs.getPaths());
+				categories.setPathCategory(categoryId);
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet.getChild(UIFAQContainer.class));
 				faqPortlet.cancelAction() ;
 			} catch (Exception e) {

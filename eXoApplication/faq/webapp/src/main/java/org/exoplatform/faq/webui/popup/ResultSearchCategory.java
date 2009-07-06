@@ -115,18 +115,18 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				return ;
 			}
-			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setIsNotChangeLanguage() ;
+			uiQuestions.setCategoryId(categoryId) ;
+			uiQuestions.setDefaultLanguage() ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-			breadcumbs.setUpdataPath(null) ;
+			//breadcumbs.setUpdataPath(null) ;
 			/*String oldPath = "" ;
 			List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
 			for(int i = listPath.size() -1 ; i >= 0; i --) {
 				oldPath = oldPath + "/" + listPath.get(i);
 			}*/
-			String newPath ="FAQService" + "/" + categoryId ;
-			uiQuestions.setPath(newPath) ;
-			breadcumbs.setUpdataPath(newPath);
+			//String newPath ="FAQService" + "/" + categoryId ;
+			//uiQuestions.setPath(newPath) ;
+			breadcumbs.setUpdataPath(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setPathCategory(breadcumbs.getPaths());

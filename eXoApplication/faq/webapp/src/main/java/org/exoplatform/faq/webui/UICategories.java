@@ -258,10 +258,10 @@ public class UICategories extends UIContainer{
 			UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
 			UIQuestions questions = container.getChild(UIQuestions.class);
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			if(questions.getCategoryId()!= null && questions.getCategoryId().equals(categoryId)) return;
+			//if(questions.getCategoryId()!= null && questions.getCategoryId().equals(categoryId)) return;
 			questions.pageSelect = 0;
 			questions.backPath_ = "" ;
-			questions.language_ = "";
+			questions.language_ = FAQUtils.getDefaultLanguage();
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			try {
 				questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
@@ -270,7 +270,7 @@ public class UICategories extends UIContainer{
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				questions.setIsNotChangeLanguage();
+				questions.setDefaultLanguage();
 				event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 				return ;
 			}
@@ -413,7 +413,7 @@ public class UICategories extends UIContainer{
 			UICategories uiCategories = event.getSource() ;
 			UIFAQContainer container = uiCategories.getParent() ;
 			UIQuestions questions = container.getChild(UIQuestions.class);
-			questions.isChangeLanguage = false ;
+			//questions.isChangeLanguage = false ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = uiCategories.getAncestorOfType(UIFAQPortlet.class) ;
 			if(!uiCategories.faqService_.isExisting(categoryId)){

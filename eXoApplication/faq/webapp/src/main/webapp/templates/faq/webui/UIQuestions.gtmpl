@@ -24,7 +24,7 @@
 	String url = uicomponent.url("Setting", "OBJECTID");
 	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
-	uicomponent.getQuestions(); 
+	//uicomponent.getQuestions(); 
 	
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
 %>
@@ -224,7 +224,7 @@
 				} else {
 					questionActions = uicomponent.getActionQuestionWithUser();
 				}
-				List listQuestion = uicomponent.getListQuestion();
+				Question[] listQuestion = uicomponent.getListQuestion();
 				String questionContent = new String();
 				int questionIndex = 0 ;
 				
@@ -349,8 +349,8 @@
 						
 				<!-- ============================================== View Question which is selected ===================================== -->
 				<%} else {
-						List listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
-						questionContent = question.getQuestion();
+						String[] listQuestLanguage = uicomponent.getQuestionLangauges(question.getPath());
+						questionContent = uicomponent.getQuestionContent();
 						String responseBy = "..." ;
 						String date = "..." ;
 						//if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
@@ -407,15 +407,15 @@
 																					<%
 																						int countLanguage = 1;
 																						for(String quesLanguage in listQuestLanguage) {
-																							String linkView = uicomponent.event("ChangeLanguage", questionIndex + "/" + quesLanguage);
+																							String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
 																							String color = "";
-																							if(quesLanguage.equals(question.getLanguage())){
+																							if(quesLanguage.equals(uicomponent.language_)){
 																								linkView = "javaScript:void(0)";
 																								color = "#914ab6";
 																							}
 																					%>
 																							<a style="line-height:20px;color:$color;" href="$linkView">$quesLanguage</a>
-																					<%	if(countLanguage < listQuestLanguage.size()){%>
+																					<%	if(countLanguage < listQuestLanguage.length){%>
 																								 |
 																						<%} else {%>
 																								&nbsp;
@@ -723,9 +723,9 @@
 										
 										<!-- ===================================== View response content ==================================================== -->
 										<% 
-										List answers = uicomponent.getPageListAnswer(question.getPath());
+										Answer[] answers = uicomponent.getPageListAnswer(question.getPath());
 										String classResponsse = "";
-										if(answers.size() > 0)classResponsse = "ResponseExternal";
+										if(answers != null && answers.length > 0)classResponsse = "ResponseExternal";
 										%>
 										<div class="ResponseContent">
 										
@@ -868,7 +868,7 @@
 												<!-- -------------------------------------- View all answer for this question ----------------------------------- -->
 												<div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;">
 													<%
-													if(answers != null && !answers.isEmpty()){
+													if(answers != null && answers.length > 0){
 														String actionAnswer = "";
 														int i = 0;
 														for(Answer answer in answers) {
@@ -1033,9 +1033,9 @@
 												<%
 												if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 													boolean canEditComment = false;
-													List comments = uicomponent.getPageListComment(question.getPath());
+													Comment[] comments = uicomponent.getPageListComment(question.getPath());
 													String classComment = "";
-													if(comments.size() > 0) {
+													if(comments.length > 0) {
 														classComment = "CommentExternal";
 												%>
 														<div class="TitleCommentContent">

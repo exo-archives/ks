@@ -235,6 +235,9 @@ public class MultiLanguages {
   }
   
   private static Node getLanguageNodeByLanguage(Node questionNode, String language) throws Exception{
+  	if(language.equals(questionNode.getProperty("exo:language").getString())) {
+  		return questionNode ;
+  	}
   	NodeIterator nodeIterator = questionNode.getNode(Utils.LANGUAGE_HOME).getNodes();
   	Node languageNode = null;
   	while(nodeIterator.hasNext()){
@@ -300,16 +303,97 @@ public class MultiLanguages {
   }
   
   public static QuestionLanguage getQuestionLanguageByLanguage(Node questionNode, String language) throws Exception{
-  	QuestionLanguage questionLanguage = new QuestionLanguage();
-  	questionLanguage.setLanguage(language);
+  	//QuestionLanguage questionLanguage = new QuestionLanguage();
+  	//questionLanguage.setLanguage(language);
   	Node languageNode = getLanguageNodeByLanguage(questionNode, language);
-  	questionLanguage.setId(languageNode.getName());
+  	/*questionLanguage.setId(languageNode.getName());
   	questionLanguage.setLanguage(languageNode.getProperty("exo:language").getString());
   	questionLanguage.setDetail(languageNode.getProperty("exo:name").getString());
-  	questionLanguage.setQuestion(languageNode.getProperty("exo:title").getString());
-  	
-  	return questionLanguage;
+  	questionLanguage.setQuestion(languageNode.getProperty("exo:title").getString());*/  	
+  	return getQuestionLanguage(languageNode);
   }
+  
+  private static QuestionLanguage getQuestionLanguage(Node questionNode) throws Exception{
+  	QuestionLanguage questionLanguage = new QuestionLanguage() ;
+  	questionLanguage.setState(QuestionLanguage.VIEW) ;
+    questionLanguage.setId(questionNode.getName()) ;
+    questionLanguage.setLanguage(questionNode.getProperty("exo:language").getValue().getString());
+    questionLanguage.setQuestion(questionNode.getProperty("exo:title").getValue().getString());
+    if(questionNode.hasProperty("exo:name")) questionLanguage.setDetail(questionNode.getProperty("exo:name").getValue().getString());
+    Comment[] comments = getComment(questionNode);
+    Answer[] answers = getAnswers(questionNode);
+    questionLanguage.setComments(comments);
+    questionLanguage.setAnswers(answers);
+    return questionLanguage ;
+  }
+  
+  private static Comment[] getComment(Node questionNode) throws Exception{
+		try{
+			if(!questionNode.hasNode(Utils.COMMENT_HOME)) return new Comment[]{};
+			NodeIterator nodeIterator = questionNode.getNode(Utils.COMMENT_HOME).getNodes();
+			Comment[] comments = new Comment[(int) nodeIterator.getSize()];
+			Node commentNode = null;
+			int i = 0;
+			while(nodeIterator.hasNext()){
+				commentNode = nodeIterator.nextNode();
+				comments[i] = getCommentByNode(commentNode);
+				i ++;
+			}
+			return comments;
+		} catch (Exception e){
+			e.printStackTrace();
+			return new Comment[]{};
+		}
+	}
+  
+  private static Comment getCommentByNode(Node commentNode) throws Exception {
+		Comment comment = new Comment();
+		comment.setId(commentNode.getName()) ;
+		if(commentNode.hasProperty("exo:comments")) comment.setComments((commentNode.getProperty("exo:comments").getValue().getString())) ;
+		if(commentNode.hasProperty("exo:commentBy")) comment.setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;		
+		if(commentNode.hasProperty("exo:dateComment")) comment.setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+		if(commentNode.hasProperty("exo:fullName")) comment.setFullName((commentNode.getProperty("exo:fullName").getValue().getString())) ;
+		if(commentNode.hasProperty("exo:postId")) comment.setPostId(commentNode.getProperty("exo:postId").getString()) ;
+		return comment;
+	}
+  
+  private static Answer[] getAnswers(Node questionNode) throws Exception{
+		try{
+			if(!questionNode.hasNode(Utils.ANSWER_HOME)) return new Answer[]{};
+			NodeIterator nodeIterator = questionNode.getNode(Utils.ANSWER_HOME).getNodes();
+			List<Answer> answers = new ArrayList<Answer>();
+			Answer ans;
+			String language = questionNode.getProperty("exo:language").getString() ;
+			while(nodeIterator.hasNext()){
+				try{
+					ans = getAnswerByNode(nodeIterator.nextNode());
+					ans.setLanguage(language) ;
+					answers.add(ans);
+				}catch(Exception e){}				
+			}
+			return answers.toArray(new Answer[]{});
+		} catch (Exception e){
+			e.printStackTrace() ;
+		}
+		return new Answer[]{};
+	}
+  
+  private static Answer getAnswerByNode(Node answerNode) throws Exception {
+		Answer answer = new Answer();
+		answer.setId(answerNode.getName()) ;
+		if(answerNode.hasProperty("exo:responses")) answer.setResponses((answerNode.getProperty("exo:responses").getValue().getString())) ;
+		if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;		
+		if(answerNode.hasProperty("exo:fullName")) answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString())) ;		
+		if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
+		if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+		if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong()) ;
+		if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers(answerNode.getProperty("exo:approveResponses").getValue().getBoolean()) ;
+		if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers(answerNode.getProperty("exo:activateResponses").getValue().getBoolean()) ;
+		if(answerNode.hasProperty("exo:postId")) answer.setPostId(answerNode.getProperty("exo:postId").getString()) ;
+		String path = answerNode.getPath() ;
+		answer.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+		return answer;
+	}
   
   public static Comment getCommentById(Node questionNode, String commentId, String language) throws Exception{
   	try{
@@ -404,7 +488,9 @@ public class MultiLanguages {
     	answerNode.setProperty("exo:dateResponse", calendar) ;
     	answerNode.setProperty("exo:id", answer.getId());
     	answerNode.setProperty("exo:questionId", questionNode.getName()) ;    	
+    	answerNode.setProperty("exo:responseLanguage", language) ;
     	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;
+    	
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());

@@ -115,7 +115,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIFAQContainer faqContainer = portlet.getChild(UIFAQContainer.class);
-			faqContainer.getChild(UIQuestions.class).setIsNotChangeLanguage() ;
+			faqContainer.getChild(UIQuestions.class).setDefaultLanguage() ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

@@ -298,7 +298,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModerators(users) ;
 			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;			 
 			faqPortlet.cancelAction() ;
-			questions.setQuestions() ; //?
+			//questions.setQuestions() ; //?
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
 			return ;
 

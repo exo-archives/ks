@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
@@ -42,10 +41,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.resources.LocaleConfig;
-import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -155,15 +151,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	
 	private void setListSystemLanguages() throws Exception{
 		listSystemLanguages.clear();
-		LocaleConfigService configService = getApplicationComponent(LocaleConfigService.class) ;
-    for(Object object:configService.getLocalConfigs()) {      
-      LocaleConfig localeConfig = (LocaleConfig)object ;
-      Locale locale = localeConfig.getLocale() ;
-      String displayName = locale.getDisplayLanguage() ;
-      if(displayName.equals(defaultLanguage_))
-      	listSystemLanguages.add(new SelectItemOption<String>(displayName + " (default) ", displayName)) ;
+		List<String> languages = FAQUtils.getAllLanguages(this) ;
+    for(String lang : languages) {      
+      if(lang.equals(defaultLanguage_))
+      	listSystemLanguages.add(new SelectItemOption<String>(lang + " (default) ", lang)) ;
       else
-      	listSystemLanguages.add(new SelectItemOption<String>(displayName, displayName)) ;
+      	listSystemLanguages.add(new SelectItemOption<String>(lang, lang)) ;
     }
 	}
 
@@ -290,9 +283,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   public void setCategoryId(String categoryId) {
     this.categoryId_ = categoryId ;
     questionId_ = null ;
-    
-    WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-    defaultLanguage_ = context.getLocale().getDisplayLanguage();
+    defaultLanguage_ = FAQUtils.getDefaultLanguage() ;
     lastLanguage_ = defaultLanguage_;
     initPage(false) ;
   }
@@ -511,8 +502,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 			url = url.substring(0, url.indexOf("/")) ;
 			url = "http://" + url;
 			String path = "" ;
-			if(FAQUtils.isFieldEmpty(questionForm.questionId_)) path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.getCategoryId() ;
-			else path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;
+			/*if(FAQUtils.isFieldEmpty(questionForm.questionId_)) path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.getCategoryId() ;
+			else path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;*/
 			link = link.replaceFirst("OBJECTID", path);
 			link = url + link;
       question_.setLink(link) ;
@@ -536,7 +527,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 								topic.setDescription(question_.getDetail());
 								topic.setIsWaiting(true);
 								forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
-								System.out.println("\n\n ==========>" + ids[t - 3] + " / " + ids[t - 2]);
+								//System.out.println("\n\n ==========>" + ids[t - 3] + " / " + ids[t - 2]);
 							}
             } catch (Exception e) {
               e.printStackTrace();
@@ -566,7 +557,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        questions.setIsNotChangeLanguage() ;
+        questions.setDefaultLanguage();
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;       

@@ -193,27 +193,18 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
         UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-        uiQuestions.setIsNotChangeLanguage();
+        uiQuestions.setDefaultLanguage();
         UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
         return ;
       }
-			uiQuestions.setCategories(categoryId) ;
-			uiQuestions.setIsNotChangeLanguage() ;
+			uiQuestions.setCategoryId(categoryId) ;
 	    UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-	    UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
-	    breadcumbs.setUpdataPath(null) ;
-      /*String oldPath = "" ;
-	    List<String> listPath = faqService_.getCategoryPath(sessionProvider, categoryId) ;
-	    for(int i = listPath.size() -1 ; i >= 0; i --) {
-	    	oldPath = oldPath + "/" + listPath.get(i);
-	    }*/
-	    String newPath = "FAQService/" + categoryId ;
-	    uiQuestions.setPath(newPath) ;
-	    breadcumbs.setUpdataPath(newPath) ;
-			categories.setPathCategory(breadcumbs.getPaths());
+	    UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);	    
+	    breadcumbs.setUpdataPath(categoryId) ;
+			categories.setPathCategory(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
@@ -231,7 +222,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         UIQuestions uiQuestions =  uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-        uiQuestions.setIsNotChangeLanguage();
+        //uiQuestions.setIsNotChangeLanguage();
         UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

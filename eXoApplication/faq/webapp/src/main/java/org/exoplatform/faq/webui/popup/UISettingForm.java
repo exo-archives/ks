@@ -503,7 +503,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			UISettingForm settingForm = event.getSource() ;		
 			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-			uiQuestions.setIsNotChangeLanguage();
+			uiQuestions.setDefaultLanguage();
 			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 			uiPopupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;

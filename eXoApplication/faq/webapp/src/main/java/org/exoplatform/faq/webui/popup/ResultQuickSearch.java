@@ -112,8 +112,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				return ;
 			}
-			uiQuestions.setCategories(id) ;
-			uiQuestions.setIsNotChangeLanguage() ;
+			uiQuestions.setCategoryId(id) ;
+			uiQuestions.setDefaultLanguage();
 			uiQuestions.setPath(id) ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;				
 			breadcumbs.setUpdataPath(id);
@@ -137,8 +137,8 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				//uiQuestions.pageList.setObjectId(id.substring(id.lastIndexOf("/") + 1));
 				String categoryId = faqService.getCategoryPathOf(id) ; 
-				uiQuestions.setCategories(categoryId) ;
-				uiQuestions.setIsNotChangeLanguage() ;
+				uiQuestions.setCategoryId(categoryId) ;
+				uiQuestions.setDefaultLanguage() ; 
 				uiQuestions.viewingQuestionId_ = id ;
 				uiQuestions.setPath(categoryId) ;
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;

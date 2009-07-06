@@ -96,7 +96,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
     	UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      questions.setIsNotChangeLanguage() ;
+      //questions.setIsNotChangeLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -122,7 +122,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-			questions.setIsNotChangeLanguage() ;
+			//questions.setIsNotChangeLanguage() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

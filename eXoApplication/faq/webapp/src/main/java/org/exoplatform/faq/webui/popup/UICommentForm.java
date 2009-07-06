@@ -198,7 +198,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							post.setIsApproved(false);
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
-								System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
+								//System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
 	            } catch (Exception e) {
 	              e.printStackTrace();
 	            }
@@ -243,7 +243,8 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-      questions.setIsNotChangeLanguage() ;
+			questions.updateCurrentLanguage() ;
+      //questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

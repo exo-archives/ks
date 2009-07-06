@@ -144,7 +144,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				currentLanguage = languageViewed ;
 			} else {
 				currentLanguage = question.getLanguage();
-			}
+			}			
 			this.setListRelation();
 		} catch (Exception e) {
 			e.printStackTrace() ;
@@ -357,6 +357,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
 			    }									
 				}	
+	      //TODO: move getURL to Utils
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
 				url = url.replaceFirst("http://", "") ;
@@ -395,17 +396,18 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 				//cancel
 				if(!responseForm.isChildOfQuestionManager_) {
-					uiQuestions.setIsNotChangeLanguage() ;
+					uiQuestions.updateCurrentLanguage() ;
+					uiQuestions.setLanguageView(responseForm.currentLanguage) ;
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ; 
-					if(!uiQuestions.getCategoryId().equals(question_.getCategoryId())) {
+					/*if(!uiQuestions.getCategoryId().equals(question_.getCategoryId())) {
 						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
 						//Category category = faqService.getCategoryById(question_.getCategoryId()) ;
 						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{""}, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					}
+					}*/
 				} else {
 					UIQuestionManagerForm questionManagerForm = responseForm.getParent() ;
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;

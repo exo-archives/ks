@@ -137,7 +137,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					url = url.replaceFirst("http://", "") ;
 					url = url.substring(0, url.indexOf("/")) ;
 					url = "http://" + url;
-					String path = questions.getPathService(question.getCategoryId()) + "/" + question.getCategoryId() ;
+					String path = question.getCategoryId() ;
 					link = link.replaceFirst("OBJECTID", path);
 					link = url + link;
 					question.setLink(link);
@@ -155,7 +155,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			questions.setIsNotChangeLanguage() ;
+			questions.setDefaultLanguage() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

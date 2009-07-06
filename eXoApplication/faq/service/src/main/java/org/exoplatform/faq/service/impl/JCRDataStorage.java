@@ -583,7 +583,7 @@ public class JCRDataStorage {
     	Node questionNode = getFAQServiceHome(sProvider).getNode(questionId) ;
     	try {
     		listQuestionLanguage.add(getQuestionLanguage(questionNode)) ;
-      }catch (Exception e){}
+      }catch (Exception e){ e.printStackTrace() ;}
       if(questionNode.hasNode(Utils.LANGUAGE_HOME)) {
         Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
         NodeIterator nodeIterator = languageNode.getNodes() ;
@@ -925,7 +925,7 @@ public class JCRDataStorage {
 		return null;
 	}
 	
-	public Comment[] getComment(Node questionNode) throws Exception{
+	private Comment[] getComment(Node questionNode) throws Exception{
 		try{
 			if(!questionNode.hasNode(Utils.COMMENT_HOME)) return new Comment[]{};
 			NodeIterator nodeIterator = questionNode.getNode(Utils.COMMENT_HOME).getNodes();

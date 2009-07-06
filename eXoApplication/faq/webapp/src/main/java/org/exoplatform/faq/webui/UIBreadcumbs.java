@@ -98,18 +98,16 @@ public class UIBreadcumbs extends UIContainer {
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
-			String categoryId = null;
 			try{
-				if(!paths.equals("FAQService")){
-					uiQuestions.setPath(paths) ;
-					categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
-					uiQuestions.backPath_ = "" ;
-					uiQuestions.language_ = "";
-				}
-				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(categoryId);
+				System.out.println("paths ===>" + paths);
+				//uiQuestions.setPath(paths) ;
+				//categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+				uiQuestions.backPath_ = "" ;
+				uiQuestions.language_ = FAQUtils.getDefaultLanguage();				
+				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);
-				uiQuestions.setCategories(categoryId) ;
+				uiQuestions.setCategoryId(paths) ;
 			} catch(Exception e){
 				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;

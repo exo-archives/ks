@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -50,8 +51,12 @@ import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
+import org.exoplatform.services.resources.LocaleConfig;
+import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
+import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormInputBase;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
@@ -75,6 +80,19 @@ public class FAQUtils {
 		return (FAQService)PortalContainer.getComponent(FAQService.class) ;
 	}
 	
+	public static String getDefaultLanguage() {
+		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+    return context.getLocale().getDisplayLanguage();
+	}
+	
+	public static List <String> getAllLanguages(UIComponent component) {
+		LocaleConfigService configService = component.getApplicationComponent(LocaleConfigService.class) ;
+		List<String> languages = new ArrayList<String>() ;
+    for(LocaleConfig localeConfig : configService.getLocalConfigs()) {      
+      languages.add(localeConfig.getLocale().getDisplayLanguage()) ;
+    }
+    return languages ;
+	}
 	/**
 	 * Find category which is already exist.<br/>
 	 * for example: when you are standing in category D in path: Root\A\B\C\D, you do some action
@@ -114,7 +132,7 @@ public class FAQUtils {
 				} else {
 					questions.categoryId_ = null ;
 					questions.setListObject();
-					questions.setIsNotChangeLanguage() ;
+					//questions.setIsNotChangeLanguage() ;
 				}
 				((UICategories)fAQContainer.findFirstComponentOfType(UICategories.class)).setPathCategory(pathCate);
 				break;
@@ -338,10 +356,10 @@ public class FAQUtils {
 		return res.getString(resourceBundl);
 	}
 	
-	public static String[] getQuestionLanguages() {
+	/*public static String[] getQuestionLanguages() {
 
 		return null ;
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	public static Map prepareMap(List inputs, Map properties) throws Exception {
