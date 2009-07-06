@@ -202,6 +202,66 @@ public class UIBreadcumbs extends UIContainer {
 		return breadcumbs_ ;
 	}
 	
+	private boolean isInArray(String []strs){
+		if(strs != null && strs.length > 0 && !strs[0].equals(" ")) return true;//private
+		else  return false;
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean checkLinkPrivate(String id) throws Exception {
+		boolean isPrivate = false;
+		if(id.indexOf(Utils.TOPIC) >= 0) {
+			try {
+				Topic topic = (Topic)this.forumService.getObjectNameById(id, Utils.TOPIC);
+				if(topic != null) {
+					if(topic.getIsClosed() || !topic.getIsActiveByForum() || !topic.getIsActive() || topic.getIsWaiting() || (isInArray(topic.getCanView()))){
+						isPrivate = true;
+					}
+					if(!isPrivate) {
+						String path = topic.getPath();
+						id = path.substring(path.lastIndexOf(Utils.FORUM), path.indexOf(Utils.TOPIC)-1);
+						Forum forum = (Forum)this.forumService.getObjectNameById(id, Utils.FORUM);
+						if(forum.getIsClosed()) isPrivate = true;
+						if(!isPrivate) {
+							id = path.substring(path.indexOf(Utils.CATEGORY), path.lastIndexOf(Utils.FORUM)-1);
+							Category cate = (Category)this.forumService.getObjectNameById(id, Utils.CATEGORY);
+							if(isInArray(cate.getUserPrivate())){
+								isPrivate = true;
+							}
+						}
+					}
+				}
+      } catch (Exception e) {
+      	e.printStackTrace();
+      }
+		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
+			try {
+				Category cate = (Category)this.forumService.getObjectNameById(id, Utils.CATEGORY);
+				if(isInArray(cate.getUserPrivate())){
+					isPrivate = true;
+				}
+      } catch (Exception e) {
+      	e.printStackTrace();
+      }
+		}else if(id.indexOf(Utils.FORUM) == 0){
+      try {
+				Forum forum = (Forum)this.forumService.getObjectNameById(id, Utils.FORUM);
+				if(forum.getIsClosed()) isPrivate = true;
+				if(!isPrivate) {
+					String path = forum.getPath();
+					path = path.substring(path.indexOf(Utils.CATEGORY), path.lastIndexOf(Utils.FORUM)-1);
+					Category cate = (Category)this.forumService.getObjectNameById(path, Utils.CATEGORY);
+					if(isInArray(cate.getUserPrivate())){
+						isPrivate = true;
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return isPrivate;
+	}
+	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs breadcums = event.getSource() ;
