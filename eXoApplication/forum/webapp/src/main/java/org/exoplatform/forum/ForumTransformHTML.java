@@ -494,7 +494,7 @@ public class ForumTransformHTML {
 	public static String convertCodeHTML(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
-		s = StringUtils.replace(s, "\n", "");
+		s = StringUtils.replace(s, "\n", "<br/>");
 		s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 		s = s.replaceFirst("(<br/>)*", "");
 	//	s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
@@ -559,7 +559,6 @@ public class ForumTransformHTML {
 	public static String enCodeHTML(String s) {
 		StringBuffer buffer = new StringBuffer();
 		if(s != null) {
-			s = StringUtils.replace(s, "\n", "");
 			s = s.replaceAll("(<p>((\\&nbsp;)*)(\\s*)?</p>)|(<p>((\\&nbsp;)*)?(\\s*)</p>)", "<br/>").trim();
 			s = s.replaceFirst("(<br/>)*", "");
 			s = s.replaceAll("(\\w|\\$)(>?,?\\.?\\*?\\!?\\&?\\%?\\]?\\)?\\}?)(<br/><br/>)*", "$1$2");
