@@ -3074,15 +3074,16 @@ public class JCRDataStorage {
 			}
 			postNode.remove();
 			//update information: setPostCount, lastpost for Topic
-			long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
-			topicNode.setProperty("exo:postCount", topicPostCount);
-			long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
-			if (newNumberAttachs > numberAttachs)
-				newNumberAttachs = newNumberAttachs - numberAttachs;
-			else
-				newNumberAttachs = 0;
-			topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
-
+			if(!post.getIsHidden()) {
+				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
+				topicNode.setProperty("exo:postCount", topicPostCount);
+				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
+				if (newNumberAttachs > numberAttachs)
+					newNumberAttachs = newNumberAttachs - numberAttachs;
+				else
+					newNumberAttachs = 0;
+				topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
+			}
 			NodeIterator nodeIterator = topicNode.getNodes();
 			/*long last = nodeIterator.getSize() - 1;
 			nodeIterator.skip(last);*/
@@ -3096,8 +3097,17 @@ public class JCRDataStorage {
 			
 			//TODO: Thinking for update forum and user profile by node observation?
 			// setPostCount for Forum
-			long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
-			forumNode.setProperty("exo:postCount", forumPostCount);
+			if(!post.getIsHidden()) {
+				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
+				forumNode.setProperty("exo:postCount", forumPostCount);
+			}else {
+				List<String> list = new ArrayList<String>();
+				if (forumNode.hasProperty("exo:moderators")){
+					list.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+				}
+				list.addAll(getAllAdministrator(sProvider));
+				getTotalJobWatting(list);
+			}
 			forumNode.save();
 			return post;			
 		} catch (Exception e) {
