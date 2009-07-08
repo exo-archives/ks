@@ -837,18 +837,18 @@
 								</div>
 								<div class="CheckPost" style="float:right;">
 									<div class="PostTime" style="margin-right:4px;font-size:10px; color:gray; float:left;"><%=_ctx.appRes(uiformId + ".label.Posted");%>:$createdDate </div>
-								<%  
+								<%
 								   if(isShowIP) {
 								     String ip = post.getRemoteAddr();
 								     if(ip != null && ip.length() > 0) {
-									     String link2= uicomponent.event("BanIPThisForum", ip);
-									     String title1 = "Ban IP:"+ip+" this Forum";
+									     String link2 = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanIPThisForum") + "')){" + uicomponent.event("BanIPThisForum", ip).replaceFirst("javascript:", "") + ";}";
+									     String title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BanIP"),ip);
 									     if(uicomponent.isIPBaned(ip)){
-									   	   title1 = "IP: " +ip+ " is baned this Forum."
+									   	   title1 = ForumUtils.getLabel(_ctx.appRes("UITopicDetail.label.BannedIP"),ip);
 									   	   link2 ="javaScript:void(0);";
 									     }
 								%>
-									<div class="IPIcon" title="IP:$ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
+									<div class="IPIcon" title="IP: $ip" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
 										<% /*Begin Popup Menu*/ %>
 										<div style="position:relative;">
 											<div class="UIPopupCategory SearchPopup" style="display:none;">
@@ -870,7 +870,7 @@
 																		</div>
 																	<% 
 																		if(userProfile.getUserRole() == 0) {
-																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "'))" + uicomponent.event("BanIPAllForum", ip); 
+																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 
 																	%>
 																	<div class="MenuItem" onclick="$link">	 
 																		<div class="ItemIcon">

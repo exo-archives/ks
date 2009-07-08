@@ -26,8 +26,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -141,8 +139,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			} 
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			if(!ipManagerForm.forumService.addBanIPForum(sProvider, ipAdd, ipManagerForm.forumId)){
+			if(!ipManagerForm.forumService.addBanIPForum(ipAdd, ipManagerForm.forumId)){
 				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
@@ -170,8 +167,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		public void execute(Event<UIBanIPForumManagerForm> event) throws Exception {
 			UIBanIPForumManagerForm ipManagerForm = event.getSource();
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			ipManagerForm.forumService.removeBanIPForum(sProvider, ip, ipManagerForm.forumId);
+			ipManagerForm.forumService.removeBanIPForum(ip, ipManagerForm.forumId);
 			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 			topicContainer.setIdUpdate(true);
@@ -182,7 +178,10 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	static	public class CancelActionListener extends EventListener<UIBanIPForumManagerForm> {
 		public void execute(Event<UIBanIPForumManagerForm> event) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
+			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+			topicContainer.setIdUpdate(true);
 			forumPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 		}
 	}
 	

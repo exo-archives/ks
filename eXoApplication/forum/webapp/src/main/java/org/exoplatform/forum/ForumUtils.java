@@ -320,8 +320,8 @@ public class ForumUtils {
 		try {
 			return label.replaceFirst("<keyWord>", key) ;
     } catch (Exception e) {
-	    label = label.substring(0, label.indexOf("<keyWord>") - 1);
-	    return label + "'" + key + "'";
+    	String s = label.substring(0, label.indexOf("<keyWord>") - 1);
+	    return s + "'" + key + "'" + label.substring(label.indexOf("<keyWord>"));
     }
 	}
 	

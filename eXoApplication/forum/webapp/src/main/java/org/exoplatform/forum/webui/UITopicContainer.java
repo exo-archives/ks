@@ -416,7 +416,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				availablePost = this.forumService.getAvailablePost(this.categoryId, this.forumId, topic.getId(), isApprove, "false", userLogin)	;
 			}
-			long value = availablePost/maxPost;
+			long value = (availablePost+1)/maxPost;
 			if((value*maxPost) < availablePost) value = value + 1;
 			return value;
 		} else return 1;

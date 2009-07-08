@@ -2645,7 +2645,10 @@ public class JCRDataStorage {
 		String objectName = "";
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
+			try {
+				forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
+      } catch (Exception e) {
+      }
 			String content = "";
 			if (forumAdminNode != null) {
 				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
