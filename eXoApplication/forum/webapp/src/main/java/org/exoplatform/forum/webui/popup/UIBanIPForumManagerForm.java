@@ -147,9 +147,9 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
 			}
-//			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
-//			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-//			topicContainer.setIdUpdate(true);
+			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
+			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+			topicContainer.setIdUpdate(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(ipManagerForm) ;
 		}
 	}
@@ -172,9 +172,9 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			ipManagerForm.forumService.removeBanIPForum(sProvider, ip, ipManagerForm.forumId);
-//			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
-//			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-//			topicContainer.setIdUpdate(true);
+			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
+			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+			topicContainer.setIdUpdate(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(ipManagerForm) ;
 		}
 	}
