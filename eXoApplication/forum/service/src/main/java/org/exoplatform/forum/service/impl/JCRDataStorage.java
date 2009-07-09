@@ -3097,12 +3097,14 @@ public class JCRDataStorage {
 			}
 			topicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
 			topicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
+			forumNode.save();
 			
 			//TODO: Thinking for update forum and user profile by node observation?
 			// setPostCount for Forum
 			if(!post.getIsHidden()) {
 				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
 				forumNode.setProperty("exo:postCount", forumPostCount);
+				forumNode.save();
 			}else {
 				List<String> list = new ArrayList<String>();
 				if (forumNode.hasProperty("exo:moderators")){
@@ -3111,7 +3113,6 @@ public class JCRDataStorage {
 				list.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(list);
 			}
-			forumNode.save();
 			return post;			
 		} catch (Exception e) {
 			return null;
@@ -3808,9 +3809,28 @@ public class JCRDataStorage {
 			} else if(ip != null) {
 				userProfile.setIsBanned(isBanIp(ip)) ;
 			}
-		}finally { sProvider.close() ;}		
+		}finally { sProvider.close() ;}
 		return userProfile ;
 	}
+	
+	public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception{
+			if (userProfile.getIsBanned()) {
+				SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+				try{
+					Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
+					if(profileNode.hasProperty("exo:banUntil")) {
+						userProfile.setBanUntil(profileNode.getProperty("exo:banUntil").getLong());
+						if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+							profileNode.setProperty("exo:isBanned", false);
+							profileNode.save();
+							userProfile.setIsBanned(false) ;
+						}
+					}
+				}finally { sProvider.close() ;}
+			}
+		return userProfile;
+	}
+	
 	
 	public String getScreenName(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;

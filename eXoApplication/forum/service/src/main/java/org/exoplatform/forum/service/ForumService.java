@@ -896,6 +896,7 @@ public interface ForumService extends ForumServiceLegacy{
   public UserProfile getQuickProfile(String userName) throws Exception ;
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception ;
   public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception ;
+  public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception ;
   public List<String> getBookmarks(String userName) throws Exception ;
   public UserProfile getUserSettingProfile(String userName) throws Exception  ;
   public UserProfile getUserProfileManagement(String userName) throws Exception ;

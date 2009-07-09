@@ -1044,6 +1044,10 @@ public class ForumServiceImpl implements ForumService, Startable{
   	return storage_.getDefaultUserProfile(userName, ip) ;
   }
   
+  public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception {
+  	return storage_.updateUserProfileSetting(userProfile);
+  }
+  
   public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
   	sProvider.close() ;
   	return getBookmarks(userName) ;

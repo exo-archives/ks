@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.portlet.ActionResponse;
@@ -208,7 +209,7 @@ public class UIBreadcumbs extends UIContainer {
 		return breadcumbs_ ;
 	}
 	
-	private boolean isInArray(String []strs){
+	private boolean isArrayNotNull(String []strs){
 		if(strs != null && strs.length > 0 && !strs[0].equals(" ")) return true;//private
 		else  return false;
 	}
@@ -220,7 +221,7 @@ public class UIBreadcumbs extends UIContainer {
 			try {
 				Topic topic = (Topic)this.forumService.getObjectNameById(id, Utils.TOPIC);
 				if(topic != null) {
-					if(topic.getIsClosed() || !topic.getIsActiveByForum() || !topic.getIsActive() || topic.getIsWaiting() || (isInArray(topic.getCanView()))){
+					if(topic.getIsClosed() || !topic.getIsActiveByForum() || !topic.getIsActive() || topic.getIsWaiting() || (isArrayNotNull(topic.getCanView()))){
 						isPrivate = true;
 					}
 					if(!isPrivate) {
@@ -231,7 +232,7 @@ public class UIBreadcumbs extends UIContainer {
 						if(!isPrivate) {
 							id = path.substring(path.indexOf(Utils.CATEGORY), path.lastIndexOf(Utils.FORUM)-1);
 							Category cate = (Category)this.forumService.getObjectNameById(id, Utils.CATEGORY);
-							if(isInArray(cate.getUserPrivate())){
+							if(isArrayNotNull(cate.getUserPrivate())){
 								isPrivate = true;
 							}
 						}
@@ -243,7 +244,7 @@ public class UIBreadcumbs extends UIContainer {
 		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
 			try {
 				Category cate = (Category)this.forumService.getObjectNameById(id, Utils.CATEGORY);
-				if(isInArray(cate.getUserPrivate())){
+				if(isArrayNotNull(cate.getUserPrivate())){
 					isPrivate = true;
 				}
       } catch (Exception e) {
@@ -257,7 +258,7 @@ public class UIBreadcumbs extends UIContainer {
 					String path = forum.getPath();
 					path = path.substring(path.indexOf(Utils.CATEGORY), path.lastIndexOf(Utils.FORUM)-1);
 					Category cate = (Category)this.forumService.getObjectNameById(path, Utils.CATEGORY);
-					if(isInArray(cate.getUserPrivate())){
+					if(isArrayNotNull(cate.getUserPrivate())){
 						isPrivate = true;
 					}
 				}
@@ -267,6 +268,34 @@ public class UIBreadcumbs extends UIContainer {
 		}
 		return isPrivate;
 	}
+	
+	private boolean isInArray(String[] arr, String str) {
+		if(Arrays.asList(arr).contains(str)){
+    	return true;
+    }
+		return false;
+	}
+	
+	private boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
+		String[] viewer = cate.getUserPrivate();
+		String userId = userProfile.getUserId();
+		if(userProfile.getUserRole() == 0) return true;
+		if(isArrayNotNull(viewer)) {
+			if(!isInArray(viewer, userId)) {
+				return false;
+			}
+		}
+		if(forum != null){
+			if(isArrayNotNull(forum.getModerators()) && isInArray(forum.getModerators(), userId)) {
+				return true;
+			} else if(forum.getIsClosed()) return false;
+		}
+		if(topic != null) {
+			if(topic.getIsClosed()|| !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
+				 topic.getIsWaiting() || (isArrayNotNull(topic.getCanView()) && !isInArray(topic.getCanView(), userId))) return false;
+		}
+	  return true;
+  }
 	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		public void execute(Event<UIBreadcumbs> event) throws Exception {

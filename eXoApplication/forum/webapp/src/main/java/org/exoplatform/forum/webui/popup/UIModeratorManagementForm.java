@@ -594,7 +594,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	public void execute(Event<UIModeratorManagementForm> event) throws Exception {
   		UIModeratorManagementForm uiForm = event.getSource() ;
   		String userId = event.getRequestContext().getRequestParameter(OBJECTID);
-  		uiForm.userProfile = uiForm.getUserProfile(userId) ;
+  		uiForm.userProfile = uiForm.forumService.updateUserProfileSetting(uiForm.getUserProfile(userId));
   		uiForm.setUserAvatarURL(userId);
 	    uiForm.removeChildById("ForumUserProfile") ;
 	    uiForm.removeChildById("ForumUserOption") ;
