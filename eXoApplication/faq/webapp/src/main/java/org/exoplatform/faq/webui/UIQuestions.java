@@ -335,7 +335,8 @@ public class UIQuestions extends UIContainer {
 		}
 	}
 
-	public void setQuestions() throws Exception  {
+	public void updateCurrentQuestionList() throws Exception  {
+		questionMap_.clear() ;
 		pageSelect = pageIterator.getPageSelected() ;
 		//listQuestion_ = new ArrayList<Question>();
 		//listQuestion_.addAll(this.pageList.getPage(pageSelect, null));
@@ -349,7 +350,7 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
-		setListObject();
+		//setListObject();
 	}
 	
 	public void setFAQService(FAQService service){
@@ -501,6 +502,7 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		this.categoryId_ = categoryId ;
 		setListObject();
+		//setQuestions() ;
 		//setIsNotChangeLanguage();
 	}
 	

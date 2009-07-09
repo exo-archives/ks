@@ -266,6 +266,8 @@ public class UICategories extends UIContainer{
 			try {
 				questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
 				questions.setCategoryId(categoryId) ;
+				questions.updateCurrentQuestionList() ;
+				
 			} catch (Exception e) {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;

@@ -475,13 +475,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         	otherLang = questionForm.mapLanguage.get(language) ;
         	otherLang.setState(QuestionLanguage.EDIT) ;
         }
-        System.out.println("questionContent =======> " + questionContent) ;
+        //System.out.println("questionContent =======> " + questionContent) ;
         otherLang.setQuestion(questionContent) ;
         otherLang.setDetail(questionDetail) ;
         otherLang.setLanguage(language) ;
         questionForm.mapLanguage.put(language, otherLang) ;
       }
-      System.out.println("lang =======> " + questionForm.mapLanguage.keySet().size()) ;
+      //System.out.println("lang =======> " + questionForm.mapLanguage.keySet().size()) ;
       questionForm.mapLanguage.remove(question_.getLanguage()) ;
       question_.setMultiLanguages(questionForm.mapLanguage.values().toArray(new QuestionLanguage[]{})) ;
       question_.setAttachMent(questionForm.listFileAttach_) ;      
@@ -557,9 +557,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        questions.setDefaultLanguage();
-        //questions.setCategoryId(Utils.CATEGORY_HOME);
-        questions.setQuestions() ;
+        questions.setDefaultLanguage(); 
+        if(isNew){
+        	questions.updateCurrentQuestionList() ;
+        }else {
+        	questions.updateCurrentLanguage() ;
+        }
+        
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;       

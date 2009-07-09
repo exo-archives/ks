@@ -145,7 +145,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				//uiQuestions.pageList.setObjectId(questionId);
 				uiQuestions.setCategoryId(categoryId) ;
-				uiQuestions.setQuestions();
+				uiQuestions.updateCurrentQuestionList();
 				//uiQuestions.viewingQuestionId_ = questionId ;
 				uiQuestions.viewQuestion(question) ;
 				//int pos = 0 ;
