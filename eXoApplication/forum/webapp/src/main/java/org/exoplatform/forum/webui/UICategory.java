@@ -112,7 +112,6 @@ public class UICategory extends UIForm	{
 		return this.userProfile ;
 	}
 	
-  @SuppressWarnings("unused")
   private int getDayForumNewPost() {
 		return dayForumNewPost;
 	}
@@ -133,6 +132,13 @@ public class UICategory extends UIForm	{
 		this.isEditCategory = true ;
 		this.isEditForum = true ;
 	}
+
+	public void updateByLink(Category category) {
+		this.categoryId = category.getId() ;
+		this.isEditCategory = false ;
+		this.isEditForum = true ;
+	}
+	
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
@@ -149,7 +155,6 @@ public class UICategory extends UIForm	{
 		return this.category ;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean isShowForum(String id) {
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
@@ -160,7 +165,6 @@ public class UICategory extends UIForm	{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private List<Forum> getForumList() throws Exception {
 		if(this.isEditForum) {
 			String strQuery = "";
@@ -197,7 +201,6 @@ public class UICategory extends UIForm	{
 		this.isEditForum = isEdit ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Forum getForum(String forumId) throws Exception {
 		for(Forum forum : this.forums) {
 			if(forum.getId().equals(forumId)) return forum;
@@ -205,7 +208,6 @@ public class UICategory extends UIForm	{
 		return null ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Topic getLastTopic(String topicPath) throws Exception {
 		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		Topic topic;
