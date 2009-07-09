@@ -719,7 +719,7 @@ public class MultiLanguages {
   	List<String> newList = new ArrayList<String>() ;
   	double mark = 0 ;
   	for(String user : userList) {
-  		System.out.println("User ==>" + user);
+  		//System.out.println("User ==>" + user);
   		if(user.indexOf(userName + "/") == 0){
   			int number = Integer.parseInt(user.substring(user.indexOf("/") + 1)) ;
   			mark = questionNode.getProperty("exo:markVote").getDouble() ;
@@ -728,7 +728,7 @@ public class MultiLanguages {
   			newList.add(user) ;
   		}  		
   	}
-  	System.out.println("size ==>" + newList.size());
+  	//System.out.println("size ==>" + newList.size());
   	questionNode.setProperty("exo:markVote", mark) ;
 		questionNode.setProperty("exo:usersVote", newList.toArray(new String[]{})) ;
 		questionNode.save() ;		

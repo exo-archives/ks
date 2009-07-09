@@ -279,11 +279,7 @@
   		</propertyDefinition>
   		<propertyDefinition name="exo:index" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-  		</propertyDefinition>
-  		<!--add new property-->
-  		<!--propertyDefinition name="exo:categoryPath" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  			<valueConstraints/>
-  		</propertyDefinition-->		
+  		</propertyDefinition>  				
   	</propertyDefinitions>
   	<childNodeDefinitions>
       <childNodeDefinition name="*" defaultPrimaryType="exo:faqQuestionHome" autoCreated="false" mandatory="false"
@@ -323,7 +319,7 @@
     </childNodeDefinitions>
   </nodeType>
   
-  <nodeType name="exo:faqCategoryHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+  <!--nodeType name="exo:faqCategoryHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
    <supertypes>
     <supertype>nt:base</supertype>
    </supertypes>   
@@ -380,7 +376,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
     </childNodeDefinitions>
-  </nodeType>
+  </nodeType-->
   
   <nodeType name="exo:faqWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
     <propertyDefinitions>
@@ -459,17 +455,7 @@
         <requiredPrimaryTypes>
           <requiredPrimaryType>exo:questionLanguageHome</requiredPrimaryType>
         </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <!--childNodeDefinition name="*" defaultPrimaryType="exo:answerHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>exo:answerHome</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      <childNodeDefinition name="*" defaultPrimaryType="exo:commentHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>exo:commentHome</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition-->
+      </childNodeDefinition>      
     </childNodeDefinitions>
   </nodeType>
   
