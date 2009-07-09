@@ -358,7 +358,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 					faqSetting.setIdNameCategoryForum("");
 				}
 				faqSetting.setIsDiscussForum(isDiscus);
-				settingForm.idForumName.clear();
 				faqSetting.setEmailMoveQuestion(emailMoveQuestion);
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
