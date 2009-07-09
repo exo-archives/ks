@@ -1671,12 +1671,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			try {
-	      if(topicDetail.checkForumHasAddTopic(topicDetail.userProfile)){
-	      	
-	  			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
-	  			String message = textAreaInput.getValue() ;
-	  			String checksms = message ;
-	  			if(checksms != null && checksms.trim().length() > 0) {
+  			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
+  			String message = textAreaInput.getValue() ;
+  			String checksms = message ;
+  			if(message != null && message.trim().length() > 0) {
+  				if(topicDetail.checkForumHasAddTopic(topicDetail.userProfile)){
 	  				boolean isOffend = false ;
 	  				boolean hasTopicMod = false ;
 	  				if(!topicDetail.isMod) {
@@ -1762,16 +1761,19 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	  				}
 	  				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 	  			}else {
-	  				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-	  				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
+	  				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+	  				uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
+	  				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	  				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
 	  			}
-	      }else {
-	      	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
-	      }
+  			}else {
+  				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+  				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
+  				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", args, ApplicationMessage.WARNING)) ;
+  				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+  			}
       } catch (Exception e) {
+      	e.printStackTrace();
       	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
       	Object[] args = {""};
   			uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
@@ -1915,24 +1917,37 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class AddWatchingActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource();
-			topicDetail.isEditTopic = true;
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
-			List<String> values = new ArrayList<String>();
-			try {
-				values.add(topicDetail.userProfile.getEmail());
-				topicDetail.forumService.addWatch(1, buffer.toString(), values, topicDetail.userProfile.getUserId()) ;
-				Object[] args = { };
+			if(topicDetail.getTopic() != null) {
+				topicDetail.isEditTopic = true;
+				StringBuffer buffer = new StringBuffer();
+				buffer.append(topicDetail.categoryId).append("/").append(topicDetail.forumId).append("/").append(topicDetail.topicId) ;
+				List<String> values = new ArrayList<String>();
+				try {
+					values.add(topicDetail.userProfile.getEmail());
+					topicDetail.forumService.addWatch(1, buffer.toString(), values, topicDetail.userProfile.getUserId()) ;
+					Object[] args = { };
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				} catch (Exception e) {
+					e.printStackTrace();
+					Object[] args = { };
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				}
+			} else {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-			} catch (Exception e) {
-				e.printStackTrace();
-				Object[] args = { };
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
+				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				categoryContainer.updateIsRender(true) ;
+				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
+				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
 		}
 	}

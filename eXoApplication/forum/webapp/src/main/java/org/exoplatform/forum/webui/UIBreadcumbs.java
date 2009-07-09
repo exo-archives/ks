@@ -38,7 +38,12 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
+import org.exoplatform.portal.account.UIAccountSetting;
+import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
+import org.exoplatform.portal.webui.workspace.UIPortalApplication;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -60,6 +65,7 @@ import org.exoplatform.webui.event.EventListener;
 		template =	"app:/templates/forum/webui/UIBreadcumbs.gtmpl" ,
 		events = {
 				@EventConfig(listeners = UIBreadcumbs.ChangePathActionListener.class),
+				@EventConfig(listeners = UIBreadcumbs.AccountSettingsActionListener.class),
 				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
 		}
 )
@@ -398,4 +404,17 @@ public class UIBreadcumbs extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
+	
+	static public class AccountSettingsActionListener extends EventListener<UIBreadcumbs> {
+    public void execute(Event<UIBreadcumbs> event) throws Exception {
+      UIPortal uiPortal = Util.getUIPortal() ;
+      UIPortalApplication uiApp = uiPortal.getAncestorOfType(UIPortalApplication.class) ;
+      UIMaskWorkspace uiMaskWS = uiApp.getChildById(UIPortalApplication.UI_MASK_WS_ID) ;
+     
+      UIAccountSetting uiAccountForm = uiMaskWS.createUIComponent(UIAccountSetting.class, null, null) ;
+      uiMaskWS.setUIComponent(uiAccountForm) ;
+      uiMaskWS.setShow(true) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiMaskWS) ;
+    }
+  }
 }

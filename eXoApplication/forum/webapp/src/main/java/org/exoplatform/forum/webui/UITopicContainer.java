@@ -404,7 +404,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private long getSizePost(Topic topic) throws Exception {
 		long maxPost = userProfile.getMaxPostInPage() ;
 		if(maxPost <= 0) maxPost = 10;
-		if(topic.getPostCount() > maxPost) {
+		if(topic.getPostCount() >= maxPost) {
 			long availablePost = 0;
 			if(isModerator){
 				availablePost = topic.getPostCount()+1;
@@ -416,7 +416,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				availablePost = this.forumService.getAvailablePost(this.categoryId, this.forumId, topic.getId(), isApprove, "false", userLogin)	;
 			}
-			long value = (availablePost+1)/maxPost;
+			long value = (availablePost)/maxPost;
 			if((value*maxPost) < availablePost) value = value + 1;
 			return value;
 		} else return 1;
