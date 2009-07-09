@@ -120,7 +120,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	}
 	
 	public void setPathCatygory(List<String> idForumName) {
-		this.idForumName =  idForumName;
+		this.idForumName = new ArrayList<String>();
+		this.idForumName.addAll(idForumName);
 		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_CATEGORY_PATH_INPUT).setValue(idForumName.get(1));
 	}
 
@@ -168,7 +169,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			Discussion.addUIFormInput(enableDiscus);
 			UIFormStringInput categoryPath = new UIFormStringInput(FIELD_CATEGORY_PATH_INPUT, FIELD_CATEGORY_PATH_INPUT, null) ;
 			String pathCate = faqSetting_.getIdNameCategoryForum();
-			idForumName.clear();
+			idForumName = new ArrayList<String>();
 			if(pathCate.indexOf(";") > 0) {
 				this.idForumName.add(pathCate.substring(0,pathCate.indexOf(";")));
 				this.idForumName.add(pathCate.substring(pathCate.indexOf(";")+1));
@@ -286,7 +287,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 					faqSetting.setIdNameCategoryForum("");
 				}
 				faqSetting.setIsDiscussForum(isDiscus);
-				settingForm.idForumName.clear();
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
