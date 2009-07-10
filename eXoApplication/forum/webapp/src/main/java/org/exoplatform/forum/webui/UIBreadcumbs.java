@@ -286,7 +286,7 @@ public class UIBreadcumbs extends UIContainer {
 									forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 								}
 							} else {
-								uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{Utils.TOPIC}, ApplicationMessage.WARNING)) ;
+								uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{ForumUtils.THREAD}, ApplicationMessage.WARNING)) ;
 								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 								UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 								categoryContainer.updateIsRender(true) ;
@@ -315,7 +315,7 @@ public class UIBreadcumbs extends UIContainer {
 							categoryContainer.updateIsRender(false) ;
 							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						} else {
-							uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{Utils.CATEGORY}, ApplicationMessage.WARNING)) ;
+							uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{ForumUtils.CATEGORY}, ApplicationMessage.WARNING)) ;
 							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 							categoryContainer.updateIsRender(true) ;
 							categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
@@ -365,7 +365,7 @@ public class UIBreadcumbs extends UIContainer {
 						}
 					}catch(Exception e) {
 						e.printStackTrace();
-						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[]{Utils.FORUM}, ApplicationMessage.WARNING)) ;
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[]{ForumUtils.FORUM}, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 						categoryContainer.updateIsRender(true) ;
 						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
