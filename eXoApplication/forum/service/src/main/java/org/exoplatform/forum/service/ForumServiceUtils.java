@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,10 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.cache.CacheService;
+import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -51,7 +55,12 @@ public class ForumServiceUtils {
 
 	@SuppressWarnings("unchecked")
 	public static List<String> getUserPermission(String[] userGroupMembership) throws Exception {
-		List<String> users = new ArrayList<String> () ;
+		List<String> users = getFromCache(userGroupMembership);
+		if (users != null) {
+			return users;
+		}
+		users = new ArrayList<String> () ;
+		
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
@@ -96,8 +105,52 @@ public class ForumServiceUtils {
 				}
 			}
 		}
+		storeInCache(userGroupMembership, users);
 		return users ;
 	}
+	
+	/**
+	 * Store the list of user for the permission expressions in cache
+	 * @param userGroupMembership
+	 * @param users
+	 * @throws Exception
+	 */
+	private static void storeInCache(String[] userGroupMembership,
+			List<String> users) throws Exception {
+		ExoCache cache = getCache();
+		Serializable cacheKey = getCacheKey(userGroupMembership);
+		System.out.println("Caching users for " + cacheKey);
+		cache.put(cacheKey, users);
+	}
+
+	/**
+	 * Load a list of user for the permission expressions in cache
+	 * @param userGroupMembership
+	 * @return
+	 * @throws Exception
+	 */
+	private static List<String> getFromCache(String[] userGroupMembership) throws Exception{
+		ExoCache cache = getCache();
+		List<String> result = new ArrayList<String>();
+		if (userGroupMembership == null) return null;
+		Serializable cacheKey = getCacheKey(userGroupMembership);
+		return  (List<String>) cache.get(cacheKey);
+	}
+
+	private static Serializable getCacheKey(String[] userGroupMembership) {
+		StringBuilder sb = new StringBuilder();
+		for (String item : userGroupMembership) {
+			sb.append("#").append(item);
+		}
+		return sb.toString();
+	}
+
+	private static ExoCache getCache() throws Exception {
+		CacheService cacheService = (CacheService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(CacheService.class);
+		return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
+	}
+
+	
 	
 	public static void reparePermissions(Node node, String owner) throws Exception {
 		ExtendedNode extNode = (ExtendedNode)node ;
