@@ -148,6 +148,12 @@ public class UICategory extends UIForm	{
 		this.isEditCategory = true ;
 		this.isEditForum = true ;
 	}
+
+	public void updateByLink(Category category) {
+		this.categoryId = category.getId() ;
+		this.isEditCategory = false ;
+		this.isEditForum = true ;
+	}
 	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {

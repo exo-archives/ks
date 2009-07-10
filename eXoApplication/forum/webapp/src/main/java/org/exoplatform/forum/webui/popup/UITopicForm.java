@@ -331,7 +331,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
 			Post post = forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
-			if(post.getAttachments() != null && post.getAttachments().size() > 0) {
+			if(post != null && post.getAttachments() != null && post.getAttachments().size() > 0) {
 				this.attachments_ = post.getAttachments();
 				this.refreshUploadFileList();
 			}

@@ -1009,7 +1009,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-				topicForm.setUpdateTopic(topicDetail.topic, true) ;
+				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
 				topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole()) ;
 				topicForm.setMod(topicDetail.isMod) ;
 				popupContainer.setId("UIEditTopicContainer") ;
@@ -1017,6 +1017,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				topicDetail.isEditTopic = true ;
 			} catch (Exception e) {
+				e.printStackTrace();
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

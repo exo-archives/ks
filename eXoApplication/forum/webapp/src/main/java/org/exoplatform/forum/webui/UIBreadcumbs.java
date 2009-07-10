@@ -70,8 +70,8 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIBreadcumbs.RssActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
-	@SuppressWarnings("unused")
   private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
@@ -89,7 +89,6 @@ public class UIBreadcumbs extends UIContainer {
 		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;
 	}
 
-	@SuppressWarnings("unused")
   private void setIsUseAjax() throws Exception{
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		userProfile = forumPortlet.getUserProfile();
@@ -188,23 +187,19 @@ public class UIBreadcumbs extends UIContainer {
 		this.isOpen = isOpen;
 	}
 	
-	@SuppressWarnings("unused")
   private String getToolTip() {
 		return tooltipLink ;
 	}
-	@SuppressWarnings("unused")
 	private boolean isLink() {return this.isLink;}
-	@SuppressWarnings("unused")
+	
 	private String getPath(int index) {
 		return this.path_.get(index) ;
 	}
 	
-	@SuppressWarnings("unused")
 	private int getMaxPath() {
 		return breadcumbs_.size() ;
 	}
 	
-	@SuppressWarnings("unused")
 	private List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
@@ -214,7 +209,6 @@ public class UIBreadcumbs extends UIContainer {
 		else  return false;
 	}
 	
-	@SuppressWarnings("unused")
   private boolean checkLinkPrivate(String id) throws Exception {
 		boolean isPrivate = false;
 		if(id.indexOf(Utils.TOPIC) >= 0) {
@@ -278,6 +272,7 @@ public class UIBreadcumbs extends UIContainer {
 	
 	private boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
 		String[] viewer = cate.getUserPrivate();
+		if(userProfile == null) setIsUseAjax();
 		String userId = userProfile.getUserId();
 		if(userProfile.getUserRole() == 0) return true;
 		if(isArrayNotNull(viewer)) {
@@ -291,7 +286,7 @@ public class UIBreadcumbs extends UIContainer {
 			} else if(forum.getIsClosed()) return false;
 		}
 		if(topic != null) {
-			if(topic.getIsClosed()|| !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
+			if(topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
 				 topic.getIsWaiting() || (isArrayNotNull(topic.getCanView()) && !isInArray(topic.getCanView(), userId))) return false;
 		}
 	  return true;
@@ -333,48 +328,59 @@ public class UIBreadcumbs extends UIContainer {
 							id = path.split("/") ;
 						}
 						if(topic != null) {
-							forumPortlet.updateIsRendered(ForumUtils.FORUM);
+							Category category = breadcums.forumService.getCategory(id[0]);
 							Forum forum = breadcums.forumService.getForum(id[0], id[1]) ;
-							UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-							UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-							uiForumContainer.setIsRenderChild(false) ;
-							uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-							UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-							uiTopicDetail.setUpdateForum(forum) ;
-							uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
-							uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
-							forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
-							if(ForumUtils.isEmpty(postId)) {
-								uiTopicDetail.setIdPostView("top") ;
-							} else {
-								uiTopicDetail.setIdPostView("top") ;
-								uiTopicDetail.setLastPostId(postId) ;
-								try {
-									Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
-									if(post != null) {
-										boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), ForumSessionUtils.getCurrentUser());
-										UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-										UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-										UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-										postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
-										postForm.updatePost(postId, true, false, post) ;
-										postForm.setMod(isMod);
-										popupContainer.setId("UIQuoteContainer") ;
-										popupAction.activate(popupContainer, 900, 500) ;
-										event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-									} else {
-										uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
-										event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-										uiTopicDetail.setIdPostView("normal") ;
+							if(breadcums.checkCanView(category, forum, topic)){
+								
+								forumPortlet.updateIsRendered(ForumUtils.FORUM);
+								UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+								UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+								uiForumContainer.setIsRenderChild(false) ;
+								uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+								UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+								uiTopicDetail.setUpdateForum(forum) ;
+								uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
+								uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
+								forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
+								if(ForumUtils.isEmpty(postId)) {
+									uiTopicDetail.setIdPostView("top") ;
+								} else {
+									uiTopicDetail.setIdPostView("top") ;
+									uiTopicDetail.setLastPostId(postId) ;
+									try {
+										Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
+										if(post != null) {
+											boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), ForumSessionUtils.getCurrentUser());
+											UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+											UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+											UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+											postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
+											postForm.updatePost(postId, true, false, post) ;
+											postForm.setMod(isMod);
+											popupContainer.setId("UIQuoteContainer") ;
+											popupAction.activate(popupContainer, 900, 500) ;
+											event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+										} else {
+											uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
+											event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+											uiTopicDetail.setIdPostView("normal") ;
+										}
+									} catch (Exception e) {
 									}
-								} catch (Exception e) {
 								}
+								if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+									breadcums.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+									forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
+								}
+							} else {
+								uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{ForumUtils.THREAD}, ApplicationMessage.WARNING)) ;
+								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+								UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+								categoryContainer.updateIsRender(true) ;
+								categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+								path = FORUM_SERVICE;
 							}
-							if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
-								breadcums.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
-								forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-							}
-						}						
+						}				
 					}catch(Exception e) {
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
@@ -384,35 +390,74 @@ public class UIBreadcumbs extends UIContainer {
 						path = FORUM_SERVICE;
 					}
 				}else	if((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
-					String id[] = path.split("/");
-					forumPortlet.updateIsRendered(ForumUtils.FORUM);
-					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
-					forumContainer.setIsRenderChild(true) ;
-					if(id.length > 1) {
-						forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-						forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
-					} else {
-						try {
-							Forum forum = (Forum)breadcums.forumService.getObjectNameById(path, Utils.FORUM);
-							path = forum.getPath();
-							path = path.substring(path.indexOf(Utils.CATEGORY));
-							id = path.split("/");
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					try {
+						Forum forum;
+						String cateId = null;
+						if(path.indexOf("/") > 0){
+							String []arr = path.split("/");
+							cateId = arr[0];
+							forum = (Forum)breadcums.forumService.getForum(cateId, arr[1]);
+						} else {
+							forum = (Forum)breadcums.forumService.getObjectNameById(path, Utils.FORUM);
+						}
+						path = forum.getPath();
+						if(cateId == null){
+							cateId = path.substring(path.indexOf(Utils.CATEGORY), path.lastIndexOf(Utils.FORUM)-1);
+						}
+						path = path.substring(path.indexOf(Utils.CATEGORY));
+						Category category = breadcums.forumService.getCategory(cateId);
+						if(breadcums.checkCanView(category, forum, null)){
+							forumPortlet.updateIsRendered(ForumUtils.FORUM);
+							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
+							forumContainer.setIsRenderChild(true) ;
 							forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
-							forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum) ;
-						}catch(Exception e) {
-							uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+							forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum) ;
+						} else {
+							uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", null, ApplicationMessage.WARNING)) ;
 							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-							UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 							categoryContainer.updateIsRender(true) ;
 							categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 							path = FORUM_SERVICE;
 						}
+					}catch(Exception e) {
+						e.printStackTrace();
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", new String[]{ForumUtils.FORUM}, ApplicationMessage.WARNING)) ;
+						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+						categoryContainer.updateIsRender(true) ;
+						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+						path = FORUM_SERVICE;
+					}
+				}else	if(path.indexOf(Utils.CATEGORY) >= 0 && path.indexOf("/") < 0) {
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					try {
+						Category category = breadcums.forumService.getCategory(path);
+						if(breadcums.checkCanView(category, null, null)){
+							categoryContainer.getChild(UICategory.class).updateByLink(category) ;
+							categoryContainer.updateIsRender(false) ;
+							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+						} else {
+							uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{ForumUtils.CATEGORIES}, ApplicationMessage.WARNING)) ;
+							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+							categoryContainer.updateIsRender(true) ;
+							categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+							path = FORUM_SERVICE;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+						categoryContainer.updateIsRender(true) ;
+						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+						path = FORUM_SERVICE;
 					}
 				}else {
-					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-					categoryContainer.getChild(UICategory.class).updateByBreadcumbs(path) ;
-					categoryContainer.updateIsRender(false) ;
+					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+					categoryContainer.updateIsRender(true) ;
+					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
+					path = FORUM_SERVICE;
 				}
 				breadcums.setUpdataPath(path);
 				forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
