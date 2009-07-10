@@ -1788,7 +1788,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UITopicDetail topicDetail = event.getSource() ;	
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
-			if(checksms != null && checksms.trim().length() > 0) {
+			if(checksms != null && message.trim().length() > 0) {
 				StringBuffer buffer = new StringBuffer();
 				for (int j = 0; j < message.length(); j++) {
 					char c = message.charAt(j); 
@@ -1822,8 +1822,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}else {
+				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-				throw new MessageException(new ApplicationMessage("MessagePost.msg.message-empty", args)) ;
+				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}
 		}
 	}
