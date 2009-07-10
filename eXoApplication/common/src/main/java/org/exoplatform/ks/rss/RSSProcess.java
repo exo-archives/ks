@@ -247,7 +247,7 @@ public class RSSProcess extends RSSGenerate {
 				if(categoryNode.hasProperty("exo:description")) categoreDescription = categoryNode.getProperty("exo:description").getString();
 				else categoreDescription = "eXo link:" + eXoLink;
 				
-				System.out.println("questionNode=========>"+ questionNode.getPath());
+				//System.out.println("questionNode=========>"+ questionNode.getPath());
 				if(!questionNode.getProperty("exo:isActivated").getBoolean() || 
 						!questionNode.getProperty("exo:isApproved").getBoolean()){
 					removeRSSItem(questionNode.getName(), categoryNode, categoreDescription);

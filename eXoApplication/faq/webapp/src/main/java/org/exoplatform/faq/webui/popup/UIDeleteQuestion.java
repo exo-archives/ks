@@ -90,6 +90,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
         questions.setDefaultLanguage() ;
+        questions.updateCurrentQuestionList() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

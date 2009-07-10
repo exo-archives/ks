@@ -1675,12 +1675,16 @@ public class JCRDataStorage {
 			String homePath = faqHome.getPath() ;
 			for(String id : questions) {
 				try{
-					faqHome.getSession().move(homePath+ "/" + id, homePath + "/" + destCategoryId + id.substring(id.lastIndexOf("/"))) ;				
+					faqHome.getSession().move(homePath+ "/" + id, homePath + "/" + destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
+					faqHome.getSession().save() ;
+					Node question = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
+					question.setProperty("exo:categoryId", destCategoryId.substring(destCategoryId.lastIndexOf("/")+ 1)) ;
+					question.save() ;
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;
 				}
 			}
-			faqHome.save() ;
+			
 		}catch (Exception e) {
 			e.printStackTrace() ;
 		}finally { sProvider.close() ;}
@@ -1820,6 +1824,7 @@ public class JCRDataStorage {
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
+			  newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
 			}	

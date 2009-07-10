@@ -99,7 +99,7 @@ public class UIBreadcumbs extends UIContainer {
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
 			try{
-				System.out.println("paths ===>" + paths);
+				//System.out.println("paths ===>" + paths);
 				//uiQuestions.setPath(paths) ;
 				//categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				uiQuestions.backPath_ = "" ;
@@ -108,6 +108,7 @@ public class UIBreadcumbs extends UIContainer {
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);
 				uiQuestions.setCategoryId(paths) ;
+				uiQuestions.updateCurrentQuestionList() ;
 			} catch(Exception e){
 				FAQUtils.findCateExist(FAQUtils.getFAQService(), uiQuestions.getAncestorOfType(UIFAQContainer.class));
 				UIApplication uiApplication = uiBreadcums.getAncestorOfType(UIApplication.class) ;
