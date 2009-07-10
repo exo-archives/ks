@@ -2014,15 +2014,20 @@
 .UIViewerSettingForm .CategoryIcon {
 	background: url('background/CategoryIcon.png') no-repeat 17px;
 	float: left;
-	height: 15px;
-	margin: 0px 2px;
+	height: 20px;
+	margin: 0px;
 	width: 36px;
 	padding-top: 2px;
 }
 
+.UIViewerSettingForm .CategoryIcon .checkbox {
+	height: 15px;
+}
+
 .UIViewerSettingForm .LabelNameCategory {
 	float: left;
-	line-height: 15px;
+	padding-left: 4px;
+	line-height: 18px;
 }
 
 .UIViewerSettingForm .TextAreContent {

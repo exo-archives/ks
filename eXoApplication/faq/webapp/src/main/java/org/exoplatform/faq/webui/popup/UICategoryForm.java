@@ -23,6 +23,7 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
@@ -282,7 +283,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Category cat ;
-			if(uiCategory.isAddNew_) {
+			if(isAddNew_) {
 				cat = new Category();
 				cat.setCreatedDate(new Date()) ;
 			}else {
@@ -296,7 +297,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setViewAuthorInfor(viewAuthorInfor);
 			cat.setIndex(index);
 			cat.setModerators(users) ;
-			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;			 
+			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;		
 			faqPortlet.cancelAction() ;
 			//questions.setQuestions() ; //?
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;

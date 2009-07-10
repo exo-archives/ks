@@ -1,7 +1,5 @@
 <% 
 	import org.exoplatform.faq.service.Category;
-	def rcontext = _ctx.getRequestContext() ;	
-  rcontext.getJavascriptManager().addJavascript('eXo.faq.UIFAQPortlet.setValueInputViewer("'+uiform.id+'") ;') ;
 %>
 <div class="UIViewerSettingForm">
 	<% uiform.begin() %>
@@ -61,161 +59,108 @@
 									<% if(tabconten.id.equals(uiform.SELECT_CATEGORY_TAB)) { %>
 
 											<div class="TitleMoveThreads"><%=uiform.getLabel("SelectCategory")%>: </div>
-												<div class="ViewQuestionsAtMove">
-													<div style="margin-left:30px;">
-														<%
-														List listCate = uicomponent.getListCate() ;
-														%>
-														<div class="Icon FAQCategoryViewMove"><span></span></div>
-														<div id="FAQCateRoot" style="float:left">
-															<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQRootChildren')">
-																<%=uicomponent.homeCategoryName%>
-															</a>
-														</div>
-														<div style="clear:left;"><span></span></div>
-														<div style="display:none;" id="FAQRootChildren">
-														 	<%
-														 	if(listCate!= null && !listCate.isEmpty()){
-																int n = listCate.size() ;
-																int i = 0 ;
-																int id = 0;
-																String checked = "";
-																List checkeds = uicomponent.getCategoriesId();
-																for(cate in uicomponent.getListCate()) {
-																	id ++;
-																	Category category = cate.getCategory();
-																	String categoryName = category.getName() ;
-																	String cateId = category.getId();
-																	//uicomponent.addCheckBoxInput(cateId);
-																	if(checkeds.contains(cateId)){
-															    	checked = "checked=\"checked\"";
-															  	} else {
-															  		checked = "";
-															  	}
-																	if(i == 0) {%>
-																			<div style="margin:5px 0px 5px 0px; display:block;">
-																				<div class="Icon CategoryIcon">
-																					<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
-																				</div>
-																				<% 
-																				if(categoryName.length() > 50) {
-																					String title = categoryName ; 
-																					title = FAQUtils.getTitle(title) ; 
-																					categoryName = FAQUtils.getSubString(categoryName, 50);
-																				 %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } else { %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } %>
-																				<div style="clear:left;"><span></span></div>
-																			</div>
-																<%
-																	} else if(i > 0) {
-																		int sub = cate.getDeft() - listCate.get(i - 1).getDeft() ;
-																		if(sub == 0) {%>
-																			<div style="margin:5px 0px 5px 0px;">
-																				<div class="Icon CategoryIcon">
-																					<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
-																				</div>
-																				<% 
-																				if(categoryName.length() > 50) {
-																					String title = categoryName ; 
-																					title = FAQUtils.getTitle(title) ; 
-																					categoryName = FAQUtils.getSubString(categoryName, 50);
-																				 %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } else { %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } %>
-																				<div style="clear:left;"><span></span></div>
-																			</div>
-																<%
-																		} else if(sub > 0) {%>
-																			<div style="padding-left:30px ; margin-top:10px; display:none;" id="FAQViewChild$i">
-																			<div style="margin:5px 0px 5px 0px;">
-																				<div class="Icon CategoryIcon">
-																					<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
-																				</div>
-																				<% 
-																				if(categoryName.length() > 50) {
-																					String title = categoryName ;
-																					title = FAQUtils.getTitle(title) ;	
-																					categoryName = FAQUtils.getSubString(categoryName, 50);
-																				 %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } else { %>
-																				<div id="FAQCate$i" class="LabelNameCategory">
-																					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
-																						$categoryName
-																					</a>
-																				</div>
-																				<% } %>
-																				<div style="clear:left;"><span></span></div>
-																			</div>
-																<%
-																		} else {
-																			for(int j = 0 ; j < (-1*sub); j ++) {%>
-																				</div>
-																 <% 	}%>
-																			<div style="margin:5px 0px 5px 0px ;">
-																				<div class="Icon CategoryIcon">
-																					<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
-																				</div>
-																				<% 
-																				if(categoryName.length() > 50) {
-																					String title = categoryName ; 
-																					title = FAQUtils.getTitle(title) ; 
-																					categoryName = FAQUtils.getSubString(categoryName, 50);
-																				 %>
-																					<div id="FAQCate$i" class="LabelNameCategory">
-																						<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title">
-																							$categoryName
-																						</a>
-																					</div>
-																				<%} else { %>
-																						<div id="FAQCate$i" class="LabelNameCategory">
-																							<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
-																								$categoryName
-																							</a>
-																						</div>
-																				<%} %>
-																				<div style="clear:left;"><span></span></div>
-																			</div>
-																 <%
-																		}
-																	}
-																	i ++ ;
-																}
-																for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+											<!-- View interface -->
+											<div class="HorizontalLayout ViewQuestionsToSelect" style="overflow:auto;">
+												<%
+												List listCate = uicomponent.listCate;
+												Stack<String> stackCateid = new Stack<String>() ;
+										    StringBuffer stringBuffer = new StringBuffer() ;
+										    int n = listCate.size() ;
+										    int i = 0 ;
+										    int id = 0 ;
+										   %>
+											   <!-- ===================================== view all subcategories of root category ==================================== -->
+											   <%
+											   if(uicomponent.listCate != null && !uicomponent.listCate.isEmpty()){
+										   		String checked = "";
+										   		List checkeds = uicomponent.getCategoriesId();
+											   	for(cate in uicomponent.listCate) {
+											   		String cateId = cate.getCategory().getId();
+														if(checkeds.isEmpty() || checkeds.contains(cateId)){
+												    	checked = "checked=\"checked\"";
+												    } else {
+												    	checked = "";
+												    }
+											   		stackCateid.push(cateId) ;
+											    	id ++ ;
+											    	i ++ ;
+											      if(i == 1) {%>
+												      <div class="FAQDomNode" style="padding-left:30px">
+																<div style="margin:6px 0px;line-height:22px;" id="FAQCate$i">
+																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																 	</div>
+																	<div class="LabelNameCategory">
+																		<%= cate.getCategory().getName();%>
 																	</div>
-																<%
-																}
-															 }
-															%>
-													<!-- finish view all categories of root category -->
-													</div>
-												</div>
+																	<div style="clear:left;"><span></span></div>
+																</div>
+																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											  	<%
+										      	} else if(i > 1) {
+											        int sub = cate.getDeft() - listCate.get(i - 2).getDeft() ;
+											        if(sub == 0) {%>
+											        		</div>
+											        	</div>
+												      <div class="FAQDomNode" style="padding-left:30px">
+											        	<div style="margin:6px 0px;line-height:22px;">
+											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																			<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																		</div>
+																		<div class="LabelNameCategory">
+																			<%= cate.getCategory().getName();%>
+																		</div>
+																		<div style="clear:left;"><span></span></div>
+																</div>
+																<div class="FAQChildNodeContainer" id="FAQViewChild$i">
+																
+											    <%
+											        } else if(sub > 0) {%>
+													      <div class="FAQDomNode" style="padding-left:30px">
+																	<div style="margin:6px 0px;line-height:22px;">
+															    	<div id="FAQCate$i" style=" overflow-x:auto;">
+															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																				<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																			</div>
+															    		<div class="LabelNameCategory">
+															    			<%= cate.getCategory().getName();%>s
+															    		</div>
+															    	</div>
+															    	<div style="clear:left;"><span></span></div>
+															    </div>
+																  <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											    <%
+											        } else {%>
+											     		<%for(int j = 0 ; j < (-1*sub) + 1; j ++) {%>
+												    				</div>
+												    			</div>
+											     		<%}%>
+												      <div class="FAQDomNode" style="padding-left:30px">
+															 <div style="margin:6px 0px;line-height:22px;">
+															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
+																 </div>
+																 <div class="LabelNameCategory">
+																 	<%= cate.getCategory().getName();%>
+																 </div>
+																 <div style="clear:left;"><span></span></div>
+															 </div>
+															 <div class="FAQChildNodeContainer" id="FAQViewChild$i">
+											     <%
+											        }
+											      }
+											    }%>
+											    	</div>
+											    </div>
+											    <%
+											    for(i = 1 ; i < listCate.get(n - 1).getDeft() ; i ++) {%>
+											    		</div>
+											    	</div>
+											  	<%
+											    }%>
+											<%}%>
 											</div>
+										
 
 									<% } else {%>
 											<div class="EditTempLateContent">
@@ -228,23 +173,16 @@
 									</div>
 							<% ++j_;} %>
 
-									<div id="view" style="display:none;"></div>
+									<div id="viewerSettingMsg" style="display:none;"><%=_ctx.appRes("UIViewerSettingForm.label.NotCheckParentInput"); %></div>
 									<div class="UIAction"> 
 										<table class="ActionContainer">
 											<tr>
 												<td align="center">
 											<%for(action in uicomponent.getActions()) { 
 													String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-													String link="", id="";
-													if(uicomponent.id_ == 0){
-														link = uicomponent.event(action, "objId") ;
-														id = "id=\"ActionSave\"";
-													} else {
-														link = "" ;
-														id = "onclick=\""+uicomponent.event(action)+"\"";
-													}
+													String link = uicomponent.event(action) ;
 											%>
-													<div $id actionLink="$link" class="ActionButton LightBlueStyle">
+													<div onclick="$link" class="ActionButton LightBlueStyle">
 														<div class="ButtonLeft">
 															<div class="ButtonRight">
 																<div class="ButtonMiddle">

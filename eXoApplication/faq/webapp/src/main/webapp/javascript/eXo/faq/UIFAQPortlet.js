@@ -9,18 +9,31 @@ UIFAQPortlet.prototype.checkedNode = function(elm){
 	var input = elm.getElementsByTagName("input")[0];
   var DOMUtil = eXo.core.DOMUtil;
   var parentNode = DOMUtil.findAncestorByClass(input,"FAQDomNode") ;
+  var ancestorNode = DOMUtil.findAncestorByClass(parentNode,"FAQDomNode") ;
+  if(ancestorNode){
+  	firstInput = DOMUtil.findFirstDescendantByClass(ancestorNode, "input", "checkbox");
+  	if(input.checked && firstInput.checked === false) {
+  		var msg = document.getElementById('viewerSettingMsg');
+  		if(msg) {
+  			alert(msg.innerHTML);
+  		} else {
+  			alert('You need to check on parent or ancestor of this category first!');
+  		}
+  		input.checked = false;
+  		input.disabled= true;
+  	}
+  }
+  
   var containerChild = DOMUtil.findFirstDescendantByClass(parentNode, "div", "FAQChildNodeContainer");
   if(containerChild) {
   	var checkboxes = containerChild.getElementsByTagName("input");
   	for(var i = 0; i < checkboxes.length; ++i){
-  		//if(input.checked)checkboxes[i].checked = true;
-  		//else checkboxes[i].checked = false;
   		checkboxes[i].checked = input.checked;
   		if(!input.checked) checkboxes[i].disabled= true;
   		else checkboxes[i].disabled= false;
   	}
   }
-}
+};
 
 UIFAQPortlet.prototype.selectCateInfor = function(number){
 	var obj = null;
@@ -31,7 +44,7 @@ UIFAQPortlet.prototype.selectCateInfor = function(number){
 			else obj.style.fontWeight = "normal";
 		}
 	}
-}
+};
 
 UIFAQPortlet.prototype.setCheckEvent = function(isCheck){
 	this.hiddentMenu = isCheck;
@@ -626,48 +639,5 @@ UIFAQPortlet.prototype.voteAnswerUpDown = function(imageId, isVote){
 		obj.style.MozOpacity="0.7";
 	}
 };
-
-UIFAQPortlet.prototype.setValueInputViewer = function(uiformId) {
-	var parentObj = document.getElementById(uiformId);
-	if(parentObj){
-		var actionObj = document.getElementById("ActionSave");
-		if(actionObj){
-			var view = document.getElementById("view");
-			var link = String(actionObj.getAttribute("actionLink"));
-			var str = String("");
-			var checkboxes = parentObj.getElementsByTagName("input");
-	  	for(var i = 0; i < checkboxes.length; ++i){
-	  		if(checkboxes[i].checked){
-	  			if(str.length == 0) str = checkboxes[i].name;
-	  			else if(str.indexOf(checkboxes[i].name) < 0){
-	  				str = str + "," + checkboxes[i].name;
-	  			}
-	  		}
-	  		checkboxes[i].onclick = function() {
-	  			if(this.checked){
-	    			if(str.length == 0) str = this.name;
-	    			else if(str.indexOf(this.name) < 0){
-	    				str = str + "," + this.name;
-	    			}
-	    		}else if(str.length > 0){
-	    			if(str.indexOf(this.name) > 0){
-	    				str = str.replace((","+this.name), "");
-	    			} else if(str.indexOf(this.name) == 0){
-	    				str = str.replace((this.name+","), "");
-	    				str = str.replace((this.name), "");
-	    			}
-	    		}
-	  			view.innerHTML = str;
-	      };
-	  	}
-			actionObj.onclick = function(){
-				str = view.innerHTML;
-				if(str.length > 0)link = link.replace("objId", str);
-				eval(link);
-			}
-		}
-	}
-};
-
 
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

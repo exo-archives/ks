@@ -77,6 +77,7 @@ public class UICategoryInfo extends UIContainer	{
       	userProfile = forumService.getDefaultUserProfile(userId, "");
       }
       double timeZone = userProfile.getTimeZone();
+      if(userProfile.getUserId().equals(UserProfile.USER_GUEST))timeZone = 0;
       long zone = (long)(userProfile.getTimeZone()*3600000) ;
       calendar.setTimeInMillis(l - zone);
       StringBuilder builder = new StringBuilder();
@@ -86,8 +87,8 @@ public class UICategoryInfo extends UIContainer	{
       builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
       if(userId == null || userId.length() == 0) {
       	if(timeZone >= 0)
-      		builder.append(" GMT+").append(timeZone);
-      	else builder.append(" GMT").append(String.valueOf(timeZone));
+      		builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
+      	else builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
       }
       s = builder.toString();
     } catch (Exception e) {

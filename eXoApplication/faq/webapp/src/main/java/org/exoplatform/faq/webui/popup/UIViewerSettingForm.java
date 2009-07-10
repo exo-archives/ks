@@ -81,13 +81,19 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 		
 		UIFormTextAreaInput textAreaInput = new UIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE, FIELD_TEMPLATE_TEXTARE, null);
 		editTemplateTab.addUIFormInput(textAreaInput);
-		addUIFormInput(selectCategoryTab) ;	
-		addUIFormInput(editTemplateTab) ;
-		this.setActions(new String[]{"Save"});
 		
 		homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME) ;
 		initSettingForm();
+		UIFormCheckBoxInput<Boolean> checkBoxInput = null;
+		for(Cate cate : listCate){
+			checkBoxInput = new UIFormCheckBoxInput<Boolean>(cate.getCategory().getId(), cate.getCategory().getId(), false);
+			checkBoxInput.setChecked(cate.getCategory().isView());
+			selectCategoryTab.addChild(checkBoxInput);
+		}
+		addUIFormInput(selectCategoryTab) ;	
+		addUIFormInput(editTemplateTab) ;
 		setTemplateEdit();
+		this.setActions(new String[]{"Save"});
   }
 	
 	public List<String> getCategoriesId() {
@@ -115,6 +121,7 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 	
 	public void initSettingForm() throws Exception {
 		categoriesId = FAQUtils.getCategoriesIdViewer();
+		if(categoriesId.isEmpty()) categoriesId.add(Utils.CATEGORY_HOME);
 		this.listCate.addAll(faqService_.listingCategoryTree()) ;
 		this.faqSetting_ = new FAQSetting();
 		String orderType = faqSetting_.getOrderType() ;
@@ -126,13 +133,19 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 	public void deActivate() throws Exception {}
 	
 	static	public class SaveActionListener extends EventListener<UIViewerSettingForm> {
-		public void execute(Event<UIViewerSettingForm> event) throws Exception {
+		@SuppressWarnings("unchecked")
+    public void execute(Event<UIViewerSettingForm> event) throws Exception {
 			UIViewerSettingForm uiform = event.getSource() ;
 			if(uiform.id_ == 0) {
-				String ids = event.getRequestContext().getRequestParameter(OBJECTID);
 				uiform.categoriesId =  new ArrayList<String>();
-				if(!FAQUtils.isFieldEmpty(ids) && !ids.equals("objId")) {
-					uiform.categoriesId.addAll(Arrays.asList(ids.split(",")));
+				UIFormInputWithActions withActions  = uiform.getChildById(SELECT_CATEGORY_TAB);
+				List<UIComponent> children = withActions.getChildren() ;
+				for(UIComponent child : children) {
+					if(child instanceof UIFormCheckBoxInput) {
+						if(((UIFormCheckBoxInput)child).isChecked()) {
+							uiform.categoriesId.add(child.getId()) ;
+						}
+					}
 				}
 				FAQUtils.saveCategoriesIdViewer(uiform.categoriesId);
 			} else {

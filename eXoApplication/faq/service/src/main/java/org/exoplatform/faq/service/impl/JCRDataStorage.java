@@ -3049,13 +3049,13 @@ public class JCRDataStorage {
   			SubCategoryInfo subCat ;
   			while (subIter.hasNext()){
   				sub = subIter.nextNode() ;
-  				if(sub.isNodeType("exo:faqCategory")) {
-  					if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){  						
+  				if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
+  					if(sub.isNodeType("exo:faqCategory")) {
 	  					subCat = new SubCategoryInfo() ;
 	  					subCat.setId(sub.getName());
 	  					subCat.setName(sub.getProperty("exo:name").getString()) ;  					
 	  					subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
-	  					subCat.setSubCateInfos(getSubCategoryInfo(sub)) ;
+	  					subCat.setSubCateInfos(getSubCategoryInfo(sub, categoryIdScoped)) ;
 	  					subCat.setQuestionInfos(getQuestionInfo(sub)) ;
 	  					subList.add(subCat) ;
   					}
@@ -3069,7 +3069,7 @@ public class JCRDataStorage {
   	return categoryInfo ;
   }
   
-  private List<SubCategoryInfo> getSubCategoryInfo(Node category) throws Exception {
+  private List<SubCategoryInfo> getSubCategoryInfo(Node category, List<String> categoryIdScoped) throws Exception {
   	List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>() ;
 		if(category.hasNodes()) {
   		NodeIterator iter = category.getNodes() ;
@@ -3079,12 +3079,14 @@ public class JCRDataStorage {
   			try{
     			sub = iter.nextNode() ;
     			if(sub.isNodeType("exo:faqCategory")) {
-    				cat = new SubCategoryInfo() ;
-    				cat.setName(sub.getProperty("exo:name").getString()) ;
-    				String path = sub.getPath() ;
-    	  		cat.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-    				cat.setId(sub.getName()) ;
-    				subList.add(cat) ;
+    				if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
+	    				cat = new SubCategoryInfo() ;
+	    				cat.setName(sub.getProperty("exo:name").getString()) ;
+	    				String path = sub.getPath() ;
+	    	  		cat.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+	    				cat.setId(sub.getName()) ;
+	    				subList.add(cat) ;
+    				}
     			}
   			}catch(Exception e) {
   	  		e.printStackTrace() ;
