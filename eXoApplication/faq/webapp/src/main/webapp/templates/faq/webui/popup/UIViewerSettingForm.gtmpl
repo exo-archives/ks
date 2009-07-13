@@ -118,7 +118,7 @@
 											        } else if(sub > 0) {%>
 													      <div class="FAQDomNode" style="padding-left:30px">
 																	<div style="margin:6px 0px;line-height:22px;">
-															    	<div id="FAQCate$i" style=" overflow-x:auto;">
+															    	<div id="FAQCate$i">
 															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
 																				<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																			</div>

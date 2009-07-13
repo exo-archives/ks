@@ -121,7 +121,6 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 	
 	public void initSettingForm() throws Exception {
 		categoriesId = FAQUtils.getCategoriesIdViewer();
-		if(categoriesId.isEmpty()) categoriesId.add(Utils.CATEGORY_HOME);
 		this.listCate.addAll(faqService_.listingCategoryTree()) ;
 		this.faqSetting_ = new FAQSetting();
 		String orderType = faqSetting_.getOrderType() ;
