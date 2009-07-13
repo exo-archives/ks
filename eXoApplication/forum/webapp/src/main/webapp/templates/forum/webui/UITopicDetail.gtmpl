@@ -278,7 +278,7 @@
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-										<div class="LeftOverButton">
+										<div class="LeftOverButton" id="ButtonSearch">
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon TagIcon">
@@ -304,7 +304,7 @@
 																<div class="UIRightPopupMenuContainer" style="padding:5px 0px;min-width:172px;">
 																	<div class="InputPage" style="float:left;">
 																		<% uicomponent.renderChild(uicomponent.FIELD_ADD_TAG) ; %>
-																		<div class="SearchTagName" id="searchTagName" linkSupmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
+																		<div class="SearchTagName" id="searchTagName" linkSubmit="<%=uicomponent.event("AddTagTopic")%>" inputId="<%=uicomponent.FIELD_ADD_TAG%>" userAndTopicId="$userLogin,<%=topic.getId()%>">
 																			<div class="TagNameItem Selected"></div>
 																		</div>
 																	</div>

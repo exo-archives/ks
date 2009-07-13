@@ -64,10 +64,12 @@ SearchTagName.prototype.init = function(userName) {
 	}
 	this.searchTagNameNode.value = "";
   this.searchTagNameNode.onkeydown = this.searchIpBanWrapper;
-  this.searchTagNameNode.onclick = this.supmitForm;
+  this.searchTagNameNode.onclick = this.submitInput;
+  var buttonSearch = document.getElementById('ButtonSearch');
+  if(buttonSearch){buttonSearch.onclick = this.submitInput;}
 };
 
-SearchTagName.prototype.supmitForm = function(event) {
+SearchTagName.prototype.submitInput = function(event) {
 	var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value)
 	if(eXo.forum.webservice.SearchTagName.parentNode.style.visibility === "hidden" && str.trim().length === 0) {
 		eXo.forum.webservice.SearchTagName.searchTagName('onclickForm');
@@ -84,9 +86,9 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 			object.parentNode.style.visibility = "hidden";
 			object.searchTagName(' ');
 		} else if(str.trim().length > 0){
-			var linkSupmit = String(object.parentNode.getAttribute('linkSupmit'));
-			linkSupmit = linkSupmit.replace("javascript:", "");
-			eval(linkSupmit);
+			var linkSubmit = String(object.parentNode.getAttribute('linkSubmit'));
+			linkSubmit = linkSubmit.replace("javascript:", "");
+			eval(linkSubmit);
 		}
 		return;
 	}

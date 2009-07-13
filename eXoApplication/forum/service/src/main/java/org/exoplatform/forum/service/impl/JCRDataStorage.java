@@ -1679,7 +1679,7 @@ public class JCRDataStorage {
 			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 			while (iter.hasNext()) {
 				topicNode = iter.nextNode();
-				if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+				if (forumNode.hasProperty("exo:isModerateTopic") && !forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 					forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 					isSavePath = true;
 					break;
@@ -1699,7 +1699,7 @@ public class JCRDataStorage {
 			} else {
 				forumNode.save();
 			}
-		} catch (RepositoryException e) {
+		} catch (PathNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
