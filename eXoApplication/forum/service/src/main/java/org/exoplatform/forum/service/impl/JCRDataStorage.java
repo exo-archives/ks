@@ -3119,7 +3119,7 @@ public class JCRDataStorage {
 			}
 			postNode.remove();
 			//update information: setPostCount, lastpost for Topic
-			if(!post.getIsHidden()) {
+			if(!post.getIsHidden() && post.getIsApproved()) {
 				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
 				topicNode.setProperty("exo:postCount", topicPostCount);
 				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
@@ -3143,7 +3143,7 @@ public class JCRDataStorage {
 			
 			//TODO: Thinking for update forum and user profile by node observation?
 			// setPostCount for Forum
-			if(!post.getIsHidden()) {
+			if(!post.getIsHidden() && post.getIsApproved()) {
 				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
 				forumNode.setProperty("exo:postCount", forumPostCount);
 				forumNode.save();

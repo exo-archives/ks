@@ -479,7 +479,7 @@
 									if(lastAccess < postDate.getTime()) {
 										title = "TitleBold";
 										newPost = "New";									
-									}									
+									}
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
@@ -487,7 +487,8 @@
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;
 									String attachment = String.valueOf(att);
-									String postCount = String.valueOf(topic.getPostCount());
+									long postCount = topic.getPostCount();
+									if(postCount < 0) postCount = 0;
 									String postView = String.valueOf(topic.getViewCount());
 									String number = "1";
 									

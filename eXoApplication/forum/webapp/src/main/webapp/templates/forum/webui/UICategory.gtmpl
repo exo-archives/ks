@@ -285,7 +285,8 @@
 							String forumTitle = forum.getForumName();
 							String forumDescription = forum.getDescription();
 							String topicCount = (String)forum.getTopicCount();
-							String postCount = (String)forum.getPostCount();
+							long postCount = forum.getPostCount();
+							if(postCount < 0) postCount = 0;
 						 	String classIconReadForum = "ThreadNoNewPost";
 						 	String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
 						 	String fontWeight = "normal";

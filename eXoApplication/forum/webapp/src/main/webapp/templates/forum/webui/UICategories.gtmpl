@@ -140,7 +140,8 @@
 										String forumDescription = forum.getDescription();
 										List	forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 										String topicCount = (String)forum.getTopicCount();
-										String postCount = (String)forum.getPostCount();
+										long postCount = forum.getPostCount();
+										if(postCount < 0) postCount = 0;
 										String openLinkLastPost = "javascript:void(0)";
 										String urlLastPost = "javascript:void(0)";
 				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());

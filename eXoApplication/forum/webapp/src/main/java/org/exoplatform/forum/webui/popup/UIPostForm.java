@@ -196,8 +196,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		editReason.setRendered(false) ;
 		if(!ForumUtils.isEmpty(this.postId) && post != null) {
 			String message = post.getMessage();
-			//message = ForumTransformHTML.enCodeHTML(message) ;
-			//System.out.println("\n\n mes2: " + message);
 			if(isQuote) {//quote
 				String title = "" ;
 				if(post.getName().indexOf(": ") > 0) title = post.getName() ;
@@ -245,7 +243,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			t = checksms.trim().length() ;
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
 			postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim() ;
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {	
+			if(t > 0 && k != 0 && !checksms.equals("null")) {	
 				Post post = new Post();
 				post.setName(postTitle) ;
 				post.setMessage(message) ;
@@ -269,9 +267,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				String[] args = { ""} ;
 				if(k == 0) {
 					args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
-					if(t < 4) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+					if(t <= 0) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
-				} else if(t < 4) {
+				} else if(t <= 0) {
 					args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
 					throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 				}
