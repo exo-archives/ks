@@ -556,7 +556,6 @@ UIForumPortlet.prototype.setMaskLayer = function(id) {
 	var popupAction = DOMUtil.findFirstDescendantByClass(forumPortlet, "span", "UIForumPopupAction") ;
 	var popupWindow = DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
  	if(masklayer) {
- 		popupAction.style.zIndex = 3;
   	masklayer.style.width = "auto";
   	masklayer.style.height = "auto";
 	 	if(popupWindow) {
