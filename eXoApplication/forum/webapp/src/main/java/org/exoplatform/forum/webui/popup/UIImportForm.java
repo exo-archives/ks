@@ -100,7 +100,6 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			if(uploadInput.getUploadResource() == null){
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				return;
 			}
 			String fileName = uploadInput.getUploadResource().getFileName();

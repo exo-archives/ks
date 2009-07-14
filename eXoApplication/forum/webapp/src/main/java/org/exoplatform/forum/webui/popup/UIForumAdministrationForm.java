@@ -392,14 +392,13 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
 				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{FIELD_NOTIFYEMAIL_TEXTAREA}, ApplicationMessage.WARNING)) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAIL_TEXTAREA)}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				return;
 			}
 			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
 				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{FIELD_NOTIFYEMAILMOVED_TEXTAREA}, ApplicationMessage.WARNING)) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA)}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				return;
 			}
