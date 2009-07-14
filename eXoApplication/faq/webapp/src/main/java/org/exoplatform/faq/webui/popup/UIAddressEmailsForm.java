@@ -31,6 +31,7 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.GroupImpl;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -54,8 +55,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
     template = "app:/templates/faq/webui/popup/UIAddressEmailsForm.gtmpl", 
     events = {
-  @EventConfig(listeners = UIAddressEmailsForm.SearchUserActionListener.class),
+  //@EventConfig(listeners = UIAddressEmailsForm.SearchUserActionListener.class),
   @EventConfig(listeners = UIAddressEmailsForm.AddActionListener.class),
+  @EventConfig(listeners = UIAddressEmailsForm.SearchActionListener.class),
   @EventConfig(listeners = UIAddressEmailsForm.ChangeGroupActionListener.class, phase = Phase.DECODE),
   @EventConfig(listeners = UIAddressEmailsForm.ShowPageActionListener.class, phase = Phase.DECODE),
   @EventConfig(listeners = UIAddressEmailsForm.CancelActionListener.class, phase = Phase.DECODE)
@@ -85,6 +87,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
     uiSelect.setOnChange("ChangeGroup") ;
     addUIFormInput(uiSelect) ;
     uiPageList_ = new UIPageIterator() ;
+    //this.addChild(uiPageList_);
     setUserList(FAQUtils.getAllUser()) ;
   }
   
@@ -104,6 +107,45 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 	  }
     return options ;
   }
+  
+  private void searchUserProfileByKey(String keyWord) throws Exception {
+		try {
+			Map<String, User> mapObject = new HashMap<String, User>();
+			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
+			keyWord = "*" + keyWord + "*" ;
+			Query q; 
+			// search by user name
+			q = new Query() ;
+			q.setUserName(keyWord) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), (User)obj);
+			}
+			// search by last name
+			q = new Query() ;
+			q.setLastName(keyWord) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), (User)obj);
+			}
+			// search by firstname
+			q = new Query() ;
+			q.setFirstName(keyWord) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), (User)obj);
+			}
+			// search by email
+			q = new Query() ;
+			q.setEmail(keyWord) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), (User)obj);
+			}
+
+			ObjectPageList objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10) ;
+		    uiPageList_.setPageList(objPageList) ;
+		} catch (Exception e) {
+			//this.isViewSearchUser = false;
+			e.printStackTrace();
+		}
+	}
   
   @SuppressWarnings("unchecked")
   public List<User> getUsers() throws Exception {
@@ -269,7 +311,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
     }
   }
-  
+  /*
   static public class SearchUserActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
       UIAddressEmailsForm uiAddressForm = event.getSource() ;  
@@ -296,7 +338,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
       	return ;
       }
     }
-  }
+  }*/
   
   static public class CancelActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
@@ -318,6 +360,15 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
       uiAddressForm.updateCurrentPage(page) ; 
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);           
     }
+  }
+  
+  static public class SearchActionListener extends EventListener<UIAddressEmailsForm> {
+	  public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+		  UIAddressEmailsForm uiAddressForm = event.getSource() ;
+		  String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
+		  uiAddressForm.searchUserProfileByKey(searchValue);
+		  event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);           
+	  }
   }
 }
 
