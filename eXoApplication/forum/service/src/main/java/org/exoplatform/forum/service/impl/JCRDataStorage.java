@@ -3119,7 +3119,7 @@ public class JCRDataStorage {
 			}
 			postNode.remove();
 			//update information: setPostCount, lastpost for Topic
-			if(!post.getIsHidden() && post.getIsApproved()) {
+			if(!post.getIsHidden() && post.getIsApproved() && (post.getUserPrivate() == null || post.getUserPrivate().length == 1)) {
 				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
 				topicNode.setProperty("exo:postCount", topicPostCount);
 				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
@@ -3143,11 +3143,11 @@ public class JCRDataStorage {
 			
 			//TODO: Thinking for update forum and user profile by node observation?
 			// setPostCount for Forum
-			if(!post.getIsHidden() && post.getIsApproved()) {
+			if(!post.getIsHidden() && post.getIsApproved() && (post.getUserPrivate() == null || post.getUserPrivate().length == 1)) {
 				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
 				forumNode.setProperty("exo:postCount", forumPostCount);
 				forumNode.save();
-			}else {
+			}else if(post.getUserPrivate() == null || post.getUserPrivate().length == 1){
 				List<String> list = new ArrayList<String>();
 				if (forumNode.hasProperty("exo:moderators")){
 					list.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));

@@ -937,7 +937,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+				throw new MessageException(new ApplicationMessage("UIPostForm.msg.canNotEdit", args, ApplicationMessage.WARNING)) ;
 			}
 		}
 	}
