@@ -59,12 +59,16 @@
 								user.setUserRole(0);
 							}
 							userRole = uicomponent.permissionUser[(int)user.getUserRole()];
+							String isBanned = false;
+							if(user.getIsBanned()){
+								isBanned = uicomponent.getIsBanned(user);
+							}
 					%>
 						<tr class="$classRowTable">
 							<td class="text"><%=user.getUserId();%></td>
 							<td class="text">$userTitle</td>
 							<td class="text"><%=userRole;%></td>
-							<td class="text"><%=user.getIsBanned();%></td>
+							<td class="text">$isBanned</td>
 							<td>				 
 								<div style="margin:0px auto;" class="ActionContainer">
 									<div style="float:left; cursor:pointer" onclick="<%=uicomponent.event("EditProfile",user.getUserId());%>">

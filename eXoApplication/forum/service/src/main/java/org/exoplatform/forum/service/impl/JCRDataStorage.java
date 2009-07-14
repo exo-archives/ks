@@ -2428,15 +2428,16 @@ public class JCRDataStorage {
 				}
 				postNode.remove();
 				//update information: setPostCount, lastpost for Topic
-				long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
-				topicNode.setProperty("exo:postCount", topicPostCount);
-				long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
-				if (newNumberAttachs > numberAttachs)
-					newNumberAttachs = newNumberAttachs - numberAttachs;
-				else
-					newNumberAttachs = 0;
-				topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
-
+				if(!post.getIsHidden() && post.getIsApproved()) {
+					long topicPostCount = topicNode.getProperty("exo:postCount").getLong() - 1;
+					topicNode.setProperty("exo:postCount", topicPostCount);
+					long newNumberAttachs = topicNode.getProperty("exo:numberAttachments").getLong();
+					if (newNumberAttachs > numberAttachs)
+						newNumberAttachs = newNumberAttachs - numberAttachs;
+					else
+						newNumberAttachs = 0;
+					topicNode.setProperty("exo:numberAttachments", newNumberAttachs);
+				}
 				NodeIterator nodeIterator = topicNode.getNodes();
 				long last = nodeIterator.getSize() - 1;
 				nodeIterator.skip(last);
@@ -2445,12 +2446,21 @@ public class JCRDataStorage {
 				}
 				topicNode.setProperty("exo:lastPostBy", postNode.getProperty("exo:owner").getValue().getString());
 				topicNode.setProperty("exo:lastPostDate", postNode.getProperty("exo:createdDate").getValue().getDate());
-				
+				forumNode.save();
 				//TODO: Thinking for update forum and user profile by node observation?
 				// setPostCount for Forum
-				long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
-				forumNode.setProperty("exo:postCount", forumPostCount);
-				forumNode.save();
+				if(!post.getIsHidden() && post.getIsApproved()) {
+					long forumPostCount = forumNode.getProperty("exo:postCount").getLong() - 1;
+					forumNode.setProperty("exo:postCount", forumPostCount);
+					forumNode.save();
+				} else {
+					List<String> list = new ArrayList<String>();
+					if (forumNode.hasProperty("exo:moderators")){
+						list.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+					}
+					list.addAll(getAllAdministrator(sProvider));
+					getTotalJobWatting(list);
+				}
 				return post;
 			} catch (PathNotFoundException e) {
 				return null;
@@ -2937,6 +2947,7 @@ public class JCRDataStorage {
 				if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
 					profileNode.setProperty("exo:isBanned", false);
 					profileNode.save();
+					userProfile.setIsBanned(false);
 				}
 			}
 		} else if(ip != null) {
@@ -3203,6 +3214,16 @@ public class JCRDataStorage {
 		userProfile.setMaxTopicInPage(userProfileNode.getProperty("exo:maxTopic").getLong());
 		userProfile.setIsShowForumJump(userProfileNode.getProperty("exo:isShowForumJump").getBoolean());
 		userProfile.setIsBanned(userProfileNode.getProperty("exo:isBanned").getBoolean());
+		if (userProfile.getIsBanned()) {
+			if(userProfileNode.hasProperty("exo:banUntil")) {
+				userProfile.setBanUntil(userProfileNode.getProperty("exo:banUntil").getLong());
+				if (userProfile.getBanUntil() <= getGreenwichMeanTime().getTimeInMillis()) {
+					userProfileNode.setProperty("exo:isBanned", false);
+					userProfileNode.save();
+					userProfile.setIsBanned(false) ;
+				}
+			}
+		}
 		if(userProfileNode.hasProperty("exo:banUntil"))userProfile.setBanUntil(userProfileNode.getProperty("exo:banUntil").getLong());
 		if(userProfileNode.hasProperty("exo:banReason"))userProfile.setBanReason(userProfileNode.getProperty("exo:banReason").getString());
 		if(userProfileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(userProfileNode.getProperty("exo:banCounter").getString()));
