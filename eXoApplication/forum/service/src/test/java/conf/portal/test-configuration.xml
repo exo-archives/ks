@@ -179,6 +179,11 @@
 	  <type>org.exoplatform.services.organization.jdbc.OrganizationServiceImpl</type>
  	</component>
 -->
+
+  <component>
+    <type>org.exoplatform.services.security.IdentityRegistry</type>
+  </component>
+
   <external-component-plugins>
     <target-component>org.exoplatform.services.database.HibernateService</target-component>
     <component-plugin> 

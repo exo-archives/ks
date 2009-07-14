@@ -17,6 +17,9 @@ import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.impl.CacheServiceImpl;
 import org.exoplatform.services.organization.OrganizationService;
+import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityRegistry;
 import org.exoplatform.test.mocks.servlet.MockServletContext;
 
 public class TestForumServiceUtils extends TestCase {
@@ -24,16 +27,21 @@ public class TestForumServiceUtils extends TestCase {
 	public TestForumServiceUtils() throws Exception {
 		super();
 		cacheService = initCacheService();
+		identityRegistry = initIdentityRegistry();
+		
 	}
 	
+
+
 	SimpleMockOrganizationService organizationService = new SimpleMockOrganizationService();
 	CacheService cacheService = null;
+	IdentityRegistry identityRegistry = null;
 
 	
 	public void setUp() {
 		ExoContainer testContainer = new ExoContainer(new ManagementContextImpl(ManagementFactory.getPlatformMBeanServer(), new HashMap<String,String>()));
 		testContainer.registerComponentInstance(OrganizationService.class, organizationService);
-		
+		testContainer.registerComponentInstance(IdentityRegistry.class, identityRegistry);
 		testContainer.registerComponentInstance(CacheService.class, cacheService);
 		
 		ExoContainerContext.setCurrentContainer(testContainer);
@@ -42,7 +50,37 @@ public class TestForumServiceUtils extends TestCase {
 		
 	}
 
-	
+	public void testHasPermission() throws Exception {
+		
+		String user = "user1";
+		organizationService.addMemberships(user, "*:/platform/users");
+		
+		simulateAuthenticate(user);
+		
+		assertFalse(ForumServiceUtils.hasPermission(null, user));
+		assertFalse(ForumServiceUtils.hasPermission(new String [] {" "}, user));
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {user}, user));
+		assertFalse(ForumServiceUtils.hasPermission(new String [] {"foo"}, user));
+		
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {"/platform/users"}, user));
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {"/platform/users", user}, user));
+		
+		// must match one (OR)
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {"/platform/users", "user2"}, user));
+		
+		assertFalse(ForumServiceUtils.hasPermission(new String [] {"/foo"}, user));
+		// suspicious * should theorically match 'admin'
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {"admin:/platform/users"}, user));
+		
+		assertTrue(ForumServiceUtils.hasPermission(new String [] {"*:/platform/users"}, user));
+		
+	}
+
+	private void simulateAuthenticate(String user) throws Exception {
+		
+		Identity identity = new OrganizationAuthenticatorImpl(organizationService).createIdentity(user);
+		identityRegistry.register(identity);
+	}
 
 	
 	public void testGetPermissionNull() throws Exception {
@@ -112,6 +150,11 @@ public class TestForumServiceUtils extends TestCase {
 		oparam.setObject(config);
 		cacheParams.addParameter(oparam);
 		return new CacheServiceImpl(cacheParams);
+	}
+	
+	
+	private IdentityRegistry initIdentityRegistry() {
+		return new IdentityRegistry(null);
 	}
 	
 }
