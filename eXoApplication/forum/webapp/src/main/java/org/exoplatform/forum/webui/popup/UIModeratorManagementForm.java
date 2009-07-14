@@ -163,6 +163,17 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
   	return forumService.isAdminRole(userId);
   }
   
+  private String getIsBanned(UserProfile userProfile) throws Exception {
+  	if(userProfile.getBanUntil() > 0) {
+  		Calendar calendar = ForumUtils.getInstanceTempCalendar();
+  		if(calendar.getTimeInMillis() >= userProfile.getBanUntil()) {
+  			userProfile.setIsBanned(false);
+  			return "false";
+  		}
+  	}
+  	return "true";
+  }
+  
   private void setListUserProfile() throws Exception {
   	if(valueSearch == null || valueSearch.trim().length() < 1){
   		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
