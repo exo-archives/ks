@@ -197,7 +197,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
 		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
 		UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
-		headerSubject.setValue(administration.getHeaderSubject());
+		String headerSubject_ = administration.getHeaderSubject(); 
+		if(ForumUtils.isEmpty(headerSubject_)) headerSubject_ = this.getLabel("notifyEmailHeaderSubjectDefault");
+		headerSubject.setValue(headerSubject_);
 		//headerSubject.setEditable(administration.getEnableHeaderSubject());
 		
 		setListBBcode();
