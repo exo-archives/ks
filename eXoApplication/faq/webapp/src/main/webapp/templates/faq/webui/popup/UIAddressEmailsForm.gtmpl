@@ -6,33 +6,26 @@ import org.exoplatform.services.organization.User;
  rcontext.getJavascriptManager().addJavascript('eXo.cs.CheckBox.init("'+uiform.id+'") ;') ;
  %>
 <div class="UIInsertAddress">
-  <div class="InsertAddressContainer">
-  	 <div class="UISearch">
-      <div class="UIBarStyle">
-        <div class="NormalBarStyle">
-          <div class="LeftBar">
-            <div class="RightBar">
-              <div class="MiddleBar">
-                <div class="UISearchForm" style="float:left">
-                  <div class="QuickSet">
-                    <div class="SearchTitle"><%=_ctx.appRes(uicomponent.id+ ".label.user-search") %>:</div>
-                    <% uiform.renderField(uiform.USER_SEARCH) %>
-                    <a class="SearchIcon" href="<%=uicomponent.event("SearchUser")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"></a>
-                  </div>
-                </div>
-                <div class="AddressesGroup">
-                  <div class="AddressLabel" style="float:left; padding-left:10px;"><b><%=_ctx.appRes(uicomponent.id+ ".label.addresses-from-group") %> :</b></div>
-                  <div style="float:left; margin-left:10px;"><% uiform.renderField(uiform.USER_GROUP) %></div>
-                  <div style="clear:left"><span></span></div>
-                </div>
-                <div style="clear:both"><span></span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>        
-    </div>
+  <div class="InsertAddressContainer" style="padding:5px">
+  	<!-- ======================================= search user ======================================================= -->
+	<div style="border:1px solid gray;padding:10px;float:left;margin:5px 0px 10px 0px;text-align:center;width:620px;">
+		<div style="width:100%;float:left;margin:5px 5px 5px 10px;">
+			<div style="float:left;font-weight:bold;"><%=_ctx.appRes(uicomponent.id+ ".label.user-search") %>:</div>
+			<div style="float:left;margin-left:5px"><% uiform.renderField(uiform.USER_SEARCH) %></div>
+			<div>
+				<a class="SearchIcon" style="padding:5px 5px 2px 10px;float:left; margin-left:5px" href="<%=uicomponent.event("Search")%>" title="<%=_ctx.appRes(uicomponent.id+ '.label.quick-search') %>"></a>
+			</div>
+		</div>
+		
+		<div>
+		  <div class="AddressLabel" style="float:left; padding-left:10px;"><b><%=_ctx.appRes(uicomponent.id+ ".label.addresses-from-group") %> :</b></div>
+		  <div style="float:left; margin-left:10px;"><% uiform.renderField(uiform.USER_GROUP) %></div>
+		  <div style="clear:left"><span></span></div>
+		</div>
+	</div>
+	<div style="clear:left;"><span></span></div>
     
+	<!-- ======================================= view all users ======================================================= -->
     <div class="AddressContainer">
       <div class="ListAddress">
 
@@ -55,21 +48,23 @@ import org.exoplatform.services.organization.User;
             <tbody>
               <%
                 for (User user : uicomponent.getUsers()) {
-                checkboxField = uicomponent.getChildById(user.getUserName());
+					checkboxField = uicomponent.getChildById(user.getUserName());
               %>
-                <tr>
-									<td>
-                    <%
-                    if (checkboxField != null) { uicomponent.renderField(checkboxField); }
-                    %>
-                  </td>
-                  <td class="text BorderAddress"><%=user.getFullName()%></td>
-                  <td class="text"><%=(user.getEmail() != null ? user.getEmail() : "")%></td>
-                </tr>
+	                <tr>
+					  <td>
+	                    <%
+	                    if (checkboxField != null) { uicomponent.renderField(checkboxField); }
+	                    %>
+	                  </td>
+	                  <td class="text BorderAddress"><%=user.getFullName()%></td>
+	                  <td class="text"><%=(user.getEmail() != null ? user.getEmail() : "")%></td>
+	                </tr>
               <%}%>
-        </tbody>
+          </tbody>
         </table>
-        <%_ctx.include("app:/templates/faq/webui/UIPageIterator.gtmpl");%>     
+		<div style="padding:5px 10px;while-space:nowrap;">
+			<%_ctx.include("app:/templates/faq/webui/UIPageIterator.gtmpl");%>     
+		</div>
       </div>
       
     </div>
