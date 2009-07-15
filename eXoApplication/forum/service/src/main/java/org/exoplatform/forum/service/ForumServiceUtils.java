@@ -213,7 +213,24 @@ public class ForumServiceUtils {
 		return cacheService.getCacheInstance("org.exoplatform.forum.ForumPermissionsUsers");
 	}
 
-	
+	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+		List<String> listOfUser = new ArrayList<String>();
+		listOfUser.add(userId);
+		String value = "";
+		String id = "";
+		Membership membership = null;
+		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
+			id = object.toString();
+			id = id.replace("Membership[", "").replace("]", "");
+			membership = organizationService_.getMembershipHandler().findMembership(id);
+			value = membership.getGroupId();
+			listOfUser.add(value);
+			value = membership.getMembershipType() + ":" + value;
+			listOfUser.add(value);
+		}
+		return listOfUser;
+	}
 	
 	public static void reparePermissions(Node node, String owner) throws Exception {
 		ExtendedNode extNode = (ExtendedNode)node ;

@@ -35,6 +35,10 @@ public class ForumEventQuery {
 		this.listOfUser.addAll(listOfUser);
 	}
 	
+	public List<String> getListOfUser() {
+	  return listOfUser;
+  }
+	
 	public long getUserPermission() {
   	return userPermission;
   }

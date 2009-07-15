@@ -772,7 +772,7 @@ public class JCRDataStorage {
 		try {
 			Node cateHome = getCategoryHome(sProvider);
 			Node userHome = getUserProfileHome(sProvider);
-			Node userNode = userHome.getNode(userId);
+//			Node userNode = userHome.getNode(userId);
 			Node cateNode = null;
 			boolean isAddNew;
 			String []moderatorCat;
@@ -4774,6 +4774,11 @@ public class JCRDataStorage {
 		}
 		boolean isAnd = false;
 		String searchBy = null;
+		if(!isAdmin){
+			Map<String, List<String>> mapList = getCategoryViewer(categoryHome, ForumServiceUtils.getAllGroupAndMembershipOfUser(userId), listCateIds, listForumIds);
+			listCateIds = mapList.get(Utils.CATEGORY);
+			listForumIds = mapList.get(Utils.FORUM);
+		}
 		for (String type : types) {
 			StringBuffer queryString = new StringBuffer();
 			queryString.append("/jcr:root").append(pathQuery).append("//element(*,exo:").append(type).append(")");
@@ -4889,7 +4894,12 @@ public class JCRDataStorage {
 		}
 		eventQuery.setPath(path);
 		String type = eventQuery.getType();
-		String queryString = null;		
+		String queryString = null;
+		if(eventQuery.getUserPermission() > 0){
+			Map<String, List<String>> mapList = getCategoryViewer(categoryHome, eventQuery.getListOfUser(), listCateIds, listForumIds);
+			listCateIds = mapList.get(Utils.CATEGORY);
+			listForumIds = mapList.get(Utils.FORUM);
+		}
 		if (type.equals(Utils.CATEGORY)){
 			queryString = eventQuery.getPathQuery(listCateIds);
 		} else {
@@ -4931,6 +4941,71 @@ public class JCRDataStorage {
 		return listSearchEvent;
 	}
 
+	private Map<String, List<String>> getCategoryViewer(Node categoryHome, List<String> listOfUser, List<String> listCateIds, List<String> listForumIds) throws Exception {
+		Map<String, List<String>> mapList = new HashMap<String, List<String>>();
+		if(listOfUser == null || listOfUser.isEmpty()) {
+			listOfUser = new ArrayList<String>();
+			listOfUser.add(UserProfile.USER_GUEST);
+		}
+		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+		StringBuilder queryString = new StringBuilder();
+		queryString.append("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:forumCategory)");
+		int i=0;
+		for (String string : listOfUser) {
+      if(i==0) queryString.append("[(@exo:userPrivate=' ') or (@exo:userPrivate='").append(string).append("')");
+      else queryString.append(" or (@exo:userPrivate='").append(string).append("')");
+      i = 1;
+    }
+		if(i==1) queryString.append("]");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		NodeIterator iter1 = null;
+		if(iter.getSize() > 0 && iter.getSize() != categoryHome.getNodes().getSize()) {
+			String forumId, cateId;
+			List<String> listForumId = new ArrayList<String>();
+			List<String> listCateId = new ArrayList<String>();
+			while (iter.hasNext()) {
+        Node catNode = iter.nextNode();
+        cateId = catNode.getName();
+        if(listCateIds != null && !listCateIds.isEmpty()) {
+      		if(listCateIds.contains(cateId)) {
+      			listCateId.add(cateId);
+      		}
+      	} else {
+      		listCateId.add(cateId);
+      	}
+        iter1 = catNode.getNodes();
+        while (iter1.hasNext()) {
+          Node forumNode = iter1.nextNode();
+          if(forumNode.isNodeType("exo:forum")) {
+          	forumId =  forumNode.getName();
+          	if(listForumIds != null && !listForumIds.isEmpty()) {
+          		if(listForumIds.contains(forumId)) {
+          			listForumId.add(forumId);
+          		}
+          	} else {
+          		listForumId.add(forumId);
+          	}
+          }
+        }
+      }
+			mapList.put(Utils.FORUM, listForumId);
+			mapList.put(Utils.CATEGORY, listCateId);
+		} else if(iter.getSize() == 0) {
+			listForumIds = new ArrayList<String>();
+			listForumIds.add("forumId");
+			mapList.put(Utils.FORUM, listForumIds);
+			listCateIds = new ArrayList<String>();
+			listCateIds.add("cateId");
+			mapList.put(Utils.CATEGORY, listCateIds);
+		} else {
+			mapList.put(Utils.FORUM, listForumIds);
+			mapList.put(Utils.CATEGORY, listCateIds);
+		}
+		return mapList;
+	}
+	
 	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception {
 		Node watchingNode = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -4942,8 +5017,8 @@ public class JCRDataStorage {
 				watchingNode = (Node) categoryHome.getSession().getItem(path);
 			}else{
 				QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-				StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
-						+ "//*[@exo:id='").append(path).append("']") ;
+				StringBuffer queryString = new StringBuffer();
+				queryString.append("/jcr:root").append(categoryHome.getPath()).append("//*[@exo:id='").append(path).append("']") ;
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				watchingNode = result.getNodes().nextNode() ;

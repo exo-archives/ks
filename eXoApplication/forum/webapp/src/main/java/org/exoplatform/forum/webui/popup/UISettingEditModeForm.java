@@ -30,8 +30,6 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -58,6 +56,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 			@EventConfig(listeners = UISettingEditModeForm.SelectTabActionListener.class) 
 		}
 )
+@SuppressWarnings({"unused", "unchecked"})
 public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile;
 	public static final String FIELD_SCOPED_TAB = "Scoped" ;
@@ -126,7 +125,6 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		return list;
 	}
 	
-	@SuppressWarnings("unused")
   private boolean tabIsSelected(int tabId) {
 		if(this.tabId == tabId) return true ;
 		else return false ;
@@ -135,26 +133,27 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
-	@SuppressWarnings( { "unused", "unchecked" })
+	
 	private List<Category> getCategoryList() throws Exception {
 		List<Category> categoryList = new ArrayList<Category>();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 			String userId = userProfile.getUserId();
-			for (Category category : forumService.getCategories(sProvider)) {
-				String[] uesrs = category.getUserPrivate();
-				if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
-					if (ForumServiceUtils.hasPermission(uesrs, userId)) {
+			if(userProfile.getUserRole() > 0) {
+				for (Category category : forumService.getCategories()) {
+					String[] uesrs = category.getUserPrivate();
+					if (uesrs != null && uesrs.length > 0 && !uesrs[0].equals(" ")) {
+						if (ForumServiceUtils.hasPermission(uesrs, userId)) {
+							categoryList.add(category);
+						}
+					} else {
 						categoryList.add(category);
 					}
-				} else {
-					categoryList.add(category);
 				}
+			} else {
+				categoryList.addAll(forumService.getCategories());
 			}
 		} catch (Exception e) {
-		} finally {
-			sProvider.close();
 		}
 		if(!isSave) {
 			listCategoryinv = ((UIForumPortlet)this.getParent()).getInvisibleCategories();
@@ -174,20 +173,16 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		return categoryList;
 	}
 
-	@SuppressWarnings( { "unused", "unchecked" })
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		List<Forum> forumList = null;
 		String strQuery = "";
 		if (this.userProfile.getUserRole() > 0)
 			strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-			forumList = forumService.getForums(sProvider, categoryId, strQuery);
+			forumList = forumService.getForums(categoryId, strQuery);
 		} catch (Exception e) {
 			forumList = new ArrayList<Forum>();
-		} finally {
-			sProvider.close();
 		}
 		if(!isSave) listforuminv = ((UIForumPortlet)this.getParent()).getInvisibleForums();
 		for (Forum forum : forumList) {
@@ -206,7 +201,6 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	}
 
 	static public class SaveActionListener extends EventListener<UISettingEditModeForm> {
-		@SuppressWarnings("unchecked")
     public void execute(Event<UISettingEditModeForm> event) throws Exception {
 			UISettingEditModeForm editModeForm = event.getSource();
 			List<UIComponent> children = editModeForm.getChildren() ;
