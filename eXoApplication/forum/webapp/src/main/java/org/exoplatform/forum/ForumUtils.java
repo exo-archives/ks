@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -35,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
@@ -414,5 +416,14 @@ public class ForumUtils {
 			limitMB = -1 ;
 		}
 		return limitMB ;
-	}		
+	}
+	
+	static public class DatetimeComparatorDESC implements Comparator<Object> {
+    public int compare(Object o1, Object o2) throws ClassCastException {
+    	Date date1 = ((Post) o1).getCreatedDate() ;
+      Date date2  = ((Post) o2).getCreatedDate() ;
+      return date1.compareTo(date2) ;
+    }
+  }
+	
 }

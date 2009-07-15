@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -172,6 +173,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					//
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
+					Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC()) ;
 					uiForm.forumService.movePost(uiForm.posts, topicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
