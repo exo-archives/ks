@@ -6259,7 +6259,8 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
-	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
+	@SuppressWarnings("unchecked")
+  private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
 		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); // pSetting.getPeriodTime()
 		//String name = String.valueOf(cal.getTime().getTime()) ;

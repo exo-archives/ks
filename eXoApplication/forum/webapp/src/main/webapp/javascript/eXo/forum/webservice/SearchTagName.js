@@ -118,7 +118,12 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 			}
 		}
 	}else if(key > 40 || key == 8) {
-		window.setTimeout(eXo.forum.webservice.SearchTagName.searchIpBanTimeout, 50);
+		var str = String(eXo.forum.webservice.SearchTagName.searchTagNameNode.value)
+		if(key == 8 && (str.trim().length === 0 ||str.trim().length === 1)){
+			eXo.forum.webservice.SearchTagName.searchTagName('onclickForm');
+		} else {
+			window.setTimeout(eXo.forum.webservice.SearchTagName.searchIpBanTimeout, 50);
+		}
 	}
 };
 

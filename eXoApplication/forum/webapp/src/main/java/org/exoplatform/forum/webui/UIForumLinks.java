@@ -33,7 +33,6 @@ import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -69,25 +68,26 @@ public class UIForumLinks extends UIForm {
 	}
 	
 	private String getStrQuery(List<String> list, String property){
-		StringBuffer strQueryCate = new StringBuffer();
+		StringBuffer strQuery = new StringBuffer();
 		int t = 0;
 		for (String string : list) {
-			if(t == 0) strQueryCate.append("@exo:").append(property).append("='").append(string).append("'");
-			else strQueryCate.append(" or @exo:").append(property).append("='").append(string).append("'");
+			if(t == 0) strQuery.append("(").append(property).append("='").append(string).append("'");
+			else strQuery.append(" or ").append(property).append("='").append(string).append("'");
 			++t;
 		}
-		return strQueryCate.toString();
+		if(t > 0) strQuery.append(")");
+		return strQuery.toString();
 	}
 	
 	public void setUpdateForumLinks() throws Exception {
-		SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
 		try {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+			this.userProfile = forumPortlet.getUserProfile() ;
     } catch (Exception e) {
     	String userName = ForumSessionUtils.getCurrentUser();
 			if (userName != null) {
 				try {
-					userProfile = forumService.getQuickProfile(sProvider, userName);
+					userProfile = forumService.getQuickProfile(userName);
 				} catch (Exception ex) {
 					userProfile = new UserProfile();
 				}
@@ -97,13 +97,33 @@ public class UIForumLinks extends UIForm {
 		String strQueryForum = "";
 		List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
 		if(this.userProfile.getUserRole() > 0) {
-			strQueryCate = getStrQuery(listUser, "userPrivate");
-			if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "[@exo:userPrivate=' ' or "+strQueryCate+"]";
-			strQueryForum = getStrQuery(listUser, "moderators") ;
-			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "[@exo:isClosed='false' or "+strQueryForum+"]";
+			// set Query for Forum 
+			strQueryForum = getStrQuery(listUser, "@exo:moderators") ;
+			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "(@exo:isClosed='false' or "+strQueryForum + ")";
+			else strQueryForum = "@exo:isClosed='false'";
+			
+			// set Query for Category 
+			listUser.add(" ");
+			strQueryCate = getStrQuery(listUser, "@exo:userPrivate");
+		}
+		List<String> listCateIdScope = forumPortlet.getInvisibleCategories();
+		List<String> listForumIdScope = forumPortlet.getInvisibleForums();
+		if(!listForumIdScope.isEmpty() && !listForumIdScope.get(0).equals(" ")) {
+			String s = getStrQuery(listForumIdScope, "fn:name()");
+			if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = strQueryForum + " and " + s;
+			else strQueryForum = s;
 		}
 		
-		this.forumLinks = forumService.getAllLink(sProvider, strQueryCate, strQueryForum);
+		if(!listCateIdScope.isEmpty() && !listCateIdScope.get(0).equals(" ")) {
+			String s = getStrQuery(listCateIdScope, "fn:name()");
+			if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = strQueryCate + " and " + s;
+			else strQueryCate = s;
+		}
+		
+		if(!ForumUtils.isEmpty(strQueryForum)) strQueryForum = "["+strQueryForum+"]";
+		if(!ForumUtils.isEmpty(strQueryCate)) strQueryCate = "["+strQueryCate+"]";
+		
+		this.forumLinks = forumService.getAllLink(strQueryCate, strQueryForum);
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
 		list.add(new SelectItemOption<String>(this.getLabel(FIELD_FORUMHOMEPAGE_LABEL)+"/" + FIELD_FORUMHOMEPAGE_LABEL, Utils.FORUM_SERVICE)) ;
 		String space = "&nbsp; &nbsp; ",	type = "/categoryLink"; 
@@ -128,7 +148,6 @@ public class UIForumLinks extends UIForm {
 			forumLink.setValue(path.trim()) ;
 			addUIFormInput(forumLink) ;
 		}
-		sProvider.close();
 	}
 	
 	public UIFormSelectBoxForum getUIFormSelectBoxForum(String name) {
@@ -154,7 +173,7 @@ public class UIForumLinks extends UIForm {
 				if(!path.equals(uiForm.path)) {
 					if(path.lastIndexOf(Utils.FORUM) > 0) {
 						String id[] = path.trim().split("/");
-						Forum forum = uiForm.forumService.getForum(ForumSessionUtils.getSystemProvider(), id[0], id[1]);;
+						Forum forum = uiForm.forumService.getForum(id[0], id[1]);;
 						if(forum != null){
 							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 							forumContainer.getChild(UIForumDescription.class).setForum(forum);
@@ -163,7 +182,7 @@ public class UIForumLinks extends UIForm {
 							forumPortlet.updateIsRendered(ForumUtils.FORUM);
 						} else isErro = true ;
 					} else if(path.indexOf(Utils.CATEGORY) >= 0) {
-						Category category = uiForm.forumService.getCategory(ForumSessionUtils.getSystemProvider(), path.trim()) ;
+						Category category = uiForm.forumService.getCategory(path.trim()) ;
 						if(category != null){
 							UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 							categoryContainer.getChild(UICategory.class).update(category, null) ;
