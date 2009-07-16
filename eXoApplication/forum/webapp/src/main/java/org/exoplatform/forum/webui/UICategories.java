@@ -200,17 +200,13 @@ public class UICategories extends UIContainer	{
 	
 	private List<Forum> getForumList(String categoryId) throws Exception {
 		if(isCollapCategories(categoryId)) return new ArrayList<Forum>();
-		List<Forum> forumList = null ;
+		List<Forum> forumList = new ArrayList<Forum>() ;
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-		try {
-			forumList = forumService.getForums(sProvider, categoryId, strQuery);
-    } catch (Exception e) {
-    	forumList = new ArrayList<Forum>();
-    }finally {
-    	sProvider.close();
-    }
+
+		forumList = forumService.getForums(categoryId, strQuery);
+
+	    
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;
 		}
@@ -244,6 +240,8 @@ public class UICategories extends UIContainer	{
 		return forum_ ;
 	}
 	
+
+	
 	private Topic getLastTopic(String topicPath) throws Exception {
 		Topic topic = null;
 		if(!ForumUtils.isEmpty(topicPath)) {
@@ -253,16 +251,16 @@ public class UICategories extends UIContainer	{
 			if(topic == null) {
 				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				if(topicPath.indexOf("ForumService") < 0){
-					topicPath = forumService.getForumHomePath(sProvider) + "/" + topicPath;
+					topicPath = forumService.getForumHomePath() + "/" + topicPath;
 				}
 				try {
-					topic = forumService.getTopicByPath(sProvider, topicPath, true) ;
-		    } catch (Exception e) {
+					topic = forumService.getTopicSummary(topicPath) ;
+			    } catch (Exception e) {
 					e.printStackTrace();
 				}finally {
-		    	sProvider.close();
-		    }
-				if(topic != null)maptopicLast.put(topic.getId(), topic) ;
+			    	sProvider.close();
+			    }
+				if(topic != null) maptopicLast.put(topic.getId(), topic) ;
 			}
 		}
 		return topic ;
