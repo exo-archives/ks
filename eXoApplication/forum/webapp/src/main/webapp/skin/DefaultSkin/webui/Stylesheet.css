@@ -197,11 +197,13 @@
 .UIForumPortlet .ForumToolbar .LeftBar {
 	background:url('background/ForumToolBarLeft3x26.gif') no-repeat left top;
 	padding-left:3px;
+	height:26px;
 }
 
 .UIForumPortlet .ForumToolbar .RightBar {
 	background:url('background/ForumToolBarRight3x26.gif') no-repeat right top;
 	padding-right:3px;
+	height:26px;
 }
 
 .UIForumPortlet .ForumToolbar .CenterBar {

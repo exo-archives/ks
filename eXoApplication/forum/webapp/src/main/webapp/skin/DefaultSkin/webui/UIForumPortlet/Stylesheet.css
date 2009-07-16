@@ -149,6 +149,7 @@
 .UIForumPortlet .UIForumActionBar {
 	border: 1px solid #9499d8;
 	margin: 7px 10px;
+	height: 30px;
 }
 
 .UIForumPortlet .UIForumActionBar .ControlbarCotainer {
@@ -184,6 +185,7 @@
 .UIForumPortlet .UIForumDescription {
 	border: 1px solid #cdcdcd;
 	line-height: 16px;
+	height: 16px;
 	padding: 7px 10px; 
 	margin: 0px 0px 10px 0px;
 }

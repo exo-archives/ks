@@ -14,15 +14,14 @@
 		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
 	}
 %>
-<div class="UIForumActionBar" style="height:auto" id="UIForumActionBar">
+<div class="UIForumActionBar" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
 		<div class="RightForumActionBar">
 			<div class="CenterForumActionBar">
-				<div class="ControlbarCotainer" style="height:auto">
+				<div class="ControlbarCotainer">
 					<table>
 						<tr>
 							<td style="width:85%;" class="ControlButtonContainer">
-								<div style="height:28px;">								
 								<%String[] actions = [""];
 									actions = ["AddCategory", "ExportCategory", "ImportCategory", "AddForum"];
 								  if(isAdmin) {
@@ -109,7 +108,6 @@
 				      		</div>
 				      	</div>
 								<div style="clear:both;"><span></span></div>
-							</div>	
 							</td>
 							<td>
 								<div style="width:250px;">
