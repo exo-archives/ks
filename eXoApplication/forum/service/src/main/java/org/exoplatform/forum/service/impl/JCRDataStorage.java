@@ -55,6 +55,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -100,6 +101,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
@@ -117,6 +119,7 @@ import org.w3c.dom.Document;
  */
 public class JCRDataStorage {
 
+	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 	
@@ -229,13 +232,13 @@ public class JCRDataStorage {
 	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
-			String []strings = new String[]{};
+			String []adminrules = new String[]{};
 			for(int i = 0; i < rulesPlugins_.size(); ++i) {
 				List<String> list = new ArrayList<String>();
 				list.addAll(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE));
 				if(list.contains(userName)) return true;
-				strings = getStringsInList(list);
-				if(ForumServiceUtils.hasPermission(strings, userName))return true;
+				adminrules = getStringsInList(list);
+				if(ForumServiceUtils.hasPermission(adminrules, userName))return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -495,24 +498,18 @@ public class JCRDataStorage {
 			ForumAdministration forumAdministration = new ForumAdministration();
 			try {
 				Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
-				if (forumAdminNode.hasProperty("exo:forumSortBy"))
-					forumAdministration.setForumSortBy(forumAdminNode.getProperty("exo:forumSortBy").getString());
-				if (forumAdminNode.hasProperty("exo:forumSortByType"))
-					forumAdministration.setForumSortByType(forumAdminNode.getProperty("exo:forumSortByType").getString());
-				if (forumAdminNode.hasProperty("exo:topicSortBy"))
-					forumAdministration.setTopicSortBy(forumAdminNode.getProperty("exo:topicSortBy").getString());
-				if (forumAdminNode.hasProperty("exo:topicSortByType"))
-					forumAdministration.setTopicSortByType(forumAdminNode.getProperty("exo:topicSortByType").getString());
-				if (forumAdminNode.hasProperty("exo:censoredKeyword"))
-					forumAdministration.setCensoredKeyword(forumAdminNode.getProperty("exo:censoredKeyword").getString());
-				if (forumAdminNode.hasProperty("exo:enableHeaderSubject"))
-					forumAdministration.setEnableHeaderSubject(forumAdminNode.getProperty("exo:enableHeaderSubject").getBoolean());
-				if (forumAdminNode.hasProperty("exo:headerSubject"))
-					forumAdministration.setHeaderSubject(forumAdminNode.getProperty("exo:headerSubject").getString());
-				if (forumAdminNode.hasProperty("exo:notifyEmailContent"))
-					forumAdministration.setNotifyEmailContent(forumAdminNode.getProperty("exo:notifyEmailContent").getString());
-				if (forumAdminNode.hasProperty("exo:notifyEmailMoved"))
-					forumAdministration.setNotifyEmailMoved(forumAdminNode.getProperty("exo:notifyEmailMoved").getString());
+				
+				PropertyReader reader = new PropertyReader(forumAdminNode);
+				
+				forumAdministration.setForumSortBy(reader.string("exo:forumSortBy"));
+				forumAdministration.setForumSortByType(reader.string("exo:forumSortByType"));
+				forumAdministration.setTopicSortBy(reader.string("exo:topicSortBy"));
+				forumAdministration.setTopicSortByType(reader.string("exo:topicSortByType"));
+				forumAdministration.setCensoredKeyword(reader.string("exo:censoredKeyword"));
+				forumAdministration.setEnableHeaderSubject(reader.bool("exo:enableHeaderSubject"));				
+				forumAdministration.setHeaderSubject(reader.string("exo:headerSubject"));
+				forumAdministration.setNotifyEmailContent(reader.string("exo:notifyEmailContent"));
+				forumAdministration.setNotifyEmailMoved(reader.string("exo:notifyEmailMoved"));
 				return forumAdministration;
 			} catch (PathNotFoundException e) {
 				return forumAdministration;
@@ -662,38 +659,25 @@ public class JCRDataStorage {
   }
 
 	private Category getCategory(Node cateNode) throws Exception {
-		Category cat = new Category();
-		cat.setId(cateNode.getName());
+		Category cat = new Category(cateNode.getName());
 		cat.setPath(cateNode.getPath());
-		if (cateNode.hasProperty("exo:owner"))
-			cat.setOwner(cateNode.getProperty("exo:owner").getString());
-		if (cateNode.hasProperty("exo:name"))
-			cat.setCategoryName(cateNode.getProperty("exo:name").getString());
-		if (cateNode.hasProperty("exo:categoryOrder"))
-			cat.setCategoryOrder(cateNode.getProperty("exo:categoryOrder").getLong());
-		if (cateNode.hasProperty("exo:createdDate"))
-			cat.setCreatedDate(cateNode.getProperty("exo:createdDate").getDate().getTime());
-		if (cateNode.hasProperty("exo:description"))
-			cat.setDescription(cateNode.getProperty("exo:description").getString());
-		if (cateNode.hasProperty("exo:modifiedBy"))
-			cat.setModifiedBy(cateNode.getProperty("exo:modifiedBy").getString());
-		if (cateNode.hasProperty("exo:modifiedDate"))
-			cat.setModifiedDate(cateNode.getProperty("exo:modifiedDate").getDate().getTime());
-		if (cateNode.hasProperty("exo:userPrivate"))
-			cat.setUserPrivate(ValuesToArray(cateNode.getProperty("exo:userPrivate").getValues()));
-		if (cateNode.hasProperty("exo:moderators"))
-			cat.setModerators(ValuesToArray(cateNode.getProperty("exo:moderators").getValues()));
-		if (cateNode.hasProperty("exo:forumCount"))
-			cat.setForumCount(cateNode.getProperty("exo:forumCount").getLong());
-		if(cateNode.isNodeType("exo:forumWatching") && cateNode.hasProperty("exo:emailWatching")) 
-			cat.setEmailNotification(ValuesToArray(cateNode.getProperty("exo:emailWatching").getValues()));
-		if (cateNode.hasProperty("exo:viewer"))
-			cat.setViewer(ValuesToArray(cateNode.getProperty("exo:viewer").getValues()));
-		if (cateNode.hasProperty("exo:createTopicRole"))
-			cat.setCreateTopicRole(ValuesToArray(cateNode.getProperty("exo:createTopicRole").getValues()));
-		if (cateNode.hasProperty("exo:poster"))
-			cat.setPoster(ValuesToArray(cateNode.getProperty("exo:poster").getValues()));
-		
+		PropertyReader reader = new PropertyReader(cateNode);
+		cat.setOwner(reader.string("exo:owner"));
+		cat.setCategoryName(reader.string("exo:name"));
+		cat.setCategoryOrder(reader.l("exo:categoryOrder"));
+		cat.setCreatedDate(reader.date("exo:createdDate"));
+		cat.setDescription(reader.string("exo:description"));
+		cat.setModifiedBy(reader.string("exo:modifiedBy"));
+		cat.setModifiedDate(reader.date("exo:modifiedDate"));
+		cat.setUserPrivate(reader.strings("exo:userPrivate"));
+		cat.setModerators(reader.strings("exo:moderators"));
+		cat.setForumCount(reader.l("exo:forumCount"));
+		if(cateNode.isNodeType("exo:forumWatching")) {
+		  cat.setEmailNotification(reader.strings("exo:emailWatching"));
+		}
+		cat.setViewer(reader.strings("exo:viewer"));
+		cat.setCreateTopicRole(reader.strings("exo:createTopicRole"));
+		cat.setPoster(reader.strings("exo:poster"));		
 		return cat;
 	}
 
@@ -806,12 +790,12 @@ public class JCRDataStorage {
 			        	List<String> forumIdsMod = ValuesToList(userNode.getProperty("exo:moderateForums").getValues());
 			        	List<String> newForumIdMod = new ArrayList<String>();
 			        	newForumIdMod.addAll(forumIdsMod);
-			        	System.out.println("\n\n forumIdsMod1: " + forumIdsMod.toString());
+			        	log.debug("\n\n forumIdsMod1: " + forumIdsMod.toString());
 			        	while (iter.hasNext()) {
 			        		Node node = iter.nextNode();
 			    				if(node.isNodeType("exo:forum")){
 			    					list = ValuesToList(node.getProperty("exo:moderators").getValues());
-			    					System.out.println("\n\n forumMode: " + list.toString());
+			    					log.debug("\n\n forumMode: " + list.toString());
 			    					if(!list.isEmpty() && list.contains(userId)) {
 			    						list.remove(userId) ;
 			    						if(list.isEmpty()) list.add(" ");
@@ -821,7 +805,7 @@ public class JCRDataStorage {
 		    					for (String string : forumIdsMod) {
                     if(string.indexOf(node.getName()) >= 0) {
                     	newForumIdMod.remove(string);
-                    	System.out.println("\n\n string: " + string);
+                    	log.debug("\n\n string: " + string);
                     }
                   }
 			        	}
@@ -830,8 +814,8 @@ public class JCRDataStorage {
 			        		newForumIdMod = new ArrayList<String>();
 			        		newForumIdMod.add(" ");
 			        	}
-			        	System.out.println("\n\n forumIdsMod2: ");
-			        	System.out.println(newForumIdMod.toString());
+			        	log.debug("\n\n forumIdsMod2: ");
+			        	log.debug(newForumIdMod.toString());
 			        	userNode.setProperty("exo:moderateForums", getStringsInList(newForumIdMod));*/
 	        		}
 	        	}
@@ -865,7 +849,7 @@ public class JCRDataStorage {
 	          }
           }
 					strModerators = getStringsInList(list);
-					System.out.println("\n\n moderator in forum " + list.toString() + "\n\n oldModeratoForums: " + oldModeratoForums.length);
+					log.debug("\n\n moderator in forum " + list.toString() + "\n\n oldModeratoForums: " + oldModeratoForums.length);
 					node.setProperty("exo:moderators", strModerators);
 					forum.setId(node.getName());
 					forum.setForumName(node.getProperty("exo:name").getString());
@@ -976,7 +960,7 @@ public class JCRDataStorage {
 				listeners_.put(catNode.getPath(), statisticEventListener); 
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to register listener for category " +path, e);
 		} finally{ sProvider.close() ;}
 	}
  	
@@ -989,7 +973,7 @@ public class JCRDataStorage {
  				listeners_.remove(path) ;
  			} 	 					
 		}catch(Exception e){
-			e.printStackTrace() ;
+			log.error("Failed to unregister listener for category " +path, e);
 		}finally{
 			sProvider.close() ;
 		}
@@ -1005,6 +989,7 @@ public class JCRDataStorage {
 			categoryHome.save() ;			
 			return category;
 		} catch(Exception e) {
+		log.error("Failed to remover category " +categoryId, e);
 			return null ;
 		}finally { sProvider.close() ;}		
 	}
@@ -1036,14 +1021,18 @@ public class JCRDataStorage {
 			NodeIterator iter = result.getNodes();
 			List<Forum> forums = new ArrayList<Forum>();
 			while (iter.hasNext()) {
+				Node forumNode = null;
 				try {
-					Node forumNode = iter.nextNode();
+					forumNode = iter.nextNode();
 					forums.add(getForum(forumNode));
-				}catch (Exception e) {}				
+				}catch (Exception e) {
+					log.error("Failed to load forum node " + forumNode.getPath(),e);
+				}				
 			}
 			return forums;
 		} catch (Exception e) {
-			return null;
+			log.error("Error retrieving forums for category " + categoryId, e);
+			return new ArrayList<Forum>();
 		}finally{ sProvider.close() ;}
 	}
 
@@ -1082,7 +1071,7 @@ public class JCRDataStorage {
 				forumNode.save();
 			}
 		} catch (RepositoryException e) {
-			e.printStackTrace();
+			log.error("Failed to modify forum " + forum.getForumName(), e);
 		}finally{ sProvider.close() ;}
 	}
 
@@ -1205,11 +1194,11 @@ public class JCRDataStorage {
 		Node userProfileNode;
 		List<String> list = new ArrayList<String>();
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
-		System.out.println("\n\n setModeratorForum: " + forum.getForumName());
+		log.debug("\n\n setModeratorForum: " + forum.getForumName());
 		if (moderators.size() > 0) {
 			for (String string : moderators) {
 				string = string.trim();
-				System.out.println("\n\n " + string);
+				log.debug("\n\n " + string);
 				list = new ArrayList<String>();
 				try {
 					userProfileNode = userProfileHomeNode.getNode(string);
@@ -1223,10 +1212,10 @@ public class JCRDataStorage {
 							list.add(string2);
 						}
 					}
-					System.out.println("\n\n list " + list.toString());
+					log.debug("\n\n list " + list.toString());
 					if (!hasMod) {
 						list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
-						System.out.println("\n\n has Mod list: " + list.toString());
+						log.debug("\n\n has Mod list: " + list.toString());
 						userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
 						if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
 							userProfileNode.setProperty("exo:userRole", 1);
@@ -1252,14 +1241,14 @@ public class JCRDataStorage {
 		// remove
 		if (!isNew) {
 			List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldModeratoForums);
-			System.out.println("\n\n oldmoderators: " + oldmoderators);
+			log.debug("\n\n oldmoderators: " + oldmoderators);
 			for (String string : oldmoderators) {
 				boolean isDelete = true;
 				if (moderators.contains(string)) {
 					isDelete = false;
 				}
 				if (isDelete) {
-					System.out.println("\n\n delete: " + string);
+					log.debug("\n\n delete: " + string);
 					try {
 						list = new ArrayList<String>();
 						userProfileNode = userProfileHomeNode.getNode(string);
@@ -1307,7 +1296,7 @@ public class JCRDataStorage {
 						List<String> moderators = ForumServiceUtils.getUserPermission(cateMods);
 						if(moderators.contains(userName)) continue;
 					}
-					System.out.println("\n\n isDelete " + isDelete + "  path: " + path + "\n " + userName);
+					log.debug("\n\n isDelete " + isDelete + "  path: " + path + "\n " + userName);
 					if (forumNode.hasProperty("exo:moderators")) {
 						String[] oldUserNamesModerate = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
 						List<String> list = new ArrayList<String>();
@@ -1316,7 +1305,7 @@ public class JCRDataStorage {
 								list.add(string);
 							}
 						}
-						System.out.println("\n\n path " + path + "  list: " + list.toString() + "\n ");
+						log.debug("\n\n path " + path + "  list: " + list.toString() + "\n ");
 						forumNode.setProperty("exo:moderators", getStringsInList(list));
 					}
 				} else {
@@ -1360,16 +1349,15 @@ public class JCRDataStorage {
 
 	private Forum getForum(Node forumNode) throws Exception {
 		Forum forum = new Forum();
+		PropertyReader reader = new PropertyReader(forumNode);
 		forum.setId(forumNode.getName());
 		forum.setPath(forumNode.getPath());
-		forum.setOwner(forumNode.getProperty("exo:owner").getString());
-		forum.setForumName(forumNode.getProperty("exo:name").getString());
-		forum.setForumOrder(Integer.valueOf(forumNode.getProperty("exo:forumOrder").getString()));
-		forum.setCreatedDate(forumNode.getProperty("exo:createdDate").getDate().getTime());
-		if (forumNode.hasProperty("exo:modifiedBy"))
-			forum.setModifiedBy(forumNode.getProperty("exo:modifiedBy").getString());
-		if (forumNode.hasProperty("exo:modifiedDate"))
-			forum.setModifiedDate(forumNode.getProperty("exo:modifiedDate").getDate().getTime());
+		forum.setOwner(reader.string("exo:owner"));
+		forum.setForumName(reader.string("exo:name"));
+		forum.setForumOrder(Integer.valueOf(reader.string("exo:forumOrder")));
+		forum.setCreatedDate(reader.date("exo:createdDate"));
+		forum.setModifiedBy(reader.string("exo:modifiedBy"));
+		forum.setModifiedDate(reader.date("exo:modifiedDate"));
 		String lastTopicPath = "";
 		if (forumNode.hasProperty("exo:lastTopicPath")){
 			lastTopicPath = forumNode.getProperty("exo:lastTopicPath").getString();
@@ -1381,37 +1369,25 @@ public class JCRDataStorage {
 				}
 			}
 		}
-		forum.setLastTopicPath(lastTopicPath);
-		if (forumNode.hasProperty("exo:description"))
-			forum.setDescription(forumNode.getProperty("exo:description").getString());
-		forum.setPostCount(forumNode.getProperty("exo:postCount").getLong());
-		forum.setTopicCount(forumNode.getProperty("exo:topicCount").getLong());
-		if (forumNode.hasProperty("exo:isModerateTopic"))
-			forum.setIsModerateTopic(forumNode.getProperty("exo:isModerateTopic").getBoolean());
-		if (forumNode.hasProperty("exo:isModeratePost"))
-			forum.setIsModeratePost(forumNode.getProperty("exo:isModeratePost").getBoolean());
-		forum.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
-		forum.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
-		if (forumNode.hasProperty("exo:isAutoAddEmailNotify"))
-			forum.setIsAutoAddEmailNotify(forumNode.getProperty("exo:isAutoAddEmailNotify").getBoolean());
-		if (forumNode.hasProperty("exo:notifyWhenAddPost"))
-			forum.setNotifyWhenAddPost(ValuesToArray(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
-		if (forumNode.hasProperty("exo:notifyWhenAddTopic"))
-			forum.setNotifyWhenAddTopic(ValuesToArray(forumNode.getProperty("exo:notifyWhenAddTopic").getValues()));
-		if (forumNode.hasProperty("exo:viewer"))
-			forum.setViewer(ValuesToArray(forumNode.getProperty("exo:viewer").getValues()));
-		if (forumNode.hasProperty("exo:createTopicRole"))
-			forum.setCreateTopicRole(ValuesToArray(forumNode.getProperty("exo:createTopicRole").getValues()));
-		if (forumNode.hasProperty("exo:poster"))
-			forum.setPoster(ValuesToArray(forumNode.getProperty("exo:poster").getValues()));
-		if (forumNode.hasProperty("exo:moderators"))
-			forum.setModerators(ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
-		if (forumNode.hasProperty("exo:banIPs"))
-			forum.setBanIP(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
-		
+		forum.setLastTopicPath(lastTopicPath);	
+		forum.setDescription(reader.string("exo:description"));
+		forum.setPostCount(reader.l("exo:postCount"));
+		forum.setTopicCount(reader.l("exo:topicCount"));
+		forum.setIsModerateTopic(reader.bool("exo:isModerateTopic"));
+		forum.setIsModeratePost(reader.bool("exo:isModeratePost"));
+		forum.setIsClosed(reader.bool("exo:isClosed"));
+		forum.setIsLock(reader.bool("exo:isLock"));
+		forum.setIsAutoAddEmailNotify(reader.bool("exo:isAutoAddEmailNotify"));
+		forum.setNotifyWhenAddPost(reader.strings("exo:notifyWhenAddPost"));
+		forum.setNotifyWhenAddTopic(reader.strings("exo:notifyWhenAddTopic"));
+		forum.setViewer(reader.strings("exo:viewer"));
+		forum.setCreateTopicRole(reader.strings("exo:createTopicRole"));
+		forum.setPoster(reader.strings("exo:poster"));
+		forum.setModerators(reader.strings("exo:moderators"));
+		forum.setBanIP(reader.list("exo:banIPs"));
 		if (forumNode.isNodeType("exo:forumWatching")) {
 			if(forumNode.hasProperty("exo:emailWatching"))
-				forum.setEmailNotification(ValuesToArray(forumNode.getProperty("exo:emailWatching").getValues()));
+				forum.setEmailNotification(reader.strings("exo:emailWatching"));
 		}
 		return forum;
 	}
@@ -1635,6 +1611,40 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	
+
+	public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
+		Topic topic = null;
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {			
+			Node forumHomeNode = getForumHomeNode(sProvider);
+			if (topicPath == null || topicPath.length() <= 0)
+				return null;
+			if (topicPath.indexOf(forumHomeNode.getName()) < 0)
+				topicPath = forumHomeNode.getPath() + "/" + topicPath;
+		
+			Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
+			topic = getTopicNodeSummary(topicNode);
+			if (topic == null && isLastPost) {
+				if (topicPath != null && topicPath.length() > 0) {
+					String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
+					topic = getTopicNodeSummary(queryLastTopic(sProvider, forumPath));
+				}
+			}
+			return topic; 
+		} catch (RepositoryException e) {
+			if (topicPath != null && topicPath.length() > 0 && isLastPost) {
+				String forumPath = topicPath.substring(0, topicPath.lastIndexOf("/"));
+				topic = getTopicNodeSummary(queryLastTopic(sProvider, forumPath));
+			}
+			return topic ;
+		}catch(Exception e) {
+			return null ;
+		}finally{sProvider.close() ;}
+		
+	}
+	
+	
 	public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
 		Topic topic = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1679,7 +1689,7 @@ public class JCRDataStorage {
 			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 			while (iter.hasNext()) {
 				topicNode = iter.nextNode();
-				if (forumNode.hasProperty("exo:isModerateTopic") && !forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
+				if (!forumNode.hasProperty("exo:isModerateTopic") && !forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 					forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 					isSavePath = true;
 					break;
@@ -1705,71 +1715,91 @@ public class JCRDataStorage {
 		}
 		return topicNode;
 	}
+	
+
+	private Topic getTopicNodeSummary(Node topicNode) throws Exception {
+		if (topicNode == null) return null;
+		Topic topicNew = new Topic();
+		PropertyReader reader = new PropertyReader(topicNode);
+		topicNew.setId(topicNode.getName()) ;
+		topicNew.setPath(topicNode.getPath());
+		topicNew.setIcon(reader.string("exo:icon"));
+		topicNew.setTopicName(reader.string("exo:name"));
+		topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
+		topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
+		topicNew.setIsClosed(reader.bool("exo:isClosed"));
+		topicNew.setIsApproved(reader.bool("exo:isApproved"));
+		topicNew.setIsPoll(reader.bool("exo:isPoll"));
+		return topicNew;
+	}	
+	
 
 	private Topic getTopicNode(Node topicNode) throws Exception {
 		if (topicNode == null) return null;
 		Topic topicNew = new Topic();
+		PropertyReader reader = new PropertyReader(topicNode);
 		topicNew.setId(topicNode.getName()) ;
-		topicNew.setPath(topicNode.getPath()) ;
-		topicNew.setOwner(topicNode.getProperty("exo:owner").getString()) ;
-		topicNew.setTopicName(topicNode.getProperty("exo:name").getString()) ;
-		topicNew.setCreatedDate(topicNode.getProperty("exo:createdDate").getDate().getTime()) ;
-		if(topicNode.hasProperty("exo:modifiedBy"))topicNew.setModifiedBy(topicNode.getProperty("exo:modifiedBy").getString()) ;
-		if(topicNode.hasProperty("exo:modifiedDate"))topicNew.setModifiedDate(topicNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
-		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
-		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
-		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
-		topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
-		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
-		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
-		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
-		topicNew.setIcon(topicNode.getProperty("exo:icon").getString()) ;
-		topicNew.setLink(topicNode.getProperty("exo:link").getString());
-		if(topicNode.hasProperty("exo:isNotifyWhenAddPost"))topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
-		topicNew.setIsModeratePost(topicNode.getProperty("exo:isModeratePost").getBoolean()) ;
-		topicNew.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean()) ;
+		topicNew.setPath(topicNode.getPath()) ;		
+		topicNew.setOwner(reader.string("exo:owner"));
+		topicNew.setTopicName(reader.string("exo:name"));
+		topicNew.setCreatedDate(reader.date("exo:createdDate"));
+		topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
+		topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
+		topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
+		topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
+		topicNew.setDescription(reader.string("exo:description"));
+		topicNew.setTopicType(reader.string("exo:topicType"));
+		topicNew.setPostCount(reader.l("setPostCount"));
+		topicNew.setViewCount(reader.l("exo:viewCount"));
+		topicNew.setNumberAttachment(reader.l("exo:numberAttachments"));
+		topicNew.setIcon(reader.string("exo:icon"));
+		topicNew.setLink(reader.string("exo:link"));
+		topicNew.setIsNotifyWhenAddPost(reader.string("exo:isNotifyWhenAddPost", null));
+		topicNew.setIsModeratePost(reader.bool("exo:isModeratePost"));
+		topicNew.setIsClosed(reader.bool("exo:isClosed"));
 		if(topicNode.getParent().getProperty("exo:isLock").getBoolean()) topicNew.setIsLock(true);
 		else topicNew.setIsLock(topicNode.getProperty("exo:isLock").getBoolean()) ;
-		topicNew.setIsApproved(topicNode.getProperty("exo:isApproved").getBoolean()) ;
-		topicNew.setIsSticky(topicNode.getProperty("exo:isSticky").getBoolean()) ;
-		topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
-		topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
-		topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
-		topicNew.setCanView(ValuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
-		topicNew.setCanPost(ValuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
-		if(topicNode.hasProperty("exo:isPoll"))topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
-		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToArray(topicNode.getProperty("exo:userVoteRating").getValues()));
-		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToArray(topicNode.getProperty("exo:tagId").getValues()));
-		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble());
+		
+		topicNew.setIsApproved(reader.bool("exo:isApproved"));
+		topicNew.setIsSticky(reader.bool("exo:isSticky"));
+		topicNew.setIsWaiting(reader.bool("exo:isWaiting"));
+		topicNew.setIsActive(reader.bool("exo:isActive"));
+		topicNew.setIsActiveByForum(reader.bool("exo:isActiveByForum"));
+		topicNew.setCanView(reader.strings("exo:canView"));
+		topicNew.setCanPost(reader.strings("exo:canPost"));
+		
+		topicNew.setIsPoll(reader.bool("exo:isPoll"));
+		topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
+		topicNew.setTagId(reader.strings("exo:tagId"));
+		topicNew.setVoteRating(reader.d("exo:voteRating"));
 		if(topicNode.isNodeType("exo:forumWatching") && topicNode.hasProperty("exo:emailWatching")) 
-			topicNew.setEmailNotification(ValuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
+			topicNew.setEmailNotification(reader.strings("exo:emailWatching"));
 		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST);
 		try {
 			Node FirstPostNode = topicNode.getNode(idFirstPost);
-			if (FirstPostNode.hasProperty("exo:numberAttachments")) {
-				if (FirstPostNode.getProperty("exo:numberAttachments").getLong() > 0) {
-					NodeIterator postAttachments = FirstPostNode.getNodes();
-					List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-					Node nodeFile;
-					while (postAttachments.hasNext()) {
-						Node node = postAttachments.nextNode();
-						if (node.isNodeType("nt:file")) {
-							JCRForumAttachment attachment = new JCRForumAttachment();
-							nodeFile = node.getNode("jcr:content");
-							attachment.setId(node.getName());
-							attachment.setPathNode(node.getPath());
-							attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-							attachment.setName(node.getProperty("exo:fileName").getString());
-							String workspace = node.getSession().getWorkspace().getName() ;
-							attachment.setWorkspace(workspace);
-							attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-							attachment.setPath("/" + workspace + node.getPath());
-							attachments.add(attachment);
-						}
+			if (reader.l("exo:numberAttachments") > 0) {
+				NodeIterator postAttachments = FirstPostNode.getNodes();
+				List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+				Node nodeFile;
+				while (postAttachments.hasNext()) {
+					Node node = postAttachments.nextNode();
+					if (node.isNodeType("nt:file")) {
+						JCRForumAttachment attachment = new JCRForumAttachment();
+						nodeFile = node.getNode("jcr:content");
+						attachment.setId(node.getName());
+						attachment.setPathNode(node.getPath());
+						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+						attachment.setName(node.getProperty("exo:fileName").getString());
+						String workspace = node.getSession().getWorkspace().getName() ;
+						attachment.setWorkspace(workspace);
+						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+						attachment.setPath("/" + workspace + node.getPath());
+						attachments.add(attachment);
 					}
-					topicNew.setAttachments(attachments);
 				}
+				topicNew.setAttachments(attachments);
 			}
+	
 			return topicNew;
 		} catch (PathNotFoundException e) {
 			return topicNew;
@@ -2377,62 +2407,46 @@ public class JCRDataStorage {
 
 	protected Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post();
+		PropertyReader reader = new PropertyReader(postNode);
 		postNew.setId(postNode.getName());
 		postNew.setPath(postNode.getPath());
-
-		if (postNode.hasProperty("exo:owner"))
-			postNew.setOwner(postNode.getProperty("exo:owner").getString());
-		if (postNode.hasProperty("exo:createdDate"))
-			postNew.setCreatedDate(postNode.getProperty("exo:createdDate").getDate().getTime());
-		if (postNode.hasProperty("exo:modifiedBy"))
-			postNew.setModifiedBy(postNode.getProperty("exo:modifiedBy").getString());
-		if (postNode.hasProperty("exo:modifiedDate"))
-			postNew.setModifiedDate(postNode.getProperty("exo:modifiedDate").getDate().getTime());
-		if (postNode.hasProperty("exo:editReason"))
-			postNew.setEditReason(postNode.getProperty("exo:editReason").getString());
-		if (postNode.hasProperty("exo:name"))
-			postNew.setName(postNode.getProperty("exo:name").getString());
-		if (postNode.hasProperty("exo:message"))
-			postNew.setMessage(postNode.getProperty("exo:message").getString());
-		if (postNode.hasProperty("exo:remoteAddr"))
-			postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString());
-		if (postNode.hasProperty("exo:icon"))
-			postNew.setIcon(postNode.getProperty("exo:icon").getString());
-		if (postNode.hasProperty("exo:link"))
-			postNew.setLink(postNode.getProperty("exo:link").getString());
-		if (postNode.hasProperty("exo:isApproved"))
-			postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean());
-		if (postNode.hasProperty("exo:isHidden"))
-			postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean());
-		if (postNode.hasProperty("exo:isActiveByTopic"))
-			postNew.setIsActiveByTopic(postNode.getProperty("exo:isActiveByTopic").getBoolean());
-		if (postNode.hasProperty("exo:userPrivate"))
-			postNew.setUserPrivate(ValuesToArray(postNode.getProperty("exo:userPrivate").getValues()));
-		if (postNode.hasProperty("exo:numberAttach")) {
-			long numberAttach = postNode.getProperty("exo:numberAttach").getLong();
-			postNew.setNumberAttach(numberAttach);
-			if (numberAttach > 0) {
-				NodeIterator postAttachments = postNode.getNodes();
-				List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-				Node nodeFile;
-				while (postAttachments.hasNext()) {
-					Node node = postAttachments.nextNode();
-					if (node.isNodeType("nt:file")) {
-						JCRForumAttachment attachment = new JCRForumAttachment();
-						nodeFile = node.getNode("jcr:content");
-						attachment.setId(node.getName());
-						attachment.setPathNode(node.getPath());
-						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-						attachment.setName(node.getProperty("exo:fileName").getString());
-						String workspace = node.getSession().getWorkspace().getName() ;
-						attachment.setWorkspace(workspace);
-						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-						attachment.setPath("/" + workspace + node.getPath());
-						attachments.add(attachment);
-					}
+		
+		postNew.setOwner(reader.string("exo:owner"));
+		postNew.setCreatedDate(reader.date("exo:createdDate"));
+		postNew.setModifiedBy(reader.string("exo:modifiedBy"));
+		postNew.setModifiedDate(reader.date("exo:modifiedDate"));
+		postNew.setEditReason(reader.string("exo:editReason"));
+		postNew.setName(reader.string("exo:name"));
+		postNew.setMessage(reader.string("exo:message"));
+		postNew.setRemoteAddr(reader.string("exo:remoteAddr"));
+		postNew.setIcon(reader.string("exo:icon"));
+		postNew.setLink(reader.string("exo:link"));
+		postNew.setIsApproved(reader.bool("exo:isApproved"));
+		postNew.setIsHidden(reader.bool("exo:isHidden"));
+		postNew.setIsActiveByTopic(reader.bool("exo:isActiveByTopic"));
+		postNew.setUserPrivate(reader.strings("exo:userPrivate"));
+		postNew.setNumberAttach(reader.l("exo:numberAttach"));
+		if (postNew.getNumberAttach() > 0) {
+			NodeIterator postAttachments = postNode.getNodes();
+			List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+			Node nodeFile;
+			while (postAttachments.hasNext()) {
+				Node node = postAttachments.nextNode();
+				if (node.isNodeType("nt:file")) {
+					JCRForumAttachment attachment = new JCRForumAttachment();
+					nodeFile = node.getNode("jcr:content");
+					attachment.setId(node.getName());
+					attachment.setPathNode(node.getPath());
+					attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+					attachment.setName(node.getProperty("exo:fileName").getString());
+					String workspace = node.getSession().getWorkspace().getName() ;
+					attachment.setWorkspace(workspace);
+					attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+					attachment.setPath("/" + workspace + node.getPath());
+					attachments.add(attachment);
 				}
-				postNew.setAttachments(attachments);
 			}
+			postNew.setAttachments(attachments);			
 		}
 		return postNew;
 	}
@@ -3999,45 +4013,36 @@ public class JCRDataStorage {
 		Node userProfileNode = getUserProfileHome(sProvider);
 		Node newProfileNode;
 		String title = "";
+		PropertyReader reader = new PropertyReader(userProfileNode);
 		try {
 			newProfileNode = userProfileNode.getNode(userName);
+			PropertyReader readernew = new PropertyReader(newProfileNode);
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
 				title = newProfileNode.getProperty("exo:userTitle").getString();
-			userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
-			if (userProfileNode.hasProperty("exo:fullName"))
-				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
-			if (userProfileNode.hasProperty("exo:firstName"))
-				userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
-			if (userProfileNode.hasProperty("exo:lastName"))
-				userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
-			if (userProfileNode.hasProperty("exo:email"))
-				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());
+			userProfile.setScreenName(reader.string("exo:screenName"));
+			userProfile.setFullName(reader.string("exo:fullName"));
+			userProfile.setFirstName(reader.string("exo:firstName"));
+			userProfile.setLastName(reader.string("exo:fullName"));
+			userProfile.setEmail(reader.string("exo:lastName"));
+
 			if(isAdminRole(userName)) {
-				userProfile.setUserRole((long)0);
+				userProfile.setUserRole((long)0); // admin role = 0
 			} else {
-				if (newProfileNode.hasProperty("exo:userRole"))
-					userProfile.setUserRole(newProfileNode.getProperty("exo:userRole").getLong());
+				userProfile.setUserRole(readernew.l("exo:userRole"));
 			}
+			
 			userProfile.setUserTitle(title);
-			if (newProfileNode.hasProperty("exo:signature"))
-				userProfile.setSignature(newProfileNode.getProperty("exo:signature").getString());
-			if (newProfileNode.hasProperty("exo:totalPost"))
-				userProfile.setTotalPost(newProfileNode.getProperty("exo:totalPost").getLong());
-			if (newProfileNode.hasProperty("exo:totalTopic"))
-				userProfile.setTotalTopic(newProfileNode.getProperty("exo:totalTopic").getLong());
-			if (newProfileNode.hasProperty("exo:bookmark"))
-				userProfile.setBookmark(ValuesToArray(newProfileNode.getProperty("exo:bookmark").getValues()));
-			if (newProfileNode.hasProperty("exo:lastLoginDate"))
-				userProfile.setLastLoginDate(newProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:joinedDate"))
-				userProfile.setJoinedDate(newProfileNode.getProperty("exo:joinedDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:lastPostDate"))
-				userProfile.setLastPostDate(newProfileNode.getProperty("exo:lastPostDate").getDate().getTime());
-			if (newProfileNode.hasProperty("exo:isDisplaySignature"))
-				userProfile.setIsDisplaySignature(newProfileNode.getProperty("exo:isDisplaySignature").getBoolean());
-			if (newProfileNode.hasProperty("exo:isDisplayAvatar"))
-				userProfile.setIsDisplayAvatar(newProfileNode.getProperty("exo:isDisplayAvatar").getBoolean());			
+			userProfile.setSignature(readernew.string("exo:signature"));
+			userProfile.setTotalPost(readernew.l("exo:totalPost"));
+			userProfile.setTotalTopic(readernew.l("exo:totalTopic"));
+			userProfile.setBookmark(readernew.strings("exo:bookmark"));
+			userProfile.setLastLoginDate(readernew.date("exo:lastLoginDate"));
+			userProfile.setJoinedDate(readernew.date("exo:joinedDate"));
+			userProfile.setLastPostDate(readernew.date("exo:lastPostDate"));
+			userProfile.setIsDisplaySignature(readernew.bool("exo:isDisplaySignature"));
+			userProfile.setIsDisplayAvatar(readernew.bool("exo:isDisplayAvatar"));
+		
 		} catch (PathNotFoundException e) {
 			userProfile.setUserId(userName);
 			userProfile.setUserTitle(Utils.USER);
@@ -6260,7 +6265,7 @@ public class JCRDataStorage {
 	}
 	
 	@SuppressWarnings("unchecked")
-  private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
+	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
 		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); // pSetting.getPeriodTime()
 		//String name = String.valueOf(cal.getTime().getTime()) ;
@@ -6274,7 +6279,7 @@ public class JCRDataStorage {
 			info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
 			info.setDescription(pSetting.getForumPath()) ;
 			schedulerService.addPeriodJob(info, periodInfo);
-			System.out.println("\n\n>>>>Activated " + info.getJobName());
+			log.debug("\n\n>>>>Activated " + info.getJobName());
 		}
 	}
 	
@@ -6295,7 +6300,7 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			//System.out.println("======> Topics found:" + iter.getSize());
+			//log.debug("======> Topics found:" + iter.getSize());
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
 				topic.setProperty("exo:isActive", false) ;				
@@ -6424,7 +6429,98 @@ public class JCRDataStorage {
   }
 	
 	
-	
+	/**
+	 * A simple wrapper to read properties easily
+	 * @author patricelamarque
+	 *
+	 */
+	class PropertyReader {
+		Node node = null;
+		public PropertyReader(Node node) {
+			this.node = node;
+		}
+		
+		public Double d(String name) {
+			try {
+				return node.getProperty(name).getDouble();
+			}
+			catch (Exception e) {
+				return 0d;
+			}
+		}
+
+		public long l(String name) {
+			try {
+				return node.getProperty(name).getLong();
+			}
+			catch (Exception e) {
+				return 0;
+			}
+		}
+
+		public String string(String name, String defaultValue) {
+			try {
+				return node.getProperty(name).getString();
+			}
+			catch (Exception e) {
+				return defaultValue;
+			}
+		}
+		
+		public String string(String name) {
+			return string(name, null);
+		}
+		
+		public Date date(String name) {
+			try {
+				return node.getProperty(name).getDate().getTime();
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+		
+		public Boolean bool(String name) {
+		 return bool(name, false);
+		}
+		
+		public Boolean bool(String name, boolean defaultValue) {
+			try {
+				return node.getProperty(name).getBoolean();
+			}
+			catch (Exception e) {
+				return defaultValue;
+			}
+		}
+		
+		public String[] strings(String name) {
+			return strings(name,null);
+		}
+		
+		public String[] strings(String name, String [] defaultValue) {
+			try {
+				return ValuesToArray(node.getProperty(name).getValues());
+			}
+			catch (Exception e) {
+				return defaultValue;
+			}
+		}
+		
+		
+		public List<String> list(String name) {
+			return list(name, null);
+		}
+		
+		public List<String> list(String name, List<String>defaultValue) {
+			try {
+				return ValuesToList(node.getProperty(name).getValues());
+			}
+			catch (Exception e) {
+				return null;
+			}
+		}
+		
+	}	
 	
 	
 	

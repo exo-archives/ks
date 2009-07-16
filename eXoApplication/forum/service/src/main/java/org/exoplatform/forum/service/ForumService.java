@@ -287,6 +287,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception;
+	
+	public Topic getTopicSummary(String topicPath) throws Exception;
 
 	/**
 	 * Modify topic.

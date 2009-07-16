@@ -13,7 +13,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.services.idgenerator.IDGeneratorService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.OrganizationService;
 
@@ -22,10 +21,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	private static Log log = ExoLogger.getLogger(RandomForumDataProvider.class);
 	private LoremIpsum4J textGen;
 	private Random rand;
-	private IDGeneratorService uidGenerator;
-	private OrganizationService organizationService;
 	private List<String> users;
-	private SessionProvider sp;
 	private int maxCategories = 10;
 	private int maxForums = 5;
 	private int maxTopics = 20;
@@ -36,10 +32,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	public RandomForumDataProvider(InitParams initParams,
 			ForumService forumService, IDGeneratorService uidGenerator,
 			OrganizationService organizationService) {
-		this.uidGenerator = uidGenerator;
-		this.organizationService = organizationService;
 		this.forumService = forumService;
-		this.sp = SessionProvider.createSystemProvider();
 		initRandomizers();
 		initParams(initParams);
 
@@ -57,9 +50,10 @@ public class RandomForumDataProvider implements ForumDataProvider {
 					.getValue());
 			randomize = Boolean.parseBoolean(initParams.getValueParam("randomize")
 					.getValue());
+			log.debug("initializing : " + initParams);
 		} catch (Exception e) {
 			throw new RuntimeException(
-					"Could not initialize RandomForumDataProvider", e);
+					"Could not initialize " , e);
 		}
 	}
 
@@ -85,6 +79,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 
 
 
+	@SuppressWarnings("unused")
 	private String randomUser() {
 		return users.get(rand.nextInt(users.size()));
 	}
@@ -94,11 +89,11 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		List<Category> result = new ArrayList<Category>();
 		try {
 			// init marker
-			//Category init = newCategory(null);
-			//init.setId("forumdataloader");
-			//forumService.saveCategory(sp, init, true);
+			Category init = newCategory(null);
+			init.setId("forumdataloader");
+			result.add(init);
+			Category previous = init;
 
-			Category previous = null;
 			for (int i = 0; i < (getMaxCategory()); i++) {
 				Category category = newCategory(previous);
 				result.add(category);
@@ -165,15 +160,12 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	}
 
 	public boolean isInitialized() {
-//		try {
-//			SessionProvider sp = SessionProvider.createSystemProvider();
-//			Category initialized = forumService.getCategory(sp,
-//					"forumdataloader");
-//			return (initialized != null);
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-		return false;
+		try {
+			Category initialized = forumService.getCategory("forumdataloader");
+			return (initialized != null);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public List<Topic> findTopicsByForum(Forum forum) {

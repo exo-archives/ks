@@ -374,6 +374,10 @@ public class ForumServiceImpl implements ForumService, Startable{
     return getTopicByPath(topicPath, isLastPost) ;
   }
   
+  public Topic getTopicSummary(String topicPath) throws Exception{
+	  return storage_.getTopicSummary(topicPath, true) ;
+  }
+  
   public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception{
     return storage_.getTopicByPath(topicPath, isLastPost) ;
   }

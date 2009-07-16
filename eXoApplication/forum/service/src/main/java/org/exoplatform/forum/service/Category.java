@@ -42,14 +42,17 @@ public class Category {
 
 	private long forumCount = 0;
 	private String[] emailNotification;
-	public Category(){
-		id = Utils.CATEGORY + IdGenerator.generate() ;
+	public Category(String id) {
+		this.id = id;
 		userPrivate = new String[] {" "};
 		moderators = new String[] {" "};
 		emailNotification = new String [] {} ;
 		viewer = new String[] {" "};
 		createTopicRole = new String[] {" "};
 		poster = new String[] {" "};
+	}
+	public Category(){
+		this(Utils.CATEGORY + IdGenerator.generate());
 	}
 
 	public String getId(){return id;}
