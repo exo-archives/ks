@@ -79,12 +79,15 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.forum.service.SortSettings;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.SortSettings.Direction;
+import org.exoplatform.forum.service.SortSettings.SortField;
 import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
@@ -516,7 +519,34 @@ public class JCRDataStorage {
 			}
 		}finally{ sProvider.close() ;}		
 	}
+	
+	public SortSettings getForumSortSettings() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
+			PropertyReader reader = new PropertyReader(forumAdminNode);
+			return new SortSettings(reader.string("exo:forumSortBy"), reader.string("exo:forumSortByType"));
+		} catch (PathNotFoundException e) {
+			log.warn("Could not log forum sort order in forum administration node: " + e.getMessage());
+		} finally {
+			sProvider.close();
+		}
+		return new SortSettings(SortField.ORDER, Direction.ASC);
+	}
 
+	public SortSettings getTopicSortSettings() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
+			PropertyReader reader = new PropertyReader(forumAdminNode);
+			return new SortSettings(reader.string("exo:topicSortBy"), reader.string("exo:topicSortByType"));
+		} catch (Exception e) {
+			log.warn("Could not log topic sort order in forum administration node: " + e.getMessage());
+		}	finally{ sProvider.close() ;}		
+		return new SortSettings(SortField.LASTPOST, Direction.DESC);
+	}	
+
+	
 	public void initDefaultBBCode() throws Exception{
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		try {
@@ -1022,9 +1052,14 @@ public class JCRDataStorage {
 	public List<Forum> getForums(String categoryId, String strQuery) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
-			ForumAdministration administration = getForumAdministration();
-			String orderBy = administration.getForumSortBy();
-			String orderType = administration.getForumSortByType();
+			//ForumAdministration administration = getForumAdministration();
+			//String orderBy = administration.getForumSortBy();
+			//String orderType = administration.getForumSortByType();
+			
+			SortSettings sort = getForumSortSettings();
+			SortField orderBy = sort.getField();
+			Direction orderType = sort.getDirection();
+			
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
 			QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryBuffer = new StringBuffer();
@@ -1033,9 +1068,9 @@ public class JCRDataStorage {
 				queryBuffer.append("[").append(strQuery).append("]");
 			}
 			queryBuffer.append("order by @exo:").append(orderBy).append(" ").append(orderType);
-			if (!orderBy.equals("forumOrder")) {
+			if (orderBy == SortField.ORDER) {
 				queryBuffer.append(",@exo:forumOrder ascending");
-				if (!orderBy.equals("createdDate")) {
+				if (orderBy != SortField.CREATED) {
 					queryBuffer.append(",@exo:createdDate ascending");
 				}
 			} else {
@@ -1556,9 +1591,14 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
 			Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
-			ForumAdministration administration = getForumAdministration();
-			String orderBy = administration.getTopicSortBy();
-			String orderType = administration.getTopicSortByType();
+//			ForumAdministration administration = getForumAdministration();
+//			String orderBy = administration.getTopicSortBy();
+//			String orderType = administration.getTopicSortByType();
+			
+			SortSettings sortSettings = getTopicSortSettings();
+			SortField orderBy = sortSettings.getField();
+			Direction orderType = sortSettings.getDirection();
+			
 			Node forumNode = categoryNode.getNode(forumId);
 			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
@@ -1572,9 +1612,9 @@ public class JCRDataStorage {
 			}
 			stringBuffer.append(" order by @exo:isSticky descending");
 			if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
-				if (orderBy != null && orderBy.length() > 0) {
+				if (orderBy != null) {
 					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
-					if (!orderBy.equals("lastPostDate")) {
+					if ( orderBy != SortField.LASTPOST) {
 						stringBuffer.append(",@exo:lastPostDate descending");
 					}
 				} else {
