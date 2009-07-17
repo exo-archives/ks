@@ -366,7 +366,10 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 	  public void execute(Event<UIAddressEmailsForm> event) throws Exception {
 		  UIAddressEmailsForm uiAddressForm = event.getSource() ;
 		  String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
-		  uiAddressForm.searchUserProfileByKey(searchValue);
+		  if(searchValue == null || searchValue.trim().length() < 1)
+			  uiAddressForm.setUserList(FAQUtils.getAllUser());
+		  else
+			  uiAddressForm.searchUserProfileByKey(searchValue);
 		  event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);           
 	  }
   }
