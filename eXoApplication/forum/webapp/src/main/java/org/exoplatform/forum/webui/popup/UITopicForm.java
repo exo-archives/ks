@@ -57,6 +57,7 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
@@ -351,9 +352,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
-			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			if(topicTitle.length() < 1 && topicTitle.equals("null")) {k = 0;}
 			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {
+			if(t > 0 && k != 0 && !checksms.equals("null")) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
@@ -373,17 +374,17 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				viewPost.setActionForm(new String[] {"Close"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}else {
-				String sms = "" ;
+				String[] args = { ""} ;
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				if(k == 0) {
-					sms = "Thread Title" ;
-					if(t < 3) sms = "Thread Title and Message";
-					Object[] args = { sms };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t < 3) {
-					Object[] args = { "Message" };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
-				}
+    		if(k == 0) {
+    			args = new String[] {uiForm.getLabel(FIELD_TOPICTITLE_INPUT)} ;
+    			if(t == 0) args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+    			uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
+    		} else if(t == 0) {
+    			args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
+    			uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
+    		}
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}
 		}
 	}
