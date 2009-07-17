@@ -653,7 +653,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	} 
     	List<String> moderateCates = new ArrayList<String>() ;
     	moderateCates.addAll(uiForm.listModCate) ;
-
+    	
+/*
     	List<String> NewModerators = new ArrayList<String> ();
     	List<String> categoryIdsMod = new ArrayList<String> ();
     	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateCategory())) ;
@@ -716,11 +717,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	}
     	
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
-//    	if(!moderateForums.isEmpty() && !moderateForums.get(0).equals(" ")) {
-//    		if(userRole >= 2) userRole = 1;
-//    	} else {
-//    		if(userRole >= 1) userRole = 2;
-//    	}
+ */
+    	if(!moderateCates.isEmpty() && !moderateCates.get(0).equals(" ")) {
+    		if(userRole >= 2) userRole = 1;
+    	} else {
+    		if(userRole >= 1) userRole = 2;
+    	}
     	
     	if(userTitle == null || userTitle.trim().length() < 1){
     		userTitle = userProfile.getUserTitle();

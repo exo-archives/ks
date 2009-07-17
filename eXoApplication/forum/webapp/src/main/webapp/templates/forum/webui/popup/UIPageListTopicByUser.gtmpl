@@ -30,7 +30,7 @@
 								<th style="width:40px;"></th>
 								<th style="width:100%;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","name");%>">
-										<div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div>
+										<a class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 									</div>
 								</th>
 								<th style="width:96px;">
@@ -38,17 +38,17 @@
 								</th>
 								<th style="width:130px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
-										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div>
+										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 									</div>
 								</th>
 								<th style="width:60px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
-										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div>
+										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
 									</div>
 								</th>
 								<th style="width:60px;">
 									<div onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
-										<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div>
+										<a class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
 									</div>
 								</th>
 								<%if(isAdmin){ %>
@@ -87,15 +87,15 @@
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 									String hot = ""; 
 									if(topic.getPostCount() > 10) hot = "Hot"; 
-									String titleTopicStatus = hot+" Thread with "+newPost+" post" ;
+									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
 									if(topic.getIsLock()) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-										titleTopicStatus = hot+" Thread with "+newPost+" post lock" ;
+										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 									}
 									if(topic.getIsClosed()) {
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-										titleTopicStatus = hot+" Thread with "+newPost+" post close" ;
+										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
 							%>
 								<tr class="$classRow">
@@ -104,11 +104,10 @@
 									<td >
 										<div>
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon">Sticky:</span>
+											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
 											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="$title">$topicTitle</a>
 										</div>
-										<div><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
 									</td>
 									<td class="Tdbox">
 										<div class="RatingInfoContainer">

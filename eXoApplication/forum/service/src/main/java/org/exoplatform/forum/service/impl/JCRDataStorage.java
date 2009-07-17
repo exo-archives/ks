@@ -718,7 +718,7 @@ public class JCRDataStorage {
 				updateModeratorInForums(sProvider, catNode, moderatorCat);
 			}
 			// Edit profile of moderator in this category
-			updateUserProfileModInCategory(sProvider, catNode, oldcategoryMod, moderatorCat, category, isNew);
+			updateUserProfileModInCategory(sProvider, catNode, oldcategoryMod, category, isNew);
 			// Set can view and can post by this category for topics children
 			List<String> listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getPoster()));
@@ -860,11 +860,11 @@ public class JCRDataStorage {
 		cateNode.save();
 	}
 	
-	private void updateUserProfileModInCategory(SessionProvider sProvider, Node catNode, String[] oldcategoryMod, String[] newCategoryMod, Category category, boolean isNew) throws Exception {
+	private void updateUserProfileModInCategory(SessionProvider sProvider, Node catNode, String[] oldcategoryMod, Category category, boolean isNew) throws Exception {
 		Node userProfileHomeNode = getUserProfileHome(sProvider);
 		Node userProfileNode;
 		String categoryId = category.getId(), cateName = category.getCategoryName();
-		List<String> moderators = ForumServiceUtils.getUserPermission(newCategoryMod);
+		List<String> moderators = ForumServiceUtils.getUserPermission(category.getModerators());
 		if(!moderators.isEmpty()) {
 			for (String string : moderators) {
 				try {
@@ -886,35 +886,60 @@ public class JCRDataStorage {
       }
 		}
 		if(!isNew && oldcategoryMod != null && oldcategoryMod.length > 0 && !oldcategoryMod[0].equals(" ")){
-			if(Utils.isAddNewArray(oldcategoryMod, newCategoryMod)) {
-				List<String>pathForums = new ArrayList<String>();
-				NodeIterator iter = catNode.getNodes();
-				while (iter.hasNext()) {
-		      Node node = iter.nextNode();
-		      if(node.isNodeType("exo:forum")) {
-		      	pathForums.add(categoryId + "/" + node.getName());
-		      }
-	      }
+			if(Utils.isAddNewArray(oldcategoryMod, category.getModerators())) {
 				List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldcategoryMod);
 				for(String oldUserId : oldmoderators) {
 	        if(moderators.contains(oldUserId)) continue ;
 	        //edit profile of old user.
 	        userProfileNode = userProfileHomeNode.getNode(oldUserId);
-	        List<String> moderateCategory = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
-					for (String string2 : moderateCategory) {
+	        List<String> moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
+					for (String string2 : moderateList) {
 	          if(string2.indexOf(categoryId) > 0) {
-	          	moderateCategory.remove(string2);
-	          	userProfileNode.setProperty("exo:moderateCategory", getStringsInList(moderateCategory));
-	          	saveModerateOfForums(pathForums, oldUserId, true);
+	          	moderateList.remove(string2);
+	          	userProfileNode.setProperty("exo:moderateCategory", getStringsInList(moderateList));
 	          	break;
 	          }
           }
+					moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
+					NodeIterator iter = catNode.getNodes();
+					while (iter.hasNext()) {
+			      Node node = iter.nextNode();
+			      if(node.isNodeType("exo:forum")) {
+			      	for (String str : moderateList) {
+		            if(str.indexOf(node.getName()) >= 0) {
+		            	moderateList.remove(str);
+		            	break;
+		            }
+	            }
+			      	List<String>forumMode = ValuesToList(node.getProperty("exo:moderators").getValues());
+			      	for (int i = 0; i < oldcategoryMod.length; i++) {
+	              if(forumMode.contains(oldcategoryMod[i])) {
+	              	forumMode.remove(oldcategoryMod[i]);
+	              }
+              }
+			      	node.setProperty("exo:moderators", getStringsInList(forumMode));
+			      }
+		      }
+					catNode.save();
+					if(moderateList.isEmpty() || (moderateList.size() == 1 && moderateList.get(0).equals(" "))) {
+						if (userProfileNode.hasProperty("exo:userRole")) {
+							long role = userProfileNode.getProperty("exo:userRole").getLong();
+							if (role == 1) {
+								userProfileNode.setProperty("exo:userRole", 2);
+							}
+						} else {
+							userProfileNode.setProperty("exo:userRole", 2);
+						}
+					}
+					userProfileNode.setProperty("exo:moderateForums", getStringsInList(moderateList));
         }
 			}
 		}
 		try {
 			userProfileHomeNode.save();
     } catch (Exception e) {
+    	e.printStackTrace();
+    	userProfileHomeNode.getSession().save();
     }
 	}
 	
@@ -4779,8 +4804,10 @@ public class JCRDataStorage {
 		}
 		boolean isAnd = false;
 		String searchBy = null;
+		List<String> listOfUser = new ArrayList<String>();
 		if(!isAdmin){
-			Map<String, List<String>> mapList = getCategoryViewer(categoryHome, ForumServiceUtils.getAllGroupAndMembershipOfUser(userId), listCateIds, listForumIds);
+			listOfUser = ForumServiceUtils.getAllGroupAndMembershipOfUser(userId);
+			Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds);
 			listCateIds = mapList.get(Utils.CATEGORY);
 			listForumIds = mapList.get(Utils.FORUM);
 		}
@@ -4809,7 +4836,7 @@ public class JCRDataStorage {
 				queryString.append("(jcr:contains(., '").append(textQuery).append("'))");
 				isAnd = true;
 			}
-			if (!isAdmin) {
+			if(!isAdmin) {
 				StringBuilder builder = new StringBuilder();
 				if(forumIdsOfModerator != null && !forumIdsOfModerator.isEmpty()){
 					for (String string : forumIdsOfModerator) {
@@ -4823,7 +4850,7 @@ public class JCRDataStorage {
 						queryString.append(" or fn:name()='").append(forumId).append("'");
 					}
 					queryString.append(")");
-				} else { 
+				} else {
 					if (type.equals(Utils.TOPIC)) {
 						if (isAnd) queryString.append(" and ");
 						queryString.append("((@exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true')");
@@ -4831,6 +4858,12 @@ public class JCRDataStorage {
 							queryString.append(builder);
 						}
 						queryString.append(")");
+						listOfUser.add(" ");
+						String s = Utils.getQueryInList(listOfUser, "@exo:canView");
+						if(s != null && s.length() > 0) {
+							if (isAnd) queryString.append(" and ");
+							queryString.append(s);
+						}
 					} else if (type.equals(Utils.POST)) {
 						if (isAnd) queryString.append(" and ");
 						queryString.append("((@exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true')");
@@ -4909,7 +4942,8 @@ public class JCRDataStorage {
 			queryString = eventQuery.getPathQuery(listCateIds);
 		} else {
 			queryString = eventQuery.getPathQuery(listForumIds);
-		}		
+		}
+		System.out.println("\n\n : "  + queryString);
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();

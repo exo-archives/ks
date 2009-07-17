@@ -356,7 +356,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
-													<a style="display:block;" href="<%=uicomponent.event("RSS",forum.getId())%>">&nbsp;RSS</a>
+													<a style="display:block;" href="<%=uicomponent.event("RSS",forum.getId())%>">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 												</div>
 											</div>
 										</div>

@@ -273,6 +273,15 @@ public class ForumEventQuery {
     if(type.equals("topic") && userPermission > 1){
 			if(isAnd) stringBuffer.append(" and ");
 			stringBuffer.append("(@exo:isApproved='true' and @exo:isActive='true' and @exo:isWaiting='false' and @exo:isActiveByForum='true')");
+			
+			List<String>tempL = new ArrayList<String>();
+			tempL.addAll(listOfUser);
+			tempL.add(" ");
+			String s = Utils.getQueryInList(tempL, "@exo:canView");
+			if(s != null && s.length() > 0) {
+				if (isAnd) stringBuffer.append(" and ");
+				stringBuffer.append(s);
+			}
 		} else if(type.equals("post")){
     	if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(@exo:userPrivate='exoUserPri'");

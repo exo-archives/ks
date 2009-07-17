@@ -551,4 +551,17 @@ public class Utils {
 		return map;
   }
 	
+	public static String getQueryInList(List<String> list, String property) {
+		StringBuilder builder = new StringBuilder();
+		if(!list.isEmpty()) {
+			int t = 0;
+			for (String string : list) {
+	      if(t == 0) builder.append("(").append(property).append("='").append(string).append("'");
+	      else builder.append(" or ").append(property).append("='").append(string).append("'");
+	      t = 1;
+      }
+			if(t == 1) builder.append(")");
+		}
+	  return builder.toString();
+  }
 }
