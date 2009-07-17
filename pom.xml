@@ -1,4 +1,6 @@
 <project>
+	<description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
+	<url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
 
   <parent>
     <groupId>org.exoplatform</groupId>
@@ -9,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>config</artifactId>
-  <name>eXo Knowledge Suite Config</name>
+  <name>eXo Knowledge Suite</name>
   <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   
@@ -17,6 +19,14 @@
      <exo.product.name>exo-ks</exo.product.name>
      <exo.product.specification>1.2</exo.product.specification>
   </properties>
+  <issueManagement>
+  	<system>jira</system>
+  	<url>http://jira.exoplatform.org/browse/KS</url>
+  </issueManagement>
+  <ciManagement>
+  	<system>hudson</system>
+  	<url>http://builder.exoplatform.org/hudson/job/ks/</url>
+  </ciManagement>
 
   <scm>
     <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
@@ -41,6 +51,10 @@
     <!--module>eXoApplication/content/webapp</module>
     <module>eXoApplication/content/service</module-->
   </modules>
+  <organization>
+  	<name>eXo Platform SAS</name>
+  	<url>http://www.exoplatform.com</url>
+  </organization>
 
   <build>
     <resources>
