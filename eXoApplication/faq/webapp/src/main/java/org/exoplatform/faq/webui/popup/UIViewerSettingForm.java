@@ -169,6 +169,18 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIViewerSettingForm uiForm = event.getSource();
 			uiForm.id_ = Integer.parseInt(id);
+			if(uiForm.id_ == 1) {
+				uiForm.categoriesId =  new ArrayList<String>();
+				UIFormInputWithActions withActions  = uiForm.getChildById(SELECT_CATEGORY_TAB);
+				List<UIComponent> children = withActions.getChildren() ;
+				for(UIComponent child : children) {
+					if(child instanceof UIFormCheckBoxInput) {
+						if(((UIFormCheckBoxInput)child).isChecked()) {
+							uiForm.categoriesId.add(child.getId()) ;
+						}
+					}
+				}
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
 		}
 	}
