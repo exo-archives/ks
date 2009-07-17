@@ -746,15 +746,23 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	static public class WatchOptionActionListener extends EventListener<UITopicContainer> {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiTopicContainer = event.getSource();
-			Forum forum = uiTopicContainer.getForum() ;
-			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
-			watchToolsForm.setPath(forum.getPath());
-			watchToolsForm.setEmails(forum.getEmailNotification()) ;
-			watchToolsForm.setIsTopic(false);
-			popupAction.activate(watchToolsForm, 500, 365) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			try {
+				uiTopicContainer.forum = uiTopicContainer.forumService.getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);;
+				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
+				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+				UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
+				watchToolsForm.setPath(uiTopicContainer.forum.getPath());
+				watchToolsForm.setEmails(uiTopicContainer.forum.getEmailNotification()) ;
+				watchToolsForm.setIsTopic(false);
+				popupAction.activate(watchToolsForm, 500, 365) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      } catch (Exception e) {
+      	e.printStackTrace();
+      	UIApplication uiApp = uiTopicContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      }
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer);
 		}
 	}	
 	
