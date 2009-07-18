@@ -4868,7 +4868,11 @@ public class JCRDataStorage {
 						if(forumNode.hasProperty("exo:isLock"))linkData.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
 						if(forumNode.hasProperty("exo:isClosed"))linkData.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
 						forumLinks.add(linkData);
-						{
+
+            // slow and useless code removed : loops on all topics in the forum. 
+            // At the end, the forumLinks for topics are not displayed...
+						/* {
+						 
 							NodeIterator iterTopic = forumNode.getNodes();
 							while (iterTopic.hasNext()) {
 								linkData = new ForumLinkData();
@@ -4883,8 +4887,8 @@ public class JCRDataStorage {
 								if(topicNode.hasProperty("exo:isLock"))linkData.setIsLock(topicNode.getProperty("exo:isLock").getBoolean());
 								if(topicNode.hasProperty("exo:isClosed"))linkData.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean());
 								forumLinks.add(linkData);
-							}
-						}
+							} 
+						} */
 					}
 				}
 			}
