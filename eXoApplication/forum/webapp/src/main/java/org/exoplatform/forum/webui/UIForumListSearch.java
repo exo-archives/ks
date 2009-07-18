@@ -83,7 +83,7 @@ public class UIForumListSearch extends UIContainer {
 		pageIterator.updatePageList(pageList);
 		isShowIter = true;
 		if(pageList.getAvailablePage() <= 1) isShowIter = false;
-		long pageSelect = pageIterator.getPageSelected();
+		int pageSelect = (int) pageIterator.getPageSelected();
 		List<ForumSearch>list = new ArrayList<ForumSearch>();
 		try {
 			list.addAll(pageList.getPageSearch(pageSelect, this.listEvent)) ;

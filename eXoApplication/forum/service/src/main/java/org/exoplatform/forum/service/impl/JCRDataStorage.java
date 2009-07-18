@@ -76,12 +76,14 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.LazyPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SortSettings;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.TopicListAccess;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
@@ -99,6 +101,7 @@ import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.rss.RSSEventListener;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -1633,42 +1636,10 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
 			Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
-//			ForumAdministration administration = getForumAdministration();
-//			String orderBy = administration.getTopicSortBy();
-//			String orderType = administration.getTopicSortByType();
-			
-			SortSettings sortSettings = getTopicSortSettings();
-			SortField orderBy = sortSettings.getField();
-			Direction orderType = sortSettings.getDirection();
-			
 			Node forumNode = categoryNode.getNode(forumId);
-			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)");
-			if (strQuery != null && strQuery.length() > 0) {
-				// @exo:isClosed,
-				// @exo:isWaiting ,
-				// @exo:isApprove
-				// @exo:isActive
-				stringBuffer.append("[").append(strQuery).append("]");
-			}
-			stringBuffer.append(" order by @exo:isSticky descending");
-			if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
-				if (orderBy != null) {
-					stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
-					if ( orderBy != SortField.LASTPOST) {
-						stringBuffer.append(",@exo:lastPostDate descending");
-					}
-				} else {
-					stringBuffer.append(",@exo:lastPostDate descending");
-				}
-			} else {
-				stringBuffer.append(",@exo:").append(strOrderBy);
-				if (strOrderBy.indexOf("lastPostDate") < 0) {
-					stringBuffer.append(",@exo:lastPostDate descending");
-				}
-			}
-			String pathQuery = stringBuffer.toString();
+      String forumPath = forumNode.getPath();
+	    String pathQuery = buildTopicQuery(strQuery, strOrderBy, forumPath);
+      QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();			
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -1678,6 +1649,61 @@ public class JCRDataStorage {
 			return null;
 		}finally{ sProvider.close() ;}
 	}
+	
+  public LazyPageList<Topic> getTopicList(String categoryId,
+                                      String forumId,
+                                      String xpathConditions,
+                                      String strOrderBy, int pageSize) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
+      Node forumNode = categoryNode.getNode(forumId);
+      String forumPath = forumNode.getPath();
+      String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
+      TopicListAccess topicListAccess = new TopicListAccess(topicQuery);
+      return new LazyPageList<Topic>(topicListAccess, pageSize);
+    } catch (Exception e) {
+      log.error("Failed to retrieve topic list for forum " + forumId);
+      return null;
+    } finally {
+      sProvider.close();
+    }
+  }
+	
+  private String buildTopicQuery(String strQuery, String strOrderBy, String forumPath) throws Exception {
+    SortSettings sortSettings = getTopicSortSettings();
+      SortField orderBy = sortSettings.getField();
+      Direction orderType = sortSettings.getDirection();     
+     
+    StringBuffer stringBuffer = new StringBuffer();
+
+    stringBuffer.append("/jcr:root").append(forumPath).append("//element(*,exo:topic)");
+    if (strQuery != null && strQuery.length() > 0) {
+    	// @exo:isClosed,
+    	// @exo:isWaiting ,
+    	// @exo:isApprove
+    	// @exo:isActive
+    	stringBuffer.append("[").append(strQuery).append("]");
+    }
+    stringBuffer.append(" order by @exo:isSticky descending");
+    if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+    	if (orderBy != null) {
+    		stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
+    		if ( orderBy != SortField.LASTPOST) {
+    			stringBuffer.append(",@exo:lastPostDate descending");
+    		}
+    	} else {
+    		stringBuffer.append(",@exo:lastPostDate descending");
+    	}
+    } else {
+    	stringBuffer.append(",@exo:").append(strOrderBy);
+    	if (strOrderBy.indexOf("lastPostDate") < 0) {
+    		stringBuffer.append(",@exo:lastPostDate descending");
+    	}
+    }
+    String pathQuery = stringBuffer.toString();
+    return pathQuery;
+  }
 
 	public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -4683,7 +4709,7 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}				
 	}
 
-	private String[] ValuesToArray(Value[] Val) throws Exception {
+	String[] ValuesToArray(Value[] Val) throws Exception {
 		if (Val.length < 1)
 			return new String[] {};
 		if (Val.length == 1)
@@ -4695,7 +4721,7 @@ public class JCRDataStorage {
 		return Str;
 	}
 
-	private List<String> ValuesToList(Value[] values) throws Exception {
+	List<String> ValuesToList(Value[] values) throws Exception {
 		List<String> list = new ArrayList<String>();
 		if (values.length < 1)
 			return list;
@@ -6542,101 +6568,7 @@ public class JCRDataStorage {
 		}catch (Exception e) {
 		}
 	  return null;
-  }
-	
-	
-	/**
-	 * A simple wrapper to read properties easily
-	 * @author patricelamarque
-	 *
-	 */
-	class PropertyReader {
-		Node node = null;
-		public PropertyReader(Node node) {
-			this.node = node;
-		}
-		
-		public Double d(String name) {
-			try {
-				return node.getProperty(name).getDouble();
-			}
-			catch (Exception e) {
-				return 0d;
-			}
-		}
-
-		public long l(String name) {
-			try {
-				return node.getProperty(name).getLong();
-			}
-			catch (Exception e) {
-				return 0;
-			}
-		}
-
-		public String string(String name, String defaultValue) {
-			try {
-				return node.getProperty(name).getString();
-			}
-			catch (Exception e) {
-				return defaultValue;
-			}
-		}
-		
-		public String string(String name) {
-			return string(name, null);
-		}
-		
-		public Date date(String name) {
-			try {
-				return node.getProperty(name).getDate().getTime();
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-		
-		public Boolean bool(String name) {
-		 return bool(name, false);
-		}
-		
-		public Boolean bool(String name, boolean defaultValue) {
-			try {
-				return node.getProperty(name).getBoolean();
-			}
-			catch (Exception e) {
-				return defaultValue;
-			}
-		}
-		
-		public String[] strings(String name) {
-			return strings(name,null);
-		}
-		
-		public String[] strings(String name, String [] defaultValue) {
-			try {
-				return ValuesToArray(node.getProperty(name).getValues());
-			}
-			catch (Exception e) {
-				return defaultValue;
-			}
-		}
-		
-		
-		public List<String> list(String name) {
-			return list(name, null);
-		}
-		
-		public List<String> list(String name, List<String>defaultValue) {
-			try {
-				return ValuesToList(node.getProperty(name).getValues());
-			}
-			catch (Exception e) {
-				return null;
-			}
-		}
-		
-	}	
+  }	
 	
 	
 	

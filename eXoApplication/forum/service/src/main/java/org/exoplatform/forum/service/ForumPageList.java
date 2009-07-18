@@ -44,12 +44,12 @@ public class ForumPageList extends JCRPageList {
 	private NodeIterator iter_ = null;
 	private List listValue_ = null;
 	
-	public ForumPageList(long pageSize, int size) {
+	public ForumPageList(int pageSize, int size) {
 		super(pageSize) ;
 		setAvailablePage(size);
 	};
 	
-	public ForumPageList(NodeIterator iter, long pageSize, String value, boolean isQuery ) throws Exception{
+	public ForumPageList(NodeIterator iter, int pageSize, String value, boolean isQuery ) throws Exception{
 		super(pageSize) ;
 		value_ = value ;
 		isQuery_ = isQuery ;
@@ -60,7 +60,7 @@ public class ForumPageList extends JCRPageList {
 		}
 		if(iter != null){
 			iter_ = iter ;
-			setAvailablePage(iter.getSize()) ;
+			setAvailablePage((int)iter.getSize()) ;
 		}
 	}
 	
@@ -75,12 +75,12 @@ public class ForumPageList extends JCRPageList {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPage(long page) throws Exception	{
+	protected void populateCurrentPage(int page) throws Exception	{
 		if(iter_ == null) {
 			sProvider_ = ForumServiceUtils.getSessionProvider();
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
 			sProvider_.close();
-			setAvailablePage(iter_.getSize()) ;
+			setAvailablePage((int) iter_.getSize()) ;
 			checkAndSetPage(page) ;
 			page = currentPage_;
 		}
@@ -131,8 +131,8 @@ public class ForumPageList extends JCRPageList {
 				break;
 			}
 		}
-		long pageSize = getPageSize();
-		long page = 1;
+		int pageSize = getPageSize();
+		int page = 1;
 		if(pos < pageSize){
 			page = 1;
 		} else {
@@ -155,7 +155,7 @@ public class ForumPageList extends JCRPageList {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void populateCurrentPageSearch(long page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
+	protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception {
 		long pageSize = getPageSize();
 		long position = 0;
 		if(page == 1) position = 0;
@@ -175,20 +175,7 @@ public class ForumPageList extends JCRPageList {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected void populateCurrentPageList(long page, List<String> list) throws Exception{
-		long pageSize = getPageSize();
-		long position = 0;
-		if(page == 1) position = 0;
-		else {
-			position = (page - 1) * pageSize;
-		}
-		pageSize *= page ;
-		currentListPage_ = new ArrayList<String>();
-		for(int i = (int)position; i < pageSize && i < list.size(); i ++){
-			currentListPage_.add(list.get(i));
-		}
-	}
+
 	
 	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
@@ -388,4 +375,28 @@ public class ForumPageList extends JCRPageList {
 			repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
 		return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
 	}
+
+  @Override
+  protected void populateCurrentPageList(int page, List list) throws Exception{
+    int pageSize = getPageSize();
+    int position = 0;
+    if(page == 1) position = 0;
+    else {
+      position = (page - 1) * pageSize;
+    }
+    pageSize *= page ;
+    currentListPage_ = new ArrayList<String>();
+    for(int i = (int)position; i < pageSize && i < list.size(); i ++){
+      currentListPage_.add(list.get(i));
+    }
+  }
+  
+  
+  
+
+  @Override
+  public List getAll() throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

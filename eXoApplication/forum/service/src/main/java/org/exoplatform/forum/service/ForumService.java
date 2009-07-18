@@ -943,5 +943,10 @@ public interface ForumService extends ForumServiceLegacy{
   public void saveTopicType(TopicType topicType)throws Exception;
   public void removeTopicType(String topicTypeId) throws Exception;
   public JCRPageList getPageTopicByType(String type) throws Exception;
+
+  public LazyPageList<Topic> getTopicList(String categoryId,
+                                  String forumId,
+                                  String string,
+                                  String strOrderBy, int pageSize) throws Exception;
   
 }

@@ -44,7 +44,7 @@ import org.exoplatform.webui.event.EventListener;
 
 public class UIForumPageIterator extends UIContainer {
 	private JCRPageList pageList ;
-	private long page = 1 ;
+	private int page = 1 ;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
 	private boolean isUpdateListTopicOld = false;
@@ -94,19 +94,19 @@ public class UIForumPageIterator extends UIContainer {
 	@SuppressWarnings("unused")
 	public List<Long> getInfoPage() throws	Exception {
 		List<Long> temp = new ArrayList<Long>() ;
-		temp.add(pageList.getPageSize()) ;//so item/trang
-		temp.add(pageList.getCurrentPage()) ;//trang hien tai
-		temp.add(pageList.getAvailable()) ;//tong so item
-		temp.add(pageList.getAvailablePage()) ;// so trang toi da
+		temp.add((long)pageList.getPageSize()) ;//so item/trang
+		temp.add((long)pageList.getCurrentPage()) ;//trang hien tai
+		temp.add((long)pageList.getAvailable()) ;//tong so item
+		temp.add((long)pageList.getAvailablePage()) ;// so trang toi da
 		return temp ;
 	} 
 	
 	public void setSelectPage(long page) {
-		this.page = page;
+		this.page = (int) page;
 	}
 	
 	@SuppressWarnings("unused")
-	public long getPageSelected() {
+	public int getPageSelected() {
 		return this.page ;
 	}
 		
@@ -118,8 +118,8 @@ public class UIForumPageIterator extends UIContainer {
 				topicDetail.setIdPostView("top") ;
 			}
 			String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
-			long maxPage = forumPageIterator.pageList.getAvailablePage() ;
-			long presentPage	= forumPageIterator.page ;
+			int maxPage = forumPageIterator.pageList.getAvailablePage() ;
+			int presentPage	= forumPageIterator.page ;
 			if(stateClick.equalsIgnoreCase("next")) {
 				if(presentPage < maxPage){
 					forumPageIterator.page = presentPage + 1 ;
@@ -157,7 +157,7 @@ public class UIForumPageIterator extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPageIterator.getParent()) ;
 				}
 			} else {
-				long temp = Long.parseLong(stateClick) ;
+				int temp = Integer.parseInt(stateClick) ;
 				if(temp > 0 && temp <= maxPage && temp != presentPage) {
 					forumPageIterator.page = temp ;
 					if(forumPageIterator.getUpdateListTopicOld()){

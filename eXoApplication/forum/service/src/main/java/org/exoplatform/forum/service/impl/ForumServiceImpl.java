@@ -48,6 +48,7 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.LazyPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
@@ -470,6 +471,10 @@ public class ForumServiceImpl implements ForumService, Startable {
   public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
   	sProvider.close() ;
   	return getPageTopic(categoryId, forumId, strQuery, strOrderBy);
+  }
+  
+  public LazyPageList<Topic>  getTopicList(String categoryId, String forumId, String strQuery, String strOrderBy, int pageSize) throws Exception {
+    return storage_.getTopicList(categoryId, forumId, strQuery, strOrderBy, pageSize);
   }
   
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {

@@ -273,7 +273,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(hasPoll) setRenderInfoPorlet();
 	}
 	
-	public void setUpdateContainer(String categoryId, String forumId, Topic topic, long numberPage) throws Exception {
+	public void setUpdateContainer(String categoryId, String forumId, Topic topic, int numberPage) throws Exception {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
@@ -550,7 +550,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						isApprove = "true";
 				}
 				pageList = this.forumService.getPosts(this.categoryId, this.forumId, topicId, isApprove, isHidden, "", userName);
-			long maxPost = this.userProfile.getMaxPostInPage();
+			int maxPost = this.userProfile.getMaxPostInPage().intValue();
 			if (maxPost <= 0) maxPost = 10;
 			pageList.setPageSize(maxPost);
 			maxPage = pageList.getAvailablePage();
@@ -570,9 +570,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		try {
 			try {
 				if(!ForumUtils.isEmpty(lastPostId)){
-					long maxPost = this.userProfile.getMaxPostInPage();
+					int maxPost = this.userProfile.getMaxPostInPage().intValue();
 					long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
-					this.pageSelect =  (long)index/maxPost;
+					this.pageSelect =  (int) (index/maxPost);
 					lastPostId = "";
 				}
       } catch (Exception e) {
@@ -898,13 +898,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			stringInput1.setValue("") ; stringInput2.setValue("") ;
 			if(!ForumUtils.isEmpty(numberPage)) {
 				try {
-					long page = Long.parseLong(numberPage.trim()) ;
+					int page = Integer.parseInt(numberPage.trim()) ;
 					if(page < 0) {
 						Object[] args = { "go page" };
 						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
 					} else {
 						if(page == 0) {
-							page = (long)1;
+							page = 1;
 						} else if(page > topicDetail.pageList.getAvailablePage()){
 							page = topicDetail.pageList.getAvailablePage() ;
 						}

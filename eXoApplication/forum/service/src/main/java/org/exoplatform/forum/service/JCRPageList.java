@@ -19,109 +19,79 @@ package org.exoplatform.forum.service;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-//import org.exoplatform.commons.exception.ExoMessageException;
+import org.exoplatform.commons.utils.PageList;
+
+
 /**
- * @author Tuan Nguyen (tuan08@users.sourceforge.net)
- * @since Oct 21, 2004
- * @version $Id: PageList.java,v 1.2 2004/10/25 03:36:58 tuan08 Exp $
+ * 
+ * @version $Revision$
  */
-abstract public class JCRPageList {
+abstract public class JCRPageList<E> extends PageList{
+
+	protected int pageSelected = 1;
 	
-	private long pageSize_ ;
-	protected long available_ = 0;
-	protected long availablePage_	= 1;
-	protected long currentPage_ = 1 ;
-	protected List currentListPage_ ;
-	protected long pageSelected = 1;
-	
-	public JCRPageList(long pageSize) {
-		pageSize_ = pageSize ;
+	public JCRPageList(int pageSize) {
+	  super(pageSize);
 	}
 	
-	public long getPageSelected(){
+  abstract protected void populateCurrentPage(int page) throws Exception   ;
+  abstract protected void populateCurrentPageSearch(int page, List list, boolean isWatch, boolean isSearchUser) throws Exception   ;
+  abstract protected void populateCurrentPageList(int page, List<String> list) throws Exception  ;
+  abstract protected void populateCurrentPage(String valueString) throws Exception   ;
+   
+	public int getPageSelected(){
 		return this.pageSelected;
 	}
-	
-	public long getPageSize() { return pageSize_	; }
+
 	public void setPageSize(long pageSize) {
-		pageSize_ = pageSize ;
-		setAvailablePage(available_) ;
+		super.setPageSize((int)pageSize);
 	}
+	public int getCurrentPage() { return currentPage_ ; }
+	public int getAvailable() { return available_ ; }
+	public int getAvailablePage() { return availablePage_ ; }
 	
-	public long getCurrentPage() { return currentPage_ ; }
-	public long getAvailable() { return available_ ; }
-	
-	public long getAvailablePage() { return availablePage_ ; }
-	
-	public List currentPage() throws Exception {
+	public List<E> currentPage() throws Exception {
 		if(currentListPage_ == null) {
 			populateCurrentPage(currentPage_) ;
 		}
 		return currentListPage_	;
 	}
 	
-	abstract protected void populateCurrentPage(long page) throws Exception	 ;
-	
-	public List getPage(long page) throws Exception	 {
-		checkAndSetPage(page) ;
-		populateCurrentPage(currentPage_) ;
-		this.pageSelected = page;
-		return currentListPage_ ;
+	public List<E> getPage(long page) throws Exception	 {
+	  List<E> result = super.getPage((int)page);
+		this.pageSelected = (int) page;
+		return result;
 	}
-	
-	abstract protected void populateCurrentPage(String valueString) throws Exception	 ;
-	
-	public List getpage(String valueSearch) throws Exception {
+
+	public List<E> getpage(String valueSearch) throws Exception {
 		populateCurrentPage(valueSearch) ;
 		return currentListPage_ ;
 	}
 	
-	abstract protected void populateCurrentPageSearch(long page, List list, boolean isWatch, boolean isSearchUser) throws Exception	 ;
-	
-	public List getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
-		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, false, false) ;
+	public List<E> getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
+		checkAndSetPage((int) page) ;
+		populateCurrentPageSearch((int) page, list, false, false) ;
 		return currentListPage_ ;
 	}
 
-	public List getPageWatch(long page, List<Watch> list) throws Exception	 {
-		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, true, false) ;
+	public List<E> getPageWatch(long page, List<Watch> list) throws Exception	 {
+		checkAndSetPage((int) page) ;
+		populateCurrentPageSearch((int) page, list, true, false) ;
 		return currentListPage_ ;
 	}
 	
-	public List getPageUser(long page) throws Exception	 {
-		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, new CopyOnWriteArrayList(), true, true) ;
+	public List<E> getPageUser(long page) throws Exception	 {
+		checkAndSetPage((int) page) ;
+		populateCurrentPageSearch((int) page, new CopyOnWriteArrayList<E>(), true, true) ;
 		return currentListPage_ ;
 	}
 
-	abstract protected void populateCurrentPageList(long page, List<String> list) throws Exception	 ;
-	public List getPageList(long page, List<String> list) throws Exception	 {
-		checkAndSetPage(page) ;
-		populateCurrentPageList(page, list) ;
+
+	public List<E> getPageList(long page, List<String> list) throws Exception	 {
+		checkAndSetPage((int) page) ;
+		populateCurrentPageList((int) page, list) ;
 		return currentListPage_ ;
 	}
 
-	protected void checkAndSetPage(long page) throws Exception	{
-		if(page < 0 ){
-			page = 1;
-		}else if(page > availablePage_) {
-			page = availablePage_;
-		}
-		currentPage_ =	page ;
-	}
-	
-	protected void setAvailablePage(long available) {
-		available_ = available ;
-		if (available == 0)	{
-			availablePage_ = 1 ; 
-			currentPage_ =	1 ;
-		} else {
-			long pages = available / pageSize_ ;
-			if ( available % pageSize_ > 0) pages++ ;
-			availablePage_ = pages ;
-		}
-	}
 
 }

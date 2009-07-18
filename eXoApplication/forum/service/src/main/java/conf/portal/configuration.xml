@@ -5,7 +5,7 @@
     <key>org.exoplatform.forum.service.ForumService</key>
     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
   </component>    
-<!-- 
+ <!-- 
     <component>
     <key>org.exoplatform.forum.bench.ForumDataInitializer</key>
     <type>org.exoplatform.forum.bench.ForumDataInitializer</type>
@@ -15,10 +15,10 @@
     <key>org.exoplatform.forum.bench.ForumDataProvider</key>
     <type>org.exoplatform.forum.bench.RandomForumDataProvider</type>
     <init-params>
-    <value-param><name>maxCategories</name><value>8</value></value-param>
-    <value-param><name>maxForums</name><value>4</value></value-param>
-    <value-param><name>maxTopics</name><value>30</value></value-param>
-    <value-param><name>maxPosts</name><value>70</value></value-param>	
+    <value-param><name>maxCategories</name><value>1</value></value-param>
+    <value-param><name>maxForums</name><value>1</value></value-param>
+    <value-param><name>maxTopics</name><value>200</value></value-param>
+    <value-param><name>maxPosts</name><value>1</value></value-param>	
     <value-param><name>randomize</name><value>true</value></value-param>
     </init-params>
   </component>    

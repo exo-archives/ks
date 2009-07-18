@@ -149,7 +149,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
 		this.pageList = forumService.getTopicByMyTag(userIdAndtagId, strOrderBy);
-		long maxTopic = this.userProfile.getMaxTopicInPage() ;
+		int maxTopic = this.userProfile.getMaxTopicInPage().intValue() ;
 		if(maxTopic <= 0) maxTopic = 10;
 		this.pageList.setPageSize(maxTopic) ;
 		this.maxPage = this.pageList.getAvailablePage();
@@ -201,7 +201,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.pageList.getPage((long)0) ;
+		List<Topic> listTopic = this.pageList.getPage(0) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -252,7 +252,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 			UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 			uiTopicDetail.setUpdateForum(forum);
-			uiTopicDetail.setUpdateContainer(cateId, forumId, topic, Long.parseLong(id[1])) ;
+			uiTopicDetail.setUpdateContainer(cateId, forumId, topic, Integer.parseInt(id[1])) ;
 			uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId, topic.getId()) ;
 			if(id[2].equals("true")) {
 				uiTopicDetail.setIdPostView("lastpost") ;
@@ -283,7 +283,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String topicPath = "";
 			try {
 				String userId = topicsTag.getUserProfile().getUserId();
-				for (String topicId : topicsTag.getIdSelected()) {
+				for (String topicId : (List<String>)topicsTag.getIdSelected()) {
 					topicPath = topicsTag.getTopic(topicId).getPath();
 					try {
 						topicsTag.forumService.unTag(topicsTag.tagId, userId, topicPath);

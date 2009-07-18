@@ -329,14 +329,14 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
 			strQuery.append("@exo:isApproved='true'") ;
 		}
-		this.pageList = forumService.getPageTopic(categoryId, forumId, strQuery.toString(), strOrderBy);
-		long maxTopic = userProfile.getMaxTopicInPage() ;
-		if(maxTopic <= 0) maxTopic = 10 ;
-		try{
-			this.pageList.setPageSize(maxTopic);
-		}catch (NullPointerException e) {
-			isNull = true;
-		}
+		//this.pageList = forumService.getPageTopic(categoryId, forumId, strQuery.toString(), strOrderBy);
+		
+    int maxTopic = userProfile.getMaxTopicInPage().intValue() ;
+    if(maxTopic <= 0) maxTopic = 10 ;
+		
+		this.pageList = forumService.getTopicList(categoryId, forumId, strQuery.toString(), strOrderBy, maxTopic);
+
+
 	}
 	
 	private String getIPRemoter() throws Exception {
@@ -366,7 +366,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })
-  private List<Topic> getTopicPageLits() throws Exception {
+  private List<Topic> getTopicPageList() throws Exception {
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
 		List<Topic> topics = pageList.getPage(pageSelect);
@@ -386,7 +386,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopicByAll(String topicId) throws Exception {
-		List<Topic> listTopic = this.pageList.getPage(0) ;
+		List<Topic> listTopic = this.pageList.getPage(1) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
@@ -501,13 +501,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			numberPage = ForumUtils.removeZeroFirstNumber(numberPage) ;
 			if(!ForumUtils.isEmpty(numberPage)) {
 				try {
-					long page = Long.parseLong(numberPage.trim()) ;
+					int page = Integer.parseInt(numberPage.trim()) ;
 					if(page < 0) {
 						Object[] args = { "go page" };
 						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
 					} else {
 						if(page == 0) {
-							page = (long)1;
+							page = 1;
 						} else if(page > topicContainer.pageList.getAvailablePage()){
 							page = topicContainer.pageList.getAvailablePage() ;
 						}
@@ -576,7 +576,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
 					uiTopicContainer.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
 				}
-				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Long.parseLong(temp[1])) ;
+				uiTopicDetail.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic, Integer.parseInt(temp[1])) ;
 				
 				WebuiRequestContext context = event.getRequestContext() ;
 				context.addUIComponentToUpdateByAjax(uiForumContainer) ;
