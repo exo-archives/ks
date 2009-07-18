@@ -1095,20 +1095,25 @@ public class JCRDataStorage {
 	}
 
 	public List<Forum> getForums(String categoryId, String strQuery) throws Exception {
+	  return getForums(categoryId, strQuery, false);
+	}
+	
+	 public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
+	    return getForums(categoryId, strQuery, true);
+	  }
+	
+	private List<Forum> getForums(String categoryId, String strQuery, boolean summary) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
-			//ForumAdministration administration = getForumAdministration();
-			//String orderBy = administration.getForumSortBy();
-			//String orderType = administration.getForumSortByType();
-			
 			SortSettings sort = getForumSortSettings();
 			SortField orderBy = sort.getField();
 			Direction orderType = sort.getDirection();
 			
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
-			QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
+			String categoryPath = catNode.getPath();
+
 			StringBuffer queryBuffer = new StringBuffer();
-			queryBuffer.append("/jcr:root").append(catNode.getPath()).append("/element(*,exo:forum)");
+			queryBuffer.append("/jcr:root").append(categoryPath).append("/element(*,exo:forum)");
 			if (strQuery != null && strQuery.trim().length() > 0) {
 				queryBuffer.append("[").append(strQuery).append("]");
 			}
@@ -1121,6 +1126,7 @@ public class JCRDataStorage {
 			} else {
 				queryBuffer.append(",@exo:createdDate ascending");
 			}
+	    QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -1129,7 +1135,11 @@ public class JCRDataStorage {
 				Node forumNode = null;
 				try {
 					forumNode = iter.nextNode();
-					forums.add(getForum(forumNode));
+					if (summary) {
+					  forums.add(getForum(forumNode));
+					} else {
+					  forums.add(getForumSummary(forumNode));
+					}
 				}catch (Exception e) {
 					log.error("Failed to load forum node " + forumNode.getPath(),e);
 				}				
@@ -1452,6 +1462,41 @@ public class JCRDataStorage {
 		sProvider.close() ;
 	}
 
+	/**
+	 * Loads only part of the forum properties
+	 * @param forumNode
+	 * @return
+	 * @throws Exception
+	 */
+	 private Forum getForumSummary(Node forumNode) throws Exception {
+	    Forum forum = new Forum();
+	    PropertyReader reader = new PropertyReader(forumNode);
+	    forum.setId(forumNode.getName());
+	    forum.setPath(forumNode.getPath());
+	    forum.setForumName(reader.string("exo:name"));
+	    forum.setDescription(reader.string("exo:description"));
+	    forum.setModerators(reader.strings("exo:moderators"));
+	    forum.setPostCount(reader.l("exo:postCount"));
+	    forum.setTopicCount(reader.l("exo:topicCount"));
+	    forum.setIsModerateTopic(reader.bool("exo:isModerateTopic"));
+	    
+	    String lastTopicPath = "";
+	    if (forumNode.hasProperty("exo:lastTopicPath")){
+	      lastTopicPath = forumNode.getProperty("exo:lastTopicPath").getString();
+	      if(lastTopicPath.trim().length() > 0){
+	        if(lastTopicPath.lastIndexOf("/") > 0){
+	          lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
+	        } else {
+	          lastTopicPath = forum.getPath() + "/" + lastTopicPath;
+	        }
+	      }
+	    }
+	    forum.setLastTopicPath(lastTopicPath);  
+	    forum.setIsClosed(reader.bool("exo:isClosed"));
+	    forum.setIsLock(reader.bool("exo:isLock"));	    
+	    return forum;	   
+	 }
+	
 	private Forum getForum(Node forumNode) throws Exception {
 		Forum forum = new Forum();
 		PropertyReader reader = new PropertyReader(forumNode);

@@ -204,7 +204,7 @@ public class UICategories extends UIContainer	{
 		String strQuery = "";
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 
-		forumList = forumService.getForums(categoryId, strQuery);
+		forumList = forumService.getForumSummaries(categoryId, strQuery);
 
 	    
 		if(mapListForum.containsKey(categoryId)) {

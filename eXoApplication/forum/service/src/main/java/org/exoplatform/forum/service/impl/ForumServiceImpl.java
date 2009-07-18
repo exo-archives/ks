@@ -419,6 +419,11 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage_.getForums(categoryId, strQuery);
   }
 
+  public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
+    return storage_.getForumSummaries(categoryId, strQuery);
+  }
+  
+  
   public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
   	sProvider.close() ;
     return removeForum(categoryId, forumId);

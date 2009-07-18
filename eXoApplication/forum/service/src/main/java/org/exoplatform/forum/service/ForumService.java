@@ -949,4 +949,6 @@ public interface ForumService extends ForumServiceLegacy{
                                   String string,
                                   String strOrderBy, int pageSize) throws Exception;
   
+  public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
+  
 }

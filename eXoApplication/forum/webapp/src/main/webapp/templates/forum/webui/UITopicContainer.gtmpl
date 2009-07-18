@@ -32,7 +32,7 @@
 <%	
 	return;
  }
-	List topics = uicomponent.getTopicPageLits() ;
+	List topics = uicomponent.getTopicPageList() ;
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
 	UserProfile userProfile = uicomponent.getUserProfile();
