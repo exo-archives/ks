@@ -100,6 +100,10 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.RSSEventListener;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -120,24 +124,62 @@ import org.w3c.dom.Document;
  * hung.nguyen@exoplatform.com Jul 10, 2007 Edited by Vu Duy Tu
  * tu.duy@exoplatform.com July 16, 2007
  */
+
+@Managed
+@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="storage")})
+@ManagedDescription("Data Storage for this forum")
 public class JCRDataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
-	private NodeHierarchyCreator nodeHierarchyCreator_;
+	NodeHierarchyCreator nodeHierarchyCreator_;
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 	
-	@SuppressWarnings("unused")
-	private Map<String, String> serverConfig_ = new HashMap<String, String>();
-	private Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
-	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
-	private List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
-	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
-	protected Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
 
+	Map<String, String> serverConfig_ = new HashMap<String, String>();
+	Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
+	List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
+	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
+	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
+
+	
+	
+	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
 	}
 	public JCRDataStorage() {}
+	
+  @Managed
+  @ManagedDescription("repository for forum storage")
+  public String getRepository() throws Exception {
+     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+      try{
+        return ((RepositoryImpl)getForumHomeNode(sProvider).getSession().getRepository()).getName();
+      } finally{ sProvider.close() ;}
+  }
+	
+	
+	@Managed
+	@ManagedDescription("workspace for the forum storage")
+	public String getWorkspace() throws Exception {
+	   SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	    try{
+	      return getForumHomeNode(sProvider).getSession().getWorkspace().getName();
+	    } finally{ sProvider.close() ;}
+	    
+	  
+	}
+	
+	 @Managed
+	  @ManagedDescription("data path for forum storage")
+	  public String getPath() throws Exception {	    
+	     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	      try{
+	        return getForumHomeNode(sProvider).getPath();
+	      } finally{ sProvider.close() ;}
+	  }
+	
 
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {

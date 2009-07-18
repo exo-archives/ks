@@ -16,8 +16,15 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ks.common.conf.ManagedPlugin;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+import org.exoplatform.management.jmx.annotations.Property;
 
 /**
  * Created by The eXo Platform SAS
@@ -25,7 +32,10 @@ import org.exoplatform.container.xml.InitParams;
  *          tu.duy@exoplatform.com
  * 23-10-2008 - 07:57:47  
  */
-public class InitBBCodePlugin extends BaseComponentPlugin {
+@Managed
+@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@ManagedDescription("Plugin that defines the initial BBCodes available")
+public class InitBBCodePlugin extends ManagedPlugin {
 	private BBCodePlugin initialData = new BBCodePlugin();
   public InitBBCodePlugin(InitParams params) throws Exception {
   	initialData = (BBCodePlugin)params.getObjectParam("bbcode.default.configuration").getObject();
@@ -34,5 +44,17 @@ public class InitBBCodePlugin extends BaseComponentPlugin {
   public BBCodePlugin getBBCodePlugin() {
 	  return initialData ;
   }
+  
+  @Managed
+  @ManagedDescription("Get the list of BBCodes defined in this plugin")
+  public List<String> getBBCodes() {
+    List<String> result = new ArrayList<String>();
+   List<BBCodeData> data = initialData.getBbcodeDatas(); 
+   for (BBCodeData bbCodeData : data) {
+     result.add(bbCodeData.getTagName());
+   }
+   return result;
+  }
+  
 
 }

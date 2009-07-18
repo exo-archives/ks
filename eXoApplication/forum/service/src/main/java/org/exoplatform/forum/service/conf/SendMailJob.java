@@ -33,7 +33,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class SendMailJob implements Job {
-	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+	private static Log log_ = ExoLogger.getLogger("job.forum.SendMailJob");
   public SendMailJob() throws Exception {}
 		
 	

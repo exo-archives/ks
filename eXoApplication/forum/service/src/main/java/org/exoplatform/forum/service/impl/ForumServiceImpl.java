@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -29,6 +30,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -55,12 +57,19 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.conf.InitBBCodePlugin;
+import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.picocontainer.Startable;
+import org.quartz.JobDetail;
 
 /**
  * Created by The eXo Platform SARL
@@ -68,15 +77,26 @@ import org.picocontainer.Startable;
  *					hung.nguyen@exoplatform.com
  * Jul 10, 2007	
  */
-public class ForumServiceImpl implements ForumService, Startable{
-  private JCRDataStorage storage_ ;
-  private final List<String> onlineUserList_ = new ArrayList<String>();
+@ManagedBy(ForumServiceManaged.class)
+public class ForumServiceImpl implements ForumService, Startable {
+  
+  private static final Log log = ExoLogger.getLogger(ForumServiceImpl.class);
+  
+  
+  JCRDataStorage storage_ ;
+  ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
+  
+  final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
+  
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
     storage_ = new JCRDataStorage(nodeHierarchyCreator);
   }
 
+
+  
+  
   public void addPlugin(ComponentPlugin plugin) throws Exception {
     storage_.addPlugin(plugin) ;
   }
@@ -96,7 +116,9 @@ public class ForumServiceImpl implements ForumService, Startable{
   public void start() {
   	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
+  	  log.info("initializing category listeners...");
   		storage_.initCategoryListener() ;
+  		log.info("updating forum stats...");
   		updateForumStatistic(systemSession);  		
   	}catch (Exception e) {
   	}finally{
@@ -104,19 +126,23 @@ public class ForumServiceImpl implements ForumService, Startable{
   	}
   	systemSession = SessionProvider.createSystemProvider() ;
   	try{
+  	  log.info("initializing user profiles...");
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
   	}finally{
   		systemSession.close() ;
   	}
   	try{
+  	  log.info("initializing default data...");
   		storage_.initDefaultData() ;
+  		log.info("initializing default BBCodes...");
   		storage_.initDefaultBBCode();
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
   	//?
   	try{
+  	  log.info("Calculating active users...");
   		storage_.evaluateActiveUsers("");
   	}catch (Exception e) {
   		e.printStackTrace() ;  		
@@ -124,17 +150,76 @@ public class ForumServiceImpl implements ForumService, Startable{
   	
   	//init RSS generate listener 
   	try{
+  	  log.info("initializing RSS listeners...");
   		storage_.addRSSEventListenner();
   	} catch (Exception e){
   		e.printStackTrace();
   	}
   	// initialize auto prune schedules
   	try{
+  	  log.info("initializing prune schedulers...");
   		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
   		e.printStackTrace();
   	}
+  	
+
+  	// management views
+  	managePlugins();
+  	manageStorage();  	
+  	manageJobs();
+
+  	
 	}
+
+
+
+
+  private void manageStorage() {
+    managed.registerStorageManager(storage_);
+  }
+
+
+
+
+  @SuppressWarnings("unchecked")
+  private void manageJobs() {
+    try {
+        ExoContainer container = ExoContainerContext.getCurrentContainer();
+        JobSchedulerService schedulerService = 
+          (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+        String groupName = "KnowledgeSuite-forum";
+        List<JobDetail> jobs = schedulerService.getAllJobs();
+        for (JobDetail jobDetail : jobs) {
+         // if (groupName.equals(jobDetail.getGroup())) {
+            managed.registerJobManager(new JobManager(jobDetail));
+         // }
+        }
+    }
+    catch (Exception e) {
+      log.error("failed to register jobs manager", e);
+    }
+  }
+
+
+
+
+  private void managePlugins() {
+    List<RoleRulesPlugin> plugins = storage_.rulesPlugins_;
+  	for (RoleRulesPlugin plugin2 : plugins) {
+  	  managed.registerPlugin(plugin2);
+    }
+  	
+    List<InitializeForumPlugin> defaultPlugins = storage_.defaultPlugins_;
+    for (InitializeForumPlugin plugin2 : defaultPlugins) {
+      managed.registerPlugin(plugin2);
+    }
+ 
+    List<InitBBCodePlugin> defaultBBCodePlugins = storage_.defaultBBCodePlugins_;
+    for (InitBBCodePlugin plugin2 : defaultBBCodePlugins) {
+      managed.registerPlugin(plugin2);
+    }
+  }
 
 	public void stop() {}
 	
@@ -925,6 +1010,7 @@ public class ForumServiceImpl implements ForumService, Startable{
     }
     return false; 
   }
+
 
   public List<String> getOnlineUsers() throws Exception {
     return onlineUserList_ ;

@@ -25,7 +25,6 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -33,7 +32,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class RecountActiveUserJob implements Job{
-	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+	private static Log log_ = ExoLogger.getLogger("job.forum.RecountActiveUserJob");
 	
 	public RecountActiveUserJob() throws Exception {}
 	
@@ -54,11 +53,10 @@ public class RecountActiveUserJob implements Job{
 	    			long currentDay = calendar.getTimeInMillis() ;
 	    			currentDay = currentDay - (days * oneDay) ;
 	    			calendar.setTimeInMillis(currentDay) ;
-	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
 	    			StringBuilder stringBuilder = new StringBuilder();
 	    			stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
 	    				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
-	    			forumService.evaluateActiveUsers(sysProvider, stringBuilder.toString()) ;
+	    			forumService.evaluateActiveUsers(stringBuilder.toString()) ;
 	    			if (log_.isDebugEnabled()) {
     		  		log_.debug("\n\n The RecoundActiveUserJob have been done");
     		  	}

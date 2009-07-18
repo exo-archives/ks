@@ -5,7 +5,7 @@
     <key>org.exoplatform.forum.service.ForumService</key>
     <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
   </component>    
-
+<!-- 
     <component>
     <key>org.exoplatform.forum.bench.ForumDataInitializer</key>
     <type>org.exoplatform.forum.bench.ForumDataInitializer</type>
@@ -22,7 +22,7 @@
     <value-param><name>randomize</name><value>true</value></value-param>
     </init-params>
   </component>    
-
+-->
   <external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
 	  <component-plugin> 

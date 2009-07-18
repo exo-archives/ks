@@ -27,7 +27,6 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -35,11 +34,10 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class DeactiveJob implements Job{
-	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+	private static Log log_ = ExoLogger.getLogger("job.forum.DesactiveJob");
 	
 	public DeactiveJob() throws Exception {}
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 		try{
 			ExoContainer exoContainer = ExoContainerContext.getCurrentContainer() ;
@@ -57,12 +55,11 @@ public class DeactiveJob implements Job{
 	    			long currentDay = calendar.getTimeInMillis() ;
 	    			currentDay = currentDay - (days * oneDay) ;
 	    			calendar.setTimeInMillis(currentDay) ;
-	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
-	    			String path = forumService.getForumHomePath(sysProvider) ;
+	    			String path = forumService.getForumHomePath() ;
 	    			StringBuilder stringBuffer = new StringBuilder();
 	    			stringBuffer.append("/jcr:root").append(path).append("//element(*,exo:topic)[");
 	    			stringBuffer.append("@exo:lastPostDate <= xs:dateTime('"+ISO8601.format(calendar)+"') and @exo:isActive = 'true']") ;
-	    			NodeIterator iter = forumService.search(stringBuffer.toString(), sysProvider) ;
+	    			NodeIterator iter = forumService.search(stringBuffer.toString()) ;
 	    			while(iter.hasNext()) {
 	    				Node topic = iter.nextNode() ;
 	    				if(forumName != null && forumName.length() > 0) {

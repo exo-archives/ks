@@ -16,8 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.conf;
 
-import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ks.common.conf.ManagedPlugin;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+import org.exoplatform.management.jmx.annotations.Property;
 
 /**
  * Created by The eXo Platform SAS
@@ -25,15 +29,24 @@ import org.exoplatform.container.xml.InitParams;
  *          tu.duy@exoplatform.com
  * 23-10-2008 - 07:57:47  
  */
-public class InitializeForumPlugin extends BaseComponentPlugin {
+@Managed
+@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@ManagedDescription("Plugin that allows to initialize default data for the forum")
+public class InitializeForumPlugin extends ManagedPlugin {
 	private ForumInitialData initialData = new ForumInitialData();
-  @SuppressWarnings("unchecked")
+
   public InitializeForumPlugin(InitParams params) throws Exception {
-  	initialData = (ForumInitialData)params.getObjectParam("livedemo.default.configuration").getObject();
+  	setInitialData((ForumInitialData)params.getObjectParam("livedemo.default.configuration").getObject());
+  }
+
+  private void setInitialData(ForumInitialData object) {
+    this.initialData = object;
+  }
+
+  public ForumInitialData getForumInitialData() {
+    return initialData;
   }
   
-  public ForumInitialData getForumInitialData() {
-	  return initialData ;
-  }
+
 
 }
