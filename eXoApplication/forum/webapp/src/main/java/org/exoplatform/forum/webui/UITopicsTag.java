@@ -201,7 +201,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.pageList.getPage(0) ;
+		List<Topic> listTopic = this.pageList.getPage(1) ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}

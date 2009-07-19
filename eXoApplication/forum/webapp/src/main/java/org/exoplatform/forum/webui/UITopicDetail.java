@@ -635,7 +635,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Post> getAllPost() throws Exception {return this.pageList.getPage(0) ;}
+	public List<Post> getAllPost() throws Exception {return this.pageList.getPage(1) ;}
 	
 	private Post getPost(String postId) throws Exception {
 		for(Post post : getAllPost()) {

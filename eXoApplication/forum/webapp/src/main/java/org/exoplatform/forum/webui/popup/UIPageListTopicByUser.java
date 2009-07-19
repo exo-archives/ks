@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -104,7 +105,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	
 	@SuppressWarnings("unchecked")
   public Topic getTopicById(String topicId) throws Exception {
-		List<Topic> topics = pageList.getPage(0) ;
+		List<Topic> topics = pageList.getPage(1) ;
 		for(Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
