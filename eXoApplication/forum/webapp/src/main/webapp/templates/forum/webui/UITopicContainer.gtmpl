@@ -134,7 +134,7 @@
 				<div class="LeftBar">
 					<div class="RightBar">
 						<div class="CenterBar" style="padding-right:10px;">
-							<div class="Title"><span style="font-weight:normal;"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%>: </span><span title="$forumName">$subForumName</span></div>
+							<div class="Title"><span style="font-weight:normal;"><%=_ctx.appRes("UITopicContainer.label.TopicInForum");%> </span><span title="$forumName">$subForumName</span></div>
 						<% if(isShowMenu && canEdit) { %>	
 							<div class="ContentAction" onclick="eXo.forum.UIForumPortlet.checkActionTopic(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
