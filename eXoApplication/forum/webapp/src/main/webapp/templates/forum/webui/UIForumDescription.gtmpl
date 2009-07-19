@@ -8,8 +8,8 @@
 	<div class="LeftDescription">
 		<div class="RightDescription">
 			<div class="CenterDescription">
-				<span class="ForumLabel"><%=_ctx.appRes("UIForumForm.label.newForum");%>:</span> 
-				<span class="NameForum"><%=forum.getForumName()%></span>
+				<span class="ForumLabel"> </span> 
+				<span class="NameForum"><%=forum.getForumName()%> : </span>
 				<span class="Description"><%=forum.getDescription()%></span>
 			</div>
 		</div>
