@@ -112,8 +112,8 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.DiscussForumActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UIQuestions extends UIContainer {
-	@SuppressWarnings("unused")
 	private static String SEARCH_INPUT = "SearchInput" ;
 	private static String COMMENT_ITER = "CommentIter" ;
 	private static String ANSWER_ITER = "AnswerIter" ;
@@ -170,7 +170,7 @@ public class UIQuestions extends UIContainer {
 		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
 	
-	private String getLinkDiscuss() {
+	private String getLinkDiscuss(String topicId) {
 		// for discuss question
 		FAQSetting faqSetting = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting);
@@ -189,6 +189,9 @@ public class UIQuestions extends UIContainer {
 		url = url.substring(0, url.indexOf("/")) ;
 		url = "http://" + url;
 		topic = new Topic();
+		if(!FAQUtils.isFieldEmpty(topicId)) {
+			topic.setId(topicId);
+		}
 		link = link.replaceFirst("OBJECTID", topic.getId());
 		link = url + link;
 		return link;
@@ -218,9 +221,11 @@ public class UIQuestions extends UIContainer {
 				//FAQServiceUtils serviceUtils = new FAQServiceUtils();
 				if(faqSetting_.getIsAdmin().equals("TRUE")){
 					faqSetting_.setCanEdit(true);
-				} else if(categoryId_ != null && categoryId_.trim().length() > 0 &&
-						Arrays.asList(faqService_.getCategoryById(this.categoryId_).getModerators()).contains(currentUser_)){
-					faqSetting_.setCanEdit(true);
+				} else if(categoryId_ != null && categoryId_.trim().length() > 0 ){
+					try{
+						if(Arrays.asList(faqService_.getCategoryById(this.categoryId_).getModerators()).contains(currentUser_))
+							faqSetting_.setCanEdit(true);
+					}catch(Exception e) {}					
 				} else {
 					faqSetting_.setCanEdit(false);
 				}
@@ -1309,9 +1314,9 @@ public class UIQuestions extends UIContainer {
 				String []paths = forum.getPath().split("/");
 				categoryId = paths[paths.length - 2];
 				Topic topic = uiForm.topic;
-				String link = uiForm.getLinkDiscuss(); 
-				link = link.replaceFirst("private", "public");
 				String topicId = topic.getId() ;
+				String link = uiForm.getLinkDiscuss(topicId); 
+				link = link.replaceFirst("private", "public");
 				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 				Question question = faqService.getQuestionById(questionId);
 				String userName = question.getAuthor();
@@ -1387,6 +1392,7 @@ public class UIQuestions extends UIContainer {
 					comment.setPostId(post.getId());
 					faqService.saveComment(questionId, comment, false);
 				}
+				uiForm.updateCurrentQuestionList();
       } catch (Exception e) {
 	      e.printStackTrace();
       } 
