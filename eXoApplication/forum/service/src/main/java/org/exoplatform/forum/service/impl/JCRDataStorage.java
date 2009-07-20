@@ -2250,6 +2250,14 @@ public class JCRDataStorage {
 			} else {
 				forumNode.save();
 			}
+			if(topic.getIsWaiting() || !topic.getIsApproved()) {
+				List<String>userIdsp = new ArrayList<String>();
+				if(forumNode.hasProperty("exo:moderators")) {
+					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+				}
+				userIdsp.addAll(getAllAdministrator(sProvider));
+				getTotalJobWatting(userIdsp);
+			}
 			if (!isMove) {
 				if (isNew) {
 					// createPost first
