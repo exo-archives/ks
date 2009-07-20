@@ -229,10 +229,6 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
 
-  <session-config>
-    <session-timeout>15</session-timeout>
-  </session-config>
-
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>user authentication</web-resource-name>
