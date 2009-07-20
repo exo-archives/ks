@@ -799,17 +799,17 @@
 										<div style="clear:left;"><span></span></div>
 								<% } %>
 								<div class="InfoMember">
-									<div><%=_ctx.appRes(uiformId + ".label.JoinDate");%>:$joinDate</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>:$joinDate</div>
 									<% long totalPost = userInfo.getTotalPost();
 										if(totalPost > 0) {
 											 Date lastPostOfUser = userInfo.getLastPostDate() ;
 											 dateView.setTime(lastPostOfUser.getTime() - setTime);
 											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateTimeFormat,dateView) ;
 									%>
-									<div><%=_ctx.appRes(uiformId + ".label.Posts");%>:$totalPost</div>
-									<div><%=_ctx.appRes(uiformId + ".label.LastPost");%>: $lastPostDateOfUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>:$totalPost</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
 									<% } else {%>
-									<div><strong>$screenName</strong><%=_ctx.appRes(uiformId + ".label.hasNoPost");%></div>
+									<div><strong>$screenName</strong><%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
@@ -822,7 +822,7 @@
 										  lastLoginUser = ForumUtils.getFormatDate(shortDateTimeFormat, dateView) ;
 										}
 									%>
-									<div><%=_ctx.appRes(uiformId + ".label.LastLogin");%>:$lastLoginUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>:$lastLoginUser</div>
 								</div>
 							</div>
 						</td>

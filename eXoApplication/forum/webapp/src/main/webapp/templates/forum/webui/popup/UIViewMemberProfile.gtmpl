@@ -22,14 +22,19 @@
 	
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
-	String createdDate = "";
 	
 	fullName = uiform.getScreenName(userName);
 	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {
 		if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
 		if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ;
-	} 
-	createdDate = ForumUtils.getFormatDate(shortDateFormat, userProfile.getJoinedDate()) ;
+	}
+	Date dateView = new Date();
+	long setTime = (long)(userProfileLogin.getTimeZone()*3600000) ;
+	String createdDate = "";
+	if(userProfile.getJoinedDate() != null){
+		dateView.setTime(userProfile.getJoinedDate().getTime() - setTime);
+		createdDate = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
+	}
 	
 	long totalPost = userProfile.getTotalPost();
 	shortDateFormat = shortDateFormat +	", " + userProfileLogin.getTimeFormat();
@@ -62,19 +67,27 @@
 								<% } %>
 								<div class="Rank">$userTitle</div>
 								<div class="InfoMember">
-									<div>Join Date: $createdDate</div>
-									<% if(totalPost > 0) { 
-											 String lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat,userProfile.getLastPostDate()) ;
+									<div><%=_ctx.appRes("UITopicDetail.label.JoinDate");%>: $createdDate</div>
+									<%if(totalPost > 0) {
+											String lastPostDateOfUser = "" ;
+											if(userProfile.getLastPostDate() != null){
+												dateView.setTime(userProfile.getLastPostDate().getTime() - setTime);
+												lastPostDateOfUser = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
+											}
 									%>
-									<div>Posts: $totalPost</div>
-									<div>Last Post: $lastPostDateOfUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.Posts");%>: $totalPost</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastPost");%>: $lastPostDateOfUser</div>
 									<% } else {%>
-									<div><strong>$userName</strong> has no post!</div>
+									<div><strong>$userName</strong> <%=_ctx.appRes("UITopicDetail.label.hasNoPost");%></div>
 									<% } 
-										String lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, userProfile.getLastLoginDate()) ;
+											String lastLoginUser = "" ;
+											if(userProfile.getLastLoginDate() != null){
+												dateView.setTime(userProfile.getLastLoginDate().getTime() - setTime);
+												lastLoginUser = ForumUtils.getFormatDate(shortDateFormat, dateView) ;
+											}
 										if(!ForumUtils.isEmpty(lastLoginUser)) {
 									%>
-									<div>Last Login: $lastLoginUser</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.LastLogin");%>: $lastLoginUser</div>
 									<% } %>
 								</div>
 							</div>
