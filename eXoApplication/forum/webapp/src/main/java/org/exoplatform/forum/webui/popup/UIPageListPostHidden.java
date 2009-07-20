@@ -93,7 +93,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 				}
 			}
 		}
-		this.listAllPost = pageList.getPage(1) ;
+		this.listAllPost = pageList.getAll();
 		return posts ;
 	}
 	

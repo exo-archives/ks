@@ -81,7 +81,10 @@ public class ForumPageList extends JCRPageList {
 			iter_ = setQuery(sProvider_, isQuery_, value_) ;
 			sProvider_.close();
 			setAvailablePage((int) iter_.getSize()) ;
-			checkAndSetPage(page) ;
+			
+			if(page == 0) currentPage_ = 0;  // nasty trick for getAll()
+			else checkAndSetPage(page) ;
+			
 			page = currentPage_;
 		}
 		Node currentNode ;
@@ -396,7 +399,9 @@ public class ForumPageList extends JCRPageList {
 
   @Override
   public List getAll() throws Exception {
-    // TODO Auto-generated method stub
-    return null;
+    currentPage_ = 0; 
+    populateCurrentPage(currentPage_) ;// trick allowed by implementation of ForumPageList.populateCurrentPage()
+    this.pageSelected = 0;
+    return currentListPage_ ;
   }
 }

@@ -180,15 +180,12 @@ public class UICategories extends UIContainer	{
 	
 	private List<Category> getCategoryList() throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-		//forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			categoryList = forumService.getCategories(sProvider);
+			categoryList = forumService.getCategories();
     } catch (Exception e) {
     	categoryList = new ArrayList<Category>();
-    }finally {
-    	sProvider.close();
     }
+    
 		if(categoryList.size() > 0)
 			forumPortlet.getChild(UIForumActionBar.class).setHasCategory(true) ;
 		else 

@@ -105,7 +105,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	
 	@SuppressWarnings("unchecked")
   public Topic getTopicById(String topicId) throws Exception {
-		List<Topic> topics = pageList.getPage(1) ;
+		List<Topic> topics = pageList.getAll() ;
 		for(Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}

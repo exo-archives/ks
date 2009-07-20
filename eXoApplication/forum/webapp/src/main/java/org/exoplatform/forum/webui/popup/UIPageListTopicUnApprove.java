@@ -90,7 +90,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
 			}
 		}
-		this.allTopics = pageList.getPage(1) ;
+		this.allTopics = pageList.getAll();
 		return topics ;
 	}
 	

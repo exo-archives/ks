@@ -571,7 +571,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
       	mapObject.put(((User)obj).getUserName(), obj);
       }
       
-      for(Object object : this.forumService.searchUserProfile(keyword).getPage(1)){
+      for(Object object : this.forumService.searchUserProfile(keyword).getAll()){
       	mapObject.put(((UserProfile)object).getUserId(), object);
       }
       
