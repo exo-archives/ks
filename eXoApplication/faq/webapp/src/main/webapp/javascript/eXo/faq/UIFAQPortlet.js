@@ -196,7 +196,7 @@ UIFAQPortlet.prototype.showPicture = function(obj) {
 	  containerNode.onclick = eXo.faq.UIFAQPortlet.hidePicture ;
 		this.showFullScreen(imageNode,containerNode);
 	  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-	  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
+	  eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
 		obj.appendChild(imageNodeSrc);
 	}
 };

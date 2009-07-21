@@ -3,7 +3,7 @@
 import org.exoplatform.services.organization.User;
  uiform.begin() 
  def rcontext = _ctx.getRequestContext() ;
- rcontext.getJavascriptManager().addJavascript('eXo.cs.CheckBox.init("'+uiform.id+'") ;') ;
+ rcontext.getJavascriptManager().addJavascript('eXo.ks.CheckBox.init("'+uiform.id+'") ;') ;
  %>
 <div class="UIInsertAddress">
   <div class="InsertAddressContainer" style="padding:5px">

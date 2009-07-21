@@ -440,7 +440,7 @@ UIForumPortlet.prototype.showPicture = function(src) {
   containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
 	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
-	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.cs.MaskLayerControl.scrollHandler) ;
+	eXo.core.Browser.addOnScrollCallback('MaskLayerControl', eXo.ks.MaskLayerControl.scrollHandler) ;
 };
 
 UIForumPortlet.prototype.getImageSize = function(imageNode){
@@ -915,13 +915,13 @@ eXo.forum.CheckBox = {
 			for(var i = 1 ; i < len ; i ++) {
 				checkboxes[i].onclick = this.check ;
 				if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
-				eXo.cs.CheckBox.checkItem(checkboxes[i]);
+				eXo.ks.CheckBox.checkItem(checkboxes[i]);
 			}
 		}
 	},
 	
 	check : function(){
-		eXo.cs.CheckBox.checkItem(this);
+		eXo.ks.CheckBox.checkItem(this);
 		var row = eXo.core.DOMUtil.findAncestorByTagName(this,"tr");
 		if(this.checked) {
 			eXo.core.DOMUtil.addClass(row,"SelectedItem");
