@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
@@ -241,6 +242,7 @@ public class UIBreadcumbs extends UIContainer {
 			UIBreadcumbs uiBreadcums = event.getSource() ;
 			if(uiBreadcums.isOpen()) {
 				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
+				path = StringUtils.remove(path, " ");
 				UIForumPortlet forumPortlet = uiBreadcums.getAncestorOfType(UIForumPortlet.class) ;
 				UIApplication uiApp = uiBreadcums.getAncestorOfType(UIApplication.class) ;
 				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0) {
@@ -261,10 +263,15 @@ public class UIBreadcumbs extends UIContainer {
 						if(id.length > 1) {
 							topic = uiBreadcums.forumService.getTopicByPath(sProvider, path, false) ;
 						} else {
-							topic = (Topic)uiBreadcums.forumService.getObjectNameById(sProvider, path, Utils.TOPIC);
-							path = topic.getPath();
-							path = path.substring(path.indexOf(Utils.CATEGORY));
-							id = path.split("/") ;
+							Object obj = uiBreadcums.forumService.getObjectNameById(sProvider, path, Utils.TOPIC);
+							if(obj instanceof Topic){
+								topic = (Topic)obj;
+								path = topic.getPath();
+								path = path.substring(path.indexOf(Utils.CATEGORY));
+								id = path.split("/") ;
+							}else {
+								topic = null;
+							}
 						}
 						if(topic != null) {
 							Category category = uiBreadcums.forumService.getCategory(sProvider, id[0]);

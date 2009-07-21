@@ -502,7 +502,7 @@
 																				<td style="width:25px">
 																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="DiscussForum"><span></span></div>
-																					</div>
+																					</a>
 																				</td>
 																			<%		} else {
 																						String link = uicomponent.url("DiscussForum", pathDiscuss);
