@@ -60,34 +60,34 @@ eXo.ks.CheckBox = new CheckBoxManager() ;
 
 /********************* Pane Spliter ******************/
 
-function LayoutSpliter() {
-} ;
-
-/**
- * 
- * @param {Object} e : Event Object
- * @param {Object} markerobj : Click object
- * This function to resize pane
- */
-LayoutSpliter.prototype.doResize = function(e , markerobj) {
-  _e = (window.event) ? window.event : e ;
-  var DOMUtil = eXo.core.DOMUtil ;
-  this.posY = eXo.core.Browser.findMouseYInPage(_e) ;
-  var marker = (typeof(markerobj) == "string")? document.getElementById(markerobj):markerobj ;
-  var container = marker.parentNode ;
-  var areas = DOMUtil.findDescendantsByClass(container, "div", "SpliterResizableListArea") ;
-  if((areas.length < 2) || (areas[0].style.display=="none")) return ;
-  this.beforeArea = areas[0] ;
-  this.afterArea = areas[1] ;
-//  this.beforeArea.style.height = this.beforeArea.offsetHeight + "px" ;
-//  this.afterArea.style.height = this.afterArea.offsetHeight + "px" ;
-  this.beforeArea.style.overflowY = "auto" ;
-  this.afterArea.style.overflowY = "auto" ;
-  this.beforeY = this.beforeArea.offsetHeight ;
-  this.afterY = this.afterArea.offsetHeight ;
-  document.onmousemove = eXo.cs.Spliter.adjustHeight ;
-  document.onmouseup = eXo.cs.Spliter.clear ;
-} ;
+//function LayoutSpliter() {
+//} ;
+//
+///**
+// * 
+// * @param {Object} e : Event Object
+// * @param {Object} markerobj : Click object
+// * This function to resize pane
+// */
+//LayoutSpliter.prototype.doResize = function(e , markerobj) {
+//  _e = (window.event) ? window.event : e ;
+//  var DOMUtil = eXo.core.DOMUtil ;
+//  this.posY = eXo.core.Browser.findMouseYInPage(_e) ;
+//  var marker = (typeof(markerobj) == "string")? document.getElementById(markerobj):markerobj ;
+//  var container = marker.parentNode ;
+//  var areas = DOMUtil.findDescendantsByClass(container, "div", "SpliterResizableListArea") ;
+//  if((areas.length < 2) || (areas[0].style.display=="none")) return ;
+//  this.beforeArea = areas[0] ;
+//  this.afterArea = areas[1] ;
+////  this.beforeArea.style.height = this.beforeArea.offsetHeight + "px" ;
+////  this.afterArea.style.height = this.afterArea.offsetHeight + "px" ;
+//  this.beforeArea.style.overflowY = "auto" ;
+//  this.afterArea.style.overflowY = "auto" ;
+//  this.beforeY = this.beforeArea.offsetHeight ;
+//  this.afterY = this.afterArea.offsetHeight ;
+//  document.onmousemove = eXo.cs.Spliter.adjustHeight ;
+//  document.onmouseup = eXo.cs.Spliter.clear ;
+//} ;
 
 //LayoutSpliter.prototype.adjustHeight = function(evt) {
 //  evt = (window.event) ? window.event : evt ;
@@ -116,7 +116,7 @@ LayoutSpliter.prototype.doResize = function(e , markerobj) {
 
 /********************* Utility function for CS ******************/
 
-function Utils() {}
+//function Utils() {}
 
 //Utils.prototype.showHidePane = function(clickobj, beforeobj, afterobj) {
 //  var container = eXo.core.DOMUtil.findAncestorByClass(clickobj, "SpliterContainer") ;
@@ -539,7 +539,7 @@ eXo.core.EventManager = new EventManager() ;
 //};
 
 //eXo.cs.UINavigation = new UINavigation() ;
-if(!eXo.ks) eXo.ks = {};
+//if(!eXo.ks) eXo.ks = {};
 eXo.ks.UIContextMenu = {
 	menus : [],
 	setup : function(){
