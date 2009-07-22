@@ -72,6 +72,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	private boolean isAdmin = false;
 	private UserProfile userProfile ;
 	private String link = "";
+	private String pathTopic = ""; 
 	
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
@@ -102,6 +103,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	public void updateTopic(String forumId, List<Topic> topics, boolean isFormTopic) throws Exception {
 		this.forumId = forumId ;
 		this.topics = topics ;
+		try {
+			this.pathTopic = topics.get(0).getPath();
+    } catch (Exception e) {}
 		this.isFormTopic = isFormTopic ;
 		setCategories() ;
 	}
@@ -135,7 +139,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
 		for(Forum forum : this.forumService.getForums(ForumSessionUtils.getSystemProvider(), categoryId, "")) {
-			if(forum.getId().equalsIgnoreCase(this.forumId)) continue ;
+			if(forum.getId().equalsIgnoreCase(this.forumId)) {
+				if(pathTopic.indexOf(categoryId) >= 0)	continue ;
+			}
 			if(this.userProfile.getUserRole() == 1){
 				if(forum.getModerators().length > 0 && !ForumUtils.isStringInStrings(forum.getModerators(), this.userProfile.getUserId()) || forum.getModerators().length <=0){
 					if(forum.getIsClosed() || forum.getIsLock())continue ; 

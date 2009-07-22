@@ -71,6 +71,7 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private List<Category> categories;
 	private String link;
+	private String pathPost = "";
 	public UIMovePostForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
@@ -84,6 +85,9 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	public void updatePost(String topicId, List<Post> posts) throws Exception {
 		this.topicId = topicId ;
 		this.posts = posts ;
+		try {
+			this.pathPost = posts.get(0).getPath();
+    } catch (Exception e) {}
 		setCategories() ;
 	}
 	
@@ -142,7 +146,10 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		List<Topic> topics = new ArrayList<Topic>() ;
 		List<Topic> topics_ = this.forumService.getTopics(ForumSessionUtils.getSystemProvider(), categoryId, forumId) ;; 
 		for(Topic topic : topics_) {
-			if(topic.getId().equalsIgnoreCase(this.topicId)) continue ;
+			if(topic.getId().equalsIgnoreCase(this.topicId)){
+				if(pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
+					continue ;
+			}
 			if(this.userProfile.getUserRole() == 1){
 				if(!isMode) {
 					if(!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting()) continue ;
