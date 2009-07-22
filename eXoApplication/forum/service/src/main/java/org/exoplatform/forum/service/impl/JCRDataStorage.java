@@ -2429,7 +2429,7 @@ public class JCRDataStorage {
 				forumHomeNode.save();
 			}
 		}catch(Exception e) {			
-			e.printStackTrace() ;
+			throw e;
 		} finally { sProvider.close() ;}		
 	}
 
@@ -3487,7 +3487,7 @@ public class JCRDataStorage {
 				sendEmailNotification(fullNameEmailOwnerPost, message);
 			}
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			throw e;
 		}finally {sProvider.close() ;}
 	}
 

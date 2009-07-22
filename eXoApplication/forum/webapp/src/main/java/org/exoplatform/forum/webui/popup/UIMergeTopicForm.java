@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.jcr.PathNotFoundException;
-
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -33,7 +31,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -118,7 +115,6 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = temp[temp.length - 3] ;
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 					try {
 						for(Topic topic : uiForm.listTopic) {
 							if(topicMergeId.equals(topic.getId())) {continue ;}
@@ -136,13 +132,12 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 								//
 								WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 								ResourceBundle res = context.getApplicationResourceBundle() ;
-								JCRPageList pageList = forumService.getPosts(sProvider, categoryId, forumId, topic.getId(), "", "", "", "") ;
+								JCRPageList pageList = forumService.getPosts(categoryId, forumId, topic.getId(), "", "", "", "") ;
 								List<Post> posts = pageList.getAll();
-								forumService.movePost(sProvider, posts, destTopicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
-								forumService.removeTopic(sProvider, categoryId, forumId, topic.getId()) ;
+								forumService.movePost(posts, destTopicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
+								forumService.removeTopic(categoryId, forumId, topic.getId()) ;
 		          } catch (Exception e) {
 			          isMerge = false;
-			          sProvider.close();
 			          break;
 		          }
 						}
@@ -151,15 +146,12 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 			        try {
 			        	List<Topic>list = new ArrayList<Topic>();
 			        	list.add(topicMerge) ;
-			          forumService.modifyTopic(ForumSessionUtils.getSystemProvider(), list, 7) ;
-			        } catch (PathNotFoundException e) {
+			          forumService.modifyTopic(list, 7) ;
+			        } catch (Exception e) {
 			          isMerge = false;
-			          sProvider.close();
 			        }
 						}
-					} finally {
-						sProvider.close();
-					}
+					}catch (Exception e) {}
 				} else {
 					isMerge = false;
 				}

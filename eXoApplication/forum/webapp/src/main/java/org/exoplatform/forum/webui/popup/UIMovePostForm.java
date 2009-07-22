@@ -71,6 +71,8 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private List<Category> categories;
 	private String link;
+	private String pathPost = "";
+	
 	public UIMovePostForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
@@ -84,6 +86,9 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 	public void updatePost(String topicId, List<Post> posts) throws Exception {
 		this.topicId = topicId ;
 		this.posts = posts ;
+		try {
+			this.pathPost = posts.get(0).getPath();
+    } catch (Exception e) {}
 		setCategories() ;
 	}
 	
@@ -142,7 +147,10 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 		List<Topic> topics = new ArrayList<Topic>() ;
 		List<Topic> topics_ = this.forumService.getTopics(categoryId, forumId);
 		for(Topic topic : topics_) {
-			if(topic.getId().equalsIgnoreCase(this.topicId)) continue ;
+			if(topic.getId().equalsIgnoreCase(this.topicId)){
+				if(pathPost.indexOf(categoryId) >= 0 && pathPost.indexOf(forumId) > 0)
+					continue ;
+			}
 			if(this.userProfile.getUserRole() == 1){
 				if(!isMode) {
 					if(!topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || topic.getIsClosed() || topic.getIsLock() || topic.getIsWaiting()) continue ;
@@ -183,12 +191,10 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
         } catch (ItemExistsException e) {
-        	e.printStackTrace();
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
         	return;
         } catch (Exception e) {
-        	e.printStackTrace();
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
         	uiApp.addMessage(new ApplicationMessage("UIMovePostForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
         	return ;
