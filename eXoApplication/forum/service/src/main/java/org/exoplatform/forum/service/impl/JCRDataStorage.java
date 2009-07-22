@@ -1009,9 +1009,11 @@ public class JCRDataStorage {
 							long role = userProfileNode.getProperty("exo:userRole").getLong();
 							if (role == 1) {
 								userProfileNode.setProperty("exo:userRole", 2);
+								userProfileNode.setProperty("exo:userTitle", Utils.USER);
 							}
 						} else {
 							userProfileNode.setProperty("exo:userRole", 2);
+							userProfileNode.setProperty("exo:userTitle", Utils.USER);
 						}
 					}
 					userProfileNode.setProperty("exo:moderateForums", getStringsInList(moderateList));
@@ -1311,7 +1313,7 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}finally{ sProvider.close() ;}
 	}
-	
+	//TODO: View again
 	private void setModeratorForum(SessionProvider sProvider, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
 		Node userProfileHomeNode = getUserProfileHome(sProvider);
 		Node userProfileNode;
@@ -1381,9 +1383,11 @@ public class JCRDataStorage {
 								long role = userProfileNode.getProperty("exo:userRole").getLong();
 								if (role == 1) {
 									userProfileNode.setProperty("exo:userRole", 2);
+									userProfileNode.setProperty("exo:userTitle", Utils.USER);
 								}
 							} else {
 								userProfileNode.setProperty("exo:userRole", 2);
+								userProfileNode.setProperty("exo:userTitle", Utils.USER);
 							}
 						}
 					} catch (PathNotFoundException e) {
@@ -5351,7 +5355,43 @@ public class JCRDataStorage {
 	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			
+			Node parentNode = getForumHomeNode(sProvider) ;
+			QueryManager qm = parentNode.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath()).
+															append("//element(*,exo:forumWatching)[(");
+			for(int i = 0; i < listNodeId.size(); i ++){
+				if(i > 0) queryString.append(" or ");
+				queryString.append("@exo:id='").append(listNodeId.get(i)).append("'");
+			}
+			queryString.append(")]");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iterator = result.getNodes();
+			Node watchingNode = null;
+			List<String> listEmail = null;
+			List<String> listUsers = null;
+			while(iterator.hasNext()){
+				watchingNode = iterator.nextNode();
+				listEmail = new ArrayList<String>();
+				listUsers = new ArrayList<String>();
+				if(watchingNode.hasProperty("exo:emailWatching"))
+					listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
+				if(watchingNode.hasProperty("exo:userWatching"))
+					listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
+				if(listUsers.contains(userId)){
+					for(int i = 0; i < listUsers.size(); i ++){
+						if(listUsers.get(i).equals(userId)){
+							listEmail.set(i, newEmailAdd);
+						}
+					}
+				}else {
+					listUsers.add(userId);
+					listEmail.add(newEmailAdd);
+				}
+				watchingNode.setProperty("exo:emailWatching", listEmail.toArray(new String[]{}));
+				watchingNode.setProperty("exo:userWatching", listUsers.toArray(new String[]{}));
+				watchingNode.save();
+			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}finally { sProvider.close() ;}

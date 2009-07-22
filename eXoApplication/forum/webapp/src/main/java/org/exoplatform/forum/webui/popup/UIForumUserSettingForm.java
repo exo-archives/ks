@@ -574,7 +574,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			if(newEmailAdd == null || newEmailAdd.trim().length() < 1 || !ForumUtils.isValidEmailAddresses(newEmailAdd)){
 				Object[] args = { };
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.Email-inValid", args, ApplicationMessage.ERROR)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.Email-inValid", args, ApplicationMessage.WARNING)) ;
 				return;
 			}
 			UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
@@ -587,9 +587,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				}
 			}
 			if(listObjectId.size() > 0){
-				SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
-				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, ForumSessionUtils.getCurrentUser(), sessionProvider);
-				sessionProvider.close();
+				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, ForumSessionUtils.getCurrentUser());
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
