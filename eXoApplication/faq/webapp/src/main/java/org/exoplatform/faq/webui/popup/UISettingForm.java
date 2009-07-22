@@ -276,7 +276,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				UIFormInputWithActions Discussion = settingForm.getChildById(DISCUSSION_TAB);
 				boolean isDiscus = (Boolean)Discussion.getUIFormCheckBoxInput(ENABLE_DISCUSSION).getValue();
 				if(isDiscus) {
-					if(!settingForm.idForumName.isEmpty()) {
+					String value = Discussion.getUIStringInput(FIELD_CATEGORY_PATH_INPUT).getValue();
+					if(!settingForm.idForumName.isEmpty() && !FAQUtils.isFieldEmpty(value)) {
 						faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0)+";"+settingForm.idForumName.get(1));
 					}else {
 						 uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING)) ;
