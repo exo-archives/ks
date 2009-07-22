@@ -330,6 +330,10 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage_.saveCategory(category, isNew);
   }
 	
+	public void calculateModerator(String categoryPath, boolean isNew) throws Exception {
+		storage_.calculateModerator(categoryPath, false);
+	}
+	
 	public Category getCategory(SessionProvider sProvider, String categoryId) throws Exception {
 		sProvider.close() ;
     return getCategory(categoryId);
@@ -726,9 +730,9 @@ public class ForumServiceImpl implements ForumService, Startable {
 		unTag(tagId, userName, topicPath);
   }
   
-  /*public UserProfile getUserProfile(SessionProvider sProvider, String userName, boolean isGetOption, boolean isGetBan, boolean isLogin) throws Exception {
-    return storage_.getUserProfile(sProvider, userName, isGetOption, isGetBan, isLogin);
-  }*/
+	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception {
+		storage_.saveUserModerator(userName, ids, isModeCate);
+	}
 
   public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
   	sProvider.close() ;

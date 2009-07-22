@@ -102,6 +102,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void saveCategory(Category category, boolean isNew) throws Exception;
+	public void calculateModerator(String categoryPath, boolean isNew) throws Exception ;
 	
 	public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) ;
 	/**
@@ -627,7 +628,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
 	public void saveEmailUserProfile(String userId, String email) throws Exception;
-	
+	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
 	/**
 	 * Gets the user profile.
 	 * 

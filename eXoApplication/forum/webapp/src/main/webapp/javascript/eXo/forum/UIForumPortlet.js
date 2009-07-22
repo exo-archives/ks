@@ -11,7 +11,7 @@ UIForumPortlet.prototype.mouseOnUserMenu = function(obj, event, wait) {
 		this.event = event;
 		setTimeout('eXo.forum.UIForumPortlet.viewUserMenu()', 300);
 	}
-}
+};
 
 UIForumPortlet.prototype.viewUserMenu = function(){
 	if(this.wait){
@@ -23,7 +23,7 @@ UIForumPortlet.prototype.viewUserMenu = function(){
 			eXo.webui.UIPopupSelectCategory.show(this.obj, this.obj.fireEvent("onclick"));
 		}
 	}
-}
+};
 
 UIForumPortlet.prototype.selectItem = function(obj) {
 	var DOMUtil = eXo.core.DOMUtil ;

@@ -646,83 +646,78 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		if(userTitle ==  null || userTitle.trim().length() == 0) userTitle = Utils.ADMIN;
     		else if(userTitle.equals(Utils.ADMIN)) userTitle = userProfile.getUserTitle();
     	}
-    	String moderateForum = inputSetProfile.getUIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE).getValue() ;
-      List<String> moderateForums = new ArrayList<String>() ;
-    	if(!ForumUtils.isEmpty(moderateForum)) {
-        moderateForums.addAll(uiForm.listModerate);
-    	} 
-    	List<String> moderateCates = new ArrayList<String>() ;
-    	moderateCates.addAll(uiForm.listModCate) ;
     	
-/*
-    	List<String> NewModerators = new ArrayList<String> ();
-    	List<String> categoryIdsMod = new ArrayList<String> ();
-    	List<String> OldModerateForums = uiForm.getModerateList(Arrays.asList(userProfile.getModerateCategory())) ;
-    	List<String> DeleteModerateForums = new ArrayList<String> ();
     	boolean isSetGetNewListForum = false ;
-    	// set moderator category
-    	NewModerators = uiForm.getModerateList(moderateCates);
-    	categoryIdsMod.addAll(NewModerators);
-    	if(NewModerators.isEmpty()){
-    		DeleteModerateForums = OldModerateForums;
+    //-----------------
+    	List<String> oldModerateForum = uiForm.getModerateList(Arrays.asList(userProfile.getModerateForums())) ;
+    	List<String> newModeratorsForum = new ArrayList<String> ();
+    	List<String> removeModerateForum = new ArrayList<String> ();
+    	List<String> forumIdsMod = new ArrayList<String> ();
+    	//
+    	newModeratorsForum = uiForm.getModerateList(uiForm.listModerate);
+    	forumIdsMod.addAll(newModeratorsForum);
+    	if(newModeratorsForum.isEmpty()){
+    		removeModerateForum = oldModerateForum;
     	} else {
-    		for (String string : OldModerateForums) {
-    			if(NewModerators.contains(string)) {
-    				NewModerators.remove(string);
+    		for (String string : oldModerateForum) {
+    			if(newModeratorsForum.contains(string)) {
+    				newModeratorsForum.remove(string);
     			} else {
-    				DeleteModerateForums.add(string) ;
+    				removeModerateForum.add(string) ;
     			}
     		}
-    		uiForm.forumService.saveModOfCategory(NewModerators, userProfile.getUserId(), true);
+    		System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
+    		if(!newModeratorsForum.isEmpty())
+    			uiForm.forumService.saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), true);
     		userRole = 1;
     		isSetGetNewListForum = true ;
     	}
-    	if(DeleteModerateForums.size() > 0) {
-    		uiForm.forumService.saveModOfCategory(DeleteModerateForums, userProfile.getUserId(), false);
+    	System.out.println("\n\n oldModerateForum " + oldModerateForum.toString());
+    	if(!removeModerateForum.isEmpty()) {
+    		System.out.println("\n\nremoveModerateForum " + removeModerateForum.toString());
+    		uiForm.forumService.saveModerateOfForums(removeModerateForum, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
-    	// merger moderator category with moderator forum
-    	OldModerateForums = uiForm.getModerateList(uiForm.forumService.getUserModerator(userProfile.getUserId(), false));
-    	System.out.println("\n\nDeleteMod " + DeleteModerateForums.toString() );
-    	for (String string : moderateForums) {
-    		System.out.println("\n\nstring 111 " + uiForm.getCategoryId(string));
-	      if(DeleteModerateForums.contains(uiForm.getCategoryId(string))){
-	      	moderateForums.remove(string);
-	      }
-      }
-    	NewModerators = uiForm.getModerateList(moderateForums);
-    	System.out.println("\n\nsNewModerators " + NewModerators.toString());
     	
-    	DeleteModerateForums =  new ArrayList<String>();
-    	if(NewModerators.isEmpty()){
-    		for (String string : OldModerateForums) {
-    			if(!categoryIdsMod.contains(uiForm.getCategoryId(string))){
-    				DeleteModerateForums.add(string) ;
-    			}
-        }
+    	uiForm.forumService.saveUserModerator(userProfile.getUserId(), uiForm.listModerate, false);
+    	
+    	//=============================================
+    	List<String> moderateCates = new ArrayList<String>() ;
+    	moderateCates.addAll(uiForm.listModCate) ;
+    	List<String> newModeratorsCate = new ArrayList<String> ();
+    	List<String> categoryIdsMod = new ArrayList<String> ();
+    	List<String> oldModerateCate = uiForm.getModerateList(Arrays.asList(userProfile.getModerateCategory())) ;
+    	List<String> removeModerateCate = new ArrayList<String> ();
+    	// set moderator category
+    	newModeratorsCate = uiForm.getModerateList(moderateCates);
+    	categoryIdsMod.addAll(newModeratorsCate);
+    	if(newModeratorsCate.isEmpty()){
+    		removeModerateCate = oldModerateCate;
     	} else {
-    		for (String string : OldModerateForums) {
-    			if(NewModerators.contains(string)) {
-    				NewModerators.remove(string);
-    			} else if(!categoryIdsMod.contains(uiForm.getCategoryId(string))){
-    				DeleteModerateForums.add(string) ;
+    		for (String string : oldModerateCate) {
+    			if(newModeratorsCate.contains(string)) {
+    				newModeratorsCate.remove(string);
+    			} else {
+    				removeModerateCate.add(string) ;
     			}
     		}
-    		uiForm.forumService.saveModerateOfForums(NewModerators, userProfile.getUserId(), false);
+    		if(!newModeratorsCate.isEmpty())
+    			uiForm.forumService.saveModOfCategory(newModeratorsCate, userProfile.getUserId(), true);
+    		userRole = 1;
     		isSetGetNewListForum = true ;
     	}
-    	if(DeleteModerateForums.size() > 0) {
-    		uiForm.forumService.saveModerateOfForums(DeleteModerateForums, userProfile.getUserId(), true);
+    	if(removeModerateCate.size() > 0) {
+    		uiForm.forumService.saveModOfCategory(removeModerateCate, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
+    	//==========================
+    	
+    //	uiForm.listModerate = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
+    	
     	
     	if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
- */
-    	if(!moderateCates.isEmpty() && !moderateCates.get(0).equals(" ")) {
-    		if(userRole >= 2) userRole = 1;
-    	} else {
-    		if(userRole >= 1) userRole = 2;
-    	}
+
+    	
     	
     	if(userTitle == null || userTitle.trim().length() < 1){
     		userTitle = userProfile.getUserTitle();
@@ -735,6 +730,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     				userTitle = uiForm.permissionUser[(int)userRole];
     		}
     	}
+    	if(userRole == 1 && userTitle.equals(uiForm.permissionUser[2])) {
+    		userTitle = uiForm.permissionUser[1];
+    	}
+    	System.out.println("\n\n userTitle: " +userTitle );
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
     	signature = ForumTransformHTML.enCodeHTML(signature);
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
@@ -758,7 +757,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     		banUntil = Long.parseLong(until.substring(6));
     	}
     	String banReason = inputSetBan.getUIFormTextAreaInput(FIELD_BANREASON_TEXTAREA).getValue() ;
-      
+      if(ForumUtils.isEmpty(banReason)) banReason = " ";
     	String []banReasonSummaries =  userProfile.getBanReasonSummary();
     	Date date = uiForm.getInstanceTempCalendar();
     	int banCounter = userProfile.getBanCounter();
@@ -791,7 +790,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	userProfile.setUserRole(userRole) ;
     	userProfile.setSignature(signature);
     	userProfile.setIsDisplaySignature(isDisplaySignature);
-    	userProfile.setModerateForums(moderateForums.toArray(new String[]{}));
+//    	System.out.println("\n\nmoderateForums: " + uiForm.listModerate.toString());
+//    	userProfile.setModerateForums(uiForm.listModerate.toArray(new String[]{}));
     	userProfile.setModerateCategory(moderateCates.toArray(new String[]{}));
     	userProfile.setIsDisplayAvatar(isDisplayAvatar);
     	
