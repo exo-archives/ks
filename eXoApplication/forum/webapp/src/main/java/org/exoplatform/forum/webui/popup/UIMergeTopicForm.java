@@ -134,7 +134,7 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 								ResourceBundle res = context.getApplicationResourceBundle() ;
 								JCRPageList pageList = forumService.getPosts(categoryId, forumId, topic.getId(), "", "", "", "") ;
 								List<Post> posts = pageList.getAll();
-								forumService.movePost(posts, destTopicPath, false, res.getString("UIMovePostForm.msg.EmailToAuthorPost"), link) ;
+								forumService.movePost(posts, destTopicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 								forumService.removeTopic(categoryId, forumId, topic.getId()) ;
 		          } catch (Exception e) {
 			          isMerge = false;
