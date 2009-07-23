@@ -2067,3 +2067,127 @@
 }
 
 
+/*******************************************UI Page Interrator***************************/
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator {    
+	margin: 0px ;
+	padding: 3px 0px 0px 0px ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer {    
+  float: right ;
+  overflow: hidden; 
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer .LeftPageIteratorBlock{    
+  line-height: 18px ; 
+  float: right ;
+  margin-right: 15px;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PageIteratorContainer .RightPageIteratorBlock{    
+  float: right ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .Icon {
+  float: left ;
+  margin: 0px 2px 0px 0px ;
+  width: 18px ; height: 17px ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .TotalPages {
+  float: left ;
+  line-height: 16px ; 
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PagesTotalNumber {
+  float: left ;
+  line-height: 17px ; 
+  color: #0183f1;
+  margin-left: 5px;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .LastTopPageIcon {
+  vertical-align: middle ;
+  background: url('background/ScrollDoubleBackArrows.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .NextTopPageIcon {
+  background: url('background/ScrollDoubleNextArrows.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .LastPageIcon {
+  background: url('background/ScrollSingleBackArrow.gif') no-repeat ;
+  cursor: pointer ; 
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .NextPageIcon {
+  background: url('background/ScrollSingleNextArrow.gif') no-repeat ;
+  cursor: pointer ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .DisableLastTopPageIcon {
+  vertical-align: middle ;
+  background: url('background/DoubleBackArrows.gif') no-repeat ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .DisableNextTopPageIcon {
+  background: url('background/DoubleNextArrows.gif') no-repeat ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .DisableLastPageIcon {
+  background: url('background/SingleBackArrow.gif') no-repeat ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .DisableNextPageIcon {
+  background: url('background/SingleNextArrow.gif') no-repeat ;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .Number {
+  float: left ;
+  text-align: center;
+  margin: 0px 2px 0px 0px;
+  line-height: 17px;
+  border: none;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PageSelected {
+  line-height: 15px;
+  height: 15px ;
+  border: 1px solid #dfdfdf;
+  color: #f16701;
+  font-weight: bold;
+  padding: 0px 6px;
+  cursor: default;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .PageNormal {
+	margin: 0px 0px 0px 0px ;
+  padding: 1px 7px;
+  border: 1px solid #dfdfdf;
+  color: #333333 ;
+  background: white;
+}
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .Number a{
+  float: left;
+  border:1px solid #DFDFDF;
+	height:15px;
+	line-height:15px;
+	padding:0 6px;
+	margin-left: 1px;
+}
+
+
+.UIFAQPortlet .UIInsertAddress .UIPageIterator .Number a:hover {
+  color: #058ee6 ;
+  border: 1px solid #777777;
+}
+
+.UIFAQPortlet .UIInsertAddress input {
+  height: 14px;
+}
+
+
