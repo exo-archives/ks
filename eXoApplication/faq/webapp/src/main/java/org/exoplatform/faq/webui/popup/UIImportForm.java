@@ -86,20 +86,16 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 					}
 				} catch (AccessDeniedException ace) {
-					ace.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch (ConstraintViolationException con) {
-					con.printStackTrace();
 					Object[] args = { null };
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch (ItemExistsException ise) {
-					ise.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				} catch(Exception e){
-					e.printStackTrace();
 					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				}
