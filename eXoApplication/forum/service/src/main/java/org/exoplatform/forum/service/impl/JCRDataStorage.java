@@ -231,6 +231,29 @@ public class JCRDataStorage {
 		
 	}
 	
+	public void addCalculateModeratorEventListenner() throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node categoryHome = getCategoryHome(sProvider) ;
+		try{
+			NodeIterator iter = categoryHome.getNodes();
+			NodeIterator iter1;
+			while (iter.hasNext()) {
+	      Node catNode = iter.nextNode();
+	      if(catNode.isNodeType("exo:forumCategory")) {
+	      	addModeratorCalculateListener(catNode);
+	      	iter1 = catNode.getNodes();
+	      	while (iter1.hasNext()) {
+	          Node forumNode = iter1.nextNode();
+	          if(forumNode.isNodeType("exo:forum")) {
+	          	addModeratorCalculateListener(forumNode);
+	          }
+          }
+	      }
+      }
+		}catch(Exception e){ e.printStackTrace() ;} 
+		finally{ sProvider.close() ;}
+	}
+	
 	protected void addModeratorCalculateListener(Node node) throws Exception{
 		try{
 			String path = node.getPath();

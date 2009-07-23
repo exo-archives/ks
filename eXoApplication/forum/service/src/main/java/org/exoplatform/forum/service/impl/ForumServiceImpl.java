@@ -156,6 +156,16 @@ public class ForumServiceImpl implements ForumService, Startable {
   	} catch (Exception e){
   		e.printStackTrace();
   	}
+  	
+  //init RSS generate listener 
+  	try{
+  	  log.info("initializing Calculate Moderators listeners...");
+  		storage_.addCalculateModeratorEventListenner();
+  	} catch (Exception e){
+  		e.printStackTrace();
+  	}
+  	
+  	
   	// initialize auto prune schedules
   	try{
   	  log.info("initializing prune schedulers...");
