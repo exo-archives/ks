@@ -383,7 +383,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   }
   
   static public class SaveActionListener extends EventListener<UIQuestionForm> {
-    @SuppressWarnings({ "static-access", "unchecked" })
     public void execute(Event<UIQuestionForm> event) throws Exception {
       boolean isNew = true;
       boolean questionIsApproved = true ;
@@ -394,7 +393,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       date = dateFormat.parse(dateStr) ;
       String author = questionForm.inputAuthor.getValue() ;      
       String emailAddress = questionForm.inputEmailAddress.getValue() ;
-      String questionContent = questionForm.inputQuestionContent.getValue();      
+      String questionContent = questionForm.inputQuestionContent.getValue(); 
       if(author == null || author.trim().length() < 1) {
       	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
       	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
@@ -413,6 +412,19 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
         return ;
       }
       String language = questionForm.selectLanguage.getValue() ;
+      //Duy Tu: Check require question content not empty.
+      if(FAQUtils.isFieldEmpty(questionContent)) {
+      	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+      	if(language.equals(questionForm.defaultLanguage_)){
+      		uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.default-question-null", null, ApplicationMessage.WARNING)) ;
+      	}else {
+	      	String[]sms = new String[]{language};
+	        uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.mutil-language-question-null", sms, ApplicationMessage.WARNING)) ;
+      	}
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        return ;
+      }
+
       if(language.equals(questionForm.defaultLanguage_)) {
       	if(questionContent == null) {
           UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
@@ -427,7 +439,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
           event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
           return ;
         }
-      }      
+      }
       
       String questionDetail = questionForm.inputQuestionDetail.getValue();
       if(!ValidatorDataInput.fckContentIsNotEmpty(questionDetail)) questionDetail = " ";
