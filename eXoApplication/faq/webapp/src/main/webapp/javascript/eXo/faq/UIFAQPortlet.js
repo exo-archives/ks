@@ -313,7 +313,7 @@ UIFAQPortlet.prototype.loadBreadcumbScroll = function(){
 UIFAQPortlet.prototype.initBreadcumbScroll = function(){
 	if(document.getElementById("UIPortalApplication").style.display == "none") return ;
 	var uiNav = eXo.faq.UIFAQPortlet ;
-	if(!uiNav.scrollManagerLoaded) uiNav.loadBreadcumbScroll() ;
+	//if(!uiNav.scrollManagerLoaded) uiNav.loadBreadcumbScroll() ;
 	uiNav.scrollMgr["UIBreadcumbs"].init() ;
 	uiNav.scrollMgr["UIBreadcumbs"].checkAvailableSpace() ;
 	if(uiNav.scrollMgr["UIBreadcumbs"].arrowsContainer) uiNav.scrollMgr["UIBreadcumbs"].renderElements() ;
@@ -347,7 +347,7 @@ UIFAQPortlet.prototype.scrollCallback = function(){
 UIFAQPortlet.prototype.initActionScroll = function() {
   if(document.getElementById("UIPortalApplication").style.display == "none") return ;
   var uiNav = eXo.faq.UIFAQPortlet ;
-  if(!uiNav.scrollManagerLoaded) uiNav.loadActionScroll() ;
+  //if(!uiNav.scrollManagerLoaded) uiNav.loadActionScroll() ;
   uiNav.scrollMgr["UIQuestions"].init() ;
   uiNav.scrollMgr["UIQuestions"].checkAvailableSpace() ;
   uiNav.scrollMgr["UIQuestions"].renderElements() ;
