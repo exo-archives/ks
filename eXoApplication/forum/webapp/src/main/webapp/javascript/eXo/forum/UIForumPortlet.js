@@ -781,8 +781,8 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	var cont = document.getElementById(id);
 	var uiContextMenu = eXo.ks.UIContextMenu;
 	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("ActionLink");
-	else uiContextMenu.classNames.pushAll("ActionLink");
-	uiContextMenu.container = cont;
+	else uiContextMenu.classNames.push("ActionLink");
+	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
 };
 
