@@ -677,8 +677,6 @@ public class QuestionPageList extends JCRPageList {
   	Category cat = new Category() ;
   	cat.setId(categoryNode.getName()) ;
   	if(categoryNode.hasProperty("exo:name")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
-  	if(categoryNode.hasProperty("exo:name")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
-  	if(categoryNode.hasProperty("exo:userPrivate")) cat.setName(categoryNode.getProperty("exo:name").getString()) ;
   	if(categoryNode.hasProperty("exo:description")) cat.setDescription(categoryNode.getProperty("exo:description").getString()) ;
   	if(categoryNode.hasProperty("exo:createdDate")) cat.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
   	if(categoryNode.hasProperty("exo:moderators")) cat.setModerators(ValuesToStrings(categoryNode.getProperty("exo:moderators").getValues())) ;
