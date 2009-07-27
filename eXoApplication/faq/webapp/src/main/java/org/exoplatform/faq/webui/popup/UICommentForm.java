@@ -70,6 +70,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private final String TITLE_USERNAME = "UserName";
 	private final String COMMENT_CONTENT = "CommentContent";
 	private boolean isAddNew = false;
+	private boolean isNotDefLg = false; 
 	private FAQSetting faqSetting_ ;
 	
 	private String link_ = "";
@@ -92,21 +93,27 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	
 	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String language) throws Exception{
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-		if(language.trim().length() > 0){
-			languageSelected = language;
-			QuestionLanguage questionLanguage = faqService.getQuestionLanguageByLanguage(question.getPath(), language);
-			this.questionContent = questionLanguage.getQuestion();
-			this.questionDetail = questionLanguage.getDetail();
-		} 
-		else{
+		if(!language.equals(question.getLanguage())) {
+			try {
+				QuestionLanguage questionLanguage = faqService.getQuestionLanguageByLanguage(question.getPath(), language);
+				this.questionContent = questionLanguage.getQuestion();
+				this.questionDetail = questionLanguage.getDetail();
+				languageSelected = language;
+	    } catch (Exception e) {
+	    	this.questionContent = question.getQuestion();
+	    	this.questionDetail = question.getDetail();
+	    	languageSelected = question.getLanguage();
+	    }
+		} else {
 			this.questionContent = question.getQuestion();
-			this.questionDetail = question.getDetail();
-			languageSelected = question.getLanguage();
+    	this.questionDetail = question.getDetail();
+    	languageSelected = question.getLanguage();
 		}
 		this.question_ = question;		
 		this.faqSetting_ = faqSetting;
 		FAQUtils.getEmailSetting(faqSetting_, false, false);
-		if(!commentId.equals("new")) {
+		if(commentId.indexOf("new") < 0) {
+			isAddNew = true;
 			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
@@ -198,7 +205,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							post.setIsApproved(false);
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
-								//System.out.println("\n\n ==========>" + ids[t-3]+" / "+ ids[t-2]);
 	            } catch (Exception e) {
 	              e.printStackTrace();
 	            }
@@ -237,13 +243,19 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				commentForm.comment.setCommentBy(currentUser) ;
 				commentForm.comment.setFullName(FAQUtils.getFullName(currentUser)) ;
 				faqService.saveComment(commentForm.question_.getPath(), commentForm.comment, language);
+				if(!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
+					try {
+						questions.updateCurrentLanguage() ;
+	        } catch (Exception e) {
+	        	questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);
+	        }
+				} else {questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);}
 			} catch(Exception e){
 				e.printStackTrace();
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			questions.updateCurrentLanguage() ;
       //questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;

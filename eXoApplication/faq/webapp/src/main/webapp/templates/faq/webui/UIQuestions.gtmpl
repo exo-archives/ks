@@ -291,6 +291,7 @@
 																	else
 																		iconView = viewAction ;
 																	String linkView = uicomponent.event(viewAction, qId);
+																	
 																	String lockFunction = "" ;
 																	if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
 																		linkView = "javaScript:alert('" + 
@@ -707,7 +708,6 @@
 																							</table> 
 																						</div>
 																					<%}%>
-																				
 																			</div>
 																		</div>
 																
