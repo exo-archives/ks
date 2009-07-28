@@ -11,17 +11,15 @@
 	String userName = userProfile.getUserId() ;
 	ForumContact contact = uiform.getContact(userName) ;
 	String avatarUrl = "";
-	String birthDay = "" ;
 	String location = "" ;
 	String fullName = "";
-	Date birthDayDate =	null;
 	boolean isCity = false;
-	birthDayDate = contact.getBirthday() ;
+	String birthDay = contact.getBirthday() ;
+	if(birthDay == null)birthDay = "";
 	if(contact.getCity() != null ) location = contact.getCity() ;
 	if(contact. getCountry() != null) location = location + ", " + contact.getCountry() ;
 	
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
-	if(birthDayDate != null) birthDay = ForumUtils.getFormatDate(shortDateFormat, birthDayDate) ;
 	
 	fullName = uiform.getScreenName(userName);
 	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {

@@ -175,6 +175,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   private boolean isShowRule = true;
 	private String lastPoistIdSave = "";
 	private String lastPostId = "";
+	private List<String> listContactGeted = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
@@ -512,11 +513,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
 	private ForumContact getPersonalContact(String userId) throws Exception {
 			ForumContact contact ;
-		if(mapContact.containsKey(userId)){
+		if(mapContact.containsKey(userId) && listContactGeted.contains(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
 			contact = ForumSessionUtils.getPersonalContact(userId) ;
 			mapContact.put(userId, contact) ;
+			listContactGeted.add(userId);
 		}
 		if(contact == null) {
 			contact = new ForumContact() ;
@@ -525,21 +527,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 	
 	private String getAvatarUrl(ForumContact contact, String userId, SessionProvider sessionProvider) throws Exception {
-//		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-//		try {
-//			ContactAttachment attachment = contact.getAttachment() ; 
-//			InputStream input = attachment.getInputStream() ;
-//			String fileName = attachment.getFileName() ;
-//			return ForumSessionUtils.getFileSource(input, fileName, dservice);
-//		} catch (NullPointerException e) {
-//			return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-//		}
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
 	}
 
 	private void initPage() throws Exception {
 		isGetSv = true;
+		listContactGeted =  new ArrayList<String>();
 		try {
 				String isApprove = "";
 				String isHidden = "";

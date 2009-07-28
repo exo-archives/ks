@@ -44,21 +44,23 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIViewUserProfile.CloseActionListener.class,phase = Phase.DECODE)
 		}
 )
+@SuppressWarnings("unused")
 public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
 	private UserProfile userProfile ;
 	private UserProfile userProfileLogin ;
 	private ForumContact contact = null;
 	private ForumService forumService ;
-	
+	private boolean isGetContact = true;
 	public ForumContact getContact(String userId) throws Exception {
-		if(contact == null) {
+		if(contact == null || isGetContact) {
 			contact = getPersonalContact(userId) ;
 		}
 		return contact;
 	}
 
 	public void setContact(ForumContact contact) {
+		isGetContact = false;
 		this.contact = contact;
 	}
 
@@ -66,17 +68,15 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
-	@SuppressWarnings("unused")
   private boolean isAdmin(String userId) throws Exception {
   	return forumService.isAdminRole(userId);
   }
 	
-	@SuppressWarnings("unused")
+	
 	private boolean isOnline(String userId) throws Exception {
 		return forumService.isOnline(userId) ;
 	}
 	
-	@SuppressWarnings("unused")
   private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName);
 	}
@@ -105,32 +105,16 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return contact ;
 	}
 	
-	@SuppressWarnings("unused")
 	private String getAvatarUrl(ForumContact contact) throws Exception {
-//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-//	try {
-//		ContactAttachment attachment = contact.getAttachment() ; 
-//		InputStream input = attachment.getInputStream() ;
-//		String fileName = attachment.getFileName() ;
-//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
-//	} catch (NullPointerException e) {
-//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-//	}
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, dservice);
 		return url;
 	}
 	
-	@SuppressWarnings("unused")
 	private String[] getLabelProfile() {
 		return new String[]{"userName", "firstName", "lastName", "birthDay", "gender", 
 				"email", "jobTitle", "location", "workPhone", "mobilePhone" , "website"};
 	}
-	/*@SuppressWarnings("unused")
-	private User getUser() {
-		User user = this.userProfile.getUser() ;
-		return user;
-	}*/
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
