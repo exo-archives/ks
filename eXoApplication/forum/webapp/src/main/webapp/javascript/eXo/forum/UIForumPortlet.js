@@ -776,10 +776,13 @@ UIForumPortlet.prototype.initScroll = function() {
 ScrollManager.prototype.loadItems = function(elementClass, clean) {
 	if (clean) this.cleanElements();
 	this.elements.clear();
-	this.elements.pushAll(eXo.core.DOMUtil.getElemementsByClass(this.mainContainer, elementClass).reverse());
+	var items = eXo.core.DOMUtil.findDescendantsByClass(this.mainContainer, "div", elementClass);
+	for(var i = 0; i < items.length; i++){
+		this.elements.push(items[i]);
+	}
 };
 
-UIForumPortlet.prototype.loadTagScroll = function(e) {
+UIForumPortlet.prototype.loadTagScroll = function() {
 	var uiNav = eXo.forum.UIForumPortlet ;
   var container = document.getElementById("TagContainer") ;
   if(container) {
@@ -787,7 +790,7 @@ UIForumPortlet.prototype.loadTagScroll = function(e) {
     uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
     uiNav.tagScrollMgr.mainContainer = container.parentNode ;
     uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
-    uiNav.tagScrollMgr.loadItems("TagIcon", true) ;
+    uiNav.tagScrollMgr.loadItems("TagІtem",true) ;
     
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.tagScrollMgr.arrowsContainer, "div");
     if(button.length >= 2) {    
@@ -802,7 +805,7 @@ UIForumPortlet.prototype.loadTagScroll = function(e) {
 
 UIForumPortlet.prototype.initTagScroll = function() {
   var uiNav = eXo.forum.UIForumPortlet ;
-  if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
+  //if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
   var elements = uiNav.tagScrollMgr.elements ;
 	uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
   uiNav.tagScrollMgr.init() ;
@@ -856,8 +859,8 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	var cont = document.getElementById(id);
 	var uiContextMenu = eXo.ks.UIContextMenu;
 	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("ActionLink");
-	else uiContextMenu.classNames.pushAll("ActionLink");
-	uiContextMenu.container = cont;
+	else uiContextMenu.classNames.push("ActionLink");
+	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
 };
 

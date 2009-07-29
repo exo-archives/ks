@@ -1,6 +1,3 @@
-//if(!eXo.cs){
-//	eXo.cs = {} ;
-//}
 if(!eXo.ks){
 	eXo.ks = {} ;
 }
@@ -540,16 +537,26 @@ eXo.core.EventManager = new EventManager() ;
 
 //eXo.cs.UINavigation = new UINavigation() ;
 //if(!eXo.ks) eXo.ks = {};
+
 eXo.ks.UIContextMenu = {
 	menus : [],
 	setup : function(){
-		eXo.core.EventManager.addEvent(this.container,"contextmenu",this.show);
+		if(!this.container) return ;
+		var i = this.container.length ;
+		while(i--){			
+			eXo.core.EventManager.addEvent(this.container[i],"contextmenu",this.show);
+		}
+	},
+	setContainer : function(obj){
+		if(!this.container) this.container = [] ;
+		this.container.push(obj);
 	},
 	getMenu : function(evt) {
 		var element = this.getMenuElement(evt);
 		if(!element) return;
 		var menuId = element.getAttribute("ctxMenuId");
-		var menu = eXo.core.DOMUtil.findDescendantById(this.container,menuId);
+		var cont = eXo.core.DOMUtil.findAncestorByClass(element, "PORTLET-FRAGMENT") ;
+		var menu = eXo.core.DOMUtil.findDescendantById(cont,menuId);
 		if(!menu) return;
 		if(element.tagName != "TR") element.parentNode.appendChild(menu);
 		return menu;
@@ -583,12 +590,20 @@ eXo.ks.UIContextMenu = {
 		}
 	},
 	setPosition : function(obj,evt){		
-		var x  = eXo.core.Browser.getBrowserWidth() - eXo.core.Browser.findMouseXInPage(evt) - obj.offsetWidth;
-		var y = eXo.core.Browser.findMouseYInPage(evt);
+		var Browser = eXo.core.Browser ;
+		var x  = Browser.getBrowserWidth() - Browser.findMouseXInPage(evt) - obj.offsetWidth;
+		var y = Browser.findMouseYInPage(evt);
 		obj.style.position = "absolute";
 		obj.style.display = "block";
+		if(Browser.isDesktop()){
+			x = Browser.findMouseXInPage(evt) - Browser.findPosX(obj.offsetParent);
+			y -= Browser.findPosY(obj.offsetParent);
+			if(document.getElementById("UIControlWorkspace") && Browser.isIE7()) x += document.getElementById("UIControlWorkspace").offsetWidth ; 
+			obj.style.left = x + "px";
+		} else{
+			obj.style.right = x + "px";
+		}
 		obj.style.top =  y + "px";
-		obj.style.right = x + "px";
 	},
 	show: function(evt){
 		eXo.core.EventManager.cancelEvent(evt);

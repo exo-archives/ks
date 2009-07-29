@@ -483,8 +483,11 @@ UIFAQPortlet.prototype.initContextMenu = function(id){
 	var uiContextMenu = eXo.ks.UIContextMenu;
 	cont = eXo.core.DOMUtil.findAncestorByClass(cont,"UIFAQPortlet");
 	if(!uiContextMenu.classNames) uiContextMenu.classNames = new Array("FAQCategory","QuestionContainer");
-	else uiContextMenu.classNames.pushAll("FAQCategory","QuestionContainer");
-	uiContextMenu.container = cont;
+	else {
+		uiContextMenu.classNames.push("FAQCategory");
+		uiContextMenu.classNames.push("QuestionContainer");
+	}
+	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
 };
 
