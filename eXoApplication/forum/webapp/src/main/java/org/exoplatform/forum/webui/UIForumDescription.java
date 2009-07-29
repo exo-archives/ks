@@ -54,16 +54,13 @@ public class UIForumDescription extends UIContainer	{
 	
 	@SuppressWarnings("unused")
 	private Forum getForum() throws Exception {
-    if(forum == null || this.isForum) {
+    if(forum == null || isForum) {
   		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-  		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				return forumService.getForum(sProvider, categoryId, forumId);
+				return forumService.getForum(categoryId, forumId);
 			}catch (Exception e) {
 				e.printStackTrace();
 				return null;
-			}finally {
-				sProvider.close();
 			}
     } else {
       return this.forum ;

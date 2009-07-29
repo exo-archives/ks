@@ -33,6 +33,8 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.UIForumContainer;
+import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
@@ -186,9 +188,12 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					String[] temp = topicPath.split("/") ;
-					UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
+					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class) ;
+					UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class) ;
 					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
 					topicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;
+					UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
+					forumDescription.setForumIds(temp[temp.length - 3], temp[temp.length - 2]);
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
         } catch (ItemExistsException e) {
         	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
