@@ -254,7 +254,24 @@
 .UIForumPortlet .DefaultStyle .CenterOverButton {
 	padding-left:3px;
 }
-/*ForumAction*/
+
+.UIForumPortlet .ButtonHeadBar .CenterOverButton {
+	padding-right: 5px;
+}
+
+.UIForumPortlet .ButtonHeadBar {
+	float:right; 
+	text-align:left; 
+	margin: 0px;
+	white-space:nowrap;
+	padding: 2px 3px 0px 0px; 
+	cursor:pointer;
+}
+
+*html .UIForumPortlet .ButtonHeadBar {
+	width:90px; 
+}
+
 .UIForumPortlet .Forum {
 	background:none;
 	line-height:22px;
@@ -561,18 +578,6 @@
 .UIForumPortlet .UIGrid input.checkbox {
 	height:13px;
 	margin: 3px 0px 0px 0px;
-}
-
-.UIForumPortlet .ButtonHeadBar {
-	min-width:90px; 
-	float:right; 
-	text-align:left; 
-	margin-top:2px;
-	white-space:nowrap;
-}
-
-*html .UIForumPortlet .ButtonHeadBar {
-	width:90px; 
 }
 
 .UIForumListSearch .SearchResult {

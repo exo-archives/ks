@@ -4310,7 +4310,7 @@ public class JCRDataStorage {
 				userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 				userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 				userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
-				if(userProfile.getTotalTopic() > 0) {
+				if(userProfile.getTotalPost() > 0) {
 					userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
 				}
 				userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime()) ;
