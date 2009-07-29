@@ -12,6 +12,8 @@
 		Poll poll = uicomponent.getPoll() ;
 		if(poll != null) {
 		String question = poll.getQuestion() ;
+		question = question.trim();
+		if(question.lastIndexOf("?") != question.length() - 1) question = question + " ?";
 		long timeOut = poll.getTimeOut() ;
 		boolean isAnonim = ForumSessionUtils.isAnonim();
 		boolean isAgain = poll.getIsAgainVote() ;
@@ -37,7 +39,7 @@
 				<div class="CenterBar">
 					<div class="Lable Question">
 						<span><%=_ctx.appRes("UITopicPoll.label.Poll"); %>:</span>
-						<span>${question}?</span>
+						<span>${question}</span>
 					</div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>	
@@ -115,7 +117,7 @@
 							 <% if(uicomponent.isGuestPermission() == false) { %> 
 								<div class="UITabContent">
 									<div class="TopicPollContent">
-										<div class="PollQuestion">${question}?</div>
+										<div class="PollQuestion">${question}</div>
 										<div class="UIForm">
 											<div class="HorizontalLayout">
 												<div class="FormContainer">
@@ -238,6 +240,8 @@
 		
 	</div>
 </div>
-	<% } 
+	<%} else {
+		uiform.reloadTopicDetail();
+		}
 	uiform.end() ;
 	%>

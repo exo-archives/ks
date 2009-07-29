@@ -629,7 +629,7 @@ UIForumPortlet.prototype.reSizeImagesInMessageForm = function() {
 	if(eXo.core.Browser.isIE6())
 		setTimeout('eXo.forum.UIForumPortlet.setSizeImages(130, "UIViewPrivateMessageForm")', 800);
 	else setTimeout('eXo.forum.UIForumPortlet.setSizeImages(10, "UIViewPrivateMessageForm")', 400);
-}
+};
 
 UIForumPortlet.prototype.setSizeImages = function(delta, classParant) {
 	var parent_ = document.getElementById(classParant);
@@ -723,7 +723,7 @@ UIForumPortlet.prototype.ReloadImage = function() {
 		}
 		//setTimeout(eXo.forum.UIForumPortlet.ReloadImage, 10000);
 	}
-} 
+} ;
 
 UIForumPortlet.prototype.shareLink = function(obj){
 	var shareLinkContainer = document.getElementById("popupShareLink");
@@ -903,7 +903,7 @@ UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
 		}
 	}
 	
-}
+};
 
 eXo.forum.UIForumPortlet = new UIForumPortlet() ;
 

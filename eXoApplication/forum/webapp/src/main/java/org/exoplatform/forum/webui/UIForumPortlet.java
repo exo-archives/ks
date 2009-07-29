@@ -375,6 +375,11 @@ public class UIForumPortlet extends UIPortletApplication {
 				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
 				topicDetail.setIdPostView("lastpost");
 			}
+			if(params.isRenderPoll()) {
+				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class);
+				topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true);;
+				topicDetailContainer.getChild(UITopicPoll.class).setEditPoll(true);
+			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

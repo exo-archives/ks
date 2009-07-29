@@ -20,9 +20,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.ActionResponse;
+import javax.xml.namespace.QName;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -31,8 +35,6 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -84,12 +86,9 @@ public class UITopicPoll extends UIForm	{
 		try {
 			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
     } catch (Exception e) {
-    	SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				userProfile = forumService.getDefaultUserProfile(sProvider, ForumSessionUtils.getCurrentUser(), "");
+				userProfile = forumService.getDefaultUserProfile(ForumSessionUtils.getCurrentUser(), "");
       } catch (Exception ex) {
-      } finally{
-      	sProvider.close();
       }
     }
 		return userProfile ; 
@@ -97,12 +96,9 @@ public class UITopicPoll extends UIForm	{
 	
 	public void setForum(Forum forum) {
 		if(forum == null){
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				this.forum = forumService.getForum(sProvider, categoryId, forumId);
+				this.forum = forumService.getForum(categoryId, forumId);
       } catch (Exception e) {
-      } finally{
-      	sProvider.close();
       }
 		} else {
 			this.forum = forum ;
@@ -143,17 +139,13 @@ public class UITopicPoll extends UIForm	{
 		}
 	}
 	
-	@SuppressWarnings("unused")
 	private Poll getPoll() throws Exception {
 		if(!ForumUtils.isEmpty(categoryId)) {
 			if(userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId())) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				poll_ = forumService.getPoll(sProvider, categoryId, forumId, topicId) ; 
+				poll_ = forumService.getPoll(categoryId, forumId, topicId) ; 
       } catch (Exception e) {
-      } finally{
-      	sProvider.close();
       }
 			this.init() ;
 			return poll_ ;
@@ -163,8 +155,12 @@ public class UITopicPoll extends UIForm	{
 	
 	@SuppressWarnings("unused")
 	private boolean getIsEditPoll() {
-		return this.isEditPoll ;
+		return isEditPoll ;
 	}
+	
+	public void setEditPoll(boolean isEditPoll) {
+	  this.isEditPoll = isEditPoll;
+  }
 	
 	@SuppressWarnings("unused")
 	private boolean getCanViewEditMenu(){
@@ -222,6 +218,13 @@ public class UITopicPoll extends UIForm	{
 			infoVote[l] = String.valueOf(userVotes.length) ;
 		}
 		return infoVote ;
+	}
+	
+	
+	@SuppressWarnings("unused")
+  private void reloadTopicDetail(){
+		UITopicDetailContainer topicDetailContainer = (UITopicDetailContainer)this.getParent() ;
+		topicDetailContainer.getChild(UITopicDetail.class).setIsEditTopic(true) ;
 	}
 	
 	static public class VoteActionListener extends EventListener<UITopicPoll> {
@@ -383,7 +386,7 @@ public class UITopicPoll extends UIForm	{
 					throw new MessageException(new ApplicationMessage("UITopicPoll.msg.notCheck", args, ApplicationMessage.WARNING)) ;
 				}
 			}
-			topicPoll.forumService.savePoll(ForumSessionUtils.getSystemProvider(), topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
+			topicPoll.forumService.savePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll.getParent()) ;
 		}
@@ -413,12 +416,9 @@ public class UITopicPoll extends UIForm	{
 	static public class RemovePollActionListener extends EventListener<UITopicPoll> {
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				topicPoll.forumService.removePoll(sProvider, topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
+				topicPoll.forumService.removePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
       } catch (Exception e) {
-      } finally {
-      	sProvider.close();
       }
 			if(topicPoll.poll_.getIsMultiCheck()) {
 				List<UIComponent> children = topicPoll.getChildren() ;
@@ -436,6 +436,10 @@ public class UITopicPoll extends UIForm	{
       } catch (Exception e) {
       	UIForumPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIForumPollPortlet.class) ;
       	topicPoll.setRendered(false);
+      	ActionResponse actionRes = event.getRequestContext().getResponse() ;
+				ForumParameter param = new ForumParameter() ;
+				param.setRenderPoll(true);
+				actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
       	event.getRequestContext().addUIComponentToUpdateByAjax(forumPollPortlet) ;
       }
 		}
@@ -461,12 +465,9 @@ public class UITopicPoll extends UIForm	{
 			} else {
 				topicPoll.poll_.setIsClosed(!topicPoll.poll_.getIsClosed()) ;
 			}
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				topicPoll.forumService.setClosedPoll(sProvider, topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, topicPoll.poll_) ;
+				topicPoll.forumService.setClosedPoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, topicPoll.poll_) ;
       } catch (Exception e) {
-      } finally {
-      	sProvider.close();
       }
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll) ;

@@ -147,8 +147,7 @@ public class UIQuickReplyForm extends UIForm {
 					}
 				} 
 				String remoteAddr = quickReply.getIPRemoter();
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
-				UserProfile userProfile = forumService.getDefaultUserProfile(sProvider, quickReply.userName, remoteAddr);
+				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
 			// set link
 				PortalRequestContext portalContext = Util.getPortalRequestContext();
 				String url = portalContext.getRequest().getRequestURL().toString();
@@ -170,19 +169,17 @@ public class UIQuickReplyForm extends UIForm {
 				post.setIsApproved(!hasTopicMod) ;
 				post.setLink(link);
 				try {
-					forumService.savePost(sProvider, quickReply.categoryId, quickReply.forumId, quickReply.topicId, post, true, ForumUtils.getDefaultMail()) ;
+					forumService.savePost(quickReply.categoryId, quickReply.forumId, quickReply.topicId, post, true, ForumUtils.getDefaultMail()) ;
 					forumService.updateTopicAccess(quickReply.userName,  topic.getId()) ;
 					if(userProfile.getIsAutoWatchTopicIPost()) {
 						List<String> values = new ArrayList<String>();
 						values.add(userProfile.getEmail());
 						String path = quickReply.categoryId + "/" + quickReply.forumId + "/" + quickReply.topicId;
-						forumService.addWatch(sProvider, 1, path, values, quickReply.userName) ;
+						forumService.addWatch(1, path, values, quickReply.userName) ;
 					}
 				} catch (PathNotFoundException e) {
 					String[] args = new String[] { } ;
 					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-				} finally {
-					sProvider.close();
 				}
 				textAreaInput.setValue("") ;
 				if(isOffend || hasTopicMod) {
