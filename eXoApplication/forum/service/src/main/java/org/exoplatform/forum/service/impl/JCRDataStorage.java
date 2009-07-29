@@ -4310,7 +4310,9 @@ public class JCRDataStorage {
 				userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 				userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 				userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
-				userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+				if(userProfile.getTotalTopic() > 0) {
+					userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+				}
 				userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime()) ;
 				userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
 				if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profileNode.getProperty("exo:signature").getString()) ;
@@ -4334,7 +4336,9 @@ public class JCRDataStorage {
 			userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 			userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 			userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
-			userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+			if(userProfile.getTotalPost() > 0) {
+				userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+			}
 			userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime()) ;
 			userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
 			if(userProfile.getIsDisplaySignature()) userProfile.setSignature(profileNode.getProperty("exo:signature").getString()) ;

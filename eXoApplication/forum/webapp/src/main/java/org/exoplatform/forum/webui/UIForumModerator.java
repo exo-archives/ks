@@ -19,8 +19,13 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SAS
@@ -29,13 +34,24 @@ import org.exoplatform.webui.core.UIContainer;
  * Apr 21, 2009 - 2:35:02 AM  
  */
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UIForumModerator.gtmpl"
+		template =	"app:/templates/forum/webui/UIForumModerator.gtmpl",
+		events = {
+				@EventConfig(listeners = UIForumModerator.CreatedLinkActionListener.class )
+		}
 )
 
 public class UIForumModerator extends UIContainer	{
 	private List<String> moderators = new ArrayList<String>();
+	ForumService forumService;
+	private long role = 3; 
 	public UIForumModerator() throws Exception { 
+		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
+	
+	@SuppressWarnings("unused")
+  private long getUserRole(){return role;}
+	public void setUserRole(long role) {this.role = role;}
+	
 	@SuppressWarnings("unused")
 	private List<String> getModeratorsForum() throws Exception {
 		return moderators ;
@@ -43,5 +59,15 @@ public class UIForumModerator extends UIContainer	{
 	
 	public void setModeratorsForum(List<String> moderators)throws Exception {
 		this.moderators = moderators ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getScreenName(String userId) throws Exception {
+		return forumService.getScreenName(userId);
+	}
+	
+	static public class CreatedLinkActionListener extends EventListener<UIForumModerator> {
+		public void execute(Event<UIForumModerator> event) throws Exception {
+		}
 	}
 }

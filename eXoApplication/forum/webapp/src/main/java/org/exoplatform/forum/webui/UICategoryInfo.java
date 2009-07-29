@@ -28,7 +28,10 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
+import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.event.EventListener;
 
 /**
  * Created by The eXo Platform SARL
@@ -38,54 +41,62 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template =	"app:/templates/forum/webui/UICategoryInfo.gtmpl"
+		template =	"app:/templates/forum/webui/UICategoryInfo.gtmpl",
+		events = {
+				@EventConfig(listeners = UICategoryInfo.CreatedLinkActionListener.class )
+		}
 )
+@SuppressWarnings("unused")
 public class UICategoryInfo extends UIContainer	{
 	private	ForumService forumService ;
+	private UserProfile userProfile;
 	//private long mostUserOnline_ = 0;
 	
 	public UICategoryInfo() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	} 
 
-	@SuppressWarnings("unused")
 	private List<String> getUserOnline() throws Exception {
-		List<String> list = new ArrayList<String>() ;
-		for (String string : this.forumService.getOnlineUsers()) {
-	    list.add(getScreenName(string));
-    }
-		return list;
+		return forumService.getOnlineUsers();
 	}
 
   private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName);
 	}
 	
-	@SuppressWarnings("unused")
+  private void setUserProfile() throws Exception {
+  	 String userId = ForumSessionUtils.getCurrentUser();
+     try {
+     	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+     	userProfile = forumPortlet.getUserProfile();
+     } catch (Exception e) {
+     	userProfile = forumService.getDefaultUserProfile(userId, "");
+     }
+  }
+  
+  private UserProfile getUserProfile() throws Exception {
+  	if(userProfile == null) {
+  		setUserProfile();
+  	}
+    return userProfile;
+  }
+  
   private String getMostUsersOnline(String s, String at) throws Exception {
 		if(ForumUtils.isEmpty(s)) return "";
 		try {
 	    String []strs = s.split(",");
 	    long l = Long.parseLong(strs[1].replace("at", "").trim());
 	    Calendar calendar = GregorianCalendar.getInstance();
-	    UserProfile userProfile = new UserProfile();
-	    String userId = ForumSessionUtils.getCurrentUser();
-	    try {
-	    	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-	    	userProfile = forumPortlet.getUserProfile();
-      } catch (Exception e) {
-      	userProfile = forumService.getDefaultUserProfile(userId, "");
-      }
       double timeZone = userProfile.getTimeZone();
       if(userProfile.getUserId().equals(UserProfile.USER_GUEST))timeZone = 0;
-      long zone = (long)(userProfile.getTimeZone()*3600000) ;
+      long zone = (long)(timeZone*3600000) ;
       calendar.setTimeInMillis(l - zone);
       StringBuilder builder = new StringBuilder();
       
       if(ForumUtils.isEmpty(at)) at = "at";
       builder.append(strs[0]).append(", ").append(at).append(" ");
       builder.append(ForumUtils.getFormatDate((userProfile.getLongDateFormat() + ", " + userProfile.getTimeFormat()), calendar.getTime()));
-      if(userId == null || userId.length() == 0) {
+      if(userProfile.getUserId().equals(UserProfile.GUEST)) {
       	if(timeZone >= 0)
       		builder.append(" GMT+").append(String.valueOf(timeZone).replace(".0", ""));
       	else builder.append(" GMT").append(String.valueOf(timeZone).replace(".0", ""));
@@ -107,5 +118,10 @@ public class UICategoryInfo extends UIContainer	{
 	
 	public ForumStatistic getForumStatistic() throws Exception {
 		return  forumService.getForumStatistic() ;				
+	}
+	
+	static public class CreatedLinkActionListener extends EventListener<UICategoryInfo> {
+		public void execute(Event<UICategoryInfo> event) throws Exception {
+		}
 	}
 }

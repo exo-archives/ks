@@ -34,8 +34,14 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.forum.webui.popup.UIPopupContainer;
+import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
+import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
+import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
+import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
@@ -53,6 +59,7 @@ import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.exception.MessageException;
 /**
  * Author : Nguyen Quang Hung
  *					hung.nguyen@exoplatform.com
@@ -63,6 +70,10 @@ import org.exoplatform.webui.event.EventListener;
 	 template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
 	 events = {
 	  	@EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class),
+	  	@EventConfig(listeners = UIForumPortlet.ViewPublicUserInfoActionListener.class ) ,
+			@EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ), 
+			@EventConfig(listeners = UIForumPortlet.PrivateMessageActionListener.class ),
+			@EventConfig(listeners = UIForumPortlet.ViewThreadByUserActionListener.class ),
 	  	@EventConfig(listeners = UIForumPortlet.OpenLinkActionListener.class)
 	 }
 )
@@ -390,20 +401,19 @@ public class UIForumPortlet extends UIPortletApplication {
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 			}else	if(path.lastIndexOf(Utils.TOPIC) >= 0) {
 				String []id = path.split("/") ;
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
 				try{
 					Topic topic ;
 					if(id.length > 1) {
-						topic = forumPortlet.forumService.getTopicByPath(sProvider, path, false) ;
+						topic = forumPortlet.forumService.getTopicByPath(path, false) ;
 					} else {
-						topic = (Topic)forumPortlet.forumService.getObjectNameById(sProvider, path, Utils.TOPIC);
+						topic = (Topic)forumPortlet.forumService.getObjectNameById(path, Utils.TOPIC);
 						path = topic.getPath();
 						path = path.substring(path.indexOf(Utils.CATEGORY));
 						id = path.split("/") ;
 					}
 					if(topic != null) {
 						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						Forum forum = forumPortlet.forumService.getForum(sProvider, id[0], id[1]) ;
+						Forum forum = forumPortlet.forumService.getForum(id[0], id[1]) ;
 						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 						uiForumContainer.setIsRenderChild(false) ;
@@ -426,8 +436,6 @@ public class UIForumPortlet extends UIPortletApplication {
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 					path = Utils.FORUM_SERVICE;
-				}finally {
-					sProvider.close() ;
 				}
 			}else	if((path.lastIndexOf(Utils.FORUM) == 0 && path.lastIndexOf(Utils.CATEGORY) < 0) || (path.lastIndexOf(Utils.FORUM) > 0)) {
 				String id[] = path.split("/");
@@ -438,9 +446,8 @@ public class UIForumPortlet extends UIPortletApplication {
 					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
 					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
 				} else {
-					SessionProvider sProvider = SessionProviderFactory.createSystemProvider() ;
 					try {
-						Forum forum = (Forum)forumPortlet.forumService.getObjectNameById(sProvider, path, Utils.FORUM);
+						Forum forum = (Forum)forumPortlet.forumService.getObjectNameById(path, Utils.FORUM);
 						path = forum.getPath();
 						path = path.substring(path.indexOf(Utils.CATEGORY));
 						id = path.split("/");
@@ -453,8 +460,6 @@ public class UIForumPortlet extends UIPortletApplication {
 						categoryContainer.updateIsRender(true) ;
 						categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 						path = Utils.FORUM_SERVICE;
-					}finally {
-						sProvider.close() ;
 					}
 				}
 			}else {
@@ -468,5 +473,81 @@ public class UIForumPortlet extends UIPortletApplication {
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
-	}	
+	}
+	
+	private ForumContact getPersonalContact(String userId) throws Exception {
+		ForumContact contact  = ForumSessionUtils.getPersonalContact(userId) ;
+		if(contact == null) {
+			contact = new ForumContact() ;
+		}
+	return contact ;
+}
+	
+	static public class ViewPublicUserInfoActionListener extends EventListener<UIForumPortlet> {
+		public void execute(Event<UIForumPortlet> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource() ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
+			try{
+				UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim())) ;
+				viewUserProfile.setUserProfile(selectProfile) ;
+			}catch(Exception e) {
+				e.printStackTrace() ;
+			}
+			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
+			ForumContact contact = forumPortlet.getPersonalContact(userId.trim());
+			viewUserProfile.setContact(contact) ;
+			popupAction.activate(viewUserProfile, 670, 400, true) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class PrivateMessageActionListener extends EventListener<UIForumPortlet> {
+		public void execute(Event<UIForumPortlet> event) throws Exception {
+			UIForumPortlet forumPortlet = event.getSource() ;;
+			if(forumPortlet.userProfile.getIsBanned()){
+				String[] args = new String[] { } ;
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING)) ;
+			}
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
+			messageForm.setFullMessage(false);
+			messageForm.setUserProfile(forumPortlet.userProfile);
+			messageForm.setSendtoField(userId) ;
+			popupContainer.setId("PrivateMessageForm") ;
+			popupAction.activate(popupContainer, 650, 480) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class ViewPostedByUserActionListener extends EventListener<UIForumPortlet> {
+		public void execute(Event<UIForumPortlet> event) throws Exception {
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = event.getSource() ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
+			viewPostedByUser.setUserProfile(userId) ;
+			popupContainer.setId("ViewPostedByUser") ;
+			popupAction.activate(popupContainer, 760, 370) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class ViewThreadByUserActionListener extends EventListener<UIForumPortlet> {
+		public void execute(Event<UIForumPortlet> event) throws Exception {
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			UIForumPortlet forumPortlet = event.getSource() ;
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
+			topicCreatedByUser.setUserId(userId) ;
+			popupContainer.setId("ViewTopicCreatedByUser") ;
+			popupAction.activate(popupContainer, 760, 450) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 }

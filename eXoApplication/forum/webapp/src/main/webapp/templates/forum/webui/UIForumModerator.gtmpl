@@ -1,4 +1,5 @@
-<%  
+<%
+	import org.exoplatform.forum.ForumUtils;
 	List moderators =	uicomponent.getModeratorsForum() ;
 	int total = moderators.size();
 %>
@@ -20,17 +21,87 @@
 				<div class="text">
 				<% boolean isMod = false ;
 				int i = 1;
+				String linkURL, userView;
 				for(moderator in moderators) {
+					linkURL = uicomponent.event("CreatedLink", moderator) ;
+					userView = uicomponent.getScreenName(moderator);
 					isMod = true ;
+				%>
+					<div class="FloatLeft">
+				<%
 					if(i == moderators.size()) {
 				%>
-					<a href="#">$moderator</a>
+						<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a>
 				<%}else {%> 
-					<a href="#">$moderator</a>,
-				<%}
+					<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a><span>,</span>
+				<%}%>
+				
+						<div style="position:relative;">
+							<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
+								<div class="UIRightClickPopupMenu" style="display:block;">
+									<div class="UIContextMenuContainer">
+										<div class="TopLeftRightClickPopupMenu">
+											<div class="TopRightRightClickPopupMenu">
+												<div class="TopCenterRightClickPopupMenu"><span></span></div>
+											</div>
+										</div>
+										<div class="MiddleLeftRightClickPopupMenu">
+											<div class="MiddleRightRightClickPopupMenu">
+												<div class="UIRightPopupMenuContainer">
+												<%
+													String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPublicUserInfo");
+												%>
+													<div class="MenuItem" onclick="$linkProf">
+														<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
+															<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+														</div>
+													</div>
+												<%
+												  if(uicomponent.getUserRole() < 3){
+														String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "PrivateMessage");
+												%>
+													<div class="MenuItem" onclick="$sendPrSms">
+														<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
+															<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+														</div>
+													</div>
+												<%
+													}
+													String viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewPostedByUser");
+												%>
+													<div class="MenuItem" onclick="$viewPosted">
+														<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
+															<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $userView</a>
+														</div>
+													</div>
+												<%
+													String viewThread = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "CreatedLink", "ViewThreadByUser");
+												%>
+													<div class="MenuItem" onclick="$viewThread">
+														<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
+															<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $userView</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="BottomLeftRightClickPopupMenu">
+											<div class="BottomRightRightClickPopupMenu">
+												<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+									
+					</div>
+				<%
 				 ++i;
-				}					
-				if(!isMod){%>
+				}	
+				%>
+				<div style="clear:left;"><span></span></div>
+				<%if(!isMod){%>
 				<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
 				<% } %>
 				</div>

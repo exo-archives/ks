@@ -16,6 +16,7 @@
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
 	Forum forum = uicomponent.getForum() ;
+	String linkURL;
 	if(forum != null)  {
 	uicomponent.initPage() ;
 	}
@@ -444,7 +445,7 @@
 								String uiformId = uiform.id;
 								int i = 0;
 								Date postDate = new Date();
-								String lastPostIdRead = "";
+								String lastPostIdRead = "", linkProf, sendPrSms, viewPosted, viewThread;
 								for(topic in topics){
 									postDate = topic.getLastPostDate();
 									boolean isLockTopic = topic.getIsLock() ;
@@ -468,11 +469,7 @@
 									}
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									topicBy = uicomponent.getScreenName(topicBy);
 									String postNewBy = topic.getLastPostBy() ;
-									if(!ForumUtils.isEmpty(postNewBy)) {
-										postNewBy = uicomponent.getScreenName(postNewBy);
-									}
 									long lastAccess = userProfile.getLastTimeAccessTopic(topicId) ;
 									String title = "TitleNorman";
 									String newPost = "NoNew"; 
@@ -590,7 +587,71 @@
 											$approved
 											<div style="clear:left;"><span></span></div>
 										</div>
-										<div><a href="#" class="LastPostInfos PostBy">$topicBy</a></div>
+										<div>
+											<% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
+											<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewTopicBy</a>
+											<% linkURL = uicomponent.url("OpenTopic", topicBy) ; %>
+											
+											<div style="position:relative;">
+												<div class="UIPopupCategory" style="display:none; left:2px; top:2px; width:140px">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																	<%
+																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
+																	%>
+																		<div class="MenuItem" onclick="$linkProf">
+																			<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+																			</div>
+																		</div>
+																	<%
+																	  if(userProfile.getUserRole() < 3){
+																			sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "PrivateMessage");
+																	%>
+																		<div class="MenuItem" onclick="$sendPrSms">
+																			<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+																			</div>
+																		</div>
+																	<%
+																		}
+																		viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPostedByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewPosted">
+																			<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $viewTopicBy</a>
+																			</div>
+																		</div>
+																	<%
+																		viewThread = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewThreadByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewThread">
+																			<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $viewTopicBy</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+										</div>
 									</td>
 									
 									<td class="Tdbox">$attachment</td>
@@ -618,7 +679,72 @@
 								 		<div title="Go to last posts">
 								 			<div onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></div>
 								 		</div>
-										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>
+										<div class="PostInfos LastPostInfos">
+											<span><%=_ctx.appRes("UITopicContainer.label.by");%></span> 
+											<% String viewPostNewBy = uicomponent.getScreenName(postNewBy); %>
+											<a class="PostBy" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewPostNewBy</a>
+											<% linkURL = uicomponent.url("OpenTopic", postNewBy) ; %>
+											
+											<div style="position:relative;">
+												<div class="UIPopupCategory" style="display:none; left:2px; top:2px; width:140px">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																	<%
+																		linkProf = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPublicUserInfo");
+																	%>
+																		<div class="MenuItem" onclick="$linkProf">
+																			<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+																			</div>
+																		</div>
+																	<%
+																	  if(userProfile.getUserRole() < 3){
+																			sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "PrivateMessage");
+																	%>
+																		<div class="MenuItem" onclick="$sendPrSms">
+																			<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+																			</div>
+																		</div>
+																	<%
+																		}
+																		viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewPostedByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewPosted">
+																			<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $viewPostNewBy</a>
+																			</div>
+																		</div>
+																	<%
+																		viewThread = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "ViewThreadByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewThread">
+																			<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $viewPostNewBy</a>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+										</div>
 										<div style="clear:right;"><span></span></div>
 									</td>
 								 	<td class="Tdbox" align="center">$postCount</td>

@@ -32,6 +32,7 @@
 	String actionBookmark = "";
 	
 %>
+
 <div class="UIForumCategory UICategory" style="padding:2px 10px;">
 <%uiform.begin()%>
   <div style="display:none;" id="divChecked" checked="0"><span></span></div>
@@ -300,7 +301,6 @@
 												topicNewPostIcon = "NormalTopicIcon" ;
 								topicNewPostTitle = topicNewPost.getTopicName();
 								lastPostBy = topicNewPost.getLastPostBy();
-								lastPostBy = uicomponent.getScreenName(lastPostBy);
 								date.setTime(topicNewPost.getLastPostDate().getTime() - setTime);
 								dateTime = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),date);
 								long createdDate = topicNewPost.getLastPostDate().getTime() - setTime;
@@ -426,7 +426,75 @@
 											</div>
 										</div>
 										<div style="clear:left;"><span></span></div>
-										<div class="LastPostInfos">by&nbsp;<a style="color:#058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
+										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
+										<div class="LastPostInfos">
+											<span>by&nbsp;</span>
+											<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
+											<span class="DateTime">&nbsp;($dateTime)</span>
+											
+											<div style="position:relative;">
+												<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">											
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer">
+																		
+																	<%
+																		String linkURL = uicomponent.url("OpenLastTopicLink", lastPostBy) ;
+																		String linkProf = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewPublicUserInfo");
+																	%>
+																		<div class="MenuItem" onclick="$linkProf">
+																			<div class="ItemIcon IconsView ViewPublicUserInfo" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPublicUserInfo")%></a>
+																			</div>
+																		</div>
+																	<%
+																	  if(userProfile.getUserRole() < 3){
+																			String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "PrivateMessage");
+																	%>
+																		<div class="MenuItem" onclick="$sendPrSms">
+																			<div class="ItemIcon IconsView PrivateMessage" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.PrivateMessage")%></a>
+																			</div>
+																		</div>
+																	<%
+																		}
+																		String viewPosted = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewPostedByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewPosted">
+																			<div class="ItemIcon IconsView ViewPostedByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewPostedByUser")%> $screemNamePost</a>
+																			</div>
+																		</div>
+																	<%
+																		String viewThread = ForumUtils.getActionViewInfoUser(linkURL, uiform.id, "OpenLastTopicLink", "ViewThreadByUser");
+																	%>
+																		<div class="MenuItem" onclick="$viewThread">
+																			<div class="ItemIcon IconsView ViewThreadByUser" style="padding-left:30px;">
+																				<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.action.ViewThreadByUser")%> $screemNamePost</a>
+																			</div>
+																		</div>
+																		
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+										</div>
 								<%} else { %>	
 									<td class="Tdbox" style="height:40px;">
 										 <%= _ctx.appRes("UICategory.label.availableTheard"); %>

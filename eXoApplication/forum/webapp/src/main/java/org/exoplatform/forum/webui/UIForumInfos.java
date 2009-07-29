@@ -73,14 +73,8 @@ public class UIForumInfos extends UIContainer	{
 		}
 		UIForumModerator forumModerator = getChild(UIForumModerator.class);
 		if(forumPortlet.isShowModerators()) {
-			List<String> list = new ArrayList<String>();
-			if(!moderators.isEmpty() && !moderators.get(0).equals(" ")) {
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				for (String string : moderators) {
-			    list.add(forumService.getScreenName(string));
-		    }
-			}
-			forumModerator.setModeratorsForum(list);
+			forumModerator.setModeratorsForum(moderators);
+			forumModerator.setUserRole(userProfile.getUserRole());
 		}
 		forumModerator.setRendered(forumPortlet.isShowModerators());
 	}
