@@ -39,7 +39,7 @@ public class AutoPruneJob implements Job{
 	  	forumService.runPrune(desc) ;
 	  	if (log_.isDebugEnabled()) {
 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
-	  	}	   
+	  	}
 	  } catch (Exception e) {
 		  e.printStackTrace();			
 	  }

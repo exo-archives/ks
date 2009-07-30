@@ -22,8 +22,10 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -145,21 +147,29 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 	static	public class SaveActionListener extends EventListener<UIAutoPruneSettingForm> {
 		public void execute(Event<UIAutoPruneSettingForm> event) throws Exception {
 			UIAutoPruneSettingForm uiform = event.getSource();
-			//long date = 0;
-			String date_ = uiform.getUIStringInput(FIELD_INACTIVEDAY_INPUT).getValue();
-			String type = uiform.getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).getValue();
-      //date =  uiform.convertDay(type, Long.parseLong(date_));
-      uiform.pruneSetting.setInActiveDay(uiform.convertDay(type, Long.parseLong(date_)));
-      date_ = uiform.getUIStringInput(FIELD_JOBDAY_INPUT).getValue();
-      type = uiform.getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).getValue();
-     	//date =  uiform.convertDay(type, Long.parseLong(date_));
-      uiform.pruneSetting.setPeriodTime(uiform.convertDay(type, Long.parseLong(date_)));
-      if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			forumService.savePruneSetting(uiform.pruneSetting);
-			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			boolean isInactiveDay = false;
+			try {
+				String date_ = uiform.getUIStringInput(FIELD_INACTIVEDAY_INPUT).getValue();
+				String type = uiform.getUIFormSelectBox(FIELD_INACTIVEDAY_SELECTBOX).getValue();
+	      uiform.pruneSetting.setInActiveDay(uiform.convertDay(type, Long.parseLong(date_)));
+	      isInactiveDay = true;
+	      date_ = uiform.getUIStringInput(FIELD_JOBDAY_INPUT).getValue();
+	      type = uiform.getUIFormSelectBox(FIELD_JOBDAY_SELECTBOX).getValue();
+	      uiform.pruneSetting.setPeriodTime(uiform.convertDay(type, Long.parseLong(date_)));
+	      if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
+				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				forumService.savePruneSetting(uiform.pruneSetting);
+				UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
+				popupContainer.getChild(UIPopupAction.class).deActivate() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			} catch (NumberFormatException e) {
+				UIApplication uiApp = uiform.getAncestorOfType(UIApplication.class) ;
+				String[] args = new String[]{uiform.getLabel(FIELD_INACTIVEDAY_INPUT)};
+				if(isInactiveDay)args = new String[]{uiform.getLabel(FIELD_JOBDAY_INPUT)};
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
 		}
 	}
 	

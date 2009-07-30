@@ -305,7 +305,7 @@ public class JCRDataStorage {
 			Node categoryHNode = getCategoryHome(sProvider);
 			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) [@exo:isActive = 'true'] order by @exo:createdDate descending");
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) [@exo:isActive = 'true']");
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -5162,7 +5162,6 @@ public class JCRDataStorage {
 		} else {
 			queryString = eventQuery.getPathQuery(listForumIds);
 		}
-		System.out.println("\n\n : "  + queryString);
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -6513,7 +6512,7 @@ public class JCRDataStorage {
 			Node categoryHNode = getCategoryHome(sProvider);
 			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:createdDate descending");
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id descending");
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -6545,8 +6544,8 @@ public class JCRDataStorage {
 	      calendar.setTime(pruneSetting.getLastRunDate()) ;
 	      pruneNode.setProperty("exo:lastRunDate", calendar);
       }
-      if (pruneNode.isNew())  forumNode.save();
-      else pruneNode.save();
+      if (pruneNode.isNew()) forumNode.getSession().save();
+      else forumNode.save();
       addOrRemoveSchedule(pruneSetting) ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
@@ -6556,7 +6555,7 @@ public class JCRDataStorage {
 	@SuppressWarnings("unchecked")
 	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
-		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, pSetting.getPeriodTime()); // pSetting.getPeriodTime()
+		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, (pSetting.getPeriodTime() * 86400000)); // pSetting.getPeriodTime() return value is Day.
 		//String name = String.valueOf(cal.getTime().getTime()) ;
 		Class clazz = Class.forName("org.exoplatform.forum.service.user.AutoPruneJob");
 		JobInfo info = new JobInfo(pSetting.getId(), "KnowledgeSuite-forum", clazz);
@@ -6585,20 +6584,19 @@ public class JCRDataStorage {
 			newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
 			QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')]");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
 			//log.debug("======> Topics found:" + iter.getSize());
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
-				topic.setProperty("exo:isActive", false) ;				
+				topic.setProperty("exo:isActive", false) ;
 			}
-			forumNode.save() ;
 		//update last run for prune setting
-			Node setting = forumNode.getNode(pSetting.getId()) ;			
+			Node setting = forumNode.getNode(pSetting.getId()) ;
 			setting.setProperty("exo:lastRunDate", getGreenwichMeanTime()) ;
-			setting.save() ;
+			forumNode.save() ;
 		}catch (Exception e) {
 			e.printStackTrace() ;
 		}finally {sProvider.close() ;}
@@ -6613,7 +6611,7 @@ public class JCRDataStorage {
 			newDate.setTimeInMillis(newDate.getTimeInMillis() - pSetting.getInActiveDay() * 86400000);
 			QueryManager qm = forumHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')] order by @exo:createdDate ascending");
+			stringBuffer.append("/jcr:root").append(forumNode.getPath()).append("//element(*,exo:topic)[ @exo:isActive='true' and @exo:lastPostDate <= xs:dateTime('").append(ISO8601.format(newDate)).append("')]");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			return result.getNodes().getSize() ;
