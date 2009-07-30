@@ -82,7 +82,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	
 	private String categoryId = "";
 	private int id = 0 ;
+	private boolean isDoubleClickSubmit = false; 
 	public UICategoryForm() throws Exception {
+		isDoubleClickSubmit = false;
 		UIFormInputWithActions detailTab = new UIFormInputWithActions(CATEGORY_DETAIL_TAB);
 		UIFormInputWithActions permissionTab = new UIFormInputWithActions(CATEGORY_PERMISSION_TAB);
 		
@@ -191,6 +193,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	static	public class SaveActionListener extends EventListener<UICategoryForm> {
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiForm = event.getSource() ;
+			if(uiForm.isDoubleClickSubmit) return;
 			String categoryTitle = uiForm.getUIStringInput(FIELD_CATEGORYTITLE_INPUT).getValue();
 			int maxText = ForumUtils.MAXTITLE ;
 			if(categoryTitle.length() > maxText) {
@@ -327,6 +330,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			uiForm.isDoubleClickSubmit = true;
 		}
 	}
 	

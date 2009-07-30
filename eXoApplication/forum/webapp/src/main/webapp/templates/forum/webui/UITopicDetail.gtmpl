@@ -1162,14 +1162,15 @@
 								</div>
 							</div>
 							<div class="ContentContainer">
-								<div class="ForumList">
+								<div class="ForumList" id="QuickReply">
 									<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
 									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
 								</div>
 								<div class="ActionContent">
 							<% for(action in uicomponent.getActions()) { 
 									 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-									 String link = uicomponent.event(action) ;
+									 String link = uicomponent.event(action);
+									 if(action.equals("QuickReply")) link = link + "; eXo.forum.UIForumPortlet.resetFielForm('QuickReply');" 
 							%>
 									<div onclick="$link" class="ActionButton LightBlueStyle">
 										<div class="ButtonLeft">

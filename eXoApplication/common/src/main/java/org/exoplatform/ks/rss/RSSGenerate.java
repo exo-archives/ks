@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -135,9 +136,12 @@ public abstract class RSSGenerate {
 	 * @throws Exception
 	 */
 	public void addNodeRSS(Node nodeIsAdded, Node rssNode, RSS data, boolean isNew) throws Exception {
-		rssNode.setProperty(contentProperty, data.getContent());
-		if(isNew) nodeIsAdded.getSession().save();
-		else nodeIsAdded.save();
+		try {
+			rssNode.setProperty(contentProperty, data.getContent());
+			if(isNew) nodeIsAdded.getSession().save();
+			else nodeIsAdded.save();
+    } catch (RepositoryException e) {
+    }
 	}
 
 	/**

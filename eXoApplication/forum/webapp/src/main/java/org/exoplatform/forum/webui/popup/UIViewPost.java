@@ -94,7 +94,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
-    s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+		try {
+			s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+    } catch (Exception e) {}
     return s;
 	}
 	

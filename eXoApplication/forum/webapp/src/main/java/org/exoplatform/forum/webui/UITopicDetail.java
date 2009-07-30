@@ -173,15 +173,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private boolean isGetSv = true;
 	private boolean isShowQuickReply = true;
   private boolean isShowRule = true;
+  private boolean isDoubleClickQuickReply = false;
 	private String lastPoistIdSave = "";
 	private String lastPostId = "";
-	private List<String> listContactGeted = new ArrayList<String>();
+	private List<String> listContactsGotten = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_ADD_TAG = "AddTag" ;
 	public UITopicDetail() throws Exception {
+		isDoubleClickQuickReply = false;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
@@ -340,37 +342,38 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			try {
 				bbcName = forumService.getActiveBBCode();
 				isGetSv = false;
-	    } catch (Exception e) {
-	    }
-	    boolean isAdd = true;
-	    BBCode bbCode;
-	    for (String string : bbcName) {
-	    	isAdd = true;
-	    	for (BBCode bbc : listBBCode) {
-	    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-	    			bbcs.add(bbc);
-	    			isAdd = false;
-	    			break;
-	    		}
-	    	}
-	    	if(isAdd) {
-	    		bbCode = new BBCode();
-	    		if(string.indexOf("=") >= 0){
-	    			bbCode.setOption(true);
-	    			string = string.replaceFirst("=", "");
-	    			bbCode.setId(string+"_option");
-	    		}else {
-	    			bbCode.setId(string);
-	    		}
-	    		bbCode.setTagName(string);
-	    		bbcs.add(bbCode);
-	    	}
-	    }
-	    listBBCode.clear();
-	    listBBCode.addAll(bbcs);
+		    boolean isAdd = true;
+		    BBCode bbCode;
+		    for (String string : bbcName) {
+		    	isAdd = true;
+		    	for (BBCode bbc : listBBCode) {
+		    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+		    			bbcs.add(bbc);
+		    			isAdd = false;
+		    			break;
+		    		}
+		    	}
+		    	if(isAdd) {
+		    		bbCode = new BBCode();
+		    		if(string.indexOf("=") >= 0){
+		    			bbCode.setOption(true);
+		    			string = string.replaceFirst("=", "");
+		    			bbCode.setId(string+"_option");
+		    		}else {
+		    			bbCode.setId(string);
+		    		}
+		    		bbCode.setTagName(string);
+		    		bbcs.add(bbCode);
+		    	}
+		    }
+		    listBBCode.clear();
+		    listBBCode.addAll(bbcs);
+			} catch (Exception e) {}
 		}
     if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
-    s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+    try {
+    	s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+    } catch (Exception e) {}
     return s;
 	}
 	
@@ -513,12 +516,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 
 	private ForumContact getPersonalContact(String userId) throws Exception {
 			ForumContact contact ;
-		if(mapContact.containsKey(userId) && listContactGeted.contains(userId)){
+		if(mapContact.containsKey(userId) && listContactsGotten.contains(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
 			contact = ForumSessionUtils.getPersonalContact(userId) ;
 			mapContact.put(userId, contact) ;
-			listContactGeted.add(userId);
+			listContactsGotten.add(userId);
 		}
 		if(contact == null) {
 			contact = new ForumContact() ;
@@ -532,8 +535,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 
 	private void initPage() throws Exception {
+		isDoubleClickQuickReply = false;
 		isGetSv = true;
-		listContactGeted =  new ArrayList<String>();
+		listContactsGotten =  new ArrayList<String>();
 		try {
 				String isApprove = "";
 				String isHidden = "";
@@ -1665,9 +1669,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
+			if(topicDetail.isDoubleClickQuickReply) return;
+			topicDetail.isDoubleClickQuickReply = true;
 			try {
   			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
-  			String message = textAreaInput.getValue() ;
+  			String message = "";
+  			try {
+  				message = textAreaInput.getValue();
+        } catch (Exception e) {}
   			String checksms = message ;
   			if(message != null && message.trim().length() > 0) {
   				if(topicDetail.checkForumHasAddTopic(topicDetail.userProfile)){
@@ -1738,8 +1747,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	  				} catch (PathNotFoundException e) {
 	  					String[] args = new String[] { } ;
 	  					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-	  				} catch (Exception e) {
-	  				}
+	  				} catch (Exception e) {}
 	  				textAreaInput.setValue("") ;
 	  				if(isOffend || hasTopicMod) {
 	  					Object[] args = { "" };
@@ -1766,13 +1774,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
   				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", args, ApplicationMessage.WARNING)) ;
   				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+  				topicDetail.isDoubleClickQuickReply = false;
   			}
       } catch (Exception e) {
-      	e.printStackTrace();
       	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
       	Object[] args = {""};
   			uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
   			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+  			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
       }
 		}
 	}

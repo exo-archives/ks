@@ -57,7 +57,6 @@ import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
@@ -127,8 +126,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private Topic topic = new Topic() ;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	private ForumService forumService;
+	private boolean isDoubleClickSubmit = false; 
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
+		isDoubleClickSubmit = false;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
 		topicTitle.addValidator(MandatoryValidator.class);
@@ -423,6 +424,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	static	public class SubmitThreadActionListener extends EventListener<UITopicForm> {
 		public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
+			if(uiForm.isDoubleClickSubmit) return;
+			uiForm.isDoubleClickSubmit = true;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = forumPortlet.getUserProfile();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -438,6 +441,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						Object[] args = { uiForm.getLabel(FIELD_TOPICTITLE_INPUT), String.valueOf(maxText) };
 						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						uiForm.isDoubleClickSubmit = false;
 						return ;
 					}
 					String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
@@ -445,6 +449,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
 						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						uiForm.isDoubleClickSubmit = false;
 						return ;
 					}
 					String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
@@ -488,6 +493,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+							uiForm.isDoubleClickSubmit = false;
 							return ;
 						}
 						erroUser = ForumSessionUtils.checkValueUser(canView) ;
@@ -495,6 +501,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 							event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+							uiForm.isDoubleClickSubmit = false;
 							return ;
 						}
 						// set link
@@ -587,6 +594,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 								uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 								event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 								event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+								uiForm.isDoubleClickSubmit = false;
 								return ;						
 							}					
 						} else {
@@ -616,6 +624,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 								uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 								event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 								event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+								uiForm.isDoubleClickSubmit = false;
 								return;
 							}					
 						}
@@ -636,9 +645,11 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							Object[] args = new String[] {uiForm.getLabel(FIELD_TOPICTITLE_INPUT)} ;
 							if(t <= 0) args = new String[] { uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+							uiForm.isDoubleClickSubmit = false;
 						} else if(t <= 0) {
 							Object[] args = { "Message" };
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
+							uiForm.isDoubleClickSubmit = false;
 						}
 					}
 				} else {
@@ -648,6 +659,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
+					uiForm.isDoubleClickSubmit = false;
 					return;
 				}
 			} catch (Exception e) {

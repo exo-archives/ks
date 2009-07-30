@@ -671,12 +671,19 @@ UIForumPortlet.prototype.showImage = function() {
 UIForumPortlet.prototype.resetFielForm = function(idElm) {
 	var elm = document.getElementById(idElm) ;
 	var inputs = elm.getElementsByTagName("input") ;
-	for(var i=0; i<inputs.length; i++) {
-		if(inputs[i].type === "checkbox") inputs[i].checked = false;
-		else if(eXo.core.DOMUtil.hasClass(inputs[i],"UISliderInput")) eXo.webui.UISliderControl.reset(inputs[i]);
-		else inputs[i].value = "";
+	if(inputs) {
+		for(var i=0; i<inputs.length; i++) {
+			if(inputs[i].type === "checkbox") inputs[i].checked = false;
+			else if(eXo.core.DOMUtil.hasClass(inputs[i],"UISliderInput")) eXo.webui.UISliderControl.reset(inputs[i]);
+			else inputs[i].value = "";
+		}
 	}
-	
+	var textAres = elm.getElementsByTagName("textarea") ;
+	if(textAres){
+		for(var i=0; i<textAres.length; i++) {
+			textAres[i].value = "";
+		}
+	}
 };
 
 UIForumPortlet.prototype.RightClickBookMark = function(elmId) {

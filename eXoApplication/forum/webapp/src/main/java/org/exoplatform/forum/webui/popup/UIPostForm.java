@@ -105,7 +105,9 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private boolean isQuote = false ;
 	private boolean isMP = false ;
 	private String link = "";
+	private boolean isDoubleClickSubmit = false;
 	public UIPostForm() throws Exception {
+		isDoubleClickSubmit = false;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
 		postTitle.addValidator(MandatoryValidator.class);
@@ -314,6 +316,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	static	public class SubmitPostActionListener extends EventListener<UIPostForm> {
 		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
+			if(uiForm.isDoubleClickSubmit) return;
+			uiForm.isDoubleClickSubmit = true;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = forumPortlet.getUserProfile();
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -327,6 +331,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      		Object[] args = { uiForm.getLabel(FIELD_POSTTITLE_INPUT), String.valueOf(maxText) };
 	      		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 	      		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	      		uiForm.isDoubleClickSubmit = false;
 	      		return ;
 	      	}
 	      	String editReason = threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).getValue() ;
@@ -334,6 +339,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      		Object[] args = { uiForm.getLabel(FIELD_EDITREASON_INPUT), String.valueOf(maxText) };
 	      		uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 	      		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	      		uiForm.isDoubleClickSubmit = false;
 	      		return ;
 	      	}
 	      	
@@ -373,6 +379,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      			Object[] args = { "" };
 	      			uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.PrivateCensor", args, ApplicationMessage.WARNING)) ;
 	      			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+	      			uiForm.isDoubleClickSubmit = false;
 	      			return ;
 	      		}
 	      		// set link
@@ -418,7 +425,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      						isNew = true;
 	      					} catch (PathNotFoundException e) {
 	      						isParentDelete = true;
-	      					}
+	      					} catch (Exception ex) {}
 	      					topicDetail.setIdPostView("lastpost");
 	      				} else{
 	      					//post.setId(uiForm.postId) ;
@@ -429,7 +436,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      						uiForm.forumService.savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, false, ForumUtils.getDefaultMail()) ;
 	      					} catch (PathNotFoundException e) {
 	      						isParentDelete = true;
-	      					}
+	      					} catch (Exception ex) {}
 	      					topicDetail.setIdPostView(uiForm.postId);
 	      				}
 	      			} else {
@@ -439,7 +446,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      					isNew = true;
 	      				} catch (PathNotFoundException e) {
 	      					isParentDelete = true;
-	      				}
+	      				} catch (Exception ex) {}
 	      				topicDetail.setIdPostView("lastpost");
 	      			}
 	      			if(isNew) {
@@ -479,9 +486,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      		if(k == 0) {
 	      			args = new String[] {uiForm.getLabel(FIELD_POSTTITLE_INPUT)} ;
 	      			if(t == 0) args = new String[] { uiForm.getLabel(FIELD_POSTTITLE_INPUT) + ", " + uiForm.getLabel(FIELD_MESSAGECONTENT)} ;
+	      			uiForm.isDoubleClickSubmit = false;
 	      			throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args)) ;
 	      		} else if(t == 0) {
 	      			args = new String[] {uiForm.getLabel(FIELD_MESSAGECONTENT) } ;
+	      			uiForm.isDoubleClickSubmit = false;
 	      			throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortMessage", args)) ;
 	      		}
 	      	}
