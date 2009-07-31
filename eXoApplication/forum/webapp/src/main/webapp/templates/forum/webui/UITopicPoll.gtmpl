@@ -123,7 +123,7 @@
 												<div class="FormContainer">
 													<table class="UIFormGrid">
 														<tr>
-															<td class="FieldComponent">
+															<td class="FieldComponent" style="white-space:normal;">
 															<%
 																uicomponent.renderChildren() ;	
 															%>
