@@ -2483,6 +2483,15 @@ public class JCRDataStorage {
 		long totalpost = (long) posts.size();
 		int count = 0;
 		Node postNode = null;
+		boolean destModeratePost = false;
+		if(destTopicNode.hasProperty("exo:isModeratePost")){
+			destModeratePost = destTopicNode.getProperty("exo:isModeratePost").getBoolean();
+		}
+		boolean srcModeratePost = false;
+		if(srcTopicNode.hasProperty("exo:isModeratePost")){
+			srcModeratePost = srcTopicNode.getProperty("exo:isModeratePost").getBoolean();
+		}
+		boolean unAproved = false;
 		for (Post post : posts) {
 			totalAtt = totalAtt + post.getNumberAttach();
 			String newPostPath = destTopicPath + "/" + post.getId();
@@ -2496,6 +2505,13 @@ public class JCRDataStorage {
 				postNode.setProperty("exo:isFirstPost", true);
 			} else {
 				postNode.setProperty("exo:isFirstPost", false);
+			}
+			if(!destModeratePost) {
+				postNode.setProperty("exo:isApproved", true);
+			} else {
+				if(!postNode.getProperty("exo:isApproved").getBoolean()) {
+					unAproved = true;
+				}
 			}
 		}
 
@@ -2568,7 +2584,27 @@ public class JCRDataStorage {
 			sendEmailNotification(Arrays.asList(new String[]{getUserProfileManagement(sProvider, posts.get(i).getOwner()).getEmail()}), message);
 		}
 		// ----------------------- finish ----------------------
-		
+		List<String>userIdsp = new ArrayList<String>();
+		if(destModeratePost && srcModeratePost) {
+			if(srcForumNode.hasProperty("exo:moderators")) {
+				userIdsp.addAll(ValuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
+			}
+			if(unAproved && destForumNode.hasProperty("exo:moderators")) {
+				userIdsp.addAll(ValuesToList(destForumNode.getProperty("exo:moderators").getValues()));
+			}
+		}else if(srcModeratePost && !destModeratePost){
+			if(srcForumNode.hasProperty("exo:moderators")) {
+				userIdsp.addAll(ValuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
+			}
+			userIdsp.addAll(getAllAdministrator(sProvider));
+		}else if(!srcModeratePost && destModeratePost){
+			if(unAproved && destForumNode.hasProperty("exo:moderators")) {
+				userIdsp.addAll(ValuesToList(destForumNode.getProperty("exo:moderators").getValues()));
+			}
+		}
+		if(!userIdsp.isEmpty()) {
+			getTotalJobWatting(userIdsp);
+		}
 	}
 
 	public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
