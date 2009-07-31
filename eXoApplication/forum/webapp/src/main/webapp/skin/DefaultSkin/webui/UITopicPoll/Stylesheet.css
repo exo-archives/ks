@@ -54,9 +54,14 @@
 .UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
 	border: 1px solid #d2d2d2;
 	padding: 10px 15px;
-	width: 500px;
 	margin: 0px auto 10px auto;
 	background: white;
+}
+/* Fix only IE7 */
+.UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
+	*min-width: 300px;
+	*overflow-y: hidden;
+	*overflow-x: auto;
 }
 
 .UIForumPortlet .UITopicPoll .TopicPollContainer .TopicPollContent .PollQuestion {
