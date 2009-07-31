@@ -303,9 +303,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
-			if(topicTitle.length() <= 3 && topicTitle.equals("null")) {k = 0;}
+			if(topicTitle.length() <= 0 && topicTitle.equals("null")) {k = 0;}
 			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
-			if(t >= 3 && k != 0 && !checksms.equals("null")) {
+			if(t > 0 && k != 0 && !checksms.equals("null")) {
 				String userName = ForumSessionUtils.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
@@ -328,13 +328,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				String sms = "" ;
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				if(k == 0) {
-					sms = "Thread Title" ;
-					if(t < 3) sms = "Thread Title and Message";
+					sms = uiForm.getLabel(FIELD_TOPICTITLE_INPUT) ;
+					if(t < 1) sms = uiForm.getLabel(FIELD_TOPICTITLE_INPUT) + " and " + uiForm.getLabel(FIELD_MESSAGECONTENT);
 					Object[] args = { sms };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				} else if(t < 3) {
-					Object[] args = { "Message" };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
+				} else if(t < 1) {
+					Object[] args = { uiForm.getLabel(FIELD_MESSAGECONTENT) };
+					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
 				}
 			}
 		}
@@ -506,7 +506,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						topicDetail.setIsEditTopic(true) ;
-					} catch (PathNotFoundException e) {e.printStackTrace();
+					} catch (PathNotFoundException e) {
 						// hung.hoang add
 						sProvider.close();
 						uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
@@ -565,7 +565,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					uiForm.isDoubleClickSubmit = false;
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
 				} else if(t <= 0) {
-					Object[] args = { "Message" };
+					Object[] args = { uiForm.getLabel(FIELD_MESSAGECONTENT) };
 					uiForm.isDoubleClickSubmit = false;
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortMessage", args, ApplicationMessage.WARNING)) ;
 				}
