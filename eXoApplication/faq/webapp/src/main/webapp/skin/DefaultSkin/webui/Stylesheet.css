@@ -855,6 +855,12 @@
 	margin-left: 130px;
 }
 
+.UIFAQPortlet .ResponseItemContainer .ResponseItemContainerRight .AnswerContent{
+	padding:3px;
+	overflow: auto;
+	width: 98%;
+}
+
 .UIFAQPortlet .UIResponse #QuestionRespone___Frame{
 	height: 280px;
 }

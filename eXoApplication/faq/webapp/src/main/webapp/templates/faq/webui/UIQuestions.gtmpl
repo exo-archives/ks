@@ -911,13 +911,13 @@
 																					<%
 																					if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
 																					%>
-																						<div style="padding:3px; width: 70%; overflow: auto;">$res</div>
+																						<div class="AnswerContent">$res</div>
 																					<%
 																					} else {
 																					%>
-																						<div style="color:gray;padding:3px; width: 70%; overflow: auto;">$res</div>
+																						<div class="AnswerContent" style="color:gray;">$res</div>
 																					<%} %>
-																					<div style="float:left; color:#721d95;">$date</div>
+																					<div style="color:#721d95;">$date</div>
 																				</div>
 																				
 																				<!-- ============================= View mark vote answer ======================================== -->
