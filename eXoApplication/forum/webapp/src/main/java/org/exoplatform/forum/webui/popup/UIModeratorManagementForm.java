@@ -292,7 +292,9 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		userTitle.setValue(title);
 		
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-		signature.setValue(ForumTransformHTML.unCodeHTML(this.userProfile.getSignature()));
+		String signature_blank = this.userProfile.getSignature();
+		if(ForumUtils.isEmpty(signature_blank)) signature_blank = "";
+		signature.setValue(ForumTransformHTML.unCodeHTML(signature_blank));
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 		UIFormTextAreaInput moderateForums = new UIFormTextAreaInput(FIELD_MODERATEFORUMS_MULTIVALUE, FIELD_MODERATEFORUMS_MULTIVALUE, null);

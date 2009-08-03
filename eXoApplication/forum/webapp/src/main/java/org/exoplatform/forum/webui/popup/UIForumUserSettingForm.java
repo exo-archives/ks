@@ -216,7 +216,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userTitle.setEnable(false);
 		}
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-		signature.setValue(this.userProfile.getSignature());
+		String signature_blank = this.userProfile.getSignature();
+		if(ForumUtils.isEmpty(signature_blank)) signature_blank = "";
+		signature.setValue(signature_blank);
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 
