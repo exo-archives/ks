@@ -205,6 +205,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					context.addUIComponentToUpdateByAjax(uiCategory) ;
 				} else {
 					forumService.saveCategory(sProvider, cat, true);
+					List<String>  invisibleCategories = forumPortlet.getInvisibleCategories();
+					List<String>  invisibleForums = forumPortlet.getInvisibleForums();
+					invisibleCategories.add(cat.getId());
+					String listForumId = invisibleForums.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+					String listCategoryId = invisibleCategories.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+					ForumUtils.savePortletPreference(listCategoryId, listForumId);
+					forumPortlet.loadPreferences();
 					forumPortlet.cancelAction() ;
 					UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategories) ;
