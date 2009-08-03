@@ -67,7 +67,7 @@
 				</div>
 				<div class="RSSBar">
 				  <%String toolTip = uicomponent.getToolTip();
-				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) || !toolTip.equals("tag")){
+				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 					    
 					  if(uicomponent.checkLinkPrivate(id)){
