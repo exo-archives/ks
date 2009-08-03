@@ -1824,7 +1824,8 @@ public class JCRDataStorage {
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
-			  newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+			  addRSSListener(questionHome) ;
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
 			}	

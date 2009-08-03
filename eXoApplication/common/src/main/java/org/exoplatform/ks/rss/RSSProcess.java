@@ -226,7 +226,7 @@ public class RSSProcess extends RSSGenerate {
 		try{
 			appHomeNode = getKSServiceHome(sProvider, FAQ_APP);
 			Node categoryNode = null;
-			if(typeEvent != 2) {
+			if(typeEvent != 2) { // Added node or edited properties
 				SyndEntry entry;
 				SyndContent description;
 				Node RSSNode = null;
@@ -282,8 +282,8 @@ public class RSSProcess extends RSSGenerate {
 				try{
 					RSSNode = categoryNode.getNode(KS_RSS);
 					getRSSData(RSSNode, data);
-					if(typeEvent != Event.NODE_ADDED)feed = updateRSSFeed(data, questionNode.getName(), entry);
-					else feed = updateRSSFeed(data, null, entry);
+					if(typeEvent == Event.NODE_ADDED) feed = updateRSSFeed(data, null, entry);
+					else feed = updateRSSFeed(data, questionNode.getName(), entry);
 				} catch (PathNotFoundException e){
 					RSSNode = categoryNode.addNode(KS_RSS, FAQ_RSS_TYPE);
 					isNew = true;
@@ -307,7 +307,7 @@ public class RSSProcess extends RSSGenerate {
 				SyndFeedOutput output = new SyndFeedOutput();
 				data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
 				addNodeRSS(categoryNode, RSSNode, data, isNew);
-			} else {
+			} else { // removed node
 				//categoryNode = getCategoryNodeById(cateid, sProvider);
 				if(path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0){
 					if(path.indexOf("/faqCommentHome") > 0) path = path.substring(0, path.indexOf("/faqCommentHome"));
@@ -402,8 +402,8 @@ public class RSSProcess extends RSSGenerate {
 			RSSNode = parentNode.addNode(KS_RSS, rssType);
 			try{
 				feed.setTitle(parentNode.getProperty("exo:name").getString());
-				if(parentNode.hasProperty("categoryNode"))feed.setDescription(parentNode.getProperty("exo:description").getString());
-				else feed.setDescription(" ");
+				feed.setDescription(parentNode.getProperty("exo:description").getString());
+				feed.setDescription(" ");
 			} catch (Exception e){
 				feed.setTitle(parentNode.getName());
 				feed.setDescription(" ");

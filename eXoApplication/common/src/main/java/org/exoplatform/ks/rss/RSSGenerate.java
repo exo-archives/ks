@@ -141,6 +141,7 @@ public abstract class RSSGenerate {
 			if(isNew) nodeIsAdded.getSession().save();
 			else nodeIsAdded.save();
     } catch (RepositoryException e) {
+    	e.printStackTrace() ;
     }
 	}
 
@@ -179,7 +180,8 @@ public abstract class RSSGenerate {
     SyndFeedInput input = new SyndFeedInput();
     SyndFeed feed = input.build(doc);
     List<SyndEntry> entries = feed.getEntries();
-    
+    //System.out.println("newEntry ====>" + newEntry );
+    //System.out.println("entries before ====>" + entries.size());
     if(idOfObjectChange != null && idOfObjectChange.trim().length() > 0){
 	    for(SyndEntry syndEntry : entries){
 	    	if(syndEntry.getUri().equals(idOfObjectChange)){
@@ -190,6 +192,7 @@ public abstract class RSSGenerate {
     }
 		if(newEntry != null)entries.add(0, newEntry);
 		feed.setEntries(entries);
+		//System.out.println("entries after ====>" + entries.size());
 		return feed;
 	}
 	

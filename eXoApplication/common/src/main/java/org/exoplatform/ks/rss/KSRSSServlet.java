@@ -48,6 +48,7 @@ public class KSRSSServlet extends HttpServlet {
       RSSProcess process = new RSSProcess(sessionProvider, appType);
       InputStream is = null;
       if(appType.equals("faq")) {
+      	//System.out.println("objectiD =======>" + objectId) ;
       	is = process.getRSSNode(sessionProvider, objectId, appType) ;
 	      response.setContentType("text/xml") ;
       }else { 
