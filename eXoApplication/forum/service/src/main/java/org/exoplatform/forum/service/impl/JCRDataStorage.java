@@ -940,14 +940,19 @@ public class JCRDataStorage {
 		NodeIterator iter = cateNode.getNodes();
 		List<String> list;
 		Forum forum = new Forum();
-		String[] oldModeratoForums;
+		String[] oldModeratoForums ;
 		String[] strModerators;
 		while (iter.hasNext()) {
 			list = new ArrayList<String>();
 			try{
 				Node node = iter.nextNode();
 				if(node.isNodeType("exo:forum")) {
-					oldModeratoForums = ValuesToArray(node.getProperty("exo:moderators").getValues());
+					try{
+						oldModeratoForums = ValuesToArray(node.getProperty("exo:moderators").getValues());
+					}catch(Exception e) {
+						oldModeratoForums = new String[]{};
+					}
+					
 					list.addAll(Arrays.asList(oldModeratoForums));
 					for (int i = 0; i < moderatorCat.length; i++) {
 						if(!list.contains(moderatorCat[i])){
@@ -971,9 +976,12 @@ public class JCRDataStorage {
 		if(!moderators.isEmpty()) {
 			for (String string : moderators) {
 				try {
-					userProfileNode = userProfileHomeNode.getNode(string);
-					List<String> moderateCategory = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
 					boolean isAdd = true;
+					userProfileNode = userProfileHomeNode.getNode(string);
+					List<String> moderateCategory = new ArrayList<String>() ;
+					try{
+						moderateCategory = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
+					}catch(Exception e){}
 					for (String string2 : moderateCategory) {
 	          if(string2.indexOf(categoryId) > 0) {
 	          	isAdd = false;
@@ -995,7 +1003,8 @@ public class JCRDataStorage {
 	        if(moderators.contains(oldUserId)) continue ;
 	        //edit profile of old user.
 	        userProfileNode = userProfileHomeNode.getNode(oldUserId);
-	        List<String> moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
+	        List<String> moderateList = new ArrayList<String>() ;
+	        try{ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());}catch(Exception e){}
 					for (String string2 : moderateList) {
 	          if(string2.indexOf(categoryId) > 0) {
 	          	moderateList.remove(string2);
@@ -1225,7 +1234,7 @@ public class JCRDataStorage {
 
 	private String[] updateModeratorInForum(Node catNode, String[]mods) throws Exception {
 		List<String> list = new ArrayList<String>();
-		list.addAll(ValuesToList(catNode.getProperty("exo:moderators").getValues()));
+		try{list.addAll(ValuesToList(catNode.getProperty("exo:moderators").getValues()));}catch(Exception e){}
 		if(!list.isEmpty() && !list.get(0).equals(" ")) {
 			for (int i = 0; i < mods.length; i++) {
 	      if(!list.contains(mods[i])) {
@@ -1548,6 +1557,40 @@ public class JCRDataStorage {
 				}
 			}
 		}
+
+		/*forum.setLastTopicPath(lastTopicPath);
+		if (forumNode.hasProperty("exo:description"))
+			forum.setDescription(forumNode.getProperty("exo:description").getString());
+		forum.setPostCount(forumNode.getProperty("exo:postCount").getLong());
+		forum.setTopicCount(forumNode.getProperty("exo:topicCount").getLong());
+		if (forumNode.hasProperty("exo:isModerateTopic"))
+			forum.setIsModerateTopic(forumNode.getProperty("exo:isModerateTopic").getBoolean());
+		if (forumNode.hasProperty("exo:isModeratePost"))
+			forum.setIsModeratePost(forumNode.getProperty("exo:isModeratePost").getBoolean());
+		forum.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
+		forum.setIsLock(forumNode.getProperty("exo:isLock").getBoolean());
+		try{
+			forum.setIsAutoAddEmailNotify(forumNode.getProperty("exo:isAutoAddEmailNotify").getBoolean());
+		}catch(Exception e) {
+			forum.setIsAutoAddEmailNotify(false);
+		}
+			
+		if (forumNode.hasProperty("exo:notifyWhenAddPost"))
+			forum.setNotifyWhenAddPost(ValuesToArray(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+		if (forumNode.hasProperty("exo:notifyWhenAddTopic"))
+			forum.setNotifyWhenAddTopic(ValuesToArray(forumNode.getProperty("exo:notifyWhenAddTopic").getValues()));
+		if (forumNode.hasProperty("exo:viewer"))
+			forum.setViewer(ValuesToArray(forumNode.getProperty("exo:viewer").getValues()));
+		if (forumNode.hasProperty("exo:createTopicRole"))
+			forum.setCreateTopicRole(ValuesToArray(forumNode.getProperty("exo:createTopicRole").getValues()));
+		if (forumNode.hasProperty("exo:poster"))
+			forum.setPoster(ValuesToArray(forumNode.getProperty("exo:poster").getValues()));
+		if (forumNode.hasProperty("exo:moderators"))
+			forum.setModerators(ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
+		if (forumNode.hasProperty("exo:banIPs"))
+			forum.setBanIP(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));*/
+		
+
 		forum.setLastTopicPath(lastTopicPath);	
 		forum.setDescription(reader.string("exo:description"));
 		forum.setPostCount(reader.l("exo:postCount"));
@@ -1556,7 +1599,7 @@ public class JCRDataStorage {
 		forum.setIsModeratePost(reader.bool("exo:isModeratePost"));
 		forum.setIsClosed(reader.bool("exo:isClosed"));
 		forum.setIsLock(reader.bool("exo:isLock"));
-		forum.setIsAutoAddEmailNotify(reader.bool("exo:isAutoAddEmailNotify"));
+		forum.setIsAutoAddEmailNotify(reader.bool("exo:isAutoAddEmailNotify", false));
 		forum.setNotifyWhenAddPost(reader.strings("exo:notifyWhenAddPost"));
 		forum.setNotifyWhenAddTopic(reader.strings("exo:notifyWhenAddTopic"));
 		forum.setViewer(reader.strings("exo:viewer"));
@@ -1564,6 +1607,7 @@ public class JCRDataStorage {
 		forum.setPoster(reader.strings("exo:poster"));
 		forum.setModerators(reader.strings("exo:moderators"));
 		forum.setBanIP(reader.list("exo:banIPs"));
+
 		if (forumNode.isNodeType("exo:forumWatching")) {
 			if(forumNode.hasProperty("exo:emailWatching"))
 				forum.setEmailNotification(reader.strings("exo:emailWatching"));
@@ -1944,6 +1988,31 @@ public class JCRDataStorage {
 		Topic topicNew = new Topic();
 		PropertyReader reader = new PropertyReader(topicNode);
 		topicNew.setId(topicNode.getName()) ;
+
+		/*topicNew.setPath(topicNode.getPath()) ;
+		topicNew.setOwner(topicNode.getProperty("exo:owner").getString()) ;
+		topicNew.setTopicName(topicNode.getProperty("exo:name").getString()) ;
+		topicNew.setCreatedDate(topicNode.getProperty("exo:createdDate").getDate().getTime()) ;
+		if(topicNode.hasProperty("exo:modifiedBy"))topicNew.setModifiedBy(topicNode.getProperty("exo:modifiedBy").getString()) ;
+		if(topicNode.hasProperty("exo:modifiedDate"))topicNew.setModifiedDate(topicNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
+		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
+		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
+		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
+		try{
+			topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
+		}catch(Exception e) {
+			topicNew.setTopicType(" ") ;
+		}
+		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
+		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
+		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
+		topicNew.setIcon(topicNode.getProperty("exo:icon").getString()) ;
+		topicNew.setLink(topicNode.getProperty("exo:link").getString());
+		if(topicNode.hasProperty("exo:isNotifyWhenAddPost"))topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
+		topicNew.setIsModeratePost(topicNode.getProperty("exo:isModeratePost").getBoolean()) ;
+		topicNew.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean()) ;*/
+
+		
 		topicNew.setPath(topicNode.getPath()) ;		
 		topicNew.setOwner(reader.string("exo:owner"));
 		topicNew.setTopicName(reader.string("exo:name"));
@@ -1953,7 +2022,7 @@ public class JCRDataStorage {
 		topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
 		topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
 		topicNew.setDescription(reader.string("exo:description"));
-		topicNew.setTopicType(reader.string("exo:topicType"));
+		topicNew.setTopicType(reader.string("exo:topicType", " "));
 		topicNew.setPostCount(reader.l("setPostCount"));
 		topicNew.setViewCount(reader.l("exo:viewCount"));
 		topicNew.setNumberAttachment(reader.l("exo:numberAttachments"));
@@ -1962,6 +2031,7 @@ public class JCRDataStorage {
 		topicNew.setIsNotifyWhenAddPost(reader.string("exo:isNotifyWhenAddPost", null));
 		topicNew.setIsModeratePost(reader.bool("exo:isModeratePost"));
 		topicNew.setIsClosed(reader.bool("exo:isClosed"));
+
 		if(topicNode.getParent().getProperty("exo:isLock").getBoolean()) topicNew.setIsLock(true);
 		else topicNew.setIsLock(topicNode.getProperty("exo:isLock").getBoolean()) ;
 		
@@ -4077,7 +4147,12 @@ public class JCRDataStorage {
 				userProfile.setUserRole((long)0);
 			} else userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 			userProfile.setModerateForums(ValuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
-			userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+			try{
+				userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+			}catch(Exception e){
+				userProfile.setModerateCategory(new String[]{});
+			}
+			
 			userProfile.setNewMessage(profileNode.getProperty("exo:newMessage").getLong());
 			userProfile.setTimeZone(profileNode.getProperty("exo:timeZone").getDouble());
 			userProfile.setShortDateFormat(profileNode.getProperty("exo:shortDateformat").getString());
@@ -4088,8 +4163,17 @@ public class JCRDataStorage {
 			userProfile.setIsShowForumJump(profileNode.getProperty("exo:isShowForumJump").getBoolean());
 			userProfile.setIsAutoWatchMyTopics(profileNode.getProperty("exo:isAutoWatchMyTopics").getBoolean());
 			userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
-			userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
-			userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+			try{
+				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+			}catch(Exception e) {
+				userProfile.setLastReadPostOfForum(new String[]{});
+			}
+			
+			try{
+				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+			}catch(Exception e) {
+				userProfile.setLastReadPostOfTopic(new String[]{});
+			}			
 
 			userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
 			if(profileNode.hasProperty("exo:collapCategories"))
@@ -4177,7 +4261,12 @@ public class JCRDataStorage {
 			Node profileNode = getUserProfileHome(sProvider).getNode(userName);
 			userProfile.setUserId(userName) ;
 			userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString());
-			userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+			try{
+				userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+			}catch(Exception e) {
+				userProfile.setScreenName(userName);
+			}
+			
 			userProfile.setSignature(profileNode.getProperty("exo:signature").getString());
 			userProfile.setIsDisplaySignature(profileNode.getProperty("exo:isDisplaySignature").getBoolean()) ;
 			userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
@@ -4225,12 +4314,30 @@ public class JCRDataStorage {
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
 		try {
 			if(isOfForum.equals("true")) {
-				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+				try{
+					userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+				}catch(Exception e) {
+					userProfile.setLastReadPostOfForum(new String[]{});
+				}
+				
 			} else if(isOfForum.equals("false")){
-				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+				try{
+					userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+				}catch(Exception e) {
+					userProfile.setLastReadPostOfTopic(new String[]{});
+				}
+				
 			} else {
-				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
-				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+				try{
+					userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+				}catch(Exception e) {
+					userProfile.setLastReadPostOfForum(new String[]{});
+				}
+				try{
+					userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+				}catch(Exception e) {
+					userProfile.setLastReadPostOfTopic(new String[]{});
+				}
 			}
     } catch (Exception e) {
     }finally{ sProvider.close() ;}
@@ -4257,7 +4364,7 @@ public class JCRDataStorage {
 		try {
 			Node profileNode = userProfileNode.getNode(userName);
 			if(isModeCate)
-				list.addAll(ValuesToList(profileNode.getProperty("exo:moderateCategory").getValues()));
+				try{list.addAll(ValuesToList(profileNode.getProperty("exo:moderateCategory").getValues()));}catch(Exception e){}
 			else
 				list.addAll(ValuesToList(profileNode.getProperty("exo:moderateForums").getValues()));
     } catch (Exception e) {
@@ -4294,7 +4401,23 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName);
 			if (newProfileNode.hasProperty("exo:userTitle"))
 				title = newProfileNode.getProperty("exo:userTitle").getString();
-			userProfile.setScreenName(reader.string("exo:screenName"));
+
+			/*try{
+				userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
+			}catch(Exception e) {
+				userProfile.setScreenName(userName);
+			}
+			
+			if (userProfileNode.hasProperty("exo:fullName"))
+				userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
+			if (userProfileNode.hasProperty("exo:firstName"))
+				userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
+			if (userProfileNode.hasProperty("exo:lastName"))
+				userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
+			if (userProfileNode.hasProperty("exo:email"))
+				userProfile.setEmail(userProfileNode.getProperty("exo:email").getString());*/
+
+			userProfile.setScreenName(reader.string("exo:screenName", userName));			
 			userProfile.setFullName(reader.string("exo:fullName"));
 			userProfile.setFirstName(reader.string("exo:firstName"));
 			userProfile.setLastName(reader.string("exo:fullName"));
@@ -4344,7 +4467,12 @@ public class JCRDataStorage {
 				userProfile.setUserId(userName) ;
 				userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 				userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
-				userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+				try{
+					userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+				}catch(Exception e) {
+					userProfile.setScreenName(userName);
+				}
+				
 				userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 				userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 				userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
@@ -4370,7 +4498,11 @@ public class JCRDataStorage {
 			userProfile.setUserId(userName) ;
 			userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
 			userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString()) ;
-			userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+			try{
+				userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+			}catch(Exception e) {
+				userProfile.setScreenName(userName);
+			}			
 			userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime()) ;
 			userProfile.setIsDisplayAvatar(profileNode.getProperty("exo:isDisplayAvatar").getBoolean()) ;
 			userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong()) ;
@@ -4489,7 +4621,11 @@ public class JCRDataStorage {
 		UserProfile userProfile = new UserProfile() ;
 		userProfile.setUserId(userProfileNode.getName());
 		userProfile.setUserTitle(userProfileNode.getProperty("exo:userTitle").getString());
-		userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
+		try{
+			userProfile.setScreenName(userProfileNode.getProperty("exo:screenName").getString());
+		}catch(Exception e) {
+			userProfile.setScreenName(userProfileNode.getName());
+		}		
 		userProfile.setFullName(userProfileNode.getProperty("exo:fullName").getString());
 		userProfile.setFirstName(userProfileNode.getProperty("exo:firstName").getString());
 		userProfile.setLastName(userProfileNode.getProperty("exo:lastName").getString());
@@ -4499,7 +4635,12 @@ public class JCRDataStorage {
 		userProfile.setTotalPost(userProfileNode.getProperty("exo:totalPost").getLong());
 		userProfile.setTotalTopic(userProfileNode.getProperty("exo:totalTopic").getLong());
 		userProfile.setModerateForums(ValuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues()));
-		userProfile.setModerateCategory(ValuesToArray(userProfileNode.getProperty("exo:moderateCategory").getValues()));
+		try{
+			userProfile.setModerateCategory(ValuesToArray(userProfileNode.getProperty("exo:moderateCategory").getValues()));
+		}catch(Exception e) {
+			userProfile.setModerateCategory(new String[]{});
+		}
+		
 //		if(userProfileNode.hasProperty("exo:bookmark"))userProfile.setBookmark(ValuesToStrings(userProfileNode.getProperty("exo:bookmark").getValues()));
 		if(userProfileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(userProfileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 		if(userProfileNode.hasProperty("exo:joinedDate"))userProfile.setJoinedDate(userProfileNode.getProperty("exo:joinedDate").getDate().getTime());
@@ -5751,7 +5892,11 @@ public class JCRDataStorage {
 				t = newProfileNode.getProperty("exo:userRole").getLong();
 			}
 			if (t < 2) {
-				job = (int)newProfileNode.getProperty("exo:jobWattingForModerator").getLong();
+				try {
+					job = (int)newProfileNode.getProperty("exo:jobWattingForModerator").getLong();
+				}catch(Exception e) {
+					job = 0 ;
+				}
 			}
 		}finally{
 			sProvider.close();

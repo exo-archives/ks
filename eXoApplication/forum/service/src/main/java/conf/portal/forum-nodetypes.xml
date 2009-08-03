@@ -1,6 +1,16 @@
 <nodeTypes xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
 	xmlns:jcr="http://www.jcp.org/jcr/1.0">
 	
+	<nodeType name="exo:datetime" isMixin="true" hasOrderableChildNodes="false" primaryItemName="" >
+		<propertyDefinitions>
+			<propertyDefinition name="exo:dateModified" requiredType="Date" autoCreated="true" mandatory="false" onParentVersion="COPY"protected="false" multiple="false" >
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:dateCreated" requiredType="Date" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false" >
+				<valueConstraints/>
+			</propertyDefinition>
+		</propertyDefinitions>
+	</nodeType>
 	
 	<nodeType name="exo:forumRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -665,10 +675,7 @@
 				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:screenName" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-				<defaultValues>
-					<defaultValue> </defaultValue>
-				</defaultValues>
+				<valueConstraints/>				
 			</propertyDefinition>
 			<propertyDefinition name="exo:userRole" requiredType="Long" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
@@ -706,11 +713,8 @@
 					<defaultValue> </defaultValue>
 				</defaultValues>
 			</propertyDefinition>
-			<propertyDefinition name="exo:moderateCategory" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-				<valueConstraints/>
-				<defaultValues>
-					<defaultValue> </defaultValue>
-				</defaultValues>
+			<propertyDefinition name="exo:moderateCategory" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+				<valueConstraints/>				
 			</propertyDefinition>
 			<propertyDefinition name="exo:readTopic" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
@@ -725,16 +729,10 @@
 				</defaultValues>
 			</propertyDefinition>
 			<propertyDefinition name="exo:lastReadPostOfTopic" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-				<valueConstraints/>
-				<defaultValues>
-					<defaultValue> </defaultValue>
-				</defaultValues>
+				<valueConstraints/>				
 			</propertyDefinition>
 			<propertyDefinition name="exo:lastReadPostOfForum" requiredType="String" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
-				<valueConstraints/>
-				<defaultValues>
-					<defaultValue> </defaultValue>
-				</defaultValues>
+				<valueConstraints/>				
 			</propertyDefinition>
 			<propertyDefinition name="exo:isAutoWatchMyTopics" requiredType="Boolean" autoCreated="true" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>

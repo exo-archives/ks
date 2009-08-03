@@ -11,10 +11,10 @@
   		<!--propertyDefinition name="exo:answerPath" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>  			
   		</propertyDefinition-->
-  		<propertyDefinition name="exo:questionId" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+  		<propertyDefinition name="exo:questionId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
-  		<propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+  		<propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
   		<propertyDefinition name="exo:responses" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -26,7 +26,7 @@
   		<propertyDefinition name="exo:responseBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>
-	  	<propertyDefinition name="exo:responseLanguage" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+	  	<propertyDefinition name="exo:responseLanguage" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>
   		<propertyDefinition name="exo:approveResponses" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -194,7 +194,7 @@
 		    <requiredPrimaryTypes>
 		    	<requiredPrimaryType>exo:answerHome</requiredPrimaryType>
 		    </requiredPrimaryTypes>
-	   </childNodeDefinition>
+	   </childNodeDefinition>	   
 		</childNodeDefinitions>
   </nodeType>
   
@@ -524,4 +524,79 @@
   	</childNodeDefinitions>
   </nodeType>
   
+  <nodeType name="exo:faqCategoryHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+   <supertypes>
+    <supertype>nt:base</supertype>
+   </supertypes>   
+   <propertyDefinitions>
+  		<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>Root</defaultValue>
+				</defaultValues>
+  		</propertyDefinition>  			
+  		<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>  
+  		<propertyDefinition name="exo:isModerateQuestions" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
+  		</propertyDefinition>			
+  		<propertyDefinition name="exo:isModerateAnswers" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
+  		</propertyDefinition>			
+  		<propertyDefinition name="exo:viewAuthorInfor" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+        <defaultValues>
+					<defaultValue>false</defaultValue>
+				</defaultValues>
+  		</propertyDefinition>			
+  		<propertyDefinition name="exo:moderators" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+  			<valueConstraints/>
+  		</propertyDefinition>	
+   </propertyDefinitions>
+   <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>
+      
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqRSS" autoCreated="false" mandatory="false" 
+      	onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>nt:base</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+    </childNodeDefinitions>
+  </nodeType>
+  
+  <nodeType name="exo:faqHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+	  	<childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:faqSettingHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:faqSettingHome</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:templateHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:templateHome</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
 </nodeTypes>  

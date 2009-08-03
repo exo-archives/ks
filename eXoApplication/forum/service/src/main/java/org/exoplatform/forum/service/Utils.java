@@ -42,14 +42,14 @@ public class Utils {
 	
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
 	public final static String FORUM_SYSTEM = "ForumSystem".intern() ;
-	public final static String FORUM_DATA = "ForumSData".intern() ;
+	public final static String FORUM_DATA = "ForumData".intern() ;
 	public final static String BANIP_HOME = "BanIPHome".intern() ;
 	public final static String STATISTIC_HOME = "StatisticHome".intern() ;
 	public final static String ADMINISTRATION_HOME = "AdministrationHome".intern() ;
 	public final static String CATEGORY_HOME = "CategoryHome".intern() ;
 	public final static String TAG_HOME = "TagHome".intern() ;
 	
-	public final static String FORUM_STATISTIC = "forumStatisticId".intern() ;
+	public final static String FORUM_STATISTIC = "forumStatistic".intern() ;
 	public final static String USER_PROFILE_HOME = "UserProfileHome".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
 	public final static String FORUM_BAN_IP = "forumBanIP".intern() ;

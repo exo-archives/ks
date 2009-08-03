@@ -305,7 +305,7 @@ public class JCRDataStorage {
 		try {
 			return	userApp.getNode(Utils.FAQ_APP) ;
 		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode(Utils.FAQ_APP, NT_UNSTRUCTURED) ;
+			Node faqHome = userApp.addNode(Utils.FAQ_APP, "exo:faqHome") ;
 			userApp.getSession().save() ;
 			return faqHome ;
 		}		

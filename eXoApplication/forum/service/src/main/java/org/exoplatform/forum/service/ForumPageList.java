@@ -254,7 +254,11 @@ public class ForumPageList extends JCRPageList {
 		if(topicNode.hasProperty("exo:modifiedDate"))topicNew.setModifiedDate(topicNode.getProperty("exo:modifiedDate").getDate().getTime()) ;
 		if(topicNode.hasProperty("exo:lastPostBy"))topicNew.setLastPostBy(topicNode.getProperty("exo:lastPostBy").getString()) ;
 		if(topicNode.hasProperty("exo:lastPostDate"))topicNew.setLastPostDate(topicNode.getProperty("exo:lastPostDate").getDate().getTime()) ;
-		topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
+		try{
+			topicNew.setTopicType(topicNode.getProperty("exo:topicType").getString()) ;
+		}catch(Exception e) {
+			topicNew.setTopicType(" ") ;
+		}
 		topicNew.setDescription(topicNode.getProperty("exo:description").getString()) ;
 		topicNew.setPostCount(topicNode.getProperty("exo:postCount").getLong()) ;
 		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
@@ -315,7 +319,12 @@ public class ForumPageList extends JCRPageList {
 		UserProfile userProfile = new UserProfile() ;
 		userProfile.setUserId(profileNode.getName());
 		userProfile.setUserTitle(profileNode.getProperty("exo:userTitle").getString());
-		userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+		try{
+			userProfile.setScreenName(profileNode.getProperty("exo:screenName").getString());
+		}catch(Exception e) {
+			userProfile.setScreenName(profileNode.getName());
+		}
+		
 		userProfile.setFullName(profileNode.getProperty("exo:fullName").getString());
 		userProfile.setFirstName(profileNode.getProperty("exo:firstName").getString());
 		userProfile.setLastName(profileNode.getProperty("exo:lastName").getString());
@@ -325,7 +334,12 @@ public class ForumPageList extends JCRPageList {
 		userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong());
 		userProfile.setTotalTopic(profileNode.getProperty("exo:totalTopic").getLong());
 		userProfile.setModerateForums(ValuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
-		userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+		try{
+			userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+		}catch(Exception e) {
+			userProfile.setModerateCategory(new String[]{});
+		}
+		
 		if(profileNode.hasProperty("exo:lastLoginDate"))userProfile.setLastLoginDate(profileNode.getProperty("exo:lastLoginDate").getDate().getTime());
 		if(profileNode.hasProperty("exo:joinedDate"))userProfile.setJoinedDate(profileNode.getProperty("exo:joinedDate").getDate().getTime());
 		if(profileNode.hasProperty("exo:lastPostDate"))userProfile.setLastPostDate(profileNode.getProperty("exo:lastPostDate").getDate().getTime());
