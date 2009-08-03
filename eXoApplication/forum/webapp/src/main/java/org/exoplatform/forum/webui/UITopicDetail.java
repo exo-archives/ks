@@ -727,7 +727,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					topicDetail.isEditTopic = true ;
 				} else {
 					Object[] args = { userName };
-					throw new MessageException(new ApplicationMessage("UITopicDetail.sms.VotedRating", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicDetail.sms.VotedRating", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1108,7 +1110,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
 					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Close", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Close", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1140,7 +1144,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
 					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Locked", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Locked", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1172,7 +1178,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
 					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.UnLock", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.UnLock", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1231,7 +1239,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				} else {
 					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Stick", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Stick", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1262,7 +1272,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				} else {
 					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.UnStick", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.UnStick", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
@@ -1294,8 +1306,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					popupAction.activate(splitTopicForm, 700, 400) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
-					Object[] args = { };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.NotSplit", args, ApplicationMessage.WARNING)) ;
+					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.NotSplit", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
