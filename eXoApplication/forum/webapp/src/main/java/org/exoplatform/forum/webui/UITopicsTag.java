@@ -100,14 +100,17 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	  this.userIdAndtagId = userIdAndtagId;
 	  this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
   }
-	@SuppressWarnings("unused")
+	
 	private UserProfile getUserProfile() {
 		return userProfile ;
 	}
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		this.userProfile	= userProfile ;
   }
-	
+
+	private String getScreenName(String userName)throws Exception {
+		return forumService.getScreenName(userName);
+	}
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
@@ -126,7 +129,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String userLogin = this.userProfile.getUserId();
 			long role = this.userProfile.getUserRole() ;
 			if(role >=2){ isHidden = "false" ;}
-			Forum forum = this.forumService.getForum(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
+			Forum forum = this.forumService.getForum(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
 			if(role == 1) {
 				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
 					isHidden = "false" ;
@@ -135,7 +138,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
 				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 			}
-			long availablePost = this.forumService.getAvailablePost(ForumSessionUtils.getSystemProvider(), Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, userLogin)	; 
+			long availablePost = this.forumService.getAvailablePost(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, userLogin)	; 
 			long value = availablePost/maxPost;
 			if(value*maxPost < availablePost) value = value + 1;
 			mapNumberPagePost.put(Id, value);
