@@ -124,7 +124,9 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	
 	private String getAvatarUrl(String userId){
 		try{
-			return FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
+			return url;
 		} catch (Exception e){
 		}
 		return Utils.DEFAULT_AVATAR_URL;

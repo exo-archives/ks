@@ -2196,4 +2196,6 @@
   height: 14px;
 }
 
-
+.UIFAQPortlet .FAQAvatar {
+	background: url('background/Avatar1.gif');
+}
