@@ -1263,25 +1263,36 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		}
 	}
 	
+	private String[] getCensoredKeyword(SessionProvider sProvider) throws Exception {
+		ForumAdministration forumAdministration = forumService.getForumAdministration(sProvider) ;
+		String stringKey = forumAdministration.getCensoredKeyword();
+		if(stringKey != null && stringKey.length() > 0) {
+			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
+			if(stringKey.contains(",")){ 
+				stringKey.replaceAll(";", ",") ;
+				return stringKey.trim().split(",") ;
+			} else { 
+				return stringKey.trim().split(";") ;
+			}
+		}
+		return new String[]{};
+	}
+	
 	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
-			ForumAdministration forumAdministration = topicDetail.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			UIFormTextAreaInput textAreaInput = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = message ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			if(checksms != null && checksms.trim().length() > 0) {
 				boolean isOffend = false ;
 				boolean hasTopicMod = false ;
 				if(!topicDetail.isMod) {
-					String stringKey = forumAdministration.getCensoredKeyword();
-					if(stringKey != null && stringKey.length() > 0) {
-						stringKey = stringKey.toLowerCase() ;
-						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-						checksms = checksms.toLowerCase().trim();
-						for (String string : censoredKeyword) {
-							if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
-						}
+					String []censoredKeyword = topicDetail.getCensoredKeyword(sProvider);
+					checksms = checksms.toLowerCase().trim();
+					for (String string : censoredKeyword) {
+						if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
 					}
 					if(topicDetail.topic != null) hasTopicMod = topicDetail.topic.getIsModeratePost() ;
 				}
@@ -1326,7 +1337,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				post.setIsHidden(isOffend) ;
 				post.setIsApproved(!hasTopicMod) ;
 				post.setLink(link);
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					topicDetail.forumService.savePost(sProvider, topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post, true, ForumUtils.getDefaultMail()) ;
 					long postCount = topicDetail.getUserInfo(userName).getTotalPost() + 1 ;

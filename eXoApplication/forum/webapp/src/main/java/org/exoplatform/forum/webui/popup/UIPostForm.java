@@ -280,12 +280,28 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		}
 	}
 	
+	private String[] getCensoredKeyword(SessionProvider sProvider) throws Exception {
+		ForumAdministration forumAdministration = forumService.getForumAdministration(sProvider) ;
+		String stringKey = forumAdministration.getCensoredKeyword();
+		if(stringKey != null && stringKey.length() > 0) {
+			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
+			if(stringKey.contains(",")){ 
+				stringKey.replaceAll(";", ",") ;
+				return stringKey.trim().split(",") ;
+			} else { 
+				return stringKey.trim().split(";") ;
+			}
+		}
+		return new String[]{};
+	}
+	
 	static	public class SubmitPostActionListener extends EventListener<UIPostForm> {
 		public void execute(Event<UIPostForm> event) throws Exception {
 			UIPostForm uiForm = event.getSource() ;
 			if(uiForm.isDoubleClickSubmit) return;
 			uiForm.isDoubleClickSubmit = true;
 			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
+			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			int t = 0, k = 1 ;
 			String postTitle = " " + threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 			int maxText = ForumUtils.MAXTITLE ;
@@ -319,7 +335,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				PortletRequestImp request = event.getRequestContext().getRequest();
 				remoteAddr = request.getRemoteAddr();
 			}
-			ForumAdministration forumAdministration = uiForm.forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.length() ;
 			postTitle = postTitle.trim();
@@ -331,17 +346,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				boolean isOffend = false ; 
 				boolean hasTopicMod = false ;
 				if(!uiForm.isMod()) {
-					String stringKey = forumAdministration.getCensoredKeyword();
-					if(!ForumUtils.isEmpty(stringKey)) {
-						stringKey = stringKey.toLowerCase() ;
-						String []censoredKeyword = ForumUtils.splitForForum(stringKey) ;
-						checksms = checksms.toLowerCase().trim();
-						for (String string : censoredKeyword) {
-							if(checksms.indexOf(string.trim()) >= 0) {isOffend = true ;break;}
-							if(postTitle.toLowerCase().indexOf(string.trim()) >= 0){isOffend = true ;break;}
-						}
+					String []censoredKeyword = uiForm.getCensoredKeyword(sProvider);
+					checksms = checksms.toLowerCase().trim();
+					for (String string : censoredKeyword) {
+						if(checksms.indexOf(string.trim().toLowerCase()) >= 0) {isOffend = true ;break;}
 					}
-					
 					if(post.getUserPrivate() != null && post.getUserPrivate().length == 2)isPP = true;
 					if((!uiForm.isMP || !isPP) && uiForm.topic != null) hasTopicMod = uiForm.topic.getIsModeratePost() ;
 				}
@@ -384,7 +393,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 				UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
 				UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class) ;
 				boolean isParentDelete = false;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				boolean isNew = false;
 				try {
 					if(!ForumUtils.isEmpty(uiForm.postId)) {
