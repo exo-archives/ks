@@ -211,8 +211,17 @@ public class MultiLanguages {
 		}
 		return Str;
 	}
+
+  private static List<String> ValuesToList(Value[] Val) throws Exception {
+  	List<String> list = new ArrayList<String>();
+  	if(Val.length < 1) return list;
+  	for(int i = 0; i < Val.length; ++i) {
+  		list.add(Val[i].getString() );
+  	}
+  	return list;
+  }
   
-  private long [] ValuesToLong(Value[] Val) throws Exception {
+ /* private long [] ValuesToLong(Value[] Val) throws Exception {
   	if(Val.length < 1) return new long[]{0} ;
   	long[] d = new long[Val.length] ;
   	for(int i = 0; i < Val.length; ++i) {
@@ -233,7 +242,7 @@ public class MultiLanguages {
   	}
   	return values;
   }
-  
+  */
   private static Node getLanguageNodeByLanguage(Node questionNode, String language) throws Exception{
   	if(language.equals(questionNode.getProperty("exo:language").getString())) {
   		return questionNode ;
@@ -698,10 +707,9 @@ public class MultiLanguages {
   public static void voteQuestion(Node questionNode, String userName, int number) throws Exception {
   	if(questionNode.hasProperty("exo:markVote") && questionNode.hasProperty("exo:usersVote")) {
   		double mark = questionNode.getProperty("exo:markVote").getDouble() ;
-  		String[] users = ValuesToStrings(questionNode.getProperty("exo:usersVote").getValues()) ;
-  		double currentMark = (mark * users.length + number) / (users.length + 1) ;
   		List<String> currentUsers = new ArrayList<String>() ;
-  		currentUsers.addAll(Arrays.asList(users)) ;
+  		currentUsers.addAll(ValuesToList(questionNode.getProperty("exo:usersVote").getValues())) ;
+  		double currentMark = (mark * currentUsers.size() + number) / (currentUsers.size() + 1) ;
   		currentUsers.add(userName + "/" + number) ;
   		questionNode.setProperty("exo:markVote", currentMark) ;
   		questionNode.setProperty("exo:usersVote", currentUsers.toArray(new String[]{})) ;

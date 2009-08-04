@@ -1172,22 +1172,53 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(!faqService_.isExisting(questions.viewingQuestionId_)){
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//questions.setIsNotChangeLanguage() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return ;
 			}
-			int number = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID));
-    	faqService_.voteQuestion(questions.viewingQuestionId_, FAQUtils.getCurrentUser(), number);
-      //questions.setIsNotChangeLanguage() ;
+			String userName = FAQUtils.getCurrentUser();
+			int number = Integer.parseInt(objectId);
+    	faqService_.voteQuestion(questions.viewingQuestionId_, userName, number);
+    	Question question = faqService_.getQuestionById(questions.viewingQuestionId_);
+    	if(question != null) {
+        if(questions.questionMap_.containsKey(question.getId())){
+        	questions.questionMap_.put(question.getId(), question);
+        } else if(questions.questionMap_.containsKey(question.getLanguage())){
+        	questions.questionMap_.put(question.getLanguage(), question);
+        }
+    	}
       event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
-			
 		}
 	}
 
+	static  public class UnVoteQuestionActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ; 
+			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
+			if(!faqService_.isExisting(questionId)){
+				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				return ;
+			}
+			String userName = FAQUtils.getCurrentUser();
+			faqService_.unVoteQuestion(questionId, userName) ;
+			Question question = faqService_.getQuestionById(questionId);
+    	if(question != null) {
+    		if(questions.questionMap_.containsKey(question.getId())){
+        	questions.questionMap_.put(question.getId(), question);
+        } else if(questions.questionMap_.containsKey(question.getLanguage())) {
+        	questions.questionMap_.put(question.getLanguage(), question);
+        }
+    	}
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class));
+		}
+	}
+	
 	static  public class MoveQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
@@ -1409,22 +1440,6 @@ public class UIQuestions extends UIContainer {
 	      e.printStackTrace();
       } 
 			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-		}
-	}
-	
-	static  public class UnVoteQuestionActionListener extends EventListener<UIQuestions> {
-		public void execute(Event<UIQuestions> event) throws Exception {
-			UIQuestions uiQuestions = event.getSource() ; 
-			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-			if(!faqService_.isExisting(questionId)){
-				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//uiQuestions.setIsNotChangeLanguage() ;
-				return ;
-			}
-			faqService_.unVoteQuestion(questionId, FAQUtils.getCurrentUser()) ;			
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class));
 		}
 	}
 	
