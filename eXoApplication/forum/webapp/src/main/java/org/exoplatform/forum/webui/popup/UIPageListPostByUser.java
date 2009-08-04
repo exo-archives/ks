@@ -30,6 +30,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
@@ -91,28 +92,28 @@ public class UIPageListPostByUser extends UIContainer {
 	private List<Post> getPostsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		List<Post> posts = null;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getPagePostByUser(sProvider, this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
+			JCRPageList pageList	= forumService.getPagePostByUser(this.userName, this.userProfile.getUserId(), isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null) pageList.setPageSize(6) ;
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}finally {
-			sProvider.close();
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;
 		return posts ;
 	}
 	
-	private Post getPostById(String postId) {
+	private Post getPostById(String postId) throws Exception {
 		for(Post post : this.posts) {
 			if(post.getId().equals(postId)) return post ;
 		}
-		return null ;
+		Post post = (Post)forumService.getObjectNameById(postId, Utils.POST);
+		return post ;
 	}
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostByUser> {
@@ -127,11 +128,11 @@ public class UIPageListPostByUser extends UIContainer {
 			}
 			boolean isRead = true;
 			if(uiForm.userProfile.getUserRole() > 0) {
-				String path =	post.getPath().replaceFirst("/exo:applications/ForumService/", "");
+				String path =	post.getPath();
 				String []id = path.split("/") ;
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
+				int l = id.length;
 				try {
-					Category category = uiForm.forumService.getCategory(sProvider, id[0]);
+					Category category = uiForm.forumService.getCategory(id[l-4]);
 					if(category == null) {
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						return ;
@@ -146,9 +147,9 @@ public class UIPageListPostByUser extends UIContainer {
 					}
 					if(isRead) {
 						String path_ = "" ;
-						Forum forum = uiForm.forumService.getForum(sProvider,id[0] , id[1] ) ;
-						if(forum != null ) path_ = forum.getPath()+"/"+id[2] ;
-						Topic topic = uiForm.forumService.getTopicByPath(sProvider, path_, false) ;
+						Forum forum = uiForm.forumService.getForum(id[l-4] , id[l-3] ) ;
+						if(forum != null ) path_ = forum.getPath()+"/"+id[l-2] ;
+						Topic topic = uiForm.forumService.getTopicByPath(path_, false) ;
 						if(forum == null || topic == null) {
 							String[] s = new String[]{};
 							uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
@@ -184,8 +185,6 @@ public class UIPageListPostByUser extends UIContainer {
 				} catch (Exception e) {
 					String[] s = new String[]{};
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", s, ApplicationMessage.WARNING)) ;
-				}finally {
-					sProvider.close();
 				}
 			}
 			if(isRead){
