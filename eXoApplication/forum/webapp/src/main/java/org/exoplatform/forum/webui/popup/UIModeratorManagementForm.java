@@ -666,15 +666,15 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     				removeModerateForum.add(string) ;
     			}
     		}
-    		System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
+//    		System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
     		if(!newModeratorsForum.isEmpty())
     			uiForm.forumService.saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), true);
     		userRole = 1;
     		isSetGetNewListForum = true ;
     	}
-    	System.out.println("\n\n oldModerateForum " + oldModerateForum.toString());
+//    	System.out.println("\n\n oldModerateForum " + oldModerateForum.toString());
     	if(!removeModerateForum.isEmpty()) {
-    		System.out.println("\n\nremoveModerateForum " + removeModerateForum.toString());
+//    		System.out.println("\n\nremoveModerateForum " + removeModerateForum.toString());
     		uiForm.forumService.saveModerateOfForums(removeModerateForum, userProfile.getUserId(), false);
     		isSetGetNewListForum = true ;
     	}
@@ -733,7 +733,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
     	if(userRole == 1 && userTitle.equals(uiForm.permissionUser[2])) {
     		userTitle = uiForm.permissionUser[1];
     	}
-    	System.out.println("\n\n userTitle: " +userTitle );
+//    	System.out.println("\n\n userTitle: " +userTitle );
     	String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
     	signature = ForumTransformHTML.enCodeHTML(signature);
       boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
