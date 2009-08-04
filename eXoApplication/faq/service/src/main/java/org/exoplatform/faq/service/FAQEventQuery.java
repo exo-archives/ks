@@ -525,17 +525,43 @@ public String getQuery() throws Exception {
     	if(text != null && text.length() > 0 ) {
       	queryString.append(" jcr:contains(., '").append(text).append("')") ;    		
       }
-    	
+      // search on viewing categories 
     	if(viewingCategories.size() > 0) {
-    		queryString.append(" and (") ;
+    		queryString.append(" and (") ;    		
     		int i = 0 ;
     		for(String catId : viewingCategories) {
     			if(i > 0) queryString.append(" or ");
-    			queryString.append("(exo:categoryId='").append(catId).append("')");
+    			//on questions
+    			queryString.append("(@exo:categoryId='").append(catId).append("')");
+    			//on categories
+    			queryString.append(" or @exo:id='").append(catId).append("'");
+    			queryString.append(" and (") ;
+    			queryString.append(" not(@exo:userPrivate)") ;
+    			// search restricted audience in category
+        	if(userMembers != null && userMembers.size() > 0) {
+        		for(String id : userMembers) {
+        			queryString.append(" or @exo:userPrivate='").append(id).append("'");        			
+        		}
+        	}
+        	queryString.append(" ) ") ;
     			i++ ;
     		}
     		queryString.append(")") ;
-    	}    	
+    	}
+    	
+    	// search restricted audience
+    	/*if(userMembers != null && userMembers.size() > 0) {
+    		queryString.append(" and (") ;
+    		int k = 0 ;
+    		for(String id : userMembers) {
+    			if(k > 0) queryString.append(" or ");
+    			queryString.append("(@exo:userPrivate='").append(id).append("')");
+    			k ++ ;
+    		}
+    		queryString.append(" )") ;
+  		}else {
+  			queryString.append(" and not(@exo:userPrivate)") ;
+  		}*/
     	
     	if(fromDate != null){
   			queryString.append(" and (@exo:createdDate >= xs:dateTime('").append(ISO8601.format(fromDate)).append("'))") ;

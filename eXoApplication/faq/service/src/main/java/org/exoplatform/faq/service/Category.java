@@ -35,7 +35,7 @@ public class Category {
   private String id ;
   private long index;
   private String name ;
-  private String[] userPrivate ;
+  private String[] userPrivate = null;
   private String description ;
   private boolean isModerateQuestions = false ;
   private boolean isModerateAnswers = false ;
@@ -51,7 +51,7 @@ public class Category {
    */
   public Category() {
     id = "Category" + IdGenerator.generate() ;
-    userPrivate = new String[] {" "};
+    //userPrivate = new String[] {" "};
   }
   
   public boolean isView() {

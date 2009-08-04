@@ -1883,8 +1883,7 @@ public class JCRDataStorage {
 			while (iter.hasNext()) {
 				node_ = (Node) iter.nextNode();
 				if (node_.hasProperty("exo:userPrivate")) {
-					str_ = ValuesToStrings(node_.getProperty("exo:userPrivate")
-							.getValues());
+					str_ = ValuesToStrings(node_.getProperty("exo:userPrivate").getValues());
 					if (str_.length > 0 && !str_[0].equals(" ")) {
 						str_ = Utils.compareStr(str_, str);
 						node_.setProperty("exo:userPrivate", str_);
@@ -2017,7 +2016,7 @@ public class JCRDataStorage {
 		return null ;
 	}
 	
-	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> userView) throws Exception {
+	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
 		//System.out.println("\n\n categoryID =====>" + categoryId);
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> catList = new ArrayList<Category>() ;
@@ -2025,11 +2024,19 @@ public class JCRDataStorage {
 			Node parentCategory ;
 			if(categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) parentCategory = getCategoryHome(sProvider, null) ;
 			else parentCategory = getFAQServiceHome(sProvider).getNode(categoryId) ;
-			StringBuffer queryString = null;
-			if(isGetAll) queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
-																															append("/element(*,exo:faqCategory) order by ");				
-			else queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
-																											append("/element(*,exo:faqCategory)[@exo:isView='true']order by ");
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath());
+			if(isGetAll) queryString.append("/element(*,exo:faqCategory) order by ");				
+			else {
+				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate)") ;
+				if(limitedUsers != null){
+					for(String id : limitedUsers) {
+						queryString.append(" or @exo:userPrivate = '").append(id).append("' ") ;
+						queryString.append(" or @exo:moderators = '").append(id).append("' ") ;
+					}
+				}
+				queryString.append(" )] order by ");
+				
+			}
 			//order by and ascending or descending
 			if(faqSetting.getOrderBy().equals("created")) {
 				if(faqSetting.getOrderType().equals("asc")) queryString.append("@exo:createdDate ascending") ;
@@ -2038,7 +2045,7 @@ public class JCRDataStorage {
 				if(faqSetting.getOrderType().equals("asc")) queryString.append("@exo:index ascending") ;
 				else queryString.append("@exo:index descending") ;
 			}
-			//System.out.println("\n\n " + queryString.toString());
+			//System.out.println("\n\n " + queryString.toString() + "\n\n");
 			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
@@ -2441,10 +2448,10 @@ public class JCRDataStorage {
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager() ;
+			//System.out.println("Query ====>" + eventQuery.getQuery());
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			//System.out.println("result ====>" + iter.getSize());
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
