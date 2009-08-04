@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.bouncycastle.jce.provider.JDKDSASigner.stdDSA;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -434,5 +435,15 @@ public class ForumUtils {
 			link = "javascript:ajaxGet('" + link +"&ajaxRequest=true')";
 		}
 		return link;
+	}
+	
+	static public String getCalculateListEmail(String s) throws Exception{
+		String []strs = splitForForum(s);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < strs.length; i++) {
+	    builder.append("<span title='").append(strs[i]).append("'>").append(getSubString(strs[i], 15)).append("</span>");
+	    if(i > 0) builder.append(",<br/>");
+    }
+		return builder.toString();
 	}
 }

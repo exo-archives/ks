@@ -20,7 +20,7 @@
 		<thead>
 			<tr>
 				<th><%=_ctx.appRes("UIPrivateMessageForm.label.MailList");%></th>
-				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.To");%></th>
+				<th style="width:140px"><%=_ctx.appRes("UIPrivateMessageForm.label.To");%></th>
 				<th style="width:120px"><%=_ctx.appRes("UIPrivateMessageForm.label.SendDate");%></th>
 				<th style="width:40px"><%=_ctx.appRes("UIPrivateMessageForm.label.Action");%></th>
 			</tr>
@@ -40,7 +40,8 @@
 					String mailId = mail.getId();
 					String nameMail = mail.getName() ;
 					if(mail.getIsUnread())nameMail = "<b>" + nameMail + "</b>";
-					String fromUser = mail.getSendTo().replaceAll(",",", ") ;
+					String fromUser = mail.getSendTo();
+					fromUser = ForumUtils.getCalculateListEmail(fromUser);
 					fromDate.setTime(mail.getReceivedDate().getTime() - setTime);
 					String strFromDate = ForumUtils.getFormatDate(formatDate,fromDate);
 		%>
