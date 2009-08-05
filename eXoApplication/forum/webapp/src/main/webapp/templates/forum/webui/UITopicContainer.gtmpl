@@ -585,8 +585,7 @@
 											%>
 											<a href="$lastPostLink" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;"><span>&nbsp; &nbsp; &nbsp;</span></a>
 											<% } %>
-											<div class="FloatLeft">$approved</div>
-											<div style="clear:left;"><span></span></div>
+											<span>$approved</span>
 										</div>
 										<div>
 											<% String viewTopicBy = uicomponent.getScreenName(topicBy); %>
