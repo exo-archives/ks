@@ -85,8 +85,9 @@ public class UIQuickSearch  extends UIForm {
 				FAQService faqService = FAQUtils.getFAQService() ;
 				List<ObjectSearchResult> list = null ;
 				FAQEventQuery eventQuery = new FAQEventQuery();
-				eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
-				
+				//System.out.println("FAQUtils.getCurrentUser() ======>" + FAQUtils.getCurrentUser());
+			  eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+				//System.out.println("eventQuery ======>" + eventQuery.getUserMembers().size());				
 				eventQuery.setText(text);
 				eventQuery.setType("categoryAndQuestion");
 				try {

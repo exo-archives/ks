@@ -149,10 +149,12 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(oldName_ != null && oldName_.trim().length() > 0) getUIStringInput(FIELD_NAME_INPUT).setValue(oldName_) ;
 			else getUIStringInput(FIELD_NAME_INPUT).setValue("Root") ;
 			String userPrivate = null;
-			for(String str : cat.getUserPrivate()) {
-				if(userPrivate != null) userPrivate = userPrivate + ", " + str;
-				else userPrivate = str ;
-			}		
+			if(cat.getUserPrivate() != null) {
+				for(String str : cat.getUserPrivate()) {
+					if(userPrivate != null) userPrivate = userPrivate + ", " + str;
+					else userPrivate = str ;
+				}
+			}					
 			getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).setDefaultValue(userPrivate) ;			
 			getUIStringInput(FIELD_INDEX_INPUT).setValue(String.valueOf(cat.getIndex())) ;
 			getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).setDefaultValue(cat.getDescription()) ;
@@ -252,10 +254,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       }
       
       String userPrivate = uiCategory.getUIStringInput(FIELD_USERPRIVATE_INPUT).getValue() ;
-      /*if(userPrivate != null && userPrivate.trim().length() > 0) {
-      	userPrivate = uiCategory.removeSpaceInString(userPrivate);
-      	userPrivate = uiCategory.filterItemInString(userPrivate) ;
-      }*/
       String erroUser = FAQUtils.checkValueUser(userPrivate) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
     		Object[] args = { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser };
@@ -263,6 +261,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
+      String[] userPrivates = null ;
+      if(userPrivate != null && userPrivate.trim().length() > 0) {
+      	userPrivates = FAQUtils.splitForFAQ(userPrivate) ;
+      }
       /*moderator = uiCategory.removeSpaceInString(moderator) ;
       moderator = uiCategory.filterItemInString(moderator) ;*/
       erroUser = FAQUtils.checkValueUser(moderator) ;
@@ -277,10 +279,10 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       Boolean moderateAnswer = uiCategory.getUIFormCheckBoxInput(FIELD_MODERATE_ANSWERS_CHECKBOX).isChecked() ;
       boolean viewAuthorInfor = uiCategory.getUIFormCheckBoxInput(VIEW_AUTHOR_INFOR).isChecked();
       String[] users = FAQUtils.splitForFAQ(moderator) ;
-      String userPrivates[] = FAQUtils.splitForFAQ(userPrivate) ;
+      
 			
 			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
-			UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			//UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Category cat ;
 			if(isAddNew_) {

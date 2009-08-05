@@ -102,7 +102,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			System.out.println("categoryID=>"+ id);
+			//System.out.println("categoryID=>"+ id);
 			FAQService faqService = FAQUtils.getFAQService() ;
 			UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
 			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
@@ -114,7 +114,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 			}
 			uiQuestions.setCategoryId(id) ;
 			uiQuestions.setDefaultLanguage();
-			uiQuestions.setPath(id) ;
+			uiQuestions.updateCurrentQuestionList() ;
 			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;				
 			breadcumbs.setUpdataPath(id);
 			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
@@ -130,7 +130,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultQuickSearch = event.getSource() ;
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			System.out.println("questionID ==>" + id);
+			//System.out.println("questionID ==>" + id);
 			FAQService faqService = FAQUtils.getFAQService() ;
 			try {				
 				UIFAQPortlet faqPortlet = resultQuickSearch.getAncestorOfType(UIFAQPortlet.class) ;
@@ -138,9 +138,12 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				//uiQuestions.pageList.setObjectId(id.substring(id.lastIndexOf("/") + 1));
 				String categoryId = faqService.getCategoryPathOf(id) ; 
 				uiQuestions.setCategoryId(categoryId) ;
+				//uiQuestions.updateCurrentLanguage() ;
 				uiQuestions.setDefaultLanguage() ; 
 				uiQuestions.viewingQuestionId_ = id ;
-				uiQuestions.setPath(categoryId) ;
+				uiQuestions.updateCurrentQuestionList() ;
+				uiQuestions.updateCurrentLanguage() ;
+				
 				UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 				breadcumbs.setUpdataPath(categoryId) ;
 				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);

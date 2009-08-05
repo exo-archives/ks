@@ -133,12 +133,9 @@ public class UICategories extends UIContainer{
 	
 	public String getCategoryPath() { return categoryId_ ;}
 	public void setPathCategory(String categoryPath){
-		//System.out.println("categoryPath ===>" + categoryPath) ;
 		this.categoryId_ = categoryPath;
 		if(categoryPath.indexOf("/") >= 0)	this.parentCateID_ = categoryPath.substring(0, categoryPath.lastIndexOf("/")) ;
 		else this.parentCateID_ = categoryPath ; 
-		//System.out.println("categoryId_ ===>" + categoryId_) ;
-		//System.out.println("parentCateID_ ===>" + parentCateID_) ;
 		this.font_weight = new String[]{"bold", "none", "none"};
 	}
 	
