@@ -19,7 +19,7 @@
  												<th style="width:18px"><%= _ctx.appRes("ResultQuickSearch.title.icon"); %></th>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.name"); %></th>
  												<th><%= _ctx.appRes("ResultQuickSearch.title.createdate"); %></th>
- 												<th style="width:20px;"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
+ 												<th style="width:60px;"><%= _ctx.appRes("ResultQuickSearch.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
