@@ -643,4 +643,9 @@ UIFAQPortlet.prototype.voteAnswerUpDown = function(imageId, isVote){
 	}
 };
 
+UIFAQPortlet.prototype.openDiscussLink = function(link) {
+	link = link.replace(/&amp;/g,"&");
+	window.open(link);
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

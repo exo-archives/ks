@@ -142,8 +142,7 @@ public class UIQuestions extends UIContainer {
 	public String backPath_ = "" ;
 	public static String language_ = FAQUtils.getDefaultLanguage() ;
 	//private List<Watch> watchList_ = new ArrayList<Watch>() ;
-	private Topic topic = new Topic();
-	
+	private String discussId = "";
 	private String[] firstTollbar_ = new String[]{"AddNewQuestion", "QuestionManagament"} ;
 	private String[] menuCateManager = new String[]{"EditCategory", "AddCategory", "DeleteCategory", "Export", "Import",} ;
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
@@ -188,11 +187,7 @@ public class UIQuestions extends UIContainer {
 		url = url.replaceFirst("http://", "") ;
 		url = url.substring(0, url.indexOf("/")) ;
 		url = "http://" + url;
-		topic = new Topic();
-		if(!FAQUtils.isFieldEmpty(topicId)) {
-			topic.setId(topicId);
-		}
-		link = link.replaceFirst("OBJECTID", topic.getId());
+		link = link.replaceFirst("OBJECTID", topicId);
 		link = url + link;
 		return link;
 	}
@@ -1356,12 +1351,12 @@ public class UIQuestions extends UIContainer {
 				Forum forum = (Forum)forumService.getObjectNameById(forumId, org.exoplatform.forum.service.Utils.FORUM);
 				String []paths = forum.getPath().split("/");
 				categoryId = paths[paths.length - 2];
-				Topic topic = uiForm.topic;
+				Topic topic = new Topic();
 				String topicId = topic.getId() ;
+				uiForm.discussId = topicId;
 				String link = uiForm.getLinkDiscuss(topicId); 
 				link = link.replaceFirst("private", "public");
-				FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-				Question question = faqService.getQuestionById(questionId);
+				Question question = faqService_.getQuestionById(questionId);
 				String userName = question.getAuthor();
 				if(FAQUtils.getUserByUserId(userName) == null) {
 					String temp = userName;
@@ -1391,9 +1386,9 @@ public class UIQuestions extends UIContainer {
 				topic.setLink(link);
 				topic.setIsWaiting(true);
 				forumService.saveTopic(categoryId, forumId, topic, true, false, "");
-				faqService.saveTopicIdDiscussQuestion(questionId, topicId);
+				faqService_.saveTopicIdDiscussQuestion(questionId, topicId);
 				Post post = new Post();
-				JCRPageList pageList = faqService.getPageListAnswer(questionId, false);
+				JCRPageList pageList = faqService_.getPageListAnswer(questionId, false);
 				List<Answer> listAnswer ;
 				if(pageList != null) {
 					listAnswer = pageList.getPageItem(0);
@@ -1415,10 +1410,10 @@ public class UIQuestions extends UIContainer {
 		        ++i;
 	        }
 					if(AllAnswer != null && AllAnswer.length > 0) {
-						faqService.saveAnswer(questionId, AllAnswer);
+						faqService_.saveAnswer(questionId, AllAnswer);
 					}
 				}
-				pageList = faqService.getPageListComment(questionId);
+				pageList = faqService_.getPageListComment(questionId);
 				List<Comment> listComment ;
 				if(pageList != null) {
 					listComment = pageList.getPageItem(0);
@@ -1433,10 +1428,14 @@ public class UIQuestions extends UIContainer {
 					post.setIsApproved(false);
 					forumService.savePost(categoryId, forumId, topicId, post, true, "");
 					comment.setPostId(post.getId());
-					faqService.saveComment(questionId, comment, false);
+					faqService_.saveComment(questionId, comment, false);
 				}
 				uiForm.updateCurrentQuestionList();
       } catch (Exception e) {
+      	uiForm.discussId = "";
+      	UIApplication uiApplication = uiForm.getAncestorOfType(UIApplication.class) ;
+      	uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.Discuss-forum-fall", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 	      e.printStackTrace();
       } 
 			event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;

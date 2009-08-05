@@ -25,7 +25,6 @@
 	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
 	//uicomponent.getQuestions(); 
-	
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
 %>
 
@@ -311,11 +310,10 @@
 																	if(uicomponent.isDiscussForum()) {
 																		String pathDiscuss = question.getTopicIdDiscuss();
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
-																			String link = uicomponent.getLinkDiscuss();
 															%>
 																		<div class="MenuItem">
 																			<div class="IconItem DiscussForum" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
-																				<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+																				<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
 																			</div>
 																		</div>
 															<%	
@@ -323,10 +321,16 @@
 																	}
 																} 
 																if(uicomponent.isDiscussForum()) {
-																	String pathDiscuss = question.getTopicIdDiscuss();
-																	if(pathDiscuss != null && pathDiscuss.length() > 0){
-																		String link = uicomponent.url("DiscussForum", pathDiscuss);
+																	String topicIdDiscuss = question.getTopicIdDiscuss();
+																	if(topicIdDiscuss != null && topicIdDiscuss.length() > 0){
+																		String link = uicomponent.url("DiscussForum", topicIdDiscuss);
 																		link = FAQUtils.convertLinkToForum(link);
+																		if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
+																			if(topicIdDiscuss.equals(uicomponent.discussId)) {
+																				jsmanager.addJavascript("eXo.faq.UIFAQPortlet.openDiscussLink('"+link+"')");
+																				uicomponent.discussId = "";
+																			}
+																		}
 															%>
 																		<div class="MenuItem">
 																			<div class="IconItem DiscussForum">
@@ -462,18 +466,23 @@
 																			<%
 																				if(uicomponent.currentUser_ != null) {
 																					if(uicomponent.isDiscussForum()) {
-																						String pathDiscuss = question.getTopicIdDiscuss();
-																						if(pathDiscuss == null || pathDiscuss.length() <= 0){
-																							String link = uicomponent.getLinkDiscuss();
+																						String topicIdDiscuss = question.getTopicIdDiscuss();
+																						if(topicIdDiscuss == null || topicIdDiscuss.length() <= 0){
 																			%>
 																				<td style="width:25px">
-																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																						<div class="DiscussForum"><span></span></div>
 																					</a>
 																				</td>
 																			<%		} else {
-																						String link = uicomponent.url("DiscussForum", pathDiscuss);
+																						String link = uicomponent.url("DiscussForum", topicIdDiscuss);
 																						link = FAQUtils.convertLinkToForum(link);
+																						if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
+																							if(topicIdDiscuss.equals(uicomponent.discussId)) {
+																								jsmanager.addJavascript("eXo.faq.UIFAQPortlet.openDiscussLink('"+link+"')");
+																								uicomponent.discussId = "";
+																							}
+																						}
 																			%>
 																				<td style="width:25px">
 																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
@@ -1215,7 +1224,7 @@
 		<%
 			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
 				String divId = uicomponent.getQuestionView();
-				rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToQuestion('"+divId+"');");
+				jsmanager.addJavascript("eXo.faq.UIFAQPortlet.jumToQuestion('"+divId+"');");
 			}
 		%>
 	</div>
