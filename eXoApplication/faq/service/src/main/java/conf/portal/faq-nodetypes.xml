@@ -235,7 +235,7 @@
   
   <nodeType name="exo:faqCategory" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
   	<supertypes>
-  		<supertype>nt:unstructured</supertype>
+  		<supertype>nt:base</supertype>
   	</supertypes>
   	<propertyDefinitions>
   		<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">

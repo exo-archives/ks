@@ -2034,8 +2034,7 @@ public class JCRDataStorage {
 						queryString.append(" or @exo:moderators = '").append(id).append("' ") ;
 					}
 				}
-				queryString.append(" )] order by ");
-				
+				queryString.append(" )] order by ");				
 			}
 			//order by and ascending or descending
 			if(faqSetting.getOrderBy().equals("created")) {
@@ -2555,14 +2554,17 @@ public class JCRDataStorage {
 				while (iter.hasNext()) {
 					nodeObj = (Node) iter.nextNode();
 					nodePath = nodeObj.getPath();
-					if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") > nodePath.indexOf("/Question")){
+					if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Question")){
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
-					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") > nodePath.indexOf("/Category")){
+					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Category")){
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Category") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
+					}	
+					//System.out.println("node path >>" + nodeObj.getPath());
+					if(!searchMap.containsKey(nodeObj.getName()))	{						
+						searchMap.put(nodeObj.getName(), getResultObj(nodeObj)) ;
 					}					
-					if(!searchMap.containsKey(nodeObj.getName()))	searchMap.put(nodeObj.getName(), getResultObj(nodeObj)) ;					
 				}
 				return	Arrays.asList(searchMap.values().toArray(new ObjectSearchResult[]{}));
 			}			
