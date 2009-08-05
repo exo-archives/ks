@@ -305,8 +305,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
 		if(isUpdate) {
-			this.topic =	topic ;
 			this.topicId = topic.getId() ;
+			this.topic =	forumService.getTopic(categoryId, forumId, topicId, "") ;
 			UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(topic.getTopicName()));

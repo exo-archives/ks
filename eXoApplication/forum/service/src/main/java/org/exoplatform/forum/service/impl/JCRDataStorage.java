@@ -2023,7 +2023,7 @@ public class JCRDataStorage {
 		topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
 		topicNew.setDescription(reader.string("exo:description"));
 		topicNew.setTopicType(reader.string("exo:topicType", " "));
-		topicNew.setPostCount(reader.l("setPostCount"));
+		topicNew.setPostCount(reader.l("exo:postCount"));
 		topicNew.setViewCount(reader.l("exo:viewCount"));
 		topicNew.setNumberAttachment(reader.l("exo:numberAttachments"));
 		topicNew.setIcon(reader.string("exo:icon"));

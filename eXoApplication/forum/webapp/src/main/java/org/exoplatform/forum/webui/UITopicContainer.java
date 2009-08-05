@@ -386,7 +386,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings("unchecked")
   private Topic getTopicByAll(String topicId) throws Exception {
-		List<Topic> listTopic = this.pageList.getPage(1) ;
+		List<Topic> listTopic = this.pageList.getAll() ;
 		for (Topic topic : listTopic) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}

@@ -212,7 +212,7 @@
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
 										actionBookmark += ";" + uicomponent.event("RSS", forumId)
-										String lineHeight = "line-height:12px;";
+										String lineHeight = "line-height:14px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height:28px;";
 										}
@@ -223,25 +223,28 @@
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleNoNewPostForum"><span></span></div></td>
 											<td>
-											<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
-														String lastRead = uicomponent.event("OpenLastReadTopic", ids+"/"+lastReadPostOfForum);
-											%>
-												<div class="ScrollRightButton" title="Go to last read post."><a href="$lastRead" style="display:block;line-height:16px;">&nbsp;</a></div>
-											<% } %>
-												<div style="float:left; line-height:16px;">
+												<span>
 														<% ++rCNB; %>
 													<%if(uicomponent.useAjax){%>
-															<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+															<a ctxMenuId="UIPopupCategory${rCNB}" actions="<%=uicomponent.event("OpenForumLink", ids)%>;" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
 													<%} else {%>
-															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity">&nbsp;</span>
+															<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" class="ForumTitle ActionLink" style="$lineHeight;font-weight:$fontWeight" >$forumTitle</a><span class="ForumQuantity"></span>
 													<%}%>
 													<div id="UIPopupCategory${rCNB}" style="display:none;">
 														<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 															<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 														</div>
 													</div>
-												</div>
-												<div style="clear:left;"><span></span></div>
+												</span>
+												
+											<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
+												String lastRead = uicomponent.event("OpenLastReadTopic", ids+"/"+lastReadPostOfForum);
+											%>
+												<a href="$lastRead" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
+											<% } %>
+												<div><span></span></div>
+
+
 												<div class="ForumDescription">$forumDescription</div>
 											</td>
 											<%if(topicNewPost != null) {

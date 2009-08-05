@@ -90,10 +90,12 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setLastPostBy(reader.string("exo:lastPostBy"));
     topicNew.setOwner(reader.string("exo:owner"));
     topicNew.setTopicName(reader.string("exo:name"));
-    topicNew.setTopicType(reader.string("exo:topicType"));
+    topicNew.setTopicType(reader.string("exo:topicType", " "));
     topicNew.setDescription(reader.string("exo:description"));
     topicNew.setPostCount(reader.l("exo:postCount"));
     topicNew.setViewCount(reader.l("exo:viewCount"));
+    topicNew.setIsPoll(reader.bool("exo:isPoll"));
+    topicNew.setIsSticky(reader.bool("exo:isSticky"));
     if(topicNode.getParent().getProperty("exo:isLock").getBoolean()) topicNew.setIsLock(true);
     else topicNew.setIsLock(reader.bool("exo:isLock")) ;
     topicNew.setIsApproved(reader.bool("exo:isApproved"));
@@ -103,6 +105,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setIsClosed(reader.bool("exo:isClosed"));
     topicNew.setIsWaiting(reader.bool("exo:isWaiting"));
     topicNew.setIsActive(reader.bool("exo:isActive"));
+    topicNew.setVoteRating(reader.d("exo:voteRating"));
     topicNew.setCreatedDate(reader.date("exo:createdDate"));
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));

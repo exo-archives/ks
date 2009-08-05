@@ -534,24 +534,17 @@
 													<div class="StatusIcon Stats" style="margin-left:18px;" title="This topic has a poll"><span></span></div>
 												</div>
 										<%} else {%>
-												<div class="StatusIcon $iconClassTopic" title="$topicType">
-													<span></span>
-												</div>
+												<div class="StatusIcon $iconClassTopic" title="$topicType"><span></span></div>
 										<%}%>
 									</td>
 									
 									<!-- --------------------------------- View name of topic ------------------------------------------------- -->
 									<td>
-										<div style="line-height:16px;">
+										<div style="line-height:13px;">
 										<% if(topic.getIsSticky()) {%>
-											<span class="Text StickyIcon" style="float:left;"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
-										<% } 
-											 if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
-													String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
-										%>
-												<div class="ScrollRightButton" title="Go to last read post."><a href="$lastPostLink" style="display:block;line-height:16px;">&nbsp;</a></div>
+											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<div style="float:left">
+											<span>
 												<% ++rCNB; %>
 												<%if(uicomponent.useAjax){%>
 														<a ctxMenuId="UIPopupCategory${rCNB}" actions="$link;" href="$url" title="$titlePost" class="ActionLink $title PopupMenu">$topicTitle</a>
@@ -564,27 +557,35 @@
 														<div action="$actionBookmark" class="ClickPopupContent"><span></span></div>
 													</div>
 												</div>
-											</div>
-											<% if(max_page > 1) { %>
-											<span>&nbsp;(</span>	
-											<%	int t = 1;
-												while(t <= max_page) {
-												if(t <= 5) { 
-													number = String.valueOf(t) ;
+											</span>
+											<span>
+												<% if(max_page > 1) { %>
+												<span>&nbsp;(</span>	
+												<%	int t = 1;
+													while(t <= max_page) {
+													if(t <= 5) { 
+														number = String.valueOf(t) ;
+												%>
+												<a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink PopupMenu" href="$url">$number</a>
+												<% }
+												t = t + 1 ;
+												}
+												if(max_page> 5) { 
+													number = String.valueOf(max_page) ;
+												%>
+												... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
+												<%} else {%>
+												<span>)</span>
+												<%} 
+												} %>
+											</span>
+											
+											<% if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
+													String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
 											%>
-											<a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>" class="ActionLink PopupMenu" href="$url">$number</a>
-											<% }
-											t = t + 1 ;
-											}
-											if(max_page> 5) { 
-												number = String.valueOf(max_page) ;
-											%>
-											... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
-											<%} else {%>
-											<span>)</span>
-											<%} 
-											} %>
-											$approved
+											<a href="$lastPostLink" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;"><span>&nbsp; &nbsp; &nbsp;</span></a>
+											<% } %>
+											<div class="FloatLeft">$approved</div>
 											<div style="clear:left;"><span></span></div>
 										</div>
 										<div>
