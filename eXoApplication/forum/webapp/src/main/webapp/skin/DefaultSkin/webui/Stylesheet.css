@@ -188,7 +188,7 @@
 	font-weight:normal;
 }
 
-.UIForumPortlet .ForumToolbar .SeparatorLine {
+.UIForumPortlet .ForumToolbar .ForumSeparatorLine {
 	background:url(background/SeparatorLine2x19.gif) no-repeat;
 	width:2px; height:19px;
 	margin:3px;

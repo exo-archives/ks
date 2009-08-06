@@ -43,7 +43,7 @@
 					<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
-					<div class="SeparatorLine"><span></span></div>
+					<div class="ForumSeparatorLine"><span></span></div>
 					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 							<div class="LeftOverButton">

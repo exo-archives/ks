@@ -76,7 +76,7 @@
 					  	link = link.replaceFirst("private", "public");
 					  }
 				  %>
-					<div class="SeparatorLine" style="float:right;">
+					<div class="ForumSeparatorLine" style="float:right;">
 						<div class="ShareLink">
 							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
 						</div>

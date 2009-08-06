@@ -44,7 +44,7 @@
 	width: auto;
 } 
 
-.UIForumCategory .ForumToolbar .SeparatorLine {
+.UIForumCategory .ForumToolbar .ForumSeparatorLine {
 	float: right;
 	width: 2px; height: 19px;
 	margin: 0px 5px 0px 5px;

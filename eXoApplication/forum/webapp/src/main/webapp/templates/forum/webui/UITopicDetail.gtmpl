@@ -273,7 +273,7 @@
 								</div>
 							</div>
 							<% } %>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="ForumSeparatorLine"><span></span></div>
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -337,7 +337,7 @@
 								</div>
 							</div>
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
-							<div class="SeparatorLine"><span></span></div>
+							<div class="ForumSeparatorLine"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton">
@@ -483,7 +483,7 @@
 							</div>
 						<% } %>	
 						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="ForumSeparatorLine"><span></span></div>
 							<div class="ButtonHeadBar">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=uicomponent.FIELD_ADD_TAG%>').focus();">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
