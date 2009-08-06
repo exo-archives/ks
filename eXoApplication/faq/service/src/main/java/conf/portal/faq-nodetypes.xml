@@ -289,20 +289,24 @@
         </requiredPrimaryTypes>
       </childNodeDefinition>
       
-      <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
-        onParentVersion="COPY" protected="false" sameNameSiblings="false">
-        <requiredPrimaryTypes>
-          <requiredPrimaryType>nt:base</requiredPrimaryType>
-        </requiredPrimaryTypes>
-      </childNodeDefinition>
-      
       <childNodeDefinition name="*" defaultPrimaryType="exo:faqRSS" autoCreated="false" mandatory="false" 
       	onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>nt:base</requiredPrimaryType>
+					<requiredPrimaryType>exo:faqRSS</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>		
 			
+    </childNodeDefinitions>
+  </nodeType>
+
+  <nodeType name="mix:faqSubCategory" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
+    <childNodeDefinitions>
+      <childNodeDefinition name="*" defaultPrimaryType="exo:faqCategory" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" sameNameSiblings="false">
+        <requiredPrimaryTypes>
+          <requiredPrimaryType>exo:faqCategory</requiredPrimaryType>
+        </requiredPrimaryTypes>
+      </childNodeDefinition>      
     </childNodeDefinitions>
   </nodeType>
   	
@@ -458,6 +462,7 @@
       </childNodeDefinition>      
     </childNodeDefinitions>
   </nodeType>
+  
   
   <!--nodeType name="mix:faqi18n" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
     <propertyDefinitions>

@@ -410,6 +410,7 @@ public class JCRDataStorage {
 			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
 		} catch (PathNotFoundException ex) {
 			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
+			categoryHome.addMixin("mix:faqSubCategory") ;
 			categoryHome.setProperty("exo:name", "Root") ;
 			faqServiceHome.save() ;
 			return categoryHome ;
@@ -1824,6 +1825,7 @@ public class JCRDataStorage {
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
+			  newCategory.addMixin("mix:faqSubCategory") ;
 			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 			  addRSSListener(questionHome) ;
 			} else {
@@ -2900,10 +2902,9 @@ public class JCRDataStorage {
 				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
 				return true ;
-			}
-			
+			}			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			//e.printStackTrace() ;
 		}finally{ sProvider.close() ;}	
 		return false ;
 	}
