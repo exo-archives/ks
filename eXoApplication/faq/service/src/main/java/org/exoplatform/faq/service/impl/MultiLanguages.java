@@ -498,8 +498,7 @@ public class MultiLanguages {
     	answerNode.setProperty("exo:id", answer.getId());
     	answerNode.setProperty("exo:questionId", questionNode.getName()) ;    	
     	answerNode.setProperty("exo:responseLanguage", language) ;
-    	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;
-    	
+    	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;    	
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
@@ -601,8 +600,9 @@ public class MultiLanguages {
   		calendar = GregorianCalendar.getInstance() ;
   		calendar.setTime(new Date()) ;
   		commentNode.setProperty("exo:dateComment", calendar) ;
-  		questionNode.getSession().save();
-  	}else questionNode.save();
+  		//questionNode.getSession().save();
+  	}//else questionNode.save();
+  	questionNode.save();
   }
   
   protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{

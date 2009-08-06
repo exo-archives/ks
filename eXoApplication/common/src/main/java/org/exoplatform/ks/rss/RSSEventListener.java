@@ -53,24 +53,34 @@ public class RSSEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				path = ev.getPath();
-				
+				//System.out.println("\n\nType ==> "+ ev.getType());
+				//System.out.println("Path ==> "+ ev.getPath());
 				//if(listPropertyNotGetEvent.contains(path.substring(path.lastIndexOf("/") + 1))) continue;
 				if(ev.getType() == Event.NODE_ADDED){
 					//System.out.println("\n\n ==> Event.NODE_ADDED");
-					process.generateRSS(ev.getPath(), Event.NODE_ADDED);
+					int length = ev.getPath().indexOf("/Question") + 41 ;
+					if(length == ev.getPath().length()) {
+						process.generateRSS(ev.getPath(), Event.NODE_ADDED);
+					} else if (ev.getPath().indexOf("/faqCommentHome") > 0 || ev.getPath().indexOf("/faqAnswerHome") > 0) {
+						process.generateRSS(ev.getPath(), Event.PROPERTY_CHANGED);
+					}
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
 					//System.out.println("\n\n ==> Event.PROPERTY_CHANGED");
 					process.generateRSS(path.substring(0, path.lastIndexOf("/")), Event.PROPERTY_CHANGED);
 				}else if(ev.getType() == Event.NODE_REMOVED) {
 					//System.out.println("\n\n ==> Event.NODE_REMOVED");					
-					process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
+					int length = ev.getPath().indexOf("/Question") + 41 ;
+					if(length == ev.getPath().length()) {
+						process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
+					} else if (ev.getPath().indexOf("/faqCommentHome") > 0 || ev.getPath().indexOf("/faqAnswerHome") > 0) {
+						process.generateRSS(ev.getPath().substring(0, ev.getPath().indexOf("/Question") + 41), Event.PROPERTY_CHANGED);
+					}
 				}
-				break ;								
+				//break ;								
 			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}		
-	}
-  
+	}  
 }
 

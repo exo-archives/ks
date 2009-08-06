@@ -166,12 +166,12 @@ public abstract class RSSGenerate {
 	 * the third parameter</i></p>
 	 * <i>Set the second and third parameter is <b><code>null</code></b> when get all items without add any item</i></p>
 	 * @param data							RSS object
-	 * @param idOfObjectChange	id of object which is changed
+	 * @param removeItemId	id of object which is changed
 	 * @return									List of items
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public SyndFeed updateRSSFeed(RSS data, String idOfObjectChange, SyndEntry newEntry) throws Exception{
+	public SyndFeed updateRSSFeed(RSS data, String removeItemId, SyndEntry newEntry) throws Exception{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(data.getContent());
@@ -181,10 +181,10 @@ public abstract class RSSGenerate {
     SyndFeed feed = input.build(doc);
     List<SyndEntry> entries = feed.getEntries();
     //System.out.println("newEntry ====>" + newEntry );
-    //System.out.println("entries before ====>" + entries.size());
-    if(idOfObjectChange != null && idOfObjectChange.trim().length() > 0){
+    System.out.println("entries before ====>" + entries.size());
+    if(removeItemId != null && removeItemId.trim().length() > 0){
 	    for(SyndEntry syndEntry : entries){
-	    	if(syndEntry.getUri().equals(idOfObjectChange)){
+	    	if(syndEntry.getUri().equals(removeItemId)){
 	    		entries.remove(syndEntry);
 	    		break;
 	    	}
@@ -192,7 +192,7 @@ public abstract class RSSGenerate {
     }
 		if(newEntry != null)entries.add(0, newEntry);
 		feed.setEntries(entries);
-		//System.out.println("entries after ====>" + entries.size());
+		System.out.println("entries after ====>" + entries.size());
 		return feed;
 	}
 	

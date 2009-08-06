@@ -85,15 +85,20 @@ public class RSSProcess extends RSSGenerate {
 	 * @param	typeEvent	the type of event
 	 * @throws Exeption
 	 */
-	public void generateRSS(String path, int typeEvent) throws Exception	{
+	public boolean generateRSS(String path, int typeEvent) throws Exception	{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		linkItem = this.getPageLink();
-		if(path.indexOf(FAQ_APP)>0){
-			generateFAQRSS(path, typeEvent, sProvider);
-		} else {
-			generateForumsRSS(path, typeEvent, sProvider);
-		}
-		sProvider.close();
+		try{
+			if(path.indexOf(FAQ_APP)>0){
+				generateFAQRSS(path, typeEvent, sProvider);
+			} else {
+				generateForumsRSS(path, typeEvent, sProvider);
+			}
+		}catch(Exception e) {
+			return false ;
+		}finally{sProvider.close();}
+		
+		return true ;
 	}
 	
 	public void generateForumsRSS(String path, int typeEvent, SessionProvider sProvider ) throws Exception{
@@ -223,6 +228,8 @@ public class RSSProcess extends RSSGenerate {
 	 */
 	public void generateFAQRSS(String path, int typeEvent, SessionProvider sProvider){
 		boolean isNew = false;
+		//System.out.println("generateFAQRSS=====typeEvent====>" + typeEvent);
+		//System.out.println("generateFAQRSS=====path====>" + path);
 		try{
 			appHomeNode = getKSServiceHome(sProvider, FAQ_APP);
 			Node categoryNode = null;
@@ -235,10 +242,13 @@ public class RSSProcess extends RSSGenerate {
 				linkItem += "?portal:componentId=faq&portal:type=action&portal:isSecure=false&uicomponent=UIQuestions&op=ViewQuestion&" +
 											"objectId=";
 				Node questionNode = (Node)appHomeNode.getSession().getItem(path) ;
-				if(!questionNode.isNodeType("exo:faqQuestion") && !questionNode.isNodeType("exo:answer") 
-						&& !questionNode.isNodeType("exo:comment")) return;
+				if(!questionNode.isNodeType("exo:faqQuestion") && !questionNode.isNodeType("exo:answer") && !questionNode.isNodeType("exo:answerHome") 
+						&& !questionNode.isNodeType("exo:comment") && !questionNode.isNodeType("exo:commentHome")) return;
 				else if(questionNode.isNodeType("exo:answer") || questionNode.isNodeType("exo:comment")) {
 					questionNode = questionNode.getParent().getParent();
+					if(!questionNode.isNodeType("exo:faqQuestion")) return ; // Worked on other languages
+				}else if(questionNode.isNodeType("exo:answerHome") || questionNode.isNodeType("exo:commentHome")) {
+					questionNode = questionNode.getParent() ;
 					if(!questionNode.isNodeType("exo:faqQuestion")) return ; // Worked on other languages
 				}
 				String categoreDescription = "";
@@ -309,22 +319,23 @@ public class RSSProcess extends RSSGenerate {
 				addNodeRSS(categoryNode, RSSNode, data, isNew);
 			} else { // removed node
 				//categoryNode = getCategoryNodeById(cateid, sProvider);
-				if(path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0){
+				/*if(path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0){
 					if(path.indexOf("/faqCommentHome") > 0) path = path.substring(0, path.indexOf("/faqCommentHome"));
 					else path = path.substring(0, path.indexOf("/faqAnswerHome"));
 					this.generateFAQRSS(path, Event.PROPERTY_CHANGED, sProvider);
-				} else {
+				} else {*/
 					String categoryPath = path.substring(0, path.indexOf("/questions/")) ;
+					//System.out.println("categoryPath =====> " + categoryPath);
 					categoryNode = (Node)appHomeNode.getSession().getItem(categoryPath) ;
 					while(!categoryNode.isNodeType("exo:faqCategory")) {
 						categoryNode = categoryNode.getParent() ;
 					}
 					removeRSSItem(path.substring(path.lastIndexOf("/") + 1), categoryNode, "");
 					//cateid = null;
-				}
+				//}
 			}			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			//e.printStackTrace() ;
 		}finally{
 			sProvider.close() ;
 		}

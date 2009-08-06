@@ -380,8 +380,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
 					//System.out.println("answers.getlang() =========>" + answers[0].getLanguage());
 					faqService.saveAnswer(question_.getPath(), answers) ;
-					question_.setMultiLanguages(new QuestionLanguage[]{}) ;
-					faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
+					//question_.setMultiLanguages(new QuestionLanguage[]{}) ;
+					//faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
 					
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum, url);
