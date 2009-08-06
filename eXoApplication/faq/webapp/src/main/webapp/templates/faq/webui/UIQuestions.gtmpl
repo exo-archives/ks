@@ -1,1285 +1,1284 @@
-<% 
-	import org.exoplatform.services.jcr.ext.common.SessionProvider;
-	import org.exoplatform.faq.service.FileAttachment;
-	import org.exoplatform.faq.service.Category;
-	import org.exoplatform.faq.service.Question;
-	import org.exoplatform.faq.service.Answer;
-	import org.exoplatform.faq.service.Comment;
-	import org.exoplatform.faq.webui.ValidatorDataInput;
-	import org.exoplatform.faq.webui.FAQUtils;
-	import org.exoplatform.faq.webui.ForumTransformHTML;
-	import org.exoplatform.web.application.JavascriptManager;
+<%
+    import org.exoplatform.services.jcr.ext.common.SessionProvider;
+    import org.exoplatform.faq.service.FileAttachment;
+    import org.exoplatform.faq.service.Category;
+    import org.exoplatform.faq.service.Question;
+    import org.exoplatform.faq.service.Answer;
+    import org.exoplatform.faq.service.Comment;
+    import org.exoplatform.faq.webui.ValidatorDataInput;
+    import org.exoplatform.faq.webui.FAQUtils;
+    import org.exoplatform.faq.webui.ForumTransformHTML;
+    import org.exoplatform.web.application.JavascriptManager;
 
-	String compId = uicomponent.getId(); 
-	def rcontext = _ctx.getRequestContext();
-	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
-	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
-	//jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
-	jsmanager.addJavascript('eXo.faq.UIFAQPortlet.initContextMenu("'+compId+'") ;') ;
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
-	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIFAQPortlet.loadActionScroll();');
-	
-	
-	String url = uicomponent.url("Setting", "OBJECTID");
-	uicomponent.setLink(url);
-	String cateId = uicomponent.getCategoryId();
-	uicomponent.getQuestions(); 
-	/*
-	if(cateId == null || cateId.trim().length() < 1) {
-		uicomponent.setIsModerators();
-	}*/
-	boolean canEditQuestion = uicomponent.getCanEditQuestion();
-	String[] categoryAction = null ;
-	String[] moderatorAction = null ;
-	
-	if(cateId != null && cateId.trim().length() > 0){
-		moderatorAction = uicomponent.getSecondActionCategory();
-	} else {
-		moderatorAction = uicomponent.getActionCategory();
-	}
+    String compId = uicomponent.getId();
+    def rcontext = _ctx.getRequestContext();
+    JavascriptManager jsmanager = rcontext.getJavascriptManager();
+    jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
+    jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
+    jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
+    //jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'");');
+    jsmanager.addJavascript('eXo.faq.UIFAQPortlet.initContextMenu("'+compId+'") ;') ;
+    jsmanager.addJavascript("eXo.faq.UIFAQPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
+jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadActionScroll();', 1500);");
+
+    String url = uicomponent.url("Setting", "OBJECTID");
+    uicomponent.setLink(url);
+    String cateId = uicomponent.getCategoryId();
+    uicomponent.getQuestions();
+    /*
+    if(cateId == null || cateId.trim().length() < 1) {
+        uicomponent.setIsModerators();
+    }*/
+    boolean canEditQuestion = uicomponent.getCanEditQuestion();
+    String[] categoryAction = null ;
+    String[] moderatorAction = null ;
+
+    if(cateId != null && cateId.trim().length() > 0){
+        moderatorAction = uicomponent.getSecondActionCategory();
+    } else {
+        moderatorAction = uicomponent.getActionCategory();
+    }
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
-	<div class="FAQToolbar" style="float:left; width:100%;">
-		<div class="LeftBar">
-			<div class="RightBar">
-				<div class="CenterBar">
-					<table>
-						<tbody>
-							<tr>
-								<td class="ControlButtonContainer">
-									<!-- ================== CustomView action ====================== -->
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-										<div style="cursor:pointer" id = "FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon FAQCustomView" id = "FAQCustomView">
-															<span></span>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
-									
-									<%
-									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
-									 	String linkRss = uicomponent.event("RSS", uicomponent.getRSSLink());
-									%>
-										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkRss">
-												<div class="LeftOverButton">
-													<div class="RightOverButton">
-														<div class="CenterOverButton">
-															<div class="Icon FAQRSS">
-																<a href="javascript:void(0);">RSS</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
-								<%
-								}
-								if(canEditQuestion) {
-								%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this); eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this);"	class="DefaultStyle FAQBar ControlButton">
-									
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="Icon CategoryManager">
-														<div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
-															<a href="javascript:void(0);">Manage Category</a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										
-										<!-- ================================================= Begin popup menu ================================ -->
-										<div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
-											<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
-											
-												<div class="MiddleLeftRightClickPopupMenu">
-													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer" style="margin:0px; padding:3px 0;">
-													<%
-														String[] actionTollbar ;
-														actionTollbar = uicomponent.getMenuCateManager();
-														String linkAction = "" ;
-														String opacity ;
-														for(String action in actionTollbar) {
-															linkAction = uicomponent.event(action, cateId);
-															String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-													%>
-																
-															<div onmousedown="$linkAction" class="MenuItem">
-																<div class="IconItem $action">
-																	<span>$itemLabelView</span>
-																</div>
-															</div>
-													<%
-														}%>
-																	
-														</div>
-													</div>
-												</div>
-											
-											</div>
-										</div>
-									<!-- ================================================= End popup menu ================================ -->
-								
-								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
-								<%
-								}
-								if(canEditQuestion) {
-									String[] actionTollbar ;
-									actionTollbar = uicomponent.getActionTollbar();
-									String linkAction = "" ;
-									String opacity ;
-									for(String action in actionTollbar) {
-										linkAction = uicomponent.event(action, cateId);
-										String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
-								%>
-										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction">
-												<div class="LeftOverButton">
-													<div class="RightOverButton">
-														<div class="CenterOverButton">
-															<div class="Icon $action">
-																<a href="javascript:void(0);">$itemLabelView</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
-								<%
-									}
-								} else {
-									String linkAction =uicomponent.event("AddNewQuestion", cateId);
-								%>
-										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction">
-												<div class="LeftOverButton">
-													<div class="RightOverButton">
-														<div class="CenterOverButton">
-															<div class="Icon AddNewQuestion">
-																<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%></a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="SeparatorLine ControlButton"><span></span></div>
-							<%}%>
-							<% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
-									String actionSetting = uicomponent.event("Setting");
-							%>
-									<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-										<div onclick="$actionSetting" >
-											<div class="LeftOverButton">
-												<div class="RightOverButton">
-													<div class="CenterOverButton">
-														<div class="Icon Setting">
-															<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%></a>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
-								<% } %>
-								<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
-									<!--<div onclick="eXo.faq.UIFAQPortlet.printAll(this)">-->
-									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>">
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="Icon Print">
-														<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="SeparatorLine ControlButton"><span></span></div>
-								<div class="ScrollButtons" style="width:35px;_width:50px;">
-									<div title="Previous">
-										<div title="Next"><span></span></div>
-									</div>
-								</div>
-								<div style="clear:both;"><span></span></div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div style="clear:left;"><span></span></div>
-	<div class="FAQContainer" id="FAQViewContent">
-		<div class="FAQContent">
-<!-- ===================================================== View question ======================================================	-->
-			<%
-				String[] questionActions = null ;
-				if(canEditQuestion) {
-					questionActions = uicomponent.getActionQuestion();
-				} else {
-					questionActions = uicomponent.getActionQuestionWithUser();
-				}
-				List listQuestion = uicomponent.getListQuestion();
-				String questionContent = new String();
-				int questionId = 0 ;
-				
-				String linkQuestion = "" ;
-				for(question in listQuestion) {
-					String qId = question.getId();
-					linkQuestion=uicomponent.event("ViewQuestion", qId);
-					String questionIcon = "" ;
-					String colorViewQuestion = "";
-					if(!question.isActivated() || !question.isApproved()) colorViewQuestion = "gray";
-					if(question.getAnswers() != null && question.getAnswers().length > 0) {
-						questionIcon = "Question" ;
-					} else {
-						questionIcon = "NotResponse" ;
-					}
-					
-					java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
-					
-					if(!uicomponent.getQuestionView().equals(qId)){
-					questionContent = question.getQuestion();
-			%>
-						<div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionId" oncontextmenu="return false;">
-							<div class="$questionIcon" style="float:left"><span></span></div>
-							<div style="width:85%; _width:80%; float:left;">
-									<!-- question content -->
-										<%
-										String titleQuestion = "" ;
-										if(questionContent.length() > 140) {
-											titleQuestion = questionContent ;
-											questionContent = FAQUtils.getSubString(questionContent, 140);
-										%>
-											<div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">$questionContent &nbsp;&nbsp;</div>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
-											<%if(!question.isApproved()) {%>
-													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
-											<%}%>
-											
-									<%} else {
-											titleQuestion = "";
-										%>
-											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
-											<%if(!question.isApproved()) {%>
-													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
-											<%}%>
-									<%}%>
-											<div style="clear:left;"><span></span></div>
-										<% if(titleQuestion.trim().length() > 0) {%>
-											<div id="titleQuestion$questionId" class="questionTitle" style="color:$colorViewQuestion;">
-												$titleQuestion &nbsp;&nbsp;
-											</div>
-									<%}%>
-									<!-- action of this question -->
-									<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none;">
-										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-												<div class="MiddleLeftRightClickPopupMenu">
-													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer"  style="margin:0px; border:solid 1px #f6f6f6">
-															<%
-																String iconView = "" ;
-																for(viewAction in questionActions) {
-																	if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
-																		iconView = viewAction.replace("Question", "");
-																	else
-																		iconView = viewAction ;
-																	String linkView = uicomponent.event(viewAction, qId);
-																	String lockFunction = "" ;
-																	if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-																		linkView = "javaScript:alert('" + 
-																								_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																		lockFunction = "LockFunction" ;
-																	}
-																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-															%>
-																	<div class="MenuItem $lockFunction">
-																		<div class="IconItem $iconView">
-																			<a href="$linkView">$itemLabelView</a>
-																		</div>
-																	</div>
-															<%}%>
-															<!-- action unwatch question -->
-															<%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
-																	<div class="MenuItem">
-																		<div class="IconItem UnWatch">
-																			<a href="<%=uicomponent.event("UnWatchQuestion", qId)%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a>
-																		</div>
-																	</div>
-															<%}%>
-															
-															<!-- action manager watch question -->
-															<%if(uicomponent.canEditQuestion) {
-																	if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
-															%>
-																		<div class="MenuItem" href="javascript:void(0);">
-																			<div class="IconItem WatchQuestionManager">
-																				<a href="<%=uicomponent.event("WatchManager", question.getId())%>"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
-																			</div>
-																		</div>
-															<%	}
-																} 
-																if(uicomponent.currentUser_ != null) {
-																	if(uicomponent.isDiscussForum()) {
-																		String pathDiscuss = question.getTopicIdDiscuss();
-																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
-																			String link = uicomponent.getLinkDiscuss();
-															%>
-																		<div class="MenuItem">
-																			<div class="IconItem DiscussForum" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
-																				<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
-																			</div>
-																		</div>
-															<%	
-																		} 
-																	}
-																} 
-																if(uicomponent.isDiscussForum()) {
-																	String pathDiscuss = question.getTopicIdDiscuss();
-																	if(pathDiscuss != null && pathDiscuss.length() > 0){
-																		String link = uicomponent.url("DiscussForum", pathDiscuss);
-																		link = FAQUtils.convertLinkToForum(link);
-															%>
-																		<div class="MenuItem">
-																			<div class="IconItem DiscussForum">
-																				<a onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
-																			</div>
-																		</div>
-															<%	} 
-																} 
-															%>
-														</div>
-													</div>
-												</div>
-										</div>
-									</div>
-									<!-- finish action of this question -->
-									
-								</div>
-							<div style="clear:left;"><span></span></div>
-						</div>
-						
-						
-				<!-- ============================================== View Question which is selected ===================================== -->
-				<%} else {
-						List listQuestLanguage = uicomponent.getQuestionLangauges(question);
-						SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-						questionContent = question.getQuestion();
-						String responseBy = "..." ;
-						String date = "..." ;
-						//if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
-						//	responseBy = question.getResponseBy();
-						//}
-					%>
-						<div class="QuestionSelect" style="_width:100%;">
-							<div class="DecoratorTL">
-								<div class="DecoratorTR">
-									<div class="DecoratorTC"><span></span></div>
-								</div>
-							</div>
-							<div class="DecoratorML">
-								<div class="DecoratorMR">
-									<div class="DecoratorMC">
-									
-										<div class="QuestionContainer" id="$qId">
-											<table style="_width:98%;">
-												<tr>
-												<% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
-													<td style="width:140px; height:100px;">
-														<div class="ProfileContainer">
-														<%
-															if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-														%>				
-															<div class="AvatarContainer">
-																<div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
-															</div>
-														<%}%>
-														<!-- ========================================= view author's infor ================================ -->
-														<%
-															if(uicomponent.viewAuthorInfor){
-														%>
-															<div class="AuthorInfor" style="text-align:center;">
-																<a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
-																	<span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
-																</a>
-																<%=question.getEmail()%>
-															</div>
-														<%}%>
-														</div>
-													</td>
-												<%}%>
-													<td>
-														<table>
-															<tbody>
-																<tr>
-																	<td>
-																		<!-- Action -->
-																		<table>
-																			<tr>
-																				<!-- action translation question -->
-																				<td style="white-space:nowrap;font-weight:bold;text-align:right;padding-left:5px;">
-																					<%
-																						int countLanguage = 1;
-																						for(String quesLanguage in listQuestLanguage) {
-																							String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage);
-																							String color = "";
-																							if(quesLanguage.equals(question.getLanguage())){
-																								linkView = "javaScript:void(0)";
-																								color = "#914ab6";
-																							}
-																					%>
-																							<a style="line-height:20px;color:$color;" href="$linkView">$quesLanguage</a>
-																					<%	if(countLanguage < listQuestLanguage.size()){%>
-																								 |
-																						<%} else {%>
-																								&nbsp;
-																						<%}
-																							countLanguage ++;
-																						}
-																					%>
-																				</td>
-																				<!-- Action back page -->
-																				<%
-																				if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
-																					String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath());
-																				%>
-																					<td style="width:25px" style="margin-left:10px;">
-																						<div onclick="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>" style="cursor:pointer">
-																							<div class="BackPageFAq"><span></span></div>
-																						</div>
-																					</td>
-																				<%}%>
-																				<!-- action print question -->
-																				<td style="width:25px">
-																					<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
-																							title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>" style="cursor:pointer">
-																						<div class="PrintScrintFAQ"><span></span></div>
-																					</a>
-																				</td>
-																				<!-- action send mail for frend -->
-																				<td style="width:25px">
-																					<%
-																					link = uicomponent.event("SendQuestion",qId);
-																					String SendToFriend = "SendToFriend";
-																					if((!question.isApproved() || !question.isActivated())){
-																						link = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																						SendToFriend = "LockSendToFriend" ;
-																					}
-																					%>
-																					<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
-																						<div class="$SendToFriend"><span></span></div>
-																					</a>
-																				</td>
-																				<!-- action Discuss -->
-																			<%
-																				if(uicomponent.currentUser_ != null) {
-																					if(uicomponent.isDiscussForum()) {
-																						String pathDiscuss = question.getTopicIdDiscuss();
-																						if(pathDiscuss == null || pathDiscuss.length() <= 0){
-																							String link = uicomponent.getLinkDiscuss();
-																			%>
-																				<td style="width:25px">
-																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
-																						<div class="DiscussForum"><span></span></div>
-																					</a>
-																				</td>
-																			<%		} else {
-																						String link = uicomponent.url("DiscussForum", pathDiscuss);
-																						link = FAQUtils.convertLinkToForum(link);
-																			%>
-																				<td style="width:25px">
-																					<a href="javascript:void(0);" onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
-																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
-																					</a>
-																				</td>
-																			<%		}
-																					}
-																				} %>
-																			</tr>
-																		</table>
-																		<div style="clear:left;"><span></span></div>
-																		<%
-																		if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																		%>
-																			<!-- =========================== Vote result ========================== -->
-																			<table  style="width:150px; float:right;">
-																				<tr>
-																					<td>
-																						<% 
-																						int markVote =(Integer) question.getMarkVote();
-																						double sodu = question.getMarkVote() - markVote;
-																						%>
-																						<div class="RatingInfoContainer">
-																							<div class="OptionsContainer">
-																							<%
-																								if(uicomponent.currentUser_ == null || 
-																										(uicomponent.currentUser_ != null && !uicomponent.canVote(question))){
-																										onclick = "javaScrip:void(0);";
-																										titleMark = "";
-																										if(uicomponent.currentUser_ != null) {
-																											onclick = uicomponent.event("UnVoteQuestion",question.getId());
-																											titleMark = _ctx.appRes("UIQuestions.action.UnVoteQuestion");
-																										}
-																								%>
-																									<div onclick="$onclick" title="$titleMark" style="cursor:pointer;">
-																										<%
-																										for(int mark = 0; mark < 5; mark ++){
-																											if(mark < markVote){%>
-																												<div class="OverVote"><span></span></div>
-																										<%} else if (mark > markVote){%>
-																												<div class="RatedVote"><span></span></div>
-																										<%} else{
-																												if(sodu < 0.3){%>
-																													<div class="RatedVote"><span></span></div>
-																											<%} else if (sodu > 0.7){%>
-																													<div class="OverVote"><span></span></div>
-																											<%} else {%>
-																													<div class="HaftVote"><span></span></div>
-																											<%}
-																											}
-																										}%>
-																									</div>
-																							<% } else { %>
-																									<div id="faqVoteSpace" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIFAQPortlet.hiddenTitle('faqMarkVoteSpace'); " 
-																																					onmouseout="eXo.faq.UIFAQPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIFAQPortlet.hiddenTitle('faqVoteQuestion');">
-																										<div id="faqMarkVoteSpace" style="display:block;">
-																										<%String classNameForStar = "";
-																											for(int mark = 0; mark < 5; mark ++){
-																												if(mark < markVote){
-																													classNameForStar = "OverVote";
-																													
-																												} else if (mark > markVote){
-																													classNameForStar = "RatedVote";
-																												} else{
-																													if(sodu < 0.3){
-																														classNameForStar = "RatedVote";
-																													} else if (sodu > 0.7){
-																														classNameForStar = "OverVote";
-																													} else {
-																														classNameForStar = "HaftVote";
-																													}
-																												}%>
-																												<div class="$classNameForStar"><span></span></div>
-																										<%}%>
-																										</div>
-																										<div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
-																											<%	
-																											for(int i = 0; i < 5; i ++) {
-																												number = String.valueOf(i+1);
-																												onclick = uicomponent.event("VoteQuestion", number);
-																											%>
-																												<div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
-																									 	<%}%>
-																								 		</div>
-																								 	</div>
-																							<%}
-																								%>
-																							</div>
-																						</div>
-																					</td>
-																					<td>
-																						<%
-																						String markView = question.getMarkVote() + "";
-																						if(markView.length() <= 4){
-																						%>
-																							<div style="line-height:22px;"><b>$markView</b></div>
-																						<%
-																						} else {
-																						%>
-																							<div style="line-height:22px;"><b><%=markView.substring(0, 4)%></b></div>
-																						<%}%>
-																					</td>
-																				</tr>
-																			</table>
-																			<div style="clear:right;"><span></span></div>
-																		<%
-																		}
-																		%>
-																		
-																	</td>
-																</tr>
-																<tr>
-																	<td>
-																		<div class="LeftQuestionContainer" style="width:99%;">
-																			<div class="$questionIcon">
-																				
-																				<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
-																					
-																					<!-- question content -->
-																					<div class="ViewQuestionNotApproved">
-																						<a href="$linkQuestion" style="color:$colorViewQuestion; cursor:pointer">
-																							<span class="QuestionName" style="line-height:20px;">$questionContent</span>
-																						</a>
-																					</div>
-																					
-																				</div>
-																				
-																				<!-- action of this question -->
-																				<div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
-																					<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
-																						<div>
-											
-																							<div class="TopLeftRightClickPopupMenu">
-																								<div class="TopRightRightClickPopupMenu">
-																									<div class="TopCenterRightClickPopupMenu"><span></span></div>
-																									<div class="RightClickCustomItem" style="display:none;"><span></span></div>
-																								</div>
-																							</div>
-																							
-																							<div class="MiddleLeftRightClickPopupMenu">
-																								<div class="MiddleRightRightClickPopupMenu">
-																									<div class="UIRightPopupMenuContainer" style="margin:0px;">
-																										<%
-																											String iconView = "" ;
-																											for(viewAction in questionActions) {
-																												if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
-																													iconView = viewAction.replace("Question", "");
-																												else
-																													iconView = viewAction ;
-																												String linkView = uicomponent.event(viewAction, qId);
-																												String lockFunction = "" ;
-																												if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-																													linkView = "javaScript:alert('" + 
-																																			_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																													lockFunction = "LockFunction" ;
-																												}
-																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																										%>
-																												<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
-																													<div class="IconItem $iconView">
-																															<span>$itemLabelView</span>
-																													</div>
-																												</div>
-																										<%
-																											}
-																										%>
-																										<!-- action unwatch question -->
-																										<%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
-																												<div onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("UnWatchQuestion", qId)%>" class="MenuItem">
-																													<div class="IconItem UnWatch">
-																															<span><%= _ctx.appRes("UIQuestions.title.un-watch"); %></span>
-																													</div>
-																												</div>
-																										<%}%>
-																																																			
-																										<!-- action manager watch question -->
-																										<%if(uicomponent.canEditQuestion) {
-																												if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
-																										%>
-																													<div onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
-																														<div class="IconItem WatchQuestionManager">
-																															<span><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></span>
-																														</div>
-																													</div>
-																										<%	}
-																											}%>
-																										
-																									</div>
-																								</div>
-																							</div>
-																										
-																							<div class="BottomLeftRightClickPopupMenu">
-																								<div class="BottomRightRightClickPopupMenu">
-																									<div class="BottomCenterRightClickPopupMenu"><span></span></div>
-																								</div>
-																							</div>
-																							
-																						</div>
-																					</div>
-																				</div>
-																				<!-- finish action of this question -->
-																				
-																					<!-- ===================================== view Detail =============================== -->
-																				<div class="UIDetailContainer">
-																					<%
-																						if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
-																						String detailQuestion = ForumTransformHTML.convertCodeHTML(question.getDetail());
-																					%>
-																							$detailQuestion
-																					<%}%>
-																				</div>
-																				<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
-																					<!-- ===================================== view bottom =============================== -->
-																				<%
-																				if(uicomponent.currentUser_ != null){
-																				%>
-																					<div class="UIAction" style="padding:2px;"> 
-																						<table class="ActionContainer">
-																							<tr>
-																								<td>
-																								<%
-																									if(uicomponent.canEditQuestion){
-																										 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion"); 
-																										 String link = uicomponent.event("ResponseQuestion", question.getId());
-																								%>
-																										<div class="ActionButton LightBlueStyle">
-																											<div class="ButtonLeft">
-																												<div class="ButtonRight">
-																													<div class="ButtonMiddle">
-																														<a href="$link">$actionLabel</a>
-																													</div>
-																												</div>
-																											</div>
-																										</div>
-																								<%}%>
-																								<%
-																									if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																								%>
-																										<div  class="ActionButton LightBlueStyle">
-																											<div class="ButtonLeft">
-																												<div class="ButtonRight">
-																													<div class="ButtonMiddle">
-																														<a href="<%=uicomponent.event("CommentQuestion", question.getId())%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
-																													</div>
-																												</div>
-																											</div>
-																										</div>
-																									<%}%>
-																									</td>
-																								</tr>
-																							</table> 
-																						</div>
-																					<%}%>
-																				
-																			</div>
-																		</div>
-																
-																	</td>
-																</tr>
-															</tbody>
-														</table>
-													</td>
-												</tr>
-											</table>
-										</div>
-										<div class="ButtomQuestion"><span></span></div>
-										
-										<!-- ===================================== View response content ==================================================== -->
-										<% 
-										List answers = uicomponent.getPageListAnswer(question.getId());
-										String classResponsse = "";
-										if(answers.size() > 0)classResponsse = "ResponseExternal";
-										%>
-										<div class="ResponseContent">
-										
-											<!-- ============================== View attachment files ============================================== -->
-											<%if(!question.getAttachMent().isEmpty()) {%>
-													<div class="AttachmentContent" style="background:white;">
-														<%
-															for(FileAttachment fileAttachment :question.getAttachMent()){
-																String fileName = fileAttachment.getName();
-																long fileSize = fileAttachment.getSize();
-																if(fileSize > 0){
-																	String size = uicomponent.convertSize(fileSize);
-																	String dataPath = "" ;
-																	String fileStream = "" ;
-																	try{
-																		dataPath = fileAttachment.getDataPath();
-																		fileStream = fileAttachment.getInputStream();
-																	} catch(Exception e) {
-																		dataPath = "null" ;
-																		fileStream = "null" ;
-																	}
-																	String fileType = fileAttachment.getMimeType();
-																	String fileWorkSpace = fileAttachment.getWorkspace();
-																	ValidatorDataInput validate = new ValidatorDataInput();
-																	String linkImage = uicomponent.getFileSource(fileAttachment);
-																	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
-																	if(validate.isImage(fileName)) {
-																		String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
-																%>
-																		<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
-																			<div class="Image">
-																				<div onclick="eXo.faq.UIFAQPortlet.showPicture(this);">
-																					<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
-																				</div>
-																			</div>
-																			<div style="clear:left;"><span></span></div>
-													 						<div class="LabelBox">
-														 						<div style="line-height:20px; white-space:nowrap;">
-															 						<div class="Size AttachmentLabel">
-															 							<%
-															 								downloadAtt = uicomponent.event("DownloadAttach");
-															 							if(fileName.length() > 60){
-															 							%>
-						 																	<a class="AttachmentLabel" title="$fileName" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-							 																	<%=FAQUtils.getSubString(fileName, 60);%>
-							 																</a>
-						 																<%}else{%>
-						 																	<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-							 																	$fileName
-							 																</a>
-						 																<%}%>
-															 						</div>
-															 						<div style="color:#1052b5; float:left;">
-															 							&nbsp;- <span style="color:gray;font-size:11px;">$size</span>
-															 						</div>
-															 					</div>
-														 						<div style="clear:left;"><span></span></div>
-														 					</div>
-													 					</div>
-																<%} else { %>
-																		<div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
-																			<div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
-																			<%
-																			if(fileName.length() > 60){
-												 							%>
-			 																	<a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-				 																	<%=FAQUtils.getSubString(fileName, 60);%>
-				 																</a>
-			 																<%}else{%>
-																				<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-																					$fileName
-																				</a>
-			 																<%}%>
-																			</div>
-																			<div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
-																			<div style="clear:left;"><span></span></div>
-																		</div>
-																<%}
-																} else {
-																%>
-																	<div class="LabelBox" style="margin:10px 10px 0px 12px;">
-																		<div class="FalseIcon" style="padding-left:15px;">
-																			<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%></a>
-																		</div>
-																		<div style="clear:left;"><span></span></div>
-																	</div>
-																<%
-																}
-															}%>
-														<div style="clear:left;"><span></span></div>
-													</div>
-											<%}%>
-											
-											<!-- ======================================= view relation question ========================================= -->
-											<%
-												List questionRelation = question.getRelations();
-												if(!questionRelation.isEmpty()) {
-													String questionRelationById = "" ;
-													String cateRelaId = "" ;
-													String quesRelaId = "" ;
-													String quesRelaCont = "" ;
-													String linkRelaQues = "" ;
-											%>
-												<div class="RelationContent">
-													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
-											<%
-													for(String relationId :questionRelation) { 
-														quesRelaCont = "" ;
-														questionRelationById = uicomponent.getQuestionRelationById(relationId);
-														if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
-															cateRelaId = questionRelationById.split("/")[0] ;
-															quesRelaId = questionRelationById.split("/")[1] ;
-															quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "");
-															linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId);
-														} else {
-															linkRelaQues = uicomponent.event("ViewQuestion", "");
-														}
-														if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
-											%>
-															<div style="padding:0px 0px 5px 10px;">
-																<a href="$linkRelaQues" style="text-decoration:yes; color:#1555B5;">$quesRelaCont</a><br/>
-															</div>
-											<% 		}
-													}
-											%>
-													</div>
-											<%}%>
-											
-											<!-- ===================================== Question's answers ==================================================== -->
-											<div class="ResponseContainer">
-												<div class="TitleResponseContent">
-													<div class="IconResponse">
-														<table align="center" width="100%">
-															<tr>
-																<td>
-																	<%=_ctx.appRes("UIQuestions.label.Answers")%>
-																</td>
-																<%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
-																		<!-- action Sort answer by vote -->
-																	<td style="width:70px">
-																		<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
-																			<div class="SortAnswer"><span></span></div>
-																		</a>
-																	</td>
-																<%}%>
-															</tr>
-														</table>
-													</div>
-												</div>
-												<div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;">
-													<%
-													if(answers != null && !answers.isEmpty()){
-														String actionAnswer = "";
-														int i = 0;
-														for(Answer answer in answers) {
-															res = answer.getResponses();
-															res = ForumTransformHTML.convertCodeHTML(res);
-															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
-																continue;
-															}
-															date = dateFormatter.format(answer.getDateResponse());
-															responseBy = FAQUtils.getFullName(answer.getResponseBy());
-															String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
-														%>
-														<div class="ResponseItemContainer">
-															<table width="100%">
-																<tbody>
-																	<tr>
-																		<td>
-																			<!-- ============================= View user who answered quesetion ============================ -->
-																			<div class="ResponseItemContainerLeft">
-																				<div style="padding-bottom:10px">
-																					<div class="ProfileContainer">
-																						<%
-																						if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																						%>				
-																						<div class="AvatarContainer" style="margin-top:0px;">
-																							<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy(), sessionProvider)%>" width="63px" alt="Avatar"/></div>
-																						</div>
-																						<%}%>
-																						<div class="AuthorInfor" style="text-align:center">
-																							<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray; cursor:pointer;">
-																								<span class="UserName">$responseBy</span>
-																							</a>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																			
-																			<div class="ResponseItemContainerRight">
-																				<div style="overflow:auto;_padding-bottom:15px;">
-																					<%
-																					if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
-																					%>
-																						<div style="padding:3px;">$res</div>
-																					<%
-																					} else {
-																					%>
-																						<div style="color:gray;padding:3px;">$res</div>
-																					<%} %>
-																					<div style="float:left; color:#721d95;">$date</div>
-																				</div>
-																				
-																				<!-- ============================= View mark vote answer ======================================== -->
-																				<div style="overflow:auto; margin-top:5px;">
-																					<%
-																					if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																							String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
-																							String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
-																							if(uicomponent.currentUser_ != null){
-																								userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/1");
-																								userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
-																							}
-																							String idVote = "FAQVoteAnswerUp" + i;
-																						%>
-																							<div style="float:left;">
-																								<div style="float:left;" title="+1">
-																									<div class="VoteAnswerUp" id="$idVote" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', null)">
-																										<a href="$userVoteUpAnswer" style="width:16px; height:16px; display:block"></a>
-																									</div>
-																								</div>
-																							<%
-																								idVote = "FAQVoteAnswerDown" + i;
-																								++i;
-																							%>
-																								<div style="float:left;" title="-1">
-																									<div class="VoteAnswerDown" id="$idVote" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', null)">
-																										<a href="$userVotedownAnswer" style="width:16px; height:16px; display:block"></a>
-																									</div>
-																								</div>
-																								<div style="float:left; line-height:18px; margin-left:4px;">
-																									<%=answer.getMarkVotes()%>
-																								</div>
-																								<div style="clear:left;"><span></span></div>
-																							</div>
-																						<%
-																						}%>
-																						<div style="clear:left;"><span></span></div>
-																				</div>
-																				
-																			</div>
-																			<div style="clear:left;"><span></span></div>
-																
-																		</td>
-																	
-																	<% if(uicomponent.canEditQuestion){%>
-																		<td style="width:20px">
-																			<a title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
-																				<div class="ItemIcon Edit" style="height:20px;width:16px;">
-																						<span></span>
-																				</div>
-																			</a>
-																		</td>
-																		<td style="width:20px;">
-																		<%
-																			actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");
-																			if(answer.getApprovedAnswers()) {
-																			%>
-																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
-																					<div class="ApprovedQuestion"><span></span></div>
-																				</a>
-																			<%} else {
-																			%>
-																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
-																					<div class="UnApprovedQuestion"><span></span></div>
-																				</a>
-																			<%}%>
-																		</td>
-																		<td style="width:20px;">
-																			<%
-																				actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Activate");
-																				if(answer.getActivateAnswers()) {
-																			%>
-																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
-																					<div class="ActivateQuestion"><span></span></div>
-																				</a>
-																			<%} else {
-																			%>
-																				<a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
-																					<div class="DeActivateQuestion"><span></span></div>
-																				</a>
-																			<%}%>
-																		</td>
-																		<td style="width:20px">
-																				<a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
-																					<div class="DeleteAnswer"><span></span></div>
-																				</a>
-																		</td>
-																	<%}%>
-																	</tr>
-																</tbody>
-															</table>
-														</div>
-														
-													<%} %>
-														<div style="overflow:auto">
-															<% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
-															<div style="clear:right;"><span></span></div>
-														</div>	
-												<%} else { %>
-													<div align="center" style="width:100%;">
-														<div class="NotResponse" style="margin:auto; width:300px; padding-left:20px; font-weight:bold; text-align:left;">
-															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%>
-														</div>
-													</div>
-												<%}%>
-												</div>
-												
-												<!-- ============================== View question's commnets ============================================== -->
-												<%
-												if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-													boolean canEditComment = false;
-													List comments = uicomponent.getPageListComment(question.getId());
-													String classComment = "";
-													if(comments.size() > 0) {
-														classComment = "CommentExternal";
-												%>
-														<div class="TitleCommentContent">
-															<div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
-														</div>
-												<% } %>
-													
-													<div class="Response $classComment">
-													<%
-														int commentCount = 0;
-														for(Comment comment in comments){
-															if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
-															else canEditComment = false;
-													%>
-															<div >
-																<div class="ResponseItemContainer" style="background:#F0F0F0;">
-																<table style="width:100%">
-																	<tr>
-																		<td>
-																		
-																				<div class="ResponseItemContainerLeft">
-																				<!-- ============================= View user who comment for quesetion ============================ -->
-																					<div style="padding:10px 0px">
-																						<div class="ProfileContainer">
-																							<%
-																							if(uicomponent.faqSetting_.isEnableViewAvatar()) {
-																							%>				
-																							<div class="AvatarContainer" style="margin-top:0px;">
-																								<div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
-																							</div>
-																							<%}%>
-																							<div class="AuthorInfor" style="text-align:center">
-																								<a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
-																									<span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
-																								</a>
-																							</div>
-																						</div>
-																					</div>
-																				</div>
-																				<div class="ResponseItemContainerRight">
-																					<%
-																						String commentDetail =comment.getComments() ;
-																						commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
-																					%>
-																					<span>$commentDetail</span>
-																					<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
-																				</div>
-																				<div style="clear:left;"><span></span></div>
-			
-																		</td>
-																		<%
-																		if(canEditComment){
-																			if (uicomponent.faqSetting_.isCanEdit()){%>
-																				<td style="width:20px;">
-																					<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
-																						<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
-																								<span></span>
-																						</div>
-																					</a>
-																				</td>
-																		<%}%>
-																			<td style="width:20px">
-																				<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
-																					<div class="ItemIcon Edit" style="height:24px;width:16px;">
-																							<span></span>
-																					</div>
-																				</a>
-																			</td>
-																			<td style="width:20px">
-																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
-																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
-																							<span></span>
-																					</div>
-																				</a>
-																			</td>
-																	<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
-																			<td style="width:20px">
-																				<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
-																					<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
-																							<span></span>
-																					</div>
-																				</a>
-																			</td>
-																			<td style="width:20px">
-																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
-																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
-																							<span></span>
-																					</div>
-																				</a>
-																			</td>
-																	<%}%>
-																	</tr>
-																</table>
-																</div>
-															</div>
-													<%}%>
-														<div>
-															<% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
-															<div style="clear:right;"><span></span></div>
-														</div>	
-													</div>
-												<%}%>
-													<div class="UIAction">
-														<div style="float:right">
-															<div class="PrintAction" style="display:none ;">
-																<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
-																	<div class="ButtonLeft">
-																		<div class="ButtonRight">
-																			<div class="ButtonMiddle">
-																				<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-																<div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint()" class="ActionButton LightBlueStyle">
-																	<div class="ButtonLeft">
-																		<div class="ButtonRight">
-																			<div class="ButtonMiddle">
-																				<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-																
-														</div>
-														<div style="clear:both;"><span></span></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								
-								<div class="DecoratorBL">
-									<div class="DecoratorBR">
-										<div class="DecoratorBC"><span></span></div>
-									</div>
-								</div>
-							
-						</div>
-					<%
-					sessionProvider.close();
-					}%>
-		<%		questionId ++ ;
-				}
-		%>
-		
-			<div class="UIAction" style="display:none ;">			
-				<div style="float:right">			
-					<div class="PrintAction">
-						<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint();" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-			</div>	
-			<div style="clear:right;"><span></span></div>
-			</div>
-		</div>
-		<%
-			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
-				String divId = uicomponent.getQuestionView();
-				rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToQuestion('"+divId+"');");
-			}
-		%>
-	</div>
-	
-	<div>
-		<%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR);%>
-	</div>
-	
+    <div class="FAQToolbar" style="float:left; width:100%;">
+        <div class="LeftBar">
+            <div class="RightBar">
+                <div class="CenterBar">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="ControlButtonContainer">
+                                    <!-- ================== CustomView action ====================== -->
+                                    <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                                        <div style="cursor:pointer" id = "FAQTitlePanels" title="<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>" onclick="eXo.faq.UIFAQPortlet.changeCustomView('true', '<%=_ctx.appRes("UIQuestions.label.HileLeftPanels")%>', '<%=_ctx.appRes("UIQuestions.label.ShowLeftPanels")%>')">
+                                            <div class="LeftOverButton">
+                                                <div class="RightOverButton">
+                                                    <div class="CenterOverButton">
+                                                        <div class="Icon FAQCustomView" id = "FAQCustomView">
+                                                            <span></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="SeparatorLine ControlButton"><span></span></div>
+
+                                    <%
+                                    if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+                                        String linkRss = uicomponent.event("RSS", uicomponent.getRSSLink());
+                                    %>
+                                        <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                                            <div onclick="$linkRss">
+                                                <div class="LeftOverButton">
+                                                    <div class="RightOverButton">
+                                                        <div class="CenterOverButton">
+                                                            <div class="Icon FAQRSS">
+                                                                <a href="javascript:void(0);">RSS</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="SeparatorLine ControlButton"><span></span></div>
+                                <%
+                                }
+                                if(canEditQuestion) {
+                                %>
+                                    <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this); eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this);" class="DefaultStyle FAQBar ControlButton">
+
+                                        <div class="LeftOverButton">
+                                            <div class="RightOverButton">
+                                                <div class="CenterOverButton">
+                                                    <div class="Icon CategoryManager">
+                                                        <div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
+                                                            <a href="javascript:void(0);">Manage Category</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ================================================= Begin popup menu ================================ -->
+                                        <div class="UIFAQPopupCategory" id="FAQCategroManager" style="display:none;" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager')" onmouseout="eXo.faq.UIFAQPortlet.setCheckEvent(true); eXo.faq.UIFAQPortlet.checkAction();">
+                                            <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block; width:150px; min-width:150px;">
+
+                                                <div class="MiddleLeftRightClickPopupMenu">
+                                                    <div class="MiddleRightRightClickPopupMenu">
+                                                        <div class="UIRightPopupMenuContainer" style="margin:0px; padding:3px 0;">
+                                                    <%
+                                                        String[] actionTollbar ;
+                                                        actionTollbar = uicomponent.getMenuCateManager();
+                                                        String linkAction = "" ;
+                                                        String opacity ;
+                                                        for(String action in actionTollbar) {
+                                                            linkAction = uicomponent.event(action, cateId);
+                                                            String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+                                                    %>
+
+                                                            <div onmousedown="$linkAction" class="MenuItem">
+                                                                <div class="IconItem $action">
+                                                                    <span>$itemLabelView</span>
+                                                                </div>
+                                                            </div>
+                                                    <%
+                                                        }%>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    <!-- ================================================= End popup menu ================================ -->
+
+                                </div>
+                                <div class="SeparatorLine ControlButton"><span></span></div>
+                                <%
+                                }
+                                if(canEditQuestion) {
+                                    String[] actionTollbar ;
+                                    actionTollbar = uicomponent.getActionTollbar();
+                                    String linkAction = "" ;
+                                    String opacity ;
+                                    for(String action in actionTollbar) {
+                                        linkAction = uicomponent.event(action, cateId);
+                                        String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+                                %>
+                                        <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                                            <div onclick="$linkAction">
+                                                <div class="LeftOverButton">
+                                                    <div class="RightOverButton">
+                                                        <div class="CenterOverButton">
+                                                            <div class="Icon $action">
+                                                                <a href="javascript:void(0);">$itemLabelView</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="SeparatorLine ControlButton"><span></span></div>
+                                <%
+                                    }
+                                } else {
+                                    String linkAction =uicomponent.event("AddNewQuestion", cateId);
+                                %>
+                                        <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
+                                            <div onclick="$linkAction">
+                                                <div class="LeftOverButton">
+                                                    <div class="RightOverButton">
+                                                        <div class="CenterOverButton">
+                                                            <div class="Icon AddNewQuestion">
+                                                                <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="SeparatorLine ControlButton"><span></span></div>
+                            <%}%>
+                            <% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
+                                    String actionSetting = uicomponent.event("Setting");
+                            %>
+                                    <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+                                        <div onclick="$actionSetting" >
+                                            <div class="LeftOverButton">
+                                                <div class="RightOverButton">
+                                                    <div class="CenterOverButton">
+                                                        <div class="Icon Setting">
+                                                            <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="SeparatorLine ControlButton"><span></span></div>
+                                <% } %>
+                                <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"  class="DefaultStyle FAQBar ControlButton">
+                                    <!--<div onclick="eXo.faq.UIFAQPortlet.printAll(this)">-->
+                                    <div onclick="<%=uicomponent.event("PrintAllQuestion")%>">
+                                        <div class="LeftOverButton">
+                                            <div class="RightOverButton">
+                                                <div class="CenterOverButton">
+                                                    <div class="Icon Print">
+                                                        <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="SeparatorLine ControlButton"><span></span></div>
+                                <div class="ScrollButtons" style="width:35px;_width:50px;">
+                                    <div title="Previous">
+                                        <div title="Next"><span></span></div>
+                                    </div>
+                                </div>
+                                <div style="clear:both;"><span></span></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:left;"><span></span></div>
+    <div class="FAQContainer" id="FAQViewContent">
+        <div class="FAQContent">
+<!-- ===================================================== View question ====================================================== -->
+            <%
+                String[] questionActions = null ;
+                if(canEditQuestion) {
+                    questionActions = uicomponent.getActionQuestion();
+                } else {
+                    questionActions = uicomponent.getActionQuestionWithUser();
+                }
+                List listQuestion = uicomponent.getListQuestion();
+                String questionContent = new String();
+                int questionId = 0 ;
+
+                String linkQuestion = "" ;
+                for(question in listQuestion) {
+                    String qId = question.getId();
+                    linkQuestion=uicomponent.event("ViewQuestion", qId);
+                    String questionIcon = "" ;
+                    String colorViewQuestion = "";
+                    if(!question.isActivated() || !question.isApproved()) colorViewQuestion = "gray";
+                    if(question.getAnswers() != null && question.getAnswers().length > 0) {
+                        questionIcon = "Question" ;
+                    } else {
+                        questionIcon = "NotResponse" ;
+                    }
+
+                    java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
+
+                    if(!uicomponent.getQuestionView().equals(qId)){
+                    questionContent = question.getQuestion();
+            %>
+                        <div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionId" oncontextmenu="return false;">
+                            <div class="$questionIcon" style="float:left"><span></span></div>
+                            <div style="width:85%; _width:80%; float:left;">
+                                    <!-- question content -->
+                                        <%
+                                        String titleQuestion = "" ;
+                                        if(questionContent.length() > 140) {
+                                            titleQuestion = questionContent ;
+                                            questionContent = FAQUtils.getSubString(questionContent, 140);
+                                        %>
+                                            <div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">$questionContent &nbsp;&nbsp;</div>
+                                            <div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+                                            <%if(!question.isApproved()) {%>
+                                                    <div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
+                                            <%}%>
+
+                                    <%} else {
+                                            titleQuestion = "";
+                                        %>
+                                            <a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
+                                            <div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+                                            <%if(!question.isApproved()) {%>
+                                                    <div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
+                                            <%}%>
+                                    <%}%>
+                                            <div style="clear:left;"><span></span></div>
+                                        <% if(titleQuestion.trim().length() > 0) {%>
+                                            <div id="titleQuestion$questionId" class="questionTitle" style="color:$colorViewQuestion;">
+                                                $titleQuestion &nbsp;&nbsp;
+                                            </div>
+                                    <%}%>
+                                    <!-- action of this question -->
+                                    <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none;">
+                                        <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+                                                <div class="MiddleLeftRightClickPopupMenu">
+                                                    <div class="MiddleRightRightClickPopupMenu">
+                                                        <div class="UIRightPopupMenuContainer"  style="margin:0px; border:solid 1px #f6f6f6">
+                                                            <%
+                                                                String iconView = "" ;
+                                                                for(viewAction in questionActions) {
+                                                                    if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+                                                                        iconView = viewAction.replace("Question", "");
+                                                                    else
+                                                                        iconView = viewAction ;
+                                                                    String linkView = uicomponent.event(viewAction, qId);
+                                                                    String lockFunction = "" ;
+                                                                    if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+                                                                        linkView = "javaScript:alert('" +
+                                                                                                _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+                                                                        lockFunction = "LockFunction" ;
+                                                                    }
+                                                                    String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+                                                            %>
+                                                                    <div class="MenuItem $lockFunction">
+                                                                        <div class="IconItem $iconView">
+                                                                            <a href="$linkView">$itemLabelView</a>
+                                                                        </div>
+                                                                    </div>
+                                                            <%}%>
+                                                            <!-- action unwatch question -->
+                                                            <%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
+                                                                    <div class="MenuItem">
+                                                                        <div class="IconItem UnWatch">
+                                                                            <a href="<%=uicomponent.event("UnWatchQuestion", qId)%>"><%= _ctx.appRes("UIQuestions.title.un-watch"); %></a>
+                                                                        </div>
+                                                                    </div>
+                                                            <%}%>
+
+                                                            <!-- action manager watch question -->
+                                                            <%if(uicomponent.canEditQuestion) {
+                                                                    if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
+                                                            %>
+                                                                        <div class="MenuItem" href="javascript:void(0);">
+                                                                            <div class="IconItem WatchQuestionManager">
+                                                                                <a href="<%=uicomponent.event("WatchManager", question.getId())%>"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
+                                                                            </div>
+                                                                        </div>
+                                                            <%  }
+                                                                }
+                                                                if(uicomponent.currentUser_ != null) {
+                                                                    if(uicomponent.isDiscussForum()) {
+                                                                        String pathDiscuss = question.getTopicIdDiscuss();
+                                                                        if(pathDiscuss == null || pathDiscuss.length() <= 0){
+                                                                            String link = uicomponent.getLinkDiscuss();
+                                                            %>
+                                                                        <div class="MenuItem">
+                                                                            <div class="IconItem DiscussForum" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
+                                                                                <a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+                                                                            </div>
+                                                                        </div>
+                                                            <%
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if(uicomponent.isDiscussForum()) {
+                                                                    String pathDiscuss = question.getTopicIdDiscuss();
+                                                                    if(pathDiscuss != null && pathDiscuss.length() > 0){
+                                                                        String link = uicomponent.url("DiscussForum", pathDiscuss);
+                                                                        link = FAQUtils.convertLinkToForum(link);
+                                                            %>
+                                                                        <div class="MenuItem">
+                                                                            <div class="IconItem DiscussForum">
+                                                                                <a onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+                                                                            </div>
+                                                                        </div>
+                                                            <%  }
+                                                                }
+                                                            %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <!-- finish action of this question -->
+
+                                </div>
+                            <div style="clear:left;"><span></span></div>
+                        </div>
+
+
+                <!-- ============================================== View Question which is selected ===================================== -->
+                <%} else {
+                        List listQuestLanguage = uicomponent.getQuestionLangauges(question);
+                        SessionProvider sessionProvider = FAQUtils.getSystemProvider();
+                        questionContent = question.getQuestion();
+                        String responseBy = "..." ;
+                        String date = "..." ;
+                        //if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
+                        //  responseBy = question.getResponseBy();
+                        //}
+                    %>
+                        <div class="QuestionSelect" style="_width:100%;">
+                            <div class="DecoratorTL">
+                                <div class="DecoratorTR">
+                                    <div class="DecoratorTC"><span></span></div>
+                                </div>
+                            </div>
+                            <div class="DecoratorML">
+                                <div class="DecoratorMR">
+                                    <div class="DecoratorMC">
+
+                                        <div class="QuestionContainer" id="$qId">
+                                            <table style="_width:98%;">
+                                                <tr>
+                                                <% if(uicomponent.viewAuthorInfor || uicomponent.faqSetting_.isEnableViewAvatar()){ %>
+                                                    <td style="width:140px; height:100px;">
+                                                        <div class="ProfileContainer">
+                                                        <%
+                                                            if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+                                                        %>
+                                                            <div class="AvatarContainer">
+                                                                <div class="ImageAvatar"><img width="63" src="<%=uicomponent.getAvatarUrl(question.getAuthor(), sessionProvider)%>" alt="Avatar"/></div>
+                                                            </div>
+                                                        <%}%>
+                                                        <!-- ========================================= view author's infor ================================ -->
+                                                        <%
+                                                            if(uicomponent.viewAuthorInfor){
+                                                        %>
+                                                            <div class="AuthorInfor" style="text-align:center;">
+                                                                <a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
+                                                                    <span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
+                                                                </a>
+                                                                <%=question.getEmail()%>
+                                                            </div>
+                                                        <%}%>
+                                                        </div>
+                                                    </td>
+                                                <%}%>
+                                                    <td>
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <!-- Action -->
+                                                                        <table>
+                                                                            <tr>
+                                                                                <!-- action translation question -->
+                                                                                <td style="white-space:nowrap;font-weight:bold;text-align:right;padding-left:5px;">
+                                                                                    <%
+                                                                                        int countLanguage = 1;
+                                                                                        for(String quesLanguage in listQuestLanguage) {
+                                                                                            String linkView = uicomponent.event("ChangeQuestion", questionId + "/" + quesLanguage);
+                                                                                            String color = "";
+                                                                                            if(quesLanguage.equals(question.getLanguage())){
+                                                                                                linkView = "javaScript:void(0)";
+                                                                                                color = "#914ab6";
+                                                                                            }
+                                                                                    %>
+                                                                                            <a style="line-height:20px;color:$color;" href="$linkView">$quesLanguage</a>
+                                                                                    <%  if(countLanguage < listQuestLanguage.size()){%>
+                                                                                                 |
+                                                                                        <%} else {%>
+                                                                                                &nbsp;
+                                                                                        <%}
+                                                                                            countLanguage ++;
+                                                                                        }
+                                                                                    %>
+                                                                                </td>
+                                                                                <!-- Action back page -->
+                                                                                <%
+                                                                                if(uicomponent.getBackPath() != null && uicomponent.getBackPath().trim().length() > 0) {
+                                                                                    String link = uicomponent.event("ViewQuestion",uicomponent.getBackPath());
+                                                                                %>
+                                                                                    <td style="width:25px" style="margin-left:10px;">
+                                                                                        <div onclick="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>" style="cursor:pointer">
+                                                                                            <div class="BackPageFAq"><span></span></div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                <%}%>
+                                                                                <!-- action print question -->
+                                                                                <td style="width:25px">
+                                                                                    <a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
+                                                                                            title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>" style="cursor:pointer">
+                                                                                        <div class="PrintScrintFAQ"><span></span></div>
+                                                                                    </a>
+                                                                                </td>
+                                                                                <!-- action send mail for frend -->
+                                                                                <td style="width:25px">
+                                                                                    <%
+                                                                                    link = uicomponent.event("SendQuestion",qId);
+                                                                                    String SendToFriend = "SendToFriend";
+                                                                                    if((!question.isApproved() || !question.isActivated())){
+                                                                                        link = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+                                                                                        SendToFriend = "LockSendToFriend" ;
+                                                                                    }
+                                                                                    %>
+                                                                                    <a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
+                                                                                        <div class="$SendToFriend"><span></span></div>
+                                                                                    </a>
+                                                                                </td>
+                                                                                <!-- action Discuss -->
+                                                                            <%
+                                                                                if(uicomponent.currentUser_ != null) {
+                                                                                    if(uicomponent.isDiscussForum()) {
+                                                                                        String pathDiscuss = question.getTopicIdDiscuss();
+                                                                                        if(pathDiscuss == null || pathDiscuss.length() <= 0){
+                                                                                            String link = uicomponent.getLinkDiscuss();
+                                                                            %>
+                                                                                <td style="width:25px">
+                                                                                    <a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>; window.open('$link');" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+                                                                                        <div class="DiscussForum"><span></span></div>
+                                                                                    </a>
+                                                                                </td>
+                                                                            <%      } else {
+                                                                                        String link = uicomponent.url("DiscussForum", pathDiscuss);
+                                                                                        link = FAQUtils.convertLinkToForum(link);
+                                                                            %>
+                                                                                <td style="width:25px">
+                                                                                    <a href="javascript:void(0);" onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
+                                                                                        <div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
+                                                                                    </a>
+                                                                                </td>
+                                                                            <%      }
+                                                                                    }
+                                                                                } %>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <div style="clear:left;"><span></span></div>
+                                                                        <%
+                                                                        if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+                                                                        %>
+                                                                            <!-- =========================== Vote result ========================== -->
+                                                                            <table  style="width:150px; float:right;">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <%
+                                                                                        int markVote =(Integer) question.getMarkVote();
+                                                                                        double sodu = question.getMarkVote() - markVote;
+                                                                                        %>
+                                                                                        <div class="RatingInfoContainer">
+                                                                                            <div class="OptionsContainer">
+                                                                                            <%
+                                                                                                if(uicomponent.currentUser_ == null ||
+                                                                                                        (uicomponent.currentUser_ != null && !uicomponent.canVote(question))){
+                                                                                                        onclick = "javaScrip:void(0);";
+                                                                                                        titleMark = "";
+                                                                                                        if(uicomponent.currentUser_ != null) {
+                                                                                                            onclick = uicomponent.event("UnVoteQuestion",question.getId());
+                                                                                                            titleMark = _ctx.appRes("UIQuestions.action.UnVoteQuestion");
+                                                                                                        }
+                                                                                                %>
+                                                                                                    <div onclick="$onclick" title="$titleMark" style="cursor:pointer;">
+                                                                                                        <%
+                                                                                                        for(int mark = 0; mark < 5; mark ++){
+                                                                                                            if(mark < markVote){%>
+                                                                                                                <div class="OverVote"><span></span></div>
+                                                                                                        <%} else if (mark > markVote){%>
+                                                                                                                <div class="RatedVote"><span></span></div>
+                                                                                                        <%} else{
+                                                                                                                if(sodu < 0.3){%>
+                                                                                                                    <div class="RatedVote"><span></span></div>
+                                                                                                            <%} else if (sodu > 0.7){%>
+                                                                                                                    <div class="OverVote"><span></span></div>
+                                                                                                            <%} else {%>
+                                                                                                                    <div class="HaftVote"><span></span></div>
+                                                                                                            <%}
+                                                                                                            }
+                                                                                                        }%>
+                                                                                                    </div>
+                                                                                            <% } else { %>
+                                                                                                    <div id="faqVoteSpace" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIFAQPortlet.hiddenTitle('faqMarkVoteSpace'); "
+                                                                                                                                                    onmouseout="eXo.faq.UIFAQPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIFAQPortlet.hiddenTitle('faqVoteQuestion');">
+                                                                                                        <div id="faqMarkVoteSpace" style="display:block;">
+                                                                                                        <%String classNameForStar = "";
+                                                                                                            for(int mark = 0; mark < 5; mark ++){
+                                                                                                                if(mark < markVote){
+                                                                                                                    classNameForStar = "OverVote";
+
+                                                                                                                } else if (mark > markVote){
+                                                                                                                    classNameForStar = "RatedVote";
+                                                                                                                } else{
+                                                                                                                    if(sodu < 0.3){
+                                                                                                                        classNameForStar = "RatedVote";
+                                                                                                                    } else if (sodu > 0.7){
+                                                                                                                        classNameForStar = "OverVote";
+                                                                                                                    } else {
+                                                                                                                        classNameForStar = "HaftVote";
+                                                                                                                    }
+                                                                                                                }%>
+                                                                                                                <div class="$classNameForStar"><span></span></div>
+                                                                                                        <%}%>
+                                                                                                        </div>
+                                                                                                        <div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+                                                                                                            <%
+                                                                                                            for(int i = 0; i < 5; i ++) {
+                                                                                                                number = String.valueOf(i+1);
+                                                                                                                onclick = uicomponent.event("VoteQuestion", number);
+                                                                                                            %>
+                                                                                                                <div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
+                                                                                                        <%}%>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                            <%}
+                                                                                                %>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <%
+                                                                                        String markView = question.getMarkVote() + "";
+                                                                                        if(markView.length() <= 4){
+                                                                                        %>
+                                                                                            <div style="line-height:22px;"><b>$markView</b></div>
+                                                                                        <%
+                                                                                        } else {
+                                                                                        %>
+                                                                                            <div style="line-height:22px;"><b><%=markView.substring(0, 4)%></b></div>
+                                                                                        <%}%>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                            <div style="clear:right;"><span></span></div>
+                                                                        <%
+                                                                        }
+                                                                        %>
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="LeftQuestionContainer" style="width:99%;">
+                                                                            <div class="$questionIcon">
+
+                                                                                <div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionId', '', null, null)">
+
+                                                                                    <!-- question content -->
+                                                                                    <div class="ViewQuestionNotApproved">
+                                                                                        <a href="$linkQuestion" style="color:$colorViewQuestion; cursor:pointer">
+                                                                                            <span class="QuestionName" style="line-height:20px;">$questionContent</span>
+                                                                                        </a>
+                                                                                    </div>
+
+                                                                                </div>
+
+                                                                                <!-- action of this question -->
+                                                                                <div class="UIFAQPopupCategory" id="UIPopupQuestion$questionId" style="display:none; left:50px;">
+                                                                                    <div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
+                                                                                        <div>
+
+                                                                                            <div class="TopLeftRightClickPopupMenu">
+                                                                                                <div class="TopRightRightClickPopupMenu">
+                                                                                                    <div class="TopCenterRightClickPopupMenu"><span></span></div>
+                                                                                                    <div class="RightClickCustomItem" style="display:none;"><span></span></div>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="MiddleLeftRightClickPopupMenu">
+                                                                                                <div class="MiddleRightRightClickPopupMenu">
+                                                                                                    <div class="UIRightPopupMenuContainer" style="margin:0px;">
+                                                                                                        <%
+                                                                                                            String iconView = "" ;
+                                                                                                            for(viewAction in questionActions) {
+                                                                                                                if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
+                                                                                                                    iconView = viewAction.replace("Question", "");
+                                                                                                                else
+                                                                                                                    iconView = viewAction ;
+                                                                                                                String linkView = uicomponent.event(viewAction, qId);
+                                                                                                                String lockFunction = "" ;
+                                                                                                                if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
+                                                                                                                    linkView = "javaScript:alert('" +
+                                                                                                                                            _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
+                                                                                                                    lockFunction = "LockFunction" ;
+                                                                                                                }
+                                                                                                                String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+                                                                                                        %>
+                                                                                                                <div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
+                                                                                                                    <div class="IconItem $iconView">
+                                                                                                                            <span>$itemLabelView</span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                        <%
+                                                                                                            }
+                                                                                                        %>
+                                                                                                        <!-- action unwatch question -->
+                                                                                                        <%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
+                                                                                                                <div onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("UnWatchQuestion", qId)%>" class="MenuItem">
+                                                                                                                    <div class="IconItem UnWatch">
+                                                                                                                            <span><%= _ctx.appRes("UIQuestions.title.un-watch"); %></span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                        <%}%>
+
+                                                                                                        <!-- action manager watch question -->
+                                                                                                        <%if(uicomponent.canEditQuestion) {
+                                                                                                                if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
+                                                                                                        %>
+                                                                                                                    <div onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("WatchManager", question.getId())%>">
+                                                                                                                        <div class="IconItem WatchQuestionManager">
+                                                                                                                            <span><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></span>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                        <%  }
+                                                                                                            }%>
+
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                            <div class="BottomLeftRightClickPopupMenu">
+                                                                                                <div class="BottomRightRightClickPopupMenu">
+                                                                                                    <div class="BottomCenterRightClickPopupMenu"><span></span></div>
+                                                                                                </div>
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- finish action of this question -->
+
+                                                                                    <!-- ===================================== view Detail =============================== -->
+                                                                                <div class="UIDetailContainer">
+                                                                                    <%
+                                                                                        if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
+                                                                                        String detailQuestion = ForumTransformHTML.convertCodeHTML(question.getDetail());
+                                                                                    %>
+                                                                                            $detailQuestion
+                                                                                    <%}%>
+                                                                                </div>
+                                                                                <span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
+                                                                                    <!-- ===================================== view bottom =============================== -->
+                                                                                <%
+                                                                                if(uicomponent.currentUser_ != null){
+                                                                                %>
+                                                                                    <div class="UIAction" style="padding:2px;">
+                                                                                        <table class="ActionContainer">
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                <%
+                                                                                                    if(uicomponent.canEditQuestion){
+                                                                                                         String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion");
+                                                                                                         String link = uicomponent.event("ResponseQuestion", question.getId());
+                                                                                                %>
+                                                                                                        <div class="ActionButton LightBlueStyle">
+                                                                                                            <div class="ButtonLeft">
+                                                                                                                <div class="ButtonRight">
+                                                                                                                    <div class="ButtonMiddle">
+                                                                                                                        <a href="$link">$actionLabel</a>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                <%}%>
+                                                                                                <%
+                                                                                                    if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+                                                                                                %>
+                                                                                                        <div  class="ActionButton LightBlueStyle">
+                                                                                                            <div class="ButtonLeft">
+                                                                                                                <div class="ButtonRight">
+                                                                                                                    <div class="ButtonMiddle">
+                                                                                                                        <a href="<%=uicomponent.event("CommentQuestion", question.getId())%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    <%}%>
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    <%}%>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="ButtomQuestion"><span></span></div>
+
+                                        <!-- ===================================== View response content ==================================================== -->
+                                        <%
+                                        List answers = uicomponent.getPageListAnswer(question.getId());
+                                        String classResponsse = "";
+                                        if(answers.size() > 0)classResponsse = "ResponseExternal";
+                                        %>
+                                        <div class="ResponseContent">
+
+                                            <!-- ============================== View attachment files ============================================== -->
+                                            <%if(!question.getAttachMent().isEmpty()) {%>
+                                                    <div class="AttachmentContent" style="background:white;">
+                                                        <%
+                                                            for(FileAttachment fileAttachment :question.getAttachMent()){
+                                                                String fileName = fileAttachment.getName();
+                                                                long fileSize = fileAttachment.getSize();
+                                                                if(fileSize > 0){
+                                                                    String size = uicomponent.convertSize(fileSize);
+                                                                    String dataPath = "" ;
+                                                                    String fileStream = "" ;
+                                                                    try{
+                                                                        dataPath = fileAttachment.getDataPath();
+                                                                        fileStream = fileAttachment.getInputStream();
+                                                                    } catch(Exception e) {
+                                                                        dataPath = "null" ;
+                                                                        fileStream = "null" ;
+                                                                    }
+                                                                    String fileType = fileAttachment.getMimeType();
+                                                                    String fileWorkSpace = fileAttachment.getWorkspace();
+                                                                    ValidatorDataInput validate = new ValidatorDataInput();
+                                                                    String linkImage = uicomponent.getFileSource(fileAttachment);
+                                                                    String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
+                                                                    if(validate.isImage(fileName)) {
+                                                                        String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath();
+                                                                %>
+                                                                        <div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
+                                                                            <div class="Image">
+                                                                                <div onclick="eXo.faq.UIFAQPortlet.showPicture(this);">
+                                                                                    <img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div style="clear:left;"><span></span></div>
+                                                                            <div class="LabelBox">
+                                                                                <div style="line-height:20px; white-space:nowrap;">
+                                                                                    <div class="Size AttachmentLabel">
+                                                                                        <%
+                                                                                            downloadAtt = uicomponent.event("DownloadAttach");
+                                                                                        if(fileName.length() > 60){
+                                                                                        %>
+                                                                                            <a class="AttachmentLabel" title="$fileName" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                                                                                <%=FAQUtils.getSubString(fileName, 60);%>
+                                                                                            </a>
+                                                                                        <%}else{%>
+                                                                                            <a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                                                                                $fileName
+                                                                                            </a>
+                                                                                        <%}%>
+                                                                                    </div>
+                                                                                    <div style="color:#1052b5; float:left;">
+                                                                                        &nbsp;- <span style="color:gray;font-size:11px;">$size</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div style="clear:left;"><span></span></div>
+                                                                            </div>
+                                                                        </div>
+                                                                <%} else { %>
+                                                                        <div class="LabelBox" style="margin:10px 5px 0px 12px; line-height:20px; float:left;">
+                                                                            <div class="AttachmentIcon FileAttachmentIcon" style="width:auto; height:auto;float:left;">
+                                                                            <%
+                                                                            if(fileName.length() > 60){
+                                                                            %>
+                                                                                <a title="$fileName" class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                                                                    <%=FAQUtils.getSubString(fileName, 60);%>
+                                                                                </a>
+                                                                            <%}else{%>
+                                                                                <a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
+                                                                                    $fileName
+                                                                                </a>
+                                                                            <%}%>
+                                                                            </div>
+                                                                            <div style=" float:left;">&nbsp;-&nbsp;<span style="color:gray;">$size</span></div>
+                                                                            <div style="clear:left;"><span></span></div>
+                                                                        </div>
+                                                                <%}
+                                                                } else {
+                                                                %>
+                                                                    <div class="LabelBox" style="margin:10px 10px 0px 12px;">
+                                                                        <div class="FalseIcon" style="padding-left:15px;">
+                                                                            <a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%></a>
+                                                                        </div>
+                                                                        <div style="clear:left;"><span></span></div>
+                                                                    </div>
+                                                                <%
+                                                                }
+                                                            }%>
+                                                        <div style="clear:left;"><span></span></div>
+                                                    </div>
+                                            <%}%>
+
+                                            <!-- ======================================= view relation question ========================================= -->
+                                            <%
+                                                List questionRelation = question.getRelations();
+                                                if(!questionRelation.isEmpty()) {
+                                                    String questionRelationById = "" ;
+                                                    String cateRelaId = "" ;
+                                                    String quesRelaId = "" ;
+                                                    String quesRelaCont = "" ;
+                                                    String linkRelaQues = "" ;
+                                            %>
+                                                <div class="RelationContent">
+                                                    <div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
+                                            <%
+                                                    for(String relationId :questionRelation) {
+                                                        quesRelaCont = "" ;
+                                                        questionRelationById = uicomponent.getQuestionRelationById(relationId);
+                                                        if(questionRelationById!= null && questionRelationById.trim().length() > 0) {
+                                                            cateRelaId = questionRelationById.split("/")[0] ;
+                                                            quesRelaId = questionRelationById.split("/")[1] ;
+                                                            quesRelaCont = (questionRelationById.replaceAll(cateRelaId + "/", "").replaceAll(quesRelaId + "/", "")).replaceAll("<p>", "").replaceAll("</p>", "");
+                                                            linkRelaQues = uicomponent.event("ViewQuestion", cateRelaId + "/" + quesRelaId);
+                                                        } else {
+                                                            linkRelaQues = uicomponent.event("ViewQuestion", "");
+                                                        }
+                                                        if(quesRelaCont != null && quesRelaCont.trim().length() > 0) {
+                                            %>
+                                                            <div style="padding:0px 0px 5px 10px;">
+                                                                <a href="$linkRelaQues" style="text-decoration:yes; color:#1555B5;">$quesRelaCont</a><br/>
+                                                            </div>
+                                            <%      }
+                                                    }
+                                            %>
+                                                    </div>
+                                            <%}%>
+
+                                            <!-- ===================================== Question's answers ==================================================== -->
+                                            <div class="ResponseContainer">
+                                                <div class="TitleResponseContent">
+                                                    <div class="IconResponse">
+                                                        <table align="center" width="100%">
+                                                            <tr>
+                                                                <td>
+                                                                    <%=_ctx.appRes("UIQuestions.label.Answers")%>
+                                                                </td>
+                                                                <%if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){%>
+                                                                        <!-- action Sort answer by vote -->
+                                                                    <td style="width:70px">
+                                                                        <a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
+                                                                            <div class="SortAnswer"><span></span></div>
+                                                                        </a>
+                                                                    </td>
+                                                                <%}%>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;">
+                                                    <%
+                                                    if(answers != null && !answers.isEmpty()){
+                                                        String actionAnswer = "";
+                                                        int i = 0;
+                                                        for(Answer answer in answers) {
+                                                            res = answer.getResponses();
+                                                            res = ForumTransformHTML.convertCodeHTML(res);
+                                                            if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
+                                                                continue;
+                                                            }
+                                                            date = dateFormatter.format(answer.getDateResponse());
+                                                            responseBy = FAQUtils.getFullName(answer.getResponseBy());
+                                                            String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
+                                                        %>
+                                                        <div class="ResponseItemContainer">
+                                                            <table width="100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <!-- ============================= View user who answered quesetion ============================ -->
+                                                                            <div class="ResponseItemContainerLeft">
+                                                                                <div style="padding-bottom:10px">
+                                                                                    <div class="ProfileContainer">
+                                                                                        <%
+                                                                                        if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+                                                                                        %>
+                                                                                        <div class="AvatarContainer" style="margin-top:0px;">
+                                                                                            <div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(answer.getResponseBy(), sessionProvider)%>" width="63px" alt="Avatar"/></div>
+                                                                                        </div>
+                                                                                        <%}%>
+                                                                                        <div class="AuthorInfor" style="text-align:center">
+                                                                                            <a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", answer.getResponseBy())%>" style="color:gray; cursor:pointer;">
+                                                                                                <span class="UserName">$responseBy</span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="ResponseItemContainerRight">
+                                                                                <div style="overflow:auto;_padding-bottom:15px;">
+                                                                                    <%
+                                                                                    if(answer.getApprovedAnswers() && answer.getActivateAnswers()){
+                                                                                    %>
+                                                                                        <div style="padding:3px;">$res</div>
+                                                                                    <%
+                                                                                    } else {
+                                                                                    %>
+                                                                                        <div style="color:gray;padding:3px;">$res</div>
+                                                                                    <%} %>
+                                                                                    <div style="float:left; color:#721d95;">$date</div>
+                                                                                </div>
+
+                                                                                <!-- ============================= View mark vote answer ======================================== -->
+                                                                                <div style="overflow:auto; margin-top:5px;">
+                                                                                    <%
+                                                                                    if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+                                                                                            String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+                                                                                            String userVotedownAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
+                                                                                            if(uicomponent.currentUser_ != null){
+                                                                                                userVoteUpAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/1");
+                                                                                                userVotedownAnswer = uicomponent.event("VoteAnswer", answer.getId() + "/-1");
+                                                                                            }
+                                                                                            String idVote = "FAQVoteAnswerUp" + i;
+                                                                                        %>
+                                                                                            <div style="float:left;">
+                                                                                                <div style="float:left;" title="+1">
+                                                                                                    <div class="VoteAnswerUp" id="$idVote" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', null)">
+                                                                                                        <a href="$userVoteUpAnswer" style="width:16px; height:16px; display:block"></a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <%
+                                                                                                idVote = "FAQVoteAnswerDown" + i;
+                                                                                                ++i;
+                                                                                            %>
+                                                                                                <div style="float:left;" title="-1">
+                                                                                                    <div class="VoteAnswerDown" id="$idVote" onmouseover="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', 'true')" onmouseout="eXo.faq.UIFAQPortlet.voteAnswerUpDown('$idVote', null)">
+                                                                                                        <a href="$userVotedownAnswer" style="width:16px; height:16px; display:block"></a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div style="float:left; line-height:18px; margin-left:4px;">
+                                                                                                    <%=answer.getMarkVotes()%>
+                                                                                                </div>
+                                                                                                <div style="clear:left;"><span></span></div>
+                                                                                            </div>
+                                                                                        <%
+                                                                                        }%>
+                                                                                        <div style="clear:left;"><span></span></div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div style="clear:left;"><span></span></div>
+
+                                                                        </td>
+
+                                                                    <% if(uicomponent.canEditQuestion){%>
+                                                                        <td style="width:20px">
+                                                                            <a title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
+                                                                                <div class="ItemIcon Edit" style="height:20px;width:16px;">
+                                                                                        <span></span>
+                                                                                </div>
+                                                                            </a>
+                                                                        </td>
+                                                                        <td style="width:20px;">
+                                                                        <%
+                                                                            actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Approve");
+                                                                            if(answer.getApprovedAnswers()) {
+                                                                            %>
+                                                                                <a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnApprove")%>">
+                                                                                    <div class="ApprovedQuestion"><span></span></div>
+                                                                                </a>
+                                                                            <%} else {
+                                                                            %>
+                                                                                <a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Approve")%>">
+                                                                                    <div class="UnApprovedQuestion"><span></span></div>
+                                                                                </a>
+                                                                            <%}%>
+                                                                        </td>
+                                                                        <td style="width:20px;">
+                                                                            <%
+                                                                                actionAnswer = uicomponent.event("ChangeStatusAnswer",question.getId() + "/" + uicomponent.language_ + "/" + answer.getId() + "/Activate");
+                                                                                if(answer.getActivateAnswers()) {
+                                                                            %>
+                                                                                <a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.UnActivated")%>">
+                                                                                    <div class="ActivateQuestion"><span></span></div>
+                                                                                </a>
+                                                                            <%} else {
+                                                                            %>
+                                                                                <a href="$actionAnswer" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.Activate")%>">
+                                                                                    <div class="DeActivateQuestion"><span></span></div>
+                                                                                </a>
+                                                                            <%}%>
+                                                                        </td>
+                                                                        <td style="width:20px">
+                                                                                <a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
+                                                                                    <div class="DeleteAnswer"><span></span></div>
+                                                                                </a>
+                                                                        </td>
+                                                                    <%}%>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    <%} %>
+                                                        <div style="overflow:auto">
+                                                            <% uicomponent.renderChild(uicomponent.ANSWER_ITER + question.getId()) %>
+                                                            <div style="clear:right;"><span></span></div>
+                                                        </div>
+                                                <%} else { %>
+                                                    <div align="center" style="width:100%;">
+                                                        <div class="NotResponse" style="margin:auto; width:300px; padding-left:20px; font-weight:bold; text-align:left;">
+                                                            <%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%>
+                                                        </div>
+                                                    </div>
+                                                <%}%>
+                                                </div>
+
+                                                <!-- ============================== View question's commnets ============================================== -->
+                                                <%
+                                                if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+                                                    boolean canEditComment = false;
+                                                    List comments = uicomponent.getPageListComment(question.getId());
+                                                    String classComment = "";
+                                                    if(comments.size() > 0) {
+                                                        classComment = "CommentExternal";
+                                                %>
+                                                        <div class="TitleCommentContent">
+                                                            <div class="IconComment"><%=_ctx.appRes("UIQuestions.label.Comments")%></div>
+                                                        </div>
+                                                <% } %>
+
+                                                    <div class="Response $classComment">
+                                                    <%
+                                                        int commentCount = 0;
+                                                        for(Comment comment in comments){
+                                                            if(uicomponent.currentUser_.equals(comment.getCommentBy())) canEditComment = true;
+                                                            else canEditComment = false;
+                                                    %>
+                                                            <div >
+                                                                <div class="ResponseItemContainer" style="background:#F0F0F0;">
+                                                                <table style="width:100%">
+                                                                    <tr>
+                                                                        <td>
+
+                                                                                <div class="ResponseItemContainerLeft">
+                                                                                <!-- ============================= View user who comment for quesetion ============================ -->
+                                                                                    <div style="padding:10px 0px">
+                                                                                        <div class="ProfileContainer">
+                                                                                            <%
+                                                                                            if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+                                                                                            %>
+                                                                                            <div class="AvatarContainer" style="margin-top:0px;">
+                                                                                                <div class="ImageAvatar"><img class="FAQAvatar" src="<%=uicomponent.getAvatarUrl(comment.getCommentBy(), sessionProvider)%>" width="63" alt="Avatar"/></div>
+                                                                                            </div>
+                                                                                            <%}%>
+                                                                                            <div class="AuthorInfor" style="text-align:center">
+                                                                                                <a title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", comment.getCommentBy())%>" style="color:gray; cursor:pointer;">
+                                                                                                    <span class="UserName"><%=FAQUtils.getFullName(comment.getCommentBy())%></span>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="ResponseItemContainerRight">
+                                                                                    <%
+                                                                                        String commentDetail =comment.getComments() ;
+                                                                                        commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
+                                                                                    %>
+                                                                                    <span>$commentDetail</span>
+                                                                                    <div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+                                                                                </div>
+                                                                                <div style="clear:left;"><span></span></div>
+
+                                                                        </td>
+                                                                        <%
+                                                                        if(canEditComment){
+                                                                            if (uicomponent.faqSetting_.isCanEdit()){%>
+                                                                                <td style="width:20px;">
+                                                                                    <a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
+                                                                                        <div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+                                                                                                <span></span>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </td>
+                                                                        <%}%>
+                                                                            <td style="width:20px">
+                                                                                <a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentQuestion", question.getId() + "/" + comment.getId())%>">
+                                                                                    <div class="ItemIcon Edit" style="height:24px;width:16px;">
+                                                                                            <span></span>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </td>
+                                                                            <td style="width:20px">
+                                                                                <a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+                                                                                    <div class="ItemIcon Delete" style="height:24px;width:16px;">
+                                                                                            <span></span>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </td>
+                                                                    <%} else if (uicomponent.faqSetting_.isCanEdit()){%>
+                                                                            <td style="width:20px">
+                                                                                <a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
+                                                                                    <div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
+                                                                                            <span></span>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </td>
+                                                                            <td style="width:20px">
+                                                                                <a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
+                                                                                    <div class="ItemIcon Delete" style="height:24px;width:16px;">
+                                                                                            <span></span>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </td>
+                                                                    <%}%>
+                                                                    </tr>
+                                                                </table>
+                                                                </div>
+                                                            </div>
+                                                    <%}%>
+                                                        <div>
+                                                            <% uicomponent.renderChild(uicomponent.COMMENT_ITER + question.getId()) %>
+                                                            <div style="clear:right;"><span></span></div>
+                                                        </div>
+                                                    </div>
+                                                <%}%>
+                                                    <div class="UIAction">
+                                                        <div style="float:right">
+                                                            <div class="PrintAction" style="display:none ;">
+                                                                <div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
+                                                                    <div class="ButtonLeft">
+                                                                        <div class="ButtonRight">
+                                                                            <div class="ButtonMiddle">
+                                                                                <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint()" class="ActionButton LightBlueStyle">
+                                                                    <div class="ButtonLeft">
+                                                                        <div class="ButtonRight">
+                                                                            <div class="ButtonMiddle">
+                                                                                <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div style="clear:both;"><span></span></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="DecoratorBL">
+                                    <div class="DecoratorBR">
+                                        <div class="DecoratorBC"><span></span></div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    <%
+                    sessionProvider.close();
+                    }%>
+        <%      questionId ++ ;
+                }
+        %>
+
+            <div class="UIAction" style="display:none ;">
+                <div style="float:right">
+                    <div class="PrintAction">
+                        <div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
+                            <div class="ButtonLeft">
+                                <div class="ButtonRight">
+                                    <div class="ButtonMiddle">
+                                        <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint();" class="ActionButton LightBlueStyle">
+                            <div class="ButtonLeft">
+                                <div class="ButtonRight">
+                                    <div class="ButtonMiddle">
+                                        <a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div style="clear:right;"><span></span></div>
+            </div>
+        </div>
+        <%
+            if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {
+                String divId = uicomponent.getQuestionView();
+                rcontext.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.jumToQuestion('"+divId+"');");
+            }
+        %>
+    </div>
+
+    <div>
+        <%uicomponent.renderChild(uicomponent.OBJECT_ITERATOR);%>
+    </div>
+
 <% /* End View category*/ %>
 </div>
