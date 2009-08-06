@@ -341,7 +341,6 @@ public class UIForumPortlet extends UIPortletApplication {
 		userProfile.setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void updateUserProfileInfo() throws Exception {
 		String userId = "" ;
 		try {
@@ -349,21 +348,18 @@ public class UIForumPortlet extends UIPortletApplication {
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
-		SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(enableBanIP) {
 				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
 				PortletRequestImp request = context.getRequest() ;
-				userProfile = forumService.getDefaultUserProfile(sProvider, userId, request.getRemoteAddr()) ;
+				userProfile = forumService.getDefaultUserProfile(userId, request.getRemoteAddr()) ;
 			}else {
-				userProfile = forumService.getDefaultUserProfile(sProvider, userId, null) ;
+				userProfile = forumService.getDefaultUserProfile(userId, null) ;
 			}
 			if(!ForumUtils.isEmpty(userId))
 				userProfile.setEmail(ForumSessionUtils.getUserByUserId(userId).getEmail());
-		}finally {
-			sProvider.close();
-		}				
+		}catch (Exception e) {}			
 	}
 	
 	static public class ReLoadPortletEventActionListener extends EventListener<UIForumPortlet> {

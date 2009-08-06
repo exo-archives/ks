@@ -26,6 +26,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Value;
 import javax.jcr.observation.Event;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -401,7 +402,6 @@ public class RSSProcess extends RSSGenerate {
 				rssType = FORUM_RSS_TYPE;
 			}
 		} catch (Exception e){
-			e.printStackTrace() ;
 			return null;
 		}
 		Node RSSNode = null;
@@ -435,21 +435,47 @@ public class RSSProcess extends RSSGenerate {
 		}
 	}
 	
+	public List<String> getForumSubscription(String userId) throws Exception {
+		List<String> list = new ArrayList<String>();
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node subscriptionNode = appHomeNode.getNode("ForumSystem/UserProfileHome/"+userId+"/forumSubscription"+userId);
+			try {
+				list.addAll(ValuesToList(subscriptionNode.getProperty("exo:categoryIds").getValues()));
+				list.addAll(ValuesToList(subscriptionNode.getProperty("exo:forumIds").getValues()));
+				list.addAll(ValuesToList(subscriptionNode.getProperty("exo:topicIds").getValues()));
+			} catch (PathNotFoundException e) {
+			}
+    } catch (Exception e) {
+    }finally {sProvider.close();}
+		return list;
+  }
+	
+	private List<String> ValuesToList(Value[] values) throws Exception {
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < values.length; ++i) {
+			list.add(values[i].getString());
+		}
+		return list;
+	}
+	
 	@SuppressWarnings("unchecked")
-	public InputStream getRSSOfMultiObjects(String[] objectIds, SessionProvider sProvider) throws Exception{
+	public InputStream getRSSOfMultiObjects(String userId, SessionProvider sProvider) throws Exception{
+		if(userId == null || userId.trim().length() == 0) return null;
 		InputStream inputStream = null;
-		SyndFeed feed = this.createNewFedd("FORUM RSS FEED", new Date());
 		List<SyndEntry> entries = new ArrayList<SyndEntry>();
 		Node objectNode = null;
 		Node RSSNode = null;
-		for(String objectId : objectIds){
+		appHomeNode = getKSServiceHome(sProvider, FORUM_APP);
+		for(String objectId : getForumSubscription(userId)){
 			objectNode = getNodeById(objectId, sProvider);
 			try{
 				RSSNode = objectNode.getNode(KS_RSS);
 				getRSSData(RSSNode, data);
 				entries.addAll(updateRSSFeed(data, null, null).getEntries());
-			} catch (Exception e){}
+			} catch (Exception e){e.printStackTrace();}
 		}
+		SyndFeed feed = this.createNewFedd("FORUM RSS FEED", new Date());
 		feed.setDescription(" ");
 		feed.setEntries(entries);
 		SyndFeedOutput output = new SyndFeedOutput();

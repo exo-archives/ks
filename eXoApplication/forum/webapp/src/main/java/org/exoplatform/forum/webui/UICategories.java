@@ -346,28 +346,6 @@ public class UICategories extends UIContainer	{
 		}
 	}
 	
-	static public class RSSActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
-			UICategories categories = event.getSource();
-			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			String currentUser = ForumSessionUtils.getCurrentUser();
-			if(currentUser != null){
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-				categories.forumService.addWatch(sProvider, -1, cateId, null, currentUser);
-				sProvider.close();
-			}
-			String rssLink = categories.getRSSLink(cateId);
-			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			popupContainer.setId("ForumRSSForm") ;
-			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
-			popupAction.activate(popupContainer, 560, 170) ;
-			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}
-	
 	static public class OpenLastTopicLinkActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories categories = event.getSource();
@@ -469,16 +447,35 @@ public class UICategories extends UIContainer	{
 		}
 	}
 
+	static public class RSSActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories categories = event.getSource();
+			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String currentUser = categories.userProfile.getUserId();
+			if(currentUser != null){
+				categories.forumService.addWatch(-1, cateId, null, currentUser);
+			}
+			String rssLink = categories.getRSSLink(cateId);
+			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			popupContainer.setId("ForumRSSForm") ;
+			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
+			popupAction.activate(popupContainer, 560, 170) ;
+			exportForm.setRSSLink(rssLink);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
 	static public class AddWatchingActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			List<String> values = new ArrayList<String>();
 			String userName = uiContainer.userProfile.getUserId();
 			try {
-				values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
-				uiContainer.forumService.addWatch(sProvider, 1, path, values, ForumSessionUtils.getCurrentUser()) ;
+				values.add(uiContainer.userProfile.getEmail());
+				uiContainer.forumService.addWatch(1, path, values, userName) ;
 				Object[] args = { };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
@@ -489,8 +486,6 @@ public class UICategories extends UIContainer	{
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			}finally {
-				sProvider.close();
 			}
 		}
 	}

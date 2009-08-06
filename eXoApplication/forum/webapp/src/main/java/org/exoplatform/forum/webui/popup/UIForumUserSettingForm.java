@@ -34,6 +34,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
@@ -153,9 +154,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings({ "unchecked" })
 	private void initForumOption() throws Exception {
 		try {
-			//String userId = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId() ;
-			String userId = ForumSessionUtils.getCurrentUser();
-			this.userProfile = forumService.getUserSettingProfile(userId) ;
+			this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
 		} catch (Exception e) {			
 			e.printStackTrace() ;
 		}
@@ -270,32 +269,45 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		
 		UIFormCheckBoxInput formCheckBoxRSS = null;
 		UIFormCheckBoxInput formCheckBoxEMAIL = null;
-		String listObjectId = "";
-		for(int i = 0; i < listWatches.size(); i ++){
+		String listObjectId = "", watchId;
+		List<String> listId = new ArrayList<String>();
+		ForumSubscription forumSubscription = forumService.getForumSubscription(userProfile.getUserId());
+		listId.addAll(Arrays.asList(forumSubscription.getCategoryIds()));
+		listId.addAll(Arrays.asList(forumSubscription.getForumIds()));
+		listId.addAll(Arrays.asList(forumSubscription.getTopicIds()));
+		boolean isAddWatchRSS;
+		for(Watch watch : listWatches){
 			if(listObjectId.trim().length() > 0) listObjectId += "/";
-			listObjectId += listWatches.get(i).getId();
-			
-			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>("RSS" + listWatches.get(i).getId(), "RSS" + listWatches.get(i).getId(), listWatches.get(i).isAddWatchByRS());
-			formCheckBoxRSS.setChecked(listWatches.get(i).isAddWatchByRS());
+			watchId = watch.getId();
+			listObjectId += watchId;
+			formCheckBoxRSS = new UIFormCheckBoxInput<Boolean>("RSS" + watch.getId(), "RSS" + watch.getId(), false);
+			isAddWatchRSS = watch.isAddWatchByRS();
+			formCheckBoxRSS.setEnable(isAddWatchRSS);
+			if(isAddWatchRSS){
+				if(listId.contains(watchId))
+					formCheckBoxRSS.setChecked(true);
+				else 
+					formCheckBoxRSS.setChecked(false);
+			}
 			inputUserWatchManger.addChild(formCheckBoxRSS);
 			
-			formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>("EMAIL" + listWatches.get(i).getId(), "EMAIL" + listWatches.get(i).getId(), listWatches.get(i).isAddWatchByEmail());
-			formCheckBoxEMAIL.setChecked(listWatches.get(i).isAddWatchByEmail());
+			formCheckBoxEMAIL = new UIFormCheckBoxInput<Boolean>("EMAIL" + watch.getId(), "EMAIL" + watch.getId(), watch.isAddWatchByEmail());
+			formCheckBoxEMAIL.setChecked(watch.isAddWatchByEmail());
+			formCheckBoxEMAIL.setEnable(watch.isAddWatchByEmail());
 			inputUserWatchManger.addChild(formCheckBoxEMAIL);
 		}
 		
 		UIFormStringInput formStringInput = null;
 		formStringInput = new UIFormStringInput(RSS_LINK, null);
-		if(listObjectId.trim().length() > 0){
-			String rssLink = "";
-			PortalRequestContext portalContext = Util.getPortalRequestContext();
-			String url = portalContext.getRequest().getRequestURL().toString();
-			url = url.replaceFirst("http://", "") ;
-			url = url.substring(0, url.indexOf("/")) ;
-			url = "http://" + url;
-			rssLink = url + RSS.getRSSLink("forum", getPortalName(), listObjectId);
-			formStringInput.setValue(rssLink);
-		}
+		
+		
+		String rssLink = "";
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String url = portalContext.getRequest().getRequestURL().toString();
+		url = url.substring(0, url.indexOf("/", 8)) ;
+		rssLink = url + RSS.getUserRSSLink(userProfile.getUserId());
+		formStringInput.setValue(rssLink);
+		
 		inputUserWatchManger.addChild(formStringInput);
 		
 		
@@ -316,6 +328,34 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+  private void saveForumSubscription() throws Exception {
+		List<String> cateIds = new ArrayList<String>();
+		List<String> forumIds = new ArrayList<String>();
+		List<String> topicIds = new ArrayList<String>();
+		String watchId;
+		UIFormCheckBoxInput formCheckBoxRSS = null;
+		UIFormInputWithActions inputUserWatchManger = this.getChildById(FIELD_USERWATCHMANGER_FORM);
+		for(Watch watch : listWatches){
+			formCheckBoxRSS = inputUserWatchManger.getChildById("RSS" + watch.getId());
+			watchId = watch.getId();
+			if(formCheckBoxRSS.isChecked()){
+				if(watchId.indexOf(Utils.CATEGORY)==0) {
+					cateIds.add(watchId);
+				}else if(watchId.indexOf(Utils.FORUM)==0) {
+					forumIds.add(watchId);
+				} else if(watchId.indexOf(Utils.TOPIC)==0) {
+					topicIds.add(watchId);
+				}
+			}
+		}
+		ForumSubscription forumSubscription = new ForumSubscription();
+		forumSubscription.setCategoryIds(cateIds.toArray(new String[]{}));
+		forumSubscription.setForumIds(forumIds.toArray(new String[]{}));
+		forumSubscription.setTopicIds(topicIds.toArray(new String[]{}));
+		forumService.saveForumSubscription(forumSubscription, userProfile.getUserId());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -459,6 +499,11 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 			
 			uiForm.forumService.saveUserSettingProfile(userProfile);
+			try {
+	      uiForm.saveForumSubscription();
+      } catch (Exception e) {
+      	e.printStackTrace();
+      }
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
 			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;
@@ -503,9 +548,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	static public class SetDefaultAvatarActionListener extends EventListener<UIForumUserSettingForm> {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
-			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
-			uiForm.forumService.setDefaultAvatar(uiForm.userProfile.getUserId(), sessionProvider);
-			sessionProvider.close();
+			uiForm.forumService.setDefaultAvatar(uiForm.userProfile.getUserId());
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
@@ -519,9 +562,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			String path = (input.substring(0, input.lastIndexOf("/"))).replace(userId + "/", "");
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			String emails = userId + "/" + email;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				uiForm.forumService.removeWatch(sProvider, 1, path, emails) ;
+				uiForm.forumService.removeWatch(1, path, emails) ;
 				for(int i = 0; i < uiForm.listWatches.size(); i ++){
 					if(uiForm.listWatches.get(i).getNodePath().equals(path) && uiForm.listWatches.get(i).getUserId().equals(userId)){
 						uiForm.listWatches.remove(i);
@@ -530,8 +572,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				}
 				uiForm.pageList = new ForumPageList(7, uiForm.listWatches.size());
 				uiForm.pageIterator.updatePageList(uiForm.pageList);
-			} finally {
-				sProvider.close();
+			} catch (Exception e) {
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
@@ -559,7 +600,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				url = url.substring(0, url.indexOf("/")) ;
 				url = "http://" + url;
 				rssLink = url + RSS.getRSSLink("forum", uiForm.getPortalName(), listObjectId);
-				((UIFormStringInput)inputUserWatchManger.getChildById(uiForm.RSS_LINK)).setValue(rssLink);
+				((UIFormStringInput)inputUserWatchManger.getChildById(RSS_LINK)).setValue(rssLink);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
@@ -579,15 +620,15 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			}
 			UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
 			List<String> listObjectId = new ArrayList<String>();
-			for(int i = 0; i < uiForm.listWatches.size(); i ++){
-				formCheckBoxEMAIL = inputUserWatchManger.getChildById("EMAIL" + uiForm.listWatches.get(i).getId());
+			for(Watch watch : uiForm.listWatches){
+				formCheckBoxEMAIL = inputUserWatchManger.getChildById("EMAIL" + watch.getId());
 				if(formCheckBoxEMAIL.isChecked()) {
-					listObjectId.add(uiForm.listWatches.get(i).getId());
-					uiForm.listWatches.get(i).setEmail(newEmailAdd);
+					listObjectId.add(watch.getId());
+					watch.setEmail(newEmailAdd);
 				}
 			}
 			if(listObjectId.size() > 0){
-				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, ForumSessionUtils.getCurrentUser());
+				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, uiForm.userProfile.getUserId());
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
@@ -613,16 +654,12 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			Category category = null;
 			Forum forum = null;
 			Topic topic = null;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try{
-				category = forumService.getCategory(sProvider, cateId) ;
-				forum = forumService.getForum(sProvider,cateId , forumId ) ;
-				topic = forumService.getTopic(sProvider, cateId, forumId, topicId, userProfile.getUserId());
+				category = forumService.getCategory(cateId) ;
+				forum = forumService.getForum(cateId , forumId ) ;
+				topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
 			} catch (Exception e) { 
-			}finally {
-				sProvider.close();
 			}
-			
 			isRead = uiForm.canView(category, forum, topic, null, userProfile);
 			
 			if(ForumUtils.isEmpty(forumId)) {

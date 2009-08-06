@@ -75,6 +75,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
@@ -930,7 +931,7 @@ public class JCRDataStorage {
 	    node.setProperty("exo:tempModerators", new String[]{});
 	    node.save();
     } catch (Exception e) {
-	    e.printStackTrace();
+    	log.debug("PathNotFoundException  cateogry node of forum node not found");
     } finally {
     	sProvider.close();
     }
@@ -4953,6 +4954,84 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	public ForumSubscription getForumSubscription(String userId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		ForumSubscription forumSubscription = new ForumSubscription();
+		try {
+			Node subscriptionNode = getUserProfileHome(sProvider).getNode(userId+"/"+Utils.FORUM_SUBSCRIOTION+userId);
+			if(subscriptionNode.hasProperty("exo:categoryIds"))
+				forumSubscription.setCategoryIds(ValuesToArray(subscriptionNode.getProperty("exo:categoryIds").getValues()));
+			if(subscriptionNode.hasProperty("exo:forumIds"))
+      	forumSubscription.setForumIds(ValuesToArray(subscriptionNode.getProperty("exo:forumIds").getValues()));
+			if(subscriptionNode.hasProperty("exo:topicIds"))
+      	forumSubscription.setTopicIds(ValuesToArray(subscriptionNode.getProperty("exo:topicIds").getValues()));
+    } catch (Exception e) {
+    }finally {sProvider.close();}
+		return forumSubscription;
+  }
+	
+	public void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node profileNode = getUserProfileHome(sProvider).getNode(userId);
+			Node subscriptionNode;
+			String id = Utils.FORUM_SUBSCRIOTION + userId;
+			try {
+				subscriptionNode = profileNode.getNode(id);
+      } catch (PathNotFoundException e) {
+      	subscriptionNode = profileNode.addNode(id, "exo:forumSubscription");
+      }
+      subscriptionNode.setProperty("exo:categoryIds", forumSubscription.getCategoryIds());
+      subscriptionNode.setProperty("exo:forumIds", forumSubscription.getForumIds());
+      subscriptionNode.setProperty("exo:topicIds", forumSubscription.getTopicIds());
+      if(profileNode.isNew()){
+      	profileNode.getSession().save();
+      } else {
+      	profileNode.save();
+      }
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }finally {sProvider.close();}
+  }
+	
+	private void addForumSubscription(SessionProvider sProvider, String userId, String objectId){
+		try {
+			Node profileNode = getUserProfileHome(sProvider).getNode(userId);
+			Node subscriptionNode;
+			String id = Utils.FORUM_SUBSCRIOTION + userId;
+			try {
+				subscriptionNode = profileNode.getNode(id);
+      } catch (PathNotFoundException e) {
+      	subscriptionNode = profileNode.addNode(id, "exo:forumSubscription");
+      }
+      if(objectId.indexOf(Utils.CATEGORY)==0) {
+      	subscriptionNode.setProperty("exo:categoryIds", getValueProperty(subscriptionNode, "exo:categoryIds", objectId));
+			}else if(objectId.indexOf(Utils.FORUM)==0) {
+				subscriptionNode.setProperty("exo:forumIds", getValueProperty(subscriptionNode, "exo:forumIds", objectId));
+			} else if(objectId.indexOf(Utils.TOPIC)==0) {
+				subscriptionNode.setProperty("exo:topicIds", getValueProperty(subscriptionNode, "exo:topicIds", objectId));
+			}
+      if(profileNode.isNew()){
+      	profileNode.getSession().save();
+      } else {
+      	profileNode.save();
+      }
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+	}
+	
+	private String[] getValueProperty(Node node, String property, String objectId) throws Exception {
+		List<String> list = new ArrayList<String>();
+		if(node.hasProperty(property)){
+			list.addAll(ValuesToList(node.getProperty(property).getValues()));
+			if(!list.contains(objectId))list.add(objectId);
+		} else {
+			list.add(objectId);
+		}
+		return list.toArray(new String[]{});
+	}
+	
 	public ForumStatistic getForumStatistic() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		ForumStatistic forumStatistic = new ForumStatistic();
@@ -5020,6 +5099,7 @@ public class JCRDataStorage {
 		}
 		return list;
 	}
+	
 
 	private static String[] getStringsInList(List<String> list) throws Exception {
 		return list.toArray(new String[] {});
@@ -5465,9 +5545,9 @@ public class JCRDataStorage {
 				if (watchType == 1) {// send email when had changed on category
 					List<String> listEmail = new ArrayList<String>();
 					if(watchingNode.hasProperty("exo:emailWatching"))
-						listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
+						listEmail.addAll(ValuesToList(watchingNode.getProperty("exo:emailWatching").getValues()));
 					if(watchingNode.hasProperty("exo:userWatching"))
-						listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
+						listUsers.addAll(ValuesToList(watchingNode.getProperty("exo:userWatching").getValues()));
 					for (String str : values) {
 						if (listEmail.contains(str))
 							continue;
@@ -5477,12 +5557,7 @@ public class JCRDataStorage {
 					watchingNode.setProperty("exo:emailWatching", getStringsInList(listEmail));
 					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
 				} else if(watchType == -1){
-					if(watchingNode.hasProperty("exo:rssWatching"))
-						listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:rssWatching").getValues())));
-					if(!listUsers.contains(currentUser)){
-						listUsers.add(currentUser);
-						watchingNode.setProperty("exo:rssWatching", getStringsInList(listUsers));
-					}
+						watchingNode.setProperty("exo:rssWatching", getValueProperty(watchingNode, "exo:rssWatching", currentUser));
 				}
 			} else {
 				watchingNode.addMixin("exo:forumWatching");
@@ -5502,6 +5577,7 @@ public class JCRDataStorage {
 			} else {
 				watchingNode.save();
 			}
+			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {sProvider.close() ;}
@@ -5631,9 +5707,9 @@ public class JCRDataStorage {
 				rootPath = categoryHome.getPath();
 				pathName = "";
 				node = iterator.nextNode();
-				if(node.hasProperty("exo:userWatching"))users.addAll(Arrays.asList(ValuesToArray(node.getProperty("exo:userWatching").getValues())));
+				if(node.hasProperty("exo:userWatching"))users.addAll(ValuesToList(node.getProperty("exo:userWatching").getValues()));
 				if(node.hasProperty("exo:emailWatching"))emails = ValuesToArray(node.getProperty("exo:emailWatching").getValues());			
-				if(node.hasProperty("exo:rssWatching"))RSSUsers.addAll(Arrays.asList(ValuesToArray(node.getProperty("exo:rssWatching").getValues())));			
+				if(node.hasProperty("exo:rssWatching"))RSSUsers.addAll(ValuesToList(node.getProperty("exo:rssWatching").getValues()));			
 				path = node.getPath();
 				if(node.isNodeType(Utils.TYPE_CATEGORY)) typeNode = Utils.TYPE_CATEGORY;
 				else if(node.isNodeType(Utils.TYPE_FORUM)) typeNode = Utils.TYPE_FORUM;

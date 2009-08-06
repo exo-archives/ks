@@ -32,6 +32,10 @@ public class RSS {
 		return "/" + appType + "/rss/" + appType + "/" + objectId;
 	}
 	
+	public static String getUserRSSLink(String userId) {
+	  return "/forum/rss/"+userId;
+  }
+	
 	public String getFileName() {
 		return fileName;
 	}

@@ -47,6 +47,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
 import org.exoplatform.forum.service.Poll;
@@ -850,7 +851,15 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void savePrivateMessage(ForumPrivateMessage privateMessage) throws Exception {
     storage_.savePrivateMessage(privateMessage) ;
   }
-
+  
+  public ForumSubscription getForumSubscription(String userId) throws Exception {
+  	return storage_.getForumSubscription(userId);
+  }
+  
+  public void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception {
+  	storage_.saveForumSubscription(forumSubscription, userId);
+  }
+  
   public JCRPageList getPageTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
   	sProvider.close() ;
     return getPageTopicOld(date, forumPatch) ;

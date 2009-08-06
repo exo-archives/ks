@@ -40,36 +40,42 @@ public class KSRSSServlet extends HttpServlet {
           throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
     String pathInfo = request.getPathInfo() ;
-    pathInfo = pathInfo.substring(1) ;
     SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
     try{
-      String appType = pathInfo.substring(0, pathInfo.indexOf("/"));
-      String objectId = pathInfo.substring(pathInfo.indexOf("/") + 1) ;
-      RSSProcess process = new RSSProcess(sessionProvider, appType);
-      InputStream is = null;
-      if(appType.equals("faq")) {
-      	//System.out.println("objectiD =======>" + objectId) ;
-      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
-	      response.setContentType("text/xml") ;
-      }else { 
-      	if(objectId.indexOf("/") > 0) {
-      		is = process.getRSSOfMultiObjects(objectId.split("/"), sessionProvider);
-      	}else {
-      		is = process.getRSSNode(sessionProvider, objectId, appType) ;
-  	      response.setContentType("text/xml") ;
-      	}      	
-      }
-      if(is != null) {
-      	byte[] buf = new byte[is.available()];
-        is.read(buf);
-        ServletOutputStream os = response.getOutputStream();
-        os.write(buf);
-      }else {
-      	byte[] buf = new byte[]{Byte.parseByte("This category is hidden or you haven't got permission to view!")};
-      	ServletOutputStream os = response.getOutputStream();
-        os.write(buf) ;
-      }
-      
+    	if(pathInfo != null && pathInfo.length() > 0){
+	    	pathInfo = pathInfo.substring(1) ;
+	      String appType = "";
+	      String objectId = "" ;
+	      if(pathInfo.indexOf("/") > 0){
+	      	appType = pathInfo.substring(0, pathInfo.indexOf("/"));
+	      	objectId = pathInfo.substring(pathInfo.indexOf("/") + 1);
+	      }else objectId = pathInfo;
+	      RSSProcess process = new RSSProcess(sessionProvider, appType);
+	      InputStream is = null;
+	      if(appType.equals("faq")) {
+	      	//System.out.println("objectiD =======>" + objectId) ;
+	      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
+		      response.setContentType("text/xml") ;
+	      }else if(appType.equals("forum")) { 
+	    		is = process.getRSSNode(sessionProvider, objectId, appType) ;
+		      response.setContentType("text/xml") ;
+	      }else{
+	      	if(pathInfo.indexOf("/") > 0){
+	      		objectId = pathInfo.substring(pathInfo.lastIndexOf("/") + 1) ;
+	      	}else objectId = pathInfo;
+	      	is = process.getRSSOfMultiObjects(objectId, sessionProvider);
+	      }
+	      if(is != null) {
+	      	byte[] buf = new byte[is.available()];
+	        is.read(buf);
+	        ServletOutputStream os = response.getOutputStream();
+	        os.write(buf);
+	      }else {
+	      	byte[] buf = ("This object is hidden or you haven't got permission to view!").getBytes();
+	      	ServletOutputStream os = response.getOutputStream();
+	        os.write(buf) ;
+	      }
+    	}
     }catch(Exception e) {
     	e.printStackTrace() ;
       //throw new ServletException(e) ;

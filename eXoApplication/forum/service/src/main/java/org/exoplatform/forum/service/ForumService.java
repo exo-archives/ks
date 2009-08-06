@@ -868,6 +868,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
+	public ForumSubscription getForumSubscription(String userId) throws Exception;
+	public void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception;
 	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception;
 	public void removeWatch(int watchType, String path, String values) throws Exception;
 	public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception ;
