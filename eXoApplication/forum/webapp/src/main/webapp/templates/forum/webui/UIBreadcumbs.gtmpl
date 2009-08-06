@@ -81,7 +81,7 @@
 				    if(!checkPath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL) && !toolTip.equals("tag")){
 					    toolTip = _ctx.appRes("UIBreadcumbs.title." + toolTip);
 				  %>
-					<div class="SeparatorLine" style="float:right;">
+					<div class="SeparatorLineForum" style="float:right;">
 						<div class="ShareLink">
 							<a class="PermLink" onclick="window.open('$link'); return false;" href="$link" title="$toolTip"><%=_ctx.appRes("UIBreadcumbs.label.ShareLink");%></a>
 						</div>
@@ -99,11 +99,11 @@
 						if(uicomponent.userProfile.getUserRole() <= 1) {
 							int total = uicomponent.getTotalJobWattingForModerator();
 					%>
-					<div class="SeparatorLine" style="float:right;">
+					<div class="SeparatorLineForum" style="float:right;">
 						<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
 					</div>
 					<%}%>
-					<div class="SeparatorLine" style="float:right;">
+					<div class="SeparatorLineForum" style="float:right;">
 						<div class="PrivateMessage PMStyle" onclick="<%=uicomponent.event("PrivateMessage");%>; return false;">
 							 <span>$newMessage</span>
 						</div>

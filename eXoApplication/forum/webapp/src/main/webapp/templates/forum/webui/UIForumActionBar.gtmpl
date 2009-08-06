@@ -68,7 +68,7 @@
 											</div>
 										</div>	
 									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
+									<div class="SeparatorLineForum ControlButton"><span></span></div>
 								<%
 									}
 									if(isAdmin) { 
@@ -94,7 +94,7 @@
 											</div>
 										
 									</div>
-									<div class="SeparatorLine ControlButton"><span></span></div>
+									<div class="SeparatorLineForum ControlButton"><span></span></div>
 								<% }%>
 								<div class="ScrollButtons" style="width:35px;">
 				      		<div title="Previous">

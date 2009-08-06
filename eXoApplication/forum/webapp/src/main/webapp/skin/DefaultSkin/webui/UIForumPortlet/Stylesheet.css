@@ -63,7 +63,7 @@
 	margin: 3px 0px 0px 2px;
 }
 
-.UIForumPortlet .UIQuickSearchForm .SeparatorLine {
+.UIForumPortlet .UIQuickSearchForm .SeparatorLineForum {
 	float: right;
 	margin: -3px 7px;
 }
@@ -124,7 +124,7 @@
 	float: right;
 }
 
-.UIForumPortlet .UIBreadcumbs .RSSBar .SeparatorLine {
+.UIForumPortlet .UIBreadcumbs .RSSBar .SeparatorLineForum {
 	background: url('background/SeparatorLine2x27.gif') no-repeat left;
 	padding-left: 12px;
 	white-space: nowrap;
@@ -165,7 +165,7 @@
 	white-space: nowrap;
 }
 
-.UIForumPortlet .UIForumActionBar .SeparatorLine {
+.UIForumPortlet .UIForumActionBar .SeparatorLineForum {
 	float: left;
 	background: url('background/SeparatorLineToolbar1x27.gif') no-repeat ;
 	height: 27px;	width: 2px;

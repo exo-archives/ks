@@ -243,7 +243,7 @@
 							</div>
 							<% } %>
 						<%if(!isClosed && userProfile.getUserRole() != 3 && !isBanned) {%>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div onclick="<%=uicomponent.event("AddTagTopic")%>">
@@ -259,7 +259,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 							<div class="ContentAction">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div onclick="<%=uicomponent.event("RatingTopic")%>">
@@ -276,7 +276,7 @@
 								</div>
 							</div>
 						<%}%>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
@@ -340,7 +340,7 @@
 								</div>
 							</div>
 						<% if((canEdit && isShowMenu) || isUserCreatedTopic) { %>	
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">								
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton">

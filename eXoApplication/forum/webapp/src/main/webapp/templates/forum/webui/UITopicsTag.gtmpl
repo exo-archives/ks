@@ -57,7 +57,7 @@
 							<div class="Title"><span style="font-weight:normal;"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:</span>$tagName_</div>
 							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 							<% if(canEdit){ %>
-							<div class="SeparatorLine" style="margin-right:7px;"><span></span></div>
+							<div class="SeparatorLineForum" style="margin-right:7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton">

@@ -42,7 +42,7 @@
 					</div>
 					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>	
-					<div class="SeparatorLine"><span></span></div>
+					<div class="SeparatorLineForum"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 							<a href="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
@@ -58,7 +58,7 @@
 							</a>
 						</div>
 					</div>
-					<div class="SeparatorLine"><span></span></div>
+					<div class="SeparatorLineForum"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 							<div onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
@@ -80,7 +80,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="SeparatorLine"><span></span></div>
+					<div class="SeparatorLineForum"><span></span></div>
 					<div class="ContentAction">
 						<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 							<div class="LeftOverButton">

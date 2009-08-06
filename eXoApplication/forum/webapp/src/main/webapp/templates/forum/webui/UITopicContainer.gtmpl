@@ -201,7 +201,7 @@
 								</div>
 								<% /*End Popup Menu*/ %>
 							</div>
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 						<% } %>
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">
@@ -264,7 +264,7 @@
 							</div>
 						</div>
 						<% if(isShowMenu && canEdit) { %>	
-							<div class="SeparatorLine"><span></span></div>
+							<div class="SeparatorLineForum"><span></span></div>
 							<div class="ContentAction" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
 									<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 										<div class="LeftOverButton">
