@@ -55,10 +55,10 @@ public class KSRSSServlet extends HttpServlet {
 	      if(appType.equals("faq")) {
 	      	//System.out.println("objectiD =======>" + objectId) ;
 	      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
-		      response.setContentType("text/xml") ;
+//		      response.setContentType("text/xml") ;
 	      }else if(appType.equals("forum")) { 
 	    		is = process.getRSSNode(sessionProvider, objectId, appType) ;
-		      response.setContentType("text/xml") ;
+		      //response.setContentType("text/xml") ;
 	      }else{
 	      	if(pathInfo.indexOf("/") > 0){
 	      		objectId = pathInfo.substring(pathInfo.lastIndexOf("/") + 1) ;
@@ -71,7 +71,7 @@ public class KSRSSServlet extends HttpServlet {
 	        ServletOutputStream os = response.getOutputStream();
 	        os.write(buf);
 	      }else {
-	      	byte[] buf = ("This object is hidden or you haven't got permission to view!").getBytes();
+	      	byte[] buf = ("<br/><br/>This object is hidden or you haven't got permission to view!").getBytes();
 	      	ServletOutputStream os = response.getOutputStream();
 	        os.write(buf) ;
 	      }

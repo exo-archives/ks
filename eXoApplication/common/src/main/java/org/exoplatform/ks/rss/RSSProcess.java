@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -408,13 +410,16 @@ public class RSSProcess extends RSSGenerate {
 		InputStream inputStream = null;
 		if(!parentNode.hasNode(KS_RSS)){
 			String feedType = "rss_2.0";
-			SyndFeed feed = new SyndFeedImpl();
+			String title = "FORUM RSS FEED";
+			if(appType.equals(KS_FAQ))title = "FAQ RSS FEED";
+			SyndFeed feed = createNewFedd(title, new Date());
 			List<SyndEntry> entries = new ArrayList<SyndEntry>();
 			RSSNode = parentNode.addNode(KS_RSS, rssType);
 			try{
 				feed.setTitle(parentNode.getProperty("exo:name").getString());
-				feed.setDescription(parentNode.getProperty("exo:description").getString());
-				feed.setDescription(" ");
+				if(parentNode.hasProperty("exo:description"))
+					feed.setDescription(parentNode.getProperty("exo:description").getString());
+				else feed.setDescription(" ");
 			} catch (Exception e){
 				feed.setTitle(parentNode.getName());
 				feed.setDescription(" ");
@@ -422,6 +427,7 @@ public class RSSProcess extends RSSGenerate {
 			feed.setLink(eXoLink);
 			feed.setFeedType(feedType);
 			feed.setEntries(entries);
+			feed.setPublishedDate(new Date());
 			RSS data = new RSS();
 			SyndFeedOutput output = new SyndFeedOutput();
 			inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
@@ -459,25 +465,26 @@ public class RSSProcess extends RSSGenerate {
 		return list;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public InputStream getRSSOfMultiObjects(String userId, SessionProvider sProvider) throws Exception{
 		if(userId == null || userId.trim().length() == 0) return null;
 		InputStream inputStream = null;
-		List<SyndEntry> entries = new ArrayList<SyndEntry>();
-		Node objectNode = null;
+		Map<String, SyndEntry> mapEntries = new HashMap<String, SyndEntry>();
 		Node RSSNode = null;
 		appHomeNode = getKSServiceHome(sProvider, FORUM_APP);
+		SyndEntry syndEntry = null;
 		for(String objectId : getForumSubscription(userId)){
-			objectNode = getNodeById(objectId, sProvider);
 			try{
-				RSSNode = objectNode.getNode(KS_RSS);
+				RSSNode = getNodeById(objectId, sProvider).getNode(KS_RSS);
 				getRSSData(RSSNode, data);
-				entries.addAll(updateRSSFeed(data, null, null).getEntries());
-			} catch (Exception e){e.printStackTrace();}
+				for(Object entry : updateRSSFeed(data, null, null).getEntries()){
+					syndEntry = (SyndEntry)entry;
+					mapEntries.put(syndEntry.getUri(), syndEntry);
+				}
+			} catch (Exception e){}
 		}
 		SyndFeed feed = this.createNewFedd("FORUM RSS FEED", new Date());
 		feed.setDescription(" ");
-		feed.setEntries(entries);
+		feed.setEntries(Arrays.asList(mapEntries.values().toArray(new SyndEntry[]{})));
 		SyndFeedOutput output = new SyndFeedOutput();
 		inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
 		return inputStream;
