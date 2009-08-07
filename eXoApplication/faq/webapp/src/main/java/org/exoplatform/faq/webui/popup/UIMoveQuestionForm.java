@@ -124,22 +124,11 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 						return ;
 					}
 					question.setCategoryId(cateId) ;
-					String link = moveQuestionForm.link.replaceFirst("UIMoveQuestionForm", "UIQuestions").replaceFirst("Cancel", "ViewQuestion").replaceAll("&amp;", "&");
-		      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-		      String portalName = "/" + Util.getUIPortal().getName() ;
-		      if(link.indexOf(portalName) > 0) {
-				    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-				      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-				    }									
-		      }	
-		      PortalRequestContext portalContext = Util.getPortalRequestContext();
-		      String url = portalContext.getRequest().getRequestURL().toString();
-					url = url.replaceFirst("http://", "") ;
-					url = url.substring(0, url.indexOf("/")) ;
-					url = "http://" + url;
-					String path = question.getCategoryId() ;
-					link = link.replaceFirst("OBJECTID", path);
-					link = url + link;
+					
+					String questionId = question.getId();
+					questionId = questionId.substring(questionId.lastIndexOf("/")+1);
+					questionId = cateId + "/" + questionId;
+					String link = FAQUtils.getLink(moveQuestionForm.link, moveQuestionForm.getId(), "UIQuestions", "Cancel", "ViewQuestion", questionId);
 					question.setLink(link);
 					FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
 					FAQUtils.getEmailMoveQuestion(moveQuestionForm.faqSetting_);

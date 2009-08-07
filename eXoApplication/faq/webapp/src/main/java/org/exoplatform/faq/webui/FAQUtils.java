@@ -44,6 +44,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.CommonContact;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -589,6 +590,15 @@ public class FAQUtils {
 		s = s.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("DiscussForum", "ChangePath").replaceAll("amp;", "");
 		return s;
 	}
+	
+	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String url = portalContext.getRequest().getRequestURL().toString();
+		url = url.substring(0, url.indexOf("/", 8)) ;
+		link = link.replaceFirst(componentId, componentIdhasAction).replaceFirst(action, actionRep).replaceFirst("OBJECTID", objectId).replaceAll("amp;", "");
+		link = url + link;
+	  return link;
+  }
 	
 	public static int getLimitUploadSize(){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();

@@ -33,7 +33,6 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -55,7 +54,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
@@ -173,22 +171,8 @@ public class UIQuestions extends UIContainer {
 		// for discuss question
 		FAQSetting faqSetting = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting);
-		String link = getLink(); 
-    String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-    String portalName = "/" + Util.getUIPortal().getName() ;
-    if(link.indexOf(portalName) > 0) {
-	    if(link.indexOf(selectedNode) < 0){
-	      link = link.replaceFirst(portalName, selectedNode) ;
-	    }									
-		}	
-    link = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("Setting", "ChangePath").replaceAll("&amp;", "&");
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String url = portalContext.getRequest().getRequestURL().toString();
-		url = url.replaceFirst("http://", "") ;
-		url = url.substring(0, url.indexOf("/")) ;
-		url = "http://" + url;
-		link = link.replaceFirst("OBJECTID", topicId);
-		link = url + link;
+		String link = getLink().replaceAll("faq", "forum"); 
+    link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
 		return link;
 	}
 	
@@ -832,7 +816,9 @@ public class UIQuestions extends UIContainer {
 					return ;
 				}
 				//uiQuestions.pathToCurrentLanguage = "";				
-				uiQuestions.viewingQuestionId_ = questionId ;				
+				uiQuestions.viewingQuestionId_ = questionId ;		
+				uiQuestions.updateCurrentQuestionList() ;
+				uiQuestions.updateCurrentLanguage() ;
 			} catch(Exception e) {
 				e.printStackTrace();				
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1255,23 +1241,10 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UISendEmailsContainer watchContainer = popupAction.activate(UISendEmailsContainer.class, 700) ;
 			UISendMailForm sendMailForm = watchContainer.getChild(UISendMailForm.class) ;
-			//link
-			String link = uiQuestions.getLink().replaceFirst("Setting", "ViewQuestion").replaceAll("&amp;", "&");
-			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-			String portalName = "/" + Util.getUIPortal().getName() ;
-			if(link.indexOf(portalName) > 0) {
-				if(link.indexOf(portalName + "/" + selectedNode) < 0){
-					link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-				}									
-			}	
-			PortalRequestContext portalContext = Util.getPortalRequestContext();
-			String url = portalContext.getRequest().getRequestURL().toString();
-			url = url.replaceFirst("http://", "") ;
-			url = url.substring(0, url.indexOf("/")) ;
-			url = "http://" + url;
-			link.replaceFirst("OBJECTID", uiQuestions.categoryId_);
-			link = url + link;
-			sendMailForm.setLink(link.replaceFirst("private", "public") + "/" + questionId + "/0");
+			//Create link by Vu Duy Tu.
+			String link = uiQuestions.getLink();
+			link = FAQUtils.getLink(link, uiQuestions.getId(), uiQuestions.getId(), "Setting", "ViewQuestion", questionId);
+			sendMailForm.setLink(link.replaceFirst("private", "public"));
 			if(!questionId.equals(uiQuestions.viewingQuestionId_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
 			else sendMailForm.setUpdateQuestion(questionId , language_) ;
 			watchContainer.setId("FAQSendMailForm") ;

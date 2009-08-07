@@ -154,29 +154,11 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
       }
 			try{								
-				//link
-	      String link = commentForm.getLink().replaceFirst("UICommentForm", "UIQuestions").replaceFirst("Cancel", "ViewQuestion").replaceAll("&amp;", "&");
-	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-	      String portalName = "/" + Util.getUIPortal().getName() ;
-	      if(link.indexOf(portalName) > 0) {
-			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			    }									
-				}	
-				PortalRequestContext portalContext = Util.getPortalRequestContext();
-				String url = portalContext.getRequest().getRequestURL().toString();
-				url = url.replaceFirst("http://", "") ;
-				url = url.substring(0, url.indexOf("/")) ;
-				url = "http://" + url;
-				String path = "" ;
-				
-				//TODO will be die
-				/*if(FAQUtils.isFieldEmpty(commentForm.question_.getId())) path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;
-				else path = questions.getPathService(commentForm.question_.getCategoryId())+"/"+commentForm.question_.getCategoryId() ;*/
-				path = commentForm.question_.getPath() ;
-				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
-				link = link.replaceFirst("OBJECTID", path);
-				link = url + link;
+				//Create link by Vu Duy Tu.
+	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
+	      
+				String linkForum = link.replaceAll("faq", "forum").replaceFirst(commentForm.getId(), "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
+				link = link.replaceFirst("OBJECTID", commentForm.question_.getId());
 				commentForm.question_.setLink(link) ;
 				if(commentForm.comment != null) {
 					commentForm.comment.setNew(false) ;
@@ -194,7 +176,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
 						linkForum = linkForum.replaceFirst("OBJECTID", topicId);
-						linkForum = url + linkForum;
 						if(commentForm.isAddNew) {
 							Post post = new Post();
 							post.setOwner(commentForm.currentUser_);

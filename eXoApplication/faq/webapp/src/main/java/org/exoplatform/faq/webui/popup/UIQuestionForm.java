@@ -499,26 +499,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       question_.setAttachMent(questionForm.listFileAttach_) ;      
       UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-      //link
-      String link = questionForm.getLink().replaceFirst("UIQuestionForm", "UIQuestions").replaceFirst("Attachment", "ViewQuestion").replaceAll("&amp;", "&");
-      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-      String portalName = "/" + Util.getUIPortal().getName() ;
-      if(link.indexOf(portalName) > 0) {
-		    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-		      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-		    }									
-			}	
-			PortalRequestContext portalContext = Util.getPortalRequestContext();
-			String url = portalContext.getRequest().getRequestURL().toString();
-			url = url.replaceFirst("http://", "") ;
-			url = url.substring(0, url.indexOf("/")) ;
-			url = "http://" + url;
-			String path = "" ;
-			/*if(FAQUtils.isFieldEmpty(questionForm.questionId_)) path = questions.getPathService(questionForm.getCategoryId())+"/"+questionForm.getCategoryId() ;
-			else path = questions.getPathService(question_.getCategoryId())+"/"+question_.getCategoryId() ;*/
-			link = link.replaceFirst("OBJECTID", path);
-			link = url + link;
-      question_.setLink(link) ;
+      //Create link by Vu Duy Tu.
+      if(isNew){
+	      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", question_.getId());
+	      question_.setLink(link) ;
+      }
       
       //For discuss in forum
       try{        
