@@ -76,7 +76,7 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.rss.RSSEventListener;
+import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -103,7 +103,7 @@ public class JCRDataStorage {
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
-	private Map<String, RSSEventListener> rssListenerMap_ = new HashMap<String, RSSEventListener> () ;
+	private Map<String, FAQRSSEventListener> rssListenerMap_ = new HashMap<String, FAQRSSEventListener> () ;
 	private NodeHierarchyCreator nodeHierarchyCreator_ ;
 	private final String ADMIN_="ADMIN".intern();
 	private final String FAQ_RSS = "ks.rss";
@@ -357,19 +357,12 @@ public class JCRDataStorage {
 			String wsName = node.getSession().getWorkspace().getName() ;
 			String path = node.getPath() ;
 			RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
-			//RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-			//changePropertyListener.setPath(path) ;
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-			//observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,path, true, null, null, false) ;
-			
-			RSSEventListener questionRSS = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
+			FAQRSSEventListener questionRSS = new FAQRSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
 			questionRSS.setPath(path) ;
 			observation.addEventListener(questionRSS, Event.NODE_ADDED + Event.PROPERTY_CHANGED + Event.NODE_REMOVED,
 					                         path, true, null, null, false) ;
 			rssListenerMap_.put(path, questionRSS) ;
-			//RSSEventListener removeQuestionListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
-			//removeQuestionListener.setPath(path) ;
-			//observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,path , true, null, null, false) ;
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}
@@ -386,22 +379,7 @@ public class JCRDataStorage {
 		rssListenerMap_.clear() ;
 		while(iter.hasNext()) {
 			addRSSListener(iter.nextNode()) ;			
-		}
-		//ObservationManager observation = questionHomeNode.getSession().getWorkspace().getObservationManager() ;
-		//EventListenerIterator listenerIterator = observation.getRegisteredEventListeners();
-		//if(listenerIterator.hasNext()){
-		//	return;
-		//} else {
-			/*String wsName = questionHomeNode.getSession().getWorkspace().getName() ;
-			RepositoryImpl repo = (RepositoryImpl)questionHomeNode.getSession().getRepository() ;
-			RSSEventListener changePropertyListener = new RSSEventListener(wsName, repo.getName()) ;
-			observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,questionHomeNode.getPath(), true, null, null, false) ;
-			RSSEventListener addQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
-			observation.addEventListener(addQuestionListener, Event.NODE_ADDED ,questionHomeNode.getPath(), false, null, null, false) ;
-			RSSEventListener removeQuestionListener = new RSSEventListener(wsName, repo.getName()) ;
-			observation.addEventListener(removeQuestionListener, Event.NODE_REMOVED ,questionHomeNode.getPath(), false, null, null, false) ;*/
-			//addListennerForNode(questionHomeNode);
-		//}
+		}		
 	}
 	
 	private Node getCategoryHome(SessionProvider sProvider, String username) throws Exception {

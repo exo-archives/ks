@@ -104,7 +104,7 @@ import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.PropertyReader;
-import org.exoplatform.ks.rss.RSSEventListener;
+import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -221,11 +221,11 @@ public class JCRDataStorage {
 			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
 			String wsName = categoryHome.getSession().getWorkspace().getName() ;
 			String repoName = ((RepositoryImpl)categoryHome.getSession().getRepository()).getName() ;
-			RSSEventListener changePropertyListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			ForumRSSEventListener changePropertyListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
-			RSSEventListener addNodeListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			ForumRSSEventListener addNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(addNodeListener, Event.NODE_ADDED ,categoryHome.getPath(), true, null, null, false) ;
-			RSSEventListener removeNodeListener = new RSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			ForumRSSEventListener removeNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;
 		}catch(Exception e){ e.printStackTrace() ;} 
 		finally{ sProvider.close() ;}

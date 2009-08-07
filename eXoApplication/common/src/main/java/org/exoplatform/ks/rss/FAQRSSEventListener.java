@@ -25,7 +25,7 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
-public class RSSEventListener implements EventListener{
+public class FAQRSSEventListener implements EventListener{
 	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String path_ ;
 	private String workspace_ ;
@@ -33,7 +33,7 @@ public class RSSEventListener implements EventListener{
 	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
 																																						 "exo:userWatching"}));
 	
-	public RSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
+	public FAQRSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
 		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
 		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
 		workspace_ = ws ;
