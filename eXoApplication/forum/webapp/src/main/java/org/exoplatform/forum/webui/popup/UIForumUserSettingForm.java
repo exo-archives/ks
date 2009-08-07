@@ -307,6 +307,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		url = url.substring(0, url.indexOf("/", 8)) ;
 		rssLink = url + RSS.getUserRSSLink(userProfile.getUserId());
 		formStringInput.setValue(rssLink);
+		formStringInput.setEditable(false);
 		
 		inputUserWatchManger.addChild(formStringInput);
 		

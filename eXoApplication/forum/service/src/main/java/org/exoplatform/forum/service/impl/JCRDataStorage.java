@@ -5577,7 +5577,7 @@ public class JCRDataStorage {
 			} else {
 				watchingNode.save();
 			}
-			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
+//			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {sProvider.close() ;}

@@ -101,9 +101,7 @@ import org.exoplatform.forum.service.Utils;
 															<th width="30"><span></span></th>
 															<th><%=_ctx.appRes("UIForumUserSettingForm.label.Path")%></th>
 															<th width="32">
-																<div class="Icon ForumRSS" style="height:24px; line-height:24px; text-algin:left;">
-																	<span></span>
-																</div>
+																<div class="Icon ForumRSS" style="height:20px; width:20px; margin:auto;"><span></span></div>
 															</th>
 															<th>
 																<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:24px; text-algin:left;">
@@ -133,8 +131,8 @@ import org.exoplatform.forum.service.Utils;
 																		<%=watch.getPath().substring(watch.getPath().lastIndexOf(">") + 1)%>
 																	</a>
 																</td>
-																<td  class="text" style="text-align:left" width="32">
-																	<%uicomponent.renderUIComponent(tabconten.getChildById("RSS" + watch.getId()))%>
+																<td  class="text" style="text-align:left" width="32px">
+																	<div style="width:17px; margin:auto;"><%uicomponent.renderUIComponent(tabconten.getChildById("RSS" + watch.getId()))%></div>
 																</td>
 																<td width="32" class="text" style="text-align:left">
 																	<%uicomponent.renderUIComponent(tabconten.getChildById("EMAIL" + watch.getId()))%>
@@ -155,41 +153,27 @@ import org.exoplatform.forum.service.Utils;
 												</table>
 												<table>
 													<tr>
-														<td align="left">
-															<div class="Icon ForumRSS" style="height:24px; line-height:24px; text-algin:left;padding-left:32px;margin-top:5px;">
-																<%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> : <%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.RSS_LINK))%>
+														<td align="left" style="padding-top:8px;">
+															<div class="Icon ForumRSS" style="height:24px; line-height:16px; text-algin:left;padding-left:32px;">
+																<span><%=_ctx.appRes("UIForumUserSettingForm.title.RSSURL")%> :</span>
 															</div>
 														</td>
-														<td align="left">
-															<div class="UIAction"> 
-																<table class="ActionContainer">
-																	<tr>
-																		<td align="center">
-																			<div class="ActionButton LightBlueStyle">
-																				<div class="ButtonLeft">
-																					<div class="ButtonRight">
-																						<div class="ButtonMiddle">
-																							<a href="<%=uiform.event("ResetRSS")%>">
-																								<%=_ctx.appRes("UIForumUserSettingForm.action.Reset")%>
-																							</a>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</td>
-																	</tr>
-																</table>
-															</div>
+														<td align="left" style="padding-top:8px;">
+															<%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.RSS_LINK))%>
 														</td>
+														<td align="left"> </td>
 													</tr>
 													<tr>
-														<td align="left">
-															<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:24px; text-algin:left;padding-left:32px;">
-																<%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> : <%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL_ADD))%>
+														<td align="left" style="padding-top:6px;">
+															<div class="Icon HotThreadNoNewPost" style="height:24px; line-height:22px; text-algin:left;padding-left:32px;">
+																<span><%=_ctx.appRes("UIForumUserSettingForm.title.EmailAddress")%> :</span>
 															</div>
 														</td>
+														<td align="left" style="padding-top:8px;">
+															<%uicomponent.renderUIComponent(tabconten.getChildById(uicomponent.EMAIL_ADD))%>
+														</td>
 														<td align="left">
-															<div class="UIAction"> 
+															<div class="UIAction" style="padding-top:6px;"> 
 																<table class="ActionContainer">
 																	<tr>
 																		<td align="center">
