@@ -153,6 +153,7 @@ public class UICategory extends UIForm	{
 		this.categoryId = category.getId() ;
 		this.isEditCategory = false ;
 		this.isEditForum = true ;
+		this.category = category;
 	}
 	
 	private Category getCategory() throws Exception{
