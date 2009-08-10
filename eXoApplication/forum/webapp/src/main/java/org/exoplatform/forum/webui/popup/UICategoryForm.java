@@ -304,7 +304,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setModerators(moderators) ;
 			cat.setCreateTopicRole(setTopicable);
 			cat.setPoster(setPostable);
-			cat.setViewer(setViewer);			
+			cat.setViewer(setViewer);
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -315,12 +315,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				} else {
 					forumService.saveCategory(cat, true);
 					List<String>  invisibleCategories = forumPortlet.getInvisibleCategories();
-					List<String>  invisibleForums = forumPortlet.getInvisibleForums();
-					invisibleCategories.add(cat.getId());
-					String listForumId = invisibleForums.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
-					String listCategoryId = invisibleCategories.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
-					ForumUtils.savePortletPreference(listCategoryId, listForumId);
-					forumPortlet.loadPreferences();
+					if(!invisibleCategories.isEmpty()){
+						List<String>  invisibleForums = forumPortlet.getInvisibleForums();
+						invisibleCategories.add(cat.getId());
+						String listForumId = invisibleForums.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+						String listCategoryId = invisibleCategories.toString().replace('['+"", "").replace(']'+"", "").replaceAll(" ", "");
+						ForumUtils.savePortletPreference(listCategoryId, listForumId);
+						forumPortlet.loadPreferences();
+					}
 				}
 			} catch (Exception e) {
 				Object[] args = { };
