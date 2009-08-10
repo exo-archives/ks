@@ -292,6 +292,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		userTitle.setValue(title);
 		
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
+		//Change committed ID from SPFF-1032 to KS-1780
 		String signature_blank = this.userProfile.getSignature();
 		if(ForumUtils.isEmpty(signature_blank)) signature_blank = "";
 		signature.setValue(ForumTransformHTML.unCodeHTML(signature_blank));
