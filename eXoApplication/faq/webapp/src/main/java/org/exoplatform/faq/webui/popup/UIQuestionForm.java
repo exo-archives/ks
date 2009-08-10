@@ -501,7 +501,9 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
       //Create link by Vu Duy Tu.
       if(isNew){
-	      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", question_.getId());
+      	StringBuilder qsId = new StringBuilder().append(question_.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME)
+      		.append("/").append(question_.getId());
+	      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", qsId.toString().replace("private", "public"));
 	      question_.setLink(link) ;
       }
       

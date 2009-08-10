@@ -1152,7 +1152,6 @@ public class JCRDataStorage {
 			path = (question.getLink().substring(0, question.getLink().indexOf("FAQService") + 10) + path).replace("private", "public");
 			question.setLink(path + "/" + question.getId() + "/0");
 		}*/
-		question.setLink(question.getCategoryId() + "/" + question.getId() + "/0");
 		
 		if(!isNew) {
 			String catePath = questionNode.getParent().getParent().getPath() ;
