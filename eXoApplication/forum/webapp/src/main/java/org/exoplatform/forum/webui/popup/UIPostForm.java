@@ -520,7 +520,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
 			attachFileForm.updateIsTopicForm(false) ;
 			attachFileForm.setMaxField(5);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
 		}
 	}
 	static public class SelectTabActionListener extends EventListener<UIPostForm> {
@@ -539,11 +539,12 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			for (ForumAttachment att : uiPostForm.attachments_) {
 				if (att.getId().equals(attFileId)) {
 					uiPostForm.removeFromUploadFileList(att);
-					uiPostForm.attachments_.remove(att) ;
 					break;
 				}
 			}
-			uiPostForm.refreshUploadFileList() ;
+			UIForumInputWithActions threadContent = uiPostForm.getChildById(FIELD_THREADCONTEN_TAB) ;
+			threadContent.setActionField(FIELD_ATTACHMENTS, uiPostForm.getUploadFileList()) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPostForm) ;
 		}
 	}
 	
@@ -564,8 +565,6 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIPostForm uiForm = event.getSource() ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
-			UITopicDetailContainer topicDetailContainer = forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetailContainer);
 		}
 	}
 
