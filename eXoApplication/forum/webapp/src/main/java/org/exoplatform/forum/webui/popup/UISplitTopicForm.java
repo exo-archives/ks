@@ -40,6 +40,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -155,7 +156,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					String categoryId = string[string.length - 3] ;
 					String forumId = string[string.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 					try {
 					// set link
 						PortalRequestContext portalContext = Util.getPortalRequestContext();
@@ -171,26 +171,27 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 						ResourceBundle res = context.getApplicationResourceBundle() ;
 						
-						forumService.saveTopic(sProvider, categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
+						forumService.saveTopic(categoryId, forumId, topic, true, true, ForumUtils.getDefaultMail()) ;
 						String destTopicPath = path.substring(0, path.lastIndexOf("/"))+ "/" + topicId ;
-						forumService.movePost(sProvider, posts, destTopicPath, true, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link);
+						forumService.movePost(posts, destTopicPath, true, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link);
 					} catch (Exception e) {
-						sProvider.close();
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 						Object[] args = { };
 						throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
-					} finally {
-						sProvider.close();
-					}			
+					}		
 				}else {
 					Object[] args = { };
 					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
 				}
 			} else {
-				Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
-				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+				uiForm.getIdSelected();
+				Object[] args = { uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
