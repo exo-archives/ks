@@ -3118,15 +3118,15 @@ public class JCRDataStorage {
 					}
 					List<String>emailListForum = new ArrayList<String>();
 					//Owner Notify
-					if(isApprovePost) {
-						String ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
+					if(isApprovePost){
+						String ownerTopicEmail = "";
 						String owner = node.getProperty("exo:owner").getString();
-						if(ownerTopicEmail != null && ownerTopicEmail.trim().length() > 0) {
+						if(node.hasProperty("exo:isNotifyWhenAddPost") && node.getProperty("exo:isNotifyWhenAddPost").getString().trim().length() > 0){
 							try {
 								Node userOwner = userProfileHome.getNode(owner);
 								ownerTopicEmail =  userOwner.getProperty("exo:email").getString();
 		          } catch (Exception e) {
-		          	e.printStackTrace();
+		          	ownerTopicEmail = node.getProperty("exo:isNotifyWhenAddPost").getString();
 		          }
 						}
 						String []users = post.getUserPrivate();

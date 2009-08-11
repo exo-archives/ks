@@ -37,7 +37,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -529,8 +528,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						topicNew.setTopicType(topicType);
 						topicNew.setLink(link);
 						if(whenNewPost){
-							ForumContact contact = ForumSessionUtils.getPersonalContact(userName);
-							topicNew.setIsNotifyWhenAddPost(contact.getEmailAddress());
+							String email = userProfile.getEmail();
+							if(ForumUtils.isEmpty(email)){
+								try {
+									email = ForumSessionUtils.getUserByUserId(userName).getEmail();
+                } catch (Exception e) {}
+								if(ForumUtils.isEmpty(email)){
+									email = "true";
+								}
+							}
+							topicNew.setIsNotifyWhenAddPost(email);
 						} else {
 							topicNew.setIsNotifyWhenAddPost("");
 						}
