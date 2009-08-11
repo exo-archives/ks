@@ -500,6 +500,7 @@ public class UIQuestions extends UIContainer {
 	
 	//update current language of viewing question
 	public void updateCurrentLanguage() throws Exception {
+		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0)
 		languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
 	}
 

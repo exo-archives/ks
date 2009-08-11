@@ -303,10 +303,22 @@
 																		<div class="IconItem $iconView">
 																			<a href="$linkView">$itemLabelView</a>
 																		</div>
-																	</div>
+																	</div>																
 															<%}%>
+															
 															 
 															<%if(uicomponent.currentUser_ != null) {
+																	if(!canEditQuestion && uicomponent.currentUser_.equals(question.getAuthor())){
+																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																		String linkView = uicomponent.event("EditQuestion", qId);
+																	%>	
+																		<div class="MenuItem">
+																			<div class="IconItem Edit">
+																				<a href="$linkView">$itemLabelView</a>
+																			</div>
+																		</div>
+																	<%	
+															  	}
 																	if(uicomponent.isDiscussForum()) {
 																		String pathDiscuss = question.getTopicIdDiscuss();
 																		if(pathDiscuss == null || pathDiscuss.length() <= 0){
@@ -460,11 +472,11 @@
 																					%>
 																					<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
 																						<div class="$SendToFriend"><span></span></div>
-																					</a>
-																				</td>
+																					</a>																					
+																				</td>																		
 																				<!-- action Discuss -->
 																			<%
-																				if(uicomponent.currentUser_ != null) {
+																				if(uicomponent.currentUser_ != null) {																						
 																					if(uicomponent.isDiscussForum()) {
 																						String topicIdDiscuss = question.getTopicIdDiscuss();
 																						if(topicIdDiscuss == null || topicIdDiscuss.length() <= 0){
@@ -650,7 +662,16 @@
 																										<%
 																											}
 																										%>																										
-																										
+																										<%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
+																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																												String linkView = uicomponent.event("EditQuestion", qId);																				
+																										%>
+																											<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
+																												<div class="IconItem Edit">
+																														<span>$itemLabelView</span>
+																												</div>
+																											</div>
+																										<%}%>
 																									</div>
 																								</div>
 																							</div>

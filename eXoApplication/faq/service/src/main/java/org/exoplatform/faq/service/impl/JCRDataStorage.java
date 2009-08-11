@@ -1088,8 +1088,7 @@ public class JCRDataStorage {
 	
 	@SuppressWarnings("static-access")
 	private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
-		//boolean isMoveQuestion = false;
-		questionNode.setProperty("exo:language", question.getLanguage()) ;
+		//boolean isMoveQuestion = false;		
 		questionNode.setProperty("exo:name", question.getDetail()) ;
 		questionNode.setProperty("exo:author", question.getAuthor()) ;
 		questionNode.setProperty("exo:email", question.getEmail()) ;
@@ -1098,6 +1097,7 @@ public class JCRDataStorage {
 			GregorianCalendar cal = new GregorianCalendar() ;
 			cal.setTime(question.getCreatedDate()) ;
 			questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
+			questionNode.setProperty("exo:language", question.getLanguage()) ;
 		} 
 		if(question.getCategoryId().equals(Utils.CATEGORY_HOME)) {
 			questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;			
