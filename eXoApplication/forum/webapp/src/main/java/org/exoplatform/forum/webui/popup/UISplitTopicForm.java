@@ -35,7 +35,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -125,7 +124,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
 	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UISplitTopicForm> event) throws Exception {
 			UISplitTopicForm uiForm = event.getSource() ;
 			String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
