@@ -525,7 +525,7 @@
 																										(uicomponent.currentUser_ != null && !uicomponent.canVote(question))){
 																										onclick = "javaScrip:void(0);";
 																										titleMark = "";
-																										if(uicomponent.currentUser_ != null) {
+																										if(uicomponent.currentUser_ != null && question.isApproved() || uicomponent.canEditQuestion) {
 																											onclick = uicomponent.event("UnVoteQuestion",question.getPath());
 																											titleMark = _ctx.appRes("UIQuestions.action.UnVoteQuestion");
 																										}
@@ -571,15 +571,22 @@
 																												<div class="$classNameForStar"><span></span></div>
 																										<%}%>
 																										</div>
-																										<div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																										
 																											<%
-																											for(int i = 0; i < 5; i ++) {
-																												number = String.valueOf(i+1);
-																												onclick = uicomponent.event("VoteQuestion", number);
+																											if (question.isApproved() || uicomponent.canEditQuestion) {
 																											%>
-																												<div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
-																									 	<%}%>
-																								 		</div>
+																											<div id="faqVoteQuestion" style="display:none;" onmouseout="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('-1', 'FAQHomeStarVote')" title="<%=_ctx.appRes("UIQuestions.action.VoteQuestion")%>">
+																											<%
+																												for(int i = 0; i < 5; i ++) {
+																													number = String.valueOf(i+1);
+																													onclick = uicomponent.event("VoteQuestion", number);
+																												%>
+																													<div id="FAQHomeStarVote$i" class="RatedVote" onmouseover="eXo.faq.UIFAQPortlet.changeStarForVoteQuestion('$i', 'FAQHomeStarVote')" onclick="$onclick" title=""><span></span></div>
+																										 	<%}%>
+																										 	</div>
+																										 	<%}%>
+																											
+																								 		
 																								 	</div>
 																							<%}
 																								%>
@@ -721,7 +728,7 @@
 																										</div>
 																								<%}%>
 																								<%
-																									if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
+																									if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
 																								%>
 																										<div  class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
