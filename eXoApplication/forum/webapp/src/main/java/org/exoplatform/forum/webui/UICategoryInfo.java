@@ -63,21 +63,15 @@ public class UICategoryInfo extends UIContainer	{
   private String getScreenName(String userName) throws Exception {
 		return forumService.getScreenName(userName);
 	}
-	
-  private void setUserProfile() throws Exception {
-  	 String userId = ForumSessionUtils.getCurrentUser();
-     try {
+  
+  private UserProfile getUserProfile() throws Exception {
+  	try {
      	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
      	userProfile = forumPortlet.getUserProfile();
      } catch (Exception e) {
+    	 String userId = ForumSessionUtils.getCurrentUser();
      	userProfile = forumService.getDefaultUserProfile(userId, "");
      }
-  }
-  
-  private UserProfile getUserProfile() throws Exception {
-  	if(userProfile == null) {
-  		setUserProfile();
-  	}
     return userProfile;
   }
   
