@@ -40,6 +40,7 @@ import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -124,7 +125,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
 	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UISplitTopicForm> event) throws Exception {
 			UISplitTopicForm uiForm = event.getSource() ;
 			String newTopicTitle = uiForm.getUIStringInput(FIELD_SPLITTHREAD_INPUT).getValue() ;
@@ -160,9 +160,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					// set link
 						PortalRequestContext portalContext = Util.getPortalRequestContext();
 						String url = portalContext.getRequest().getRequestURL().toString();
-						url = url.replaceFirst("http://", "") ;
-						url = url.substring(0, url.indexOf("/")) ;
-						url = "http://" + url;
+						url = url.substring(0, url.indexOf("/",8)) ;
 						String link = uiForm.getLink();
 						link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
 						link = url + link;
@@ -189,8 +187,12 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
 				}
 			} else {
-				Object[] args = {uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
-				throw new MessageException(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+				uiForm.getIdSelected();
+				Object[] args = { uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
+				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return;
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
