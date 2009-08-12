@@ -319,6 +319,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                         </div>
                                                                     </div>
                                                             <%}%>
+																														
                                                             <!-- action unwatch question -->
                                                             <%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
                                                                     <div class="MenuItem">
@@ -340,6 +341,17 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                             <%  }
                                                                 }
                                                                 if(uicomponent.currentUser_ != null) {
+																																	if(!canEditQuestion && uicomponent.currentUser_.equals(question.getAuthor())){
+																																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																																		String linkView = uicomponent.event("EditQuestion", question.getId());
+																																	%>	
+																																		<div class="MenuItem">
+																																			<div class="IconItem Edit">
+																																				<a href="$linkView">$itemLabelView</a>
+																																			</div>
+																																		</div>
+																																	<%	
+																																	}
                                                                     if(uicomponent.isDiscussForum()) {
                                                                         String pathDiscuss = question.getTopicIdDiscuss();
                                                                         if(pathDiscuss == null || pathDiscuss.length() <= 0){
@@ -673,6 +685,16 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                                                         <%
                                                                                                             }
                                                                                                         %>
+																																																				<%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
+																																																						String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																																																						String linkView = uicomponent.event("EditQuestion", question.getId());																				
+																																																				%>
+																																																					<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
+																																																						<div class="IconItem Edit">
+																																																								<span>$itemLabelView</span>
+																																																						</div>
+																																																					</div>
+																																																				<%}%>
                                                                                                         <!-- action unwatch question -->
                                                                                                         <%if(uicomponent.checkUserWatchQuestion(question.getId())) {%>
                                                                                                                 <div onclick="javascript:void(0);" onmousedown="<%=uicomponent.event("UnWatchQuestion", qId)%>" class="MenuItem">
