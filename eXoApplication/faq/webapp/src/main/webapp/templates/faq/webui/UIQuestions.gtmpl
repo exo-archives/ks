@@ -164,6 +164,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                     }
                                 } else {
                                     String linkAction =uicomponent.event("AddNewQuestion", cateId);
+																		if(uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion()) {
                                 %>
                                         <div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)" class="DefaultStyle FAQBar ControlButton">
                                             <div onclick="$linkAction">
@@ -179,7 +180,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                             </div>
                                         </div>
                                         <div class="SeparatorLine ControlButton"><span></span></div>
-                            <%}%>
+																	<%}
+																}%>
                             <% if(FAQUtils.getCurrentUser() != null && FAQUtils.getCurrentUser().trim().length() > 0) {
                                     String actionSetting = uicomponent.event("Setting");
                             %>

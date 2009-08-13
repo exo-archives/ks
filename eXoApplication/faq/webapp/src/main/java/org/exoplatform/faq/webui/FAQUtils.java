@@ -365,6 +365,7 @@ public class FAQUtils {
 		faqSetting.setEnableViewAvatar(Boolean.parseBoolean(portletPref.getValue("enableViewAvatar", "")));
 		faqSetting.setEnableAutomaticRSS(Boolean.parseBoolean(portletPref.getValue("enableAutomaticRSS", "")));
 		faqSetting.setEnanbleVotesAndComments(Boolean.parseBoolean(portletPref.getValue("enanbleVotesAndComments", "")));
+		faqSetting.setEnableAnonymousSubmitQuestion(Boolean.parseBoolean(portletPref.getValue("enableAnonymousSubmitQuestion", "")));
 		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
 		faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
 		faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
@@ -414,6 +415,7 @@ public class FAQUtils {
 			portletPref.setValue("enableAutomaticRSS", setting.isEnableAutomaticRSS() + "");
 			portletPref.setValue("enableViewAvatar", setting.isEnableViewAvatar() + "");
 			portletPref.setValue("enanbleVotesAndComments", setting.isEnanbleVotesAndComments() + "");
+			portletPref.setValue("enableAnonymousSubmitQuestion", setting.isEnableAnonymousSubmitQuestion() + "");
 			portletPref.setValue("SendMailAddNewQuestion", emailAddNewQuestion);
 			portletPref.setValue("SendMailEditResponseQuestion", emailEditResponseQuestion);
 			portletPref.store();

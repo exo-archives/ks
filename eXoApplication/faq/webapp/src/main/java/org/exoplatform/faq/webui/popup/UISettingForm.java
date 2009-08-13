@@ -88,6 +88,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private final String DISPLAY_APPROVED = "approved";
 	private final String DISPLAY_BOTH = "both";
 	private final String ENABLE_VOTE_COMMNET = "enableVotComment";
+	private final String ENABLE_ANONYMOUS_SUBMIT_QUESTION = "enableAnonymousSubmitQuestion" ;
 	public static final String ITEM_CREATE_DATE = "created".intern();
 	public static final String ITEM_ALPHABET = "alphabet".intern();
 	public static final String ASC = "asc".intern();
@@ -157,6 +158,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VOTE_COMMNET, ENABLE_VOTE_COMMNET, false)).
 																																	setChecked(faqSetting_.isEnanbleVotesAndComments()));
+			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_ANONYMOUS_SUBMIT_QUESTION, ENABLE_ANONYMOUS_SUBMIT_QUESTION, false)).
+					setChecked(faqSetting_.isEnableAnonymousSubmitQuestion()));
 			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_RSS, ENABLE_RSS, false)).
 																																	setChecked(faqSetting_.isEnableAutomaticRSS()));
 			DisplayTab.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ENABLE_VIEW_AVATAR, ENABLE_VIEW_AVATAR, false)).
@@ -258,6 +261,8 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setOrderType(String.valueOf(((UIFormSelectBox)displayTab.getChildById(ORDER_TYPE)).getValue())) ;
 				faqSetting.setEnanbleVotesAndComments(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_VOTE_COMMNET)).isChecked());
+				faqSetting.setEnableAnonymousSubmitQuestion(((UIFormCheckBoxInput<Boolean>)displayTab.
+						getChildById(settingForm.ENABLE_ANONYMOUS_SUBMIT_QUESTION)).isChecked());
 				faqSetting.setEnableAutomaticRSS(((UIFormCheckBoxInput<Boolean>)displayTab.
 																								getChildById(settingForm.ENABLE_RSS)).isChecked());
 				faqSetting.setEnableViewAvatar(((UIFormCheckBoxInput<Boolean>)displayTab.
