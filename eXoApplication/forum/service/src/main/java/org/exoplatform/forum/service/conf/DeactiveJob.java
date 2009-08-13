@@ -41,6 +41,7 @@ public class DeactiveJob implements Job{
 	
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider();
 		try{
 			ExoContainer exoContainer = ExoContainerContext.getCurrentContainer() ;
 	    Object obj = exoContainer.getComponentInstanceOfType(ForumService.class) ;
@@ -57,7 +58,6 @@ public class DeactiveJob implements Job{
 	    			long currentDay = calendar.getTimeInMillis() ;
 	    			currentDay = currentDay - (days * oneDay) ;
 	    			calendar.setTimeInMillis(currentDay) ;
-	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
 	    			String path = forumService.getForumHomePath(sysProvider) ;
 	    			StringBuilder stringBuffer = new StringBuilder();
 	    			stringBuffer.append("/jcr:root").append(path).append("//element(*,exo:topic)[");
@@ -85,6 +85,6 @@ public class DeactiveJob implements Job{
   		nfe.printStackTrace() ;
   	}catch(Exception e) {
   		//e.printStackTrace() ;
-		}	  
+		}finally{ sysProvider.close() ;}	  
   }
 }

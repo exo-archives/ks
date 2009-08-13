@@ -39,6 +39,7 @@ public class RecountActiveUserJob implements Job{
 	
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider();
 		try{
 			ExoContainer exoContainer = ExoContainerContext.getCurrentContainer() ;
 	    Object obj = exoContainer.getComponentInstanceOfType(ForumService.class) ;
@@ -53,8 +54,7 @@ public class RecountActiveUserJob implements Job{
 	    			Calendar calendar = GregorianCalendar.getInstance() ;
 	    			long currentDay = calendar.getTimeInMillis() ;
 	    			currentDay = currentDay - (days * oneDay) ;
-	    			calendar.setTimeInMillis(currentDay) ;
-	    			SessionProvider sysProvider = SessionProvider.createSystemProvider();
+	    			calendar.setTimeInMillis(currentDay) ;	    			
 	    			StringBuilder stringBuilder = new StringBuilder();
 	    			stringBuilder.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
 	    				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
@@ -69,6 +69,6 @@ public class RecountActiveUserJob implements Job{
   		nfe.printStackTrace() ;
   	}catch(Exception e) {
   		e.printStackTrace() ;
-		}	  
+		}finally { sysProvider.close() ;}	  
   }
 }
