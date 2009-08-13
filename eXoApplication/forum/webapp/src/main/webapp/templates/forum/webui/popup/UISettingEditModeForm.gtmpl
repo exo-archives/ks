@@ -52,14 +52,17 @@
 						<div class="HorizontalLayout">
 							<div class="UITabContentContainer">
 							<% 
-								String displayTab="block", display="", iconClass="", categoryName="", forumName="", classForumIcon="";
+								String displayTab="block", display="", iconClass="", categoryName="", forumName="", classForumIcon="", height="";
 								int j = 0, t = 0;
 								List categories = uicomponent.getCategoryList(); 
-								for(j = 0; j < 2; ++j){
+								for(j = 0; j < 3; ++j){
 									if(uiform.tabIsSelected(j)) displayTab =	"block";
 									else {displayTab = "none";}
+									if(j==2) height = "height:175px";
+									else if(j==1) height = "height:220px";
+									else height = ""; 
 							%>
-								<div style="display:$displayTab" id="UITabContent" class="UITabContent">
+								<div style="display:$displayTab; $height" id="UITabContent" class="UITabContent">
 									<% if(j == 0){ %>	
 									<div class="TitleMoveThreads"><%=_ctx.appRes("UISettingEditModeForm.label.ChooseCategory-Forum");%>:</div>
 									<div class="UITree ScrollArea" style="background:#FFFFFF;height:245px;">
@@ -110,10 +113,15 @@
 										<% } %>	
 										</div>
 									</div>
-									<% } else { %>
+									<% } else if(j==1){ %>
 									<div class="TitleMoveThreads"><%=_ctx.appRes("UISettingEditModeForm.label.SelectPanelEnable");%>:</div>
-									<div class="ShowHiddenConten UITree" style="background:#FFFFFF;height:250px;">
+									<div class="ShowHiddenConten UITree" style="background:#FFFFFF;height:180px;">
 										<% uiform.renderChild(uiform.FIELD_SHOW_HIDDEN_TAB) ;   %>
+									</div>
+									<% } else {%>
+									<div class="TitleMoveThreads"><%=_ctx.appRes("UISettingEditModeForm.label.ForumPreference");%>:</div>
+									<div class="ShowHiddenConten UITree" style="background:#FFFFFF;height:150px;">
+										<% uiform.renderChild(uiform.FIELD_FORUM_PREFERENCE_TAB) ;   %>
 									</div>
 									<% } %>
 								</div>

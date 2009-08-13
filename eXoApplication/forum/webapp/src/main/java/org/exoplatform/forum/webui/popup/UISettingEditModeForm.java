@@ -61,6 +61,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile;
 	public static final String FIELD_SCOPED_TAB = "Scoped" ;
 	public static final String FIELD_SHOW_HIDDEN_TAB = "EnabledPanel" ;
+	public static final String FIELD_FORUM_PREFERENCE_TAB = "ForumPreference" ;
 
 	public static final String FIELD_ISFORUMJUMP_CHECKBOX = "isShowForumJump" ;
 	public static final String FIELD_ISPOLL_CHECKBOX = "IsShowPoll" ;
@@ -69,6 +70,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	public static final String FIELD_ISICONSLEGEND_CHECKBOX = "isShowIconsLegend" ;
 	public static final String FIELD_ISRULES_CHECKBOX = "isShowRules" ;
 	public static final String FIELD_ISSTATISTIC_CHECKBOX = "isShowStatistic" ;
+	public static final String FIELD_ISUSEAJAX_CHECKBOX = "isUseAjax" ;
 	private boolean isSave = false;
 	private int tabId = 0 ;
 	private static List<String>listCategoryinv = new ArrayList<String>();
@@ -77,6 +79,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	public UISettingEditModeForm() {
 		UIForumInputWithActions Scoped = new UIForumInputWithActions(FIELD_SCOPED_TAB);
 		UIForumInputWithActions EnabledPanel = new UIForumInputWithActions(FIELD_SHOW_HIDDEN_TAB);
+		UIForumInputWithActions ForumPreference = new UIForumInputWithActions(FIELD_FORUM_PREFERENCE_TAB);
+		
 		UIFormCheckBoxInput<Boolean> isShowForumJump = new UIFormCheckBoxInput<Boolean>(FIELD_ISFORUMJUMP_CHECKBOX, FIELD_ISFORUMJUMP_CHECKBOX, true);
 		UIFormCheckBoxInput<Boolean> IsShowPoll = new UIFormCheckBoxInput<Boolean>(FIELD_ISPOLL_CHECKBOX, FIELD_ISPOLL_CHECKBOX, true);
 		UIFormCheckBoxInput<Boolean> isShowModerator = new UIFormCheckBoxInput<Boolean>(FIELD_ISMODERATOR_CHECKBOX, FIELD_ISMODERATOR_CHECKBOX, true);
@@ -84,6 +88,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		UIFormCheckBoxInput<Boolean> isShowIconsLegend = new UIFormCheckBoxInput<Boolean>(FIELD_ISICONSLEGEND_CHECKBOX, FIELD_ISICONSLEGEND_CHECKBOX, true);
 		UIFormCheckBoxInput<Boolean> isShowRules = new UIFormCheckBoxInput<Boolean>(FIELD_ISRULES_CHECKBOX, FIELD_ISRULES_CHECKBOX, true);
 		UIFormCheckBoxInput<Boolean> isShowStatistic = new UIFormCheckBoxInput<Boolean>(FIELD_ISSTATISTIC_CHECKBOX, FIELD_ISSTATISTIC_CHECKBOX, true);
+		UIFormCheckBoxInput<Boolean> isUseAjax = new UIFormCheckBoxInput<Boolean>(FIELD_ISUSEAJAX_CHECKBOX, FIELD_ISUSEAJAX_CHECKBOX, true);
 		
 		EnabledPanel.addUIFormInput(isShowForumJump);
 		EnabledPanel.addUIFormInput(IsShowPoll);
@@ -93,14 +98,18 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		EnabledPanel.addUIFormInput(isShowRules);
 		EnabledPanel.addUIFormInput(isShowStatistic);
 		
+		ForumPreference.addUIFormInput(isUseAjax);
+		
 		addUIFormInput(Scoped);
 		addUIFormInput(EnabledPanel);
+		addUIFormInput(ForumPreference);
 		
 		setActions(new String[]{"Save"});
 	}
 
   public void setInitComponent() throws Exception {
 		UIForumInputWithActions EnabledPanel = getChildById(FIELD_SHOW_HIDDEN_TAB);
+		UIForumInputWithActions ForumPreference = getChildById(FIELD_FORUM_PREFERENCE_TAB);
 		portletPreference = ForumUtils.getPorletPreference();
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISFORUMJUMP_CHECKBOX).setChecked(portletPreference.isShowForumJump());
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISPOLL_CHECKBOX).setChecked(portletPreference.isShowPoll());
@@ -109,6 +118,8 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISRULES_CHECKBOX).setChecked(portletPreference.isShowRules());
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).setChecked(portletPreference.isShowStatistics());
 		EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).setChecked(portletPreference.isShowModerators());
+		
+		ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).setChecked(portletPreference.isUseAjax());
   }
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
@@ -231,6 +242,10 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 			editModeForm.portletPreference.setShowStatistics((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISSTATISTIC_CHECKBOX).getValue());
 			editModeForm.portletPreference.setShowModerators((Boolean) EnabledPanel.getUIFormCheckBoxInput(FIELD_ISMODERATOR_CHECKBOX).getValue());
 			UIApplication uiApp = editModeForm.getAncestorOfType(UIApplication.class) ;
+			
+			UIForumInputWithActions ForumPreference = editModeForm.getChildById(FIELD_FORUM_PREFERENCE_TAB);
+			editModeForm.portletPreference.setUseAjax((Boolean) ForumPreference.getUIFormCheckBoxInput(FIELD_ISUSEAJAX_CHECKBOX).getValue());
+			
 			try {
 				editModeForm.isSave = true;
 				listCategoryinv = editModeForm.getListInValus(listCategoryId);

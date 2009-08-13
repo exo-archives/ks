@@ -393,6 +393,7 @@ public class ForumUtils {
 		portletPref.setValue("isShowQuickReply", sPreference.isShowQuickReply() + "");
 		portletPref.setValue("isShowRules", sPreference.isShowRules() + "");
 		portletPref.setValue("isShowStatistics", sPreference.isShowStatistics() + "");
+		portletPref.setValue("useAjax", sPreference.isUseAjax() + "");
 		portletPref.setValue("invisibleCategories", listCategoryId);
 		portletPref.setValue("invisibleForums", listForumId);
 		portletPref.store();
