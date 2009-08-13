@@ -30,7 +30,9 @@ public class FAQSetting {
 	
 	private boolean enableAutomaticRSS = true;
 	
-	private boolean enanbleVotesAndComments = true;
+	private boolean enableVotesAndComments = true;
+	
+	private boolean enableAnonymousSubmitQuestion = true ;
 	
 	/** display mode of faq. */
 	private String displayMode ;
@@ -226,11 +228,19 @@ public class FAQSetting {
 	}
 
 	public boolean isEnanbleVotesAndComments() {
-		return enanbleVotesAndComments;
+		return enableVotesAndComments;
 	}
-
+	
 	public void setEnanbleVotesAndComments(boolean enanbleVotesAndComments) {
-		this.enanbleVotesAndComments = enanbleVotesAndComments;
+		this.enableVotesAndComments = enanbleVotesAndComments;
+	}
+	
+	public boolean isEnableAnonymousSubmitQuestion() {
+		return enableAnonymousSubmitQuestion;
+	}
+	
+	public void setEnableAnonymousSubmitQuestion(boolean isSubmit) {
+		this.enableAnonymousSubmitQuestion = isSubmit;
 	}
 	
 	public boolean getIsDiscussForum() {

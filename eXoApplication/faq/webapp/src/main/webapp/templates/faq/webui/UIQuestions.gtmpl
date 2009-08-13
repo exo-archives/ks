@@ -151,6 +151,7 @@
 									}
 								} else {
 									String linkAction =uicomponent.event("AddNewQuestion", cateId);
+									if(uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion()) {
 								%>
 										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
 											<div onclick="$linkAction" class="SeparatorLine">
@@ -165,7 +166,8 @@
 												</div>
 											</div>
 										</div>
-							<%}%>
+								<%}
+							  }%>
 							<%String currentUser = FAQUtils.getCurrentUser() ; 
 								if(currentUser != null && currentUser.trim().length() > 0) {
 									String actionSetting = uicomponent.event("Setting");

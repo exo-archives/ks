@@ -43,6 +43,11 @@
         <value>true</value> <!-- true/false -->
         <read-only>false</read-only>
       </preference>
+      <preference>
+        <name>enableAnonymousSubmitQuestion</name>
+        <value>true</value>
+        <read-only>false</read-only>
+      </preference>
     	<preference>
         <name>display</name>
         <value>both</value> <!--approved/both -->
@@ -77,7 +82,7 @@
         <name>isDiscussForum</name>
         <value>false</value>
         <read-only>false</read-only>
-      </preference>
+      </preference>      
       <preference>
         <name>idNameCategoryForum</name>
         <value> </value>	<!-- id of forum;CategoryName/ForumName -->
