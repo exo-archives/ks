@@ -302,6 +302,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                             <%
                                                                 String iconView = "" ;
                                                                 for(viewAction in questionActions) {
+																																		if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;
                                                                     if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
                                                                         iconView = viewAction.replace("Question", "");
                                                                     else
@@ -668,6 +669,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                                                         <%
                                                                                                             String iconView = "" ;
                                                                                                             for(viewAction in questionActions) {
+																																																								if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;
                                                                                                                 if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
                                                                                                                     iconView = viewAction.replace("Question", "");
                                                                                                                 else
