@@ -392,8 +392,12 @@ public class UICategories extends UIContainer	{
 				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 				uiTopicDetail.setUpdateForum(forum) ;
 				uiTopicDetail.setTopicFromCate(id[0], id[1], topic) ;
-				uiTopicDetail.setIdPostView(id[id.length-1]) ;
-				uiTopicDetail.setLastPostId(id[id.length-1]);
+				if(id[id.length-1].indexOf(Utils.POST) == 0){
+					uiTopicDetail.setIdPostView(id[id.length-1]) ;
+					uiTopicDetail.setLastPostId(id[id.length-1]);
+				} else {
+					uiTopicDetail.setIdPostView("lastpost") ;
+				}
 				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 				categories.maptopicLast.clear() ;

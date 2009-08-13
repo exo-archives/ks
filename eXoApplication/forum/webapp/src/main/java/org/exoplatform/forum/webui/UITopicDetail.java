@@ -570,13 +570,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				if(!ForumUtils.isEmpty(lastPostId)){
 					int maxPost = this.userProfile.getMaxPostInPage().intValue();
 					long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
-					this.pageSelect =  (int) (index/maxPost);
+					if(index <= maxPost) pageSelect = 1;
+					else pageSelect =  (int) (index/maxPost);
 					lastPostId = "";
 				}
-      } catch (Exception e) {
-	      e.printStackTrace();
-      }
-			posts = this.pageList.getPage(this.pageSelect) ;
+      } catch (Exception e) {}
+			posts = pageList.getPage(pageSelect) ;
 			if(posts == null) posts = new ArrayList<Post>(); 
 			List<String> userNames = new ArrayList<String>() ;
 			mapUserProfile.clear() ;
