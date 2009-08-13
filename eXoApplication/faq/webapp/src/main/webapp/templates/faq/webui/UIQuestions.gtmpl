@@ -245,7 +245,7 @@
 					java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
 					
 					if(!uicomponent.getQuestionView().equals(qId)){
-					questionContent = question.getQuestion();
+						questionContent = question.getQuestion();
 			%>
 						<div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionIndex" oncontextmenu="return false;">
 							<div class="$questionIcon" style="float:left"><span></span></div>
@@ -283,10 +283,11 @@
 										<div class="UIRightClickPopupMenu UIContextMenuContainer" style="display:block;">
 												<div class="MiddleLeftRightClickPopupMenu">
 													<div class="MiddleRightRightClickPopupMenu">
-														<div class="UIRightPopupMenuContainer"  style="margin:0px; border:solid 1px #f6f6f6">
+														<div class="UIRightPopupMenuContainer"  style="margin:0px; border:solid 1px #f6f6f6">														
 															<%
 																String iconView = "" ;
-																for(viewAction in questionActions) {
+																for(viewAction in questionActions) {			
+																	if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;														
 																	if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
 																		iconView = viewAction.replace("Question", "");
 																	else
@@ -650,6 +651,7 @@
 																										<%
 																											String iconView = "" ;
 																											for(viewAction in questionActions) {
+																												if(viewAction.equals("CommentQuestion") && !question.isApproved() && !uicomponent.canEditQuestion) continue ;
 																												if(!viewAction.equals("MoveQuestion") && !viewAction.equals("ResponseQuestion"))
 																													iconView = viewAction.replace("Question", "");
 																												else
@@ -661,7 +663,7 @@
 																																			_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
 																													lockFunction = "LockFunction" ;
 																												}
-																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);																												
 																										%>
 																												<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
 																													<div class="IconItem $iconView">
