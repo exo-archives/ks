@@ -33,7 +33,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -85,14 +84,14 @@ public class UIForumActionBar extends UIContainer	{
 	
 	@SuppressWarnings("unused")
 	private int getTotalJobWattingForModerator() throws Exception {
-		return forumService.getJobWattingForModeratorByUser(SessionProviderFactory.createSystemProvider(), this.userProfile.getUserId());
+		return forumService.getJobWattingForModeratorByUser(this.userProfile.getUserId());
 	}
 	
 	@SuppressWarnings("unused")
 	private long getNewMessage() throws Exception {
 		try {
 			String username = this.userProfile.getUserId();
-			return forumService.getNewPrivateMessage(SessionProviderFactory.createSystemProvider(), username );
+			return forumService.getNewPrivateMessage(username);
     } catch (Exception e) {
 	    return -1;
     }

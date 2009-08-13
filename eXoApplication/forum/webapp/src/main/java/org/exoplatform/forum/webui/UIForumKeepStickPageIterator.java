@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -43,7 +42,8 @@ public class UIForumKeepStickPageIterator extends UIForm {
 
 	public int pageSelect = 1 ;
 	public int maxPage = 1;
-	public JCRPageList pageList ;
+	@SuppressWarnings("unchecked")
+  public JCRPageList pageList ;
 	public long totalCheked = 0;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;

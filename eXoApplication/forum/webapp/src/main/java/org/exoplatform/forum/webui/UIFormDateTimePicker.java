@@ -77,7 +77,6 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
     }
   }
   
-  @SuppressWarnings("unused")
   public void decode(Object input, WebuiRequestContext context) throws Exception {
     if(input != null) value_ = ((String)input).trim();
   }

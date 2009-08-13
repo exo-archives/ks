@@ -36,7 +36,6 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
-import org.bouncycastle.jce.provider.JDKDSASigner.stdDSA;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;

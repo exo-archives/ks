@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
@@ -83,7 +82,7 @@ public class UIQuickSearchForm extends UIForm {
 				}
 				List<ForumSearch> list = null;
 				try {
-					list = forumService.getQuickSearch(ForumSessionUtils.getSystemProvider(), text, type, "", userProfile.getUserId(),
+					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
 															forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				}catch (Exception e) {
 					e.printStackTrace();

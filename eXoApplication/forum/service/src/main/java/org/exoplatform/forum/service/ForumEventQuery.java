@@ -174,19 +174,27 @@ public class ForumEventQuery {
     	}
     }
     if(byUser != null && byUser.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(");
-    	byUser = byUser.replaceAll(";", ",") ;
+    	String temp = setArrays(byUser, "owner");
+      if(temp != null && temp.length() > 0) { 
+      	stringBuffer.append(temp) ;
+      }
+    	/*byUser = byUser.replaceAll(";", ",") ;
     	String[] users = byUser.split(",") ;
+    	StringBuilder builder = new StringBuilder();
     	int i = 0;
     	for (String string : users) {
     		string = string.trim();
-    		if(i > 0) stringBuffer.append(" or ") ;
-    		stringBuffer.append("(@exo:owner='").append(string).append("')") ;
-    		++i;
+    		if(string.length() > 0) {
+	    		if(i > 0) builder.append(" or ") ;
+	    		builder.append("(@exo:owner='").append(string).append("')") ;
+	    		++i;
+    		}
       }
-    	stringBuffer.append(")");
-			isAnd = true ;
+    	if(builder.length() > 0) {
+	    	if(isAnd) stringBuffer.append(" and ");
+	    	stringBuffer.append("(").append(builder).append(")");
+				isAnd = true ;
+    	}*/
 		}
     if(type.equals("topic")) {
     	if(topicType != null && topicType.length() > 0 && !topicType.equals("all")){
@@ -245,9 +253,14 @@ public class ForumEventQuery {
     	isAnd = true ;
     }
     if(moderator != null && moderator.length() > 0) {
-    	if(isAnd) stringBuffer.append(" and ");
+    	String temp = setArrays(moderator, "moderators");
+      if(temp != null && temp.length() > 0) { 
+      	stringBuffer.append(temp) ;
+      	isEmpty = false;
+      }
+    	/*if(isAnd) stringBuffer.append(" and ");
     	stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
-    	isAnd = true ;isEmpty = false;
+    	isAnd = true ;*/
     }
     String temp = setValueMin(topicCountMin, "topicCount") ;
     if(temp != null && temp.length() > 0) { 
@@ -311,6 +324,32 @@ public class ForumEventQuery {
     if(isAnd) queryString.append(stringBuffer.toString()) ;
 	  return queryString.toString();
   }
+	
+	private String setArrays(String values, String property){
+		StringBuffer stringBuffer = new StringBuffer() ;
+		StringBuilder builder = new StringBuilder();
+		values = values.replaceAll(";", ",") ;
+		if(values.indexOf(",") > 0) {
+	  	String[] vls = values.split(",") ;
+	  	int i = 0;
+	  	for (String string : vls) {
+	  		string = string.trim();
+	  		if(string.length() > 0) {
+	    		if(i > 0) builder.append(" or ") ;
+	    		builder.append("(@exo:").append(property).append("='").append(string).append("')") ;
+	    		++i;
+	  		}
+	    }
+  	} else if(values.trim().length() > 0){
+  		builder.append("@exo:").append(property).append("='").append(values).append("'");
+  	}
+  	if(builder.length() > 0) {
+    	if(isAnd) stringBuffer.append(" and ");
+    	stringBuffer.append("(").append(builder).append(")");
+			isAnd = true ;
+  	}
+		return stringBuffer.toString();
+	}
 	
 	private String setValueMin(String min, String property) {
 		StringBuffer queryString = new StringBuffer() ;

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -227,12 +226,7 @@ public class UICategories extends UIContainer	{
 			}
 		}
 		if(forum_ == null) {
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			try {
-				forum_ = forumService.getForum(sProvider, categoryId, forumId) ;
-	    } finally {
-	    	sProvider.close();
-	    }
+			forum_ = forumService.getForum(categoryId, forumId) ;
 		}
 		return forum_ ;
 	}
@@ -284,13 +278,10 @@ public class UICategories extends UIContainer	{
 			String[] id = objects.split(",");
 			String userName = uiContainer.userProfile.getUserId();
 			if (!userName.equals(UserProfile.USER_GUEST)) {
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiContainer.forumService.saveCollapsedCategories(sProvider, userName, id[0], Boolean.parseBoolean(id[1]));
+					uiContainer.forumService.saveCollapsedCategories(userName, id[0], Boolean.parseBoolean(id[1]));
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					sProvider.close();
 				}
 				uiContainer.getAncestorOfType(UIForumPortlet.class).updateUserProfileInfo();
 			}
@@ -433,13 +424,10 @@ public class UICategories extends UIContainer	{
 					Topic topic = uiContainer.getLastTopic(path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
 				}
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiContainer.forumService.saveUserBookmark(sProvider, userName, path, true) ;
+					uiContainer.forumService.saveUserBookmark(userName, path, true) ;
 				}catch (Exception e) {
 					e.printStackTrace();
-				}finally {
-					sProvider.close();
 				}
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateUserProfileInfo() ;

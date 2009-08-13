@@ -36,7 +36,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -108,7 +107,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.userProfile	= userProfile ;
   }
 
-	private String getScreenName(String userName)throws Exception {
+	@SuppressWarnings("unused")
+  private String getScreenName(String userName)throws Exception {
 		return forumService.getScreenName(userName);
 	}
 	public String getRSSLink(String cateId){
@@ -169,7 +169,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		return topics ;
 	}
 	
-	@SuppressWarnings("unused")
 	private Tag getTagById() throws Exception {
 		if(this.isUpdateTag) {
 			try{
@@ -213,12 +212,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	private Forum getForum(String categoryId, String forumId) throws Exception {
 		Forum forum = null;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			forum = this.forumService.getForum(sProvider, categoryId, forumId);
-		}finally {
-    	sProvider.close();
-    }
+			forum = this.forumService.getForum(categoryId, forumId);
+		}catch (Exception e) {}
 		return forum;
 	}
 	
@@ -229,15 +225,13 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String []id = idAndNumber.split(",") ;
 			Topic topic = uiTopicsTag.getTopic(id[0]);
 			String[]ids = topic.getPath().split("/");
-			String cateId="", forumId="", topicId="", postId="";
+			String cateId="", forumId="";
 			for (int i = 0; i < ids.length; i++) {
 	      if(ids[i].indexOf(Utils.CATEGORY) >= 0) cateId = ids[i];
 	      if(ids[i].indexOf(Utils.FORUM) >= 0) forumId = ids[i];
-	      if(ids[i].indexOf(Utils.TOPIC) >= 0) topicId = ids[i];
-	      if(ids[i].indexOf(Utils.POST) >= 0) postId = ids[i];
       }
 			SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
-			Category category = ((ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class)).getCategory(sProvider, cateId);
+			Category category = ((ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class)).getCategory(cateId);
 			String[] privateUsers = category.getUserPrivate();
 			if(privateUsers.length > 0 && privateUsers[0].trim().length() > 0 && 
 					!ForumServiceUtils.hasPermission(privateUsers, uiTopicsTag.userProfile.getUserId())){
@@ -320,7 +314,6 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			UITopicsTag topicTag = event.getSource();
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(topicId)) {
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try{
 					Topic topic = topicTag.getTopic(topicId);
 					String path = topic.getPath();
@@ -328,12 +321,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path) ;
 					String userName = topicTag.userProfile.getUserId() ;
-					topicTag.forumService.saveUserBookmark(sProvider, userName, buffer.toString(), true) ;
+					topicTag.forumService.saveUserBookmark(userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateUserProfileInfo() ;
 				} catch (Exception e) {
-				} finally {
-					sProvider.close();
 				}
 			}
 		}
@@ -345,9 +336,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String currentUser = ForumSessionUtils.getCurrentUser();
 			if(currentUser != null){
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider();
-				uiForm.forumService.addWatch(sProvider, -1, forumId, null, currentUser);
-				sProvider.close();
+				uiForm.forumService.addWatch(-1, forumId, null, currentUser);
 			}
 			String rssLink = uiForm.getRSSLink(forumId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -366,30 +355,23 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			UITopicsTag topicTag = event.getSource();
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(topicId)) {
-				try{
-					Topic topic = topicTag.getTopic(topicId);
-					String path = topic.getPath();
-					path = path.substring(path.indexOf(Utils.CATEGORY));
-					SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-					List<String> values = new ArrayList<String>();
-					String userName = topicTag.userProfile.getUserId();
-					try {
-						values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
-						topicTag.forumService.addWatch(sProvider, 1, path, values, ForumSessionUtils.getCurrentUser()) ;
-						Object[] args = { };
-						UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					} catch (Exception e) {
-						e.printStackTrace();
-						Object[] args = { };
-						UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					}finally {
-						sProvider.close();
-					}
+				Topic topic = topicTag.getTopic(topicId);
+				String path = topic.getPath();
+				path = path.substring(path.indexOf(Utils.CATEGORY));
+				List<String> values = new ArrayList<String>();
+				try {
+					values.add(topicTag.userProfile.getEmail());
+					topicTag.forumService.addWatch(1, path, values, topicTag.userProfile.getUserId()) ;
+					Object[] args = { };
+					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				} catch (Exception e) {
+					e.printStackTrace();
+					Object[] args = { };
+					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			}
 		}

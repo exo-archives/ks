@@ -114,14 +114,12 @@ public class UIFormSelectBoxForum extends UIFormStringInput {
 	
 	public void setOnChange(String onchange){ onchange_ = onchange; }		
 	
-	@SuppressWarnings("deprecation")
 	public UIFormSelectBoxForum setDisabled(boolean disabled) {
 		setEnable(!disabled);
 		return this;
 	}
 	
 	@Override
-	@SuppressWarnings("unused")
 	public void decode(Object input, WebuiRequestContext context) throws Exception {
 		String[] values = context.getRequestParameterValues(getId()) ;
 		if(values == null) {

@@ -29,7 +29,6 @@ import org.exoplatform.webui.form.UIFormInputBase;
  *          tu.duy@exoplatform.com
  * 24 Mar 2008, 08:00:59
  */
-@SuppressWarnings("hiding")
 public class UIForumCheckBoxInput<T> extends UIFormInputBase<T>{
 	 /**
    * Whether this checkbox is checked
@@ -83,7 +82,6 @@ public class UIForumCheckBoxInput<T> extends UIFormInputBase<T>{
     return this ;
   } 
   
-  @SuppressWarnings("unused")
   public void decode(Object input, WebuiRequestContext context)  throws Exception {
     if (!isEnable()) return ;    
     if (input == null) checked = false; else checked = true;

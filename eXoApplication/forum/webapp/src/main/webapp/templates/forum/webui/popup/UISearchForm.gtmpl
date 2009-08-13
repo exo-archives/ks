@@ -46,7 +46,7 @@
 										<div style="float:left">
 									  	<%uiform.renderField(uiform.FIELD_SEARCHUSER_INPUT); %>
 									  </div>
-									  <div onclick="<%=uicomponent.event("AddValuesUser");%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
+									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_SEARCHUSER_INPUT);%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
 									    <img alt="" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
 									  </div>
 									  <div style="clear:left;"><span></span></div>
@@ -139,14 +139,20 @@
 									  <%uiform.renderField(uiform.FIELD_VIEWCOUNTMIN_SLIDER); %>
 									</td>
 							</tr>							<%}  
-								if(uiform.getIsSearchForum()){
+								if(uiform.getIsSearchForum() || uiform.isSearchCate){
 							%>
 							<tr>
 									<td class="FieldLabel">
 											<%=uicomponent.getLabel(uiform.FIELD_MODERATOR_INPUT); %>
 									</td>
 									<td class="FieldComponent" colspan="2">
-											<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
+										<div style="float:left">
+									  	<%uiform.renderField(uiform.FIELD_MODERATOR_INPUT); %>
+									  </div>
+									  <div onclick="<%=uicomponent.event("AddValuesUser", uiform.FIELD_MODERATOR_INPUT);%>" title="<%=_ctx.appRes("UISearchForm.label.action.SearchUser");%>" style="float:left; cursor:pointer; width:16px;">
+									    <img alt="" class="SelectUserIcon" src="/eXoResources/skin/DefaultSkin/background/Blank.gif"/>
+									  </div>
+									  <div style="clear:left;"><span></span></div>
 									</td>
 							</tr>
 							<%} %>
