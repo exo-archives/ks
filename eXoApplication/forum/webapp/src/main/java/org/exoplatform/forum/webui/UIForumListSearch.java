@@ -222,7 +222,7 @@ public class UIForumListSearch extends UIContainer {
 						UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
 						viewPost.setPostView(post) ;
 						viewPost.setViewUserInfo(false) ;
-						viewPost.setActionForm(new String[] {"Close"});
+						viewPost.setActionForm(new String[] {"Close", "OpenTopicLink"});
 						event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					}
 				} else isErro = true ;

@@ -30,8 +30,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -63,7 +61,8 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 	List<ForumSearch> list_;
 	private boolean isShowIter = true;
 	public final String SEARCH_ITERATOR = "moderationIterator";
-	private JCRPageList pageList ;
+	@SuppressWarnings("unchecked")
+  private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIModerationForum() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -100,14 +99,11 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<ForumSearch> getListObject() throws Exception {
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			list_ = forumService.getJobWattingForModerator(sProvider, getPath()) ;
+			list_ = forumService.getJobWattingForModerator(getPath()) ;
 		} catch (Exception e) {
 			list_ = new ArrayList<ForumSearch>();
 			e.printStackTrace();
-		} finally {
-			sProvider.close();
 		}
 		pageList = new ForumPageList(10, list_.size());
 		pageList.setPageSize(10);
@@ -138,31 +134,26 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 			ForumSearch forumSearch = moderationForum.getObject(objectId); 
 			UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			if(forumSearch.getType().equals(Utils.TOPIC)) {
 				try {
-					Topic topic = moderationForum.forumService.getTopicByPath(sProvider, forumSearch.getPath(), false);
+					Topic topic = moderationForum.forumService.getTopicByPath(forumSearch.getPath(), false);
 					UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 					viewTopic.setTopic(topic) ;
 					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					sProvider.close();
 				}
 			} else {
 				try {
-	        Post post = moderationForum.forumService.getPost(sProvider, "", "", "", forumSearch.getPath());
+	        Post post = moderationForum.forumService.getPost("", "", "", forumSearch.getPath());
 					UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 					viewPost.setPostView(post) ;
 					viewPost.setViewUserInfo(false) ;
-					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close"});
+					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					sProvider.close();
 				}
 			}
 		}

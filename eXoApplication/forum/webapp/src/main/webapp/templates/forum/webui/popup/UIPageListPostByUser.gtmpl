@@ -45,8 +45,8 @@
 								%>
 									<th style="width:120px; margin:0px auto;"><%=_ctx.appRes("UIPageListPostByUser.label.IPLogging");%></th>
 								<%  }%>
-									<th style="width:40px;"><%=_ctx.appRes("UIPageListPostByUser.label.Delete");%></th>
 								<%} %>
+									<th style="width:60px;"><%=_ctx.appRes("UIForumPortlet.label.Action");%></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -85,11 +85,19 @@
 									String link_ =  uicomponent.event("DeletePostLink", post.getId());
 									%>
 										<td class="Tdbox">
-											<div onclick="$link_">
-												<div class="ItemIcon SetDeleteIcon" style="width:16px; height:16px; cursor:pointer;  margin:0 auto;"><span></span></div>
+											<div style="margin:0 auto; width:48px">
+												<div class="ItemIcon SetDeleteIcon" onclick="$link_" title="Delete this post." style="width:20px; height:24px; cursor:pointer; float:left"><span></span></div>
+												<a style="display:block; width:24px;float: left;" title="Go to topic." class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+												<div style="clear:left;"><span></span></div>
 											</div>
 										</td>
-									<%} %>
+									<%} else {%>
+										<td class="Tdbox">
+											<div style="margin:0 auto; width:28px">
+												<a style="display:block; width:24px; float:none; display:block;" title="Go to topic." class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+											</div>
+										</td>
+									<%}  %>
 					 			</tr>
 						 	<% i = i + 1;}
 						 		} else {

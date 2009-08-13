@@ -114,7 +114,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 			UIViewPost viewPost = popupAction.activate(UIViewPost.class, 700) ;
 			viewPost.setPostView(post) ;
 			viewPost.setViewUserInfo(false) ;
-			viewPost.setActionForm(new String[] {"Close"});
+			viewPost.setActionForm(new String[] {"Close", "OpenTopicLink"});
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
