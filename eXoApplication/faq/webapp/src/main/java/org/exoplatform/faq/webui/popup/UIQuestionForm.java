@@ -345,12 +345,12 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       String question = questionForm.inputQuestionContent.getValue();
       if(!ValidatorDataInput.fckContentIsNotEmpty(detail)) detail = " ";
       if(!ValidatorDataInput.fckContentIsNotEmpty(question)){
-      	System.out.println("=======> lang empty") ;
+      	//System.out.println("=======> lang empty") ;
       	if( questionForm.mapLanguage.containsKey(questionForm.lastLanguage_)){
       		questionForm.mapLanguage.get(questionForm.lastLanguage_).setState(QuestionLanguage.DELETE) ;      		
       	}
       }else {
-      	System.out.println("=======> lang not empty") ;
+      	//System.out.println("=======> lang not empty") ;
       	QuestionLanguage langObj = new QuestionLanguage();
       	if(questionForm.mapLanguage.containsKey(questionForm.lastLanguage_)) {
       		langObj = questionForm.mapLanguage.get(questionForm.lastLanguage_) ;
@@ -557,11 +557,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         questions.setDefaultLanguage(); 
-        //if(isNew){
+        if(isNew){
         	questions.updateCurrentQuestionList() ;
-        //}else {
-        	questions.updateCurrentLanguage() ;
-        //}
+        }else {
+        	questions.updateLanguageMap() ;
+        }
         
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;

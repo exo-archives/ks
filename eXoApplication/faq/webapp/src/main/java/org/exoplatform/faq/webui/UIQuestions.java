@@ -222,61 +222,10 @@ public class UIQuestions extends UIContainer {
 
   private Answer[] getPageListAnswer(String questionId) throws Exception {
 		return languageMap.get(language_).getAnswers() ;
-		/*List<Answer> list = new ArrayList<Answer>();
-		try {
-			String IterId = ANSWER_ITER + questionId;			
-			UIFAQPageIterator iterator = getChildById(IterId);
-			if(iterator == null) iterator = addChild(UIFAQPageIterator.class, null, IterId);
-			JCRPageList answerPageList ;
-			if(pathToCurrentLanguage != null && pathToCurrentLanguage.trim().length() > 0)
-				answerPageList = faqService_.getPageListAnswer(questionId +"/"+ pathToCurrentLanguage, isSortAnswer);
-			else
-				answerPageList = faqService_.getPageListAnswer(questionId , isSortAnswer);
-			if(answerPageList != null) {
-				answerPageList.setPageSize(6);
-				long page = iterator.getPageSelected();
-				if(isChangeLg) page = 1;
-				iterator.updatePageList(answerPageList);
-				list = answerPageList.getPageItem(page);
-				iterator.setSelectPage(answerPageList.getCurrentPage());
-			} else {
-				iterator.updatePageList(null);
-				iterator.setSelectPage(1);
-			}
-    } catch (Exception e) {
-	    e.printStackTrace();
-    } 
-		return list;*/
 	}
 
 	private Comment[] getPageListComment(String questionId) throws Exception {
-		return languageMap.get(language_).getComments() ;
-		/*for(QuestionLanguage qLang : listQuestionLanguage) {
-			if(qLang.getLanguage().equals(language_)) {
-				return Arrays.asList(qLang.getComments()) ;
-			}
-		}*/
-		/*System.out.println("\n\n=======> Failure ");
-		List<Comment> list = new ArrayList<Comment>();
-		try {
-			String IterId = COMMENT_ITER + questionId;
-			JCRPageList pageListComment = faqService_.getPageListComment(questionId);
-			UIFAQPageIterator iterator = this.getChildById(IterId) ;
-			if( iterator == null) iterator = addChild(UIFAQPageIterator.class, null, IterId);
-			if(pageListComment != null) {
-				pageListComment.setPageSize(6);
-				long page = iterator.getPageSelected();
-				if(isChangeLg) page = 1;
-				iterator.updatePageList(pageListComment);
-				list = pageListComment.getPageItem(page);
-				iterator.setSelectPage(pageListComment.getCurrentPage());
-			} else {
-				iterator.updatePageList(null);
-				iterator.setSelectPage(1);
-			}
-		} catch (Exception e) { }
-		isChangeLg = false;
-		return list;*/
+		return languageMap.get(language_).getComments() ;		
 	}
 	
 	private String[] getActionTollbar() {
@@ -347,8 +296,12 @@ public class UIQuestions extends UIContainer {
 		this.language_ = language;
 	}
 	
-	private String getQuestionContent() {
+	private String getQuestionContent() {		
 		return languageMap.get(language_).getQuestion() ;
+	}
+	
+	private String getQuestionDetail() {		
+		return languageMap.get(language_).getDetail() ;
 	}
 	
 	/*public void setCategories(String categoryId) throws Exception  {
@@ -508,7 +461,7 @@ public class UIQuestions extends UIContainer {
 		languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language)) ;
 	}
 	
-	private void updateLanguageMap() throws Exception{
+	public void updateLanguageMap() throws Exception{
 		List<QuestionLanguage> languages = faqService_.getQuestionLanguages(viewingQuestionId_)  ;
 		languageMap.clear() ;
 		for(QuestionLanguage lang : languages) {

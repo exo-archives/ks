@@ -376,7 +376,7 @@
 						//if(question.getResponses() != null && question.getResponses().trim().length() > 0) {
 						//	responseBy = question.getResponseBy();
 						//}
-					%>
+					%>					
 						<div class="QuestionSelect" style="_width:100%;">
 							<div class="DecoratorTL">
 								<div class="DecoratorTR">
@@ -701,10 +701,11 @@
 																					<!-- ===================================== view Detail =============================== -->
 																				<div class="UIDetailContainer">
 																					<%
-																						if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
-																						String detailQuestion = ForumTransformHTML.convertCodeHTML(question.getDetail());
+																						String questionDetail = uicomponent.getQuestionDetail() ;
+																						if(questionDetail != null && questionDetail.trim().length() > 0){\
+																						questionDetail = ForumTransformHTML.convertCodeHTML(questionDetail);
 																					%>
-																							$detailQuestion
+																							$questionDetail
 																					<%}%>
 																				</div>
 																				<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
