@@ -2641,17 +2641,25 @@ public class JCRDataStorage {
 	
 	public String getParentCategoriesName(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		String names = "";
+		StringBuilder names = new StringBuilder();
+		List<String> list = new ArrayList<String>();
 		try {
 			Node category = getFAQServiceHome(sProvider).getNode(path) ;
-			while(!category.getName().equals(Utils.CATEGORY_HOME)) {
-				names = " > " + category.getName() + names ;
+			while(category.isNodeType("exo:faqCategory")) {
+				if(category.hasProperty("exo:name")){
+					list.add(category.getProperty("exo:name").getString());
+				} else {
+					list.add(category.getName());
+				}
 				category = category.getParent() ;
 			}
+			for (int i = list.size()-1; i >= 0; i--) {
+				if(i != list.size()-1)names.append(" > ");
+				names.append(list.get(i));
+      }
 		}catch(Exception e) {
-			e.printStackTrace() ;
 		}finally { sProvider.close() ;}		
-		return names;
+		return names.toString();
 	}
 	
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {

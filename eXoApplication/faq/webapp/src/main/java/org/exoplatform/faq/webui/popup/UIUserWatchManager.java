@@ -96,7 +96,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   public List<Category> getListCategory() throws Exception {return getListCategoriesWatch() ;}
 	
   public String getCategoriesName(String categoryId) throws Exception {  	
-    return FAQUtils.getFAQService().getParentCategoriesName(categoryId) ;
+    return faqService_.getParentCategoriesName(categoryId) ;
   }  
   
   public static String getSubString(String str, int max) {
@@ -117,7 +117,6 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   	this.faqSetting_ = setting;
   }
   
-  @SuppressWarnings("unused")
   private List<Category> getListCategoriesWatch(){
   	try{
   		if(pageListCates == null){

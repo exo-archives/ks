@@ -83,7 +83,7 @@
 						 								<tr>
 						 									<% if(path.length() > 120) {
 						 											String title = path ;
-						 											path = uicomponent.getSubString(path,120)
+						 											path = uicomponent.getSubString(path,120);
 						 									 %>
 						 										<td class="text" style="text-align:left"><a title="$title" href="$link">$path</a></td>
 						 									<% } else { %>
