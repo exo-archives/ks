@@ -67,8 +67,6 @@ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
@@ -1008,9 +1006,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
-				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
 				topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole()) ;
+				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
 				topicForm.setMod(topicDetail.isMod) ;
+				topicForm.setIsDetail(true);
 				popupContainer.setId("UIEditTopicContainer") ;
 				popupAction.activate(popupContainer, 900, 460) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -1720,15 +1719,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	  					}
 	  				} 
 	  				
-	  			// set link
-	  				PortalRequestContext portalContext = Util.getPortalRequestContext();
-	  				String url = portalContext.getRequest().getRequestURL().toString();
-	  				url = "http://" + portalContext.getRequest().getServerName() + ":"+ portalContext.getRequest().getServerPort();
-	  				String link = topicDetail.getLink();
-	  				link = ForumSessionUtils.getBreadcumbUrl(link, topicDetail.getId(), "ViewThreadByUser");				
-	  				link = link.replaceFirst("pathId", topicDetail.topicId) ;
-	  				link = url + link;
-	  				link = link.replaceFirst("private", "public");
+	  				// set link
+	  				String link = ForumSessionUtils.getBreadcumbUrl(topicDetail.getLink(), topicDetail.getId(), "ViewThreadByUser", topicDetail.topicId).replaceFirst("private", "public");				
 	  				//
 	  				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 	  				String userName = topicDetail.userProfile.getUserId() ;

@@ -34,9 +34,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -148,15 +146,8 @@ public class UIQuickReplyForm extends UIForm {
 				} 
 				String remoteAddr = quickReply.getIPRemoter();
 				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
-			// set link
-				PortalRequestContext portalContext = Util.getPortalRequestContext();
-				String url = portalContext.getRequest().getRequestURL().toString();
-				url = "http://" + portalContext.getRequest().getServerName() + ":"+ portalContext.getRequest().getServerPort();
-				String link = quickReply.getLink();
-				link = ForumSessionUtils.getBreadcumbUrl(link, quickReply.getId(), "QuickReply");				
-				link = link.replaceFirst("pathId", quickReply.topicId) ;
-				link = url + link;
-				link = link.replaceFirst("private", "public");
+				// set link
+				String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");				
 				//
 				Topic topic = quickReply.topic ;
 				Post post = new Post() ;

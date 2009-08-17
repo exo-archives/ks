@@ -520,7 +520,7 @@
 									actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String url = uicomponent.url("OpenTopic", (topicId));
-									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
+									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
 								  String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";

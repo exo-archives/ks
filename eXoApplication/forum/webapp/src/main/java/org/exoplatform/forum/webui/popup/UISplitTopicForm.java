@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -33,8 +34,6 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -120,7 +119,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	private Topic getTopic() {return this.topic ;}
 	public void setTopic(Topic topic) { this.topic = topic; }
 	@SuppressWarnings("unused")
-	private UserProfile getUserProfile() {return this.userProfile ;}
+	private UserProfile getUserProfile() {return userProfile ;}
 	public void setUserProfile(UserProfile userProfile) { this.userProfile = userProfile; }
 	
 	static	public class SaveActionListener extends EventListener<UISplitTopicForm> {
@@ -130,16 +129,18 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 			if(!ForumUtils.isEmpty(newTopicTitle)) {
 				newTopicTitle = ForumTransformHTML.enCodeHTML(newTopicTitle);
 				List<Post> posts = new ArrayList<Post>() ;
+				
 				for(String child : uiForm.getIdSelected()) {
 					Post post = uiForm.getPostById(child);
 					if(post !=  null) {
 							posts.add(post);
 					}
 				}
+				Collections.sort(posts, new ForumUtils.DatetimeComparatorDESC()) ;
 				if(posts.size() > 0) {
 					Topic topic = new Topic() ;
 					Post post = posts.get(0) ;
-					String owner = ForumSessionUtils.getCurrentUser() ;
+					String owner = uiForm.userProfile.getUserId();
 					String topicId = post.getId().replaceFirst(Utils.POST, Utils.TOPIC);
 					topic.setId(topicId) ;
 					topic.setTopicName(newTopicTitle) ;
@@ -148,23 +149,19 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					topic.setDescription(post.getMessage());
 					topic.setIcon(post.getIcon());
 					topic.setAttachments(post.getAttachments());
-					topic.setLastPostBy(posts.get(posts.size() - 1).getOwner()) ;
+					Post lastPost = posts.get(posts.size() - 1);
+					topic.setLastPostBy(lastPost.getOwner()) ;
+					if(posts.size() > 1){
+						topic.setLastPostDate(lastPost.getCreatedDate()) ;
+					}
 					String path = uiForm.topic.getPath() ;
 					String []string = path.split("/") ;
 					String categoryId = string[string.length - 3] ;
 					String forumId = string[string.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					try {
-					// set link
-						PortalRequestContext portalContext = Util.getPortalRequestContext();
-						String url = portalContext.getRequest().getRequestURL().toString();
-						url = url.replaceFirst("http://", "") ;
-						url = url.substring(0, url.indexOf("/")) ;
-						url = "http://" + url;
-						String link = uiForm.getLink();
-						link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
-						link = url + link;
-						link = link.replaceFirst("private", "public");
+						// set link
+						String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");	
 						//
 						WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 						ResourceBundle res = context.getApplicationResourceBundle() ;

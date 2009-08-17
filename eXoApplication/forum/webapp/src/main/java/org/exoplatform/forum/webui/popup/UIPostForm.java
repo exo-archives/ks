@@ -40,8 +40,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -383,16 +381,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      			return ;
 	      		}
 	      		// set link
-	      		PortalRequestContext portalContext = Util.getPortalRequestContext();
-	      		String url = portalContext.getRequest().getRequestURL().toString();
-	      		url = url.replaceFirst("http://", "") ;
-	      		url = url.substring(0, url.indexOf("/")) ;
-	      		url = "http://" + url;
-	      		String link = uiForm.getLink();
-	      		link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewPost");	
-	      		link = link.replaceFirst("pathId", uiForm.topicId) ;
-	      		link = url + link;
-	      		link = link.replaceFirst("private", "public");
+	      		String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "PreviewPost", uiForm.topicId).replaceFirst("private", "public");	
 	      		//
 	      		if(uiForm.isQuote || uiForm.isMP) post = new Post();
 	      		post.setName(postTitle) ;

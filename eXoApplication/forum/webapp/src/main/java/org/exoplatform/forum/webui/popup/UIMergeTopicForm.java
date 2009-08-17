@@ -29,8 +29,6 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -115,20 +113,13 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String categoryId = temp[temp.length - 3] ;
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+					String link = uiForm.getLink();
 					try {
 						for(Topic topic : uiForm.listTopic) {
 							if(topicMergeId.equals(topic.getId())) {continue ;}
 							try {
-							// set link
-								PortalRequestContext portalContext = Util.getPortalRequestContext();
-								String url = portalContext.getRequest().getRequestURL().toString();
-								url = url.replaceFirst("http://", "") ;
-								url = url.substring(0, url.indexOf("/")) ;
-								url = "http://" + url;
-								String link = uiForm.getLink();
-								link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
-								link = url + link;
-								link = link.replaceFirst("private", "public");
+								// set link
+								link = (ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel", "pathId")).replaceFirst("private", "public");	
 								//
 								WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 								ResourceBundle res = context.getApplicationResourceBundle() ;

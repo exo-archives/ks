@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.user.ContactProvider;
 import org.exoplatform.forum.service.user.ForumContact;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -226,15 +227,12 @@ public class ForumSessionUtils {
 		}
 	}
 	
-	public static String getBreadcumbUrl(String link, String componentName, String actionName) throws Exception {
-		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-		String portalName = "/" + Util.getUIPortal().getName() ;
-		link = link.replaceFirst(componentName,"UIBreadcumbs").replaceFirst(actionName,"ChangePath").replaceAll("&amp;", "&");							
-		if(link.indexOf(portalName) > 0) {
-			if(link.indexOf(portalName + "/" + selectedNode) < 0){
-				link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			}									
-		}	
-		return link;
+	public static String getBreadcumbUrl(String link, String componentName, String actionName, String objectId) throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String url = portalContext.getRequest().getRequestURL().toString();
+		url = url.substring(0, url.indexOf("/", 8)) ;
+		link = link.replaceFirst(componentName,"UIBreadcumbs").replaceFirst(actionName,"ChangePath")
+			.replace("pathId", objectId).replaceAll("&amp;", "&");
+		return (url+link);
 	}
 }

@@ -857,7 +857,7 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node cateHome = getCategoryHome(sProvider);
-			Node userHome = getUserProfileHome(sProvider);
+//			Node userHome = getUserProfileHome(sProvider);
 //			Node userNode = userHome.getNode(userId);
 			Node cateNode = null;
 			boolean isAddNew;
@@ -940,7 +940,6 @@ public class JCRDataStorage {
 	private void updateModeratorInForums(SessionProvider sProvider, Node cateNode, String[] moderatorCat) throws Exception {
 		NodeIterator iter = cateNode.getNodes();
 		List<String> list;
-		Forum forum = new Forum();
 		String[] oldModeratoForums ;
 		String[] strModerators;
 		while (iter.hasNext()) {
@@ -1929,7 +1928,7 @@ public class JCRDataStorage {
 	private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		String queryString = "/jcr:root" + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false'] order by @exo:lastPostDate descending";
+		String queryString = "/jcr:root" + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (@exo:canView=' ' or @exo:canView='')] order by @exo:lastPostDate descending";
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -2282,6 +2281,9 @@ public class JCRDataStorage {
 				topic.setCreatedDate(calendar.getTime());
 				topicNode.setProperty("exo:createdDate", calendar);
 				topicNode.setProperty("exo:lastPostBy", topic.getOwner());
+				if(isMove && topic.getLastPostDate() != null){
+					calendar.setTime(topic.getLastPostDate());
+				}
 				topicNode.setProperty("exo:lastPostDate", calendar);
 				topicNode.setProperty("exo:postCount", -1);
 				topicNode.setProperty("exo:viewCount", 0);
@@ -2334,6 +2336,17 @@ public class JCRDataStorage {
 			topicNode.setProperty("exo:isWaiting", topic.getIsWaiting());
 			topicNode.setProperty("exo:isActive", topic.getIsActive());
 			String[] strs = topic.getCanView();
+			boolean isGetLastTopic = false;
+			if(!isNew) {
+				if(topicNode.hasProperty("exo:canView") && strs != null && strs.length > 0){
+					List<String> list = ValuesToList(topicNode.getProperty("exo:canView").getValues());
+					if(Utils.isAddNewList(list, Arrays.asList(strs))){
+						isGetLastTopic = true;
+					}
+				} else {
+					isGetLastTopic = true;
+				}
+			}
 			if(strs == null || strs.length == 0) strs = new String []{" "};
 			topicNode.setProperty("exo:canView", strs);
 			strs = topic.getCanPost();
@@ -2347,6 +2360,9 @@ public class JCRDataStorage {
 				forumNode.getSession().save();
 			} else {
 				forumNode.save();
+			}
+			if(isGetLastTopic) {
+				queryLastTopic(sProvider, forumNode.getPath());
 			}
 			if(topic.getIsWaiting() || !topic.getIsApproved()) {
 				List<String>userIdsp = new ArrayList<String>();
@@ -2863,10 +2879,14 @@ public class JCRDataStorage {
 							// set InfoPost for Forum
 							if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								forumNode.setProperty("exo:postCount", forumPostCount);
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" ")){
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								}
 								sendAlertJob = false;
 							} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-								forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" ")){
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+								}
 								sendAlertJob = false;
 							}
 							// set InfoPost for Topic
@@ -2881,7 +2901,8 @@ public class JCRDataStorage {
 							if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 									if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+										if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" "))
+											forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 										sendAlertJob = false;
 									} 
 								} 
@@ -2890,7 +2911,8 @@ public class JCRDataStorage {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} else if (post.getIsApproved()) {
-									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+									if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" "))
+										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} 
 							}

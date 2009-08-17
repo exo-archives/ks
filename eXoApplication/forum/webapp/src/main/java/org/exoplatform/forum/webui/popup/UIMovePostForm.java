@@ -39,8 +39,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -170,16 +168,9 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 			String topicPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			if(!ForumUtils.isEmpty(topicPath)) {
 				try {
+					String[] temp = topicPath.split("/") ;
 				// set link
-					PortalRequestContext portalContext = Util.getPortalRequestContext();
-					String url = portalContext.getRequest().getRequestURL().toString();
-					url = url.replaceFirst("http://", "") ;
-					url = url.substring(0, url.indexOf("/")) ;
-					url = "http://" + url;
-					String link = uiForm.getLink();
-					link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel");	
-					link = url + link;
-					link = link.replaceFirst("private", "public");
+					String link = (ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId")).replaceFirst("private", "public");
 					//
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
@@ -187,7 +178,6 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					uiForm.forumService.movePost(uiForm.posts, topicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
-					String[] temp = topicPath.split("/") ;
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class) ;
 					UITopicDetailContainer topicDetailContainer = forumContainer.getChild(UITopicDetailContainer.class) ;
 					topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 3], temp[temp.length - 2], temp[temp.length - 1]) ;

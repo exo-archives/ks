@@ -24,8 +24,6 @@ import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -129,9 +127,8 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			uiForm.bbcode.setExample(example);
 			uiForm.bbcode.setOption(isOption);
 			uiForm.listBBCode = new ArrayList<BBCode>();
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
-				uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode(sProvider));
+				uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode());
 	    } catch (Exception e) {
 	    }
     	for (BBCode code : uiForm.listBBCode) {
@@ -146,11 +143,9 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			try {
 				List<BBCode> bbcodes = new ArrayList<BBCode>();
 				bbcodes.add(uiForm.bbcode);
-				uiForm.forumService.saveBBCode(sProvider, bbcodes);
+				uiForm.forumService.saveBBCode(bbcodes);
       } catch (Exception e) {
 	      e.printStackTrace();
-      }finally {
-      	sProvider.close();
       }
       UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
@@ -179,9 +174,8 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				uiForm.bbcode.setExample(example);
 				uiForm.bbcode.setOption(isOption);
 				uiForm.listBBCode = new ArrayList<BBCode>();
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode(sProvider));
+					uiForm.listBBCode.addAll(uiForm.forumService.getAllBBCode());
 		    } catch (Exception e) {
 		    }
 		    if(uiForm.isEdit){

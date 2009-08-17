@@ -44,8 +44,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -121,6 +119,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private String link = "";
 	private Forum forum ;
 	private boolean isMod = false;
+	private boolean isDetail = false;
 	private int id = 0;
 	private Topic topic = new Topic() ;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
@@ -225,6 +224,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
+	public void setIsDetail(boolean isDetail) {this.isDetail = isDetail;}
 	public void setTopicIds(String categoryId, String forumId, Forum forum, long userRole) throws Exception {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -301,34 +301,33 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		return attachments_ ;
 	}
 
-	
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.topicId = topic.getId() ;
 			this.topic =	forumService.getTopic(categoryId, forumId, topicId, "") ;
 			UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
-			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(topic.getTopicName()));
-			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(topic.getDescription());
+			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(this.topic.getTopicName()));
+			threadContent.getChild(UIFormWYSIWYGInput.class).setValue(this.topic.getDescription());
 			
 			UIForumInputWithActions threadOption = this.getChildById(FIELD_THREADOPTION_TAB);
 			String stat = "open";
-			if(topic.getIsClosed()) stat = "closed";
+			if(this.topic.getIsClosed()) stat = "closed";
 			threadOption.getUIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX).setValue(stat);
-			if(topic.getIsLock()) stat = "locked";
+			if(this.topic.getIsLock()) stat = "locked";
 			else stat = "unlock";
 			threadOption.getUIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX).setValue(stat);
-			threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(topic.getIsModeratePost());
-			if(topic.getIsNotifyWhenAddPost() != null && topic.getIsNotifyWhenAddPost().trim().length() > 0){
+			threadOption.getUIFormCheckBoxInput(FIELD_MODERATEPOST_CHECKBOX).setChecked(this.topic.getIsModeratePost());
+			if(this.topic.getIsNotifyWhenAddPost() != null && this.topic.getIsNotifyWhenAddPost().trim().length() > 0){
 				threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).setChecked(true);
 			}
 			
-			threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue(topic.getTopicType());
-			threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(topic.getIsSticky());
+			threadOption.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setValue(this.topic.getTopicType());
+			threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 			
 			UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
-			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(topic.getCanView()));
-			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(topic.getCanPost()));
+			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
+			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
 			Post post = forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
@@ -504,18 +503,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							return ;
 						}
 						// set link
-						PortalRequestContext portalContext = Util.getPortalRequestContext();
-						String url = portalContext.getRequest().getRequestURL().toString();
-						url = url.replaceFirst("http://", "") ;
-						url = url.substring(0, url.indexOf("/")) ;
-						url = "http://" + url;
-						String link = uiForm.getLink();
-						link = ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "PreviewThread");	
-						link = link.replaceFirst("pathId", uiForm.topic.getId()) ;
-						link = url + link;
-						link = link.replaceFirst("private", "public");
-						//
 						Topic topicNew = uiForm.topic;
+						String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "PreviewThread", topicNew.getId()).replaceFirst("private", "public");	
+						//
 						String userName = userProfile.getUserId() ;
 						topicNew.setOwner(userName);
 						topicNew.setTopicName(topicTitle);
@@ -588,9 +578,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							topicNew.setEditReason(editReason) ;
 							try {
 								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
-								forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
-								UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-								topicDetail.setIsEditTopic(true) ;
+								if(uiForm.isDetail){
+									forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
+									UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+									topicDetail.setIsEditTopic(true) ;
+									uiForm.isDetail = false;
+								}
 							} catch (PathNotFoundException e) {
 								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 								UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;

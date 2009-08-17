@@ -38,7 +38,7 @@
 								linkPath = links.substring(lastIndex + 2);
 								links = "topicIcon//topicName//"+linkPath;
 								linkBm = uiform.url("OpenLink",linkPath);		
-								linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink");					
+								linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink", "");					
 								//window.location.href=this.href;						
 					%>
 					<tr>
