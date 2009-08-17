@@ -444,10 +444,10 @@ public class UICategories extends UIContainer	{
 			UICategories categories = event.getSource();
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String currentUser = categories.userProfile.getUserId();
-			if(currentUser != null){
+			if(!currentUser.equals(UserProfile.USER_GUEST)){
 				categories.forumService.addWatch(-1, cateId, null, currentUser);
 			}
-			String rssLink = categories.getRSSLink(cateId);
+			/*String rssLink = categories.getRSSLink(cateId);
 			UIForumPortlet portlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -455,7 +455,7 @@ public class UICategories extends UIContainer	{
 			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
 			popupAction.activate(popupContainer, 560, 170) ;
 			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 	

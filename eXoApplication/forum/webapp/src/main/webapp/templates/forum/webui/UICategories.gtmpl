@@ -45,7 +45,7 @@
 						} else {
 							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
 						}
-						actionBookmark += ";" + uicomponent.event("RSS", categoryId)
+						actionBookmark += ";" + uicomponent.getRSSLink(categoryId) + "," + uicomponent.event("RSS", categoryId).replace("javascript:","") ;
 						url = uicomponent.url("OpenCategory", categoryId);
 						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory" );
 						String classCssCollap = "CollapseButton";
@@ -211,7 +211,7 @@
 										} else {
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
-										actionBookmark += ";" + uicomponent.event("RSS", forumId)
+										actionBookmark += ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","") ;
 										String lineHeight = "line-height:14px;";
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height:28px;";
@@ -249,9 +249,9 @@
 											</td>
 											<%if(topicNewPost != null) {
 												if(uicomponent.userProfile.getUserRole() < 3){
-													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.event("RSS", topicNewPost.getId());
+													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
 												} else {
-													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath) + ";" + uicomponent.event("RSS", topicNewPost.getId());
+													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
 												}
 											%>
 										 	<td>

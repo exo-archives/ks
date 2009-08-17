@@ -70,7 +70,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.ExportActionListener.class),
 				@EventConfig(listeners = UICategories.ImportActionListener.class),
 				@EventConfig(listeners = UICategories.ChangeIndexActionListener.class),
-				@EventConfig(listeners = UICategories.RSSActionListener.class),
+				//@EventConfig(listeners = UICategories.RSSActionListener.class),
 				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.FilterQuestionsActionListener.class),
 				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
@@ -559,7 +559,7 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
-	static  public class RSSActionListener extends EventListener<UICategories> {
+	/*static  public class RSSActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
 			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -572,7 +572,7 @@ public class UICategories extends UIContainer{
 			exportForm.setRSSLink(rssLink);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}
+	}*/
 	
 	static  public class FilterQuestionsActionListener extends EventListener<UICategories> {
 		public void execute(Event<UICategories> event) throws Exception {

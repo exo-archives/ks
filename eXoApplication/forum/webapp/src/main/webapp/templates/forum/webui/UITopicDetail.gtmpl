@@ -561,13 +561,14 @@
 								</div>
 							</div>
 						<%}%>
+						
 							<div class="ButtonHeadBar">
 								<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
 									<div class="LeftOverButton">
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
-													<a style="display:block;" href="<%=uicomponent.event("RSS",topic.getId())%>">&nbsp;RSS</a>
+													<a style="display:block;" href="javascript:window.open('<%=uicomponent.getRSSLink(topic.getId())%>'); <%=uicomponent.event("RSS", topic.getId()).replace("javascript:","")%>;">&nbsp;RSS</a>
 												</div>
 											</div>
 										</div>

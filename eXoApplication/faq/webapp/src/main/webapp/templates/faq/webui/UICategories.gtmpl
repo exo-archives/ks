@@ -129,10 +129,12 @@
 																
 														<%
 															}
-															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
+															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+																String rssLink = uicomponent.getRSSLink(category.getPath()) ;
+															%>
 															<div class="MenuItem">
 																<div class="IconItem FAQRSS">
-																	<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getPath()))%>"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
+																	<a href="$rssLink" target="_blank"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
 																</div>
 															</div>
 														<%}%>

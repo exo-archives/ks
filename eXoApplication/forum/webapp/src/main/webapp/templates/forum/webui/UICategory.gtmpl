@@ -184,7 +184,7 @@
 								<div class="RightOverButton">
 									<div class="CenterOverButton">
 										<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
-											<a style="display:block;" href="<%=uicomponent.event("RSS",categoryId)%>">&nbsp;RSS</a>
+											<a style="display:block;" href="javascript:window.open('<%=uicomponent.getRSSLink(categoryId)%>'); <%=uicomponent.event("RSS", categoryId).replace("javascript:","")%>;">&nbsp;RSS</a>
 										</div>
 									</div>
 								</div>
@@ -357,9 +357,9 @@
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
 							if(uicomponent.userProfile.getUserRole() < 3){
-								actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path) + ";" + uicomponent.event("RSS", forumId);
+								actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
 							} else {
-								actionBookmark = uicomponent.event("ShareLink","forum//"+path) + ";" + uicomponent.event("RSS", forumId);
+								actionBookmark = uicomponent.event("ShareLink","forum//"+path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
 							}
 							String lineHeight = "line-height:12px;";
 							if(ForumUtils.isEmpty(forumDescription)) {
@@ -396,9 +396,9 @@
 									</td>
 						 <% if(topicNewPost != null) { 
 						 			if(uicomponent.userProfile.getUserRole() < 3){
-								 		actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId) + ";" + uicomponent.event("RSS", topicId);
+								 		actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									} else {
-										actionBookmark = uicomponent.event("ShareLink","topic//"+path+"/"+topicId) + ";" + uicomponent.event("RSS", topicId);
+										actionBookmark = uicomponent.event("ShareLink","topic//"+path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									}
 						 %>
 									<td >

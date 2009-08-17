@@ -54,7 +54,7 @@
 									
 									<%
 									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
-									 	String linkRss = uicomponent.event("RSS", uicomponent.getRSSLink());
+									 	String linkRss = uicomponent.getRSSLink() ;
 									%>
 										<div onmouseout="eXo.faq.UIFAQPortlet.OverButton(this)" onmouseover="eXo.faq.UIFAQPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
 											<div onclick="$linkRss" class="SeparatorLine">
@@ -62,7 +62,7 @@
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
 															<div class="Icon FAQRSS">
-																<a href="javascript:void(0);">RSS</a>
+																<a href="$linkRss" target="_blank">RSS</a>
 															</div>
 														</div>
 													</div>

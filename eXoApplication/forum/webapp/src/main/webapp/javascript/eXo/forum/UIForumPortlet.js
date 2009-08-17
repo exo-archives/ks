@@ -708,7 +708,9 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 			itemmenuWatching.href= actions[1] ;
 			if(itemmenuRSS){
 				if(actions.length == 3) {
-					itemmenuRSS.href= actions[2] ;
+					var link = actions[2].substring(0, actions[2].indexOf(','));
+					var action = actions[2].substring(actions[2].indexOf(',')+1);
+					itemmenuRSS.href= "javascript:window.open('"+link+"'); " + action +";";//link,action
 					itemmenuRSS.parentNode.style.display ="block";
 				} else {
 					itemmenuRSS.parentNode.style.display ="none";

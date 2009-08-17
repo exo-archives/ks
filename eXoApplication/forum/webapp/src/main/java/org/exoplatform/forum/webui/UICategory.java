@@ -785,7 +785,7 @@ public class UICategory extends UIForm	{
 			if(!userId.equals(UserProfile.USER_GUEST)){
 				uiForm.forumService.addWatch(-1, cateId, null, userId);
 			}
-			String rssLink = uiForm.getRSSLink(cateId);
+			/*String rssLink = uiForm.getRSSLink(cateId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -793,7 +793,7 @@ public class UICategory extends UIForm	{
 			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
 			popupAction.activate(popupContainer, 560, 170) ;
 			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 }

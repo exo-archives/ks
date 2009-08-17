@@ -1975,10 +1975,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail uiForm = event.getSource();
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(uiForm.userName != null){
+			if(!uiForm.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)){
 				uiForm.forumService.addWatch(-1, topicId, null, uiForm.userName);
 			}
-			String rssLink = uiForm.getRSSLink(topicId);
+			/*String rssLink = uiForm.getRSSLink(topicId);
 			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -1986,7 +1986,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
 			popupAction.activate(popupContainer, 560, 170) ;
 			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 }

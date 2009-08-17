@@ -357,7 +357,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="AddRSS ForumRSSFeed" style="padding-left:16px;line-height:22px;">
-													<a style="display:block;" href="<%=uicomponent.event("RSS",forum.getId())%>">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+													<a style="display:block;" href="javascript:window.open('<%=uicomponent.getRSSLink(forum.getId())%>'); <%=uicomponent.event("RSS", forum.getId()).replace("javascript:","")%>;">&nbsp;<%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 												</div>
 											</div>
 										</div>
@@ -517,7 +517,7 @@
 									if(uicomponent.isLogin){
 										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
 									}
-									actionBookmark += ";" + uicomponent.event("RSS", topicId);
+									actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									String url = uicomponent.url("OpenTopic", (topicId));
 									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic" );
