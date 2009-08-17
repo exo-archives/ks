@@ -753,7 +753,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
 				watchToolsForm.setPath(uiTopicContainer.forum.getPath());
 				watchToolsForm.setEmails(uiTopicContainer.forum.getEmailNotification()) ;
-				watchToolsForm.setIsTopic(false);
 				popupAction.activate(watchToolsForm, 500, 365) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {

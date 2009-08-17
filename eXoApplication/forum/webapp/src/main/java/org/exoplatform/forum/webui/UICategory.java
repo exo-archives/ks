@@ -771,7 +771,6 @@ public class UICategory extends UIForm	{
 			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
 			watchToolsForm.setPath(category.getPath());
 			watchToolsForm.setEmails(category.getEmailNotification()) ;
-			watchToolsForm.setIsTopic(true);
 			popupAction.activate(watchToolsForm, 500, 365) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
