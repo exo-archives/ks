@@ -194,7 +194,7 @@ public class UITopicPoll extends UIForm	{
 		Poll poll = poll_ ;
 		String[] voteNumber = poll.getVote() ;
 		String[] userVotes = poll.getUserVote();
-		long size = 0 ;
+		long size = 0 , temp = 1;
 		if(!poll.getIsMultiCheck()) {
 			size = userVotes.length	;
 		} else {
@@ -202,6 +202,7 @@ public class UITopicPoll extends UIForm	{
 				size += userVotes[i].split(":").length -1 ;
       }
 		}
+		temp = size;
 		if(size == 0) size = 1;
 		int l = voteNumber.length;
 		String[] infoVote = new String[(l + 1)] ;
@@ -213,7 +214,7 @@ public class UITopicPoll extends UIForm	{
 			string = "" + (double) t*100/size ;
 			infoVote[j] = string + ":" + t ;
     }
-		infoVote[l] = "" + size ;
+		infoVote[l] = "" + temp ;
 		if(poll.getIsMultiCheck()) {
 			infoVote[l] = String.valueOf(userVotes.length) ;
 		}

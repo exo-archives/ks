@@ -402,8 +402,8 @@ UIForumPortlet.prototype.setEnableInput = function() {
 			document.getElementById("BanCounter").disabled = "disabled" ;
 			document.getElementById("BanReasonSummary").readonly = "readonly" ;
 			document.getElementById("CreatedDateBan").disabled = "disabled" ;
+			var selectbox = DOMUtil.findFirstDescendantByClass(parend, "select", "selectbox") ;
 			if(!obj.checked) {
-				var selectbox = DOMUtil.findFirstDescendantByClass(parend, "select", "selectbox") ;
 				selectbox.disabled = "disabled" ;
 				var banReason = document.getElementById("BanReason");
 				banReason.disabled = "disabled" ;
