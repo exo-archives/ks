@@ -46,7 +46,6 @@ import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListTopicUnApprove;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
-import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
@@ -1234,9 +1233,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
 			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
-			searchForm.setSelectType(Utils.CATEGORY) ;
-			searchForm.setIsSearchForum(false);
-			searchForm.setIsSearchTopic(false);
+			searchForm.setSelectType(Utils.TOPIC) ;
+			searchForm.setPath(uiForm.forum.getPath());
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

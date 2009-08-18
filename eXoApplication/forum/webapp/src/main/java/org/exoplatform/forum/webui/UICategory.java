@@ -700,9 +700,8 @@ public class UICategory extends UIForm	{
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
 			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
-			searchForm.setSelectType(Utils.CATEGORY) ;
-			searchForm.setIsSearchForum(false);
-			searchForm.setIsSearchTopic(false);
+			searchForm.setSelectType(Utils.FORUM) ;
+			searchForm.setPath(uiForm.category.getPath());
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}

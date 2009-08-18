@@ -113,6 +113,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	private boolean isSearchForum = false;
 	private boolean isSearchCate = false;
 	private boolean isSearchTopic = false;
+	private String path = "";
 	private ForumService forumService;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	public UISearchForm() throws Exception {
@@ -180,10 +181,12 @@ public class UISearchForm extends UIForm implements UISelector {
 		setActions(new String[]{"Search","ResetField", "Cancel"});
 	}
 	
+	public boolean getIsSearchCate() {return isSearchCate;}
 	public boolean getIsSearchForum() { return isSearchForum;}
 	public void setIsSearchForum(boolean isSearchForum){this.isSearchForum = isSearchForum;}
 	public boolean getIsSearchTopic() {return isSearchTopic;}
 	public void setIsSearchTopic(boolean isSearchTopic) {this.isSearchTopic = isSearchTopic;}
+	public void setPath(String path) {this.path = path;}
 	
 	private void setTopicType() throws Exception {
 		listTT.clear();
@@ -204,9 +207,32 @@ public class UISearchForm extends UIForm implements UISelector {
 		return false ;
 	}
 	
-	public void setSelectType(String type) {
+	public void setSelectType(String type) throws Exception {
 		this.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).setValue(type) ;
-		if(!isSearchCate && type.equals(Utils.CATEGORY)) isSearchCate = true;
+		if(type.equals(Utils.FORUM)) {
+			this.isSearchForum = true; 
+			this.isSearchTopic = false;
+			this.isSearchCate = false;
+		} else if(type.equals(Utils.TOPIC)){
+			this.isSearchCate = false;
+			this.isSearchForum = false; 
+			this.isSearchTopic = true;
+			this.setTopicType();
+			List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+			list.add(new SelectItemOption<String>(this.getLabel("All"), "all")) ;
+			for (TopicType topicType : this.listTT) {
+				list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
+	    }
+			this.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
+		} else if(type.equals(Utils.CATEGORY)){
+			this.isSearchCate = true;
+			this.isSearchForum = false; 
+			this.isSearchTopic = false;
+		} else {
+			this.isSearchCate = false;
+			this.isSearchForum = false; 
+			this.isSearchTopic = false;
+		}
 	}
 	
 	public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
@@ -281,7 +307,6 @@ public class UISearchForm extends UIForm implements UISelector {
 			
 			String valueIn = uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).getValue() ;
 			if(valueIn == null || valueIn.length() == 0) valueIn = "entire";
-			String path = "" ;
 			String byUser = uiForm.getUIStringInput(FIELD_SEARCHUSER_INPUT).getValue() ;
 			
 			String isLock = "all";
@@ -335,7 +360,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setKeyValue(keyValue) ;
 			eventQuery.setValueIn(valueIn) ;
 			eventQuery.setTopicType(topicType);
-			eventQuery.setPath(path) ;
+			eventQuery.setPath(uiForm.path) ;
 			eventQuery.setByUser(byUser);
 			eventQuery.setIsLock(isLock) ;
 			eventQuery.setIsClose(isClosed) ;
@@ -387,26 +412,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			UISearchForm uiForm = event.getSource() ;
 			String type = uiForm.getUIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX).getValue() ;
 			uiForm.getUIFormRadioBoxInput(FIELD_SCOPE_RADIOBOX).setValue("entire");
-			if(type.equals(Utils.FORUM)) {
-				uiForm.isSearchForum = true; uiForm.isSearchTopic = false;
-			} else if(type.equals(Utils.TOPIC)){
-				uiForm.isSearchCate = false;
-				uiForm.isSearchForum = false; uiForm.isSearchTopic = true;
-				uiForm.setTopicType();
-				List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-				list.add(new SelectItemOption<String>(uiForm.getLabel("All"), "all")) ;
-				for (TopicType topicType : uiForm.listTT) {
-					list.add(new SelectItemOption<String>(topicType.getName(), topicType.getId()));
-		    }
-				uiForm.getUIFormSelectBox(FIELD_TOPICTYPE_SELECTBOX).setOptions(list);
-			} else if(type.equals(Utils.CATEGORY)){
-				uiForm.isSearchCate = true;
-				uiForm.isSearchForum = false; uiForm.isSearchTopic = false;
-			} else {
-				uiForm.isSearchCate = false;
-				uiForm.isSearchForum = false; 
-				uiForm.isSearchTopic = false;
-			}
+			uiForm.setSelectType(type);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
