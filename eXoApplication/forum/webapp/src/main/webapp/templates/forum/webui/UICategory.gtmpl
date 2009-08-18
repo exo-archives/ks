@@ -41,7 +41,7 @@
 			<div class="RightBar">
 				<div class="CenterBar CategoryDetectPosition">
 					<div class="Title"><%=category.getCategoryName()%> : <span title="$description">$subDescription</span></div>
-					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(isShowMenu){ %>
 					<div class="ForumSeparatorLine"><span></span></div>
 					<div class="ToolbarActionsContainer" onclick="eXo.forum.UIForumPortlet.checkAction(this, event, 6);">

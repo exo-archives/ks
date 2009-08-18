@@ -48,11 +48,13 @@
 						actionBookmark += ";" + uicomponent.getRSSLink(categoryId) + "," + uicomponent.event("RSS", categoryId).replace("javascript:","") ;
 						url = uicomponent.url("OpenCategory", categoryId);
 						url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory", "");
+						String titleCollap = _ctx.appRes("UIForumPortlet.label.Collapse");
 						String classCssCollap = "CollapseButton";
 						String actionCollap = uicomponent.event("CollapCategory", categoryId+",true");
 						String display = "block";
 						String styleForumToolBar = "";
 						if(uicomponent.isCollapCategories(categoryId)){
+							titleCollap = _ctx.appRes("UIForumPortlet.label.Expand");
 							classCssCollap = "ExpandButton";
 							display = "none";
 							styleForumToolBar = "style=\"border-bottom:solid 1px #b7b7b7;\""; 
@@ -80,7 +82,7 @@
 											</div>
 										</div>
 								</div>
-								<div class="$classCssCollap" title="Collapse" onclick="$actionCollap;"><span></span></div>
+								<div class="$classCssCollap" title="$titleCollap" onclick="$actionCollap;"><span></span></div>
 								<div style="clear:both;"><span></span></div>
 							</div>
 						</div>

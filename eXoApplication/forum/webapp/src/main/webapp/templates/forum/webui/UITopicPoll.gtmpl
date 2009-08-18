@@ -41,7 +41,7 @@
 						<span><%=_ctx.appRes("UITopicPoll.label.Poll"); %>:</span>
 						<span>${question}</span>
 					</div>
-					<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>	
 					<div class="ForumSeparatorLine"><span></span></div>
 					<div class="ContentAction">

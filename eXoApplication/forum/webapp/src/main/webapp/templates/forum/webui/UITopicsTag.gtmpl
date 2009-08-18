@@ -40,7 +40,7 @@
 					<div class="RightBar">
 						<div class="CenterBar">
 							<div class="Title"><span style="font-weight:normal;"><%=_ctx.appRes("UITopicsTag.label.TagName");%>:</span>$tagName_</div>
-							<div class="CollapseButton" title="Collapse" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
+							<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 							<% if(isShowMenu){ %>
 							<div class="ForumSeparatorLine" style="margin-right:7px;"><span></span></div>
 							<div class="ToolbarActionsTag" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
@@ -317,7 +317,7 @@
 									</td>
 								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>
-								 		<div title="Go to last posts"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
+								 		<div title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>"><a href="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></a></div>
 										<div class="PostInfos LastPostInfos">
 										
 											<span><%=_ctx.appRes("UITopicContainer.label.by");%></span> 
