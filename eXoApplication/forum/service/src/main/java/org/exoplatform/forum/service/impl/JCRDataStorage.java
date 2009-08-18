@@ -5353,7 +5353,7 @@ public class JCRDataStorage {
 				} else {
 					if (type.equals(Utils.TOPIC)) {
 						if (isAnd) queryString.append(" and ");
-						queryString.append("((@exo:isClosed='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true')");
+						queryString.append("((@exo:isClosed='false' and @exo:isWaiting='false' and @exo:isApproved='true' and @exo:isActive='true' and @exo:isActiveByForum='true')");
 						if(builder.length() > 0) {
 							queryString.append(builder);
 						}
