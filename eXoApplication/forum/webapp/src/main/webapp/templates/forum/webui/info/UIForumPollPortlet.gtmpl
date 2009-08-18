@@ -1,6 +1,6 @@
 <% if(uicomponent.isRenderChild) {%>
-<div id="$uicomponent.id">
-	<div class="UIForumPortlet UIForumPollPortlet">
+<div id="$uicomponent.id" class="UIForumPollPortlet">
+	<div class="UIForumPortlet">
 		<div class="ParentMaskLayer">
 			<div class="MaskLayerForum"><span></span></div>
 		</div>

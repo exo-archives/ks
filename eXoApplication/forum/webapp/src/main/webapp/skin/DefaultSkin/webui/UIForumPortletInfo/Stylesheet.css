@@ -14,12 +14,28 @@
 	min-height: auto;
 }
 
+.UIForumPollPortlet .UIForumPortlet {
+	padding: 0px;
+	margin: 0px;
+	min-height: auto;
+	border: none;
+}
+
 .UIForumPollPortlet {
-	padding: 0px 10px 10px 10px;
 	border: 1px solid #b7b7b7;
 	border-top: none;
 	margin: -3px 1px 0px 4px;
-	min-height: auto;
+}
+
+.UIForumPollPortlet .UIForumContainer {
+	padding: 10px 0px 0px 0px;
+	width: 98%;
+	margin: auto;
+}
+
+.UIWindow .UIForumPollPortlet {
+	border: none;
+	margin: 0px;
 }
 
 .UIForumRulePortlet {
