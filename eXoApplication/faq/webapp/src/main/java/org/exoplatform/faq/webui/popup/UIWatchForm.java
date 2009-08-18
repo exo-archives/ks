@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -83,7 +84,8 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
     public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource() ;
 			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
-			UIFAQPortlet uiPortlet = uiWatchForm.getAncestorOfType(UIFAQPortlet.class);
+			
+			UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class);
       String name = uiWatchForm.getUIStringInput(USER_NAME).getValue() ;
       String listEmail = "";
       List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
@@ -112,11 +114,12 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
     	watch.setEmails(listEmail);
     	//if(uiWatchForm.isUpdate) {
     		faqService.addWatchCategory(categoryId , watch) ;
-    		UIWatchManager watchManager = uiPortlet.findFirstComponentOfType(UIWatchManager.class) ;
+    		UIWatchManager watchManager = watchContainer.findFirstComponentOfType(UIWatchManager.class) ;
     		//watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
-    		UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
+    		UIPopupAction uiPopupAction = watchContainer.getChild(UIPopupAction.class) ;
         uiPopupAction.deActivate() ;
-    		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager.getAncestorOfType(UIPopupAction.class)) ; 
+        watchManager.setCategoryID(categoryId);
+    		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
     		/*} else {
       	faqService.addWatchCategory(categoryId , watch) ;
       	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,	ApplicationMessage.INFO)) ;

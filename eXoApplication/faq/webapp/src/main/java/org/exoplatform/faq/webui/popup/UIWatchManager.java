@@ -177,7 +177,9 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			String user = event.getRequestContext().getRequestParameter(OBJECTID);
 			watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
 			faqService_.deleteCategoryWatch(categoryId_, user);
-			event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ;			
+			watchManager.setCategoryID(categoryId_);
+			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;			
 		}
 	}
 
