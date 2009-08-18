@@ -605,7 +605,7 @@
 									</td>
 								 	<td>
 								 		<div class="DateTime">$lastPostDate</div>
-								 		<div title="Go to last posts">
+								 		<div title="<%=_ctx.appRes("UITopicContainer.label.GotoLastPost");%>">
 								 			<div onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",true"))%>"><span class="RightArrowIcon"></span></div>
 								 		</div>
 										<div class="PostInfos LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%> <a href="#" class="PostBy">$postNewBy</a></div>

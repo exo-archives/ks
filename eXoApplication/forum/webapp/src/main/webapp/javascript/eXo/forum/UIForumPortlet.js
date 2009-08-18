@@ -247,15 +247,16 @@ UIForumPortlet.prototype.expandCollapse = function(obj) {
 	if (contentContainer.style.display != "none") {
 		contentContainer.style.display = "none" ;
 		obj.className = "ExpandButton" ;
-		obj.setAttribute("title","Expand") ;
+		obj.setAttribute("title",obj.getAttribute("expand")) ;
 		forumToolbar.style.borderBottom = "solid 1px #b7b7b7";
 	} else {
 		contentContainer.style.display = "block" ;
 		obj.className = "CollapseButton" ;
-		obj.setAttribute("title","Collapse") ;
+		obj.setAttribute("title",obj.getAttribute("collapse")) ;
 		forumToolbar.style.borderBottom = "none";
 	}
 } ;
+
 //Edit by Duy Tu 14-11-07
 UIForumPortlet.prototype.showTreeNode = function(obj, isShow) {
 	if(isShow === "false") return ;
