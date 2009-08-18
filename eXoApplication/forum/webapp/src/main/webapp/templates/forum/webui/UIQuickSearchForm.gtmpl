@@ -8,7 +8,7 @@
 			uiform.renderChildren() ;
 		%>
 		</div>
-		<div class="Label"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:</div>
+		<div class="Label"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%></div>
 	</div>
   <%uiform.end()%>
 </div>

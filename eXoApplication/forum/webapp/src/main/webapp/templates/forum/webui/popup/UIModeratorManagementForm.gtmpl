@@ -29,7 +29,7 @@
 								uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
 							%>
 						</div>
-						<div class="Label" style="float:right; line-height:20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>:&nbsp;</div>
+						<div class="Label" style="float:right; line-height:20px;"><%=_ctx.appRes("UIQuickSearchForm.label.Search")%>&nbsp;</div>
 						<div style="clear:right;"><span></span></div>
 					</div>
 					<div style="clear:right;"><span></span></div>
