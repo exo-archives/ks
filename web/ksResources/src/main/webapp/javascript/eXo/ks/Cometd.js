@@ -14,6 +14,11 @@ at the handshake, so the transport should not do it, and be set after.
  *  @description Re-written.
  *
  */
+
+if(!eXo.ks){
+	eXo.ks = {} ;
+}
+
 function Cometd() {
 	this._connected = false;
 	this._polling = false;
@@ -106,9 +111,9 @@ Cometd.prototype._deliver = function(message){
     if (this.multiClients) {
       this._multiClientsDetectCnt ++;
       //console.warn('Multiple clients detected and notify from server');
-      if (this._multiClientsDetectCnt == 1) {
-        window.alert('You has multiple tab/window using Cometd!\nPlease keep only once.');
-      }
+      //if (this._multiClientsDetectCnt == 1) {
+      // window.alert('You has multiple tab/window using Cometd!\nPlease keep only once.');
+      //}
     } else {
       this._multiClientsDetectCnt = 0;
       this.resetRetryInterval();
@@ -316,7 +321,7 @@ function LongPollTransport() {
 			}
 
 			if( this._cometd.advice && this._cometd.advice['interval'] && this._cometd.advice.interval>0 ){
-				setTimeout(function(){ eXo.core.Cometd.init(); }, this._cometd._retryInterval);
+				setTimeout(function(){ eXo.ks.Cometd.init(); }, this._cometd._retryInterval);
 			}else{
 				this._cometd.init(this.url,this._props);
 			}
@@ -462,5 +467,5 @@ function LongPollTransport() {
 	}
 	return instance;
 }
-eXo.core.Cometd = new Cometd();
+eXo.ks.Cometd = new Cometd();
 eXo.portal.LongPollTransport = LongPollTransport.prototype.constructor;

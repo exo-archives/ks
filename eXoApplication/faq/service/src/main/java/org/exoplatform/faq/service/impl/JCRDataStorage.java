@@ -577,6 +577,7 @@ public class JCRDataStorage {
     } finally { sProvider.close() ;}    
     return listQuestionLanguage ;
   }
+	
   private QuestionLanguage getQuestionLanguage(Node questionNode) throws Exception{
   	QuestionLanguage questionLanguage = new QuestionLanguage() ;
   	questionLanguage.setState(QuestionLanguage.VIEW) ;
