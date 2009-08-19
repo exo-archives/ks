@@ -389,7 +389,7 @@
 										<% if(!ForumUtils.isEmpty(lastReadPost)) {
 													String lastRead = uicomponent.event("OpenLastReadTopic", path+"/"+lastReadPost);
 									%>
-										<a href="$lastRead" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
+										<a href="$lastRead" class="ScrollRightButton" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>" style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
 									<% } %>
 										<div><span></span></div>
 										<div class="ForumDescription">$forumDescription</div>
@@ -428,7 +428,7 @@
 										<div style="clear:left;"><span></span></div>
 										<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 										<div class="LastPostInfos">
-											<span>by&nbsp;</span>
+											<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
 											<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
 											<span class="DateTime">&nbsp;($dateTime)</span>
 											

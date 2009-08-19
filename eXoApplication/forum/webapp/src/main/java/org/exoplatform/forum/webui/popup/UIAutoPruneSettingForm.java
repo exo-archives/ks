@@ -67,6 +67,7 @@ public class UIAutoPruneSettingForm extends UIForm implements UIPopupComponent {
 	private boolean isTest = false;
 	private boolean isActivate = false;
 	public UIAutoPruneSettingForm() throws Exception {
+		if(getId()== null)setId("UIAutoPruneSettingForm");
 		UIFormStringInput inActiveDay = new UIFormStringInput(FIELD_INACTIVEDAY_INPUT, FIELD_INACTIVEDAY_INPUT, null);
 		UIFormStringInput jobDay = new UIFormStringInput(FIELD_JOBDAY_INPUT, FIELD_JOBDAY_INPUT, null);
 		

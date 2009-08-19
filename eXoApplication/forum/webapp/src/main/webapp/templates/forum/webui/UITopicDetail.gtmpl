@@ -94,11 +94,11 @@
 							<% if(isCanReply) { %>
 									<div onclick="<%=uicomponent.event("AddPost")%>">
 										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
-											<%=_ctx.appRes(uiformId + ".action.AddPost");%>
+											<%=_ctx.appRes("UITopicDetail.action.AddPost");%>
 										</div>
 									</div>
 							<% } else { %>
-									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 							<% } %>
 							</div>
 						</div>
@@ -110,7 +110,7 @@
 		 	List<Tag> tags = uicomponent.getTagsByTopic();
 		 	if(!tags.isEmpty()){
 		%>
-			<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;">Tag:</div>
+			<div class="FloatLeft" style="padding-left: 20px; line-height: 24px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%>:</div>
 		<%}%>
 		<div class="TagContainer" style="float:left;">
 			<div class="TagContent" id="TagContainer">
@@ -194,7 +194,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="StatusIcon ModerationIcon">
-													<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.Moderation");%></div>
+													<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.Moderation");%></div>
 												</div>
 											</div>
 										</div>
@@ -222,7 +222,7 @@
 															for(action in actionMenuPost) {
 																link = uicomponent.event(action,uiformId,uiformId) ;
 																classIcon = action + "Icon";
-														 		itemLabel = _ctx.appRes(uiformId + ".action." + action);
+														 		itemLabel = _ctx.appRes("UITopicDetail.action." + action);
 																boolean isView = true ;
 																if(action.equals("SetApprovePost")){
 																	if(!topic.getIsModeratePost()) {
@@ -277,11 +277,11 @@
 							<div class="ContentAction">
 								<div class="SearchForm" onclick="eXo.forum.UIForumPortlet.showPopup(this, event); document.getElementById('<%=ForumUtils.SEARCHFORM_ID%>').focus();">									
 										<div class="DefaultStyle Forum" onmouseover="eXo.forum.UIForumPortlet.OverButton(this)" onmouseout="eXo.forum.UIForumPortlet.OverButton(this)">
-											<div class="LeftOverButton" title="<%=_ctx.appRes(uiformId + ".title.SearchInThisThread");%>">
+											<div class="LeftOverButton" title="<%=_ctx.appRes("UITopicDetail.title.SearchInThisThread");%>">
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="StatusIcon SearchIcon">
-															<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.SearchThisThread");%></div>
+															<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.SearchThisThread");%></div>
 														</div>
 													</div>
 												</div>
@@ -344,7 +344,7 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="StatusIcon ToolIcon">
-													<div class="DownArrow1Icon"><%=_ctx.appRes(uiformId + ".label.ThreadTools");%></div>
+													<div class="DownArrow1Icon"><%=_ctx.appRes("UITopicDetail.label.ThreadTools");%></div>
 												</div>
 											</div>
 										</div>
@@ -378,7 +378,7 @@
 														 				if(action.equals("AddPoll")) continue ;
 														 			}
 														 			link = uicomponent.event(action,uiformId,uiformId) ;
-															 		itemLabel = _ctx.appRes(uiformId + ".action." + action);
+															 		itemLabel = _ctx.appRes("UITopicDetail.action." + action);
 															 		classIcon = null;
 															 		if(action.length() < 11) classIcon = action + "Icon";
 															 		else classIcon = action.replaceFirst("Topic", "Icon");
@@ -408,17 +408,17 @@
 															 		} 
 															 		if(!isView){ 
 													 		%>
-														 				<div class="DisableMenuItem">	 
-																			<div class="ItemIcon $classIcon">
-																				$itemLabel
-																			</div>
+													 				<div class="DisableMenuItem">	 
+																		<div class="ItemIcon $classIcon">
+																			$itemLabel
 																		</div>
+																	</div>
 													 		<% } else { %>
-																			<div class="MenuItem" onclick="$link">	 
-																				<div class="ItemIcon $classIcon">
-																					<a href="javaScript:void(0)">$itemLabel</a>
-																				</div>
-																			</div>
+																	<div class="MenuItem" onclick="$link">	 
+																		<div class="ItemIcon $classIcon">
+																			<a href="javaScript:void(0)">$itemLabel</a>
+																		</div>
+																	</div>
 																<% } %>
 															<% } 
 															 } else {
@@ -441,7 +441,7 @@
 															 			 else classIcon = "SetApprovePostIcon" ;
 																	 }
 														 			 link = uicomponent.event(action,uiformId,uiformId) ;
-															 		 itemLabel = _ctx.appRes(uiformId + ".action." + action);
+															 		 itemLabel = _ctx.appRes("UITopicDetail.action." + action);
 															 		 if(action.equals(menuTopicActions[2])){
 															 			 isView = !topic.getIsLock() ;
 															 		 } else if(action.equals(menuTopicActions[3])){
@@ -450,19 +450,17 @@
 															 		 if(!isView){ 
 													 			%>
 														 				<div class="DisableMenuItem">	 
-																			<div class="ItemIcon $classIcon">
-																				<%=itemLabel%>
-																			</div>
+																			<div class="ItemIcon $classIcon">$itemLabel</div>
 																		</div>
 													 			<% } else { %>
 																 		<% if(isApprove) { %>
 														 						<div class="LineMenu"><span></span></div>
 														 				<% } %>
-																			<div class="MenuItem" onclick="$link">	 
-																				<div class="ItemIcon $classIcon">
-																					<a href="javaScript:void(0)"><%=itemLabel%></a>
-																				</div>
+																		<div class="MenuItem" onclick="$link">	 
+																			<div class="ItemIcon $classIcon">
+																				<a href="javaScript:void(0)">$itemLabel</a>
 																			</div>
+																		</div>
 																<% } 
 																 }	
 															 } %>
@@ -491,7 +489,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon TagIcon">
-														<a href="javaScript:void(0)"><%=_ctx.appRes(uiformId + ".label.Tag");%></a>
+														<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.Tag");%></a>
 													</div>
 												</div>
 											</div>
@@ -552,7 +550,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="StatusIcon VoteIcon">
-														<a href="javaScript:void(0)"><%=_ctx.appRes(uiformId + ".label.VoteThread");%></a>
+														<a href="javaScript:void(0)"><%=_ctx.appRes("UITopicDetail.label.VoteThread");%></a>
 													</div>
 												</div>
 											</div>
@@ -718,7 +716,7 @@
 																		for(viewAction in menuViewInfos) {
 																		  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
 																			String linkView = uicomponent.event(viewAction, owner) ;
-																			String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																			String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
 																	%>
 																			<div class="MenuItem" onclick="$linkView">
@@ -771,7 +769,7 @@
 																			for(viewAction in menuViewInfos) {
 																			  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
 																				String linkView = uicomponent.event(viewAction, owner) ;
-																				String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																				String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
 																		%>
 																				<div class="MenuItem" onclick="$linkView">
@@ -812,7 +810,7 @@
 									<% } 
 									 if(!ForumUtils.isEmpty(location)) {
 									%>
-									<div><%=_ctx.appRes(uiformId + ".label.Location");%>:$location</div>
+									<div><%=_ctx.appRes("UITopicDetail.label.Location");%>:$location</div>
 									<%} 
 									  Date lastLogin = userInfo.getLastLoginDate();
 										String lastLoginUser = "" ;
@@ -911,7 +909,7 @@
 								<% } else { %>
 								<div class="PostViewTitle" style="float:left; width:100%;">
 									<div class="PostViewIcon $classIconPost" style="float:left;">$namePost $alert</div>
-									<div class="PostTime" style="float:right; font-size:11px; color:gray;"><%=_ctx.appRes(uiformId + ".label.Posted");%>:$createdDate</div>
+									<div class="PostTime" style="float:right; font-size:11px; color:gray;"><%=_ctx.appRes("UITopicDetail.label.Posted");%>:$createdDate</div>
 								</div>
 								<div style="clear:left;"><span></span></div>
 								<% } %>
@@ -930,7 +928,7 @@
 							</div>
 							<% if(hasAttachment) {%>
 							<div class="AttachmentContainer">
-								<div class="AttachmentTitle"><%=_ctx.appRes(uiformId + ".label.Attachments");%>:</div>
+								<div class="AttachmentTitle"><%=_ctx.appRes("UITopicDetail.label.Attachments");%>:</div>
 								<div class="AttachmentContent">
 								<% for(attachment in attachments) {
 										 String urlFile = uicomponent.getFileSource(attachment) ;
@@ -980,7 +978,7 @@
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
 									String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
 							%>
-									<div class="Signature">__________________<br/><%=signature;%></div>
+									<div class="Signature">__________________<br/>$signature</div>
 							<%} %>
 						</div>
 							<div class="FootPost" style="margin-bottom:2px;">
@@ -989,7 +987,7 @@
 										<%	
 											if(!ForumUtils.isEmpty(editBy)) {
 										%>
-												<div><%=_ctx.appRes(uiformId + ".label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes(uiformId + ".label.on");%> $editDate</div>
+												<div><%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate</div>
 												<%
 													String reason = post.getEditReason() ;
 													if(!ForumUtils.isEmpty(reason)) { 
@@ -1006,8 +1004,8 @@
 										boolean isShowAction = true;
 										for(action in actions) {
 											isShowAction = true;
-											String title = _ctx.appRes(uicomponent.getName() + ".title." + action);
-											String label = _ctx.appRes(uicomponent.getName() + ".action." + action);
+											String title = _ctx.appRes("UITopicDetail.title." + action);
+											String label = _ctx.appRes("UITopicDetail.action." + action);
 											if(!(userLogin.equals(owner))) {
 												if(!canEdit){
 													if(action.equals("Edit")||action.equals("Delete")){
@@ -1063,9 +1061,9 @@
 		 } else {
 		 if(canEdit){
 		%>
-		<div class="ContentNotPost"><%=_ctx.appRes(uiformId + ".label.TopicDeleted");%></div>
+		<div class="ContentNotPost"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
 		<% }else{ %>
-		<div class="ContentNotPost"><%=_ctx.appRes(uiformId + ".label.NoPermission");%></div>
+		<div class="ContentNotPost"><%=_ctx.appRes("UITopicDetail.label.NoPermission");%></div>
 		<% } %>
 	<% } %>
 <!-- End ContentContainer -->
@@ -1085,11 +1083,11 @@
 							<% if(isCanReply) { %>
 									<div onclick="<%=uicomponent.event("AddPost")%>">
 										<div class="IconButton PostReplyIcon"><span class="LabelIcon"></span>
-											<%=_ctx.appRes(uicomponent.getName() + ".action.AddPost");%>
+											<%=_ctx.appRes("UITopicDetail.action.AddPost");%>
 										</div>
 									</div>
 							<% } else { %>
-									<div class="IconButton LockIcon" title="<%=_ctx.appRes(uiformId + ".title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes(uiformId + ".action.AddPost");%></div>
+									<div class="IconButton LockIcon" title="<%=_ctx.appRes("UITopicDetail.title.NotAddPost");%>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicDetail.action.AddPost");%></div>
 							<% } %>
 							</div>
 						</div>
@@ -1097,7 +1095,7 @@
 				</div>
 			</div>
 		</div>
-		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
+		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
 			<div style="position:relative;">
@@ -1155,7 +1153,7 @@
 								<div class="LeftBar">
 									<div class="RightBar">
 										<div class="CenterBar">
-											<div class="Title"><%=_ctx.appRes(uiformId + ".title.ForumQuickReply");%></div>
+											<div class="Title"><%=_ctx.appRes("UITopicDetail.title.ForumQuickReply");%></div>
 											<div class="CollapseButton" collapse="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIForumPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIForumPortlet.label.Collapse");%>" onclick="eXo.forum.UIForumPortlet.expandCollapse(this) ;"><span></span></div>
 											<div style="clear:both;"><span></span></div>
 										</div>
@@ -1164,7 +1162,7 @@
 							</div>
 							<div class="ContentContainer">
 								<div class="ForumList" id="QuickReply">
-									<div class=""><%= _ctx.appRes("UITopicDetail.label.Message");%>:</div>
+									<div class=""><%=_ctx.appRes("UITopicDetail.label.Message");%>:</div>
 									<div class=""><%uicomponent.renderChild(uicomponent.FIELD_MESSAGE_TEXTAREA);%></div>
 								</div>
 								<div class="ActionContent">

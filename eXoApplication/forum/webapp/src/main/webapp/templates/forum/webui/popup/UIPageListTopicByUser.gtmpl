@@ -114,7 +114,7 @@
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
 										%>
-					 						<div class="AvgRatingImages" title="Thread Rating: $SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;

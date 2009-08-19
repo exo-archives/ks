@@ -129,10 +129,11 @@
 					<tr class="OddRow">
 						<td style="width:40px; padding:0px; border-right:1px solid #f4f4f4;"></td>
 					 	<td class="text">
-					 		<div class="text"><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics, 
-					 											<%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, 
-					 											<%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, 
-					 											<%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:$activeUsers
+					 		<div class="text">
+					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics,</span> 
+					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, </span>
+					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, </span>
+					 			<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:$activeUsers</span>
 					 		</div>
 							<div class="text" style="padding-bottom:5px;">
 								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>:</span>
@@ -196,8 +197,6 @@
 										</div>
 									</div>
 								</div>
-									
-									
 							</div>
 					 	</td>
 		 			</tr>

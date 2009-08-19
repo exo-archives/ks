@@ -242,7 +242,7 @@
 											<% if(!ForumUtils.isEmpty(lastReadPostOfForum)) {
 												String lastRead = uicomponent.event("OpenLastReadTopic", ids+"/"+lastReadPostOfForum);
 											%>
-												<a href="$lastRead" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
+												<a href="$lastRead" class="ScrollRightButton" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>" style="float:none; margin:0px;">&nbsp; &nbsp; &nbsp;</a>
 											<% } %>
 												<div><span></span></div>
 
@@ -260,7 +260,7 @@
 										 		<!-- <div class="LastPostIcon $topicNewPostIcon"><span></span></div> -->
 										 		<%if(topicNewPost.getIsPoll()){%>
 														<div class="LastPostIcon $topicNewPostIcon" style="margin-right:20px;">
-															<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="This topic has a poll"><span></span></div>
+															<div class="LastPostIcon Stats" style="margin-left:18px;cursor:pointer;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"><span></span></div>
 														</div>
 												<%} else {%>
 														<div class="LastPostIcon $topicNewPostIcon">
@@ -283,7 +283,7 @@
 												<div style="clear:left;"><span></span></div>
 												<% String screemNamePost =  uicomponent.getScreenName(lastPostBy);%>
 												<div class="LastPostInfos">
-													<span>by&nbsp;</span>
+													<span><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;</span>
 													<a style="color:#058EE6;" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
 													<span class="DateTime">&nbsp;($dateTime)</span>
 

@@ -127,8 +127,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormStringInput forumOrder = new UIFormStringInput(FIELD_FORUMORDER_INPUT, FIELD_FORUMORDER_INPUT, "0");
 		forumOrder.addValidator(PositiveNumberFormatValidator.class) ;
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Open", "open")) ;
-		ls.add(new SelectItemOption<String>("Closed", "closed")) ;
+		ls.add(new SelectItemOption<String>(getLabel("Open"), "open")) ;
+		ls.add(new SelectItemOption<String>(getLabel("Closed"), "closed")) ;
 		UIFormSelectBox forumState = new UIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX, FIELD_FORUMSTATE_SELECTBOX, ls) ;
 		forumState.setDefaultValue("open");
 		ls = new ArrayList<SelectItemOption<String>>() ;

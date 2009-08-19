@@ -9,8 +9,13 @@
 		<div class="RightDescription">
 			<div class="CenterDescription">
 				<span class="ForumLabel"> </span> 
-				<span class="NameForum"><%=forum.getForumName()%> : </span>
-				<span class="Description"><%=forum.getDescription()%></span>
+				<span class="NameForum"><%=forum.getForumName()%></span>
+		<%
+			String des = forum.getDescription();
+			if(des != null && des.length() > 0){
+		%>
+				<span class="Description">: $des</span>
+		<%} %>
 			</div>
 		</div>
 	</div>

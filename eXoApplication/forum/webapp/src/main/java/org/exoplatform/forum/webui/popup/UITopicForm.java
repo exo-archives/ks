@@ -127,6 +127,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isDoubleClickSubmit = false; 
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
+		if(getId()== null)setId("UITopicForm");
 		isDoubleClickSubmit = false;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
@@ -136,13 +137,13 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 //		UIFormTextAreaInput message = new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA, null);
 		
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Open", "open")) ;
-		ls.add(new SelectItemOption<String>("Closed", "closed")) ;
+		ls.add(new SelectItemOption<String>(getLabel("Open"), "open")) ;
+		ls.add(new SelectItemOption<String>(getLabel("Closed"), "closed")) ;
 		UIFormSelectBox topicState = new UIFormSelectBox(FIELD_TOPICSTATE_SELECTBOX, FIELD_TOPICSTATE_SELECTBOX, ls) ;
 		topicState.setDefaultValue("open");
 		List<SelectItemOption<String>> ls1 = new ArrayList<SelectItemOption<String>>() ;
-		ls1.add(new SelectItemOption<String>("UnLock", "unlock")) ;
-		ls1.add(new SelectItemOption<String>("Locked", "locked")) ;
+		ls1.add(new SelectItemOption<String>(getLabel("UnLock"), "unlock")) ;
+		ls1.add(new SelectItemOption<String>(getLabel("Locked"), "locked")) ;
 		UIFormSelectBox topicStatus = new UIFormSelectBox(FIELD_TOPICSTATUS_SELECTBOX, FIELD_TOPICSTATUS_SELECTBOX, ls1) ;
 		topicStatus.setDefaultValue("unlock");
 		

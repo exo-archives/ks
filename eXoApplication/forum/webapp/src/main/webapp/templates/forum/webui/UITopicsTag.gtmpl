@@ -104,13 +104,13 @@
 								<th style="width:40px;">&nbsp;</th>
 								<th style="width:40px;">&nbsp;</th>
 								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
-								<th style="width:40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
+								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
 								<th style="width:130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
 								<% if(isShowMenu) { %>
-								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
+								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
 								<% } %>
 							</tr>
 						</thead>
@@ -221,7 +221,7 @@
 											if(max_page > 5) { 
 												number = String.valueOf(max_page) ;
 											%>
-											... <a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
+											<span>... </span><a onclick="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>; return false;" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
 											<%} else {%>
 											<span>)</span>
 											<%} 
@@ -301,7 +301,7 @@
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
 										%>
-					 						<div class="AvgRatingImages" title="Topic Rating:$SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;

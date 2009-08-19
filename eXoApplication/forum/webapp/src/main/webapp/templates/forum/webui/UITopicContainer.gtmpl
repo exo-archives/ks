@@ -411,7 +411,7 @@
 									<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 								</div>
 								</th>
-								<th style="width:40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
+								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;">
 									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 								</th>
@@ -431,7 +431,7 @@
 									</div>
 								</th>
 								<% if(canEdit) { %>
-								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
+								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.CheckAll");%>" value="4"/></th>
 								<% } %>
 							</tr>
 						</thead>
@@ -493,15 +493,13 @@
 									 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
-									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
 									if(topic.getIsLock() || isLock) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 									}
 									if(topic.getIsClosed()) {
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
+									String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
 									String approved = "" ;
 									if(canEdit){
 										if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor") ;
@@ -531,7 +529,7 @@
 									<td class="Tdbox" style="*text-align:left;">
 										<%if(topic.getIsPoll()){%>
 												<div class="StatusIcon $iconClassTopic" style="margin:8px;">
-													<div class="StatusIcon Stats" style="margin-left:18px;" title="This topic has a poll"><span></span></div>
+													<div class="StatusIcon Stats" style="margin-left:18px;" title="<%=_ctx.appRes("UITopicContainer.label.TopicHasPoll");%>"><span></span></div>
 												</div>
 										<%} else {%>
 												<div class="StatusIcon $iconClassTopic" title="$topicType"><span></span></div>
@@ -573,7 +571,7 @@
 												if(max_page> 5) { 
 													number = String.valueOf(max_page) ;
 												%>
-												... <a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
+												<span>... </span><a actions="<%=uicomponent.event("OpenTopic", (topicId+","+number + ",false"))%>"  class="ActionLink PopupMenu" href="$url"><%=_ctx.appRes("UITopicContainer.label.LastPage");%></a> )
 												<%} else {%>
 												<span>)</span>
 												<%} 
@@ -583,7 +581,7 @@
 											<% if(lastPostIdRead != null && lastPostIdRead.length() > 0){ 
 													String lastPostLink = uicomponent.event("OpenTopic",topicId+",0,"+lastPostIdRead);
 											%>
-											<a href="$lastPostLink" class="ScrollRightButton" title="Go to last read post." style="float:none; margin:0px;"><span>&nbsp; &nbsp; &nbsp;</span></a>
+											<a href="$lastPostLink" class="ScrollRightButton" title="<%=_ctx.appRes("UIForumPortlet.label.GoLastRead");%>" style="float:none; margin:0px;"><span>&nbsp; &nbsp; &nbsp;</span></a>
 											<% } %>
 											<span>$approved</span>
 										</div>
@@ -660,7 +658,7 @@
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
 										%>
-					 						<div class="AvgRatingImages" title="Topic Rating: $SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="<%=ForumUtils.getLabel(_ctx.appRes("UIForumPortlet.label.TopicRatingVotes"), SumVote);%>">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;
