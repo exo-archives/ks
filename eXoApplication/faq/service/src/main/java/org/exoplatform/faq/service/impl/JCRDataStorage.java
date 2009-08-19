@@ -2892,6 +2892,11 @@ public class JCRDataStorage {
 				Session session = categoryNode.getSession();
 				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
+				if(categoryNode.hasNode(Utils.CATEGORY_HOME)) {
+					Node cateChildNode = categoryNode.getNode(Utils.CATEGORY_HOME);
+					cateChildNode.setProperty("exo:isView", true);
+					cateChildNode.save();
+				}
 				return true ;
 			}			
 		}catch(Exception e) {
