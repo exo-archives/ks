@@ -9,7 +9,6 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.core.JSON') ;
-	jsmanager.importJavascript('eXo.core.Cometd') ;
 	jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
 	jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
 %>

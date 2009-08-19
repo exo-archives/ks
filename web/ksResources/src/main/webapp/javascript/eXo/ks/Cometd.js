@@ -15,6 +15,11 @@ at the handshake, so the transport should not do it, and be set after.
  * Re-writed Cometd's contructor.
  *
  */
+
+if(!eXo.ks){
+	eXo.ks = {} ;
+}
+
 function Cometd() {
 	this._connected = false;
 	this._polling = false;
@@ -289,7 +294,7 @@ function LongPollTransport() {
 			}
 
 			if( this._cometd.advice && this._cometd.advice['interval'] && this._cometd.advice.interval>0 ){
-				setTimeout(function(){ eXo.core.Cometd.init(); }, this._cometd.advice.interval);
+				setTimeout(function(){ eXo.ks.Cometd.init(); }, this._cometd.advice.interval);
 			}else{
 				this._cometd.init(this.url,this._props);
 			}
@@ -431,5 +436,5 @@ function LongPollTransport() {
 	}
 	return instance;
 }
-eXo.core.Cometd = new Cometd();
+eXo.ks.Cometd = new Cometd();
 eXo.portal.LongPollTransport = LongPollTransport.prototype.constructor;

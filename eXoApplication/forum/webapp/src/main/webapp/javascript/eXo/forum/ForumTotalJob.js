@@ -3,20 +3,23 @@ function ForumTotalJob() {
 } ;
 
 ForumTotalJob.prototype.init = function(eXoUser, eXoToken){
-  eXo.core.Cometd.exoId = eXoUser;
-  eXo.core.Cometd.exoToken = eXoToken;
+	if (!eXo.ks.Cometd) {
+		eXo.require('eXo.ks.Cometd');
+	}
+  eXo.ks.Cometd.exoId = eXoUser;
+  eXo.ks.Cometd.exoToken = eXoToken;
 //  	alert(eXoUser + "  :  " + eXoToken);
-  eXo.core.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
+  eXo.ks.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
 		eXo.forum.ForumTotalJob.alarm(eventObj) ;
 	});
-  //eXo.core.Cometd.addOnConnectionReadyCallback(this.initCometd);
-	if (!eXo.core.Cometd.isConnected()) {
-     eXo.core.Cometd.init();
+  //eXo.ks.Cometd.addOnConnectionReadyCallback(this.initCometd);
+	if (!eXo.ks.Cometd.isConnected()) {
+     eXo.ks.Cometd.init();
   }
 } ;
   
 ForumTotalJob.prototype.initCometd = function() {
-	 eXo.core.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
+	 eXo.ks.Cometd.subscribe('/eXo/Application/Forum/messages', function(eventObj) {		
 		eXo.forum.ForumTotalJob.alarm(eventObj) ;
   });
 };
