@@ -2865,6 +2865,7 @@ public class JCRDataStorage {
 			if(isZip){ // Import from zipfile
 				ZipInputStream zipStream = new ZipInputStream(inputStream) ;
 				ZipEntry entry ;
+				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
 				while((entry = zipStream.getNextEntry()) != null) {
 					ByteArrayOutputStream out= new ByteArrayOutputStream();
 					int available = -1;
@@ -2875,12 +2876,16 @@ public class JCRDataStorage {
 					zipStream.closeEntry();
 					out.close();
 					InputStream input = new ByteArrayInputStream(out.toByteArray());
-					Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
 					Session session = categoryNode.getSession();
 					session.importXML(categoryNode.getPath(), input, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-					session.save();										
+					session.save();
 				}
 				zipStream.close();
+				if(categoryNode.hasNode(Utils.CATEGORY_HOME)) {
+					Node cateChildNode = categoryNode.getNode(Utils.CATEGORY_HOME);
+					cateChildNode.setProperty("exo:isView", true);
+					cateChildNode.save();
+				}
 				return true ;
 			} else { // import from xml
 				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			

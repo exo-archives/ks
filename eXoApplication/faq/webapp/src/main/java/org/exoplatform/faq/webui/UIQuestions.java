@@ -285,7 +285,6 @@ public class UIQuestions extends UIContainer {
 		faqService_ = service;
 	}
 
-	@SuppressWarnings("unused")
 	private String[] getActionQuestionWithUser(){
 		if(!faqSetting_.isEnanbleVotesAndComments() || (currentUser_ == null || currentUser_.trim().length() < 1)) return userActionQues2_ ;
 		return userActionQues_ ;
@@ -314,7 +313,6 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	//should be check canVote in Question object 
-	@SuppressWarnings("unused")
 	private boolean canVote(Question question){
 		if(question.getUsersVote() != null)
 			for(String user : question.getUsersVote()){
@@ -358,7 +356,6 @@ public class UIQuestions extends UIContainer {
 		this.listQuestion_ = listQuestion ;
 	}*/
 
-	@SuppressWarnings("unused")
 	private String convertSize(long size){
 		String result = "";
 		long  residual = 0;
@@ -377,23 +374,19 @@ public class UIQuestions extends UIContainer {
 		return result;
 	}
 
-	@SuppressWarnings("unused")
 	private Question[] getListQuestion() {
 		return questionMap_.values().toArray(new Question[]{}) ;
 	}
 
-	@SuppressWarnings("unused")
 	private boolean getCanEditQuestion() {
 		return this.canEditQuestion ;
 	}
 
-	@SuppressWarnings("unused")
 	private String getQuestionView(){
 		return this.viewingQuestionId_ ;
 	}
 
 	
-	@SuppressWarnings("unused")
 	private String[] getQuestionLangauges(String questionPath){
 		/*try {
 			if(!isChangeLanguage) {
@@ -419,7 +412,6 @@ public class UIQuestions extends UIContainer {
 	}
 
 	
-	@SuppressWarnings("unused")
 	private String getAvatarUrl(String userId){
 		try{
 			return FAQUtils.getFileSource(faqService_.getUserAvatar(userId), getApplicationComponent(DownloadService.class));
@@ -1233,7 +1225,6 @@ public class UIQuestions extends UIContainer {
 	}
 	//approve/activate
 	static  public class ChangeStatusAnswerActionListener extends EventListener<UIQuestions> {
-		@SuppressWarnings("unchecked")
     public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
 			String[] param = event.getRequestContext().getRequestParameter(OBJECTID).split("/") ;
@@ -1379,7 +1370,7 @@ public class UIQuestions extends UIContainer {
 				Category cate = faqService_.getCategoryById(categoryId) ;
 				if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 					faqService_.removeCategory(categoryId) ;
-					//uiQuestions.setIsNotChangeLanguage() ;					
+					uiQuestions.updateCurrentQuestionList();		
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
