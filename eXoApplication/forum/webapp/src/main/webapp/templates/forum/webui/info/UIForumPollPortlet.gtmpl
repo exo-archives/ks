@@ -1,20 +1,22 @@
 <% if(uicomponent.isRenderChild) {%>
-<div id="$uicomponent.id" class="UIForumPollPortlet">
-	<div class="UIForumPortlet">
-		<div class="ParentMaskLayer">
-			<div class="MaskLayerForum"><span></span></div>
-		</div>
-		<div class="UIForumContainer">
-		<%
-			List children = uicomponent.getChildren() ;
-			for(component in children) {
-				if(component.isRendered()){
-					uicomponent.renderChild(component.getClass()) ; 
+<div id="$uicomponent.id">
+	<div class="UIForumPollPortlet">
+		<div class="UIForumPortlet">
+			<div class="ParentMaskLayer">
+				<div class="MaskLayerForum"><span></span></div>
+			</div>
+			<div class="UIForumContainer">
+			<%
+				List children = uicomponent.getChildren() ;
+				for(component in children) {
+					if(component.isRendered()){
+						uicomponent.renderChild(component.getClass()) ; 
+					}
 				}
-			}
-		%>
+			%>
+			</div>
+			<%uicomponent.renderPopupMessages();%>
 		</div>
-		<%uicomponent.renderPopupMessages();%>
 	</div>
 </div>
 <% } else { %>
