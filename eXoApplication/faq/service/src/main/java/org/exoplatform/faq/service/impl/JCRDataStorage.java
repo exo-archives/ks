@@ -390,6 +390,7 @@ public class JCRDataStorage {
 			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
 			categoryHome.addMixin("mix:faqSubCategory") ;
 			categoryHome.setProperty("exo:name", "Root") ;
+			categoryHome.setProperty("exo:isView", true);
 			faqServiceHome.save() ;
 			return categoryHome ;
 		}
@@ -2881,22 +2882,12 @@ public class JCRDataStorage {
 					session.save();
 				}
 				zipStream.close();
-				if(categoryNode.hasNode(Utils.CATEGORY_HOME)) {
-					Node cateChildNode = categoryNode.getNode(Utils.CATEGORY_HOME);
-					cateChildNode.setProperty("exo:isView", true);
-					cateChildNode.save();
-				}
 				return true ;
 			} else { // import from xml
 				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
 				Session session = categoryNode.getSession();
 				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
-				if(categoryNode.hasNode(Utils.CATEGORY_HOME)) {
-					Node cateChildNode = categoryNode.getNode(Utils.CATEGORY_HOME);
-					cateChildNode.setProperty("exo:isView", true);
-					cateChildNode.save();
-				}
 				return true ;
 			}			
 		}catch(Exception e) {
