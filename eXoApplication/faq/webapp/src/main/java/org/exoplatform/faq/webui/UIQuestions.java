@@ -447,6 +447,7 @@ public class UIQuestions extends UIContainer {
 	public void updateCurrentLanguage() throws Exception {
 		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0)
 		languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
+		else languageMap.clear() ;
 	}
 
 	public void updateQuestionLanguageByLanguage(String questionPath, String language) throws Exception {
@@ -454,11 +455,12 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	public void updateLanguageMap() throws Exception{
-		List<QuestionLanguage> languages = faqService_.getQuestionLanguages(viewingQuestionId_)  ;
-		languageMap.clear() ;
-		for(QuestionLanguage lang : languages) {
-			languageMap.put(lang.getLanguage(), lang) ;
-		}
+		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0){
+			List<QuestionLanguage> languages = faqService_.getQuestionLanguages(viewingQuestionId_)  ;
+			for(QuestionLanguage lang : languages) {
+				languageMap.put(lang.getLanguage(), lang) ;
+			}
+		} else languageMap.clear() ;
 	}
 	
 	private String getQuestionRelationById(String questionId) {

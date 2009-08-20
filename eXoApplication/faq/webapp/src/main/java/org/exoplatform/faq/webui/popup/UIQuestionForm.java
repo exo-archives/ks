@@ -39,8 +39,6 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -556,12 +554,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       
       if(!questionForm.isChildOfManager) {
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        questions.setDefaultLanguage(); 
-        if(isNew){
-        	questions.updateCurrentQuestionList() ;
-        }else {
-        	questions.updateLanguageMap() ;
-        }
+        questions.setDefaultLanguage();
+        questions.updateCurrentQuestionList() ;
+      	if(question_.getPath().equals(questions.viewingQuestionId_)){
+      		questions.updateLanguageMap() ;
+      	}
         
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
