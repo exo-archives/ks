@@ -28,6 +28,7 @@ import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
@@ -248,10 +249,10 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   
 	private String getCategoryPath(String questionPath){
   	try{
-  		return faqService_.getCategoryPathOfQuestion(questionPath);
+  		return faqService_.getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/"+Utils.QUESTION_HOME)));
   	}catch(Exception e){
   		e.printStackTrace();
-  		return null;
+  		return questionPath;
   	}
   }
   

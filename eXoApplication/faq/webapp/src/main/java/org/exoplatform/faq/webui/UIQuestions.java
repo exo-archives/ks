@@ -857,7 +857,7 @@ public class UIQuestions extends UIContainer {
 			Answer answer = null;
 			String answerId = event.getRequestContext().getRequestParameter(OBJECTID);
 			try{
-				System.out.println("language_ ===>" + language_);
+//				System.out.println("language_ ===>" + language_);
 				question = faqService_.getQuestionById(uiQuestions.viewingQuestionId_);
 				answer = faqService_.getAnswerById(uiQuestions.viewingQuestionId_, answerId, language_);
 			} catch(javax.jcr.PathNotFoundException e) {
