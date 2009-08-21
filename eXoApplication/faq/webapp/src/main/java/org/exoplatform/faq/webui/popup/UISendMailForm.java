@@ -66,8 +66,9 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISendMailForm.ChangeLanguageActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UISendMailForm extends UIForm implements UIPopupComponent	{
-	private boolean isViewCC = false;
+  private boolean isViewCC = false;
 	private boolean isViewBCC = false;
 	
   private static final String FILED_FROM_NAME = "FromName" ;
@@ -84,10 +85,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   
   private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
   private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-  @SuppressWarnings("unused")
   private String languageIsResponsed = "" ;
   private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  @SuppressWarnings("unused")
   private String questionChanged_ = new String() ;
   private String link_ = "" ;
   public List<User> toUsers = new ArrayList<User>();
@@ -116,7 +115,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
   public List<User> getAddBCCUsers() { return addBCCUsers; }
   public void setAddBCCUsers(List<User> userList) { addBCCUsers = userList; }
 	
-  @SuppressWarnings("unused")
   private List<SelectItemOption<String>> getListLanguageToSendFriend() {
     return listLanguageToReponse ;
   }
@@ -132,7 +130,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	public void setUpdateQuestion(String questionPath, String language) throws Exception {
     Question question = FAQUtils.getFAQService().getQuestionById(questionPath) ;
     if(language.equals("")) language = question.getLanguage() ;
-    @SuppressWarnings("unused")
     String email = "" ;
     String name = "" ;
     String userName = FAQUtils.getCurrentUser() ;
@@ -153,7 +150,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionPath)) {
     	String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
     	questionLanguage2.setDetail(quest2) ;
-      listQuestionLanguage.add(questionLanguage2) ;
+    	if(!isContainLanguageList(listQuestionLanguage, question.getLanguage()))
+    		listQuestionLanguage.add(questionLanguage2) ;
     }
     questionChanged_ = question.getQuestion() ;
     // set info for form
@@ -166,7 +164,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
     addChild(new UIFormStringInput(FILED_ADD_CC, FILED_ADD_CC, null)) ;
     addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null)) ;
-    UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, getListLanguageToSendFriend()) ;
+    UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, listLanguageToReponse) ;
     questionLanguages.setSelectedValues(new String[]{language}) ;
     questionLanguages.setOnChange("ChangeLanguage") ;
     addChild(questionLanguages) ;
@@ -202,6 +200,13 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
     addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, content)) ;
 	}
 
+	private boolean isContainLanguageList(List<QuestionLanguage> questionlg, String language) throws Exception {
+		for (QuestionLanguage questionLanguage : questionlg) {
+	    if(questionLanguage.getLanguage().equals(language)) return true;
+    }
+		return false;
+	}
+	
 	public void setFieldToValue(String value) { 
 		if(listAnotherEmail != null && listAnotherEmail.size() > 0){
 			for(String email : listAnotherEmail){

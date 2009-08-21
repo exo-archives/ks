@@ -29,8 +29,10 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -64,6 +66,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
     }
 )
 
+@SuppressWarnings("unused")
 public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
   private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
@@ -153,32 +156,26 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }*/
   }
   
-  @SuppressWarnings("unused")
   private String[] getQuestionActions(){
     return new String[]{"AddLanguage", "Attachment", "Save", "Close"} ;
   }
   
-  @SuppressWarnings("unused")
   private String[] getQuestionNotAnsweredActions() {
     return new String[]{"QuestionRelation", "Attachment", "Save", "Close"} ;
   }
   
-  @SuppressWarnings("unused")
   private String[] getTab() {
     return new String[]{"Question managerment", "Question not yet answered"} ;
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsEdit(){
     return isEditTab_;
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsResponse() {
     return isResponseTab_ ;
   }
   
-  @SuppressWarnings("unused")
   private long getTotalpages(String pageInteratorId) {
     UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
     try {
@@ -249,7 +246,6 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  @SuppressWarnings("unused")
 	private String getCategoryPath(String questionPath){
   	try{
   		return faqService_.getCategoryPathOfQuestion(questionPath);
@@ -259,7 +255,6 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   	}
   }
   
-  @SuppressWarnings("unused")
   private List<Question> getListQuestion() {
     if(!isChangeTab_){
       pageSelect = pageIterator.getPageSelected() ;
@@ -287,7 +282,6 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
    * 
    * @return the list question not answered
    */
-  @SuppressWarnings("unused")
   private List<Question> getListQuestionNotAnswered() {
     if(!isChangeTab_){
       pageSelectNotAnswer = pageQuesNotAnswerIterator.getPageSelected() ;
@@ -477,14 +471,21 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   			}
   			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
   			faqService_.saveQuestion(question, false,questionsInfo.faqSetting_);
+  			UIFAQPortlet portlet = questionsInfo.getAncestorOfType(UIFAQPortlet.class) ;
+  			UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class) ;
+  			questions.setDefaultLanguage();
+        questions.updateCurrentQuestionList() ;
+      	if(question.getPath().equals(questions.viewingQuestionId_)){
+      		questions.updateLanguageMap() ;
+      	}
+      	event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
   		}catch (Exception e){
   			e.printStackTrace() ;
   			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
   		}
-  		UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getAncestorOfType(UIPopupContainer.class)) ;
   	}
   }
   
