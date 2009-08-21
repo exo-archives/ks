@@ -9,7 +9,7 @@
 
 <div class="UIMovePostForm UIMoveTopicForm">
 	<% uiform.begin() %>
-	<div class="TitleMoveThreads">Choose a Destination Forum:</div>
+	<div class="TitleMoveThreads"><%=_ctx.appRes("UISelectItemForum.label.ChooseDestinationForum");%>:</div>
 	<div class="UITree ScrollArea">
 		<div class="TreeContainer ParentNode">
 		<% 
@@ -98,9 +98,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										<%=_ctx.appRes("UIMoveForumForm.action.Cancel");%>
-									</a>
+									<a href="javascript:void(0);"><%=_ctx.appRes("UIMoveForumForm.action.Cancel");%></a>
 								</div>
 							</div>
 						</div>

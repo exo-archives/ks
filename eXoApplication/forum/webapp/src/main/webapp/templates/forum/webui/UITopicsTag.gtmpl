@@ -127,14 +127,14 @@
 								<th style="width:40px;">&nbsp;</th>
 								<th style="width:40px;">&nbsp;</th>
 								<th><a href="<%=uicomponent.event("SetOrderBy","name");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></div></a></th>
-								<th style="width:40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
+								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;"><a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a></th>
 								<th style="width:40px;"><%=_ctx.appRes("UITopicContainer.label.Tag");%></th>
 								<th style="width:130px;"><a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Replies");%></div></a></th>
 								<th style="width:60px;"><a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><div class="DownArrow1Icon"><%=_ctx.appRes("UITopicContainer.label.Views");%></div></a></th>
 								<% if(canEdit) { %>
-								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
+								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.Checkall");%>" value="4"/></th>
 								<% } %>
 							</tr>
 						</thead>
@@ -180,15 +180,13 @@
 									} 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
-									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
 									if(topic.getIsLock()) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 									}
 									if(topic.getIsClosed()) {
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
+									String titleTopicStatus = _ctx.appRes("UITopicContainer.label."+iconTopicStatus) ;
 									String approved = "" ;
 									if(canEdit){
 										if(topic.getIsWaiting()) approved = "&nbsp;(<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)" ;
@@ -258,8 +256,9 @@
 										<div class="RatingInfoContainer">
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
+											 String titleRating = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicRatingSumVotes"), SumVote) ;
 										%>
-					 						<div class="AvgRatingImages" title="Topic Rating:$SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="$titleRating">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;
@@ -274,8 +273,12 @@
 					 					</div>
 									</td>
 									<td class="Tdbox">
-									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());%> 
-										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have <%=tags.size();%> Tag!">
+									<% 
+										List tags = uicomponent.getTagsByTopic(topic.getTagId());
+										int sizeTag = tags.size();
+										String titeSizeTag = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicHaveSizeTag"), ""+sizeTag) ;
+									%> 
+										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="$titeSizeTag">
 											<% /*Begin Popup Menu*/ %>
 											<div style="position:relative; left:92px;">
 												<div class="UIPopupCategory" style="display:none; ">

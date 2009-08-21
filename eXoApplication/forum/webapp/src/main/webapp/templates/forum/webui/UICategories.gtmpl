@@ -246,7 +246,7 @@
 													</div>
 												</div>
 												<div style="clear:left;"><span></span></div>
-												<div class="LastPostInfos">by&nbsp;<a style="color:#058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
+												<div class="LastPostInfos"><%=_ctx.appRes("UITopicContainer.label.by");%>&nbsp;<a style="color:#058EE6;" href="#">$lastPostBy</a><span class="DateTime">&nbsp;($dateTime)</span></div>
 											<%} else { %>	
 											<td class="Tdbox" style="height:40px;">
 													<%=_ctx.appRes("UICategory.label.availableTheard"); %>

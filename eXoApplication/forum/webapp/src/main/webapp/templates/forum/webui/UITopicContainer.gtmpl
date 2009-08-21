@@ -391,7 +391,7 @@
 									<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
 								</div>
 								</th>
-								<th style="width:40px;"><div class="AttachmentIcon" title="Attachment(s) in Thread"><span></span></div></th>
+								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;">
 									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
 								</th>
@@ -412,7 +412,7 @@
 									</div>
 								</th>
 								<% if(canEdit) { %>
-								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="Check all" value="4"/></th>
+								<th style="width:30px;"><input id="UIForumCheckAll" type="checkbox" class="checkbox" title="<%=_ctx.appRes("UITopicContainer.label.Checkall");%>" value="4"/></th>
 								<% } %>
 							</tr>
 						</thead>
@@ -461,15 +461,13 @@
 									 
 									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
-									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
 									if(topic.getIsLock() || isLock) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 									}
 									if(topic.getIsClosed()) {
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
+									String titleTopicStatus = _ctx.appRes("UITopicContainer.label."+iconTopicStatus) ;
 									String approved = "" ;
 									if(canEdit){
 										if(topic.getIsWaiting()) approved = "<span style='white-space:nowrap;'> (<span style='color:#f77617;'>"+_ctx.appRes("UITopicContainer.label.TopicPendingCensor")+"</span>)</span>" ;
@@ -542,8 +540,9 @@
 										<div class="RatingInfoContainer">
 										<% String[] classNames = uicomponent.getStarNumber(topic) ; 
 											 String SumVote = classNames[5] ;
+											 String titleRating = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicRatingSumVotes"), SumVote) ;
 										%>
-					 						<div class="AvgRatingImages" title="Topic Rating: $SumVote votes, 5 average">
+					 						<div class="AvgRatingImages" title="$titleRating">
 					 					<%	
 											for(className in classNames) {
 												if(className.equals("star")) className = "Voted" ;
@@ -560,8 +559,9 @@
 									<td class="Tdbox">
 									<% List tags = uicomponent.getTagsByTopic(topic.getTagId());
 									  int sizeTag = tags.size();
+									  String titeSizeTag = ForumUtils.getLabel(_ctx.appRes("UITopicContainer.label.TopicHaveSizeTag"), ""+sizeTag) ;
 									%> 
-										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="Topic have $sizeTag Tag!">
+										<div class="StatusIcon BlueTagIcon" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);" title="$titeSizeTag">
 											<% /*Begin Popup Menu*/ 
 											if(sizeTag> 0) {
 											%>

@@ -9,13 +9,13 @@ import org.exoplatform.forum.service.Category;
 				if(!uiform.listCategories.isEmpty()){%>
 					<div>
 						<fieldset style="color:rgb(51, 51, 51); margin:10px;">
-							<legend class="StyleLegend" style="cursor:pointer;">Select categories</legend>
+							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.Selectcategories");%></legend>
 							<div style="height:100px; overflow:auto;">
 								<table class="UIGrid" style="margin:2px auto; width:95%;">
 									<thead>
 										<tr>
 											<th style="width:16px;"><!-- input style="width:16px; margin:2px auto" type="checkbox" id="checkAllCategories"/ --></th>
-											<th align="center" style="width:100%">Categories</th>
+											<th align="center" style="width:100%"><%=_ctx.appRes("UIExportForm.label.Categories");%></th>
 										</tr>
 									</thead>
 									<tbody>	

@@ -103,7 +103,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public static final String FIELD_POSTABLE_MULTIVALUE = "Postable" ;
 	public static final String FIELD_TOPICABLE_MULTIVALUE = "Topicable" ;
 	
-	@SuppressWarnings("unchecked")
 	public UIForumForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
@@ -125,8 +124,8 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormStringInput forumOrder = new UIFormStringInput(FIELD_FORUMORDER_INPUT, FIELD_FORUMORDER_INPUT, "0");
 		forumOrder.addValidator(PositiveNumberFormatValidator.class) ;
 		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>("Open", "open")) ;
-		ls.add(new SelectItemOption<String>("Closed", "closed")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("Open"), "open")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("Closed"), "closed")) ;
 		UIFormSelectBox forumState = new UIFormSelectBox(FIELD_FORUMSTATE_SELECTBOX, FIELD_FORUMSTATE_SELECTBOX, ls) ;
 		forumState.setDefaultValue("open");
 		ls = new ArrayList<SelectItemOption<String>>() ;
@@ -244,7 +243,6 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		this.isForumUpdate = isForumUpdate ;
 	}
 	
-	@SuppressWarnings("unused")
 	private String [] getChildIds() {return new String[] {FIELD_MODERATOR_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE,FIELD_VIEWER_MULTIVALUE} ;}
 	
 	public void updateSelect(String selectField, String value) throws Exception {

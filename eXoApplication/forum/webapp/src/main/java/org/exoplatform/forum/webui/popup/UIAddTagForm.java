@@ -71,6 +71,7 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	private String tagId = "" ;
 	private boolean isTopicTag	= false ;
 	public UIAddTagForm() throws Exception {
+		if(ForumUtils.isEmpty(getId())) setId("UIAddTagForm");
 		UIFormStringInput tagName = new UIFormStringInput(FIELD_TAGNAME_INPUT, FIELD_TAGNAME_INPUT, null);
 		tagName.addValidator(MandatoryValidator.class);
 		UIFormTextAreaInput description = new UIFormTextAreaInput(FIELD_TAGDESCRIPTION_TEXTAREA, FIELD_TAGDESCRIPTION_TEXTAREA, null);
@@ -96,12 +97,13 @@ public class UIAddTagForm extends UIForm implements UIPopupComponent {
 	}
 	
 	private Map<String, String> getColorName() throws Exception {
-		String colorsName[] = new String[] {"Blue", "Dark Golden Rod", "Green", "Yellow", "Blue Violet", "Orange","Dark Blue", "Indian Red","Dark Cyan" ,"Lawn Green", "Violet", "Red"} ;
 		TreeMap<String, String> map = new TreeMap<String, String>();
-		int i = 0;
-		for (String string : this.colors) {
-			map.put(string, colorsName[i]);
-			++i;
+		String[] listColor = getLabel("ColorsList").split(",");
+		if(listColor[0].equals("ColorsList")) listColor = new String[]{};
+		int l = listColor.length;
+		for (int j = 0; j < colors.length; j++) {
+			if(j < l)	map.put(this.colors[j], listColor[j].trim());
+			else map.put(colors[j], colors[j]);
 		}
 		return map ;	
 	}
