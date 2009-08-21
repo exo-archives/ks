@@ -24,6 +24,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPageIterator;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -161,13 +162,14 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			
 			uiQuestions.setCategoryId(categoryId) ;
 			uiQuestions.setDefaultLanguage() ;
+			uiQuestions.updateCurrentQuestionList() ;
+			UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
+			categories.setPathCategory(categoryId);
 			UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 			breadcumbs.setUpdataPath(categoryId) ;
-			//uiQuestions.setPath(categoryId) ;			
-			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 			uiPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
 
