@@ -10,14 +10,14 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
-  <artifactId>ks</artifactId>
+  <artifactId>config</artifactId>
   <name>eXo Knowledge Suite</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2-beta1</version>
   <packaging>pom</packaging>
   
   <properties>
      <exo.product.name>exo-ks</exo.product.name>
-     <exo.product.specification>1.2</exo.product.specification>
+     <exo.product.specification>1.2-beta1</exo.product.specification>
   </properties>
   <issueManagement>
   	<system>jira</system>
@@ -29,9 +29,9 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/trunk</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2-beta1</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2-beta1</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/tags/1.2-beta1</url>
   </scm> 
   
   <modules>
@@ -166,7 +166,7 @@
         <org.exoplatform.jcr.version>1.10.3</org.exoplatform.jcr.version>
         <org.exoplatform.pc.version>2.0.6</org.exoplatform.pc.version>
         <org.exoplatform.portal.version>2.5.3</org.exoplatform.portal.version>
-        <org.exoplatform.ks.version>1.2-SNAPSHOT</org.exoplatform.ks.version>
+        <org.exoplatform.ks.version>1.2-beta1</org.exoplatform.ks.version>
         <test.classes>Test</test.classes>
         <test.skip>true</test.skip>
       </properties>
