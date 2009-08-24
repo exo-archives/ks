@@ -931,7 +931,7 @@ public class JCRDataStorage {
 	    node.setProperty("exo:tempModerators", new String[]{});
 	    node.save();
     } catch (Exception e) {
-    	log.debug("PathNotFoundException  cateogry node of forum node not found");
+    	log.debug("PathNotFoundException  cateogry node or forum node not found");
     } finally {
     	sProvider.close();
     }
