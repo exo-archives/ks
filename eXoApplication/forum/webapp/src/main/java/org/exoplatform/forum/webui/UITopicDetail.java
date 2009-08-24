@@ -57,7 +57,6 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
-import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
 import org.exoplatform.forum.webui.popup.UISplitTopicForm;
 import org.exoplatform.forum.webui.popup.UITopicForm;

@@ -153,9 +153,9 @@ public class UIForumListSearch extends UIContainer {
 			String cateId="", forumId="", topicId="", postId="";
 			for (int i = 0; i < id.length; i++) {
 	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
-	      if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
-	      if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
-	      if(id[i].indexOf(Utils.POST) >= 0) postId = id[i];
+	      else if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
+	      else if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
+	      else if(id[i].indexOf(Utils.POST) >= 0) postId = id[i];
       }
 			Category category = null;
 			Forum forum = null;

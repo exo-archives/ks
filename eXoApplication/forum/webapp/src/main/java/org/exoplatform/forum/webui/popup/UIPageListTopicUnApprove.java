@@ -20,14 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -77,7 +75,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsUnApprove() throws Exception {
-		pageList	= forumService.getPageTopic(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
+		pageList	= forumService.getPageTopic(this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		List<Topic> topics = pageList.getPage(pageSelect);
@@ -121,12 +119,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				}
 			}
 			if(!listTopic.isEmpty()) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
-				try {
-					topicUnApprove.forumService.modifyTopic(sProvider, listTopic, 3) ;
-				} finally {
-					sProvider.close();
-				}
+				topicUnApprove.forumService.modifyTopic(listTopic, 3) ;
 			} else {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;

@@ -38,7 +38,6 @@ import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
-import org.exoplatform.forum.webui.popup.UIRSSForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;

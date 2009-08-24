@@ -37,8 +37,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -87,18 +85,15 @@ public class UIPageListTopicByUser extends UIContainer{
 	private List<Topic> getTopicsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		List<Topic> topics = new ArrayList<Topic>(); 
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() == 0) isMod = true;
-			pageList	= forumService.getPageTopicByUser(sProvider, this.userName, isMod, strOrderBy) ;
+			pageList	= forumService.getPageTopicByUser(this.userName, isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null)pageList.setPageSize(6) ;
 			topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}finally {
-			sProvider.close();
-		}
+		}catch (Exception e) {}
 		return topics ;
 	}
 	
@@ -126,12 +121,7 @@ public class UIPageListTopicByUser extends UIContainer{
 			int i = path.length ;
 			String categoryId = path[i-3];
 			String forumId = path[i-2] ;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
-			try {
-				uiForm.forumService.removeTopic(sProvider, categoryId, forumId, topicId);
-			}finally {
-				sProvider.close();
-			}
+			uiForm.forumService.removeTopic(categoryId, forumId, topicId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
@@ -152,9 +142,8 @@ public class UIPageListTopicByUser extends UIContainer{
 			String forumId = id[i-2] ;
 			boolean isRead = true;
 			if(uiForm.userProfile.getUserRole() > 0) {
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					Category category = uiForm.forumService.getCategory(sProvider, categoryId);
+					Category category = uiForm.forumService.getCategory(categoryId);
 					String[] privateUser = category.getUserPrivate();
 					if(privateUser != null && privateUser.length > 0) {
 						if(privateUser.length ==1 && privateUser[0].equals(" ")){
@@ -166,21 +155,16 @@ public class UIPageListTopicByUser extends UIContainer{
 				}catch (Exception e) {
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 					return ;
-				}finally {
-					sProvider.close();
 				}
 			}
 			Forum forum = new Forum();
 			if(isRead) {
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					forum = uiForm.forumService.getForum(sProvider,categoryId , forumId) ;
+					forum = uiForm.forumService.getForum(categoryId , forumId) ;
 				}catch (Exception e) {
 					String[] s = new String[]{};
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", s, ApplicationMessage.WARNING)) ;
 					return;
-				}finally {
-					sProvider.close();
 				}
 				if(uiForm.userProfile.getUserRole() > 0) {
 					if(uiForm.userProfile.getUserRole() == 1 && (forum.getModerators() != null && forum.getModerators().length > 0 && 

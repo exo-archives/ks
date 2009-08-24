@@ -23,7 +23,7 @@ import org.exoplatform.web.application.JavascriptManager;
 											<%if(uicomponent.object_ == null){%>
 												<th align="center" style="width:100%"><%=_ctx.appRes("UIExportForm.label.Categories");%></th>
 											<%}else if(uicomponent.object_ instanceof Category){%>
-												<th align="center" style="width:100%">Forums</th>
+												<th align="center" style="width:100%"><%=_ctx.appRes("UICategory.label.Forums");%></th>
 											<%}%>
 										</tr>
 									</thead>

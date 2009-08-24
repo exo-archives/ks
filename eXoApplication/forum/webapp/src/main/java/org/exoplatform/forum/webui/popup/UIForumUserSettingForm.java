@@ -647,8 +647,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			String cateId="", forumId="", topicId="";
 			for (int i = 0; i < id.length; i++) {
 	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
-	      if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
-	      if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
+	      else if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
+	      else if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
       }
 			Category category = null;
 			Forum forum = null;
