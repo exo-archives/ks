@@ -157,10 +157,13 @@ public class UISearchForm extends UIForm implements UISelector {
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		try {
 			this.userProfile = userProfile ;
+			UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+			forumPortlet.getChild(UIForumLinks.class).setValueOption("");
+			if(this.userProfile ==  null)	this.userProfile = forumPortlet.getUserProfile() ;
 		} catch (Exception e) {
-			this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
 		}
 	}
+	
 	private boolean getIsMod() {
 		if(this.userProfile != null) {
 			if(this.userProfile.getUserRole() < 2) return true ;
