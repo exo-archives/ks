@@ -142,10 +142,12 @@ public class UIForumLinks extends UIForm {
 		UIFormSelectBoxForum forumLink ;
 		if(getChild(UIFormSelectBoxForum.class) != null) {
 			forumLink = this.getChild(UIFormSelectBoxForum.class).setOptions(list) ;
-			forumLink.setValue(path.trim()) ;
+			if(ForumUtils.isEmpty(path)) forumLink.setValue(Utils.FORUM_SERVICE) ;
+			else forumLink.setValue(path.trim()) ;
 		} else {
 			forumLink = new UIFormSelectBoxForum(FIELD_FORUMLINK_SELECTBOX, FIELD_FORUMLINK_SELECTBOX, list) ;
-			forumLink.setValue(path.trim()) ;
+			if(ForumUtils.isEmpty(path)) forumLink.setValue(Utils.FORUM_SERVICE) ;
+			else forumLink.setValue(path.trim()) ;
 			addUIFormInput(forumLink) ;
 		}
 	}

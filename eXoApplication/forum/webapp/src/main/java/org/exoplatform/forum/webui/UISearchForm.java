@@ -234,6 +234,9 @@ public class UISearchForm extends UIForm implements UISelector {
 			this.isSearchForum = false; 
 			this.isSearchTopic = false;
 		}
+		try {
+	    this.getAncestorOfType(UIForumPortlet.class).getChild(UIForumLinks.class).setValueOption("");
+    } catch (Exception e) {}
 	}
 	
 	public UIFormRadioBoxInput getUIFormRadioBoxInput(String name) {
