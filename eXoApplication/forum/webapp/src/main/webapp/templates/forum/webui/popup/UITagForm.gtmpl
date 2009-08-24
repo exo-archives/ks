@@ -8,9 +8,9 @@
 	<div class="TagContent">
 		<div class="TagControlBar">
 			<div style="overflow:auto;">
-				<div class="TagTitle">Tags</div>
+				<div class="TagTitle"><%=_ctx.appRes("UITagForm.label.Tags");%></div>
 					<div class="TagIcon" onclick="<%=uicomponent.event("AddTag");%>">
-						<div class="AddNewNodeIcon" title="Add new Tag"><span></span></div>
+						<div class="AddNewNodeIcon" title="<%=_ctx.appRes("UITagForm.label.AddNewTag"); %>"><span></span></div>
 					</div>
 				<div style="clear:both"><span></span></div>
 			</div>
@@ -44,9 +44,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$actionLabel
-									</a>
+									<a href="javascript:void(0);">$actionLabel</a>
 								</div>
 							</div>
 						</div>

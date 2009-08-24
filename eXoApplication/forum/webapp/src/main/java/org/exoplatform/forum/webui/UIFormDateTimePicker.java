@@ -44,15 +44,17 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
    * Whether to display the full time (with hours, minutes and seconds), not only the date
    */
   private boolean isDisplayTime_ ;
+  private String titleShowCalendar = "Show Calendar";
   
-  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime) {
+  public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar) {
     super(name, bindField, String.class) ;
     setDisplayTime(isDisplayTime) ;
+    setTitleShowCalendar(titleShowCalendar);
     if(date != null) value_ = dateFormat_.format(date) ;
   }
   
   public UIFormDateTimePicker(String name, String bindField, Date date) {
-    this(name, bindField, date, true) ;
+    this(name, bindField, date, true, "") ;
   }
   /**
    * By default, creates a date of format Month/Day/Year
@@ -77,7 +79,15 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
     }
   }
   
-  @SuppressWarnings("unused")
+
+	public void setTitleShowCalendar(String titleShowCalendar) {
+		this.titleShowCalendar = titleShowCalendar;
+	}
+
+	public String getTitleShowCalendar() {
+		return titleShowCalendar;
+	}
+  
   public void decode(Object input, WebuiRequestContext context) throws Exception {
     if(input != null) value_ = ((String)input).trim();
   }
@@ -93,6 +103,6 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
     }
     w.write("/>");
     w.write("<div class='CalendarIcons' onclick='eXo.ks.UIDateTimePicker.init(this,");
-    w.write(String.valueOf(isDisplayTime_)+");' title='Show Calendar'><span></span></div>");
+    w.write(String.valueOf(isDisplayTime_)+");' title='"+getTitleShowCalendar()+"'><span></span></div>");
   }
 }
