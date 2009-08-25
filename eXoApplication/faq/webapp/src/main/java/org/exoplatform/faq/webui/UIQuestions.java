@@ -1178,6 +1178,11 @@ public class UIQuestions extends UIContainer {
 			UIQuestions uiQuestions = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			boolean isSendLink = true;
+			if(questionId.indexOf("/true") > 0){
+				questionId = questionId.replace("/true", "");
+				isSendLink = false;
+			}
 			if(!faqService_.isExisting(questionId)){				
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1190,9 +1195,12 @@ public class UIQuestions extends UIContainer {
 			UISendEmailsContainer watchContainer = popupAction.activate(UISendEmailsContainer.class, 700) ;
 			UISendMailForm sendMailForm = watchContainer.getChild(UISendMailForm.class) ;
 			//Create link by Vu Duy Tu.
-			String link = uiQuestions.getLink();
-			link = FAQUtils.getLink(link, uiQuestions.getId(), uiQuestions.getId(), "Setting", "ViewQuestion", questionId);
-			sendMailForm.setLink(link.replaceFirst("private", "public"));
+			String link = "";
+			if(isSendLink){ 
+				link = uiQuestions.getLink();
+				link = FAQUtils.getLink(link, uiQuestions.getId(), uiQuestions.getId(), "Setting", "ViewQuestion", questionId).replaceFirst("private", "public");
+			}
+			sendMailForm.setLink(link);
 			if(!questionId.equals(uiQuestions.viewingQuestionId_) || FAQUtils.isFieldEmpty(language_)) sendMailForm.setUpdateQuestion(questionId , "") ;
 			else sendMailForm.setUpdateQuestion(questionId , language_) ;
 			watchContainer.setId("FAQSendMailForm") ;

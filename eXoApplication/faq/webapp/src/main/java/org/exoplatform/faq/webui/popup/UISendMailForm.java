@@ -68,33 +68,33 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 )
 @SuppressWarnings("unused")
 public class UISendMailForm extends UIForm implements UIPopupComponent	{
-  private boolean isViewCC = false;
+	private boolean isViewCC = false;
 	private boolean isViewBCC = false;
 	
-  private static final String FILED_FROM_NAME = "FromName" ;
-  private static final String FILED_FROM = "From" ;
-  private static final String FILED_TO = "To" ;
-  private static final String FILED_ADD_CC = "AddCc" ;
-  private static final String FILED_ADD_BCC = "AddBcc" ;
-  private static final String FILED_SUBJECT = "Subject" ;
-  private static final String FILED_QUESTION_LANGUAGE = "Language" ;
-  private static final String FILED_MESSAGE = "Message" ;
-  final static public String FIELD_FROM_INPUT = "fromInput" ;
-  final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
-  private static Map<String, String> serverConfig_ = new HashMap<String, String>();
-  
-  private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
-  private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-  private String languageIsResponsed = "" ;
-  private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private String questionChanged_ = new String() ;
-  private String link_ = "" ;
-  public List<User> toUsers = new ArrayList<User>();
-  public List<User> addCCUsers = new ArrayList<User>();
-  public List<User> addBCCUsers = new ArrayList<User>();
-  private int posOfResponse = 0;
-  private List<String> listAnotherEmail = new ArrayList<String>();
-  
+	private static final String FILED_FROM_NAME = "FromName" ;
+	private static final String FILED_FROM = "From" ;
+	private static final String FILED_TO = "To" ;
+	private static final String FILED_ADD_CC = "AddCc" ;
+	private static final String FILED_ADD_BCC = "AddBcc" ;
+	private static final String FILED_SUBJECT = "Subject" ;
+	private static final String FILED_QUESTION_LANGUAGE = "Language" ;
+	private static final String FILED_MESSAGE = "Message" ;
+	final static public String FIELD_FROM_INPUT = "fromInput" ;
+	final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
+	private static Map<String, String> serverConfig_ = new HashMap<String, String>();
+	
+	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
+	private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+	private String languageIsResponsed = "" ;
+	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+	private String questionChanged_ = new String() ;
+	private String link_ = "" ;
+	public List<User> toUsers = new ArrayList<User>();
+	public List<User> addCCUsers = new ArrayList<User>();
+	public List<User> addBCCUsers = new ArrayList<User>();
+	private int posOfResponse = 0;
+	private List<String> listAnotherEmail = new ArrayList<String>();
+	
 	public UISendMailForm() throws Exception { 
 		listAnotherEmail = new ArrayList<String>();
 		this.setActions(new String[]{"Send", "Cancel"}) ;
@@ -105,21 +105,21 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 
 	public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
-  
-	public List<User> getToUsers() { return toUsers; }
-  public void setToUsers(List<User> userList) { toUsers = userList; }
-  
-  public List<User> getAddCCUsers() { return addCCUsers; }
-  public void setAddCCUsers(List<User> userList) { addCCUsers = userList; }
-  
-  public List<User> getAddBCCUsers() { return addBCCUsers; }
-  public void setAddBCCUsers(List<User> userList) { addBCCUsers = userList; }
 	
-  private List<SelectItemOption<String>> getListLanguageToSendFriend() {
-    return listLanguageToReponse ;
-  }
-  
-  public void addPlugin(ComponentPlugin plugin) throws Exception {
+	public List<User> getToUsers() { return toUsers; }
+	public void setToUsers(List<User> userList) { toUsers = userList; }
+	
+	public List<User> getAddCCUsers() { return addCCUsers; }
+	public void setAddCCUsers(List<User> userList) { addCCUsers = userList; }
+	
+	public List<User> getAddBCCUsers() { return addBCCUsers; }
+	public void setAddBCCUsers(List<User> userList) { addBCCUsers = userList; }
+	
+	private List<SelectItemOption<String>> getListLanguageToSendFriend() {
+		return listLanguageToReponse ;
+	}
+	
+	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		} catch(Exception e) {
@@ -128,82 +128,77 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	}
 
 	public void setUpdateQuestion(String questionPath, String language) throws Exception {
-    Question question = FAQUtils.getFAQService().getQuestionById(questionPath) ;
-    if(language.equals("")) language = question.getLanguage() ;
-    String email = "" ;
-    String name = "" ;
-    String userName = FAQUtils.getCurrentUser() ;
-    if(!FAQUtils.isFieldEmpty(userName)){
-      name = FAQUtils.getFullName(userName) ;
-      email = FAQUtils.getEmailUser(userName) ;
-    }
-    languageIsResponsed = question.getLanguage() ;
-    QuestionLanguage questionLanguage = new QuestionLanguage() ;
-    questionLanguage.setId(question.getId());
-    questionLanguage.setQuestion(question.getQuestion());
-    questionLanguage.setDetail(question.getDetail()) ;
-    questionLanguage.setLanguage(question.getLanguage()) ;
-    questionLanguage.setAnswers(question.getAnswers()) ;
-    questionLanguage.setComments(question.getComments());
-    
-    listQuestionLanguage.add(questionLanguage) ;
-    for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionPath)) {
-    	String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
-    	questionLanguage2.setDetail(quest2) ;
-    	if(!isContainLanguageList(listQuestionLanguage, question.getLanguage()))
-    		listQuestionLanguage.add(questionLanguage2) ;
-    }
-    questionChanged_ = question.getQuestion() ;
-    // set info for form
-    for(QuestionLanguage quesLanguage : listQuestionLanguage) {
-      listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
-    }
-    
-    addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
-    addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
-    addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
-    addChild(new UIFormStringInput(FILED_ADD_CC, FILED_ADD_CC, null)) ;
-    addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null)) ;
-    UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, listLanguageToReponse) ;
-    questionLanguages.setSelectedValues(new String[]{language}) ;
-    questionLanguages.setOnChange("ChangeLanguage") ;
-    addChild(questionLanguages) ;
-    String content = "" ;
-    String contenQuestion = "" ;
-    for(QuestionLanguage questionLangua : listQuestionLanguage) {
-      if(questionLangua.getLanguage().equals(language)) {
-       contenQuestion =  questionLangua.getQuestion() ;
-     	 Answer[] answers = questionLangua.getAnswers() ;
-        if(answers == null || answers.length < 1){ 
-        	content =this.getLabel("change-content1") + this.getLabel("change-content2")
-										+"<p><b>" + this.getLabel( "Question") + "</b> "+ contenQuestion + "</p>";
-        	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
-        		content += "<p><b>" + this.getLabel( "Detail") + "</b> "+ questionLangua.getDetail() + "</p>";
-      		content += "<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>" ;
-        } else {
-        	StringBuffer stringBuffer = new StringBuffer();
-        	stringBuffer.append(this.getLabel("change-content1")).append(this.getLabel("change-content2"))
-        							.append("<p><b>").append(this.getLabel( "Question")).append("</b> "+ contenQuestion + "</p>");
-        	if(questionLangua.getDetail()!= null && questionLangua.getDetail().trim().length() > 0)
-        		stringBuffer.append("<p><b>").append(this.getLabel( "Detail")).append("</b> "+ questionLangua.getDetail() + "</p>");
-        	stringBuffer.append("<p><b>" + this.getLabel( "Response") + "</b> ");
-        	for(Answer answer : answers){
-        		stringBuffer.append(answer.getResponses() + "</p>");
-        	}
-        	stringBuffer.append("<p>"+this.getLabel("Link1")+"<a href ="+link_+">"+this.getLabel("Link2")+"</a>"+this.getLabel("Link3")+"</p>");
-        	content =stringBuffer.toString();
-        }
-        break;
-      }
-    }
-    addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
-    addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, content)) ;
+		Question question = FAQUtils.getFAQService().getQuestionById(questionPath) ;
+		if(language.equals("")) language = question.getLanguage() ;
+		String email = "" ;
+		String name = "" ;
+		String userName = FAQUtils.getCurrentUser() ;
+		if(!FAQUtils.isFieldEmpty(userName)){
+			name = FAQUtils.getFullName(userName) ;
+			email = FAQUtils.getEmailUser(userName) ;
+		}
+		languageIsResponsed = question.getLanguage() ;
+		QuestionLanguage questionLanguage = new QuestionLanguage() ;
+		questionLanguage.setId(question.getId());
+		questionLanguage.setQuestion(question.getQuestion());
+		questionLanguage.setDetail(question.getDetail()) ;
+		questionLanguage.setLanguage(question.getLanguage()) ;
+		questionLanguage.setAnswers(question.getAnswers()) ;
+		questionLanguage.setComments(question.getComments());
+		
+		listQuestionLanguage.add(questionLanguage) ;
+		for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionPath)) {
+			String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
+			questionLanguage2.setDetail(quest2) ;
+			if(!isContainLanguageList(listQuestionLanguage, question.getLanguage()))
+				listQuestionLanguage.add(questionLanguage2) ;
+		}
+		questionChanged_ = question.getQuestion() ;
+		// set info for form
+		for(QuestionLanguage quesLanguage : listQuestionLanguage) {
+			listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
+		}
+		
+		addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
+		addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
+		addChild(new UIFormStringInput(FILED_TO, FILED_TO, null)) ;
+		addChild(new UIFormStringInput(FILED_ADD_CC, FILED_ADD_CC, null)) ;
+		addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null)) ;
+		UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, listLanguageToReponse) ;
+		questionLanguages.setSelectedValues(new String[]{language}) ;
+		questionLanguages.setOnChange("ChangeLanguage") ;
+		addChild(questionLanguages) ;
+		String contenQuestion = "" ;
+		StringBuffer stringBuffer = new StringBuffer();
+		for (QuestionLanguage questionLangua : listQuestionLanguage) {
+			if (questionLangua.getLanguage().equals(language)) {
+				contenQuestion = questionLangua.getQuestion();
+				Answer[] answers = questionLangua.getAnswers();
+				stringBuffer.append(this.getLabel("change-content1")).append(getLabel("change-content2")).append("<p><b>")
+										.append(getLabel("Question")).append("</b> ").append(contenQuestion).append("</p>");
+				if (questionLangua.getDetail() != null && questionLangua.getDetail().trim().length() > 0)
+					stringBuffer.append("<p><b>").append(this.getLabel("Detail")).append("</b> ").append(questionLangua.getDetail()).append("</p>");
+				if (answers != null && answers.length > 0) {
+					stringBuffer.append("<p>");
+					for (Answer answer : answers) {
+						stringBuffer.append("<br/><b>").append(getLabel("Response")).append("</b>").append("<br/>").append(answer.getResponses());
+					}
+					stringBuffer.append("</p>");
+				}
+				if (!FAQUtils.isFieldEmpty(link_)) {
+					stringBuffer.append(getLabel("Link").replaceFirst("<link>", link_));
+				}
+				break;
+			}
+		}
+		addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
+		addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, stringBuffer.toString())) ;
 	}
 
 	private boolean isContainLanguageList(List<QuestionLanguage> questionlg, String language) throws Exception {
 		for (QuestionLanguage questionLanguage : questionlg) {
-	    if(questionLanguage.getLanguage().equals(language)) return true;
-    }
+			if(questionLanguage.getLanguage().equals(language)) return true;
+		}
 		return false;
 	}
 	
@@ -243,167 +238,167 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
-      String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
-      String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
-      String fullFrom = fromName +" (" + from +  ") <"+ serverConfig_.get("account")+">" ;
-      String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
-      String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
-      String cc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
-      String bcc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
-      String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(FILED_MESSAGE)).getValue() ;
-      if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
-      if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
-      if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
-      if (FAQUtils.isFieldEmpty(fromName)) {
-        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.fromName-field-empty", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      } else if (FAQUtils.isFieldEmpty(from)) {
-        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      } else if(!FAQUtils.isValidEmailAddresses(from)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      } else if (FAQUtils.isFieldEmpty(to)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      } else if (!FAQUtils.isValidEmailAddresses(to)) {
-        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-to-field", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        return ;
-      } else if(!FAQUtils.isValidEmailAddresses(cc)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-cc-field",null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      } else if(!FAQUtils.isValidEmailAddresses(bcc)) {
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      } else if(subject == null || subject.trim().length() < 0){
-      	uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.subject-field-empty",null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      }
-      Message  message = new Message(); 
-      message.setMimeType(MIMETYPE_TEXTHTML) ;
-      message.setFrom(fullFrom) ;
-      message.setTo(to) ;
-      message.setCC(cc) ;
-      message.setBCC(bcc) ;
-      message.setSubject(subject) ;
-      message.setBody(body) ;
-      try {
-      	faqService_.sendMessage(message) ;
-      } catch(Exception e) {
-        uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-        e.printStackTrace() ;
-        return ;
-      }
-      uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
+			String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
+			String fullFrom = fromName +" (" + from +	") <"+ serverConfig_.get("account")+">" ;
+			String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
+			String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
+			String cc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
+			String bcc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
+			String body = ((UIFormWYSIWYGInput)sendMailForm.getChildById(FILED_MESSAGE)).getValue() ;
+			if (to != null && to.indexOf(";") > -1) to = to.replace(';', ',') ;
+			if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
+			if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
+			if (FAQUtils.isFieldEmpty(fromName)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.fromName-field-empty", null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if (FAQUtils.isFieldEmpty(from)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if(!FAQUtils.isValidEmailAddresses(from)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if (FAQUtils.isFieldEmpty(to)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if (!FAQUtils.isValidEmailAddresses(to)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-to-field", null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if(!FAQUtils.isValidEmailAddresses(cc)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-cc-field",null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if(!FAQUtils.isValidEmailAddresses(bcc)) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			} else if(subject == null || subject.trim().length() < 0){
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.subject-field-empty",null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+			Message	message = new Message(); 
+			message.setMimeType(MIMETYPE_TEXTHTML) ;
+			message.setFrom(fullFrom) ;
+			message.setTo(to) ;
+			message.setCC(cc) ;
+			message.setBCC(bcc) ;
+			message.setSubject(subject) ;
+			message.setBody(body) ;
+			try {
+				faqService_.sendMessage(message) ;
+			} catch(Exception e) {
+				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				e.printStackTrace() ;
+				return ;
+			}
+			uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			popupAction.deActivate() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class ToActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
-    	UISendMailForm sendMailForm = event.getSource() ;
+		public void execute(Event<UISendMailForm> event) throws Exception {
+			UISendMailForm sendMailForm = event.getSource() ;
 			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
 			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
 			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
 			addressEmailsForm.setRecipientsType(FILED_TO);
-      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
-      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
-      List<String> emailList = new ArrayList<String>();
-      sendMailForm.listAnotherEmail = new ArrayList<String>();
-      for (int i = 0 ; i < toAddresses.length; i++) {
-        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
-      }
-      sendMailForm.listAnotherEmail.addAll(emailList);
-      List<User> toUser = sendMailForm.getToUsers() ;
-      if (toUser != null && toUser.size() > 0) {
-        List<User> userList = new ArrayList<User>();
-        for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) {
-          	userList.add(ct) ;
-          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
-          }
-        }
-        addressEmailsForm.setAlreadyCheckedUser(userList);
-      }
+			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
+			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+			List<String> emailList = new ArrayList<String>();
+			sendMailForm.listAnotherEmail = new ArrayList<String>();
+			for (int i = 0 ; i < toAddresses.length; i++) {
+				if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+			}
+			sendMailForm.listAnotherEmail.addAll(emailList);
+			List<User> toUser = sendMailForm.getToUsers() ;
+			if (toUser != null && toUser.size() > 0) {
+				List<User> userList = new ArrayList<User>();
+				for (User ct : toUser) {
+					if (emailList.contains(ct.getEmail())) {
+						userList.add(ct) ;
+						sendMailForm.listAnotherEmail.remove(ct.getEmail());
+					}
+				}
+				addressEmailsForm.setAlreadyCheckedUser(userList);
+			}
 
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 	
 	static public class CcActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
-    	UISendMailForm sendMailForm = event.getSource() ;
+		public void execute(Event<UISendMailForm> event) throws Exception {
+			UISendMailForm sendMailForm = event.getSource() ;
 			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
 			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
 			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
 			addressEmailsForm.setRecipientsType(FILED_ADD_CC);
-      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
-      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
-      List<String> emailList = new ArrayList<String>();
-      sendMailForm.listAnotherEmail = new ArrayList<String>();
-      for (int i = 0 ; i < toAddresses.length; i++) {
-        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
-      }
-      sendMailForm.listAnotherEmail.addAll(emailList);
-      List<User> toUser = sendMailForm.getAddCCUsers() ;
-      if (toUser != null && toUser.size() > 0) {
-        List<User> userList = new ArrayList<User>();
-        for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())){
-          	userList.add(ct) ;
-          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
-          }
-        }
-        addressEmailsForm.setAlreadyCheckedUser(userList);
-      }
+			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
+			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+			List<String> emailList = new ArrayList<String>();
+			sendMailForm.listAnotherEmail = new ArrayList<String>();
+			for (int i = 0 ; i < toAddresses.length; i++) {
+				if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+			}
+			sendMailForm.listAnotherEmail.addAll(emailList);
+			List<User> toUser = sendMailForm.getAddCCUsers() ;
+			if (toUser != null && toUser.size() > 0) {
+				List<User> userList = new ArrayList<User>();
+				for (User ct : toUser) {
+					if (emailList.contains(ct.getEmail())){
+						userList.add(ct) ;
+						sendMailForm.listAnotherEmail.remove(ct.getEmail());
+					}
+				}
+				addressEmailsForm.setAlreadyCheckedUser(userList);
+			}
 
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 	
 	static public class BccActionListener extends EventListener<UISendMailForm> {
-    public void execute(Event<UISendMailForm> event) throws Exception {
-    	UISendMailForm sendMailForm = event.getSource() ;
+		public void execute(Event<UISendMailForm> event) throws Exception {
+			UISendMailForm sendMailForm = event.getSource() ;
 			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
 			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
 			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
 			addressEmailsForm.setRecipientsType(FILED_ADD_BCC);
-      String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
-      InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
-      List<String> emailList = new ArrayList<String>();
-      sendMailForm.listAnotherEmail = new ArrayList<String>();
-      for (int i = 0 ; i < toAddresses.length; i++) {
-        if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
-      }
-      sendMailForm.listAnotherEmail.addAll(emailList);
-      List<User> toUser = sendMailForm.getAddBCCUsers() ;
-      if (toUser != null && toUser.size() > 0) {
-        List<User> userList = new ArrayList<User>();
-        for (User ct : toUser) {
-          if (emailList.contains(ct.getEmail())) {
-          	userList.add(ct) ;
-          	sendMailForm.listAnotherEmail.remove(ct.getEmail());
-          }
-        }
-        addressEmailsForm.setAlreadyCheckedUser(userList);
-      }
+			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
+			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
+			List<String> emailList = new ArrayList<String>();
+			sendMailForm.listAnotherEmail = new ArrayList<String>();
+			for (int i = 0 ; i < toAddresses.length; i++) {
+				if (toAddresses[i] != null) emailList.add(toAddresses[i].getAddress());
+			}
+			sendMailForm.listAnotherEmail.addAll(emailList);
+			List<User> toUser = sendMailForm.getAddBCCUsers() ;
+			if (toUser != null && toUser.size() > 0) {
+				List<User> userList = new ArrayList<User>();
+				for (User ct : toUser) {
+					if (emailList.contains(ct.getEmail())) {
+						userList.add(ct) ;
+						sendMailForm.listAnotherEmail.remove(ct.getEmail());
+					}
+				}
+				addressEmailsForm.setAlreadyCheckedUser(userList);
+			}
 
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-    }
-  }
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
 	
 	static public class CancelActionListener extends EventListener<UISendMailForm> {
 		public void execute(Event<UISendMailForm> event) throws Exception {
@@ -414,37 +409,36 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
-   static public class ChangeLanguageActionListener extends EventListener<UISendMailForm> {
-  	 public void execute(Event<UISendMailForm> event) throws Exception {
-  		 UISendMailForm sendMailForm = event.getSource() ;
-  		 UIFormSelectBox formSelectBox = sendMailForm.getChildById(FILED_QUESTION_LANGUAGE) ;
-  		 UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE) ;
-  		 UIFormStringInput subject = sendMailForm.getChildById(FILED_SUBJECT) ;
-       String language = formSelectBox.getValue() ;
-       String contenQuestion = "" ;
-       for(QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
-         if(questionLanguage.getLanguage().equals(language)) {
-        	 sendMailForm.languageIsResponsed = language ;
-        	 contenQuestion =  questionLanguage.getQuestion() ;
-        	 Answer[] answers = questionLanguage.getAnswers() ;
-           String content = "" ;
-           if(answers == null || answers.length < 1) content =sendMailForm.getLabel("change-content1")+sendMailForm.getLabel("change-content2")
-          	 													+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
-          	 													+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
-          	 													+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
-           else {
-           	content =sendMailForm.getLabel("change-content1")+ sendMailForm.getLabel("change-content2")
-           			+"<p><b>" + sendMailForm.getLabel( "Question") + "</b> "+ contenQuestion + "</p>"
-           			+"<p><b>" + sendMailForm.getLabel( "Detail") + "</b> "+ questionLanguage.getDetail() + "</p>"
-           			+"<p><b>" + sendMailForm.getLabel( "Response") + "</b> " + answers[sendMailForm.posOfResponse].getResponses() + "</p>"
-           			+"<p>"+sendMailForm.getLabel("Link1")+"<a href ="+sendMailForm.getLink()+">"+sendMailForm.getLabel("Link2")+"</a>"+sendMailForm.getLabel("Link3")+"</p>";
-           }
-           body.setValue(content) ;
-           subject.setValue(sendMailForm.getLabel("change-title")+contenQuestion) ;
-           break;
-         }
-       }
-       event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm) ;
-  	 }
-   }
+	
+	static public class ChangeLanguageActionListener extends EventListener<UISendMailForm> {
+		public void execute(Event<UISendMailForm> event) throws Exception {
+			UISendMailForm sendMailForm = event.getSource();
+			UIFormSelectBox formSelectBox = sendMailForm.getChildById(FILED_QUESTION_LANGUAGE);
+			UIFormWYSIWYGInput body = sendMailForm.getChildById(FILED_MESSAGE);
+			UIFormStringInput subject = sendMailForm.getChildById(FILED_SUBJECT);
+			String language = formSelectBox.getValue();
+			String contenQuestion = "";
+			StringBuilder strBuilder = new StringBuilder();
+			for (QuestionLanguage questionLanguage : sendMailForm.listQuestionLanguage) {
+				if (questionLanguage.getLanguage().equals(language)) {
+					sendMailForm.languageIsResponsed = language;
+					contenQuestion = questionLanguage.getQuestion();
+					Answer[] answers = questionLanguage.getAnswers();
+					strBuilder.append(sendMailForm.getLabel("change-content1")).append(sendMailForm.getLabel("change-content2")).append("<p><b>")
+								    .append(sendMailForm.getLabel("Question")).append("</b> ").append(contenQuestion).append("</p>").append("<p><b>")
+								    .append(sendMailForm.getLabel("Detail")).append("</b> ").append(questionLanguage.getDetail()).append("</p>");
+					if (answers != null && answers.length > 0) {
+						strBuilder.append(sendMailForm.getLabel("Response")).append("</b> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");
+					}
+					if (!FAQUtils.isFieldEmpty(sendMailForm.link_)) {
+						strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", sendMailForm.link_));
+					}
+					body.setValue(strBuilder.toString());
+					subject.setValue(sendMailForm.getLabel("change-title")+ contenQuestion);
+					break;
+				}
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm);
+		}
+	}
 }

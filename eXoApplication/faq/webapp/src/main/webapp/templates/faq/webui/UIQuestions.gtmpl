@@ -292,13 +292,18 @@
 																		iconView = viewAction.replace("Question", "");
 																	else
 																		iconView = viewAction ;
-																	String linkView = uicomponent.event(viewAction, qId);
+																	String linkView = "";
 																	
 																	String lockFunction = "" ;
 																	if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-																		linkView = "javaScript:alert('" + 
-																								_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																		lockFunction = "LockFunction" ;
+																		if(canEditQuestion){
+																			linkView = uicomponent.event(viewAction, qId+"/true");
+																		} else {
+																			linkView = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend") + "');" ;
+																			lockFunction = "LockFunction" ;
+																		}
+																	} else {
+																		linkView = uicomponent.event(viewAction, qId);
 																	}
 																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 															%>
@@ -466,11 +471,16 @@
 																				<!-- action send mail for frend -->
 																				<td style="width:25px">
 																					<%
-																					link = uicomponent.event("SendQuestion",qId);
 																					String SendToFriend = "SendToFriend";
 																					if((!question.isApproved() || !question.isActivated())){
-																						link = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																						SendToFriend = "LockSendToFriend" ;
+																						if(canEditQuestion) {
+																							link = uicomponent.event("SendQuestion",qId+"/true");
+																						} else {
+																							link = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend") + "');" ;
+																							SendToFriend = "LockSendToFriend" ;
+																						}
+																					} else {
+																						link = uicomponent.event("SendQuestion",qId);
 																					}
 																					%>
 																					<a href="$link" title="<%=_ctx.appRes("UIQuestions.action.SendQuestion")%>" style="cursor:pointer">
@@ -656,12 +666,17 @@
 																													iconView = viewAction.replace("Question", "");
 																												else
 																													iconView = viewAction ;
-																												String linkView = uicomponent.event(viewAction, qId);
+																												String linkView = "";
 																												String lockFunction = "" ;
 																												if(viewAction.equals("SendQuestion") && (!question.isApproved() || !question.isActivated())) {
-																													linkView = "javaScript:alert('" + 
-																																			_ctx.appRes(uicomponent.getName() + ".label." + "CanSendToFriend") + "');" ;
-																													lockFunction = "LockFunction" ;
+																													if(canEditQuestion){
+																														linkView = uicomponent.event(viewAction, qId+"/true");
+																													} else {
+																														linkView = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend")+"');" ;
+																														lockFunction = "LockFunction" ;
+																													}
+																												} else {
+																													linkView = uicomponent.event(viewAction, qId);
 																												}
 																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);																												
 																										%>
