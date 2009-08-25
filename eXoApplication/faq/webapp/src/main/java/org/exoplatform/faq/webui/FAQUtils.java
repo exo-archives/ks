@@ -325,6 +325,7 @@ public class FAQUtils {
 			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 			User user = organizationService.getUserHandler().findUserByName(userName) ;
 			String fullName = user.getFullName() ;
+			if(isFieldEmpty(fullName)) fullName = userName;
 			return fullName ;
 		} catch (Exception e){
 			return userName;

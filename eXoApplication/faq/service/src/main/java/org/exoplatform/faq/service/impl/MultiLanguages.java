@@ -496,13 +496,17 @@ public class MultiLanguages {
     	calendar.setTime(new Date()) ;
     	answerNode.setProperty("exo:dateResponse", calendar) ;
     	answerNode.setProperty("exo:id", answer.getId());
-    	answerNode.setProperty("exo:questionId", questionNode.getName()) ;    	
+    	answerNode.setProperty("exo:questionId", questionNode.getName()) ;
     	answerNode.setProperty("exo:responseLanguage", language) ;
     	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;    	
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
-    questionNode.save();
+    if(questionNode.isNew()){
+    	questionNode.getSession().save();
+    } else {
+    	questionNode.save();
+    }
   }
   
   public static void saveAnswer(Node quesNode, QuestionLanguage questionLanguage) throws Exception{

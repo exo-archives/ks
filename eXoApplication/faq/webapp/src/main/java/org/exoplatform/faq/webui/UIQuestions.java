@@ -1021,18 +1021,12 @@ public class UIQuestions extends UIContainer {
 			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			try{				
 				Comment comment = faqService_.getCommentById(questions.viewingQuestionId_, commentId, language_);
-				if(comment == null){
-					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					//questions.setIsNotChangeLanguage() ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-					return ;
-				} else {
+				if(comment != null){
 					Answer answer = new Answer();
 					answer.setNew(true);
 					answer.setResponses(comment.getComments());
 					answer.setResponseBy(comment.getCommentBy());
+					answer.setFullName(comment.getFullName());
 					answer.setDateResponse(comment.getDateComment());
 					answer.setMarksVoteAnswer(0);
 					answer.setUsersVoteAnswer(null);
@@ -1040,18 +1034,22 @@ public class UIQuestions extends UIContainer {
 					answer.setApprovedAnswers(true);					
 					faqService_.saveAnswer(questions.viewingQuestionId_, answer, language_);
 					faqService_.deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, language_);					
+				} else {
+					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+					return ;
 				}
 			} catch (Exception e) {				
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				//questions.setIsNotChangeLanguage() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return ;
 			}
 			questions.setLanguageView(language_);
 			questions.updateCurrentLanguage() ;
-			//questions.setIsNotChangeLanguage();
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}
 	}
