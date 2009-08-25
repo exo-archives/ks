@@ -94,6 +94,110 @@
 	            </field> 
 	          </object>        
 	        </object-param> 
+	        
+	        <object-param>
+	          <name>KnowledgeSuite</name>
+	          <description>description</description>
+	          <object type="org.exoplatform.application.registry.ApplicationCategory">
+	            <field  name="name"><string>KnowledgeSuite</string></field>
+	            <field  name="displayName"><string>KnowledgeSuite</string></field> 
+	            <field  name="description"><string>KS Portlets</string></field> 
+	            <field  name="applications">
+		            <collection type="java.util.ArrayList">
+	                <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>AnswersPortlet</string></field>
+						          <field name="displayName"><string>Answers Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>FAQPortlet</string></field>
+						          <field name="displayName"><string>FAQ Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+					        <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumPortlet</string></field>
+						          <field name="displayName"><string>Forum Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumStatisticPortlet</string></field>
+						          <field name="displayName"><string>Forum Statistic Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumPollPortlet</string></field>
+						          <field name="displayName"><string>Forum Poll Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumModeratePortlet</string></field>
+						          <field name="displayName"><string>Forum Moderate Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumRulePortlet</string></field>
+						          <field name="displayName"><string>Forum Rule Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumQuickReplyPortlet</string></field>
+						          <field name="displayName"><string>Forum Quick Reply Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumIconStatePortlet</string></field>
+						          <field name="displayName"><string>Forum Icon State Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+									<value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>ForumLinkPortlet</string></field>
+						          <field name="displayName"><string>Forum Link Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
+		            </collection>                               
+	            </field> 
+	          </object>        
+	        </object-param> 
 	      </init-params>
 	    </component-plugin>
 	  </component-plugins>      
