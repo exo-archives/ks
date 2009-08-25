@@ -17,10 +17,10 @@
       <page-reference>portal::classic::forum</page-reference>
     </node>
     <node>
-      <uri>faq</uri>
-      <name>faq</name>
-      <label>#{portal.classic.faq}</label>
-      <page-reference>portal::classic::faq</page-reference>
+      <uri>answers</uri>
+      <name>answers</name>
+      <label>#{portal.classic.answers}</label>
+      <page-reference>portal::classic::answers</page-reference>
     </node>
     <node>
       <uri>tour</uri>

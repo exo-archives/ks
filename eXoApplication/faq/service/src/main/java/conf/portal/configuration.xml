@@ -6,7 +6,7 @@
     <type>org.exoplatform.faq.service.impl.FAQServiceImpl</type>
   </component>    
   
-  <external-component-plugins>
+  <!--external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
 	  <component-plugin> 
 	    <name>add.nodeType</name>
@@ -20,6 +20,6 @@
 	      </values-param>
 	    </init-params>
 	  </component-plugin>
-	</external-component-plugins>
+	</external-component-plugins-->
 		
 </configuration>

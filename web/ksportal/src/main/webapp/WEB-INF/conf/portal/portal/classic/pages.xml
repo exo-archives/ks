@@ -32,15 +32,15 @@
     </application>
   </page>
   <page>
-    <page-id>portal::classic::faq</page-id>
+    <page-id>portal::classic::answers</page-id>
     <owner-type>portal</owner-type>
     <owner-id>classic</owner-id>
-    <name>faq</name>
+    <name>answers</name>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     <application>
-      <instance-id>portal#classic:/faq/FAQPortlet/faq</instance-id>
-      <title>FAQ Portlet</title>
+      <instance-id>portal#classic:/faq/AnswersPortlet/answers</instance-id>
+      <title>Answers Portlet</title>
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>

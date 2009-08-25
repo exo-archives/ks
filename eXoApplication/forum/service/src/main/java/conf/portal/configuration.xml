@@ -23,7 +23,7 @@
     </init-params>
   </component>    
 -->
-  <external-component-plugins>
+  <!--external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
 	  <component-plugin> 
 	    <name>add.forum.nodeType</name>
@@ -37,6 +37,6 @@
 	      </values-param>
 	    </init-params>
 	  </component-plugin>
-	</external-component-plugins>
+	</external-component-plugins-->
 		
 </configuration>

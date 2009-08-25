@@ -1,40 +1,40 @@
 SkinService.addSkin(
-    "faq/FAQPortlet",
+    "faq/AnswersPortlet",
     "Default",
     "/faq/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
-    "faq/FAQPortlet",
+    "faq/AnswersPortlet",
     "Mac",
     "/faq/skin/MacSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
-    "faq/FAQPortlet",
+    "faq/AnswersPortlet",
     "Vista",
     "/faq/skin/VistaSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
-    "faq/FAQViewerPortlet",
+    "faq/FAQPortlet",
     "Default",
     "/faq/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
-    "faq/FAQViewerPortlet",
+    "faq/FAQPortlet",
     "Mac",
     "/faq/skin/MacSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
-    "faq/FAQViewerPortlet",
+    "faq/FAQPortlet",
     "Vista",
     "/faq/skin/VistaSkin/webui/Stylesheet.css",
     ServletContext

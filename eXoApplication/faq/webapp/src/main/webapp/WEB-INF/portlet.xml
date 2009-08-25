@@ -3,9 +3,9 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
   <portlet>
-    <description xml:lang="EN">FAQ Portlet</description>
-    <portlet-name>FAQPortlet</portlet-name>
-    <display-name xml:lang="EN">FAQ Portlet</display-name>
+    <description xml:lang="EN">Answers Portlet</description>
+    <portlet-name>AnswersPortlet</portlet-name>
+    <display-name xml:lang="EN">Answers Portlet</display-name>
     <portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>    
     
     <init-param>
@@ -22,8 +22,8 @@
     <supported-locale>en</supported-locale>
     <resource-bundle>locale.portlet.faq.FAQPortlet</resource-bundle>
     <portlet-info>
-      <title>FAQ Portlet</title>
-      <short-title>FAQ Portlet</short-title>
+      <title>Answers Portlet</title>
+      <short-title>Answers Portlet</short-title>
       <keywords>faq</keywords>
     </portlet-info>
     
@@ -97,9 +97,9 @@
   </portlet>
   
   <portlet>
-		<description xml:lang="EN">FAQ Viewer Portlet</description>
-		<portlet-name>FAQViewerPortlet</portlet-name>
-		<display-name xml:lang="EN">FAQ Viewer Portlet</display-name>
+		<description xml:lang="EN">FAQ Portlet</description>
+		<portlet-name>FAQPortlet</portlet-name>
+		<display-name xml:lang="EN">FAQPortlet</display-name>
 		<portlet-class>org.exoplatform.webui.application.portlet.PortletApplicationController</portlet-class>		
 		
 		<init-param>
@@ -115,9 +115,9 @@
 		<supported-locale>en</supported-locale>
 		<resource-bundle>locale.portlet.faq.FAQViewerPortlet</resource-bundle>
 		<portlet-info>
-			<title>FAQ Viewer Portlet</title>
-			<short-title>FAQ List Portlet</short-title>
-			<keywords>faq viewer</keywords>
+			<title>FAQ Portlet</title>
+			<short-title>FAQ Portlet</short-title>
+			<keywords>faq</keywords>
 		</portlet-info>
 	
 		<portlet-preferences>
