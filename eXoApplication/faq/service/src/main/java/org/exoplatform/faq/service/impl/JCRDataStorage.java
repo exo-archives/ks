@@ -1216,7 +1216,6 @@ public class JCRDataStorage {
 			else questionNode.save();
 			return questionNode;
 		}catch (Exception e) {
-			e.printStackTrace() ;
 		}finally {sProvider.close() ;}
 		return null ;
 	}
