@@ -1689,22 +1689,20 @@ public class UIQuestions extends UIContainer {
 			Question question = null ;
 
 			SessionProvider sessionProvider = FAQUtils.getSystemProvider();
-
 			try{
 				question = faqService_.getQuestionById(questionId, sessionProvider) ;
 			} catch (javax.jcr.PathNotFoundException e) {
-				e.printStackTrace() ;
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				questions.setIsNotChangeLanguage() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-				sessionProvider.close();
 				return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
-			} 
-			sessionProvider.close();
+			} finally{
+				sessionProvider.close();
+			}
 			UICommentForm commentForm = popupContainer.addChild(UICommentForm.class, null, null) ;
 			commentForm.setInfor(question, commentId, questions.faqSetting_, language_) ;
 			popupContainer.setId("FAQCommentForm") ;
