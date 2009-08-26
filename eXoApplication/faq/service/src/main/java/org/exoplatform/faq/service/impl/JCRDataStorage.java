@@ -1474,12 +1474,16 @@ public class JCRDataStorage {
 		try {
 			StringBuffer queryString = null;
 			String id ;
+			Node categoryNode ;
 			if(categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) {
 				id = Utils.CATEGORY_HOME ;
 				categoryId = Utils.CATEGORY_HOME ;
-			}
-			else id = categoryId.substring(categoryId.lastIndexOf("/") + 1) ;
-			Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId) ;
+				categoryNode = getCategoryHome(sProvider, null);
+			}else{
+				id = categoryId.substring(categoryId.lastIndexOf("/") + 1) ;
+				categoryNode = getFAQServiceHome(sProvider).getNode(categoryId) ;
+			} 
+			categoryNode = getFAQServiceHome(sProvider).getNode(categoryId) ;
 			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			//if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 			String userId = faqSetting.getCurrentUser();
@@ -2435,6 +2439,11 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
+			System.out.println("eventQuery.getQuery() ====>" + eventQuery.getQuery());
+			System.out.println("=======>iter > " + iter.getSize());
+			while (iter.hasNext()) {
+				System.out.println("=======>name > " + iter.nextNode().getPath());
+			}
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
