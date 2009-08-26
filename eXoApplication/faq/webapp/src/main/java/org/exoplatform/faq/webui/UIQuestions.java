@@ -446,7 +446,7 @@ public class UIQuestions extends UIContainer {
 	//update current language of viewing question
 	public void updateCurrentLanguage() throws Exception {
 		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0)
-		languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
+			languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
 		else languageMap.clear() ;
 	}
 
@@ -463,7 +463,8 @@ public class UIQuestions extends UIContainer {
 				}
 			} else languageMap.clear() ;
     } catch (Exception e) {
-    	languageMap.clear() ;
+    	viewingQuestionId_ = "";
+    	e.printStackTrace();
     }
 	}
 	
@@ -803,10 +804,8 @@ public class UIQuestions extends UIContainer {
 			uiQuestions.isSortAnswer = null;
 			uiQuestions.backPath_ = "" ;
 			//uiQuestions.pathToCurrentLanguage = "";
+			uiQuestions.viewingQuestionId_ = questionId ;
 			uiQuestions.updateLanguageMap() ;
-			if(uiQuestions.languageMap != null && uiQuestions.languageMap.size() > 0){
-				uiQuestions.viewingQuestionId_ = questionId ;
-			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;			 
 		}
 	}
