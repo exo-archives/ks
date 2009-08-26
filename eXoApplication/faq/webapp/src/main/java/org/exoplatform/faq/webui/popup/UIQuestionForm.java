@@ -116,6 +116,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private boolean isActivated_ = true ;
   private boolean isMode = false;
   private boolean isChildOfManager = false ;
+  private boolean isModerate = false;
+  private boolean isAddCheckBox = false;
   private FAQSetting faqSetting_ ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -193,14 +195,21 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     addChild(selectLanguage);
     addChild(inputAuthor) ;
     addChild(inputEmailAddress) ;
-    if(questionId_ != null && questionId_.trim().length() > 0) {
-    	String cateId = question_.getPath();
-    	if(!FAQUtils.isFieldEmpty(cateId))cateId = cateId.substring(0, cateId.indexOf("/"+org.exoplatform.faq.service.Utils.QUESTION_HOME));
-    	if(getIsModerator(cateId)){
-	      addChild(inputIsApproved.setChecked(isApproved_)) ;
+    isModerate = fAQService_.isModerateAnswer(getCategoryId());
+    isAddCheckBox = false;
+  	if(getIsModerator()){
+  		if(questionId_ != null && questionId_.trim().length() > 0) {
+	  		addChild(inputIsApproved.setChecked(isApproved_)) ;
 	      addChild(inputIsActivated.setChecked(isActivated_)) ;
-    	}
-    }
+	      isAddCheckBox = true;
+  		} else {
+  			if(isModerate){
+	  			addChild(inputIsApproved.setChecked(false)) ;
+	  			addChild(inputIsActivated.setChecked(true)) ;
+	  			isAddCheckBox = true;
+  			}
+  		}
+  	}
     addUIFormInput(inputAttachcment) ;
     if(question_ != null && !isEdit) {
       this.setListFileAttach(question_.getAttachMent()) ;
@@ -212,12 +221,14 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     }
   }
   
-  private boolean getIsModerator(String cateId) throws Exception{
+  private boolean getIsModerator() throws Exception{
   	try {
-  		if(isMode || faqSetting_.isAdmin() || fAQService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())) {
+  		if(isMode || faqSetting_.isAdmin()) {
   			isMode = true;
-  			return isMode ;
+  		} else if(question_ != null && fAQService_.isCategoryModerator(question_.getCategoryId(), FAQUtils.getCurrentUser())){
+  			isMode = true;
   		}
+  		return isMode ;
     } catch (Exception e) {e.printStackTrace();}
     return false;
 	}
@@ -397,7 +408,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     	UIQuestionForm questionForm = event.getSource() ;
     	try {
     		boolean isNew = true;
-	      boolean questionIsApproved = true ;
 	      DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy") ;
 	      java.util.Date date = new java.util.Date();
 	      String dateStr = dateFormat.format(date) ;
@@ -465,25 +475,36 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        question_ = new Question() ;
 	        question_.setCategoryId(questionForm.getCategoryId()) ;
 	        question_.setRelations(new String[]{}) ;
-	        try{
-	          questionIsApproved = !fAQService_.isModerateAnswer(questionForm.getCategoryId()) ;
-	        } catch(Exception exception){
-	          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-	          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
-	          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;          
-	          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-	          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-	          popupAction.deActivate() ;
-	          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-	          return;
-	        }
 	        question_.setCreatedDate(date) ;
-	        question_.setApproved(questionIsApproved) ;
 	      } else { // Edit question
 	      	isNew = false ;
-	      	if(questionForm.isMode){
+	      }
+	      
+	      /*try{
+          questionIsApproved = !fAQService_.isModerateAnswer(questionForm.getCategoryId()) ;
+        } catch(Exception exception){
+          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
+          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;          
+          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+          popupAction.deActivate() ;
+          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+          return;
+        }*/
+	      if(questionForm.isModerate){
+	      	if(questionForm.isAddCheckBox){
 		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
 		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	} else if(isNew){
+	      		question_.setApproved(false) ;
+	      	}
+	      } else {
+	      	if(questionForm.isAddCheckBox){
+		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
+		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	} else{
+	      		question_.setApproved(true) ;
 	      	}
 	      }
 	      question_.setLanguage(questionForm.getDefaultLanguage()) ;
@@ -539,7 +560,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 									topic.setDescription(question_.getDetail());
 									topic.setIsWaiting(true);
 									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
-									//System.out.println("\n\n ==========>" + ids[t - 3] + " / " + ids[t - 2]);
 								}
 	            } catch (Exception e) {
 	              e.printStackTrace();
@@ -554,7 +574,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 		        isNew = false;
 					}        
 	        if(isNew) {
-	          if(questionIsApproved) {
+	          if(!questionForm.isModerate || questionForm.isMode) {
 	          	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
 	          	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.add-new-question-successful", null, ApplicationMessage.INFO)) ;
 	          	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

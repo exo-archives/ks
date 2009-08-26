@@ -236,8 +236,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     		this.pageList = faqService_.getAllQuestions() ;
     		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer("All", false) ;
     	} else {
-    		this.pageList = faqService_.getAllQuestionsByCatetory(this.cateId_, this.faqSetting_);
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(this.cateId_, false) ;
+    		String cateId = cateId_;
+    		if(cateId.indexOf("/") > 0){
+    			cateId = cateId.substring(cateId.lastIndexOf("/")+1);
+    		}
+    		this.pageList = faqService_.getAllQuestionsByCatetory(cateId, this.faqSetting_);
+    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(cateId, false) ;
     	}
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;

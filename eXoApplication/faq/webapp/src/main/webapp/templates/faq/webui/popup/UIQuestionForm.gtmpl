@@ -58,7 +58,7 @@
 					<%  }
 					  }
 					}
-					if(uiform.isMode && uiform.questionId_ != null && uiform.questionId_.trim().length() > 0) {
+					if(uiform.isAddCheckBox) {
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
 						<tr>

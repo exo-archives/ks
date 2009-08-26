@@ -1572,16 +1572,25 @@ public class JCRDataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node categoryHome = getCategoryHome(sProvider, null) ;
-			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-																			append("//element(*,exo:faqQuestion)[(");
-			int i = 0 ;
-			for(String categoryId : listCategoryId) {
-				if ( i > 0) queryString.append(" or ") ;
-				queryString.append("(@exo:categoryId='").append(categoryId).append("')");				
-				i ++ ;
+			String cateId = listCategoryId.get(0);
+			String path = categoryHome.getPath();
+			if(!isNotYetAnswer){
+				if(cateId.indexOf(path) < 0) path = path+"/"+cateId+"/"+Utils.QUESTION_HOME;
 			}
-			queryString.append(")]order by @exo:createdDate ascending");
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(path).append("//element(*,exo:faqQuestion)");
+			if(isNotYetAnswer){
+				queryString.append("[(");
+				int i = 0 ;
+				for(String categoryId : listCategoryId) {
+					if ( i > 0) queryString.append(" or ") ;
+					queryString.append("(@exo:categoryId='").append(categoryId).append("')");
+					i ++ ;
+				}
+				queryString.append(")]");
+			}
+			queryString.append(" order by @exo:createdDate ascending");
+			System.out.println("\n\n query:" + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = null;
