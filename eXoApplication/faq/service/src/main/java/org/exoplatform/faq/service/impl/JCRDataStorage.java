@@ -50,6 +50,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.bouncycastle.voms.VOMSAttribute.FQAN;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -1481,16 +1482,19 @@ public class JCRDataStorage {
 			Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId) ;
 			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			//if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
-			if(faqSetting.getDisplayMode().equals("approved")) {
+			String userId = faqSetting.getCurrentUser();
+			if(faqSetting.getDisplayMode().equals("approved") || !faqSetting.isCanEdit()) {
 				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
-													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
-																				append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").
-																				append("]");
+													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')");
+				if(userId != null && userId.length() > 0){
+					queryString.append(" and (@exo:isActivated='true') and ((@exo:isApproved='true') or (@exo:author='").append(userId).append("'))").append("]");
+				}else{
+					queryString.append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").append("]");
+				}
 			} else {
 				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
 													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
-													append(" and (@exo:isActivated='true')").
-													append("]");
+													append(" and (@exo:isActivated='true')").append("]");
 			}
 			
 			queryString.append("order by ");
@@ -1508,7 +1512,7 @@ public class JCRDataStorage {
 				queryString.append("ascending");
 			} else {
 				queryString.append("descending");
-			}			
+			}
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();			
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;

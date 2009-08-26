@@ -76,6 +76,8 @@ public class FAQSetting {
 	
 	private String emailMoveQuestion = null;
 	
+	/** The Current User Login */
+	private String currentUser = "";
 	/**
 	 * This method get one value is Alphabet or Post Date.
 	 * 
@@ -282,5 +284,13 @@ public class FAQSetting {
 	public void setEmailMoveQuestion(String emailMoveQuestion) {
 		this.emailMoveQuestion = emailMoveQuestion;
 	}
+
+	public String getCurrentUser() {
+  	return currentUser;
+  }
+
+	public void setCurrentUser(String currentUser) {
+  	this.currentUser = currentUser;
+  }
 	
 }

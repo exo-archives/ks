@@ -4,7 +4,7 @@
 		<div class="HorizontalLayout" style="padding:10px 0px;">
 			<div class="UIFormInput">
 				<table class="UIFormGrid" style="width:95%">
-					<tbody>				
+					<tbody>
 					<% 
 					String url = uicomponent.url("Attachment", "OBJECTID") ;
 					uicomponent.setLink(url);
@@ -58,7 +58,7 @@
 					<%  }
 					  }
 					}
-					if(uiform.questionId_ != null && uiform.questionId_.trim().length() > 0) {
+					if(uiform.isMode && uiform.questionId_ != null && uiform.questionId_.trim().length() > 0) {
 					%>
 						<!-- ============== Validation apporved and activate ============================ -->
 						<tr>

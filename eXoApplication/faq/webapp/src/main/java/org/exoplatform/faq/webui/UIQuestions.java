@@ -196,7 +196,7 @@ public class UIQuestions extends UIContainer {
 		//this.isChangeLanguage = false;
 		try {
 			if(currentUser_ != null && currentUser_.trim().length() > 0){
-				//FAQServiceUtils serviceUtils = new FAQServiceUtils();
+				faqSetting_.setCurrentUser(currentUser_);
 				if(faqSetting_.getIsAdmin().equals("TRUE")){
 					faqSetting_.setCanEdit(true);
 				} else if(categoryId_ != null && categoryId_.trim().length() > 0 ){
@@ -930,8 +930,8 @@ public class UIQuestions extends UIContainer {
 				return ;
 			}
 			UIQuestionForm questionForm = popupContainer.addChild(UIQuestionForm.class, null, null) ;
-			questionForm.setQuestion(question) ;
 			questionForm.setFAQSetting(questions.faqSetting_);
+			questionForm.setQuestion(question) ;
 			popupContainer.setId("EditQuestion") ;
 			popupAction.activate(popupContainer, 900, 450) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

@@ -195,7 +195,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     addChild(inputEmailAddress) ;
     if(questionId_ != null && questionId_.trim().length() > 0) {
     	String cateId = question_.getPath();
-    	cateId = cateId.substring(0, cateId.indexOf("/"+org.exoplatform.faq.service.Utils.QUESTION_HOME));
+    	if(!FAQUtils.isFieldEmpty(cateId))cateId = cateId.substring(0, cateId.indexOf("/"+org.exoplatform.faq.service.Utils.QUESTION_HOME));
     	if(getIsModerator(cateId)){
 	      addChild(inputIsApproved.setChecked(isApproved_)) ;
 	      addChild(inputIsActivated.setChecked(isActivated_)) ;
@@ -213,8 +213,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   }
   
   private boolean getIsModerator(String cateId) throws Exception{
-		if(isMode || faqSetting_.isAdmin() || fAQService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())) return true ;
-		return false;
+  	try {
+  		if(isMode || faqSetting_.isAdmin() || fAQService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())) {
+  			isMode = true;
+  			return isMode ;
+  		}
+    } catch (Exception e) {e.printStackTrace();}
+    return false;
 	}
   
   public void setIsChildOfManager(boolean isChild) {
@@ -476,8 +481,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        question_.setApproved(questionIsApproved) ;
 	      } else { // Edit question
 	      	isNew = false ;
-	        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
-	        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	if(questionForm.isMode){
+		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
+		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	}
 	      }
 	      question_.setLanguage(questionForm.getDefaultLanguage()) ;
 	      question_.setAuthor(author) ;
