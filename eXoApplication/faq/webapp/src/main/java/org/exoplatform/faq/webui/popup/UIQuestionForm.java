@@ -590,13 +590,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      
 	      if(!questionForm.isChildOfManager) {
 	        UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-	        questions.setDefaultLanguage();
-	        questions.updateCurrentQuestionList() ;
-	      	if(!isNew && question_.getPath().equals(questions.viewingQuestionId_)){
-	      		questions.updateLanguageMap() ;
-	      	}
-	        
-	        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 	        popupAction.deActivate() ;
 	        event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;       
 	      } else {
@@ -610,6 +603,13 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        UIPopupContainer popupContainer = questionManagerForm.getParent() ;
 	        event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 	      }
+	      //update question list in question container.
+	      questions.setDefaultLanguage();
+        questions.updateCurrentQuestionList() ;
+      	if(!isNew && question_.getPath().equals(questions.viewingQuestionId_)){
+      		questions.updateLanguageMap() ;
+      	}
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
     	} catch (Exception e) {
     		e.printStackTrace();
       }

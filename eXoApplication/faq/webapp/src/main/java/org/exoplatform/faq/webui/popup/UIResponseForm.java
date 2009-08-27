@@ -240,7 +240,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	private void updateDiscussForum(String linkForum, String url) throws Exception{
+	private void updateDiscussForum(String linkForum) throws Exception{
 		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String topicId = question_.getTopicIdDiscuss();
@@ -250,9 +250,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				if(topic != null) {
 					String []ids = topic.getPath().split("/");
 					int t = ids.length;
-					//System.out.println("\n\n ======> " + ids[t-3]+" / "+ids[t-2]+" / "+topicId);
 					linkForum = linkForum.replaceFirst("OBJECTID", topicId);
-					linkForum = url + linkForum;
 					Post post;
 					int l = question_.getAnswers().length;
 					for (int i = 0; i < l; ++i) {
@@ -349,25 +347,9 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				UIQuestions uiQuestions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 				
 				//Link Question to send mail 
-				String link = responseForm.getLink().replaceFirst("UIResponseForm", "UIQuestions").replaceFirst("AddRelation", "ViewQuestion").replaceAll("&amp;", "&");
-	      String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-	      String portalName = "/" + Util.getUIPortal().getName() ;
-	      if(link.indexOf(portalName) > 0) {
-			    if(link.indexOf(portalName + "/" + selectedNode) < 0){
-			      link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			    }									
-				}	
-	      //TODO: move getURL to Utils
-				PortalRequestContext portalContext = Util.getPortalRequestContext();
-				String url = portalContext.getRequest().getRequestURL().toString();
-				url = url.replaceFirst("http://", "") ;
-				url = url.substring(0, url.indexOf("/")) ;
-				url = "http://" + url;
-				String path = "" ;
-				path = question_.getPath() ;
+				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
-				link = link.replaceFirst("OBJECTID", path);
-				link = url + link;
+				link = link.replaceFirst("OBJECTID", question_.getPath());
 				question_.setLink(link) ;
 				
 				// set answer to question for discuss forum function  
@@ -384,7 +366,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					//faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
 					
 					// author: Vu Duy Tu. Make discuss forum
-					responseForm.updateDiscussForum(linkForum, url);
+					responseForm.updateDiscussForum(linkForum);
 				} catch (PathNotFoundException e) {
 					e.printStackTrace();
 					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
@@ -414,6 +396,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					if(questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
 						questionForm.setIsChildOfManager(true) ;
 						questionForm.setQuestion(question_) ;
+						questionForm.setIsMode(true);
 					}
 					questionManagerForm.isResponseQuestion = false ;
 					UIPopupContainer popupContainer = questionManagerForm.getParent() ;

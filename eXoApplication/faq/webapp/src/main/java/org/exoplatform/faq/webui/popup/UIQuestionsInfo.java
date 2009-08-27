@@ -388,6 +388,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         UIQuestionManagerForm questionManagerForm = questionsInfo.getParent() ;
         if(questionManagerForm.isEditQuestion) {
           UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
+          questionForm.setIsMode(true);
           if(questionForm.getQuestionId().equals(questionId)) {
             questionManagerForm.isEditQuestion = false ;
           }
