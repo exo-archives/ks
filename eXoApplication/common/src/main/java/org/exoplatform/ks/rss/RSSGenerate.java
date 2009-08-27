@@ -141,7 +141,7 @@ public abstract class RSSGenerate {
 			if(isNew) nodeIsAdded.getSession().save();
 			else nodeIsAdded.save();
     } catch (RepositoryException e) {
-    	e.printStackTrace() ;
+    	//e.printStackTrace() ;
     }
 	}
 

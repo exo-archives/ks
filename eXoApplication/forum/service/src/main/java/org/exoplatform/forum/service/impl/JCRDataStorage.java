@@ -133,6 +133,7 @@ import org.w3c.dom.Document;
 @Managed
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="storage")})
 @ManagedDescription("Data Storage for this forum")
+@SuppressWarnings("unchecked")
 public class JCRDataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
@@ -1127,11 +1128,24 @@ public class JCRDataStorage {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node categoryNode = categoryHome.getNode(categoryId) ;
 			Category category = getCategory(categoryNode);
+			try {
+				categoryNode.setProperty("exo:tempModerators", ValuesToArray(categoryNode.getProperty("exo:moderators").getValues()));
+				categoryNode.setProperty("exo:moderators", new String[]{" "});
+				NodeIterator iter = categoryNode.getNodes();
+				while (iter.hasNext()) {
+		      Node node = iter.nextNode();
+		      if(node.isNodeType("exo:forum")){
+			      node.setProperty("exo:tempModerators", ValuesToArray(node.getProperty("exo:moderators").getValues()));
+			      node.setProperty("exo:moderators", new String[]{" "});
+		      }
+	      }
+				categoryNode.save();
+      } catch (Exception e) {}
 			categoryNode.remove();
 			categoryHome.save() ;			
 			return category;
 		} catch(Exception e) {
-		log.error("Failed to remover category " +categoryId, e);
+			log.error("Failed to remover category " +categoryId);
 			return null ;
 		}finally { sProvider.close() ;}		
 	}
@@ -1622,10 +1636,13 @@ public class JCRDataStorage {
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
 			Node forumNode = catNode.getNode(forumId);
 			forum = getForum(forumNode);
+			forumNode.setProperty("exo:tempModerators", ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
+			forumNode.setProperty("exo:moderators", new String[]{" "});
+			forumNode.save();
 			forumNode.remove();
 			catNode.setProperty("exo:forumCount", catNode.getProperty("exo:forumCount").getLong() - 1);
 			catNode.save();			
-			String[] moderators = forum.getModerators();
+		/*	String[] moderators = forum.getModerators();
 			Node userProfileHomeNode = getUserProfileHome(sProvider);
 			Node userProfileNode;
 			forumId = forum.getForumName() + "(" + categoryId + "/" + forumId;
@@ -1651,7 +1668,7 @@ public class JCRDataStorage {
 				userProfileHomeNode.getSession().save();
 			} else {
 				userProfileHomeNode.save();
-			}
+			}*/
 			return forum;
 		} catch(Exception e) {
 			return null;
@@ -2416,12 +2433,14 @@ public class JCRDataStorage {
 		try {
 			Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" +forumId);
 			Topic topic = getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST);
+			Node topicNode = forumNode.getNode(topicId);
 			String owner = topic.getOwner();
 			Node userProfileNode = getUserProfileHome(sProvider);
-			
 			Node newProfileNode = userProfileNode.getNode(owner);
 			newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
-			newProfileNode.save();
+			userProfileNode.save();
+			//calculate Total Post Of User
+//			calculateTotalPostOfUserWhenRemoveNode(sProvider, topicNode);
 			
 //		 TODO: Thinking for update forum and user profile by node observation?
 			// setTopicCount for Forum
@@ -2431,7 +2450,7 @@ public class JCRDataStorage {
 			long postCount = topic.getPostCount() + 1; //+1 for default post
 			long newPostCount = forumNode.getProperty("exo:postCount").getLong() - postCount;
 			forumNode.setProperty("exo:postCount", newPostCount);
-			forumNode.getNode(topicId).remove();
+			topicNode.remove();
 			forumNode.save();
 			if(!topic.getIsActive()|| !topic.getIsApproved() || topic.getIsWaiting()) {
 				List<String>userIdsp = new ArrayList<String>();
@@ -2447,6 +2466,51 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 
+//	TODO: Calculate total Post of User when remove Topic, Forum or Category. If usesing it, maybe will use Event listener
+	@SuppressWarnings("unused")
+  private void calculateTotalPostOfUserWhenRemoveNode(SessionProvider sProvider, Node node) throws Exception {
+		Node userProfileNode = getUserProfileHome(sProvider);
+		NodeIterator iter;
+		if(node.isNodeType("exo:topic")){
+			iter = node.getNodes();
+		} else {
+			StringBuilder strBuilder = new StringBuilder();
+			strBuilder.append("/jcr:root").append(node.getPath()).append("//element(*,exo:post)");
+			QueryManager qm = node.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			iter = result.getNodes();
+		}
+		try {
+			Map<String, Integer> mapUser = new HashMap<String, Integer>();
+			String str; int t;
+			List<String> listUser = new ArrayList<String>();
+			while (iter.hasNext()) {
+	      Node node_ = (Node) iter.nextNode();
+	      if(node_.isNodeType("exo:post")){
+	      	str = node_.getProperty("exo:owner").getString();
+	      	if(mapUser.containsKey(str)){
+			    	t = mapUser.get(str) + 1;
+			    } else {
+			    	t = 1;
+			    	listUser.add(str);
+			    }
+			    mapUser.put(str, t);
+	      }
+      }
+			Node userNode; long l;
+			for (String user : listUser) {
+		    userNode = userProfileNode.getNode(user);
+		    l = userNode.getProperty("exo:totalPost").getLong() - mapUser.get(user);
+		    if(l < 0) l = 0;
+		    userNode.setProperty("exo:totalPost", l);
+	    }
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+		userProfileNode.save();
+	}
+	
 	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
 		List<String> list = new ArrayList<String>();
 		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
@@ -5764,7 +5828,6 @@ public class JCRDataStorage {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
 		try {
 			Calendar cal = new GregorianCalendar();
@@ -5781,8 +5844,8 @@ public class JCRDataStorage {
 	}
 	
 	
-	@SuppressWarnings({ "unchecked", "unused" })
-	private void updateImportedData(String path) throws Exception {
+	@SuppressWarnings("unused")
+  private void updateImportedData(String path) throws Exception {
 		try {
 			Calendar cal = new GregorianCalendar();
 			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
@@ -6833,7 +6896,6 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void addOrRemoveSchedule(PruneSetting pSetting) throws Exception {
 		Calendar cal = new GregorianCalendar();
 		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, -1, (pSetting.getPeriodTime() * 86400000)); // pSetting.getPeriodTime() return value is Day.
