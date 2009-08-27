@@ -86,7 +86,7 @@
 														<table class="UIGrid">
 															<tr>
 																<th><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Question")%></b></th>
-																<th><b>Category</b></th>
+																<th><b><%=_ctx.appRes("UIUserWatchManager.label.pathCategory");%></b></th>
 																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsApproved")%></b></th>
 																<th style="width:100px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionIsActivated")%></b></th>
 																<th style="width:60px"><b><%=_ctx.appRes(uicomponent.getName() + ".label." + "Action")%></b></th>
