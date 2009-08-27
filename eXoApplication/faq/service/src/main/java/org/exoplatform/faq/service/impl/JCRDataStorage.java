@@ -1102,12 +1102,11 @@ public class JCRDataStorage {
 			questionNode.setProperty("exo:createdDate", cal.getInstance()) ;
 			questionNode.setProperty("exo:language", question.getLanguage()) ;
 		} 
-		if(question.getCategoryId().equals(Utils.CATEGORY_HOME)) {
-			questionNode.setProperty("exo:categoryId", question.getCategoryId()) ;			
-		}else {
-			String catId = question.getCategoryId() ;
-			questionNode.setProperty("exo:categoryId", catId.substring(catId.lastIndexOf("/") + 1)) ;
-		}		
+		String catId = question.getCategoryId() ;
+		if(!question.getCategoryId().equals(Utils.CATEGORY_HOME)) {
+			catId = catId.substring(catId.lastIndexOf("/") + 1) ;
+		}
+		questionNode.setProperty("exo:categoryId", catId) ;
 		questionNode.setProperty("exo:isActivated", question.isActivated()) ;
 		questionNode.setProperty("exo:isApproved", question.isApproved()) ;
 		questionNode.setProperty("exo:relatives", question.getRelations()) ;
@@ -1125,12 +1124,11 @@ public class JCRDataStorage {
 						else nodeFile = questionNode.addNode(att.getNodeName(), "exo:faqAttachment");
 						// fix permission to download file in ie 6:
 						FAQServiceUtils.reparePermissions(nodeFile, "any");
-						
-						nodeFile.setProperty("exo:fileName", att.getName()) ;
 						Node nodeContent = null;
 						if (nodeFile.hasNode("jcr:content")) nodeContent = nodeFile.getNode("jcr:content");
-						else	nodeContent = nodeFile.addNode("jcr:content", "nt:resource") ;
-						
+						else	nodeContent = nodeFile.addNode("jcr:content", "exo:faqResource") ;
+						nodeContent.setProperty("exo:fileName", att.getName()) ;
+						nodeContent.setProperty("exo:categoryId", catId) ;
 						nodeContent.setProperty("jcr:mimeType", att.getMimeType());
 						nodeContent.setProperty("jcr:data", att.getInputStream());
 						nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
@@ -1144,7 +1142,7 @@ public class JCRDataStorage {
 		Node node = null ;
 		while(nodeIterator.hasNext()){
 			node = nodeIterator.nextNode() ;
-			if(node.isNodeType("nt:file") && !listNodeNames.contains(node.getName())) node.remove() ;
+			if(node.isNodeType("exo:faqAttachment") && !listNodeNames.contains(node.getName())) node.remove() ;
 		}
 		
 		// reset link of question before send mail:
@@ -1280,17 +1278,16 @@ public class JCRDataStorage {
 		Node nodeFile ;
 		Node node ;
 		FileAttachment attachment =	null;
-		String workspace = "";
+		String workspace = questionNode.getSession().getWorkspace().getName() ;;
 		while(nodeIterator.hasNext()){
 			node = nodeIterator.nextNode() ;
-			if(node.isNodeType("nt:file")) {
+			if(node.isNodeType("exo:faqAttachment")) {
 				attachment = new FileAttachment() ;
 				nodeFile = node.getNode("jcr:content") ;
 				attachment.setId(node.getPath());
 				attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
 				attachment.setNodeName(node.getName());
-				attachment.setName(node.getProperty("exo:fileName").getValue().getString());
-				workspace = node.getSession().getWorkspace().getName() ;
+				attachment.setName(nodeFile.getProperty("exo:fileName").getValue().getString());				
 				attachment.setWorkspace(workspace) ;
 				attachment.setPath("/" + workspace + node.getPath()) ;
 				try{
@@ -1674,7 +1671,16 @@ public class JCRDataStorage {
 					faqHome.getSession().move(homePath+ "/" + id, homePath + "/" + destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
 					faqHome.getSession().save() ;
 					Node question = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
-					question.setProperty("exo:categoryId", destCategoryId.substring(destCategoryId.lastIndexOf("/")+ 1)) ;
+					String catId = destCategoryId.substring(destCategoryId.lastIndexOf("/")+ 1) ;
+					question.setProperty("exo:categoryId", catId) ;
+					NodeIterator iter = question.getNodes() ;
+					Node attNode ;
+					while(iter.hasNext()) {
+						attNode = iter.nextNode() ;
+						if(attNode.isNodeType("exo:faqAttachment")) {
+							attNode.setProperty("exo:categoryId", catId) ;
+						}
+					}
 					question.save() ;
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;
@@ -2448,11 +2454,6 @@ public class JCRDataStorage {
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			System.out.println("eventQuery.getQuery() ====>" + eventQuery.getQuery());
-			System.out.println("=======>iter > " + iter.getSize());
-			while (iter.hasNext()) {
-				System.out.println("=======>name > " + iter.nextNode().getPath());
-			}
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
@@ -2470,15 +2471,10 @@ public class JCRDataStorage {
 				while(iter.hasNext()){
 					nodeObj = iter.nextNode();
 					if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
+					if(nodeObj.isNodeType("exo:faqResource")) listQuestion.add(nodeObj.getParent().getParent()) ;
 					if(nodeObj.isNodeType("exo:faqLanguage")) listLanguage.add(nodeObj) ;
 					if(nodeObj.isNodeType("exo:answer")) listAnswer.add(nodeObj) ;
 				}
-				/*System.out.println("mapQuestionNode=>" + listQuestion.size());
-				System.out.println("mapLanguageNode=>" + listLanguage.size());
-				System.out.println("mapAnswerNode=>" + listAnswer.size());
-				System.out.println("eventQuery.isQuestionLevelSearch()=>" + eventQuery.isQuestionLevelSearch());
-				System.out.println("eventQuery.isAnswerLevelSearch()=>" + eventQuery.isAnswerLevelSearch());
-				System.out.println("eventQuery.isLanguageLevelSearch()=>" + eventQuery.isLanguageLevelSearch());*/
 				
 				if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
 				if(eventQuery.isAnswerLevelSearch() && listAnswer.isEmpty()) return results ;

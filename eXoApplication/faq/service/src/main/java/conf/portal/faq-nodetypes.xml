@@ -110,6 +110,27 @@
   	</childNodeDefinitions>
   </nodeType>
   
+  <nodeType	name="exo:faqResource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	 	<supertypes>
+	 	  <supertype>nt:resource</supertype>
+	 	</supertypes>
+	 	<propertyDefinitions>
+	 		<propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  	  </propertyDefinition>
+  	  <propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false"
+        onParentVersion="COPY" protected="false" multiple="false">
+        <valueConstraints/>
+      </propertyDefinition>	  		
+  	</propertyDefinitions>	
+  </nodeType>
+  
+  <nodeType	name="exo:faqAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	 	<supertypes>
+	 	  <supertype>nt:file</supertype>
+	 	</supertypes>	 		
+  </nodeType>	 
+  
   <nodeType name="exo:faqQuestion" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
   	<supertypes>
   		<supertype>nt:base</supertype>
@@ -180,9 +201,9 @@
       <!-- End for migration data -->
   	</propertyDefinitions>
   	<childNodeDefinitions>
-			<childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:faqAttachment" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
 				<requiredPrimaryTypes>
-				<requiredPrimaryType>nt:file</requiredPrimaryType>
+				<requiredPrimaryType>exo:faqAttachment</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:commentHome" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
@@ -209,18 +230,7 @@
 		    </requiredPrimaryTypes>
 	   </childNodeDefinition>  
   	</childNodeDefinitions>
-  </nodeType>
-  
-	<nodeType	name="exo:faqAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-	 	<supertypes>
-	 	  <supertype>nt:file</supertype>
-	 	</supertypes>
-	 	<propertyDefinitions>
-  	  <propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-  		<valueConstraints/>
-  	  </propertyDefinition>	  		
-  	</propertyDefinitions>	
-  </nodeType>	 
+  </nodeType>	
   
   <nodeType name="exo:faqRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
   	<supertypes>

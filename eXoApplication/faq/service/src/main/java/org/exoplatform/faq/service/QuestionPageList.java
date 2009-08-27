@@ -570,17 +570,16 @@ public class QuestionPageList extends JCRPageList {
     Node nodeFile ;
     Node node ;
     FileAttachment attachment =  null;
-    String workspace = "";
+    String workspace = questionNode.getSession().getWorkspace().getName() ;
     while(nodeIterator.hasNext()){
       node = nodeIterator.nextNode() ;
-      if(node.isNodeType("nt:file")) {
+      if(node.isNodeType("exo:faqAttachment")) {
         attachment = new FileAttachment() ;
         nodeFile = node.getNode("jcr:content") ;
         attachment.setId(node.getPath());
         attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
         attachment.setNodeName(node.getName());
-        attachment.setName(node.getProperty("exo:fileName").getValue().getString());
-        workspace = node.getSession().getWorkspace().getName() ;
+        attachment.setName(nodeFile.getProperty("exo:fileName").getValue().getString());
         attachment.setWorkspace(workspace) ;
         attachment.setPath("/" + workspace + node.getPath()) ;
         try{
