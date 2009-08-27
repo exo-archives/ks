@@ -83,15 +83,16 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
   static public class OkActionListener extends EventListener<UIDeleteQuestion> {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
-      //SessionProvider sessionProvider = FAQUtils.getSystemProvider();
       deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getPath()) ;
+      UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      questions.setDefaultLanguage() ;
+      questions.updateCurrentQuestionList() ;
+    	if(deleteQuestion.question_.getPath().equals(questions.viewingQuestionId_)){
+    		questions.viewingQuestionId_ = "";
+    	}
       if(!deleteQuestion.isManagement_) {
-        UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-        UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
-        questions.setDefaultLanguage() ;
-        questions.updateCurrentQuestionList() ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } else {
@@ -100,6 +101,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
+      event.getRequestContext().addUIComponentToUpdateByAjax(portlet.findFirstComponentOfType(UIFAQContainer.class)) ;
     }
   }
   
