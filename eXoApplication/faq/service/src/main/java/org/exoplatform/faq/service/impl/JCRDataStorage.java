@@ -50,7 +50,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.bouncycastle.voms.VOMSAttribute.FQAN;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -1731,15 +1730,17 @@ public class JCRDataStorage {
 	public long getMaxindexCategory(String parentId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		long max = 0 ;
-		try {			
-			return getFAQServiceHome(sProvider).getNode(parentId).getNodes().getSize() ;
+		try {
+			NodeIterator iter = getFAQServiceHome(sProvider).getNode(parentId).getNodes();
+			while (iter.hasNext()) {
+	      Node node = iter.nextNode();
+	      if(node.isNodeType("exo:faqCategory")) max = max + 1;
+      }
 		}catch (Exception e) {
-			e.printStackTrace() ;			
 		}finally { sProvider.close() ;}
 		return max ;
 	}
 	
-	@SuppressWarnings("static-access")
 	private void saveCategory(Node categoryNode, Category category, boolean isNew, SessionProvider sProvider) throws Exception {
 		Map<String, String> moderators = new HashMap<String, String> () ;
 		if(!categoryNode.getName().equals(Utils.CATEGORY_HOME)) {

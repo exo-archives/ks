@@ -74,7 +74,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   private static boolean isAddNew_ = true ;
   private String oldName_ = "";
   private Category currentCategory_ ;
-  
+  private static long maxIndex = 1;
 	public UICategoryForm() throws Exception {
 		faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	}
@@ -83,8 +83,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		isAddNew_ = isAddNew ;
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
-    UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;    
-    if (isAddNew) index.setValue(String.valueOf(faqService_.getMaxindexCategory(parentId_) + 1));
+    UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
+    maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
+    if(isAddNew)index.setValue(String.valueOf(maxIndex));
     inputset.addUIFormInput(index) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null)) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null)) ;
@@ -231,7 +232,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
       }
-      long index = 0;
+      long index = 1;
       String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;
       if(strIndex != null && strIndex.trim().length() > 0) {
       	try {
@@ -243,6 +244,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	        return ;
         }
       }
+      if(index > maxIndex) index = maxIndex;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
@@ -303,8 +305,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			faqPortlet.cancelAction() ;
 			//questions.setQuestions() ; //?
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-			return ;
-
 		}
 	}
 
