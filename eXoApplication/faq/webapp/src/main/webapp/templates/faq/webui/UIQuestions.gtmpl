@@ -62,7 +62,7 @@
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
 															<div class="Icon FAQRSS">
-																<a href="$linkRss" target="_blank">RSS</a>
+																<a href="$linkRss" target="_blank"><%=_ctx.appRes("UIQuestions.action.RSS"); %></a>
 															</div>
 														</div>
 													</div>
@@ -80,7 +80,7 @@
 													<div class="CenterOverButton">
 														<div class="Icon CategoryManager">
 															<div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
-																<a href="javascript:void(0);">Manage Category</a>
+																<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.ManageCategory"); %></a>
 															</div>
 														</div>
 													</div>
@@ -1249,7 +1249,7 @@
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
+										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Print")%></a>
 									</div>
 								</div>
 							</div>
@@ -1258,7 +1258,7 @@
 							<div class="ButtonLeft">
 								<div class="ButtonRight">
 									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
+										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.ClosePrintQuestion")%></a>
 									</div>
 								</div>
 							</div>

@@ -48,8 +48,8 @@
 						  	t = t + 1 ;
 						  } %>
 						 <div class="ScrollButtons" style="width:35px;_width:50px;padding: 4px 1px 0px 1px;">
-							<div title="Previous">
-								<div title="Next"><span></span></div>
+							<div title="<%=_ctx.appRes("UIBreadcumbs.label.Previous")%>">
+								<div title="<%=_ctx.appRes("UIBreadcumbs.label.Next")%>"><span></span></div>
 							</div>
 						</div>
 						  <div style="clear:left"><span></span></div>
