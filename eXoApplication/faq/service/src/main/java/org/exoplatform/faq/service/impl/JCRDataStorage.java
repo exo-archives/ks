@@ -2471,7 +2471,6 @@ public class JCRDataStorage {
 				while(iter.hasNext()){
 					nodeObj = iter.nextNode();
 					if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
-					//TODO:
 					if(nodeObj.isNodeType("exo:faqResource")) listQuestion.add(nodeObj.getParent().getParent()) ;
 					if(nodeObj.isNodeType("exo:faqLanguage")) listLanguage.add(nodeObj) ;
 					if(nodeObj.isNodeType("exo:answer")) listAnswer.add(nodeObj) ;
