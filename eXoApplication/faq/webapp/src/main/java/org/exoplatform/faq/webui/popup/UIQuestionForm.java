@@ -569,7 +569,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      	// end discuss
 					if(fAQService_.saveQuestion(question_, isNew, questionForm.faqSetting_) == null) {
 						UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-		        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
+		        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-deleted", null, ApplicationMessage.WARNING)) ;
 		        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 		        isNew = false;
 					}        
