@@ -142,9 +142,9 @@
 			</propertyDefinition>
 		</propertyDefinitions>
 		<childNodeDefinitions>
-			<childNodeDefinition name="*" defaultPrimaryType="nt:file" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumAttachment" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="true">
 				<requiredPrimaryTypes>
-				<requiredPrimaryType>nt:file</requiredPrimaryType>
+				<requiredPrimaryType>exo:forumAttachment</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>

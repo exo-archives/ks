@@ -565,4 +565,12 @@ public class Utils {
 		}
 	  return builder.toString();
   }
+	
+	public static boolean isListContentItemList(List<String> list, List<String> list1) {
+		if(list1.size() == 1 && list1.get(0).equals(" ")) return false;
+		for (String string : list1) {
+	    if(list.contains(string)) return true;
+    }
+	  return false;
+  }
 }
