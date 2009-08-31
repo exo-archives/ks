@@ -140,7 +140,7 @@
 								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
 								<% linkURL = uicomponent.event("CreatedLink", newMember) ; %>
 								<div style="position:relative;">
-									<div class="UIPopupCategory" style="display:none; left:160px; top:0px; width:140px">
+									<div class="UIPopupCategory" style="display:none; left:60px; top:0px; width:140px">
 										<div class="UIRightClickPopupMenu" style="display:block;">
 											<div class="UIContextMenuContainer">
 												<div class="TopLeftRightClickPopupMenu">

@@ -5553,7 +5553,12 @@ public class JCRDataStorage {
 					}
 				}
 				if(isAdd){
-					listSearchEvent.add(setPropertyForForumSearch(nodeObj, Utils.POST));
+					String type = Utils.POST;
+					if(nodeObj.getProperty("exo:isFirstPost").getBoolean()) {
+						nodeObj = nodeObj.getParent();
+						type = Utils.TOPIC;
+					}
+					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
 				}
 			}
 		}
