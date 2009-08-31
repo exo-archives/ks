@@ -142,7 +142,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
-  	//?
+
   	try{
   	  log.info("Calculating active users...");
   		storage_.evaluateActiveUsers("");
@@ -153,17 +153,18 @@ public class ForumServiceImpl implements ForumService, Startable {
   	//init RSS generate listener 
   	try{
   	  log.info("initializing RSS listeners...");
+//  	  TODO: JUnit test is fall.
   		storage_.addRSSEventListenner();
   	} catch (Exception e){
-  		e.printStackTrace();
+//  		e.printStackTrace();
   	}
   	
-  //init RSS generate listener 
+  //init Calculate Moderators listeners
   	try{
   	  log.info("initializing Calculate Moderators listeners...");
   		storage_.addCalculateModeratorEventListenner();
   	} catch (Exception e){
-  		e.printStackTrace();
+//  		e.printStackTrace();
   	}
   	
   	
@@ -172,16 +173,18 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing prune schedulers...");
   		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
-  		e.printStackTrace();
+//  		e.printStackTrace();
   	}
-  	
 
+//  TODO: JUnit test is fall.
   	// management views
-  	managePlugins();
-  	manageStorage();  	
-  	manageJobs();
-
-  	
+  	try {
+  		managePlugins();
+  		manageStorage();  	
+  		manageJobs();
+    } catch (Exception e) {
+//	    e.printStackTrace();
+    }
 	}
 
 

@@ -23,7 +23,6 @@ import javax.jcr.observation.EventListener;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 public class CategoryEventListener implements EventListener{
 	private String workspace_ ;
@@ -44,12 +43,9 @@ public class CategoryEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
-					SessionProvider sProvider = SessionProvider.createSystemProvider();
 					try {
-						forumService.registerListenerForCategory(sProvider, ev.getPath());
+						forumService.registerListenerForCategory(ev.getPath());
           } catch (Exception e) {
-          }finally {
-          	sProvider.close();
           }
 				}else if(ev.getType() == Event.NODE_REMOVED) {
 					forumService.unRegisterListenerForCategory(ev.getPath()) ;
