@@ -1199,6 +1199,7 @@ public class JCRDataStorage {
 					questionHome = category.getNode(Utils.QUESTION_HOME) ;
 				}catch(PathNotFoundException ex) {
 					questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+//					TODO: JUnit test is fall
 					addRSSListener(questionHome) ;
 				}
 				questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
@@ -1709,7 +1710,7 @@ public class JCRDataStorage {
 	}
 	
 	
-	public QuestionPageList getQuestionsNotYetAnswer() throws Exception {
+	/*public QuestionPageList getQuestionsNotYetAnswer() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node categoryHome = getCategoryHome(sProvider, null) ;
@@ -1725,7 +1726,7 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return null ;
-	}
+	}*/
 	
 	public long getMaxindexCategory(String parentId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1808,7 +1809,7 @@ public class JCRDataStorage {
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes() ;
-		if(iter.getSize() > index) {
+		if(iter.getSize() >= index) {
 			long i = 1 ;
 			Node cat ;
 			while(iter.hasNext()) {
@@ -1829,6 +1830,7 @@ public class JCRDataStorage {
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
 			  newCategory.addMixin("mix:faqSubCategory") ;
 			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+//			  TODO: JUnit test is fall
 			  addRSSListener(questionHome) ;
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
@@ -2800,6 +2802,7 @@ public class JCRDataStorage {
 		long index = mockCategory.getProperty("exo:index").getValue().getLong() ;
 		if(goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
 			goingCategory.setProperty("exo:index", index) ;
+			goingCategory.save();
 			resetIndex(goingCategory, index) ;
 		}else {
 			String id = goingCategory.getName() ;
@@ -2807,6 +2810,7 @@ public class JCRDataStorage {
 			mockCategory.getSession().save() ;
 			Node destCat = mockCategory.getParent().getNode(id) ;
 			destCat.setProperty("exo:index", index) ;
+			destCat.save();
 			resetIndex(destCat, index) ;
 		}
 	}

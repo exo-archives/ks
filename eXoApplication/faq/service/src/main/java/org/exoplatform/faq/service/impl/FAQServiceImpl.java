@@ -84,8 +84,9 @@ public class FAQServiceImpl implements FAQService, Startable{
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
 	public void start() {
+//		TODO: JUni test is fall
 		try{
-			jcrData_.reInitRSSEvenListener();			
+			jcrData_.reInitRSSEvenListener();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
