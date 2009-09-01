@@ -2178,7 +2178,7 @@ public class JCRDataStorage {
 			if (strOrderBy != null && strOrderBy.trim().length() > 0) {
 				stringBuffer.append(",@exo:").append(strOrderBy);
 			}
-			stringBuffer.append(",exo:createdDate");
+			stringBuffer.append(",exo:createdDate ascending");
 			String pathQuery = stringBuffer.toString();
 			Query query = qm.createQuery(pathQuery, Query.XPATH);
 			QueryResult result = query.execute();
@@ -5518,7 +5518,7 @@ public class JCRDataStorage {
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 		StringBuilder strQuery = new StringBuilder();
 		strQuery.append("/jcr:root").append(path).append("//element(*,nt:resource) [");
-		strQuery.append("(jcr:contains(., '").append(key).append("'))]") ;
+		strQuery.append("(jcr:contains(., '").append(key).append("*'))]") ;
 //		System.out.println("\n\n---------> strQuery:" + strQuery.toString());
 		Query query = qm.createQuery(strQuery.toString(), Query.XPATH);
 		QueryResult result = query.execute();

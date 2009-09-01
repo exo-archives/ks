@@ -32,7 +32,7 @@ public class UserProfile {
 	private String screenName;
 	private String userTitle ; //Rank of user
 	private long userRole ; // values: 0: Admin ; 1: Moderator ; 2: User ; 3 guest
-	private String signature ;
+	private String signature = "" ;
 	private long totalPost = 0;
 	private long totalTopic = 0;
 	private long jobWattingForModerator = 0;

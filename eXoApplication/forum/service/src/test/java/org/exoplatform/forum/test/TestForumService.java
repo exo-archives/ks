@@ -207,6 +207,15 @@ public class TestForumService extends BaseForumTestCase{
   	list.clear();
   	list.addAll(Arrays.asList(forum.getModerators()));
   	assertEquals(list.contains("demo"), true);
+  	
+  	// test moderator of category.
+  	cat.setModerators(new String[]{"admin", "john"});
+  	forumService_.saveCategory(cat, false);
+  	forum = forumService_.getForum(catId, forumId);
+  	list.clear();
+  	list.addAll(Arrays.asList(forum.getModerators()));
+  	assertEquals("Forum in category can not content moderatort user admin", list.contains("admin"), true);
+  	
   	// test moveForum, Move list Forum from Category 'cat' to Category 'cate'
   	
   	//create new Category
@@ -279,16 +288,17 @@ public class TestForumService extends BaseForumTestCase{
     // get Topic By User
     topic = createdTopic();
     topic.setOwner("demo");
-    //forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
-    // We have 21 topic: 20 by root and 1 by tu.duy
-//    pagelist = forumService_.getPageTopicByUser("demo", true, "");
-//    List<Post> posts = pagelist.getPage(1);
-//    for (Post post : posts) {
-//	    System.out.println("\n\n post: " + post.getName());
-//    }
-//    System.out.println("\n\n " + pagelist.getAvailable());
+    forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
+    /*// We have 21 topic: 20 by root and 1 by tu.duy
+    pagelist = forumService_.getPageTopicByUser("demo", false, "");
+    List<Post> posts = pagelist.getPage(1);
+    for (Post post : posts) {
+	    System.out.println("\n\n post: " + post.getName());
+    }
+    System.out.println("\n\n " + pagelist.getAvailable());
     //assertEquals(pagelist.getAvailable(), 20);
-//	move Topic
+*/
+    //	move Topic
 //	move topic from forum to forum 1
 		Forum forum1 = createdForum();
 		forumService_.saveForum(cat.getId(), forum1, true);
@@ -484,11 +494,16 @@ public class TestForumService extends BaseForumTestCase{
 		Tag tag = createTag("Tag1");
 		Tag tag2 = createTag("Tag2");
 		Tag tag3 = createTag("Tag3");
-
-		//	Test save tag:
-		forumService_.saveTag(tag);
-		forumService_.saveTag(tag2);
-		forumService_.saveTag(tag3);
+		
+	// add tag
+		List<Tag> tags = new ArrayList<Tag>();
+		tags.add(tag);
+		tags.add(tag2);
+		tags.add(tag3);
+		Topic topic = forumService_.getTopic(categoryId, forumId, topicId, "");
+		forumService_.addTag(tags, USER_ROOT, topic.getPath());
+		// get Tags name in topic by root.
+//		List<String> list = forumService_.getTagNameInTopic(USER_ROOT+","+topicId);
 		
 		//	Test get tag
 		String id = Utils.TAG + tag.getName();
@@ -496,7 +511,8 @@ public class TestForumService extends BaseForumTestCase{
 		assertNotNull(tag);
 		
 		//	Get all tag
-		assertEquals(3, forumService_.getAllTags().size());
+		assertEquals("All tags size is not 3", 3, forumService_.getAllTags().size());
+		
   }
   
   public void testSearch() throws Exception {
