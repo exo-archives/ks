@@ -19,7 +19,10 @@
 <div class="UIBannerPortlet UIApplication">
 	<div class="ApplicationMinWidth">
 		<div class="MiddleBanner_">
-		 	<div class="BannerTitle_"><span></span></div>
+<%
+  String pageURI = Util.getPortalRequestContext().getPortalURI() + "home";
+%>	
+		 	<div class="BannerTitle_"><a href="$pageURI" style="display: block; width: 100%;height:100%" title="<%=_ctx.appRes("banner.goHome")%>">&nbsp;</a></div>
 			<div class="LoginContainer">
 				<div class="LeftContainer">
 					<div class="RightContainer">

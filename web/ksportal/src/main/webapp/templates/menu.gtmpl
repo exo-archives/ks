@@ -133,12 +133,14 @@
 											 node.getUri() == selectedNode.getUri()) {
 											tabStyleNavigation = "SelectedNavigationTab" ;
 										}
+		                				stl = "" ;
+			            				if ("home".equals(node.getUri())) {stl = "style='display:none;'" };  										
 										String icon = node.getIcon();
 										if(icon == null) icon = "DefaultPageIcon";
 						%>			
 						
 										<div class="UITab">
-											<div class="$tabStyleNavigation">
+											<div class="$tabStyleNavigation" $stl>
 												<div class="LeftTab">
 													<div class="RightTab">
 														<div class="MiddleTab">

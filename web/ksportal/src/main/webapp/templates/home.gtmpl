@@ -56,6 +56,38 @@
 									
 								</div>
 							</td>
+							
+							<td>
+							<%String answersuri = Util.getPortalRequestContext().getPortalURI() + "answers" %>
+								<div class="Decorator" style="margin: 8px 0px 0px 4px">
+									
+									<div class="DecoratorML">
+										<div class="DecoratorMR">
+											<div class="DecoratorMC">
+												<div class="TryNowIcon">
+													<div class="FAQIcon">
+														<div class="FAQLabel">
+															<div class="Title"><a href="$answersuri">Answers</a></div>
+															<div class="Label">Capture and manage key answers </div>
+															<div class="Label">efficiently in Answers.</div>
+														</div>
+													</div>
+												</div>
+												<div style="margin:0px 0px 0px 90px;">
+													<div class="CheckIcon">Organize in categories</div>
+													<div class="CheckIcon">Multiple answers, comments</div>
+													<div class="CheckIcon">Multi-language Q/A</div>
+													<div class="CheckIcon">Moderation</div>
+													<div class="CheckIcon">RSS and email Watch</div>
+												</div>
+												<div style="clear: left;"><span></span></div>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</td>
+							
 							<td>
 							<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
 								<div class="Decorator" style="margin: 8px 0px 0px 4px">
@@ -67,17 +99,17 @@
 													<div class="FAQIcon">
 														<div class="FAQLabel">
 															<div class="Title"><a href="$faquri">FAQ</a></div>
-															<div class="Label">Capture and manage key knowledge </div>
-															<div class="Label">efficiently in FAQ.</div>
+															<div class="Label">Publish forged knowledge </div>
+															<div class="Label">into straighforward FAQs</div>
 														</div>
 													</div>
 												</div>
 												<div style="margin:0px 0px 0px 90px;">
-													<div class="CheckIcon">Unlimited categories and questions</div>
-													<div class="CheckIcon">Public / private categories</div>
-													<div class="CheckIcon">Multi-language Q/A</div>
-													<div class="CheckIcon">Questions moderation</div>
-													<div class="CheckIcon">and many more!</div>
+													<div class="CheckIcon">Publish categories from Answers</div>
+													<div class="CheckIcon">Fully customizable template</div>
+													<div class="CheckIcon"></div>
+													<div class="CheckIcon"></div>
+													<div class="CheckIcon"></div>
 												</div>
 												<div style="clear: left;"><span></span></div>
 											</div>
@@ -85,7 +117,9 @@
 									</div>
 									
 								</div>
-							</td>
+							</td>							
+							
+							
 						</tr>
 					</table>
 				</div>

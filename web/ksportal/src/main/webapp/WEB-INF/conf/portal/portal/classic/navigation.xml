@@ -23,6 +23,12 @@
       <page-reference>portal::classic::answers</page-reference>
     </node>
     <node>
+      <uri>faq</uri>
+      <name>faq</name>
+      <label>#{portal.classic.faq}</label>
+      <page-reference>portal::classic::faq</page-reference>
+    </node>    
+    <node>
       <uri>tour</uri>
       <name>tour</name>
       <label>#{portal.classic.tour}</label>

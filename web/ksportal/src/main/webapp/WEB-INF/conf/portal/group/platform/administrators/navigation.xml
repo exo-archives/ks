@@ -2,7 +2,7 @@
 <node-navigation>
 	<owner-type>group</owner-type>
   <owner-id>platform/administrators</owner-id>
-  <priority>2</priority>
+  <priority>3</priority>
   
   <page-nodes>   
     <node>

@@ -15,10 +15,7 @@
       <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
       <show-info-bar>false</show-info-bar>
     </application>
-    <application>
-      <instance-id>portal#classic:/web/BreadcumbsPortlet/breadcumbs</instance-id>
-      <show-info-bar>false</show-info-bar>
-    </application>
+    
     <container id="KS" template="system:/templates/groovy/webui/component/UITableColumnContainer.gtmpl">
       <container id="sidebar" template="system:/groovy/portal/webui/container/UIContainer.gtmpl">
         <application>
