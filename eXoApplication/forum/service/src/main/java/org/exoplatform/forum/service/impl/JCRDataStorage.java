@@ -2075,13 +2075,13 @@ public class JCRDataStorage {
 				Node nodeFile;
 				while (postAttachments.hasNext()) {
 					Node node = postAttachments.nextNode();
-					if (node.isNodeType("nt:file")) {
+					if (node.isNodeType("exo:forumAttachment")) {
 						JCRForumAttachment attachment = new JCRForumAttachment();
 						nodeFile = node.getNode("jcr:content");
 						attachment.setId(node.getName());
 						attachment.setPathNode(node.getPath());
 						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-						attachment.setName(node.getProperty("exo:fileName").getString());
+						attachment.setName(nodeFile.getProperty("exo:fileName").getString());
 						String workspace = node.getSession().getWorkspace().getName() ;
 						attachment.setWorkspace(workspace);
 						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
@@ -2804,13 +2804,13 @@ public class JCRDataStorage {
 			Node nodeFile;
 			while (postAttachments.hasNext()) {
 				Node node = postAttachments.nextNode();
-				if (node.isNodeType("nt:file")) {
+				if (node.isNodeType("exo:forumAttachment")) {
 					JCRForumAttachment attachment = new JCRForumAttachment();
 					nodeFile = node.getNode("jcr:content");
 					attachment.setId(node.getName());
 					attachment.setPathNode(node.getPath());
 					attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-					attachment.setName(node.getProperty("exo:fileName").getString());
+					attachment.setName(nodeFile.getProperty("exo:fileName").getString());
 					String workspace = node.getSession().getWorkspace().getName() ;
 					attachment.setWorkspace(workspace);
 					attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
@@ -2901,13 +2901,13 @@ public class JCRDataStorage {
 						else nodeFile = postNode.getNode(file.getId());
 						//Fix permission node
 						ForumServiceUtils.reparePermissions(nodeFile, "any");
-						nodeFile.setProperty("exo:fileName", file.getName());
 						Node nodeContent = null;
 						if (!nodeFile.hasNode("jcr:content")) {
-							nodeContent = nodeFile.addNode("jcr:content", "nt:resource");
+							nodeContent = nodeFile.addNode("jcr:content", "exo:forumResource");
 							nodeContent.setProperty("jcr:mimeType", file.getMimeType());
 							nodeContent.setProperty("jcr:data", file.getInputStream());
 							nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+							nodeContent.setProperty("exo:fileName", file.getName());
 						}
 					} catch (Exception e) {
 					}
@@ -5460,7 +5460,7 @@ public class JCRDataStorage {
 				}
 	//		TODO: Query Attachment in post.
 				if(type.equals(Utils.POST)){
-					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin));
+					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin, ""));
 				}
 			}
 		} catch (Exception e) {
@@ -5501,10 +5501,10 @@ public class JCRDataStorage {
 				listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
 			}
 //		TODO: Query Attachment in post.
-			if(type.equals(Utils.POST) && eventQuery.getKeyValue() != null && eventQuery.getKeyValue().trim().length() > 0) {
+			if((type.equals(Utils.POST) || type.equals(Utils.TOPIC)) && eventQuery.getKeyValue() != null && eventQuery.getKeyValue().trim().length() > 0) {
 				boolean isAdmin = false;
 				if(eventQuery.getUserPermission() == 0) isAdmin = true;
-				listSearchEvent.addAll(getSearchByAttachment(categoryHome, eventQuery.getPath(), eventQuery.getKeyValue(), listForumIds, eventQuery.getListOfUser(), isAdmin));
+				listSearchEvent.addAll(getSearchByAttachment(categoryHome, eventQuery.getPath(), eventQuery.getKeyValue(), listForumIds, eventQuery.getListOfUser(), isAdmin, type));
 			}
     } catch (Exception e) {
     }finally {
@@ -5513,7 +5513,7 @@ public class JCRDataStorage {
 		return listSearchEvent;
 	}
 
-	private List<ForumSearch> getSearchByAttachment(Node categoryHome, String path, String key, List<String> listForumIds, List<String> listOfUser, boolean isAdmin) throws Exception {
+	private List<ForumSearch> getSearchByAttachment(Node categoryHome, String path, String key, List<String> listForumIds, List<String> listOfUser, boolean isAdmin, String type) throws Exception {
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 		StringBuilder strQuery = new StringBuilder();
@@ -5525,9 +5525,23 @@ public class JCRDataStorage {
 		NodeIterator iter = result.getNodes();
 		boolean isAdd = true;
 		List<String> list = new ArrayList<String>();
+		String type_ = type;
 		while (iter.hasNext()) {
 			Node nodeObj = iter.nextNode().getParent().getParent();
 			if(nodeObj.isNodeType("exo:post")) {
+				if(type == null || type.length() == 0){
+					if(nodeObj.getProperty("exo:isFirstPost").getBoolean()) {
+						type_ = Utils.TOPIC;
+					}else{
+						type_ = Utils.POST;
+					}
+				} else {
+					if(nodeObj.getProperty("exo:isFirstPost").getBoolean()) {
+						if(!type.equals(Utils.TOPIC)) continue;
+					}else {
+						if(type.equals(Utils.TOPIC)) continue;
+					}
+				}
 				//check scoping, private by category.
 				if(!isAdmin && !listForumIds.isEmpty()){
 					String path_ = nodeObj.getPath() ;
@@ -5558,12 +5572,8 @@ public class JCRDataStorage {
 					}
 				}
 				if(isAdd){
-					String type = Utils.POST;
-					if(nodeObj.getProperty("exo:isFirstPost").getBoolean()) {
-						nodeObj = nodeObj.getParent();
-						type = Utils.TOPIC;
-					}
-					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
+					if(type_.equals(Utils.TOPIC)) nodeObj = nodeObj.getParent();
+					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type_));
 				}
 			}
 		}

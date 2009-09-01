@@ -222,13 +222,13 @@ public class ForumPageList extends JCRPageList {
 				Node nodeFile;
 				while (postAttachments.hasNext()) {
 					Node node = postAttachments.nextNode();
-					if (node.isNodeType("nt:file")) {
+					if (node.isNodeType("exo:forumAttachment")) {
 						JCRForumAttachment attachment = new JCRForumAttachment();
 						nodeFile = node.getNode("jcr:content");
 						attachment.setId(node.getName());
 						attachment.setPathNode(node.getPath());
 						attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-						attachment.setName(node.getProperty("exo:fileName").getString());
+						attachment.setName(nodeFile.getProperty("exo:fileName").getString());
 						String workspace = node.getSession().getWorkspace().getName() ;
 						attachment.setWorkspace(workspace);
 						attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
@@ -284,7 +284,7 @@ public class ForumPageList extends JCRPageList {
 		if (topicNode.isNodeType("exo:forumWatching") && topicNode.hasProperty("exo:emailWatching")) {
 			topicNew.setEmailNotification(ValuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
 		}
-		String idFirstPost = topicNode.getName().replaceFirst("topic", "post") ;
+		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		if(topicNode.hasNode(idFirstPost)) {
 			Node FirstPostNode	= topicNode.getNode(idFirstPost) ;
 			if(FirstPostNode.hasProperty("exo:numberAttachments")) {
@@ -294,13 +294,13 @@ public class ForumPageList extends JCRPageList {
 					Node nodeFile;
 					while (postAttachments.hasNext()) {
 						Node node = postAttachments.nextNode();
-						if (node.isNodeType("nt:file")) {
+						if (node.isNodeType("exo:forumAttachment")) {
 							JCRForumAttachment attachment = new JCRForumAttachment();
 							nodeFile = node.getNode("jcr:content");
 							attachment.setId(node.getName());
 							attachment.setPathNode(node.getPath());
 							attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-							attachment.setName(node.getProperty("exo:fileName").getString());
+							attachment.setName(nodeFile.getProperty("exo:fileName").getString());
 							String workspace = node.getSession().getWorkspace().getName() ;
 							attachment.setWorkspace(workspace);
 							attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());

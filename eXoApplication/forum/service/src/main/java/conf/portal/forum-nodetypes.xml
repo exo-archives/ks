@@ -74,6 +74,12 @@
 	 	<supertypes>
 	 		<supertype>nt:file</supertype>
 	 	</supertypes>
+	</nodeType>
+	
+	<nodeType	name="exo:forumResource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	 	<supertypes>
+	 		<supertype>nt:resource</supertype>
+	 	</supertypes>
 	 	<propertyDefinitions>
 			<propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 			<valueConstraints/>
