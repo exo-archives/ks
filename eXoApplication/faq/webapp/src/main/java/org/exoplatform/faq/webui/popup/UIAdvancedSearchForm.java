@@ -353,6 +353,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				return ;
 			}*/
 			String userName = FAQUtils.getCurrentUser();
+			eventQuery.setUserId(userName) ;
 			eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(userName));
 			eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));
 			

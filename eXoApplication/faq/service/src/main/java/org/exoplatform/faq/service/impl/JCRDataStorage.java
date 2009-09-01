@@ -2471,10 +2471,60 @@ public class JCRDataStorage {
 				List<Node> listAnswer = new ArrayList<Node>();
 				while(iter.hasNext()){
 					nodeObj = iter.nextNode();
-					if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
-					if(nodeObj.isNodeType("exo:faqResource")) listQuestion.add(nodeObj.getParent().getParent()) ;
-					if(nodeObj.isNodeType("exo:faqLanguage")) listLanguage.add(nodeObj) ;
-					if(nodeObj.isNodeType("exo:answer")) listAnswer.add(nodeObj) ;
+					if(!eventQuery.isAdmin()) {
+						try {
+							if(nodeObj.isNodeType("exo:faqQuestion")){
+								if((nodeObj.getProperty("exo:isApproved").getBoolean() == true 
+										&& nodeObj.getProperty("exo:isActivated").getBoolean() == true ) 
+										|| (nodeObj.getProperty("exo:author").getString().equals(eventQuery.getUserId()) 
+												&& nodeObj.getProperty("exo:isActivated").getBoolean() == true))
+									listQuestion.add(nodeObj) ;
+							}
+							
+							if(nodeObj.isNodeType("exo:faqResource")){
+								Node nodeQuestion = nodeObj.getParent().getParent() ; 
+								if((nodeQuestion.getProperty("exo:isApproved").getBoolean() == true 
+										&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true ) 
+										|| (nodeQuestion.getProperty("exo:author").getString().equals(eventQuery.getUserId())
+												&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true))
+									listQuestion.add(nodeQuestion) ;
+							}
+							
+							if(nodeObj.isNodeType("exo:faqLanguage")){
+								Node nodeQuestion = nodeObj.getParent().getParent() ; 
+								if((nodeQuestion.getProperty("exo:isApproved").getBoolean() == true 
+										&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true ) 
+										|| (nodeQuestion.getProperty("exo:author").getString().equals(eventQuery.getUserId())
+												&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true))
+									listLanguage.add(nodeObj) ;
+							}
+							
+							if(nodeObj.isNodeType("exo:answer")){
+								Node nodeQuestion = nodeObj.getParent().getParent();
+								if(nodeQuestion.isNodeType("exo:faqQuestion")) {
+									if((nodeQuestion.getProperty("exo:isApproved").getBoolean() == true 
+											&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true ) 
+											|| (nodeQuestion.getProperty("exo:author").getString().equals(eventQuery.getUserId())
+													&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true))
+										listAnswer.add(nodeObj) ;
+								}else {
+									nodeQuestion = nodeObj.getParent().getParent().getParent().getParent() ;
+									if((nodeQuestion.getProperty("exo:isApproved").getBoolean() == true 
+											&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true ) 
+											|| (nodeQuestion.getProperty("exo:author").getString().equals(eventQuery.getUserId())
+													&& nodeQuestion.getProperty("exo:isActivated").getBoolean() == true))
+										listAnswer.add(nodeObj) ;
+								}								
+							}							
+						} catch(Exception e){}
+						
+					}else {
+						if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
+						if(nodeObj.isNodeType("exo:faqResource")) listQuestion.add(nodeObj.getParent().getParent()) ;
+						if(nodeObj.isNodeType("exo:faqLanguage")) listLanguage.add(nodeObj) ;
+						if(nodeObj.isNodeType("exo:answer")) listAnswer.add(nodeObj) ;
+					}
+					
 				}
 				
 				if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
@@ -2551,17 +2601,29 @@ public class JCRDataStorage {
 				Session session = categoryHome.getSession();
 				Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
 				while (iter.hasNext()) {
+					boolean isResult = true ;
 					nodeObj = (Node) iter.nextNode();
 					nodePath = nodeObj.getPath();
 					if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Question")){
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
+						if(!eventQuery.isAdmin()) {
+							try{
+								if((nodeObj.getProperty("exo:isApproved").getBoolean() == true 
+										&& nodeObj.getProperty("exo:isActivated").getBoolean() == true ) 
+										|| (nodeObj.getProperty("exo:author").getString().equals(eventQuery.getUserId())
+												&& nodeObj.getProperty("exo:isActivated").getBoolean() == true))
+									isResult = true ;
+								else 
+									isResult = false ;
+							}catch(Exception e) { isResult = false ;}
+						}						
 					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Category")){
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Category") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
 					}	
 					//System.out.println("node path >>" + nodeObj.getPath());
-					if(!searchMap.containsKey(nodeObj.getName()))	{						
+					if(!searchMap.containsKey(nodeObj.getName()) && isResult)	{						
 						searchMap.put(nodeObj.getName(), getResultObj(nodeObj)) ;
 					}					
 				}

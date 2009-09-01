@@ -41,6 +41,7 @@ public class FAQEventQuery {
 	private String moderator ;
 	private String path;
 	private String author;
+	private String userId;
 	private String questionDisplayMode;
 	private String email ;
 	private String question;
@@ -57,6 +58,7 @@ public class FAQEventQuery {
 	private boolean isLanguageLevelSearch = false ;
 	private boolean isAnswerLevelSearch = false ;
 	private boolean isSearchOnDefaultLanguage = false ;
+	
 
 	public String getLanguage() {
 		return language;
@@ -198,6 +200,14 @@ public class FAQEventQuery {
   	return author;
   }
 	
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
 	/**
 	 * Sets the author.
 	 * 
@@ -380,7 +390,7 @@ public String getQuery() throws Exception {
 		  	queryString.append(" and (jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
 			}		  
 		  
-			if(!isAdmin()) {
+			if(!isAdmin) {
 				queryString.append(" and (not(@exo:userPrivate) ");
 		    if(userMembers != null && !userMembers.isEmpty()) {
 			    for (String str : userMembers) {
@@ -525,6 +535,13 @@ public String getQuery() throws Exception {
     	if(text != null && text.length() > 0 ) {
       	queryString.append(" jcr:contains(., '").append(text).append("')") ;    		
       }
+    	
+    	if(!isAdmin) {
+    		queryString.append(" and ( ") ;
+    		queryString.append(" @exo:isApproved='true'") ;
+    		queryString.append(" ) ") ;
+    	}
+    	
       // search on viewing categories 
     	if(viewingCategories.size() > 0) {
     		queryString.append(" and (") ;    		
