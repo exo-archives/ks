@@ -1,7 +1,7 @@
 <project>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>config</artifactId>
+    <artifactId>ks</artifactId>
     <version>1.2-SNAPSHOT</version>
   </parent> 
 
