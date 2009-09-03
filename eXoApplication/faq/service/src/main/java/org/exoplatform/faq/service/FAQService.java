@@ -49,6 +49,13 @@ public interface FAQService extends FAQServiceLegacy{
 	public void addPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**
+	 * Plugin to initialize default FAQ data
+	 * @param plugin
+	 * @throws Exception
+	 */
+	public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
+	
+	/**
 	 * This method should check exists category or NOT to create new or update exists category
 	 * <p>
 	 * This function is used to add new or edit category in list. User will input information of fields need

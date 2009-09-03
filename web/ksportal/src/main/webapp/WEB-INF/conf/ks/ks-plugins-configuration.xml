@@ -100,7 +100,34 @@
 				</values-param>
 			</init-params>
 		</component-plugin>
-		
+	<component-plugin>
+		<name>general-questions</name>
+		<set-method>addInitialDataPlugin</set-method>
+		<type>org.exoplatform.faq.service.InitialDataPlugin</type>
+		<description>Initialize</description>
+		<init-params>
+			<value-param>
+				<name>location</name>
+				<description>location where FAQ export format file is stored
+				</description>
+				<value>war:/conf/ks/faq/data/General-Questions.zip</value>
+			</value-param>
+		</init-params>
+	</component-plugin>			
+	<component-plugin>
+		<name>technical-faq</name>
+		<set-method>addInitialDataPlugin</set-method>
+		<type>org.exoplatform.faq.service.InitialDataPlugin</type>
+		<description>Initialize</description>
+		<init-params>
+			<value-param>
+				<name>location</name>
+				<description>location where FAQ export format file is stored
+				</description>
+				<value>war:/conf/ks/faq/data/Technical-FAQ.zip</value>
+			</value-param>
+		</init-params>
+	</component-plugin>		
 	</external-component-plugins>	 
 	
 	<external-component-plugins>

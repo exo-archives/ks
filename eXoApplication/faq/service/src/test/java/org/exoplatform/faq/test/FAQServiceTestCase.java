@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service.test;
-
-import java.util.List;
+package org.exoplatform.faq.test;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
@@ -29,7 +27,6 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.test.BasicTestCase;
 
 /**
  * Created by The eXo Platform SAS
@@ -37,9 +34,9 @@ import org.exoplatform.test.BasicTestCase;
  *          hung.nguyen@exoplatform.com
  * May 7, 2008  
  */
-public abstract class FAQServiceTestCase extends BasicTestCase {
+public abstract class FAQServiceTestCase extends FAQTestCase {
 
-  protected static Log          log = ExoLogger.getLogger("sample.services.test");  
+  protected static Log          log = ExoLogger.getLogger("faq.test");  
 
   protected static RepositoryService   repositoryService;
   protected static StandaloneContainer container;
@@ -84,29 +81,7 @@ public abstract class FAQServiceTestCase extends BasicTestCase {
   }
   
   
-  /**
-   * All elements of a list should be contained in the expected array of String
-   * @param message
-   * @param expected
-   * @param actual
-   */
-  public static void assertContainsAll(String message, List<String> expected, List<String> actual) {
-    assertEquals(message, expected.size(), actual.size());
-    assertTrue(message,expected.containsAll(actual));
-  } 
-  
-  /**
-   * Assertion method on string arrays
-   * @param message
-   * @param expected
-   * @param actual
-   */
-  public static void assertEquals(String message, String []expected, String []actual) {
-    assertEquals(message, expected.length, actual.length);
-    for (int i = 0; i < expected.length; i++) {
-      assertEquals(message, expected[i], actual[i]);
-    }
-  }
+ 
   private static void initContainer() {
     try {
       String containerConf = FAQServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
