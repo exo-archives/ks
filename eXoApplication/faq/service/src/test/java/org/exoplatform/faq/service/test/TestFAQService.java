@@ -19,17 +19,22 @@ package org.exoplatform.faq.service.test;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
+import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.JCRPageList;
+import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
@@ -47,15 +52,23 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  */
 
 
-public class TestFAQService extends FAQServiceTestCase {
+@SuppressWarnings("unused")
+public class TestFAQService extends FAQServiceTestCase{
 	private FAQService faqService_ ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private SessionProvider sProvider_ ;
 	private List<FileAttachment> listAttachments = new ArrayList<FileAttachment>() ;
 
 	private static String  USER_ROOT = "root";
-	private static String  USER_JOHN = "john";
+  private static String  USER_JOHN = "john";
 	private static String  USER_DEMO = "demo";
+	private static String  categoryId1;
+	private static String  categoryId2;
+	private static String  questionId1;
+	private static String  questionId2;
+	private static String  questionId3;
+	private static String  questionId4;
+	private static String  questionId5;
 	private JCRDataStorage datastorage;
 
 	public TestFAQService() throws Exception {
@@ -138,6 +151,7 @@ public class TestFAQService extends FAQServiceTestCase {
 		answer.setResponseBy(user);
 		answer.setResponses(content);
 		answer.setUsersVoteAnswer(null);
+		answer.setLanguage("English");
 		return answer;
 	}
 
@@ -148,45 +162,8 @@ public class TestFAQService extends FAQServiceTestCase {
 		comment.setDateComment(new Date());
 		comment.setNew(true);
 		comment.setPostId(null);
+		comment.setFullName(user + " " + user);
 		return comment;
-	}
-
-	private InputStream createQuestionToImport(String questionId){
-		InputStream is = null;
-		String data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<sv:node xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\" xmlns:rep=\"internal\" xmlns:sv=\"http://www.jcp.org/jcr/sv/1.0\" " +
-		"xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\" xmlns:fn=\"http://www.w3.org/2005/xpath-functions\" " +
-		"xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:fn_old=\"http://www.w3.org/2004/10/xpath-functions\" " +
-		"xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" " +
-		"xmlns:webdav=\"http://www.exoplatform.org/jcr/webdav\" xmlns:exo=\"http://www.exoplatform.com/jcr/exo/1.0\" " +
-		"sv:name=\""+questionId+"\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\">" +
-		"<sv:value>exo:faqQuestion</sv:value></sv:property><sv:property sv:name=\"jcr:mixinTypes\" sv:type=\"Name\">" +
-		"<sv:value>mix:faqi18n</sv:value></sv:property><sv:property sv:name=\"exo:author\" sv:type=\"String\"><sv:value>root</sv:value>" +
-		"</sv:property><sv:property sv:name=\"exo:categoryId\" sv:type=\"String\"><sv:value>null</sv:value></sv:property>" +
-		"<sv:property sv:name=\"exo:createdDate\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:25.843+07:00</sv:value>" +
-		"</sv:property><sv:property sv:name=\"exo:email\" sv:type=\"String\"><sv:value>root@localhost.com</sv:value></sv:property>" +
-		"<sv:property sv:name=\"exo:isActivated\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property " +
-		"sv:name=\"exo:isApproved\" sv:type=\"Boolean\"><sv:value>true</sv:value></sv:property><sv:property sv:name=\"exo:language\" " +
-		"sv:type=\"String\"><sv:value>English</sv:value></sv:property><sv:property sv:name=\"exo:markVote\" sv:type=\"Double\">" +
-		"<sv:value>0.0</sv:value></sv:property><sv:property sv:name=\"exo:name\" sv:type=\"String\"><sv:value>&lt;p&gt;detail " +
-		"for this question&lt;/p&gt;</sv:value></sv:property><sv:property sv:name=\"exo:relatives\" sv:type=\"String\"></sv:property>" +
-		"<sv:property sv:name=\"exo:title\" sv:type=\"String\"><sv:value>new question 1</sv:value></sv:property><sv:node " +
-		"sv:name=\"faqAnswerHome\"><sv:property sv:name=\"jcr:primaryType\" sv:type=\"Name\"><sv:value>nt:unstructured</sv:value>" +
-		"</sv:property><sv:node sv:name=\"Answer0e1a8845c0a8013100c543662af2545d\"><sv:property sv:name=\"jcr:primaryType\" " +
-		"sv:type=\"Name\"><sv:value>exo:answer</sv:value></sv:property><sv:property sv:name=\"exo:MarkVotes\" sv:type=\"Long\">" +
-		"<sv:value>0</sv:value></sv:property><sv:property sv:name=\"exo:activateResponses\" sv:type=\"Boolean\"><sv:value>true" +
-		"</sv:value></sv:property><sv:property sv:name=\"exo:approveResponses\" sv:type=\"Boolean\"><sv:value>true</sv:value>" +
-		"</sv:property><sv:property sv:name=\"exo:dateResponse\" sv:type=\"Date\"><sv:value>2009-03-16T14:06:41.109+07:00</sv:value>" +
-		"</sv:property><sv:property sv:name=\"exo:id\" sv:type=\"String\"><sv:value>Answer0e1a8845c0a8013100c543662af2545d</sv:value>" +
-		"</sv:property><sv:property sv:name=\"exo:responseBy\" sv:type=\"String\"><sv:value>root</sv:value></sv:property>" +
-		"<sv:property sv:name=\"exo:responses\" sv:type=\"String\"><sv:value>&lt;p&gt;new answer 1&lt;/p&gt;</sv:value>" +
-		"</sv:property></sv:node></sv:node></sv:node>";
-		try {
-			is = new ByteArrayInputStream(data.getBytes("UTF-8"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return is;
 	}
 
 	private Watch createNewWatch(String user, String mail){
@@ -299,57 +276,54 @@ public class TestFAQService extends FAQServiceTestCase {
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testQuestion() throws Exception {
-		//Create category Home.
+	private void defaultData() throws Exception {
+	//Create category Home.
 		faqService_.getAllCategories();
 		//Create some category default
 		Category cate = createCategory("Category to test question") ;
+		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
 		Category cate2 = createCategory("Category 2 to test question") ;
+		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
-		String cateId = Utils.CATEGORY_HOME + "/" + cate.getId();
 
-		Question question1 = createQuestion(cateId) ;
-		
-		Question question2 = createQuestion(cateId) ;
+		Question question1 = createQuestion(categoryId1) ;
+		questionId1 = question1.getId();
+		Question question2 = createQuestion(categoryId1) ;
 		question2.setRelations(new String[]{}) ;
-		question2.setApproved(true) ;
-		question2.setActivated(true) ;
 		question2.setLanguage("English") ;
-		question2.setAuthor("Mai Van Ha") ;
+		question2.setAuthor("root") ;
 		question2.setEmail("truong_tb1984@yahoo.com") ;
 		question2.setDetail("Nguyen van truong test question 2222222 ?") ;
 		question2.setCreatedDate(new Date()) ;
+		questionId2 = question2.getId();
 		
-		Question question3 = createQuestion(cateId) ;
+		Question question3 = createQuestion(categoryId1) ;
 		question3.setRelations(new String[]{}) ;
-		question3.setApproved(true) ;
-		question3.setActivated(true) ;
 		question3.setLanguage("English") ;
 		question3.setAuthor("Phung Hai Nam") ;
 		question3.setEmail("phunghainam@yahoo.com") ;
 		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
 		question3.setCreatedDate(new Date()) ;
+		questionId3 = question3.getId();
 
-		Question question4 = createQuestion(cateId) ;
+		Question question4 = createQuestion(categoryId1) ;
 		question4.setRelations(new String[]{}) ;
-		question4.setApproved(false) ;
-		question4.setActivated(true) ;
 		question4.setLanguage("English") ;
 		question4.setAuthor("Pham Dinh Tan") ;
 		question4.setEmail("phamdinhtan@yahoo.com") ;
 		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
 		question4.setCreatedDate(new Date()) ;
+		questionId4 = question4.getId();
 
-		Question question5 = createQuestion(cateId) ;
+		Question question5 = createQuestion(categoryId1) ;
 		question5.setRelations(new String[]{}) ;
-		question5.setApproved(false) ;
-		question5.setActivated(true) ;
 		question5.setLanguage("English") ;
 		question5.setAuthor("Ly Dinh Quang") ;
 		question5.setEmail("lydinhquang@yahoo.com") ;
 		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
 		question5.setCreatedDate(new Date()) ;
+		questionId5 = question5.getId();
 		
 //		save questions
 		faqService_.saveQuestion(question1, true,faqSetting_) ;
@@ -357,10 +331,14 @@ public class TestFAQService extends FAQServiceTestCase {
 		faqService_.saveQuestion(question3, true,faqSetting_) ;
 		faqService_.saveQuestion(question4, true,faqSetting_) ;
 		faqService_.saveQuestion(question5, true,faqSetting_) ;
+	}
 	
+	public void testQuestion() throws Exception {
+//		Add new data default
+		defaultData();
 //		get question 1
-		String questionId = cateId + "/" + Utils.QUESTION_HOME + "/" + question1.getId();
-		question1 = faqService_.getQuestionById(questionId);
+		String questionId = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId1;
+		Question question1 = faqService_.getQuestionById(questionId);
 		assertNotNull("Question 1 have not been saved into data", question1) ;
 		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(Utils.CATEGORY_HOME, false).getAll() ;
 		assertEquals("have some questions are not yet answer", listQuestion.size(), 0) ; 
@@ -373,18 +351,19 @@ public class TestFAQService extends FAQServiceTestCase {
 									"Nguyen van truong test question 11111111 ?", question1.getDetail());
 
 //		move question 2 to category 2
-		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME + "/" + cate2.getId());
+		Category cate2 = faqService_.getCategoryById(categoryId2);
 		List<String> listId = new ArrayList<String>() ;
-		String questionId2 = cateId + "/" + Utils.QUESTION_HOME + "/" + question2.getId();
-		listId.add(questionId2);
+		String qsId2 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId2;
+		listId.add(qsId2);
 		assertEquals("Category 2 have some questions before move question 2", 
 							faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 0);
 		faqService_.moveQuestions(listId, cate2.getPath());
 		assertEquals("Category 2 have more than one question after move question 2", 
 								faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 1);
-/*
+		
 //	Get question by list category
-		listId.clear(); listId.add(cateId);
+		listId = new ArrayList<String>() ;
+		listId.add(categoryId1.replace(Utils.CATEGORY_HOME, ""));
 		JCRPageList pageList = faqService_.getQuestionsByListCatetory(listId, false);
 		pageList.setPageSize(10);
 		assertEquals("Can't move question 2 to category 2", pageList.getPage(1, "root").size(), 4);
@@ -394,36 +373,38 @@ public class TestFAQService extends FAQServiceTestCase {
 		assertEquals("the number of categories in FAQ is not 5", listAllQuestion.size(), 5) ;
 
 //		get list question by category of question 1
-		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(question1.getCategoryId(), faqSetting_).getAll() ;
+		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(categoryId1, faqSetting_).getAll() ;
 		assertEquals("the number of question in category which contain question 1 is not 4", listQuestionByCategory.size(), 4) ;
 
 //		Get list paths of all question in category - removed
-		//List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId());
-		//assertEquals("In Category 1 have more than 4 questions, because can't move question 2 to category 2", listPaths.size(), 4);
+//		List<String> listPaths = faqService_.getListPathQuestionByCategory(cate.getId());
+//		assertEquals("In Category 1 have more than 4 questions, because can't move question 2 to category 2", listPaths.size(), 4);
 
 //		Get question node by id - removed
 		//assertNotNull("Question1 is not already existing in system", faqService_.getQuestionNodeById(question1.getId()));
 
 //		remove question
-		faqService_.removeQuestion(question5.getId());
+		faqService_.removeQuestion(categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId5);
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions().getAll();
 		assertEquals("Question 5 have not been removed, in system have 5 questions", listAllQuestionAfterRemove.size(), 4) ;
-		*/
+	// remove Data when tested question
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
-	/*
 
 	public void testSearch() throws Exception {
+//		set Data default
+		defaultData();
+		
 		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
 
 //		quick search with text = "test"
 		eventQueryCategory.setText("test");
+		eventQueryCategory.setType("categoryAndQuestion");
 		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQueryCategory) ;
-		assertEquals("Can't get all questions and catgories have \"test\" charaters in content", listQuickSearch.size(), 7) ;
-
-//		search all category and question in database
-		eventQueryCategory.setText("");
-		List<ObjectSearchResult> listSearchAll = faqService_.getSearchResults(eventQueryCategory) ;
-		assertEquals("The number of objects (question and category) is not 8", listSearchAll.size(), 8) ;
+		assertEquals("Can't get all questions and catgories have \"test\" charaters in content", listQuickSearch.size(), 4) ;
+//for (ObjectSearchResult objectSearchResult : listQuickSearch) {
+//	System.out.println("\n\n " + objectSearchResult.getType()  + " : " + objectSearchResult.getName());
+//}
 
 //		advance search all category in database - removed
 		//FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
@@ -452,159 +433,173 @@ public class TestFAQService extends FAQServiceTestCase {
 		//List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
 		//assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
 									//listSearchAdvanceQuestion.size(), 2) ;
+		
+	// remove Data when tested search
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testAnswer() throws Exception{
-		Category cate = createCategory("category to test answer");
-		faqService_.saveCategory(null, cate, true);
-		Question question = createQuestion(cate);
-		faqService_.saveQuestion(question, true, faqSetting_);
+//	set data default
+		defaultData() ;
+		// create Answer
 		Answer answer1 = createAnswer(USER_ROOT, "Root answer 1 for question");
 		Answer answer2 = createAnswer(USER_DEMO, "Demo answer 2 for question");
-
+		
 //		Save answer:
-		faqService_.saveAnswer(question.getId(), new Answer[]{answer1, answer2});
+		String questionId = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId1;
+		faqService_.saveAnswer(questionId, new Answer[]{answer1, answer2});
 
 //		Get answer by id:
-		assertNotNull("Answer 2 have not been added", faqService_.getAnswerById(question.getId(), answer2.getId()));
+		assertNotNull("Answer 2 have not been added", faqService_.getAnswerById(questionId, answer2.getId()));
 
 //		Update answers:
 		assertEquals(answer1.getResponses(), "Root answer 1 for question");
-		answer1.setResponses("Root answer 1 for question edit");
-		faqService_.saveAnswer(question.getId(), answer1, false);
+		String content = "Root answer 1 for question edit";
+		answer1.setResponses(content);
+		faqService_.saveAnswer(questionId, answer1, false);
 		assertEquals("Content of Answer have not been changed to \"Root answer 1 for question edit\"", 
-								faqService_.getAnswerById(question.getId(), answer1.getId()).getResponses(), 
-								"Root answer 1 for question edit");
+								faqService_.getAnswerById(questionId, answer1.getId()).getResponses(), content);
 
 //		Get all answers of question:
-		JCRPageList pageList = faqService_.getPageListAnswer(question.getId(), null);
+		JCRPageList pageList = faqService_.getPageListAnswer(questionId, null);
 		pageList.setPageSize(10);
 		assertEquals("Question have 2 answers", pageList.getPageItem(0).size(), 2);
 
 //		Delete answer
-		faqService_.deleteAnswer(question.getId(), answer1.getId());
-		pageList = faqService_.getPageListAnswer(question.getId(), null);
+		faqService_.deleteAnswer(questionId, answer1.getId());
+		pageList = faqService_.getPageListAnswer(questionId, null);
 		pageList.setPageSize(10);
 		assertEquals("Answer 1 have not been removed, question only have one answer", pageList.getPageItem(0).size(), 1);
+
+		// remove Data when tested answer
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 	
 	public void testComment() throws Exception{
-		Category cate = createCategory("category to test comment");
-		faqService_.saveCategory(null, cate, true);
-		Question question = createQuestion(cate);
-		faqService_.saveQuestion(question, true, faqSetting_);
-
+//	set default data
+		defaultData();
 		Comment comment1 = createComment(USER_ROOT, "Root comment 1 for question");
 		Comment comment2 = createComment(USER_DEMO, "Demo comment 2 for question");
-		JCRPageList pageList = null;
 //		Save comment
-		faqService_.saveComment(question.getId(), comment1, true);
-		faqService_.saveComment(question.getId(), comment2, true);
+		String questionId = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId1;
+		faqService_.saveComment(questionId, comment1, true);
+		faqService_.saveComment(questionId, comment2, true);
 
 //		Get comment by Id:
-		assertNotNull("Comment 1 have not been added ", faqService_.getCommentById(question.getId(), comment1.getId()));
-		assertNotNull("Comment 1 have not been added ", faqService_.getCommentById(question.getId(), comment2.getId()));
+		assertNotNull("Comment 1 have not been added ", faqService_.getCommentById(questionId, comment1.getId()));
+		assertNotNull("Comment 1 have not been added ", faqService_.getCommentById(questionId, comment2.getId()));
 
 //		Get all comment of question
-		pageList = faqService_.getPageListComment(question.getId());
+		JCRPageList pageList = faqService_.getPageListComment(questionId);
 		pageList.setPageSize(10);
 		assertEquals("Question have two comments", pageList.getPageItem(0).size(), 2);
 
 //		Delete comment by id
-		faqService_.deleteComment(question.getId(), comment1.getId());
-		pageList = faqService_.getPageListComment(question.getId());
+		faqService_.deleteComment(questionId, comment1.getId());
+		pageList = faqService_.getPageListComment(questionId);
 		pageList.setPageSize(10);
 		assertEquals("Comment 1 is not removed", pageList.getPageItem(0).size(), 1);
+		
+		System.out.println("faqService_.getAllCategories():" + faqService_.getAllCategories().size());
+	// remove Data when tested comment
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testImportData() throws Exception{
-		Question question = new Question();
-		faqService_.importData(faqService_.getCategoryNodeById(null).getName(), createQuestionToImport(question.getId()), false);
-		assertNotNull("question have not been imported into root category, and get this category by id from Root category is null", 
-									faqService_.getQuestionById(question.getId()));
+		faqService_.getAllCategories();
+//		Before import data, number question is 0
+		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
+		try {
+			File file = new File("../service/src/test/java/conf/portal/Data.xml");
+		  String content = FileUtils.readFileToString(file, "UTF-8");
+			byte currentXMLBytes[] = content.getBytes();
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
+			faqService_.importData(Utils.CATEGORY_HOME, byteArrayInputStream, false) ;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		After imported data, number questions is 5
+		assertEquals("Before import data, number question is not 5", faqService_.getAllQuestions().getAvailable(), 5);
+	// remove Data when tested comment
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testWatchCategory() throws Exception {
-		Category cateWatch = createCategory("Cate to test watch") ;
-		cateWatch.setName("test cate add watch") ;
-		faqService_.saveCategory(null, cateWatch, true) ;
-
+//	add default data
+		defaultData();
 		List<Watch> listWatchs = new ArrayList<Watch>();
 //		add  watch
-		faqService_.addWatchCategory(cateWatch.getId(), createNewWatch(USER_ROOT, "maivanha1610@gmail.com")) ;
-		faqService_.addWatchCategory(cateWatch.getId(), createNewWatch(USER_DEMO, "maivanha1610@yahoo.com")) ;
-		faqService_.addWatchCategory(cateWatch.getId(), createNewWatch(USER_JOHN, "john@localhost.com")) ;
+		faqService_.addWatchCategory(categoryId1, createNewWatch(USER_ROOT, "maivanha1610@gmail.com")) ;
+		faqService_.addWatchCategory(categoryId1, createNewWatch(USER_DEMO, "maivanha1610@yahoo.com")) ;
+		faqService_.addWatchCategory(categoryId1, createNewWatch(USER_JOHN, "john@localhost.com")) ;
 
-//		get email watch - removed		
-		//JCRPageList pageList = faqService_.getListMailInWatch(cateWatch.getId()) ;
-		//pageList.setPageSize(5);
-		//listWatchs.addAll(pageList.getPageListWatch(1, USER_ROOT));
-		//assertEquals("Can't add watched into category \"Cate to test watch", listWatchs.size(), 3) ;
-
-//		Delete email watch - removed
-		faqService_.deleteMailInWatch(cateWatch.getId(), "john@localhost.com");
-		pageList = faqService_.getListMailInWatch(cateWatch.getId()) ;
-		pageList.setPageSize(5);
-		assertEquals("Can't delete one email in list",
-								pageList.getPageListWatch(1, USER_ROOT).size(), 2) ;
-
+//	Check hasWatch of category
+		assertEquals("This category has not watch.", faqService_.hasWatch(categoryId1), true);
+//	check get All watch in category.
+		assertEquals("Size of all watch in this category is not 3", faqService_.getWatchByCategory(categoryId1).size(), 3);
 //		Check category is watched by user
-		assertEquals("User root didn't watch this category", 
-									faqService_.isUserWatched(USER_ROOT, cateWatch.getId()), true);
+		assertEquals("User root didn't watch this category", faqService_.isUserWatched(USER_ROOT, categoryId1), true);
 
 //		get all categories are watched by user
-		assertNotNull("user root have not watched some categories", faqService_.getWatchedCategoryByUser(USER_ROOT));
-
-//		UnWatch category - removed
-		faqService_.UnWatch(cateWatch.getId(), USER_DEMO);
-		pageList = faqService_.getListMailInWatch(cateWatch.getId()) ;
-		pageList.setPageSize(5);
-		assertEquals("User demo have not unWatched, this category only have one watch by Root", 
-									pageList.getPageListWatch(1, USER_ROOT).size(), 1) ;
+		assertEquals("user root have not watched some categories", faqService_.getWatchedCategoryByUser(USER_ROOT).getAvailable(), 1);
+		
+//		Check unWatch Category by user
+		faqService_.unWatchCategory(categoryId1, USER_ROOT);		
+		assertEquals("User root has watching this category", faqService_.isUserWatched(USER_ROOT, categoryId1), false);
+	// remove Data when tested comment
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testQuestionMultilanguage() throws Exception{
-		Category category = createCategory("Cateogry to test multilanguage");
-		faqService_.saveCategory(null, category, true);
-		Question question = createQuestion(category);
-		faqService_.saveQuestion(question, true, faqSetting_);
-
+  public void testQuestionMultilanguage() throws Exception{
+//		set data default
+		defaultData();
 //		Add question language for question
-		MultiLanguages multiLanguages = new MultiLanguages();
-		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId()), createQuestionLanguage("Viet Nam"));
-		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId()), createQuestionLanguage("French"));
-
-//		Get all question language :
-		assertEquals(faqService_.getQuestionLanguages(question.getId()).size(), 2);
+		String questionId = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId1;
+		faqService_.addLanguage(questionId, createQuestionLanguage("VietNam"));
+		faqService_.addLanguage(questionId, createQuestionLanguage("French"));
+//		Get all question language (it is 3: English(default), VietNam and French):
+		List<QuestionLanguage> questionLanguages = faqService_.getQuestionLanguages(questionId);
+		assertEquals("Language of this question is not 3", questionLanguages.size(), 3);
+//		Get Question_language by language
+		QuestionLanguage questionLanguage = faqService_.getQuestionLanguageByLanguage(questionId, "VietNam");
+		assertNotNull("QuestionLanguage is Null.", questionLanguage);
+//		add answer1 in question language by questionLanguage
+		Answer answer = createAnswer(USER_ROOT, "Answer of language VietNam 1");
+		String answerId = answer.getId();
+		answer.setLanguage("VietNam");
+		questionLanguage.setAnswers(new Answer[]{answer});
+		faqService_.saveAnswer(questionId, questionLanguage);
+		assertNotNull("Answer1 in question language is not save.", faqService_.getAnswerById(questionId, answerId, "VietNam"));
+		
+//		add answer2 in question language by answer
+		answer = createAnswer(USER_ROOT, "Answer of language VietNam 2");
+		answerId = answer.getId();
+		answer.setLanguage("VietNam");
+		faqService_.saveAnswer(questionId, answer, "VietNam");
+		assertNotNull("Answer2 in question language is not save.", faqService_.getAnswerById(questionId, answerId, "VietNam"));
+		
+//	add comment in question language
+		Comment comment = createComment(USER_ROOT, "New comment of question language");
+		String commentId = comment.getId();
+		comment.setNew(true);
+		faqService_.saveComment(questionId, comment, "VietNam");
+		assertNotNull("Comment in question language is not save.", faqService_.getCommentById(questionId, commentId, "VietNam"));
+//		Delete answer in question language.
+		faqService_.deleteAnswerQuestionLang(questionId, answerId, "VietNam");
+		assertNull("Answer2 in question language is not deleted.", faqService_.getAnswerById(questionId, answerId, "VietNam"));
+//		Delete comment in question language.
+		faqService_.deleteCommentQuestionLang(questionId, commentId, "VietNam");
+		assertNull("Comment in question language is not deleted.", faqService_.getCommentById(questionId, commentId, "VietNam"));
 	}
 	
-	public void testSearchQuestionMultiLanguage() throws Exception{
-		Category category = createCategory("Cateogry to test search question with multilanguage");
-		faqService_.saveCategory(null, category, true);
-		Question question = createQuestion(category);
-		faqService_.saveQuestion(question, true, faqSetting_);
-		MultiLanguages multiLanguages = new MultiLanguages();
-		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId()), createQuestionLanguage("Viet Nam"));
-		//multiLanguages.addLanguage(faqService_.getQuestionNodeById(question.getId()), createQuestionLanguage("French"));
-
-//		Search question language 
-		assertEquals("don't have any question have VietNamese", faqService_.searchQuestionByLangageOfText(faqService_.getQuestionsByCatetory(category.getId(), 
-																																							faqSetting_).getAll(),
-																													"Viet Nam", "Viet Nam").size(),1);
-		assertEquals("don't have any question have \"Viet Nam\" charaters in content", 
-								faqService_.searchQuestionByLangage(faqService_.getQuestionsByCatetory(category.getId(),
-										sProvider_, faqSetting_).getAll(),
-								"Viet Nam", "Viet Nam", null).size(),1);
-	}
-
 	public void testUserSetting() throws Exception {
-//		set userSetting information into user node
+//		save userSetting information into user node
 		faqSetting_.setDisplayMode("both");
 		faqSetting_.setOrderBy("created");
 		faqSetting_.setOrderType("asc") ;
 		assertEquals("All data is not sorted by created date", faqSetting_.getOrderBy(), "created");
 		assertEquals("Data is not sorted asc", faqSetting_.getOrderType(), "asc");
-		faqService_.getUserSetting(USER_ROOT, faqSetting_);
+		faqService_.saveFAQSetting(faqSetting_, USER_ROOT);
 
 //		get all userSetting information from user node and set for FAQSetting object
 		FAQSetting setting = new FAQSetting();
@@ -631,7 +626,7 @@ public class TestFAQService extends FAQServiceTestCase {
 		List<String> list = faqService_.getAllFAQAdmin();
 		assertNotNull(list);
 		assertEquals("User demo is addmin of FAQ System", faqService_.isAdminRole(USER_DEMO), false);
-
+/*
 //	Test send mail for user:
 		Message  message = new Message(); 
     message.setMimeType("text/htm") ;
@@ -643,7 +638,7 @@ public class TestFAQService extends FAQServiceTestCase {
     	faqService_.sendMessage(message) ;
     } catch(Exception e) {
     	e.printStackTrace();
-    }
+    }*/
 	}
 	
 	public void testUserAvatar()throws Exception{
@@ -658,5 +653,4 @@ public class TestFAQService extends FAQServiceTestCase {
 		assertNull(faqService_.getUserAvatar(USER_ROOT));
 	}
 
-*/
 }

@@ -421,7 +421,6 @@ public class MultiLanguages {
 			if(commentNode.hasProperty("exo:dateComment")) comment.setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
   		return comment;
   	} catch (Exception e){
-  		e.printStackTrace();
   		return null;
   	}
   }
@@ -450,7 +449,6 @@ public class MultiLanguages {
       answer.setLanguage(answerNode.getProperty("exo:responseLanguage").getValue().getString()) ;
       return answer;
   	} catch (Exception e){
-  		e.printStackTrace() ;
   	}
   	return null;
   }
@@ -515,6 +513,7 @@ public class MultiLanguages {
   		quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).getNode(questionLanguage.getId());
     } catch (Exception e) {
     	quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).addNode(questionLanguage.getId(), "exo:faqLanguage");
+    	quesNode.getSession().save();
     }
   	if(!quesLangNode.isNodeType("mix:faqi18n")) {
   		quesLangNode.addMixin("mix:faqi18n") ;
@@ -525,7 +524,7 @@ public class MultiLanguages {
   	try{
   		answerHome = quesLangNode.getNode(Utils.ANSWER_HOME);
   	} catch (Exception e){
-  		answerHome = quesLangNode.addNode(Utils.ANSWER_HOME, "answerHome");
+  		answerHome = quesLangNode.addNode(Utils.ANSWER_HOME, "exo:answerHome");
   	}
   	if(!answerHome.isNew()){
   		List<String> listNewAnswersId = new ArrayList<String>();
@@ -558,6 +557,8 @@ public class MultiLanguages {
 	    	answerNode.setProperty("exo:questionId", quesNode.getName() ) ;
 	    	answerNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString() ) ;
 	  	}
+	  	String language = answer.getLanguage();
+	  	if(language == null || language.length() == 0) language = questionLanguage.getLanguage();
 	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
 	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
 	  	answerNode.setProperty("exo:fullName", answer.getFullName());
@@ -565,6 +566,7 @@ public class MultiLanguages {
 	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
 	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
+	  	answerNode.setProperty("exo:responseLanguage", language) ;
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}

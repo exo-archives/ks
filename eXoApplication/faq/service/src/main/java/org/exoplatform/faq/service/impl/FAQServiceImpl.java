@@ -16,7 +16,6 @@
  */
 package org.exoplatform.faq.service.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,10 +95,8 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
+	
 	public void start() {
-	  
-	  
-	  
       log.info("initializing FAQ default data...");
 
       try{
@@ -117,8 +114,6 @@ public class FAQServiceImpl implements FAQService, Startable{
           log.error("Error while initializing Data plugin " + plugin.getName(), e);
         }   
       }
- 
-	  
 		try{
 		  log.info("initializing FAQ RSS listeners...");
 			jcrData_.reInitRSSEvenListener();			
@@ -132,9 +127,6 @@ public class FAQServiceImpl implements FAQService, Startable{
     } catch (Exception e) {
       log.error("Error while initializing FAQ template", e);
     }   
-    
-  
-		
 	}
 
 	public void stop() {}

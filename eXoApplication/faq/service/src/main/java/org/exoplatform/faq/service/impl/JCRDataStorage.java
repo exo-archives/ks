@@ -233,7 +233,7 @@ public class JCRDataStorage {
 			if(userSettingNode.hasProperty("exo:ordeType")) faqSetting.setOrderType(userSettingNode.getProperty("exo:ordeType").getValue().getString());
 			if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
 		}catch (Exception e) {
-			//e.printStackTrace() ;
+			e.printStackTrace() ;
 		}finally { sProvider.close() ;}		
 	}
 																																																																																																																																																																																																																																																																																
@@ -770,7 +770,7 @@ public class JCRDataStorage {
     	String qId = quesNode.getName() ;
   		String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
     	String defaultLang = quesNode.getProperty("exo:language").getString() ;
-    	//System.out.println("defaultLang >>>>>>>> " + defaultLang) ;
+//    	System.out.println("defaultLang >>>>>>>> " + defaultLang) ;
     	
     	for(Answer answer : answers){
     		if(answer.getLanguage().equals(defaultLang)){
@@ -934,9 +934,8 @@ public class JCRDataStorage {
 			Node answerNode = getFAQServiceHome(sProvider).getNode(questionId).getNode(Utils.ANSWER_HOME).getNode(answerid);
 			return getAnswerByNode(answerNode);
 		} catch (Exception e){
-			e.printStackTrace();			
 		}finally { sProvider.close() ;}
-		return null;
+		return null;	
 	}
 	
 	private Comment[] getComment(Node questionNode) throws Exception{
@@ -1621,7 +1620,6 @@ public class JCRDataStorage {
 				queryString.append(")]");
 			}
 			queryString.append(" order by @exo:createdDate ascending");
-			System.out.println("\n\n query:" + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = null;
@@ -2516,7 +2514,7 @@ public class JCRDataStorage {
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager() ;
-			//System.out.println("Query ====>" + eventQuery.getQuery());
+//			System.out.println("Query ====>" + eventQuery.getQuery());
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
