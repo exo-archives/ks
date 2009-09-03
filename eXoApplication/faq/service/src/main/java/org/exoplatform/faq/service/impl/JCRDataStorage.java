@@ -1242,7 +1242,8 @@ public class JCRDataStorage {
 				}*/
 			}else {
 				questionNode = getFAQServiceHome(sProvider).getNode(question.getPath()) ;
-			}			
+			}	
+			System.out.println("questionNode ==>" + questionNode.getPath());
 			saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
 			if (questionNode.isNew())	questionNode.getSession().save();
 			else questionNode.save();
