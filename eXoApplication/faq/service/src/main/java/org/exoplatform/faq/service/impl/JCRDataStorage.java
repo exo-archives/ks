@@ -37,19 +37,30 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.jcr.AccessDeniedException;
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.InvalidItemStateException;
+import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.ReferentialIntegrityException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.version.VersionException;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
@@ -80,6 +91,7 @@ import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
@@ -96,6 +108,7 @@ import org.exoplatform.services.scheduler.PeriodInfo;
  */
 public class JCRDataStorage {
   
+  private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 	final private static String USER_SETTING = "UserSetting".intern();
 	final private static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
@@ -387,14 +400,34 @@ public class JCRDataStorage {
 		try {
 			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
 		} catch (PathNotFoundException ex) {
-			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
-			categoryHome.addMixin("mix:faqSubCategory") ;
-			categoryHome.setProperty("exo:name", "Root") ;
-			categoryHome.setProperty("exo:isView", true);
-			faqServiceHome.save() ;
-			return categoryHome ;
+			initRootCategory();
+			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
 		}
 	}
+
+  public boolean initRootCategory() throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    try {
+      Node faqServiceHome = getFAQServiceHome(sProvider) ;
+      
+      if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
+        log.debug("root category is already created");
+        return false;
+      }
+      
+      Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
+      categoryHome.addMixin("mix:faqSubCategory") ;
+      categoryHome.setProperty("exo:name", "Root") ;
+      categoryHome.setProperty("exo:isView", true);
+      faqServiceHome.save() ;  
+      log.info("Initialized root category : " + categoryHome.getPath());
+      return true;
+    }catch (Exception e) {
+      log.error("Could not initialize root category", e);
+      return false;
+    }finally { sProvider.close() ;}
+
+  }
 	
 	private Node getTemplateHome(SessionProvider sProvider) throws Exception {
 		Node faqServiceHome = getFAQServiceHome(sProvider) ;
@@ -1713,7 +1746,7 @@ public class JCRDataStorage {
 	/*public QuestionPageList getQuestionsNotYetAnswer() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			Node categoryHome = getCategoryHome(sProvider, null) ;
+			Node categoryHome = getCategoriesHome(sProvider) ;
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root" + categoryHome.getPath() 
 					+ "//element(*,exo:faqQuestion)").append("order by @exo:createdDate ascending");
@@ -1944,15 +1977,44 @@ public class JCRDataStorage {
 		return category;
 	}
 	
+	/**
+	 * 
+	 * @param categoryId the path of the category starting from home. It should be in the form of "categories/CategoryXXX/CategoryXXX"
+	 * @return
+	 * @throws Exception
+	 */
 	public Category getCategoryById(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 				return getCategory(getFAQServiceHome(sProvider).getNode(categoryId)) ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.debug("Category not found " + categoryId);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
+	
+	 public List<Category> findCategoriesByName(String categoryName) throws Exception {
+	    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	    try {
+	      Node categoryHome = getCategoryHome(sProvider, null) ;
+	      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+	      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+	                                     append("//element(*,exo:faqCategory)[@exo:name='").
+	                                     append(categoryName).append("']") ;
+	      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+	      QueryResult queryResult = query.execute();
+	      NodeIterator iter = queryResult.getNodes() ;
+	      List<Category> result = new ArrayList<Category>() ;
+	      while(iter.hasNext()) {
+	        result.add(getCategory(iter.nextNode())) ;
+	      }
+	      return result ;
+	    }catch(Exception e) {
+	      log.error("could not retrieve categories by name " + categoryName, e);
+	    }finally { sProvider.close() ;}
+	    return null ;   
+	  }
+	
 	
 	public List<String> getListCateIdByModerator(String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -2944,20 +3006,21 @@ public class JCRDataStorage {
 		sProvider.close();
 	}*/
 	
-	public boolean importData(String categoryId, InputStream inputStream, boolean isZip) throws Exception{
+	public boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			if(isZip){ // Import from zipfile
 				ZipInputStream zipStream = new ZipInputStream(inputStream) ;
 				ZipEntry entry ;
-				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
+				Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
 				while((entry = zipStream.getNextEntry()) != null) {
 					ByteArrayOutputStream out= new ByteArrayOutputStream();
 					int available = -1;
 					byte[] data = new byte[2048];
 					while ((available = zipStream.read(data, 0, 1024)) > -1) {
 						out.write(data, 0, available); 
-					}												 
+					}						
+		
 					zipStream.closeEntry();
 					out.close();
 					InputStream input = new ByteArrayInputStream(out.toByteArray());
@@ -2968,14 +3031,15 @@ public class JCRDataStorage {
 				zipStream.close();
 				return true ;
 			} else { // import from xml
-				Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryId);			
+				Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
 				Session session = categoryNode.getSession();
 				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
 				return true ;
 			}			
 		}catch(Exception e) {
-			//e.printStackTrace() ;
+			log.warn("Failed to import data in category " + parentId + ": " + e.getMessage());
+			//throw new RuntimeException("Failed to import data in category " + categoryId, e);
 		}finally{ sProvider.close() ;}	
 		return false ;
 	}

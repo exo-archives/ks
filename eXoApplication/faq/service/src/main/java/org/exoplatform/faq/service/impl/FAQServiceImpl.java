@@ -18,12 +18,15 @@ package org.exoplatform.faq.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
+import org.apache.commons.logging.Log;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
@@ -36,6 +39,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.InitialDataPlugin;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
@@ -46,6 +50,7 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.Message;
 import org.picocontainer.Startable;
 
@@ -65,11 +70,15 @@ public class FAQServiceImpl implements FAQService, Startable{
 	private TemplatePlugin template_ ;
 	private ConfigurationManager configManager_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
+	private Collection<InitialDataPlugin> initDataPlugins;
+	
+	private static Log log = ExoLogger.getLogger(FAQServiceImpl.class);
 	
 	public FAQServiceImpl(ConfigurationManager configManager, NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
 		configManager_ = configManager ;
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
+		initDataPlugins = new ArrayList<InitialDataPlugin>();
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
@@ -80,26 +89,61 @@ public class FAQServiceImpl implements FAQService, Startable{
 		jcrData_.addRolePlugin(plugin) ;
 	}
 	
+	public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception {
+	  initDataPlugins.add(plugin);
+	}
+	
 	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
 	public void start() {
-//		TODO: JUni test is fall
+	  
+	  
+	  
+      log.info("initializing FAQ default data...");
+
+      try{
+        jcrData_.initRootCategory(); 
+      } catch (Exception e) {
+        throw new RuntimeException ("Error while initializing the root category", e);
+      }   
+      
+      for (InitialDataPlugin plugin : initDataPlugins) {
+        try{
+          if (plugin.importData(this, configManager_)) {
+            log.info("imported plugin " + plugin); 
+          }
+        } catch (Exception e) {
+          log.error("Error while initializing Data plugin " + plugin.getName(), e);
+        }   
+      }
+ 
+	  
 		try{
-			jcrData_.reInitRSSEvenListener();
+		  log.info("initializing FAQ RSS listeners...");
+			jcrData_.reInitRSSEvenListener();			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error while initializing FAQ RSS listeners", e);
 		}		
-		try{
-			initViewerTemplate() ;			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+
+    try{
+      log.info("initializing FAQ template...");
+      initViewerTemplate() ;      
+    } catch (Exception e) {
+      log.error("Error while initializing FAQ template", e);
+    }   
+    
+  
+		
 	}
 
 	public void stop() {}
 	
 	private void initViewerTemplate() throws Exception {
+	  if (template_ == null) {
+	    log.warn("No default template was configured for FAQ.");
+	    return;
+	  }
 		if(getTemplate() == null) {
 			InputStream in = configManager_.getInputStream(template_.getPath()) ;
 			byte[] data = new byte[in.available()] ;
