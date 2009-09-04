@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
+import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
@@ -187,7 +188,67 @@ public class TestFAQService extends FAQServiceTestCase{
 		return attachment;
 	}
 
+
+	private void defaultData() throws Exception {
+	//Create category Home.
+		faqService_.getAllCategories();
+		//Create some category default
+		Category cate = createCategory("Category to test question") ;
+		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
+		Category cate2 = createCategory("Category 2 to test question") ;
+		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
+		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
+		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
+
+		Question question1 = createQuestion(categoryId1) ;
+		questionId1 = question1.getId();
+		Question question2 = createQuestion(categoryId1) ;
+		question2.setRelations(new String[]{}) ;
+		question2.setLanguage("English") ;
+		question2.setAuthor("root") ;
+		question2.setEmail("truong_tb1984@yahoo.com") ;
+		question2.setDetail("Nguyen van truong test question 2222222 ?") ;
+		question2.setCreatedDate(new Date()) ;
+		questionId2 = question2.getId();
+		
+		Question question3 = createQuestion(categoryId1) ;
+		question3.setRelations(new String[]{}) ;
+		question3.setLanguage("English") ;
+		question3.setAuthor("Phung Hai Nam") ;
+		question3.setEmail("phunghainam@yahoo.com") ;
+		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
+		question3.setCreatedDate(new Date()) ;
+		questionId3 = question3.getId();
+
+		Question question4 = createQuestion(categoryId1) ;
+		question4.setRelations(new String[]{}) ;
+		question4.setLanguage("English") ;
+		question4.setAuthor("Pham Dinh Tan") ;
+		question4.setEmail("phamdinhtan@yahoo.com") ;
+		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
+		question4.setCreatedDate(new Date()) ;
+		questionId4 = question4.getId();
+
+		Question question5 = createQuestion(categoryId1) ;
+		question5.setRelations(new String[]{}) ;
+		question5.setLanguage("English") ;
+		question5.setAuthor("Ly Dinh Quang") ;
+		question5.setEmail("lydinhquang@yahoo.com") ;
+		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
+		question5.setCreatedDate(new Date()) ;
+		questionId5 = question5.getId();
+		
+//		save questions
+		faqService_.saveQuestion(question1, true,faqSetting_) ;
+		faqService_.saveQuestion(question2, true,faqSetting_) ;
+		faqService_.saveQuestion(question3, true,faqSetting_) ;
+		faqService_.saveQuestion(question4, true,faqSetting_) ;
+		faqService_.saveQuestion(question5, true,faqSetting_) ;
+	}
+	
 	public void testCategory() throws Exception {
+	// remove Data before testing category.
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
 //		add category Id	
 		faqService_.getAllCategories();
 		Category cate1 = createCategory("Cate 1") ;
@@ -275,63 +336,21 @@ public class TestFAQService extends FAQServiceTestCase{
 		// remove Data when tested category
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
-
-	private void defaultData() throws Exception {
-	//Create category Home.
-		faqService_.getAllCategories();
-		//Create some category default
-		Category cate = createCategory("Category to test question") ;
-		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
-		Category cate2 = createCategory("Category 2 to test question") ;
-		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
-		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
-		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
-
-		Question question1 = createQuestion(categoryId1) ;
-		questionId1 = question1.getId();
-		Question question2 = createQuestion(categoryId1) ;
-		question2.setRelations(new String[]{}) ;
-		question2.setLanguage("English") ;
-		question2.setAuthor("root") ;
-		question2.setEmail("truong_tb1984@yahoo.com") ;
-		question2.setDetail("Nguyen van truong test question 2222222 ?") ;
-		question2.setCreatedDate(new Date()) ;
-		questionId2 = question2.getId();
-		
-		Question question3 = createQuestion(categoryId1) ;
-		question3.setRelations(new String[]{}) ;
-		question3.setLanguage("English") ;
-		question3.setAuthor("Phung Hai Nam") ;
-		question3.setEmail("phunghainam@yahoo.com") ;
-		question3.setDetail("Nguyen van truong test question 33333333 nguyenvantruong ?") ;
-		question3.setCreatedDate(new Date()) ;
-		questionId3 = question3.getId();
-
-		Question question4 = createQuestion(categoryId1) ;
-		question4.setRelations(new String[]{}) ;
-		question4.setLanguage("English") ;
-		question4.setAuthor("Pham Dinh Tan") ;
-		question4.setEmail("phamdinhtan@yahoo.com") ;
-		question4.setDetail("Nguyen van truong test question nguyenvantruong ?") ;
-		question4.setCreatedDate(new Date()) ;
-		questionId4 = question4.getId();
-
-		Question question5 = createQuestion(categoryId1) ;
-		question5.setRelations(new String[]{}) ;
-		question5.setLanguage("English") ;
-		question5.setAuthor("Ly Dinh Quang") ;
-		question5.setEmail("lydinhquang@yahoo.com") ;
-		question5.setDetail("Nguyen van truong test question 55555555555 ?") ;
-		question5.setCreatedDate(new Date()) ;
-		questionId5 = question5.getId();
-		
-//		save questions
-		faqService_.saveQuestion(question1, true,faqSetting_) ;
-		faqService_.saveQuestion(question2, true,faqSetting_) ;
-		faqService_.saveQuestion(question3, true,faqSetting_) ;
-		faqService_.saveQuestion(question4, true,faqSetting_) ;
-		faqService_.saveQuestion(question5, true,faqSetting_) ;
-	}
+// FAQPortlet
+	public void testCategoryInfo() throws Exception {
+//	Add new data default
+		defaultData();
+//	Get categoryInfo
+		List<String> categoryIdScoped = new ArrayList<String>();
+		CategoryInfo categoryInfo = faqService_.getCategoryInfo(Utils.CATEGORY_HOME, categoryIdScoped);
+		assertEquals("Can not get info of category by categoryInfo.", categoryInfo.getSubCateInfos().size(), 2);
+//		get QuestionInfo
+		categoryIdScoped = new ArrayList<String>();
+		categoryInfo = faqService_.getCategoryInfo(categoryId1, categoryIdScoped);
+		assertEquals("Can not questionInfo  of category.", categoryInfo.getQuestionInfos().size(), 5);
+//	 remove Data when tested category
+		faqService_.removeCategory(Utils.CATEGORY_HOME);
+  }
 	
 	public void testQuestion() throws Exception {
 //		Add new data default

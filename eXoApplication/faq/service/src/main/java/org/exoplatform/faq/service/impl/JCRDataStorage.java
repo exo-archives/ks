@@ -37,28 +37,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.jcr.AccessDeniedException;
 import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.InvalidItemStateException;
-import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.ReferentialIntegrityException;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.VersionException;
 
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
@@ -233,7 +223,8 @@ public class JCRDataStorage {
 			if(userSettingNode.hasProperty("exo:ordeType")) faqSetting.setOrderType(userSettingNode.getProperty("exo:ordeType").getValue().getString());
 			if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			saveFAQSetting(faqSetting, userName);
+//			e.printStackTrace() ;
 		}finally { sProvider.close() ;}		
 	}
 																																																																																																																																																																																																																																																																																
@@ -1230,8 +1221,8 @@ public class JCRDataStorage {
 				try {
 					questionHome = category.getNode(Utils.QUESTION_HOME) ;
 				}catch(PathNotFoundException ex) {
-					questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 //					TODO: JUnit test is fall
+					questionHome = category.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 					addRSSListener(questionHome) ;
 				}
 				questionNode = questionHome.addNode(question.getId(), "exo:faqQuestion");
@@ -1242,7 +1233,7 @@ public class JCRDataStorage {
 			}else {
 				questionNode = getFAQServiceHome(sProvider).getNode(question.getPath()) ;
 			}	
-			System.out.println("questionNode ==>" + questionNode.getPath());
+//			System.out.println("questionNode ==>" + questionNode.getPath());
 			saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
 			if (questionNode.isNew())	questionNode.getSession().save();
 			else questionNode.save();
@@ -1698,9 +1689,16 @@ public class JCRDataStorage {
 		try {
 			Node faqHome = getFAQServiceHome(sProvider) ;
 			String homePath = faqHome.getPath() ;
+			Node destQuestionHome;
+			try {
+				destQuestionHome = (Node)faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME);
+      } catch (Exception e) {
+      	destQuestionHome = faqHome.getNode(destCategoryId).addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
+      	faqHome.getSession().save();
+      }
 			for(String id : questions) {
 				try{
-					faqHome.getSession().move(homePath+ "/" + id, homePath + "/" + destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
+					faqHome.getSession().move(homePath+ "/" + id, destQuestionHome.getPath() + id.substring(id.lastIndexOf("/"))) ;
 					faqHome.getSession().save() ;
 					Node question = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
 					String catId = destCategoryId.substring(destCategoryId.lastIndexOf("/")+ 1) ;
@@ -1861,8 +1859,8 @@ public class JCRDataStorage {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
 			  newCategory.addMixin("mix:faqSubCategory") ;
-			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 //			  TODO: JUnit test is fall
+			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
 			  addRSSListener(questionHome) ;
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;

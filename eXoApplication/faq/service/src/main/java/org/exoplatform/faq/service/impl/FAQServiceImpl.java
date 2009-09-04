@@ -97,23 +97,23 @@ public class FAQServiceImpl implements FAQService, Startable{
 	}
 	
 	public void start() {
-      log.info("initializing FAQ default data...");
-
+		log.info("initializing FAQ default data...");
+    try{
+      jcrData_.initRootCategory(); 
+    } catch (Exception e) {
+      throw new RuntimeException ("Error while initializing the root category", e);
+    }   
+    
+    for (InitialDataPlugin plugin : initDataPlugins) {
       try{
-        jcrData_.initRootCategory(); 
+        if (plugin.importData(this, configManager_)) {
+          log.info("imported plugin " + plugin); 
+        }
       } catch (Exception e) {
-        throw new RuntimeException ("Error while initializing the root category", e);
+        log.error("Error while initializing Data plugin " + plugin.getName(), e);
       }   
-      
-      for (InitialDataPlugin plugin : initDataPlugins) {
-        try{
-          if (plugin.importData(this, configManager_)) {
-            log.info("imported plugin " + plugin); 
-          }
-        } catch (Exception e) {
-          log.error("Error while initializing Data plugin " + plugin.getName(), e);
-        }   
-      }
+    }
+    
 		try{
 		  log.info("initializing FAQ RSS listeners...");
 			jcrData_.reInitRSSEvenListener();			
@@ -126,7 +126,7 @@ public class FAQServiceImpl implements FAQService, Startable{
       initViewerTemplate() ;      
     } catch (Exception e) {
       log.error("Error while initializing FAQ template", e);
-    }   
+    }  
 	}
 
 	public void stop() {}
