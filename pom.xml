@@ -10,9 +10,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
-  <artifactId>ks</artifactId>
+  <artifactId>config</artifactId>
   <name>eXo Knowledge Suite</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2.x</version>
   <packaging>pom</packaging>
   
   <properties>
@@ -29,9 +29,9 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/trunk</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
   </scm> 
   
   <modules>
@@ -166,7 +166,7 @@
         <org.exoplatform.jcr.version>1.10.3</org.exoplatform.jcr.version>
         <org.exoplatform.pc.version>2.0.6</org.exoplatform.pc.version>
         <org.exoplatform.portal.version>2.5.3</org.exoplatform.portal.version>
-        <org.exoplatform.ks.version>1.2-SNAPSHOT</org.exoplatform.ks.version>
+        <org.exoplatform.ks.version>1.2.x</org.exoplatform.ks.version>
         <test.classes>Test</test.classes>
         <test.skip>true</test.skip>
       </properties>
