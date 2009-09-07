@@ -1,6 +1,11 @@
 <%  
 	import org.exoplatform.faq.service.CategoryInfo;
 	import org.exoplatform.faq.service.Utils;
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	def rcontext = _ctx.getRequestContext();
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.createLink('UIFAQViewerPortlet','"+uicomponent.useAjax+"');") ;
 %>
 
 <style type="text/css">
@@ -129,6 +134,7 @@
 		<% 
 		int i = 0;
 		String link = ids[0], viewName;
+		String url;
 		for(pathName in navPath) {
 			if(pathName.equals(Utils.CATEGORY_HOME)){ 
 				pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
@@ -141,11 +147,12 @@
 			if(i < ids.length && i > 0)
 				link = link + "/" + ids[i];
 			if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+				url = uicomponent.url("ChangePath", link);
 				if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
 		%>
-			<span><a href="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+			<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
 				<%} else { %>
-			<span><a href="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+			<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
 				<%} %>
 		<%} else { %>
 			<span title="$pathName"><b>$viewName</b></span>
@@ -172,7 +179,7 @@
 		%>
 		<div class="FAQViewerIcon">
 			<span>
-				<b><a href="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>"><font color="black">$categoryName</font></a></b>
+				<b><a class="ActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>"><font color="black">$categoryName</font></a></b>
 			</span>
 			<%if(!subCategories.isEmpty()) {%>
 				<span>[</span>
@@ -182,7 +189,7 @@
 					String subCateName = subCategory.getName();
 					String subPath = subCategory.getPath();
 			%>
-				<a href="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+				<a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
 			<%	if(j != (subCategories.size-1)) {%>
 				<span> | </span>
 			<%	}

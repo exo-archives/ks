@@ -162,11 +162,25 @@
 											</div>
 										
 
-									<% } else {%>
+									<% } else if(tabconten.id.equals(uiform.EDIT_TEMPLATE_TAB)) {%>
 											<div class="EditTempLateContent">
 												<div class="LabelContent"><%=uiform.getLabel(uiform.FIELD_TEMPLATE_TEXTARE);%>:</div>
 												<div class="TextAreContent">
 													<%uiform.renderField(tabconten.getChildById(uiform.FIELD_TEMPLATE_TEXTARE)) ;%>
+												</div>
+											</div>
+									<% } else {%>
+										<%
+											 String checkedBox = "";
+											 if(uiform.useAjax) checkedBox = "checked=\"checked\"";
+										%>
+											<div class="EditTempLateContent">
+												<div style="width:200px; margin:30px auto;line-height:20px;">
+													<div class="FloatLeft"><%=uiform.getLabel(uiform.FIELD_USEAJAX_CHECKBOX);%>:&nbsp; &nbsp;</div>
+													<div class="FloatLeft" style="padding-top:3px">
+														<input type="checkbox" class="checkbox" value="false" $checkedBox name="<%=uiform.FIELD_USEAJAX_CHECKBOX;%>"/>
+													</div>
+													<div style="clear:left;"><span></span></div>
 												</div>
 											</div>
 									<% } %>

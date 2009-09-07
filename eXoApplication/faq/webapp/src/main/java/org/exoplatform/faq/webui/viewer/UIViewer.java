@@ -41,7 +41,7 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-		//template =	"app:/templates/faq/webui/UIViewer.gtmpl",
+		template =	"app:/templates/faq/webui/UIViewer.gtmpl",
 		events = {
 		  	 @EventConfig(listeners = UIViewer.ChangePathActionListener.class)
 		}
@@ -50,6 +50,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIViewer extends UIContainer {
 	private FAQService fAqService;
 	private String path = Utils.CATEGORY_HOME;
+	private boolean useAjax = true;
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
@@ -66,18 +67,19 @@ public class UIViewer extends UIContainer {
 		return newList;
 	} 
 	
-  public ResourceResolver getTemplateResourceResolver(WebuiRequestContext context, String template) {
+  /*public ResourceResolver getTemplateResourceResolver(WebuiRequestContext context, String template) {
   	return new FAQResourceResolver() ;
   }
   
   public String getTemplate() {
   	return "FAQViewerTemplate" ;
-  }
+  }*/
   
   private CategoryInfo getCategoryInfo() throws Exception {
 		CategoryInfo categoryInfo = new CategoryInfo();
 		List<String> list = new ArrayList<String>();
-		list = FAQUtils.getCategoriesIdViewer();
+		list = FAQUtils.getCategoriesIdFAQPortlet();
+		useAjax = FAQUtils.getUseAjaxFAQPortlet();
 		try {
 			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
     } catch (Exception e) {

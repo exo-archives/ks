@@ -421,7 +421,7 @@ public class FAQUtils {
 		return StringUtils.replace(text, "\"", "&quot;");		
 	}
 
-	public static List<String> getCategoriesIdViewer() throws Exception{
+	public static List<String> getCategoriesIdFAQPortlet() throws Exception{
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		String str = portletPref.getValue("displayCategories", "");
@@ -432,12 +432,19 @@ public class FAQUtils {
 	  return list;
   }
 
-	public static void saveCategoriesIdViewer(List<String> list) throws Exception{
+	public static boolean getUseAjaxFAQPortlet() {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+	  return Boolean.parseBoolean(portletPref.getValue("useAjax", ""));
+  }
+	
+	public static void saveFAQPortletPreference(List<String> list, boolean useAjax) throws Exception{
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
 		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		String str = list.toString();
 		str = str.replace("[", "").replace("]", "").replaceAll(" ", "");
 		portletPref.setValue("displayCategories", str);
+		portletPref.setValue("useAjax", String.valueOf(useAjax));
 		portletPref.store();
 	}
 	
