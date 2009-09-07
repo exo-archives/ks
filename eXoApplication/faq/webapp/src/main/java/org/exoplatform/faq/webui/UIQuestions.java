@@ -33,6 +33,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -414,9 +415,12 @@ public class UIQuestions extends UIContainer {
 	
 	private String getAvatarUrl(String userId){
 		try{
-			return FAQUtils.getFileSource(faqService_.getUserAvatar(userId), getApplicationComponent(DownloadService.class));
-		} catch (Exception e){}		
-		return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
+			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
+			return url;
+		} catch (Exception e){
+		}
+		return Utils.DEFAULT_AVATAR_URL;
 	}
 
 	public String getCategoryId(){
