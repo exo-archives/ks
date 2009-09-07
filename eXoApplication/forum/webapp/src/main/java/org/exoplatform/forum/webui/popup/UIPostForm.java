@@ -105,6 +105,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private String link = "";
 	private boolean isDoubleClickSubmit = false;
 	public UIPostForm() throws Exception {
+		if(ForumUtils.isEmpty(getId())) setId("UIPostForm");
 		isDoubleClickSubmit = false;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
@@ -119,12 +120,16 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		threadContent.addChild(formWYSIWYGInput) ;
 		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
 		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
+		threadContent.setActionIdAddItem(FIELD_ATTACHMENTS);
+		threadContent.setActionAddItem("Attachment");
+		threadContent.setLabelActionAddItem(getLabel("Attachment"));
+		
 		UIFormInputIconSelector inputIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
 		inputIconSelector.setSelectedIcon("IconsView") ;
 		
 		addUIFormInput(threadContent) ;
 		addUIFormInput(inputIconSelector) ;
-		this.setActions(new String[] {"PreviewPost", "SubmitPost", "Attachment", "Cancel"}) ;
+		this.setActions(new String[] {"PreviewPost", "SubmitPost", "Cancel"}) ;
 	}
 	
 	public String getLink() {return link;}
@@ -163,7 +168,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			removeAction.setActionListener("RemoveAttachment") ;
 			removeAction.setActionName(ACT_REMOVE);
 			removeAction.setActionParameter(attachdata.getId());
-			removeAction.setActionType(ActionData.TYPE_LINK) ;
+			removeAction.setActionType(ActionData.TYPE_ICON) ;
+			removeAction.setCssIconClass("DustBin");
 			removeAction.setBreakLine(true) ;
 			uploadedFiles.add(removeAction) ;
 		}

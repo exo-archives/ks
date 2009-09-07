@@ -464,6 +464,11 @@
 	margin: 0px 0px 0px 4px;
 }
 
+.UIFAQPortlet .DustBin {
+	background: url('background/DustBin.gif') no-repeat center;
+	width: 18px; height: 20px;
+}
+
 .UIFAQPortlet .VoteFAQ {
 	float: right;
 	background: url('background/VoteIcon.gif') no-repeat center;

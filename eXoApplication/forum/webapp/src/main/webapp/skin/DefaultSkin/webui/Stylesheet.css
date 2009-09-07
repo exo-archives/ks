@@ -607,3 +607,9 @@
 .UIForumPortlet .UIRightClickPopupMenu a{
 	display: block;
 }
+
+.UIForumPortlet .AddActionItem a{
+	color: blue;
+	text-decoration: underline;
+	font-style: italic;
+}

@@ -231,7 +231,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userTitle.setEnable(false);
 		}
 		UIFormTextAreaInput signature = new UIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA, FIELD_SIGNATURE_TEXTAREA, null);
-		signature.setValue(this.userProfile.getSignature());
+		String strSignature = this.userProfile.getSignature();
+		if(ForumUtils.isEmpty(strSignature)) strSignature = "";
+		signature.setValue(strSignature);
 		UIFormCheckBoxInput isDisplaySignature = new UIFormCheckBoxInput<Boolean>(FIELD_ISDISPLAYSIGNATURE_CHECKBOX, FIELD_ISDISPLAYSIGNATURE_CHECKBOX, false);
 		isDisplaySignature.setChecked(this.userProfile.getIsDisplaySignature()) ;
 
@@ -465,7 +467,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
-			}
+			} else signature = "";
 			signature = ForumTransformHTML.enCodeHTML(signature);
 			boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
 			Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;

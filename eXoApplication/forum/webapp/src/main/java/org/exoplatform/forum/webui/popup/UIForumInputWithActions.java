@@ -40,10 +40,35 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 public class UIForumInputWithActions extends UIFormInputSet {
 
 	Map<String, List<ActionData>> actionField = new HashMap<String, List<ActionData>> () ;
+	private String actionAddItem;
+	private String labelActionAddItem;
+	private String actionIdAddItem = "";
 	public UIForumInputWithActions(String id) {
 		super.setId(id) ;
 	}
 	
+	public String getActionAddItem() {
+  	return actionAddItem;
+  }
+	public void setActionAddItem(String actionAddItem) {
+  	this.actionAddItem = actionAddItem;
+  }
+
+	public String getLabelActionAddItem() {
+  	return labelActionAddItem;
+  }
+	public void setLabelActionAddItem(String labelActionAddItem) {
+  	this.labelActionAddItem = labelActionAddItem;
+  }
+
+	public String getActionIdAddItem() {
+  	return actionIdAddItem;
+  }
+
+	public void setActionIdAddItem(String actionIdAddItem) {
+  	this.actionIdAddItem = actionIdAddItem;
+  }
+
 	public void setActionField(String fieldName, List<ActionData> actions) throws Exception {
 		actionField.put(fieldName, actions) ;
 	}
@@ -90,7 +115,7 @@ public class UIForumInputWithActions extends UIFormInputSet {
 					}
 					w.write("<a title=\"" + actionLabel + "\" href=\"" + actionLink +"\">") ;
 					if(action.getActionType() == ActionData.TYPE_ICON) {
-						w.write("<img src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" class=\"" + action.getCssIconClass()+"\"/>") ;
+						w.write("<img src=\"/eXoResources/skin/DefaultSkin/background/Blank.gif\" alt=\""+ForumUtils.getSubString(actionLabel, 30)+"\" class=\"" + action.getCssIconClass()+"\"/>") ;
 						if(action.isShowLabel) w.write(ForumUtils.getSubString(actionLabel, 30)) ;
 					}else if(action.getActionType() == ActionData.TYPE_LINK){
 						w.write(ForumUtils.getSubString(actionLabel, 30)) ;
@@ -113,6 +138,9 @@ public class UIForumInputWithActions extends UIFormInputSet {
 					w.write("</a>") ; w.write("&nbsp;") ; 
 					if(action.isBreakLine()) w.write("<br/>") ; 
 				}
+			}
+			if(inputEntry.getId().equals(actionIdAddItem)) {
+				w.write("<div class=\"AddActionItem\"><a href=\""+((UIComponent)getParent()).event(actionAddItem)+"\">"+labelActionAddItem+"</a></div>");
 			}
 			w.write("</td>") ;
 			w.write("</tr>") ;

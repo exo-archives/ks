@@ -106,9 +106,9 @@
 						     				<%=FAQUtils.getSubString(name, 80)%>
 						     			</a>
 						     	<%}%>
-											&nbsp;&nbsp;&nbsp;[&nbsp;<a href="$link" style="color:#058EE6; font-size:12px">
-												<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>
-											</a>&nbsp;]
+											<a href="$link" style="color:#058EE6; font-size:12px;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>">
+												<img class="DustBin" src="/eXoResources/skin/DefaultSkin/background/Blank.gif" alt="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>"/>
+											</a>
 										</div>
 						    <%
 						  	}

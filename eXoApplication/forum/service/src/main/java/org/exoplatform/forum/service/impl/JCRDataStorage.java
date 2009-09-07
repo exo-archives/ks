@@ -125,8 +125,10 @@ import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
 /**
- * Created by The eXo Platform SARL Author : Hung Nguyen Quang
- * hung.nguyen@exoplatform.com Jul 10, 2007 Edited by Vu Duy Tu
+ * Created by The eXo Platform SARL 
+ * Author : Hung Nguyen Quang
+ * hung.nguyen@exoplatform.com Jul 10, 2007 
+ * Edited by Vu Duy Tu
  * tu.duy@exoplatform.com July 16, 2007
  */
 
@@ -6183,7 +6185,7 @@ public class JCRDataStorage {
 		}
 		return totalJob;
 	}
-	
+//	TODO: JUnit test is fall.
 	public void getTotalJobWatting(List<String> userIds) {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		try {
