@@ -128,7 +128,7 @@
       </preference>
       <preference>
 			  <name>useAjax</name>
-			  <value>true</value><!-- value is true/false -->
+			  <value>false</value><!-- value is true/false -->
 			  <read-only>false</read-only>
 			</preference>
 		</portlet-preferences>
