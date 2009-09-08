@@ -50,7 +50,7 @@ import org.exoplatform.webui.event.EventListener;
 public class UIViewer extends UIContainer {
 	private FAQService fAqService;
 	private String path = Utils.CATEGORY_HOME;
-	private boolean useAjax = true;
+	private boolean useAjax = false;
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
