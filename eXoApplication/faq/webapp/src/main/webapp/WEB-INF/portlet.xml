@@ -126,6 +126,11 @@
         <value> </value><!-- listing categoryId show in viewer portlet (cate1,cate2,...) -->
         <read-only>false</read-only>
       </preference>
+      <preference>
+			  <name>useAjax</name>
+			  <value>true</value><!-- value is true/false -->
+			  <read-only>false</read-only>
+			</preference>
 		</portlet-preferences>
 
 	</portlet>

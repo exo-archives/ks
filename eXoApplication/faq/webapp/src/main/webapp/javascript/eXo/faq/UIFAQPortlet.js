@@ -648,4 +648,23 @@ UIFAQPortlet.prototype.openDiscussLink = function(link) {
 	window.open(link);
 } ;
 
+UIFAQPortlet.prototype.executeLink = function(evt) {
+  var onclickAction = String(this.getAttribute("actions")) ;
+	eval(onclickAction) ;
+	eXo.core.EventManager.cancelEvent(evt);
+	return false;
+} ;
+
+
+UIFAQPortlet.prototype.createLink = function(cpId,isAjax) {
+	if(!isAjax || isAjax === 'false') return ;
+  var comp = document.getElementById(cpId);
+	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","ActionLink");
+	var i = uiCategoryTitle.length;
+	if(!i || (i <=0)) return ;
+	while(i--){
+		uiCategoryTitle[i].onclick = this.executeLink ;
+	}
+} ;
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;
