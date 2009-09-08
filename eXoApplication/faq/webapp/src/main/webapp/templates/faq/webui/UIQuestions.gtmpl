@@ -257,8 +257,6 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                         questionIcon = "NotResponse" ;
                     }
 
-                    java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
-
                     if(!uicomponent.getQuestionView().equals(qId)){
                     questionContent = question.getQuestion();
             %>
@@ -273,7 +271,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                             questionContent = FAQUtils.getSubString(questionContent, 140);
                                         %>
                                             <div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionId')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionId')">$questionContent &nbsp;&nbsp;</div>
-                                            <div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+                                            <div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
                                             <%if(!question.isApproved()) {%>
                                                     <div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
                                             <%}%>
@@ -282,7 +280,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                             titleQuestion = "";
                                         %>
                                             <a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
-                                            <div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+                                            <div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
                                             <%if(!question.isApproved()) {%>
                                                     <div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
                                             <%}%>
@@ -746,7 +744,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                                             $detailQuestion
                                                                                     <%}%>
                                                                                 </div>
-                                                                                <span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
+                                                                                <span class="QuestionDateTime">&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;</span>
                                                                                     <!-- ===================================== view bottom =============================== -->
                                                                                 <%
                                                                                 if(uicomponent.currentUser_ != null){
@@ -967,7 +965,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                             if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
                                                                 continue;
                                                             }
-                                                            date = dateFormatter.format(answer.getDateResponse());
+                                                            date = FAQUtils.getFormatDate(answer.getDateResponse());
                                                             responseBy = FAQUtils.getFullName(answer.getResponseBy());
                                                             String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
                                                         %>
@@ -1167,7 +1165,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                                         commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
                                                                                     %>
                                                                                     <span>$commentDetail</span>
-                                                                                    <div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+                                                                                    <div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
                                                                                 </div>
                                                                                 <div style="clear:left;"><span></span></div>
 

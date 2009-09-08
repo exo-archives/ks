@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +41,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.CommonContact;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -424,49 +426,10 @@ public class FAQUtils {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static String getFormatDate(String format, Date myDate) {
-		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
-		 * */
+	public static String getFormatDate(Date myDate) {
 		if(myDate == null) return null;
-		String strCase = "" ;
-		int day = myDate.getDay() ;
-		switch (day) {
-		case 0:
-			strCase = "Sunday" ;
-			break;
-		case 1:
-			strCase = "Monday" ;
-			break;
-		case 2:
-			strCase = "Tuesday" ;
-			break;
-		case 3:
-			strCase = "Wednesday" ;
-			break;
-		case 4:
-			strCase = "Thursday" ;
-			break;
-		case 5:
-			strCase = "Friday" ;
-			break;
-		case 6:
-			strCase = "Saturday" ;
-			break;
-		default:
-			break;
-		}
-		String form = "temp" + format ;
-		if(form.indexOf("DDDD") > 0) {
-			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDDD") + 5));
-			return strCase + ", "	+ formatter.format(myDate).replaceAll(",", ", ");
-		} else if(form.indexOf("DDD") > 0) {
-			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDD") + 4));
-			return strCase.replaceFirst("day", "") + ", " + formatter.format(myDate).replaceAll(",", ", ");
-		} else {
-			Format formatter = new SimpleDateFormat(format);
-			return formatter.format(myDate);
-		}
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		return DateFormat.getDateInstance(DateFormat.LONG, portalContext.getLocale()).format(myDate);
 	}
 	
 	@SuppressWarnings("unused")  
