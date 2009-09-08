@@ -74,7 +74,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                     <div class="RightOverButton">
                                                         <div class="CenterOverButton">
                                                             <div class="Icon FAQRSS">
-                                                                <a href="javascript:void(0);">RSS</a>
+                                                                <a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.label.Rss")%></a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -93,7 +93,7 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                 <div class="CenterOverButton">
                                                     <div class="Icon CategoryManager">
                                                         <div class="DownArrow1Icon" style="padding-right:16px;" onclick="eXo.faq.UIFAQPortlet.viewTitle('FAQCategroManager');" >
-                                                            <a href="javascript:void(0);">Manage Category</a>
+                                                            <a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.label.ManageCategory")%></a>
                                                         </div>
                                                     </div>
                                                 </div>
