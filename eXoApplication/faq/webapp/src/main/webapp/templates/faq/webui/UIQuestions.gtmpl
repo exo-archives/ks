@@ -242,8 +242,6 @@
 						questionIcon = "NotResponse" ;
 					}
 					
-					java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMMM dd yyyy");
-					
 					if(!uicomponent.getQuestionView().equals(qId)){
 						questionContent = question.getQuestion();
 			%>
@@ -258,7 +256,7 @@
 											questionContent = FAQUtils.getSubString(questionContent, 140);
 										%>
 											<div class="ViewQuestionNotApproved" style="color:$colorViewQuestion; float:left; cursor:pointer;" onclick="$linkQuestion" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('titleQuestion$questionIndex')" onmouseout="eXo.faq.UIFAQPortlet.hiddenTitle('titleQuestion$questionIndex')">$questionContent &nbsp;&nbsp;</div>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
 											<%if(!question.isApproved()) {%>
 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
 											<%}%>
@@ -267,7 +265,7 @@
 											titleQuestion = "";
 										%>
 											<a class="ViewQuestionNotApproved" href="$linkQuestion" style="color:$colorViewQuestion; float:left;">$questionContent &nbsp;&nbsp;</a>
-											<div style="color:#721d95; float:left;">(&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;)</div>
+											<div style="color:#721d95; float:left;">(&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;)</div>
 											<%if(!question.isApproved()) {%>
 													<div style="color:red; float:left;">( <%=_ctx.appRes("UIQuestions.label.QuestionIsNotApproved")%> )</div>
 											<%}%>
@@ -723,7 +721,7 @@
 																							$questionDetail
 																					<%}%>
 																				</div>
-																				<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
+																				<span class="QuestionDateTime">&nbsp;<%=FAQUtils.getFormatDate(question.getCreatedDate())%>&nbsp;</span>
 																					<!-- ===================================== view bottom =============================== -->
 																				<%
 																				if(uicomponent.currentUser_ != null){
@@ -754,7 +752,7 @@
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
 																													<div class="ButtonMiddle">
-																														<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+																														<a class="Comment" href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
 																													</div>
 																												</div>
 																											</div>
@@ -934,7 +932,7 @@
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 																continue;
 															}
-															date = dateFormatter.format(answer.getDateResponse());
+															date = FAQUtils.getFormatDate(answer.getDateResponse());
 															responseBy = answer.getFullName();
 															String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
 														%>
@@ -1138,7 +1136,7 @@
 																						commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
 																					%>
 																					<span>$commentDetail</span>
-																					<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>
+																					<div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
 																				</div>
 																				<div style="clear:left;"><span></span></div>
 			
