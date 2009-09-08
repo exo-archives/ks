@@ -596,11 +596,6 @@ public class FAQUtils {
 		return null;
 	}
 	
-	public static String convertLinkToForum(String s){
-		s = s.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("DiscussForum", "ChangePath").replaceAll("amp;", "");
-		return s;
-	}
-	
 	public static String getLink(String link, String componentId, String componentIdhasAction, String action, String actionRep, String objectId) {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();

@@ -55,6 +55,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
@@ -162,6 +163,7 @@ public class UIQuestions extends UIContainer {
 		currentUser_ = FAQUtils.getCurrentUser() ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
 		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		if(FAQUtils.isFieldEmpty(getId())) setId("UIQuestions");
 	}
 	
 	public String getRSSLink(){
@@ -172,9 +174,17 @@ public class UIQuestions extends UIContainer {
 		// for discuss question
 		FAQSetting faqSetting = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting);
-		String link = getLink().replaceAll("faq", "forum"); 
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String link = getLink().replaceAll(portalContext.getNodePath().replace("/", ""), "forum"); 
     link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
 		return link;
+	}
+	
+	private String convertLinkToForum(String s){
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		s = s.replaceAll(portalContext.getNodePath().replace("/", ""), "forum").replaceFirst(getId(), "UIBreadcumbs")
+				 .replaceFirst("DiscussForum", "ChangePath").replaceAll("amp;", "");
+		return s;
 	}
 	
 	public String getPortalName() {
@@ -1341,6 +1351,7 @@ public class UIQuestions extends UIContainer {
 		        post.setIsApproved(false);
 		        forumService.savePost(categoryId, forumId, topicId, post, true, "");
 		        answer.setPostId(post.getId());
+		        if(answer.getLanguage() == null) answer.setLanguage(question.getLanguage());
 		        AllAnswer[i] = answer;
 		        ++i;
 	        }
