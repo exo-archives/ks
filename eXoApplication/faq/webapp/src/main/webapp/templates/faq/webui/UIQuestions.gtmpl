@@ -467,6 +467,27 @@
 																						<div class="PrintScrintFAQ"><span></span></div>
 																					</a>
 																				</td>
+																			<%if(uicomponent.currentUser_ != null) {
+																					if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
+																			%>
+																				<td style="width:22px">
+																					<a onclick="<%=uicomponent.event("EditQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>" style="cursor:pointer">
+																						<div class="Edit" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
+																					</a>
+																				</td>
+																				<td style="width:22px">
+																					<a onclick="<%=uicomponent.event("DeleteQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>" style="cursor:pointer">
+																						<div class="Delete" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
+																					</a>
+																				</td>
+																				<td style="width:22px">
+																					<a onclick="<%=uicomponent.event("MoveQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>" style="cursor:pointer">
+																						<div class="MoveQuestion" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
+																					</a>
+																				</td>
+																			<%	}
+																				} 
+																			%>
 																				<!-- action send mail for frend -->
 																				<td style="width:25px">
 																					<%
@@ -739,8 +760,10 @@
 																										<div class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
-																													<div class="ButtonMiddle">
-																														<a href="$link">$actionLabel</a>
+																													<div class="ButtonMiddle ButtonMiddleIcon">
+																														<div class="ResponseQuestion" style="padding-left:20px;">
+																															<a href="$link">$actionLabel</a>
+																														</div>
 																													</div>
 																												</div>
 																											</div>
@@ -752,8 +775,10 @@
 																										<div  class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
-																													<div class="ButtonMiddle">
-																														<a class="Comment" href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+																													<div class="ButtonMiddle ButtonMiddleIcon">
+																														<div class="Comment" style="padding-left:20px;">
+																															<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+																														</div>
 																													</div>
 																												</div>
 																											</div>

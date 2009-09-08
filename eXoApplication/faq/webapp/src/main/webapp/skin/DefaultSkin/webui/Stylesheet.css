@@ -1329,7 +1329,7 @@
 }
 
 .UIFAQPortlet .ResponseQuestion {
-	background: url('background/FAQPortlet.gif') no-repeat left -595px;
+	background: url('background/FAQPortlet.gif') no-repeat left -597px;
 }
 
 .UIFAQPortlet .MoveQuestion {
@@ -2203,4 +2203,8 @@
 
 .UIFAQPortlet .FAQAvatar {
 	background: url('background/Avatar1.gif');
+}
+
+.UIFAQPortlet .UIAction .LightBlueStyle .ButtonMiddleIcon {
+	padding: 0px 10px 0px 2px;
 }
