@@ -344,7 +344,7 @@
 																	String topicIdDiscuss = question.getTopicIdDiscuss();
 																	if(topicIdDiscuss != null && topicIdDiscuss.length() > 0){
 																		String link = uicomponent.url("DiscussForum", topicIdDiscuss);
-																		link = FAQUtils.convertLinkToForum(link);
+																		link = uicomponent.convertLinkToForum(link);
 																		if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																			if(topicIdDiscuss.equals(uicomponent.discussId)) {
 																				jsmanager.addJavascript("eXo.faq.UIFAQPortlet.openDiscussLink('"+link+"')");
@@ -501,7 +501,7 @@
 																				</td>
 																			<%		} else {
 																						String link = uicomponent.url("DiscussForum", topicIdDiscuss);
-																						link = FAQUtils.convertLinkToForum(link);
+																						link = uicomponent.convertLinkToForum(link);
 																						if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																							if(topicIdDiscuss.equals(uicomponent.discussId)) {
 																								jsmanager.addJavascript("eXo.faq.UIFAQPortlet.openDiscussLink('"+link+"')");
