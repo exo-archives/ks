@@ -62,7 +62,6 @@
 						%>
 							<div style="display:$display;" id="UITabContent" class="UITabContent">
 								<% 
-									//uiform.renderChild(tabconten.id) ; 
 									tabconten.setRendered(true);
 									if(!tabconten.id.equals("ThreadIcon")) {
 										uiform.renderChild(tabconten.id) ; 

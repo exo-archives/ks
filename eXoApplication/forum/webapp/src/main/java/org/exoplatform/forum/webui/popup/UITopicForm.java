@@ -173,7 +173,10 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		threadContent.addUIFormInput(formWYSIWYGInput);
 		threadContent.addUIFormInput(new UIFormInputInfo(FIELD_ATTACHMENTS, FIELD_ATTACHMENTS, null)) ;
 		threadContent.setActionField(FIELD_THREADCONTEN_TAB, getUploadFileList()) ;
-
+		threadContent.setActionIdAddItem(FIELD_ATTACHMENTS);
+		threadContent.setActionAddItem("Attachment");
+		threadContent.setLabelActionAddItem(getLabel("Attachment"));
+		
 		UIForumInputWithActions threadOption = new UIForumInputWithActions(FIELD_THREADOPTION_TAB);
 		threadOption.addUIFormInput(topicType);
 		threadOption.addUIFormInput(topicState);
@@ -209,7 +212,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		addUIFormInput(uiIconSelector) ;
 		addUIFormInput(threadOption) ;
 		addUIFormInput(threadPermission) ;
-		this.setActions(new String[]{"PreviewThread","SubmitThread","Attachment","Cancel"}) ;
+		this.setActions(new String[]{"PreviewThread","SubmitThread","Cancel"}) ;
 	}
 	
 	private void addActionAddTopicType() throws Exception {
@@ -279,7 +282,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			removeAction.setActionListener("RemoveAttachment") ;
 			removeAction.setActionName(ACT_REMOVE);
 			removeAction.setActionParameter(attachdata.getId());
-			removeAction.setActionType(ActionData.TYPE_LINK) ;
+			removeAction.setActionType(ActionData.TYPE_ICON) ;
+			removeAction.setCssIconClass("DustBin");
 			removeAction.setBreakLine(true) ;
 			uploadedFiles.add(removeAction) ;
 		}

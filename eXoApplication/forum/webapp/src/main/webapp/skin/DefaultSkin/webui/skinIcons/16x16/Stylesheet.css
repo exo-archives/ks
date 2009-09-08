@@ -395,6 +395,11 @@
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat left center;
 }
 
+.UIForumPortlet .DustBin {
+	width:24px; height:24px;
+	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat left center;
+}
+
 .UIForumPortlet .TopicActiveIcon {
 	background: url('icons/TopicUnActiveIcon.gif') no-repeat left center;
 }
