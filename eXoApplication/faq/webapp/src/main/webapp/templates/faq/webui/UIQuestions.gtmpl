@@ -398,9 +398,10 @@
 														<div class="ProfileContainer">
 														<%
 															if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																String avatarUrl = uicomponent.getAvatarUrl(question.getAuthor());
 														%>				
 															<div class="AvatarContainer">
-																<div class="ImageAvatar"><img width="63" class="FAQAvatar" src="/faq/skin/DefaultSkin/webui/background/Avatar1.gif" alt="Avatar"/></div>
+																<div class="ImageAvatar"><img width="63" class="FAQAvatar" src="$avatarUrl" alt="Avatar"/></div>
 															</div>
 														<%}%>
 														<!-- ========================================= view author's infor ================================ -->
@@ -972,9 +973,10 @@
 																					<div class="ProfileContainer">
 																						<%
 																						if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																							String avatarUrlAnswer = uicomponent.getAvatarUrl(answer.getResponseBy());
 																						%>				
 																						<div class="AvatarContainer" style="margin-top:0px;">
-																							<div class="ImageAvatar"><img class="FAQAvatar" src="/faq/skin/DefaultSkin/webui/background/Avatar1.gif" width="63px" alt="Avatar"/></div>
+																							<div class="ImageAvatar"><img class="FAQAvatar" src="$avatarUrlAnswer" width="63px" alt="Avatar"/></div>
 																						</div>
 																						<%}%>
 																						<div class="AuthorInfor" style="text-align:center">
@@ -1142,9 +1144,10 @@
 																						<div class="ProfileContainer">
 																							<%
 																							if(uicomponent.faqSetting_.isEnableViewAvatar()) {
+																								String avatarUrlComment = uicomponent.getAvatarUrl(comment.getCommentBy());
 																							%>				
 																							<div class="AvatarContainer" style="margin-top:0px;">
-																								<div class="ImageAvatar"><img class="FAQAvatar" src="/faq/skin/DefaultSkin/webui/background/Avatar1.gif" width="63" alt="Avatar"/></div>
+																								<div class="ImageAvatar"><img class="FAQAvatar" src="$avatarUrlComment" width="63" alt="Avatar"/></div>
 																							</div>
 																							<%}%>
 																							<div class="AuthorInfor" style="text-align:center">
