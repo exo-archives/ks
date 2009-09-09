@@ -1007,7 +1007,7 @@ public class JCRDataStorage {
 	        //edit profile of old user.
 	        userProfileNode = userProfileHomeNode.getNode(oldUserId);
 	        List<String> moderateList = new ArrayList<String>() ;
-	        try{ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());}catch(Exception e){}
+	        try{moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());}catch(Exception e){}
 					for (String string2 : moderateList) {
 	          if(string2.indexOf(categoryId) > 0) {
 	          	moderateList.remove(string2);
