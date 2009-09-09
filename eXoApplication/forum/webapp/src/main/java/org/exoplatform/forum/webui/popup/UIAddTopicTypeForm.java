@@ -22,6 +22,8 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -118,6 +120,11 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 			topicType.setName(typeName.trim());
 			topicType.setIcon(typeIcon);
 			forumService.saveTopicType(topicType);
+			if(topicTypeForm.isEdit) {
+				UITopicContainer topicContainer = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicContainer.class);
+				topicContainer.setTopicType(topicType.getId());
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+			}
 			topicTypeForm.isEdit = false;
 			UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
 			try {

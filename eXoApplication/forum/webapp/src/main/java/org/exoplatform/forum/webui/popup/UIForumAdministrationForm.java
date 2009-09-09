@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -560,7 +561,10 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			UIForumAdministrationForm uiForm = event.getSource();
 			String topicTypeId = event.getRequestContext().getRequestParameter(OBJECTID);
 			uiForm.forumService.removeTopicType(topicTypeId);
+			UITopicContainer topicContainer = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicContainer.class);
+			topicContainer.setTopicType(topicTypeId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 		}
 	}
 	
