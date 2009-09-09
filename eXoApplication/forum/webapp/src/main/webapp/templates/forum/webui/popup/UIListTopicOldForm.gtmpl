@@ -33,7 +33,8 @@
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
-								 for(topic in topics){
+								Date postDate = new Date();
+								for(topic in topics){
 									if(i%2 == 0) classRow = "whileRow";
 									else classRow = "OddRow";
 									String topicId = topic.getId();
@@ -41,7 +42,8 @@
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
 									String isActive = "" + topic.getIsActive();
-									String lastPostDate = ForumUtils.getFormatDate(formatDate, topic.getCreatedDate());
+									postDate.setTime(topic.getCreatedDate().getTime() - setTime);
+									String lastPostDate = ForumUtils.getFormatDate(formatDate, postDate);
 									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
