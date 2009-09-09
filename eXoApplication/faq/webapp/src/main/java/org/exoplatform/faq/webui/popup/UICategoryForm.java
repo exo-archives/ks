@@ -226,12 +226,19 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String name = uiCategory.getUIStringInput(FIELD_NAME_INPUT).getValue() ;
       if(name.indexOf("<") >=0)  name = name.replace("<", "&lt;") ;
       if(name.indexOf(">") >=0) name = name.replace(">", "&gt;") ;
-      //uiCategory.checkSameName(name) ;
+      
       if(name.indexOf("'") >=0 ){
       	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-invalid", null, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
       }
+      
+      if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
+    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+    		return ;
+      }
+      
       long index = 1;
       String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;
       if(strIndex != null && strIndex.trim().length() > 0) {

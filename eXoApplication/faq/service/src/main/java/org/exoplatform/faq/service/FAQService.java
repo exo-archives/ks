@@ -647,7 +647,10 @@ public interface FAQService extends FAQServiceLegacy{
   public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception ;
   
   public byte[] getTemplate() throws Exception ;
+  
   public void saveTemplate(String str) throws Exception;
+  
+  public boolean isCategoryExist(String name, String path) ;
 
 
 }

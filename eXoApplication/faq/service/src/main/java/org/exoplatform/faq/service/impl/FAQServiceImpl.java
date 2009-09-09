@@ -1271,6 +1271,10 @@ public class FAQServiceImpl implements FAQService, Startable{
   	jcrData_.saveTemplate(str);
   }
   
+  public boolean isCategoryExist(String name, String path){
+  	return jcrData_.isCategoryExist(name, path) ;
+  }
+  
 }
 
 
