@@ -721,7 +721,7 @@
 											<string>CODE</string>
 										</field>
 										<field name="replacement">
-											<string><![CDATA[<div class="ClassCode"><pre style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr"><div>{param}</div></pre>]]></string>
+											<string><![CDATA[<div class="ClassCode"><pre style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr"><div>{param}</div></pre></div>]]></string>
 										</field>
 										<field name="description">
 											<string>The [code] tag allows you to view source code html.</string>
