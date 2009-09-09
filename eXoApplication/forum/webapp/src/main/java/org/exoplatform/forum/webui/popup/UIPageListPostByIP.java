@@ -57,7 +57,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIPageListPostByIP.OpenPostLinkActionListener.class),
 			@EventConfig(listeners = UIPageListPostByIP.SetOrderByActionListener.class),
 			@EventConfig(listeners = UIPageListPostByIP.CancelActionListener.class),
-			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class, confirm="UITopicDetail.confirm.DeleteThisPost")
+			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
 		}
 )
 public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
