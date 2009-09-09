@@ -58,6 +58,7 @@
 								userTitle = Utils.ADMIN;
 								user.setUserRole(0);
 							}
+							if(user.getUserRole() == 1 && userTitle.equals(Utils.USER)) userTitle = Utils.MODERATOR;
 							userRole = uicomponent.permissionUser[(int)user.getUserRole()];
 							String isBanned = false;
 							if(user.getIsBanned()){
