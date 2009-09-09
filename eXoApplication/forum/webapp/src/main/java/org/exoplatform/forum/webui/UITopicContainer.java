@@ -185,6 +185,17 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return pruneSetting.isActive();
 	}
 	
+  public void setTopicType(String typeId) throws Exception {
+  	try {
+  		TopicType topicType = forumService.getTopicType(typeId);
+  		if(topicType.getId().equals(TopicType.DEFAULT_ID)) {
+  			if(topicTypeM.containsKey(typeId)) topicTypeM.remove(typeId) ;
+  		} else topicTypeM.put(typeId, topicType);
+    } catch (Exception e) {
+    	if(topicTypeM.containsKey(typeId)) topicTypeM.remove(typeId) ;
+    }
+  }
+  
   private String[] getIconTopicType(String typeId) throws Exception {
 		try {
 			TopicType topicType = topicTypeM.get(typeId);
