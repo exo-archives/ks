@@ -57,7 +57,7 @@ public class UIFAQContainer extends UIContainer  {
     uiQuestions.setFAQService(faqService_);
     uiQuestions.setFAQSetting(faqSetting_);
     uiQuestions.setCategoryId(Utils.CATEGORY_HOME);
-    uiQuestions.updateCurrentQuestionList() ;
+    //uiQuestions.updateCurrentQuestionList() ;
     uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(null);
     //if(uiQuestions.getCategoryId() == null) uiQuestions.setCategories(Utils.CATEGORY_HOME) ;
     

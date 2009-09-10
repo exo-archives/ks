@@ -385,7 +385,12 @@ public class UIQuestions extends UIContainer {
 		return result;
 	}
 
-	private Question[] getListQuestion() {
+	private Question[] getListQuestion(){
+		try{
+			updateCurrentQuestionList() ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}		
 		return questionMap_.values().toArray(new Question[]{}) ;
 	}
 
