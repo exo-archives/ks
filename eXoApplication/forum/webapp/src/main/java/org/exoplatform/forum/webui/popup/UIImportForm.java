@@ -76,12 +76,8 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			out.close();
 			
 			inputStream = new ByteArrayInputStream(out.toByteArray());
-			try{
-				service.importXML(nodePath, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-			}catch(Exception e){
-				e.printStackTrace();
-				numberExportFalse ++;
-			}
+			service.importXML(nodePath, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+			numberExportFalse ++;
 			entry = zipStream.getNextEntry();
 		}
 		zipStream.close();
@@ -141,8 +137,6 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
   			if(importSuccess){
   				service.updateDataImported();
   				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
-  			}else{
-  				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-false", null, ApplicationMessage.WARNING));
   			}
   			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
   			isUdateForm = true;
