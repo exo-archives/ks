@@ -26,6 +26,7 @@
 	String cateId = uicomponent.getCategoryId();
 	//uicomponent.getQuestions(); 
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
+	
 %>
 
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
