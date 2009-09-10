@@ -174,15 +174,15 @@ public class UIQuestions extends UIContainer {
 		// for discuss question
 		FAQSetting faqSetting = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting);
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String link = getLink().replaceAll(portalContext.getNodePath().replace("/", ""), "forum"); 
+//		PortalRequestContext portalContext = Util.getPortalRequestContext();
+//		portalContext.getNodePath().replace("/", "")
+		String link = getLink().replaceAll("answers", "forum"); 
     link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
 		return link;
 	}
 	
 	private String convertLinkToForum(String s){
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		s = s.replaceAll(portalContext.getNodePath().replace("/", ""), "forum").replaceFirst(getId(), "UIBreadcumbs")
+		s = s.replaceAll("answers", "forum").replaceFirst(getId(), "UIBreadcumbs")
 				 .replaceFirst("DiscussForum", "ChangePath").replaceAll("amp;", "");
 		return s;
 	}
