@@ -323,7 +323,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				if(uiForm.userProfile.getUserRole() > 0){
 					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 					uiTopicDetail.setUpdateForum(forum) ;
-					uiTopicDetail.setTopicFromCate(category.getId(), forum.getId(), topic) ;
+					uiTopicDetail.setTopicFromCate(category.getId(), forum.getId(), topic, 0) ;
 					uiTopicDetail.setIdPostView(post.getId()) ;
 					uiTopicDetail.setLastPostId(post.getId());
 					uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(category.getId(), forum.getId(), topic.getId()) ;

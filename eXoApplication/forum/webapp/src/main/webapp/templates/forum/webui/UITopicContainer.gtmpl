@@ -14,7 +14,7 @@
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
 	Forum forum = uicomponent.getForum() ;
 	String linkURL;
 	if(forum != null)  {
@@ -544,7 +544,7 @@
 										<% } %>
 											<span>
 												<% ++rCNB; %>
-												<%if(uicomponent.useAjax){%>
+												<%if(uicomponent.isUseAjax){%>
 														<a ctxMenuId="UIPopupCategory${rCNB}" actions="$link;" href="$url" title="$titlePost" class="ActionLink $title PopupMenu">$topicTitle</a>
 												<%} else {%>
 														<a ctxMenuId="UIPopupCategory${rCNB}" href="$url" title="$titlePost" class="ActionLink $title PopupMenu">$topicTitle</a>

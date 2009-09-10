@@ -191,7 +191,7 @@ public class UIForumListSearch extends UIContainer {
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(cateId, forum) ;
+						uiTopicContainer.setUpdateForum(cateId, forum, 1) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId+"/"+forumId));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}
@@ -206,7 +206,7 @@ public class UIForumListSearch extends UIContainer {
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(cateId, forumId, topic) ;
+						uiTopicDetail.setTopicFromCate(cateId, forumId, topic, 0) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId , topic.getId()) ;
 						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;

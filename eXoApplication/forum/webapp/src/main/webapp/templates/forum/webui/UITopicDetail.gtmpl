@@ -23,6 +23,7 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.controlWorkSpace();");
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.loadTagScroll();") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
 	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
 	String userLogin = "" ;

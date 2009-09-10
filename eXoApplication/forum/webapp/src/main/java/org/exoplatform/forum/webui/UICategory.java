@@ -515,7 +515,7 @@ public class UICategory extends UIForm	{
 			uiForumContainer.setIsRenderChild(true) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum) ;
+			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 1) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
@@ -536,7 +536,7 @@ public class UICategory extends UIForm	{
 			uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 			Topic topic = uiCategory.getTopic(id[1]) ;
 			uiTopicDetail.setUpdateForum(uiCategory.getForum(id[0])) ;
-			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic) ;
+			uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[0], topic, 0) ;
 			String lastPostId = "";
 			uiTopicDetail.setLastPostId(lastPostId);
 			if(lastPostId == null || lastPostId.length() < 0) lastPostId = "lastpost";
@@ -568,7 +568,7 @@ public class UICategory extends UIForm	{
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 				uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
 				uiTopicDetail.setUpdateForum(uiCategory.getForum(id[1])) ;
-				uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[1], topic) ;
+				uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[1], topic, 0) ;
 				String lastPostId = id[3];
 				uiTopicDetail.setLastPostId(lastPostId);
 				if(lastPostId == null || lastPostId.length() < 0) lastPostId = "lastpost";

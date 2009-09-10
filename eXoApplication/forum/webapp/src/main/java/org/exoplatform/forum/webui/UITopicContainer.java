@@ -115,7 +115,6 @@ import org.exoplatform.webui.form.UIFormStringInput;
 )
 @SuppressWarnings({ "unchecked", "unused" })
 public class UITopicContainer extends UIForumKeepStickPageIterator {
-  private boolean useAjax = true;
 	private ForumService forumService ;
 	private String forumId = "";
 	private String categoryId = "";
@@ -143,6 +142,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		if(!ForumSessionUtils.isAnonim()) isLogin = true;
+		isLink = true;
 	}
 	
 	private UserProfile getUserProfile() { return userProfile ;}
@@ -159,15 +159,15 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return userProfile.getLastPostIdReadOfTopic(topicId);
 	}
 	
-	public void setUpdateForum(String categoryId, Forum forum) throws Exception {
+	public void setUpdateForum(String categoryId, Forum forum, int page) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;
 		this.categoryId = categoryId ;
-		this.pageSelect = 1 ;
+		this.pageSelect = page ;
 		this.isUpdate = false ;
 		this.isReload = false;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-		this.useAjax = forumPortlet.isUseAjax();
+		this.isUseAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId)) ;
 		forumPortlet.updateAccessForum(forumId);
@@ -222,14 +222,14 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
 	
-	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs) throws Exception {
+	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs, int page) throws Exception {
 		this.forumId = forumId ;
 		this.categoryId = categoryId ;
 		this.isUpdate = true ;
-		this.pageSelect = 1 ;
+		this.pageSelect = page ;
 		this.isReload = false;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
-		this.useAjax = forumPortlet.isUseAjax();
+		this.isUseAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		forumPortlet.updateAccessForum(forumId);
 		this.userProfile = forumPortlet.getUserProfile() ;
@@ -312,6 +312,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
 	private void initPage() throws Exception {
+		objectId = forumId;
 		if(userProfile == null) userProfile = new UserProfile();
 		StringBuffer strQuery = new StringBuffer() ;
 		String userId = userProfile.getUserId() ;

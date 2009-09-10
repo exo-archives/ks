@@ -420,7 +420,7 @@ public class UIForumPortlet extends UIPortletApplication {
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
+						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, 0) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
@@ -444,7 +444,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				forumContainer.setIsRenderChild(true) ;
 				if(id.length > 1) {
 					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 1) ;
 				} else {
 					try {
 						Forum forum = (Forum)forumPortlet.forumService.getObjectNameById(path, Utils.FORUM);
@@ -452,7 +452,7 @@ public class UIForumPortlet extends UIPortletApplication {
 						path = path.substring(path.indexOf(Utils.CATEGORY));
 						id = path.split("/");
 						forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
-						forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum) ;
+						forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum, 1) ;
 					}catch(Exception e) {
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);

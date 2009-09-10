@@ -67,6 +67,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	private JCRPageList pageList;
 	private String strOrderBy = "";
 	private String userName = new String() ;
+	private boolean isUseAjax = true;
 	public UIPageListTopicByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
@@ -74,8 +75,14 @@ public class UIPageListTopicByUser extends UIContainer{
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
-		return this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
+		isUseAjax = forumPortlet.isUseAjax();
+		return this.userProfile = forumPortlet.getUserProfile() ;
 	}
+	
+	public boolean isUseAjax() {
+	  return isUseAjax;
+  }
 	
 	public void setUserName(String userName) {
 		this.userName = userName ;

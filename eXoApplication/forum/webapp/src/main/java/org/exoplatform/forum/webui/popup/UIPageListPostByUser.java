@@ -292,7 +292,7 @@ public class UIPageListPostByUser extends UIContainer {
 				if(uiForm.userProfile.getUserRole() > 0){
 					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 					uiTopicDetail.setUpdateForum(forum) ;
-					uiTopicDetail.setTopicFromCate(category.getId(), forum.getId(), topic) ;
+					uiTopicDetail.setTopicFromCate(category.getId(), forum.getId(), topic, 0) ;
 					uiTopicDetail.setIdPostView(postId) ;
 					uiTopicDetail.setLastPostId(postId);
 					uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(category.getId(), forum.getId(), topic.getId()) ;

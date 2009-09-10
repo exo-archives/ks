@@ -47,6 +47,9 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public long totalCheked = 0;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
+	public boolean isUseAjax = true;
+	public boolean isLink = false;
+	public String objectId = "";
 	private Map<Integer, List<String>> pageCheckedList = new HashMap<Integer, List<String>>();
 	public UIForumKeepStickPageIterator () throws Exception {
 	}
@@ -62,6 +65,20 @@ public class UIForumKeepStickPageIterator extends UIForm {
 		totalCheked = 0;
 	  this.pageCheckedList.clear();
   }
+	
+	public boolean isUseAjax() {
+  	return isUseAjax;
+  }
+
+	public void setUseAjax(boolean isUseAjax) {
+  	this.isUseAjax = isUseAjax;
+  }
+
+	public String getURLGopage(String componentId, String link) throws Exception {
+		link = link.replaceFirst(componentId, "UIBreadcumbs").replaceFirst("GoPage", "ChangePath")
+					 		 .replaceFirst("objectId=", "objectId="+objectId+"/");
+		return link;
+	}
 	
 	public List<String> getTotalpage() throws	Exception {
 		int max_Page = (int)pageList.getAvailablePage() ;
