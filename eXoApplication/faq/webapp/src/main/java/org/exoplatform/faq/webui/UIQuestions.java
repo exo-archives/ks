@@ -687,7 +687,8 @@ public class UIQuestions extends UIContainer {
 			boolean isUp = true ;
 			if(voteType.equals("down")) isUp = false ;
 			try{
-				faqService_.voteAnswer(answerPath, FAQUtils.getCurrentUser(), isUp) ;				
+				faqService_.voteAnswer(answerPath, FAQUtils.getCurrentUser(), isUp) ;
+				questions.updateCurrentLanguage() ;
 			} catch (Exception e){				
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;

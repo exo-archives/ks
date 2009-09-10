@@ -666,9 +666,9 @@ public class MultiLanguages {
   public static void voteAnswer(Node answerNode, String userName, boolean isUp) throws Exception {
   	boolean isVoted = false ;
   	long mark = 0 ;
-  	String[] users = new String[]{};
+  	List<String> users = new ArrayList<String>();
   	if(answerNode.hasProperty("exo:usersVoteAnswer") && answerNode.hasProperty("exo:MarkVotes")) {
-  		users = ValuesToStrings(answerNode.getProperty("exo:usersVoteAnswer").getValues()) ;
+  		users = ValuesToList(answerNode.getProperty("exo:usersVoteAnswer").getValues()) ;
     	mark = answerNode.getProperty("exo:MarkVotes").getLong() ;
     	int i = 0 ;
     	for(String user : users) {
@@ -677,12 +677,12 @@ public class MultiLanguages {
     			if(values[1].equals("1")){ //up
     				if(!isUp){
     					mark = mark - 2 ;
-    					users[i] = userName + "/-1" ;
+    					users.add(i, userName + "/-1")  ;
     				} 
     			}else { // -1: down 
     				if(isUp){
     					mark = mark + 2 ;
-    					users[i] = userName + "/1" ;
+    					users.add(i, userName + "/1") ;
     				}  				
     			}
     			isVoted = true ;	
@@ -692,11 +692,11 @@ public class MultiLanguages {
     	}
   	}  	 
   	if(isVoted) {
-  		answerNode.setProperty("exo:usersVoteAnswer", users) ;
+  		answerNode.setProperty("exo:usersVoteAnswer", users.toArray(new String[]{})) ;
   		answerNode.setProperty("exo:MarkVotes", mark) ;  		  		
   	}else {
-  		List<String> newUsers = new ArrayList<String>() ;
-  		if(users.length > 0) newUsers = Arrays.asList(users) ;
+  		List<String> newUsers = users ;
+  		//if(users.length > 0) newUsers = Arrays.asList(users) ;
   		if(isUp){
   			mark = mark + 1 ;
   			newUsers.add(userName + "/1") ;
@@ -707,6 +707,7 @@ public class MultiLanguages {
   		answerNode.setProperty("exo:usersVoteAnswer", newUsers.toArray(new String[]{})) ;
   		answerNode.setProperty("exo:MarkVotes", mark) ;
   	}
+  	System.out.println("mark ==>" + mark);  	
   	answerNode.save() ;
   }
   
