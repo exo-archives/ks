@@ -312,10 +312,19 @@ public class UIBreadcumbs extends UIContainer {
 				}else	if(path.lastIndexOf(Utils.TOPIC) >= 0) {
 					String []id = path.split("/") ;
 					String postId = "";
+					int page = 0;
 					if(path.indexOf(Utils.POST) > 0) {
 						postId = id[id.length-1];
 						path = path.substring(0, path.lastIndexOf("/")) ;
 						id = new String[]{path};
+					} else if(id.length > 1) {
+						try {
+							page = Integer.parseInt(id[id.length-1]);
+            } catch (Exception e) {}
+						if(page > 0){
+							path = path.replace("/"+id[id.length-1], "");
+							id = new String[]{path};
+						} else page = 1;
 					}
 					try{
 						Topic topic ;
@@ -339,7 +348,7 @@ public class UIBreadcumbs extends UIContainer {
 								uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 								UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 								uiTopicDetail.setUpdateForum(forum) ;
-								uiTopicDetail.setTopicFromCate(id[0], id[1] , topic) ;
+								uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, page) ;
 								uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 								forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 								if(ForumUtils.isEmpty(postId)) {
@@ -394,10 +403,18 @@ public class UIBreadcumbs extends UIContainer {
 					try {
 						Forum forum;
 						String cateId = null;
+						int page = 1;
 						if(path.indexOf("/") > 0){
 							String []arr = path.split("/");
-							cateId = arr[0];
-							forum = (Forum)breadcums.forumService.getForum(cateId, arr[1]);
+							try {
+								page = Integer.parseInt(arr[arr.length-1]);
+							} catch (Exception e) {}
+							if(arr[0].indexOf(Utils.CATEGORY) == 0){
+								cateId = arr[0];
+								forum = breadcums.forumService.getForum(cateId, arr[1]);
+							} else {
+								forum = (Forum)breadcums.forumService.getObjectNameById(arr[0], Utils.FORUM);
+							}
 						} else {
 							forum = (Forum)breadcums.forumService.getObjectNameById(path, Utils.FORUM);
 						}
@@ -412,7 +429,7 @@ public class UIBreadcumbs extends UIContainer {
 							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 							forumContainer.setIsRenderChild(true) ;
 							forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
-							forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum) ;
+							forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page) ;
 						} else {
 							uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", null, ApplicationMessage.WARNING)) ;
 							forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);

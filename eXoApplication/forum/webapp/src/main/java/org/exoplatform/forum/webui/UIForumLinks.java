@@ -179,7 +179,7 @@ public class UIForumLinks extends UIForm {
 						if(forum != null){
 							UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class);
 							forumContainer.getChild(UIForumDescription.class).setForum(forum);
-							forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true) ;
+							forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 1) ;
 							forumContainer.setIsRenderChild(true) ;
 							forumPortlet.updateIsRendered(ForumUtils.FORUM);
 						} else isErro = true ;

@@ -6,7 +6,13 @@
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumTransformHTML; 
-	import java.util.Date ; 
+	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
+	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat() ;
@@ -61,6 +67,7 @@
 							if(!topics.isEmpty()) {
 								String classRow = "whileRow";
 								int i = 0;
+								String linkOpen = "";
 								Date postDate = new Date();
 								for(topic in topics){
 									if(i%2 == 0) classRow = "whileRow";
@@ -86,17 +93,16 @@
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 									String hot = ""; 
-									if(topic.getPostCount() > 10) hot = "Hot"; 
-									String titleTopicStatus = hot+" Topic with "+newPost+" post" ;
+									if(topic.getPostCount() > 30) hot = "Hot"; 
 									String iconTopicStatus = hot+"Thread"+newPost+"Post" ;
 									if(topic.getIsLock()) {
 										iconTopicStatus = hot+"Thread"+newPost+"LockPost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post lock" ;
 									}
 									if(topic.getIsClosed()) {
 										iconTopicStatus = hot+"Thread"+newPost+"ClosePost" ;
-										titleTopicStatus = hot+" Topic with "+newPost+" post close" ;
 									}
+									String titleTopicStatus = _ctx.appRes("UITopicContainer.label." + iconTopicStatus);
+									linkOpen = ForumSessionUtils.getBreadcumbUrl(uicomponent.url("OpenTopic", topicId), uicomponent.id, "OpenTopic", "" );
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
@@ -106,7 +112,7 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<a href="<%=uicomponent.event("OpenTopic", topicId)%>" title="$titlePost" class="$title">$topicTitle</a>
+											<a actions="<%=uicomponent.event("OpenTopic", topicId)%>" href="$linkOpen" title="$titlePost" class="ActionLink $title">$topicTitle</a>
 										</div>
 									</td>
 									<td class="Tdbox">

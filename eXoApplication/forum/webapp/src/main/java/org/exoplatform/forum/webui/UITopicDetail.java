@@ -190,6 +190,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		addChild(UIPostRules.class, null, null);
 		this.setSubmitAction("GoNumberPage") ;
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
+		this.isLink = true;
 	}
 	
   private boolean isShowQuickReply() {
@@ -247,14 +248,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		userName = userProfile.getUserId() ;
 		cleanCheckedList();
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
+		this.isUseAjax = forumPortlet.isUseAjax();
 		this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
 		setRenderInfoPorlet();
 	}
 	
-	public void setTopicFromCate(String categoryId, String forumId, Topic topic) throws Exception {
+	public void setTopicFromCate(String categoryId, String forumId, Topic topic, int page) throws Exception {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
+		if(page > 0) pageSelect = page;
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		isShowQuickReply = forumPortlet.isShowQuickReply();
 		isShowRule = forumPortlet.isShowRules();
@@ -263,6 +266,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
+		this.isUseAjax = forumPortlet.isUseAjax();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		setRenderInfoPorlet();
@@ -287,6 +291,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
+		this.isUseAjax = forumPortlet.isUseAjax();
 		userProfile = forumPortlet.getUserProfile() ;
 		userName = userProfile.getUserId() ;
 		setRenderInfoPorlet();
@@ -532,6 +537,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	}
 
 	private void initPage() throws Exception {
+		objectId = topicId;
 		isDoubleClickQuickReply = false;
 		isGetSv = true;
 		listContactsGotten =  new ArrayList<String>();
@@ -1384,7 +1390,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				uiForumContainer.setIsRenderChild(true) ;
 				UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-				topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum) ;
+				topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum, 1) ;
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;

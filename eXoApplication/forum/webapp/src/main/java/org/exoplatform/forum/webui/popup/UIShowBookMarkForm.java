@@ -171,7 +171,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(categoryId, forumId , topic) ;
+						uiTopicDetail.setTopicFromCate(categoryId, forumId , topic, 0) ;
 						uiTopicDetail.setIdPostView("top") ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(categoryId, forumId , topic.getId()) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId + "/" + forumId + " "));
@@ -211,7 +211,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(categoryId, forum) ;
+						uiTopicContainer.setUpdateForum(categoryId, forum, 1) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+id));
 					}
 				} else if(id.indexOf(Utils.CATEGORY) >= 0){
