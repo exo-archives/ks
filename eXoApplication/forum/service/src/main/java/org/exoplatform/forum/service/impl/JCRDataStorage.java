@@ -5195,6 +5195,7 @@ public class JCRDataStorage {
 	
 
 	private static String[] getStringsInList(List<String> list) throws Exception {
+		if(list.size() > 1)while(list.contains(" "))list.remove(" ");
 		return list.toArray(new String[] {});
 	}
 

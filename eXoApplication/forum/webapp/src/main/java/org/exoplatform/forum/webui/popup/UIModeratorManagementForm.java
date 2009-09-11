@@ -94,6 +94,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	private ForumService forumService ;
 	private List<UserProfile> userProfiles = new ArrayList<UserProfile>();
 	private String[] permissionUser = null;
+	private String[] titleUser = null;
 	private JCRPageList userPageList ;
 	private boolean isEdit = false ;
 	private UserProfile userProfile = new UserProfile();
@@ -143,10 +144,14 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 		addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
-																	res.getString("UIForumPortlet.label.PermissionModerator").toLowerCase(),
-																	res.getString("UIForumPortlet.label.PermissionUser").toLowerCase(),
-																	res.getString("UIForumPortlet.label.PermissionGuest").toLowerCase()};
+		titleUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin"), 
+																	res.getString("UIForumPortlet.label.PermissionModerator"),
+																	res.getString("UIForumPortlet.label.PermissionUser"),
+																	res.getString("UIForumPortlet.label.PermissionGuest")};
+		permissionUser = new String[titleUser.length];
+		for (int i = 0; i < titleUser.length; i++) {
+			permissionUser[i] = titleUser[i].toLowerCase();
+    }
 	}
 	
 	public void setValueSearch(String value){
@@ -666,21 +671,19 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 						removeModerateForum.add(string) ;
 					}
 				}
-//				System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
+				System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
 				if(!newModeratorsForum.isEmpty())
-					uiForm.forumService.saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), true);
-				userRole = 1;
+					uiForm.forumService.saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), false);
 				isSetGetNewListForum = true ;
 			}
 //			System.out.println("\n\n oldModerateForum " + oldModerateForum.toString());
 			if(!removeModerateForum.isEmpty()) {
 //				System.out.println("\n\nremoveModerateForum " + removeModerateForum.toString());
-				uiForm.forumService.saveModerateOfForums(removeModerateForum, userProfile.getUserId(), false);
+				uiForm.forumService.saveModerateOfForums(removeModerateForum, userProfile.getUserId(), true);
 				isSetGetNewListForum = true ;
 			}
 			
 			uiForm.forumService.saveUserModerator(userProfile.getUserId(), uiForm.listModerate, false);
-			
 			//=============================================
 			List<String> moderateCates = new ArrayList<String>() ;
 			moderateCates.addAll(uiForm.listModCate) ;
@@ -701,9 +704,10 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 						removeModerateCate.add(string) ;
 					}
 				}
-				if(!newModeratorsCate.isEmpty())
+				if(!newModeratorsCate.isEmpty()){
 					uiForm.forumService.saveModOfCategory(newModeratorsCate, userProfile.getUserId(), true);
-				userRole = 1;
+					if(userRole > 1)userRole = 1;
+				}
 				isSetGetNewListForum = true ;
 			}
 			if(removeModerateCate.size() > 0) {
@@ -711,13 +715,12 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 				isSetGetNewListForum = true ;
 			}
 			//==========================
-			
-		//	uiForm.listModerate = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
-			
+			if(userRole > 1) {
+				uiForm.listModerate = uiForm.forumService.getUserModerator(userProfile.getUserId(), false);
+				if(uiForm.listModerate.size() >= 1 && !uiForm.listModerate.get(0).equals(" ")) userRole = 1;
+			}
 			
 			if(isSetGetNewListForum)forumPortlet.findFirstComponentOfType(UICategories.class).setIsgetForumList(true);
-
-			
 			
 			if(userTitle == null || userTitle.trim().length() < 1){
 				userTitle = userProfile.getUserTitle();
@@ -727,13 +730,16 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 					if(Arrays.asList(uiForm.permissionUser).indexOf(userProfile.getUserTitle().toLowerCase()) < 0)
 						userTitle = userProfile.getUserTitle();
 					else 
-						userTitle = uiForm.permissionUser[(int)userRole];
+						userTitle = uiForm.titleUser[(int)userRole];
 				}
+			} else {
+				if(userTitle.equalsIgnoreCase(uiForm.titleUser[1]) || userTitle.equalsIgnoreCase(uiForm.titleUser[2]))
+					userTitle = uiForm.titleUser[0];
 			}
-			if(userRole == 1 && userTitle.equals(uiForm.permissionUser[2])) {
-				userTitle = uiForm.permissionUser[1];
+			if(userRole == 1 && userTitle.equalsIgnoreCase(uiForm.titleUser[2])) {
+				userTitle = uiForm.titleUser[1];
 			}
-//			System.out.println("\n\n userTitle: " +userTitle );
+
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
 			signature = ForumTransformHTML.enCodeHTML(signature);
 			boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
