@@ -178,23 +178,6 @@ public class ForumEventQuery {
       if(temp != null && temp.length() > 0) { 
       	stringBuffer.append(temp) ;
       }
-    	/*byUser = byUser.replaceAll(";", ",") ;
-    	String[] users = byUser.split(",") ;
-    	StringBuilder builder = new StringBuilder();
-    	int i = 0;
-    	for (String string : users) {
-    		string = string.trim();
-    		if(string.length() > 0) {
-	    		if(i > 0) builder.append(" or ") ;
-	    		builder.append("(@exo:owner='").append(string).append("')") ;
-	    		++i;
-    		}
-      }
-    	if(builder.length() > 0) {
-	    	if(isAnd) stringBuffer.append(" and ");
-	    	stringBuffer.append("(").append(builder).append(")");
-				isAnd = true ;
-    	}*/
 		}
     if(type.equals("topic")) {
     	if(topicType != null && topicType.length() > 0 && !topicType.equals("all")){
@@ -216,6 +199,7 @@ public class ForumEventQuery {
 		    		stringBuffer.append(")") ;
 	    		} else if(isClosed.equals("false")){
 	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
+	    			isEmpty = false;
 	    		} else if(isClosed.equals("true")){
 	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("' and (@exo:moderators='").
 	    										append(listOfUser.get(0)).append("'") ;
@@ -223,20 +207,21 @@ public class ForumEventQuery {
 		    			stringBuffer.append(" or @exo:moderators='").append(str).append("'");
 		    		}
 	    			stringBuffer.append("))") ;
+	    			isEmpty = false;
 	    		}
 	    		isAnd = true ;
 	    	} else {
 	    		if(!isClosed.equals("all")){
 	    			if(isAnd) stringBuffer.append(" and ");
 	    			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
-	    			isAnd = true ;
+	    			isAnd = true ; isEmpty = false;
 	    		}
 	    	}
     	} else {
     		if(!isClosed.equals("all")){
     			if(isAnd) stringBuffer.append(" and ");
     			stringBuffer.append("(@exo:isClosed='").append(isClosed).append("')") ;
-    			isAnd = true ;
+    			isAnd = true ; isEmpty = false;
     		}
     	}
     }
@@ -258,9 +243,6 @@ public class ForumEventQuery {
       	stringBuffer.append(temp) ;
       	isEmpty = false;
       }
-    	/*if(isAnd) stringBuffer.append(" and ");
-    	stringBuffer.append("(@exo:moderators='").append(moderator).append("')") ;
-    	isAnd = true ;*/
     }
     String temp = setValueMin(topicCountMin, "topicCount") ;
     if(temp != null && temp.length() > 0) { 
