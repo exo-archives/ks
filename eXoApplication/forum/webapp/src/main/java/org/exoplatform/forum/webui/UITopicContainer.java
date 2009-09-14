@@ -546,7 +546,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption(Utils.FORUM_SERVICE) ;
+			forumPortlet.getChild(UIForumLinks.class).setValueOption("") ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
 			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;

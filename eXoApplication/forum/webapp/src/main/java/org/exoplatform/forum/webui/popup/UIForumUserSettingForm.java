@@ -507,6 +507,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
       }
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
+			forumPortlet.setRenderForumLink();
+			UICategoryContainer categoryContainer = forumPortlet.findFirstComponentOfType(UICategoryContainer.class) ;
+			if(categoryContainer.isRendered()) categoryContainer.renderJump();
 			forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;
 			forumPortlet.findFirstComponentOfType(UITopicContainer.class).setUserProfile(userProfile) ;
 			forumPortlet.findFirstComponentOfType(UITopicsTag.class).setUserProfile(userProfile) ;

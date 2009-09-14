@@ -173,6 +173,19 @@ public class UIForumPortlet extends UIPortletApplication {
 				getChild(UIForumActionBar.class).setRendered(false) ;
 			}
 		}
+		setRenderForumLink();
+		getChild(UIForumContainer.class).setRendered(isForumRendered) ;
+		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
+		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
+		if(!isForumRendered) {
+			try {
+	      this.setRenderQuickReply();
+      } catch (Exception e) {
+      }
+		}
+	}
+	
+	public void setRenderForumLink() throws Exception {
 		if(userProfile == null) updateUserProfileInfo();
 		if(isShowForumJump){
 			isJumpRendered = this.userProfile.getIsShowForumJump() ;
@@ -185,16 +198,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		}else {
 			getChild(UIForumLinks.class).setRendered(isJumpRendered) ;
 		}
-		getChild(UIForumContainer.class).setRendered(isForumRendered) ;
-		getChild(UITopicsTag.class).setRendered(isTagRendered) ;
-		getChild(UISearchForm.class).setRendered(isSearchRendered) ;
-		if(!isForumRendered) {
-			try {
-	      this.setRenderQuickReply();
-      } catch (Exception e) {
-      }
-		}
-	}
+  }
 	
 	public void setRenderQuickReply() {
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;

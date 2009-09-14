@@ -296,23 +296,25 @@ public class UICategories extends UIContainer	{
 			UICategories uiContainer = event.getSource();
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UICategoryContainer categoryContainer = uiContainer.getParent() ;
+			UIForumPortlet forumPortlet = categoryContainer.getParent();
 			try {
 				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
 				List<Forum> list = null;
 				if(!uiContainer.collapCategories.contains(categoryId)){
 					list = uiContainer.getForumList(categoryId);
 				}
+				forumPortlet.setRenderForumLink();
 				uiCategory.update(uiContainer.getCategory(categoryId), list) ;
 				categoryContainer.updateIsRender(false) ;
-				((UIForumPortlet)categoryContainer.getParent()).getChild(UIForumLinks.class).setValueOption(categoryId);
+				forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
 				uiContainer.maptopicLast.clear();
 			} catch (Exception e) {
 				Object[] args = { "" };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(categoryContainer) ;
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
