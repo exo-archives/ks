@@ -24,7 +24,7 @@
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	boolean isModeratePost = topic.getIsModeratePost() ;
 %>
-	<div class="ViewTopicContainer">
+	<div class="ViewTopicContainer" style="padding:10px 8px;">
 		<div class="ViewTopicPageIterator">
 			<% 
 			if(uicomponent.getIsRenderIter()) {
@@ -40,6 +40,7 @@
 		long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 		int nb = 0;
 		Date dateView = new Date();
+		String screenName ="";
 		for(post in posts) {
 			String owner = post.getOwner() ;
 			ForumContact contact = uiform.getPersonalContact(owner) ;
@@ -52,6 +53,7 @@
 				location = location + contact.getCountry() ;
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
+			screenName = userInfo.getScreenName();
 			String classIconPost = post.getIcon() ;
 			if(ForumUtils.isEmpty(classIconPost)) 
 				classIconPost = "NormalTopicIcon" ;
@@ -107,8 +109,8 @@
 										}
 								%>
 								<div class="MemberName">
-									<div class="State $userSmile" title="${owner}'s $titleSmile"><span></span></div>
-									<div class="Name">$owner</div>
+									<div class="State $userSmile" title="${screenName}'s $titleSmile"><span></span></div>
+									<div class="Name">$screenName</div>
 									<div style="clear:left;"><span></span></div>
 								</div>
 								<div class="Rank"><%=userInfo.getUserTitle();%></div>
@@ -243,8 +245,12 @@
 		<table class="ActionContainer">
 			<tr>
 				<td align="center">
-					<div style="width:300px;">
-				<% for(action in uicomponent.getActions()) { 
+				<%  
+					String []actions = uicomponent.getActions();
+					int l = actions.length;
+				%>
+					<div style="width:<%=(l*100)%>px;">
+				<% for(action in actions) { 
 					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
 					 String link = uicomponent.event(action) ;
 				%>
@@ -258,6 +264,7 @@
 							</div>
 						</div>
 					<%}%>
+						<div style="clear:left;"><span></span></div>
 					</div>
 				</td>
 			</tr>

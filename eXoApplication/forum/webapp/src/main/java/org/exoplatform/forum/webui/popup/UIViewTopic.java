@@ -38,9 +38,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -139,7 +137,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		Topic topic = this.topic ;
 		String id[] = topic.getPath().split("/");
 		int l = id.length ;
-		pageList = forumService.getPosts(ForumSessionUtils.getSystemProvider(), id[l-3], id[l-2], topic.getId(), "", "", "", userLogin)	; 
+		pageList = forumService.getPosts(id[l-3], id[l-2], topic.getId(), "", "", "", userLogin)	; 
 		long maxPost = this.userProfile.getMaxPostInPage() ;
 		if(maxPost <= 0) maxPost = 10 ;
 		pageList.setPageSize(maxPost) ;
@@ -156,16 +154,13 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			}
 		}
 		if(userNames.size() > 0) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
-				List<UserProfile> profiles = forumService.getQuickProfiles(sProvider, userNames) ;
+				List<UserProfile> profiles = forumService.getQuickProfiles(userNames) ;
 				for(UserProfile profile : profiles) {
 					mapUserProfile.put(profile.getUserId(), profile) ;
 				}
 			}catch(Exception e) {
 				e.printStackTrace() ;
-			}finally {
-				sProvider.close() ;
 			}
 		}
 	}
@@ -236,15 +231,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
 	private String getAvatarUrl(String userId) throws Exception {
-//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-//	try {
-//		ContactAttachment attachment = contact.getAttachment() ; 
-//		InputStream input = attachment.getInputStream() ;
-//		String fileName = attachment.getFileName() ;
-//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
-//	} catch (NullPointerException e) {
-//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-//	}
 		String url = ForumSessionUtils.getUserAvatarURL(userId, forumService, getApplicationComponent(DownloadService.class));
 		return url;
 	}
@@ -260,14 +246,11 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 			topic.setIsWaiting(false);
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
-				uiForm.forumService.modifyTopic(sProvider, topics, 3);
-				uiForm.forumService.modifyTopic(sProvider, topics, 5);
+				uiForm.forumService.modifyTopic(topics, 3);
+				uiForm.forumService.modifyTopic(topics, 5);
 			}catch(Exception e) {
 				e.printStackTrace() ;
-			}finally {
-				sProvider.close() ;
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -288,11 +271,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIViewTopic> event) throws Exception {
 			UIViewTopic uiForm = event.getSource() ;
 			Topic topic = uiForm.topic;
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			try {
 				String []path = topic.getPath().split("/");
 				int l = path.length ;
-	      uiForm.forumService.removeTopic(sProvider, path[l-3], path[l-2], topic.getId());
+	      uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
       } catch (Exception e) {
 	      e.printStackTrace();
       }
