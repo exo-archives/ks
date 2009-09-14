@@ -420,6 +420,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			UIFormInputWithActions bbcodeTab = administrationForm.getChildById(FIELD_BBCODE_TAB) ;
 //			
 			List<BBCode> bbCodes = new ArrayList<BBCode>();
+			boolean inactiveAll = true;
 			for (BBCode bbc : administrationForm.listBBCode) {
 				boolean isActive = true;
 				try {
@@ -430,7 +431,14 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 					bbc.setActive(isActive);
 					bbCodes.add(bbc);
 				}
+				if(isActive) inactiveAll = false;
       }
+			if(administrationForm.listBBCode.size() > 0 && inactiveAll){
+				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
+				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.inactiveAllBBCode", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA)}, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				return;
+			}
 			if(!bbCodes.isEmpty()){
 				try {
 					administrationForm.forumService.saveBBCode(bbCodes);
