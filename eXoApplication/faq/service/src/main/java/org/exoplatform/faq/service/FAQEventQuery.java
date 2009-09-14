@@ -538,7 +538,7 @@ public String getQuery() throws Exception {
     	
     	if(!isAdmin) {
     		queryString.append(" and ( ") ;
-    		queryString.append(" @exo:isApproved='true'") ;
+    		queryString.append("not(@exo:isApproved) or @exo:isApproved='true'") ;
     		queryString.append(" ) ") ;
     	}
     	
