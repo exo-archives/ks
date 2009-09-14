@@ -709,45 +709,7 @@ public class JCRDataStorage {
 
   public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
   	Answer[] answers = {answer} ;
-  	saveAnswer(questionId, answers) ;
-  	/*SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-  	try {
-  		Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
-    	if(!quesNode.isNodeType("mix:faqi18n")) {
-    		quesNode.addMixin("mix:faqi18n") ;
-    	}
-    	Node answerHome = null;
-    	try{
-    		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-    	} catch (Exception e){
-    		answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome");
-    	}
-    	Node answerNode;
-    	if(isNew){
-    		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
-    		java.util.Calendar calendar = null ;
-    		calendar = null ;
-    		calendar = GregorianCalendar.getInstance();
-    		calendar.setTime(new Date());
-    		answerNode.setProperty("exo:dateResponse", quesNode.getSession().getValueFactory().createValue(calendar));
-    		answerNode.setProperty("exo:id", answer.getId());
-    	} else {
-    		answerNode = answerHome.getNode(answer.getId());
-    	}
-    	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
-    		answerNode.setProperty("exo:postId", answer.getPostId());
-    	}
-    	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-    	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-    	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-    	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-    	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-    	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;    	
-    	if(isNew) quesNode.getSession().save();
-    	else quesNode.save();
-  	}catch (Exception e) {
-  		e.printStackTrace() ;
-  	}finally { sProvider.close() ;}*/
+  	saveAnswer(questionId, answers) ;  	
   }
   
   public void saveAnswer(String questionId, Answer[] answers) throws Exception{
@@ -761,7 +723,6 @@ public class JCRDataStorage {
     	String qId = quesNode.getName() ;
   		String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
     	String defaultLang = quesNode.getProperty("exo:language").getString() ;
-//    	System.out.println("defaultLang >>>>>>>> " + defaultLang) ;
     	
     	for(Answer answer : answers){
     		if(answer.getLanguage().equals(defaultLang)){
@@ -771,7 +732,6 @@ public class JCRDataStorage {
         		answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
         	}
     		}else { //answer for other languages
-    			//System.out.println("answer.getLanguage() >>>>>>>> " + answer.getLanguage()) ;
     			Node langNode = getLanguageNodeByLanguage(quesNode, answer.getLanguage()) ;
     			try{
         		answerHome = langNode.getNode(Utils.ANSWER_HOME);
@@ -780,7 +740,6 @@ public class JCRDataStorage {
         	}        	
     		}
     		saveAnswer(answer, answerHome, qId, categoryId) ;
-    		//System.out.println("====> LanguageSaved:"+answer.getLanguage()) ;
     	}
     	quesNode.save() ;
     }catch (Exception e) {
@@ -2512,11 +2471,11 @@ public class JCRDataStorage {
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager() ;
-			System.out.println("Query ====>" + eventQuery.getQuery());
+			//System.out.println("Query ====>" + eventQuery.getQuery());
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			System.out.println("size ====>" + iter.getSize());
+			//System.out.println("size ====>" + iter.getSize());
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
@@ -3282,6 +3241,17 @@ public class JCRDataStorage {
 			}
 		}
   	return questionInfoList ;
+  }
+  
+  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception{
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node question = getFAQServiceHome(sProvider).getNode(questionPath) ;
+			question.setProperty("exo:relatives", relatives) ;
+			question.save() ;
+		}catch (Exception e) {
+			e.printStackTrace() ;
+		}finally {sProvider.close() ;}
   }
 }
 

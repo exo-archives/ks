@@ -298,7 +298,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm responseForm = event.getSource() ;
 				String language = responseForm.questionLanguages_.getValue() ;
-				//System.out.println("language ==========>" + language);
 				String responseQuestionContent = responseForm.inputResponseQuestion_.getValue() ;
 				Answer answer;
 				if(ValidatorDataInput.fckContentIsNotEmpty(responseQuestionContent)) {						
@@ -306,7 +305,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						answer = responseForm.mapAnswers.get(language);
 						answer.setResponses(responseQuestionContent);
 						answer.setNew(true) ;
-						//System.out.println(" =====Not empty=====>");
 					} else {
 						answer = new Answer();
 						answer.setDateResponse(new Date());
@@ -318,7 +316,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						answer.setApprovedAnswers(responseForm.isAnswerApproved);
 						answer.setResponses(responseQuestionContent);
 						answer.setLanguage(language) ;
-						//System.out.println(" =====empty=====>");
 					}
 					responseForm.mapAnswers.put(language, answer);
 				} else{
@@ -360,11 +357,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
-					//System.out.println("answers.getlang() =========>" + answers[0].getLanguage());
 					faqService.saveAnswer(question_.getPath(), answers) ;
-					//question_.setMultiLanguages(new QuestionLanguage[]{}) ;
-					//faqService.saveQuestion(question_, false, responseForm.faqSetting_) ;
-					
+					faqService.updateQuestionRelatives(question_.getPath(), question_.getRelations()) ;
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum);
 				} catch (PathNotFoundException e) {
@@ -384,12 +378,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ; 
-					/*if(!uiQuestions.getCategoryId().equals(question_.getCategoryId())) {
-						UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-						//Category category = faqService.getCategoryById(question_.getCategoryId()) ;
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-moved", new Object[]{""}, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					}*/
 				} else {
 					UIQuestionManagerForm questionManagerForm = responseForm.getParent() ;
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;

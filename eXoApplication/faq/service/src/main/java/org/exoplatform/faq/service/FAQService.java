@@ -651,7 +651,8 @@ public interface FAQService extends FAQServiceLegacy{
   public void saveTemplate(String str) throws Exception;
   
   public boolean isCategoryExist(String name, String path) ;
-
+  
+  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
 
 }
 
