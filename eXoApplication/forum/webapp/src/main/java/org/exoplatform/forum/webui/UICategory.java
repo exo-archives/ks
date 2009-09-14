@@ -182,7 +182,7 @@ public class UICategory extends UIForm	{
 			String strQuery = "";
 			if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 			try {
-				this.forums = forumService.getForums(this.categoryId, strQuery);
+				this.forums = forumService.getForumSummaries(this.categoryId, strQuery);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -508,16 +508,24 @@ public class UICategory extends UIForm	{
 		public void execute(Event<UICategory> event) throws Exception {
 			UICategory uiCategory = event.getSource();
 			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			Forum forum = uiCategory.getForum(forumId) ;
-			UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.updateIsRendered(ForumUtils.FORUM);
-			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-			uiForumContainer.setIsRenderChild(true) ;
-			uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-			uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 1) ;
-			forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			Forum forum = uiCategory.forumService.getForum(uiCategory.categoryId, forumId);
+			if(forum != null){
+				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateIsRendered(ForumUtils.FORUM);
+				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+				uiForumContainer.setIsRenderChild(true) ;
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+				UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+				uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 1) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			} else {
+				uiCategory.isEditForum = true;
+				UIApplication uiApp = uiCategory.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UITopicContainer.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
+			}
 		}
 	}
 	
