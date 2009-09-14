@@ -291,8 +291,8 @@ public class QuestionPageList extends JCRPageList {
           break ;
         }
       }
-    }
-    iter_ = null ;    
+    }    
+    iter_ = null ;
   }
 // Created by Vu Duy Tu 
   @SuppressWarnings("unchecked")

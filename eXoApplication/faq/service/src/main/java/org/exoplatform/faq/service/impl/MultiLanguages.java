@@ -707,7 +707,7 @@ public class MultiLanguages {
   		answerNode.setProperty("exo:usersVoteAnswer", newUsers.toArray(new String[]{})) ;
   		answerNode.setProperty("exo:MarkVotes", mark) ;
   	}
-  	System.out.println("mark ==>" + mark);  	
+  	//System.out.println("mark ==>" + mark);  	
   	answerNode.save() ;
   }
   
