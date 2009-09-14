@@ -114,7 +114,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     }
     listBBCode.clear();
     listBBCode.addAll(bbcs);
-    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
 	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {

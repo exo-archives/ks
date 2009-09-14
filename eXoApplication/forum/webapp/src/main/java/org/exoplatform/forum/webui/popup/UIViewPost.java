@@ -165,7 +165,6 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     }
     listBBCode.clear();
     listBBCode.addAll(bbcs);
-    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
 	}
 	
 	@SuppressWarnings("unused")

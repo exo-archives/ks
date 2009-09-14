@@ -372,10 +372,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		    listBBCode.addAll(bbcs);
 			} catch (Exception e) {}
 		}
-    if(listBBCode.isEmpty())listBBCode.addAll(BBCodeData.createDefaultBBcode());
-    try {
-    	s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
-    } catch (Exception e) {}
+    if(!listBBCode.isEmpty()){
+	    try {
+	    	s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+	    } catch (Exception e) {}
+    }
     return s;
 	}
 	
