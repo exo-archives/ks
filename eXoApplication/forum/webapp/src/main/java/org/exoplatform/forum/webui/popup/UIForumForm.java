@@ -80,6 +80,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private boolean isMode = false;
 	private boolean isAddValue = true;
 	private String forumId = "";
+	private String categoryId = "";
 	private String listEmailAutoUpdate = "";
 	private int id = 0 ;
 	private boolean isDoubleClickSubmit; 
@@ -114,13 +115,20 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setMode(boolean isMode) {this.isMode = isMode;}
 	
 	public void initForm() throws Exception {
-		List<Category> categorys = forumService.getCategories();
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		for (Category category :categorys) {
-			list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId())) ;
+		if(ForumUtils.isEmpty(categoryId)) {
+			List<Category> categorys = forumService.getCategories();
+			for (Category category :categorys) {
+				list.add(new SelectItemOption<String>(category.getCategoryName(), category.getId())) ;
+			}
+			categoryId = categorys.get(0).getId();
+		} else {
+			Category category = forumService.getCategory(categoryId);
+			list.add(new SelectItemOption<String>(category.getCategoryName(), categoryId)) ;
 		}
-		UIFormSelectBox categoryId = new UIFormSelectBox(FIELD_CATEGORY_SELECTBOX, FIELD_CATEGORY_SELECTBOX, list) ;
-		categoryId.setDefaultValue(categorys.get(0).getId());
+		
+		UIFormSelectBox selictCategoryId = new UIFormSelectBox(FIELD_CATEGORY_SELECTBOX, FIELD_CATEGORY_SELECTBOX, list) ;
+		selictCategoryId.setDefaultValue(categoryId);
 		
 		UIFormStringInput forumTitle = new UIFormStringInput(FIELD_FORUMTITLE_INPUT, FIELD_FORUMTITLE_INPUT, null);
 		forumTitle.addValidator(MandatoryValidator.class);
@@ -150,7 +158,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormCheckBoxInput<Boolean> autoAddEmailNotify = new UIFormCheckBoxInput<Boolean>(FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, FIELD_AUTOADDEMAILNOTIFY_CHECKBOX, true);
 		autoAddEmailNotify.setValue(true);
 		
-		addUIFormInput(categoryId) ;
+		addUIFormInput(selictCategoryId) ;
 		UIFormInputWithActions newForum = new UIFormInputWithActions(FIELD_NEWFORUM_FORM);
 		newForum.addUIFormInput(forumTitle) ;
 		newForum.addUIFormInput(forumOrder) ;
@@ -205,6 +213,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	public void setForumValue(Forum forum, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			forumId = forum.getId();
+			forum = forumService.getForum(categoryId, forumId);
 			UIFormInputWithActions newForum = this.getChildById(FIELD_NEWFORUM_FORM);
 			newForum.getUIStringInput(FIELD_FORUMTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(forum.getForumName()));
 			newForum.getUIStringInput(FIELD_FORUMORDER_INPUT).setValue(String.valueOf(forum.getForumOrder()));
@@ -240,6 +249,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 		if(!isEditable) getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId) ;
 		getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setEnable(isEditable) ;
 		isCategoriesUpdate = isEditable;
+		this.categoryId = categoryId;
 	}
 	
 	public void setForumUpdate(boolean isForumUpdate) {
