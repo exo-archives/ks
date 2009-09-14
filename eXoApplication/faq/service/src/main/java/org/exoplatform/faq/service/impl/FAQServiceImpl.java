@@ -1271,6 +1271,10 @@ public class FAQServiceImpl implements FAQService, Startable{
   	jcrData_.saveTemplate(str);
   }
   
+  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception {
+  	jcrData_.updateQuestionRelatives(questionPath, relatives) ;
+  }
+  
 }
 
 

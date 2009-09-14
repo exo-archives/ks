@@ -108,12 +108,9 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     }
     listQuestion.addAll(faqService.getQuickQuestionsByListCatetory(listIds, false));  
     UIFormCheckBoxInput checkQuestion ;
-    //List<Question> questions;
+    
     for(Question question : listQuestion) {
-    	System.out.println("questionName ===>" + question.getQuestion());
     	mapQuestion_.get(question.getCategoryId()).add(question);    	
-    	//questions.add(question);
-    	//mapQuestion_.put(question.getCategoryId(), questions);
     	if(quesIdsSelect.contains(question.getPath())) {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false).setChecked(true) ;        
       } else {
@@ -126,11 +123,11 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   
   private void setListCate(String path) throws Exception {
     //List<Cate> listCate = new ArrayList<Cate>();
-    String userName = FAQUtils.getCurrentUser();
-    List<String>userPrivates = null;
+    //String userName = FAQUtils.getCurrentUser();
+    /*List<String>userPrivates = null;
     if(userName != null){
     	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
-    }
+    }*/
     this.listCategory_.clear() ;
     this.listCategory_.addAll(faqService.listingCategoryTree()) ;
     mapQuestion_.put(Utils.CATEGORY_HOME, new ArrayList<Question>()) ;

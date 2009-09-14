@@ -648,7 +648,8 @@ public interface FAQService extends FAQServiceLegacy{
   
   public byte[] getTemplate() throws Exception ;
   public void saveTemplate(String str) throws Exception;
-
+  
+  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
 
 }
 

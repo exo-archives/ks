@@ -908,6 +908,7 @@
 													String linkRelaQues = "" ;
 													String relationContent = "" ;
 											%>
+											empty
 												<div class="RelationContent">
 													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
 											<%
