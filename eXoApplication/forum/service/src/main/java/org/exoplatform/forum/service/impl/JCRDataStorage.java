@@ -2380,9 +2380,6 @@ public class JCRDataStorage {
 			} else {
 				forumNode.save();
 			}
-			if(isGetLastTopic) {
-				queryLastTopic(sProvider, forumNode.getPath());
-			}
 			if(topic.getIsWaiting() || !topic.getIsApproved()) {
 				List<String>userIdsp = new ArrayList<String>();
 				if(forumNode.hasProperty("exo:moderators")) {
@@ -2390,6 +2387,10 @@ public class JCRDataStorage {
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(userIdsp);
+				isGetLastTopic = true;
+			}
+			if(!isNew && (isGetLastTopic || topic.getIsActive() || topic.getIsClosed())) {
+				queryLastTopic(sProvider, forumNode.getPath());
 			}
 			if (!isMove) {
 				if (isNew) {
