@@ -60,7 +60,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME) ;
 	}
 
-	public String getCategoryID() { return categoryId_; }
+	private String getCategoryID() { return categoryId_; }
 	public void setCategoryID(String s) { categoryId_ = s ; }
 
 	public void activate() throws Exception {}
@@ -71,39 +71,18 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	}
 
 	public void setFAQSetting(FAQSetting faqSetting){
-		this.faqSetting_ = faqSetting;
-		String orderType = faqSetting.getOrderType() ;
-		if(orderType.equals("asc")) faqSetting.setOrderType("desc") ;
-		else faqSetting.setOrderType("asc") ;
+		this.faqSetting_ = faqSetting;		
 	}
 
 	public void setListCate() throws Exception {
-		/*List<Cate> listCate = new ArrayList<Cate>() ;
-		Cate cate ;
-		for(Category category : faqService_.getSubCategories(null, faqSetting_, false, null)) {
-			cate = new Cate() ;
-			cate.setCategory(category) ;
-			cate.setDeft(0) ;
-			listCate.add(cate) ;
+		listCate.clear() ;
+		List<Cate> temp = faqService_.listingCategoryTree() ;		
+		for(Cate cat : temp) {			
+			if(cat.getCategory().getPath().indexOf(categoryId_) < 0){
+				listCate.add(cat) ;
+			}				
 		}
-		Cate parentCate;
-		Cate childCate;
-		while (!listCate.isEmpty()) {
-			parentCate = new Cate() ;
-			parentCate = listCate.get(listCate.size() - 1) ;
-			listCate.remove(parentCate) ;
-			this.listCate.add(parentCate) ;
-			for(Category category : faqService_.getSubCategories(parentCate.getCategory().getPath(), faqSetting_, false, null)){
-				childCate = new Cate() ;
-				childCate.setCategory(category) ;
-				childCate.setDeft(parentCate.getDeft() + 1) ;
-				listCate.add(childCate) ;
-			}
-		}*/
-		this.listCate.addAll(faqService_.listingCategoryTree()) ;
-		String orderType = faqSetting_.getOrderType() ;
-		if(orderType.equals("asc")) faqSetting_.setOrderType("desc") ;
-		else faqSetting_.setOrderType("asc") ;
+		temp = null ;
 	}
 
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
@@ -125,6 +104,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 					return;
 				}
 			}catch (Exception e) {
+				e.printStackTrace() ;
 				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

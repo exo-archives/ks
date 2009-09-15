@@ -609,18 +609,11 @@ public class UICategories extends UIContainer{
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			System.out.println("MoveCategoryActionListener. categoryId ===> " + categoryId);
 			UIFAQPortlet faqPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			try {
-				//if(uiCategories.faqSetting_.isAdmin() || uiCategories.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
-					/*if(uiCategories.faqService_.existingCategories()  <= 1 ) {
-						uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.cannot-move-category", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-					} */
 					UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
 					popupContainer.setId("MoveCategoryForm") ;
 					uiMoveCategoryForm.setCategoryID(categoryId) ;
@@ -628,12 +621,6 @@ public class UICategories extends UIContainer{
 					uiMoveCategoryForm.setListCate() ;
 					popupAction.activate(popupContainer, 600, 400) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					
-				/*} else {
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-				}*/
 			} catch (Exception e) {
 				e.printStackTrace() ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
