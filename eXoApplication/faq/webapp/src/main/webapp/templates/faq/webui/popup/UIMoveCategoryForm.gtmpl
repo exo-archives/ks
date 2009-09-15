@@ -23,7 +23,7 @@
 			$homeCateName</a>
 		</div>
 		<div style="clear:left;"><span></span></div>
-		<div style="margin-left:30px;">sdfasfasd
+		<div style="margin-left:30px;">
 			<%
 			List listCate = uicomponent.getListCate() ;		
 	    int deep = 0;
