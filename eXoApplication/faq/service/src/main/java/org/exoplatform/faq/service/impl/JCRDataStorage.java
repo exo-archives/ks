@@ -1844,10 +1844,7 @@ public class JCRDataStorage {
 			if(cat.isNodeType("exo:faqCategory")) {
 				cate = new Cate() ;
 				cate.setCategory(getCategory(cat)) ;
-				/*System.out.println("path ==>" + cate.getCategory().getPath());
-				System.out.println("name ==>" + cate.getCategory().getName());
-				System.out.println("deep ==>" + i);*/
-		    cate.setDeft(i) ;
+				cate.setDeft(i) ;
 		    cateList.add(cate) ;
 				if(cat.hasNodes()) {
 					cateList.addAll(listingSubTree(cat, j)) ; ;
