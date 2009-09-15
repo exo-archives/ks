@@ -165,7 +165,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					questionContent = language.getQuestion();
 				}
 				languageMap.put(language.getLanguage(), language) ;
-				listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
+				if (!language.getLanguage().equals(question.getLanguage()))
+					listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
