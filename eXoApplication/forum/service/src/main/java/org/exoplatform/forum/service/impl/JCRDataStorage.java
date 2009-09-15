@@ -1175,14 +1175,14 @@ public class JCRDataStorage {
 			if (strQuery != null && strQuery.trim().length() > 0) {
 				queryBuffer.append("[").append(strQuery).append("]");
 			}
-			queryBuffer.append("order by @exo:").append(orderBy).append(" ").append(orderType);
-			if (orderBy == SortField.ORDER) {
-				queryBuffer.append(",@exo:forumOrder ascending");
+			queryBuffer.append(" order by @exo:").append(orderBy).append(" ").append(orderType);
+			if (orderBy != SortField.ORDER) {
+				queryBuffer.append(", @exo:forumOrder ascending");
 				if (orderBy != SortField.CREATED) {
-					queryBuffer.append(",@exo:createdDate ascending");
+					queryBuffer.append(", @exo:createdDate ascending");
 				}
 			} else {
-				queryBuffer.append(",@exo:createdDate ascending");
+				queryBuffer.append(", @exo:createdDate ascending");
 			}
 	    QueryManager qm = catNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryBuffer.toString(), Query.XPATH);
@@ -1826,7 +1826,7 @@ public class JCRDataStorage {
     if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
     	if (orderBy != null) {
     		stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
-    		if ( orderBy != SortField.LASTPOST) {
+    		if (!orderBy.equals(SortField.LASTPOST)) {
     			stringBuffer.append(",@exo:lastPostDate descending");
     		}
     	} else {
