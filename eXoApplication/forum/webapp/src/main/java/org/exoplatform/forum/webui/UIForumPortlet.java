@@ -193,9 +193,8 @@ public class UIForumPortlet extends UIPortletApplication {
 			isJumpRendered = false;
 		}
 		UICategoryContainer categoryContainer = getChild(UICategoryContainer.class).setRendered(isCategoryRendered) ;
-		if(isCategoryRendered) {
-			categoryContainer.setIsRenderJump(isJumpRendered);
-		}else {
+		categoryContainer.setIsRenderJump(isJumpRendered);
+		if(!isCategoryRendered) {
 			getChild(UIForumLinks.class).setRendered(isJumpRendered) ;
 		}
   }
