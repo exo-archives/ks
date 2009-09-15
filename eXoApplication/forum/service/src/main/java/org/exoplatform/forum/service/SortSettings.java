@@ -26,7 +26,7 @@ public class SortSettings {
 
 
 	private SortField toField(String sortBy) {
-		if ("Name".equalsIgnoreCase(sortBy)) return SortField.NAME;
+		if ("name".equalsIgnoreCase(sortBy)) return SortField.NAME;
 		else if ("createdDate".equalsIgnoreCase(sortBy)) return SortField.CREATED;
 		else if ("isLock".equalsIgnoreCase(sortBy)) return SortField.ISLOCK;
 		else if ("topicCount".equalsIgnoreCase(sortBy)) return SortField.TOPICCOUNT;
@@ -54,7 +54,7 @@ public class SortSettings {
 	};
 	
 	public enum SortField {
-		NAME("Name"), ORDER("forumOrder"), CREATED("createdDate"), LASTPOST("lastPostDate"), POSTCOUNT("postCount"), TOPICCOUNT("topicCount"), ISLOCK("isLock"), ATTACHMENTS("numberAttachments");
+		NAME("name"), ORDER("forumOrder"), CREATED("createdDate"), LASTPOST("lastPostDate"), POSTCOUNT("postCount"), TOPICCOUNT("topicCount"), ISLOCK("isLock"), ATTACHMENTS("numberAttachments");
 	
 	 private final String name;
 	 SortField(String name) {

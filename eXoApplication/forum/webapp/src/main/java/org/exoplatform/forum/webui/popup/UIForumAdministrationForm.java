@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -403,7 +404,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				return;
 			}
-			ForumAdministration forumAdministration = administrationForm.administration ;
+			ForumAdministration forumAdministration = new ForumAdministration() ;
 			forumAdministration.setForumSortBy(forumSortBy) ;
 			forumAdministration.setForumSortByType(forumSortByType) ;
 			forumAdministration.setTopicSortBy(topicSortBy) ;
@@ -415,6 +416,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumAdministration.setNotifyEmailMoved(notifyEmailMoved);
 			try {
 				administrationForm.forumService.saveForumAdministration(forumAdministration) ;
+				if(!forumSortBy.equals(administrationForm.administration.getForumSortBy()) || !forumSortByType.equals(administrationForm.administration.getForumSortByType())){
+					forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true);
+				}
 			} catch (Exception e) {
 			}
 			UIFormInputWithActions bbcodeTab = administrationForm.getChildById(FIELD_BBCODE_TAB) ;

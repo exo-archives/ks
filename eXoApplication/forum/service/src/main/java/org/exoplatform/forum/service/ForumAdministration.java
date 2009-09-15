@@ -26,10 +26,10 @@ public class ForumAdministration {
 	private String forumSortByType ;//ascending or descending
 	private String topicSortBy ;//Name, isLock, lastPostDate, postCount,  numberAttachments.
 	private String topicSortByType; 
-	private String censoredKeyword ;
+	private String censoredKeyword = "";
 	private String headerSubject = "";
-	private String notifyEmailContent;
-	private String notifyEmailMoved;
+	private String notifyEmailContent = "";
+	private String notifyEmailMoved = "";
 	private boolean enableHeaderSubject;
 	
 
