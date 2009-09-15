@@ -363,9 +363,14 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				Post postNew = new Post();
 				postNew.setOwner(userName);
 				postNew.setName(topicTitle);
-				postNew.setCreatedDate(new Date());
+				if(ForumUtils.isEmpty(uiForm.topicId)){
+					postNew.setCreatedDate(ForumUtils.getInstanceTempCalendar().getTime());
+					postNew.setModifiedDate(ForumUtils.getInstanceTempCalendar().getTime());
+				}else {
+					postNew.setCreatedDate(uiForm.topic.getCreatedDate());
+					postNew.setModifiedDate(uiForm.topic.getModifiedDate());
+				}
 				postNew.setModifiedBy(userName);
-				postNew.setModifiedDate(new Date());
 				postNew.setMessage(message);
 				postNew.setAttachments(uiForm.attachments_) ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);

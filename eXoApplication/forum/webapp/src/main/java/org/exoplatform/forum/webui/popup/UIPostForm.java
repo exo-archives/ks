@@ -96,7 +96,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	private String categoryId; 
 	private String forumId ;
 	private String topicId ;
-	private String postId ;
+	private String postId = "";
 	private boolean isMod = false ;
 	private Topic topic ;
 	private Post post_ = new Post();
@@ -250,13 +250,15 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
 			postTitle = ForumTransformHTML.enCodeHTML(postTitle).trim() ;
 			if(t > 0 && k != 0 && !checksms.equals("null")) {	
-				Post post = new Post();
+				Post post = uiForm.post_;
 				post.setName(postTitle) ;
 				post.setMessage(message) ;
 				post.setOwner(userName) ;
-				post.setCreatedDate(new Date()) ;
+				if(ForumUtils.isEmpty(uiForm.postId)){
+					post.setCreatedDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
+					post.setModifiedDate(ForumUtils.getInstanceTempCalendar().getTime()) ;
+				}
 				post.setModifiedBy(userName) ;
-				post.setModifiedDate(new Date()) ;
 				post.setRemoteAddr("") ;
 				UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 				post.setIcon(uiIconSelector.getSelectedIcon());
