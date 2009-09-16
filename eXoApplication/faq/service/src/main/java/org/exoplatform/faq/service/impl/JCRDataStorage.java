@@ -1536,6 +1536,7 @@ public class JCRDataStorage {
 			} else {
 				queryString.append("descending");
 			}
+			System.out.println("queryString.toString()===>" + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();			
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
