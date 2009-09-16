@@ -168,12 +168,14 @@ public class UICategories extends UIContainer{
 		if(!isSwap){
 			List<Category> newList = new ArrayList<Category>();
 			String userName = FAQUtils.getCurrentUser();
-	    List<String>userPrivates = null;
-	    if(userName != null){
-	    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
-	    }
-			try{
-				newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, userPrivates);
+	    try{
+				if(faqSetting_.isAdmin()) {
+					newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, true, null);
+				}else {
+					newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, 
+							FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+				}
+	    	
 				currentCategoryName = faqService_.getCategoryById(this.categoryId_).getName();
 			} catch(Exception e){
 				currentCategoryName = faqService_.getCategoryById(this.parentCateID_).getName();
@@ -181,7 +183,12 @@ public class UICategories extends UIContainer{
 			}
 			viewBackIcon = true;
 			if(newList.isEmpty()) {
-				newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false, userPrivates);
+				if(faqSetting_.isAdmin()) {
+					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, true, null);
+				}else {
+					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false,
+							FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+				}
 				viewBackIcon = false;
 			}
 			if(currentCategoryName == null || currentCategoryName.trim().length() < 1) currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
@@ -207,11 +214,12 @@ public class UICategories extends UIContainer{
 		isSwap = true;
 		listCate.clear();
 		String userName = FAQUtils.getCurrentUser();
-    List<String>userPrivates = null;
-    if(userName != null){
-    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
-    }
-		listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, false, userPrivates));
+    if(faqSetting_.isAdmin()) {
+    	listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, true, null));
+    }else {
+    	listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, false, 
+  				FAQServiceUtils.getAllGroupAndMembershipOfUser(userName)));
+    }		
 		setIsModerators(userName);
 	}
 	

@@ -98,6 +98,7 @@ public class FAQServiceUtils {
   
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
   	List<String> userGroupMembership = new ArrayList<String>();
+  	if(userId == null || userId.equals("null")) return userGroupMembership ; //for anonimous users  	
 		userGroupMembership.add(userId);
 		String value = "";
 		String id = "";

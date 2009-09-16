@@ -122,39 +122,11 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     ResourceBundle res = context.getApplicationResourceBundle() ;
   	this.listCategories.add(new SelectItemOption<String>(res.getString("UIQuestionsInfo.label.All"), "All")) ;
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  	
     List<Cate> listCate = new ArrayList<Cate>();
-    //Cate parentCate = new Cate() ;
-    //Cate childCate = new Cate() ;
-    List<String> listGroup = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     listCate.addAll(faqService.listingCategoryTree()) ;
     for(Cate cat : listCate) {
     	this.listCategories.add(new SelectItemOption<String>(cat.getCategory().getName(), cat.getCategory().getPath())) ;
     }
-    /*for(Category category : faqService.getSubCategories(null, faqSetting_, false, listGroup)) {
-      Cate cate = new Cate() ;
-      cate.setCategory(category) ;
-      cate.setDeft(0) ;
-      listCate.add(cate) ;
-    }
-    String deep = "";
-   // boolean isAdmin = ;
-    while (!listCate.isEmpty()) {
-      parentCate = listCate.get(0);
-      listCate.remove(0);
-      for(int i = 0; i < parentCate.getDeft(); i ++){
-      	deep += "  ";
-      }
-      if(faqSetting_.isAdmin() || hasInGroup(listGroup, parentCate.getCategory().getModerators()))
-      	this.listCategories.add(new SelectItemOption<String>(deep + parentCate.getCategory().getName(), parentCate.getCategory().getPath())) ;
-      int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getPath(), faqSetting_, false, listGroup)){
-        childCate = new Cate() ;
-        childCate.setCategory(category) ;
-        childCate.setDeft(parentCate.getDeft() + 1) ;
-        listCate.add(i ++, childCate) ;
-      }
-    }*/
   }
   
   private String[] getQuestionActions(){
@@ -193,11 +165,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    String userName = FAQUtils.getCurrentUser();
-    List<String>userPrivates = null;
-    if(userName != null){
-    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
-    }
+    List<String>userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     if(!faqSetting_.isAdmin()) {
       List<String> listCateId = new ArrayList<String>() ;
       if(cateId_.equals("All")){

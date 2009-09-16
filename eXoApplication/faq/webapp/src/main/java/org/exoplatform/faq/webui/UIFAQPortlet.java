@@ -52,8 +52,6 @@ public class UIFAQPortlet extends UIPortletApplication {
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-    //context.getJavascriptManager().importJavascript("eXo.ecm.ECMUtils","/ecm/javascript/");
-    //context.getJavascriptManager().addJavascript("eXo.ecm.ECMUtils.init('UIFastContentCreatorPortlet') ;");
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
     	isFirstTime = true;
@@ -62,17 +60,7 @@ public class UIFAQPortlet extends UIPortletApplication {
     			removeChild(UISettingForm.class);
     		}
 	    	addChild(UIFAQContainer.class, null, null) ;
-    	} /*else {
-    		UIFAQContainer container = getChild(UIFAQContainer.class);
-    		container.updateIsRender(true);
-    		PortletPreferences portletPref = portletReqContext.getRequest().getPreferences() ;
-    		UIQuestions questions = getChild(UIFAQContainer.class).getChild(UIQuestions.class);
-    		FAQSetting faqSetting = new FAQSetting();
-    		faqSetting.setDisplayMode(portletPref.getValue("display", "")) ;
-        faqSetting.setOrderBy(portletPref.getValue("orderBy", "")) ;
-        faqSetting.setOrderType(portletPref.getValue("orderType", "")) ;
-        questions.setFAQSetting(faqSetting);
-    	}*/
+    	} 
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
     	try{
     		if(isFirstTime){
