@@ -1275,6 +1275,10 @@ public class FAQServiceImpl implements FAQService, Startable{
   	jcrData_.updateQuestionRelatives(questionPath, relatives) ;
   }
   
+  public boolean isCategoryExist(String name, String path){
+  	return jcrData_.isCategoryExist(name, path) ;
+  }
+  
 }
 
 

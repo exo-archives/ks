@@ -3216,6 +3216,23 @@ public class JCRDataStorage {
 		return false ;
 	}
 	
+	public boolean isCategoryExist(String name, String path) {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node category = getFAQServiceHome(sProvider).getNode(path) ;
+			NodeIterator iter = category.getNodes() ;
+			while (iter.hasNext()) {
+				Node cat = iter.nextNode();
+				if(name.equals(cat.getProperty("exo:name").getString())) return true ;
+			}			
+		}catch(Exception e) {
+			e.printStackTrace() ;			
+		}finally{
+			sProvider.close() ;
+		}
+		return false ;
+	}
+	
 	public List<String> getQuestionContents(List<String> paths) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> contents = new ArrayList<String>() ;
