@@ -130,6 +130,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private boolean isNull = false; 
 	private boolean enableIPLogging = true;
 	private boolean isReload = true;
+	private boolean isShowActive = false;
   private String DEFAULT_ID = TopicType.DEFAULT_ID;
 	public boolean isNull() { return isNull; }
 	public void setNull(boolean isNull) { this.isNull = isNull;}
@@ -177,12 +178,13 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
   private boolean getIsAutoPrune() throws Exception {
-		PruneSetting pruneSetting = new PruneSetting();
+	/*PruneSetting pruneSetting = new PruneSetting();
 		try {
 			pruneSetting = forumService.getPruneSetting(forum.getPath());
     } catch (Exception e) {
     }
-		return pruneSetting.isActive();
+		return pruneSetting.isActive();*/
+		return isShowActive ;
 	}
 	
   public void setTopicType(String typeId) throws Exception {
@@ -375,8 +377,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		topicList = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
 		if(topicList == null) topicList = new ArrayList<Topic>();
+		isShowActive = false;
 		try {
 			for(Topic topic : topicList) {
+				if(!topic.getIsActive()) isShowActive = true;
 				if(getUIFormCheckBoxInput(topic.getId()) != null) {
 					getUIFormCheckBoxInput(topic.getId()).setChecked(false) ;
 				}else {
