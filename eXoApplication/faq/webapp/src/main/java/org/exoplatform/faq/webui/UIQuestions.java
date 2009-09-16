@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +122,7 @@ public class UIQuestions extends UIContainer {
 
 	private FAQSetting faqSetting_ = null;
 	//public List<Question> listQuestion_ =  null ;
-	private Map<String, Question> questionMap_ = new HashMap<String, Question>() ;
+	private Map<String, Question> questionMap_ = new LinkedHashMap<String, Question>() ;
 	public JCRPageList pageList ;
 	//private List<String> listCateId_ = new ArrayList<String>() ;
 	private boolean canEditQuestion = false ;
