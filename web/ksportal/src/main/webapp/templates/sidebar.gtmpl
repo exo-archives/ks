@@ -16,7 +16,7 @@
 		</div>
 		<div class="PortletDecorationML">
 			<div class="PortletDecorationMR">
-				<div class="HomePortletAdBackround">
+				<div class="HomePortletAdBackround" style="padding:20px 8px 0px 8px;">
 					<div class="LeftButton">
 						<div class="RightButton">
 							<div class="CenterButton">
