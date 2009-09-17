@@ -342,6 +342,7 @@ public class UICategories extends UIContainer{
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
+					uiCategoryForm.setParentId(uiCategories.categoryId_) ;
 					uiCategoryForm.updateAddNew(false);
 					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -374,6 +375,7 @@ public class UICategories extends UIContainer{
 					UIPopupContainer uiPopupContainer = popupAction.activate(UIPopupContainer.class,540) ;
 					uiPopupContainer.setId("EditCategoryForm") ;
 					UICategoryForm uiCategoryForm = uiPopupContainer.addChild(UICategoryForm.class, null, null) ;
+					uiCategoryForm.setParentId(uiCategories.categoryId_) ;
 					uiCategoryForm.updateAddNew(false);
 					uiCategoryForm.setCategoryValue(category, true) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

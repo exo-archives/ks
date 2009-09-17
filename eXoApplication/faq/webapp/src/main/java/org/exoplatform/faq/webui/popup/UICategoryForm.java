@@ -184,41 +184,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		return string.toString();
 	}
 
-	/*private String filterItemInString(String string) throws Exception {
-		if (string != null && string.trim().length() > 0) {
-			String[] strings = FAQUtils.splitForFAQ(string) ;
-			List<String>list = new ArrayList<String>() ;
-			string = strings[0] ;
-			String string1 = cutColonCaret(string) ;
-			list.add(string1);
-			for(String string_ : strings ) {
-				string1 = cutColonCaret(string_) ;
-				if(list.contains(string1)) continue ;
-				list.add(string1) ;
-				string = string + "," + string_ ;
-			}
-		}
-		return string ;
-	}
-
-	private String removeSpaceInString(String str) throws Exception {
-		if(str != null && str.trim().length() > 0) {
-			String strs[] = new String[]{";", ", ", " ,", ",,"};
-			for (int i = 0; i < strs.length; i++) {
-				while (str.indexOf(strs[i]) >= 0) {
-	        str = str.replaceAll(strs[i], ",");
-        }
-      }
-			if(str.lastIndexOf(",") == str.length() - 1) {
-				str = str.substring(0, str.length() - 1) ;
-			}
-			if(str.indexOf(",") == 0) {
-				str = str.substring(1, str.length()) ;
-			}
-			return str;
-		} else return "";
-	}*/
-
 	static public class SaveActionListener extends EventListener<UICategoryForm> {
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm uiCategory = event.getSource() ;
@@ -233,11 +198,20 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		return ;
       }
       
-      if( uiCategory.isAddNew_ && faqService_.isCategoryExist(name, uiCategory.parentId_)) {
-      	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
-    		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-    		return ;
+      if(uiCategory.isAddNew_) {
+      	if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+        	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
+      		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      		return ;
+        }
+      }else {
+      	if(!name.equals(uiCategory.oldName_) && faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+        	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
+      		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      		return ;
+        }
       }
+      
       
       long index = 1;
       String strIndex = uiCategory.getUIStringInput(FIELD_INDEX_INPUT).getValue() ;

@@ -1782,11 +1782,12 @@ public class JCRDataStorage {
 		}
 		
 		if(category.getId() != null){
-			categoryNode.setProperty("exo:id", category.getId()) ;
-			categoryNode.setProperty("exo:index", category.getIndex()) ;
+			categoryNode.setProperty("exo:id", category.getId()) ;			
 			categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
 			categoryNode.setProperty("exo:isView", category.isView());
 		}
+		System.out.println("category.getIndex() ===>" + category.getIndex());
+		categoryNode.setProperty("exo:index", category.getIndex()) ;
 		categoryNode.setProperty("exo:name", category.getName()) ;
 		categoryNode.setProperty("exo:description", category.getDescription()) ;
 		for(String mod : category.getModerators()) {
@@ -2077,7 +2078,6 @@ public class JCRDataStorage {
 	}
 	
 	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
-		//System.out.println("\n\n categoryID =====>" + categoryId);
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> catList = new ArrayList<Category>() ;
 		try {			
@@ -2085,7 +2085,8 @@ public class JCRDataStorage {
 			if(categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) parentCategory = getCategoryHome(sProvider, null) ;
 			else parentCategory = getFAQServiceHome(sProvider).getNode(categoryId) ;
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath());
-			if(faqSetting.isAdmin()) queryString.append("/element(*,exo:faqCategory) order by @exo:index");				
+			if(faqSetting.isAdmin()) 
+				queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");				
 			else {
 				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate)") ;
 				if(limitedUsers != null){
@@ -2096,27 +2097,16 @@ public class JCRDataStorage {
 				}
 				queryString.append(" )] order by @exo:index");				
 			}
-			//order by and ascending or descending
-			/*if(faqSetting.getOrderBy().equals("created")) {
-				if(faqSetting.getOrderType().equals("asc")) queryString.append("@exo:createdDate ascending") ;
-				else queryString.append("@exo:createdDate descending") ;
-			} else {
-				if(faqSetting.getOrderType().equals("asc")) queryString.append("@exo:index ascending") ;
-				else queryString.append("@exo:index descending") ;
-			}*/
-			//System.out.println("\n\n " + queryString.toString() + "\n\n");
 			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-			
 			NodeIterator iter = result.getNodes() ;
 			while(iter.hasNext()) {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
 		}catch (Exception e) {
 			e.printStackTrace() ;
-		}
-		sProvider.close();
+		}finally {sProvider.close();}		
 		return catList ;
 	}
 	
