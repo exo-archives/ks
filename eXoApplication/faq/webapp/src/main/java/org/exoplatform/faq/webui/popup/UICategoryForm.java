@@ -233,7 +233,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		return ;
       }
       
-      if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      if( uiCategory.isAddNew_ && faqService_.isCategoryExist(name, uiCategory.parentId_)) {
       	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;

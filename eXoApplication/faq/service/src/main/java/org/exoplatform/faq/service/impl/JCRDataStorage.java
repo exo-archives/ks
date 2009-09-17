@@ -2506,6 +2506,7 @@ public class JCRDataStorage {
 		eventQuery.setViewingCategories(getViewableCategoryIds(sProvider)) ;
 		List<String> retrictedCategoryList = new ArrayList<String>() ;
 		if(!eventQuery.isAdmin()) retrictedCategoryList = getRetrictedCategories(eventQuery.getUserId(), eventQuery.getUserMembers()) ;
+		
 		Node categoryHome = getCategoryHome(sProvider, null) ;
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
@@ -2749,6 +2750,7 @@ public class JCRDataStorage {
 					nodeObj = iter.nextNode();
 					nodePath = nodeObj.getPath();
 					if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Question")){
+						System.out.println("Search question");
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
 						if(!eventQuery.isAdmin()) {
@@ -2756,10 +2758,9 @@ public class JCRDataStorage {
 								if((nodeObj.getProperty("exo:isApproved").getBoolean() == true 
 										&& nodeObj.getProperty("exo:isActivated").getBoolean() == true ) 
 										|| (nodeObj.getProperty("exo:author").getString().equals(eventQuery.getUserId())
-												&& nodeObj.getProperty("exo:isActivated").getBoolean() == true))
-									//for retricted audiences
+												&& nodeObj.getProperty("exo:isActivated").getBoolean() == true)) {
+								//for retricted audiences
 									if(retrictedCategoryList.size() > 0) {
-										//isResult = false ;
 										String path = nodeObj.getPath() ;
 										for(String id : retrictedCategoryList) {
 											if(path.indexOf(id) > 0) {
@@ -2767,15 +2768,17 @@ public class JCRDataStorage {
 												break ;
 											}
 										}										
-									}								
-								else 
+									}
+								}else {
 									isResult = false ;
+								}								
 							}catch(Exception e) { 
 								e.printStackTrace() ;
 								isResult = false ;
 							}
 						}						
 					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Category")){
+						System.out.println("Search category");
 						if(!eventQuery.isAdmin()) {
 							//for restricted audiences
 							if(retrictedCategoryList.size() > 0) {
@@ -3223,7 +3226,9 @@ public class JCRDataStorage {
 			NodeIterator iter = category.getNodes() ;
 			while (iter.hasNext()) {
 				Node cat = iter.nextNode();
-				if(name.equals(cat.getProperty("exo:name").getString())) return true ;
+				try{
+					if(name.equals(cat.getProperty("exo:name").getString())) return true ;
+				}catch(Exception e){}
 			}			
 		}catch(Exception e) {
 			e.printStackTrace() ;			
