@@ -3,10 +3,6 @@
 	float: right;
 }
 
-.pagebodyTDContainer {
-	margin-right: 225px;
-}
-
 #UIContainer-pagebody {
 	padding: 0px;
 }
@@ -59,17 +55,17 @@
 	margin:0px 4px 0px 0px;
 }
 
-.UIBannerPortlet .MiddleBanner_  .LeftButton{
+.UIBannerPortlet .MiddleBanner_	.LeftButton{
 	background: url('DefaultSkin/background/LeftButton.gif') no-repeat left;
 	padding-left: 10px;
 }
 
-.UIBannerPortlet .MiddleBanner_  .RightButton{
+.UIBannerPortlet .MiddleBanner_	.RightButton{
 	background: url('DefaultSkin/background/RightButton.gif') no-repeat right;
 	padding-right: 9px;
 }
 
-.UIBannerPortlet .MiddleBanner_  .CenterButton{
+.UIBannerPortlet .MiddleBanner_	.CenterButton{
 	background: url('DefaultSkin/background/CenterButton.gif') repeat-x ;
 	line-height: 20px;
 	padding: 0px 8px;
@@ -79,23 +75,23 @@
 	height: 20px;
 	white-space: nowrap;
 }
-.UIBannerPortlet .MiddleBanner_  .CenterButton a{
+.UIBannerPortlet .MiddleBanner_	.CenterButton a{
 	color: #025193;
 }
-.UIBannerPortlet .MiddleBanner_  .CenterButton a:hover{
+.UIBannerPortlet .MiddleBanner_	.CenterButton a:hover{
 	color: #000;
 }
-.UIBannerPortlet .MiddleBanner_  .SignIn{
+.UIBannerPortlet .MiddleBanner_	.SignIn{
 	width: 76px;
 	float: left;
 	margin: 0px 7px;
 	}
 	
-.UIBannerPortlet .MiddleBanner_  .SignOut{
+.UIBannerPortlet .MiddleBanner_	.SignOut{
 	width: 86px;
 	float: left;
 	}
-.UIBannerPortlet .MiddleBanner_  .YourAccount{
+.UIBannerPortlet .MiddleBanner_	.YourAccount{
 	width: 113px;
 	float: right;
 	margin: 0px 7px;
@@ -238,6 +234,12 @@
 	padding-left: 110px;
 }
 
+.UIHomePagePortlet .Decorator .AnswerIcon {
+	background: url('DefaultSkin/background/AnswerIcon.jpg') no-repeat 20px bottom;
+	height: 95px;
+	padding-left: 110px;
+}
+
 .UIHomePagePortlet .Decorator .FAQLabel {
 	padding: 10px 0px 0px 0px;
 	font-weight: bold;
@@ -263,7 +265,7 @@
 /***************************************************************************************************/
 
 .SideBar {
-	padding: 3px;
+	padding: 1px 3px;
 }
 
 
@@ -313,7 +315,7 @@
 }
 
 
-.SideBar .CenterButton  .TextCreatDemo{
+.SideBar .CenterButton	.TextCreatDemo{
 	font-size: 11px;
 	white-space: nowrap;
 	font-weight: normal;
@@ -340,300 +342,6 @@
 	color: #1d7ce1;
 	text-align: center;
 	font-size: 12px;
-}
-
-/*********************************Navigation Portlet**********************************/
-
-.UINavigationPortlet {
-  !position: relative;
-}
-
-.UINavigationPortlet .UINavigationBar {
-  height: 33px;
-  background: url('DefaultSkin/background/Navigation.gif') repeat-x top center;
-}
-
-.UINavigationPortlet .UINavigationBar .UIHorizontalTabs {
-  height: 33px;
-}
-
-.UINavigationPortlet .UINavigationBar .UIHorizontalTabs .TabsContainer {
-  overflow: auto;
-  float: none;
-  height: auto;
-}
-
-.UINavigationPortlet .UINavigationBar .RightNavigationBar {
-	background:none;
-}
-
-.UINavigationPortlet .UINavigationBar .MiddleNavigationBar {
-	background:none;
-}
-
-.UINavigationPortlet .UINavigationBar .LeftNavigationBar {
-  line-height: 33px;
-  background:none;
-  padding-left: 3px; 
-}
-
-.UINavigationPortlet .UITab a.TabLabel {
-	display: block;
-	padding: 0px 0 0px 20px; 
-}
-
-.UINavigationPortlet .MenuItemContainer {
-	white-space: nowrap;
-	border: solid #b7b7b7 1px;
-	background: #f3f3f3;
-	text-align: left; 
-}
-
-.UINavigationPortlet .MenuItemContainer .MenuItemDecorator {
-  border: 1px solid #fcfcfc;
-  background: #f3f3f3;
-  padding-bottom: 6px;
-}
-
-.UINavigationPortlet .MenuItemContainer .MenuItem {
-  border-bottom: 1px solid #fff;
-	cursor: pointer;
-	line-height: 24px;
-	height: 24px; width: auto;
-	display: block;
-	white-space: nowrap;
-	font-weight: normal;
-	padding-left: 5px;
-}
-
-.UINavigationPortlet .MenuItemContainer .MenuItem a {
-	padding: 0px 20px 0px 25px; 
-	display: block;
-}
-
-.UINavigationPortlet .MenuItemContainer .MenuItem a:hover {
-	color: #3e8df0;
-	background: url('DefaultSkin/background/HoverItem.gif') repeat-x bottom;
-}
-
-.UINavigationPortlet .MenuItemContainer .SelectedItem {
-	line-height: 24px;
-	width: auto; 
-	background: url('DefaultSkin/background/HoverItem.gif') repeat-x bottom;
-}
-
-.UINavigationPortlet .MenuItemContainer .SelectedItem a {
-	color: #3e8df0;
-}
-
-.UINavigationPortlet .MenuItemContainer .ItemIcon {
-  height: 24px; width: auto;
-}
-
-.UINavigationPortlet .MenuItemContainer .MenuItem .ArrowIcon {
-  height: 24px; 
-  width: auto;
-  background: url('DefaultSkin/background/Button.gif') no-repeat right -48px;
-}	
-
-/*============ Scroll Buttons =====================*/
-
-.UINavigationPortlet .ScrollButtons {
-	float: right; 
-	padding-top: 10px;
-	display: none;
-}
-
-.UINavigationPortlet .ScrollLeftButton {
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat left -15px; 
-  padding-left: 18px; 
-  margin: 0px 5px;
-}
-
-.UINavigationPortlet .ScrollRightButton {
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat right -15px; 
-  width: 15px;
-  height: 15px;
-}
-
-.UINavigationPortlet .DisableScrollLeftButton {
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat left -30px; 
-  padding-left: 18px; 
-  margin: 0px 5px;
-}
-
-.UINavigationPortlet .DisableScrollRightButton { 
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat right -30px; 
-  width: 15px;
-  height: 15px;
-}
-
-.UINavigationPortlet .HighlightScrollLeftButton {
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat left top; 
-  padding-left: 18px;
-  margin: 0px 5px;
-}
-
-.UINavigationPortlet .HighlightScrollRightButton {
-  cursor: pointer;
-  background: url('DefaultSkin/background/Button.gif') no-repeat right top;
-  width: 15px;
-  height: 15px;
-}
-
-/*###########################--UINavigation Tab--############################*/
-
-.UIHorizontalTabs {
-}
-
-.UIHorizontalTabs .CenterHorizontalTabs {
-  overflow-y: hidden;
-  padding: 0px 6px;
-}
-
-.UIHorizontalTabs .TabsContainer {
- 	height: 24px;
-}
-
-.UIHorizontalTabs .UITab {
-  float: left; 
-  font-weight: bold;
-  text-align: center;
-  width: auto;
-}
-
-/*###########################--NavigationTabTab--############################*/
-.UIHorizontalTabs .UITab .NormalNavigationTab {
-  line-height: 33px; 
-  margin-left: 1px;
-  margin-top: 0px;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab .LeftTab {
-  line-height: 33px;
-  padding-left: 4px;
-  background: none;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab .RightTab {
-  line-height: 33px; 
-  background: none;
-  padding-right: 4px;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab .MiddleTab {
-  line-height: 33px;
-  background: none;
-  text-align: center;
-  padding: 2px 8px 0;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab .TabIcon {
-  color: #fff;
-  line-height: 31px;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab a {
-  color: #fff;
-  margin: 0px;
-}
-
-.UIHorizontalTabs .UITab .NormalNavigationTab .DropDownArrowIcon {
-  padding-right: 20px;
-  background: url(DefaultSkin/background/NavDownArrow.gif) no-repeat right; 
-  cursor: pointer;
-}
-
-/*###############-Hightlight Navigation Tab  -################*/
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab {
-  line-height: 22px; 
-  margin-left: 1px;
-  margin-top: 0px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .LeftTab {
-  line-height: 33px; 
-  background: url('DefaultSkin/background/NavigationTab.gif') repeat-x left -67px;
-  padding-left: 4px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .RightTab {
-  line-height: 33px; 
-  background:none;
-  padding-right: 4px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .MiddleTab {
-  line-height: 33px;
-  background:none;
-  text-align: center;
-  padding: 2px 8px 0px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .TabIcon {
-  color: #f57a00;
-  line-height: 31px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab a {
-  color: #f57a00;
-  margin: 0px;
-}
-
-.UIHorizontalTabs .UITab .HighlightNavigationTab .DropDownArrowIcon {
-  padding-right: 20px; 
-  background: url(DefaultSkin/background/NavDownArrow.gif) no-repeat right; 
-  cursor: pointer;
-}
-
-/*###############-Selected Navigation Tab-################*/
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab {
-  line-height: 22px; 
-  margin-left: 1px; 
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .LeftTab {
-  line-height: 33px; 
-  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat left -1px;
-  padding-left: 4px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .RightTab {
-  line-height: 33px; 
-  background: url('DefaultSkin/background/NavigationTab.gif') no-repeat right -1px;
-  padding-right: 4px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .MiddleTab {
-  line-height: 33px;
-  background: url('DefaultSkin/background/NavigationTab.gif') repeat-x left -33px;
-  text-align: center;
-  padding: 0 8px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .TabIcon {
-  color: #f57a00;
-  line-height: 33px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab a {
-  color: #f57a00;
-  margin: 0px;
-}
-
-.UIHorizontalTabs .UITab .SelectedNavigationTab .DropDownArrowIcon {
-  padding-right: 20px; 
-  background: transparent url(DefaultSkin/background/NavDownArrow.gif) no-repeat scroll right center;  
-  cursor: pointer;
 }
 
 /*========================KS Guided Tour===========================*/
@@ -831,8 +539,8 @@
 }
 
 .UIKSGuidedTour .RightKSGuidedTour .H4 {
-	background:transparent url(DefaultSkin/background/H4.gif) no-repeat left;
-	height: 347px; width: 592px;
+	background:transparent url(DefaultSkin/background/H4.gif) no-repeat left top;
+	height: 430px; width: 592px;
 	margin: 4px;
 }
 
@@ -866,89 +574,4 @@
 	background:transparent url(DefaultSkin/background/H3.gif) no-repeat left;
 	height: 315px;width: 491px;
 	margin: 4px;
-}
-
-/*=======================Breadcumbs=========================*/
-
-.UIWindow .UIBreadcumbsPortlet {
-  margin: 0px;
-}
-
-.UIBreadcumbsPortlet {
-  margin: 0px;
-  height: 25px;
-  padding: 0px;
-}
-
-.UIBreadcumbs {
-  line-height: 25px;
-  height: 25px;
-  padding: 0px;
-}
-
-.UIBreadcumbs a {
-  float: left ; 
-  color: #6d7fa1 ; 
-}
-
-.UIBreadcumbs a.Selected {
-  color: black;
-}
-
-.UIBreadcumbs .HomeIcon {
-  float: left; 
-  margin: 4px 5px 0 0 ; 
-}
-
-.UIBreadcumbs .LeftBreadcumbsBar {
-  background: url('DefaultSkin/background/BreadcumbBG.gif') repeat-x left top;
-  height: 25px;
-}
-
-.UIBreadcumbs .RightBreadcumbsBar {
-  height: 25px;
-  background: none;
-}
-
-.UIBreadcumbs .BreadcumbsInfoBar {
-  height: 25px; 
-  line-height: 25px;
-  padding-left: 10px; 
-  background: none;
-}
-
-.UIBreadcumbs .RightBlackGridArrowIcon {
-  float: left;
-  margin: 5px 0px 0px 0px;
-}
-/*==========================UIFooterPortlet===========================*/
-.UIFooterPortletKS {
-  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
-  margin: 0;
-}
-
-.UIFooterPortletKS .LeftFooter{
-  background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
-}
-
-.UIFooterPortletKS .RightFooter{
-   background: url('DefaultSkin/background/FooterBG.gif') repeat-x top; 
-}
-
-.UIFooterPortletKS .RepeatFooter {
-  padding: 0px;
-  margin: 0px;
-  padding: 14px 0 0 20px; 
-}
-
-.UIFooterPortletKS .FooterInfoContainer {
-  line-height: 25px ;
-}
-
-.UIFooterPortletKS .CopyrightInfo {
-  background: url('DefaultSkin/background/FooterLogo.gif') no-repeat top left;
-  text-align: left; 
-  color: #395c88;
-  padding-left: 80px; 
-  line-height: 30px;
 }
