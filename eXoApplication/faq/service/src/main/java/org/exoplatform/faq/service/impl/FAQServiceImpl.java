@@ -113,7 +113,7 @@ public class FAQServiceImpl implements FAQService, Startable{
         log.error("Error while initializing Data plugin " + plugin.getName(), e);
       }   
     }
-    
+//    TODO: JUnit-test is fall.
 		try{
 		  log.info("initializing FAQ RSS listeners...");
 			jcrData_.reInitRSSEvenListener();			
