@@ -1786,7 +1786,6 @@ public class JCRDataStorage {
 			categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
 			categoryNode.setProperty("exo:isView", category.isView());
 		}
-		System.out.println("category.getIndex() ===>" + category.getIndex());
 		categoryNode.setProperty("exo:index", category.getIndex()) ;
 		categoryNode.setProperty("exo:name", category.getName()) ;
 		categoryNode.setProperty("exo:description", category.getDescription()) ;
