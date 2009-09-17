@@ -205,7 +205,7 @@ public class RSSProcess extends RSSGenerate {
 					feed.setLink(linkItem + node.getName());
 					feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
 				} catch (Exception e) {
-					e.printStackTrace();
+//					e.printStackTrace();
 					continue;
 				}
 				

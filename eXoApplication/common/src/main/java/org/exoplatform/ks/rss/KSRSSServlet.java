@@ -55,10 +55,10 @@ public class KSRSSServlet extends HttpServlet {
 	      if(appType.equals("faq")) {
 	      	//System.out.println("objectiD =======>" + objectId) ;
 	      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
-		      response.setContentType("text/xml") ;
+//		      response.setContentType("text/xml") ;
 	      }else if(appType.equals("forum")) { 
 	    		is = process.getRSSNode(sessionProvider, objectId, appType) ;
-		      response.setContentType("text/xml") ;
+//		      response.setContentType("text/xml") ;
 	      }else{
 	      	if(pathInfo.indexOf("/") > 0){
 	      		objectId = pathInfo.substring(pathInfo.lastIndexOf("/") + 1) ;
@@ -66,6 +66,7 @@ public class KSRSSServlet extends HttpServlet {
 	      	is = process.getRSSOfMultiObjects(objectId, sessionProvider);
 	      }
 	      if(is != null) {
+	      	response.setContentType("text/xml") ;
 	      	byte[] buf = new byte[is.available()];
 	        is.read(buf);
 	        ServletOutputStream os = response.getOutputStream();
