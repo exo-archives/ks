@@ -1825,20 +1825,21 @@ public class JCRDataStorage {
     stringBuffer.append(" order by @exo:isSticky descending");
     if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
     	if (orderBy != null) {
-    		stringBuffer.append(",@exo:").append(orderBy).append(" ").append(orderType);
+    		stringBuffer.append(", @exo:").append(orderBy).append(" ").append(orderType);
     		if (!orderBy.equals(SortField.LASTPOST)) {
-    			stringBuffer.append(",@exo:lastPostDate descending");
+    			stringBuffer.append(", @exo:lastPostDate descending");
     		}
     	} else {
-    		stringBuffer.append(",@exo:lastPostDate descending");
+    		stringBuffer.append(", @exo:lastPostDate descending");
     	}
     } else {
-    	stringBuffer.append(",@exo:").append(strOrderBy);
+    	stringBuffer.append(", @exo:").append(strOrderBy);
     	if (strOrderBy.indexOf("lastPostDate") < 0) {
-    		stringBuffer.append(",@exo:lastPostDate descending");
+    		stringBuffer.append(", @exo:lastPostDate descending");
     	}
     }
     String pathQuery = stringBuffer.toString();
+    System.out.println("\n\n pathQuery: " + pathQuery);
     return pathQuery;
   }
 
