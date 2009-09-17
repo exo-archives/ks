@@ -86,6 +86,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqSetting_.setOrderBy("created");
 		faqSetting_.setOrderType("asc") ;
 		faqSetting_.setSortQuestionByVote(true);
+		faqSetting_.setIsAdmin("TRUE");
 	}
 
 	public void testFAQService() throws Exception {
@@ -268,6 +269,8 @@ public class TestFAQService extends FAQServiceTestCase{
 		subCate1.setModerators(new String[]{"marry","Demo"}) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME+"/"+cate1.getId(), subCate1, true) ;
 		
+//	is Category Exist	
+		assertEquals("Category has name:"+cate1.getName()+"  is no longer exists.", faqService_.isCategoryExist(cate1.getName(), Utils.CATEGORY_HOME), true);
 //		Get category by id
 		cate1 = faqService_.getCategoryById(Utils.CATEGORY_HOME+"/"+cate1.getId());
 		assertNotNull("Category have not been added", cate1) ;
@@ -295,12 +298,13 @@ public class TestFAQService extends FAQServiceTestCase{
 		cate1.setName("Nguyen van truong test category111111") ;
 		cate1.setCreatedDate(new Date()) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate1, false);
+		cate1 =  faqService_.getCategoryById(cate1.getPath());
 		assertEquals("Name of category 1 haven't been changed", "Nguyen van truong test category111111", cate1.getName());
 
 //		get Categories
-		List<Category> listCate = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting_, false, null) ;
+		List<Category> listCate = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting_, true, null) ;
 		assertEquals("In root category don't have two subcategories", listCate.size(), 2) ;
-
+		
 //		Get Maxindex of cateogry
 		assertEquals("Root have two category and maxIndex of subcategories in root is't 2", 
 									faqService_.getMaxindexCategory(Utils.CATEGORY_HOME), 2);
@@ -357,6 +361,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		defaultData();
 //		get question 1
 		String questionId = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId1;
+		String qsId2 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId2;
 		Question question1 = faqService_.getQuestionById(questionId);
 		assertNotNull("Question 1 have not been saved into data", question1) ;
 		List<Question> listQuestion = faqService_.getQuestionsNotYetAnswer(Utils.CATEGORY_HOME, false).getAll() ;
@@ -369,10 +374,13 @@ public class TestFAQService extends FAQServiceTestCase{
 		assertEquals("Detail of question 1 have not been changed",
 									"Nguyen van truong test question 11111111 ?", question1.getDetail());
 
+//  update Question Relatives
+		faqService_.updateQuestionRelatives(questionId, new String[]{qsId2});
+		question1 = faqService_.getQuestionById(questionId);
+		assertNotNull("Question not save relatives ", faqService_.getQuestionById(question1.getRelations()[0]));
 //		move question 2 to category 2
 		Category cate2 = faqService_.getCategoryById(categoryId2);
 		List<String> listId = new ArrayList<String>() ;
-		String qsId2 = categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId2;
 		listId.add(qsId2);
 		assertEquals("Category 2 have some questions before move question 2", 
 							faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 0);
@@ -386,7 +394,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		JCRPageList pageList = faqService_.getQuestionsByListCatetory(listId, false);
 		pageList.setPageSize(10);
 		assertEquals("Can't move question 2 to category 2", pageList.getPage(1, "root").size(), 4);
-
 //		get list all question
 		List<Question> listAllQuestion = faqService_.getAllQuestions().getAll();
 		assertEquals("the number of categories in FAQ is not 5", listAllQuestion.size(), 5) ;
@@ -419,8 +426,9 @@ public class TestFAQService extends FAQServiceTestCase{
 //		quick search with text = "test"
 		eventQueryCategory.setText("test");
 		eventQueryCategory.setType("categoryAndQuestion");
+		eventQueryCategory.setAdmin(true);
 		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQueryCategory) ;
-		assertEquals("Can't get all questions and catgories have \"test\" charaters in content", listQuickSearch.size(), 4) ;
+		assertEquals("Can't get all questions have \"test\" charaters in content", listQuickSearch.size(), 6) ;// 1 category and 4 question
 //for (ObjectSearchResult objectSearchResult : listQuickSearch) {
 //	System.out.println("\n\n " + objectSearchResult.getType()  + " : " + objectSearchResult.getName());
 //}
@@ -519,7 +527,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		pageList.setPageSize(10);
 		assertEquals("Comment 1 is not removed", pageList.getPageItem(0).size(), 1);
 		
-		System.out.println("faqService_.getAllCategories():" + faqService_.getAllCategories().size());
 	// remove Data when tested comment
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
