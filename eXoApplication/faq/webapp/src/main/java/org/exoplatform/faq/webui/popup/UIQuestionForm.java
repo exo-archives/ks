@@ -99,9 +99,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private Map<String, List<ActionData>> actionField_ ;
   
   private List<SelectItemOption<String>> listSystemLanguages = new ArrayList<SelectItemOption<String>>() ;
-  //private Map<String, String> listQuestionDetail = new HashMap<String, String>() ;
-  //private Map<String, String> listQuestionContent = new HashMap<String, String>() ;
-  //private List<String> listLanguages = new ArrayList<String>() ;
   private List<FileAttachment> listFileAttach_ = new ArrayList<FileAttachment>() ;
   private Map<String, QuestionLanguage> mapLanguage = new HashMap<String, QuestionLanguage>() ;
   private String categoryId_ = "" ;
@@ -126,10 +123,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	public void setLink(String link) { this.link_ = link;}
 	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_ = faqSetting;}
   public UIQuestionForm() throws Exception {
-  	//listQuestionDetail.clear();
-  	//listQuestionContent.clear();
     isChildOfManager = false ;
-    //listLanguages.clear() ;
     listFileAttach_.clear() ;
     mapLanguage.clear() ;
     questionContents_.clear() ;
@@ -181,7 +175,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     }
     
     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
-    //inputQuestionDetail.setColumns(80) ;
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;
       if(input!= null && input.indexOf("<p>") >=0 && input.indexOf("</p>") >= 0) {
@@ -366,12 +359,10 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       String question = questionForm.inputQuestionContent.getValue();
       if(!ValidatorDataInput.fckContentIsNotEmpty(detail)) detail = " ";
       if(!ValidatorDataInput.fckContentIsNotEmpty(question)){
-      	//System.out.println("=======> lang empty") ;
       	if( questionForm.mapLanguage.containsKey(questionForm.lastLanguage_)){
       		questionForm.mapLanguage.get(questionForm.lastLanguage_).setState(QuestionLanguage.DELETE) ;      		
       	}
       }else {
-      	//System.out.println("=======> lang not empty") ;
       	QuestionLanguage langObj = new QuestionLanguage();
       	if(questionForm.mapLanguage.containsKey(questionForm.lastLanguage_)) {
       		langObj = questionForm.mapLanguage.get(questionForm.lastLanguage_) ;
@@ -467,7 +458,6 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      if(!ValidatorDataInput.fckContentIsNotEmpty(questionContent)){
 	      	if( questionForm.mapLanguage.containsKey(language)){
 	      		questionForm.mapLanguage.get(language).setState(QuestionLanguage.DELETE) ;
-	      		//System.out.println(questionForm.mapLanguage.get(language).getLanguage() + " " + questionForm.mapLanguage.get(questionForm.lastLanguage_).getState()) ;
 	      	}
 	      }
 	       
@@ -479,19 +469,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      } else { // Edit question
 	      	isNew = false ;
 	      }
-	      
-	      /*try{
-          questionIsApproved = !fAQService_.isModerateAnswer(questionForm.getCategoryId()) ;
-        } catch(Exception exception){
-          UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-is-deleted", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;          
-          UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-          UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-          popupAction.deActivate() ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-          return;
-        }*/
+	      	      
 	      if(questionForm.isModerate){
 	      	if(questionForm.isAddCheckBox){
 		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
@@ -521,13 +499,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        	otherLang = questionForm.mapLanguage.get(language) ;
 	        	otherLang.setState(QuestionLanguage.EDIT) ;
 	        }
-	        //System.out.println("questionContent =======> " + questionContent) ;
 	        otherLang.setQuestion(questionContent) ;
 	        otherLang.setDetail(questionDetail) ;
 	        otherLang.setLanguage(language) ;
 	        questionForm.mapLanguage.put(language, otherLang) ;
 	      }
-	      //System.out.println("lang =======> " + questionForm.mapLanguage.keySet().size()) ;
 	      questionForm.mapLanguage.remove(question_.getLanguage()) ;
 	      question_.setMultiLanguages(questionForm.mapLanguage.values().toArray(new QuestionLanguage[]{})) ;
 	      question_.setAttachMent(questionForm.listFileAttach_) ;      

@@ -381,6 +381,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				categories.resetListCate();
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
+				questions.updateCurrentQuestionList() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
 			return ;

@@ -374,6 +374,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 
 				//cancel
 				if(!responseForm.isChildOfQuestionManager_) {
+					uiQuestions.updateCurrentQuestionList() ;
 					uiQuestions.updateCurrentLanguage() ;
 					uiQuestions.setLanguageView(responseForm.currentLanguage) ;
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
