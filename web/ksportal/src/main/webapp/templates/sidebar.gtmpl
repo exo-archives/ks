@@ -29,13 +29,13 @@
 					<div class="DotLine"><span></span></div>
 					<div class="DownloadButton">
 						<div style="height: 45px"><span></span></div>
-						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949" style="color: white;" class="TextDownload">DOWN LOAD</a><br/>
-						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949" style="color: white;">Community Version</a>
+						<a href="http://download.forge.objectweb.org/exoplatform" style="color: white;" class="TextDownload">DOWNLOAD</a><br/>
+						<a href="http://download.forge.objectweb.org/exoplatform" style="color: white;">Community Version</a>
 					</div>
 					<div class="DotLine"><span></span></div>
 					<div class="VersionIcon"><span></span></div>
 					<div class="ArowIcon">For support, check our<br/>
-					<a href="http://www.exoplatform.com/portal/public/en/download/dl_compare" class="ProVersion">professional version</a>
+					<a href="http://www.exoplatform.com" class="ProVersion">professional version</a>
 					</div>
 					
 					<div class="DotLine"><span></span></div>
