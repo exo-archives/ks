@@ -2087,7 +2087,7 @@ public class JCRDataStorage {
 			if(faqSetting.isAdmin()) 
 				queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");				
 			else {
-				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate)") ;
+				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate=''") ;
 				if(limitedUsers != null){
 					for(String id : limitedUsers) {
 						queryString.append(" or @exo:userPrivate = '").append(id).append("' ") ;
