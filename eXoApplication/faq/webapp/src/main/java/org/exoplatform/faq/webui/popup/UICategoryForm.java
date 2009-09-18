@@ -244,7 +244,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
     		return ;
     	}
-      String[] userPrivates = new String[]{} ;
+      String[] userPrivates = new String[]{""} ;
       if(userPrivate != null && userPrivate.trim().length() > 0) {
       	userPrivates = FAQUtils.splitForFAQ(userPrivate) ;
       }
