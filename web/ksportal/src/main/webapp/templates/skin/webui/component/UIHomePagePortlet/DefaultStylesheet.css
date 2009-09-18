@@ -234,9 +234,9 @@
 	padding-left: 110px;
 }
 
-.UIHomePagePortlet .Decorator .AnswerIcon {
-	background: url('DefaultSkin/background/AnswerIcon.jpg') no-repeat 20px bottom;
-	height: 95px;
+.UIHomePagePortlet .Decorator .AnswersIcon {
+	background: url('DefaultSkin/background/AnswersIcon.gif') no-repeat 20px bottom;
+	height: 90px;
 	padding-left: 110px;
 }
 
