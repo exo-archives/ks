@@ -30,10 +30,12 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.util.IdGenerator;
 
 
 /**
@@ -142,12 +144,14 @@ public class TestForumService extends BaseForumTestCase{
   	
     // add category
     forumService_.saveCategory(cat, true) ;
+    forumService_.saveCategory(createCategory(), true) ;
+    forumService_.saveCategory(createCategory(), true) ;
     Category category = forumService_.getCategory(catId); 
     assertNotNull("Category is null", category) ;
     // get categories
 //    TODO: not get all categories.
 //    List<Category> categories = forumService_.getCategories() ;
-    // assertEquals(categories.size(), 1) ;
+//    assertEquals(categories.size(), 3) ;
     // update category
     cat.setCategoryName("ReName Category") ;
     forumService_.saveCategory(cat, false) ;
@@ -312,7 +316,25 @@ public class TestForumService extends BaseForumTestCase{
 		assertNotNull(forumService_.removeTopic(cat.getId(), forum1.getId(), topica.getId()));
   }
   
+  
+  public void testTopicType() throws Exception {
+//	  set Data
+  	setData();
+  	TopicType topicType = createTopicType("Musics");
+  	forumService_.saveTopicType(topicType);
+  	forumService_.saveTopicType(createTopicType("Dance"));
+  	forumService_.saveTopicType(createTopicType("Sing"));
+  	topicType = forumService_.getTopicType(topicType.getId());
+  	assertNotSame("Can not save and get Topic type.", topicType.getId(), TopicType.DEFAULT_ID);
+//  	Check get All
+  	List<TopicType> listTopicType = forumService_.getTopicTypes();
+  	assertEquals("Can not get all topic type. Size of topicTypes list is not 3.",listTopicType.size(), 3);
+  }
+  
   private void setData() throws Exception {
+  	if(forumService_.getCategory(categoryId) != null){
+  		forumService_.removeCategory(categoryId);
+  	}
   	Category cat = createCategory();
   	this.categoryId = cat.getId();
 		forumService_.saveCategory(cat, true);
@@ -685,14 +707,15 @@ public class TestForumService extends BaseForumTestCase{
   }
   
   private Category createCategory() {
-    Category cat = new Category() ;
+  	String id = Utils.CATEGORY + IdGenerator.generate();
+    Category cat = new Category(id) ;
     cat.setOwner("root") ;
     cat.setCategoryName("testCategory") ;
     cat.setCategoryOrder(1) ;
     cat.setCreatedDate(new Date()) ;
     cat.setDescription("desciption") ;
     cat.setModifiedBy("root") ;
-    cat.setModifiedDate(new Date()) ;    
+    cat.setModifiedDate(new Date()) ;
     return cat ;
   }
   
@@ -744,5 +767,11 @@ public class TestForumService extends BaseForumTestCase{
   	return bbCode;
   }
   
+  private TopicType createTopicType(String name) {
+  	TopicType topicType = new TopicType();
+  	topicType.setIcon("BlueIcon");
+  	topicType.setName(name);
+  	return topicType;
+  }
   
 }
