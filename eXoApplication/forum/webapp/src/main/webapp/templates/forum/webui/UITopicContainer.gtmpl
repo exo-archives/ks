@@ -15,6 +15,7 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
 	Forum forum = uicomponent.getForum() ;
 	String linkURL;
 	if(forum != null)  {
