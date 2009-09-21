@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>	
+	<component>
+    <type>org.exoplatform.ks.datamigration.MigrateService</type>
+		<init-params>
+		<!--FAQ migration configuration-->
+      
+      <value-param>
+        <name>migrationFAQNodetypes</name>              
+        <description>Node types configuration file</description>
+        <value>jar:/conf/portal/faq-nodetypes-migration.xml</value>
+      </value-param>
+      <value-param>
+        <name>faqNodetypes1.1</name>
+        <description>Node types configuration file</description>
+        <value>jar:/conf/portal/faq-nodetypes-11.xml</value>
+      </value-param>
+      <value-param>
+  			<name>faqData1.1</name>
+  			<description></description>
+  			<value>file:d:\data\faq_data_11.xml</value>
+  		</value-param>
+			<value-param>
+  			<name>faqData1.2</name>
+  			<description></description>
+  			<value>file:d:\data\faq_data_12.xml</value>
+  		</value-param>
+      
+      <!-- Forum migration configuration -->
+      
+      <value-param>
+        <name>migrationForumNodetypes</name>
+        <description>Node types configuration file</description>
+				<value>jar:/conf/portal/forum-nodetypes-migration.xml</value>
+      </value-param>
+      <value-param>
+        <name>forumNodetypes1.1</name>
+        <description>Node types configuration file</description>
+        <value>jar:/conf/portal/forum-nodetypes-11.xml</value>
+      </value-param>      
+      <value-param>
+  			<name>forumData1.1</name>
+  			<description></description>
+  			<value>file:d:\data\forum_data_11.xml</value>
+  		</value-param>
+			<value-param>
+  			<name>forumData1.2</name>
+  			<description></description>
+  			<value>file:d:\data\forum_data_12.xml</value>
+  		</value-param>      
+    </init-params>
+  </component>    
+  
+  <!--external-component-plugins>
+	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
+	  <component-plugin> 
+	    <name>add.nodeType</name>
+	    <set-method>addPlugin</set-method>
+	    <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+	    <init-params>
+	      <values-param>
+	        <name>autoCreatedInNewRepository</name>
+	        <description>Node types configuration file</description>
+	        <value>jar:/conf/portal/faq-nodetypes-migration.xml</value>
+					<value>jar:/conf/portal/forum-nodetypes-migration.xml</value>
+	      </values-param>
+	    </init-params>
+	  </component-plugin>
+	</external-component-plugins-->
+	
+	<!--external-component-plugins>  
+    <target-component>org.exoplatform.ks.datamigration.MigrateService</target-component>		
+		
+		<component-plugin>
+      <name>faq.migrate.plugin</name>
+			<set-method>addMigrateFAQDataPlugin</set-method>
+			<type>org.exoplatform.ks.datamigration.MigrateFAQDataPlugin</type>
+			<description></description>
+  		<init-params>
+        <value-param>
+  				<name>dataInput</name>
+  				<description></description>
+  				<value>file:d:\faq_data_11.xml</value>
+  			</value-param>
+				<value-param>
+  				<name>dataOutput</name>
+  				<description></description>
+  				<value>d:\faq_data_121.xml</value>
+  			</value-param>
+      </init-params>
+    </component-plugin>
+		
+		<component-plugin>
+      <name>faq.new.data.plugin</name>
+			<set-method>addNewFAQDataPlugin</set-method>
+			<type>org.exoplatform.ks.datamigration.NewFAQDataPlugin</type>
+			<description></description>
+  		<init-params>
+        <value-param>
+  				<name>path</name>
+  				<description></description>
+  				<value>war:/conf/ks/migration/faq_data_12.xml</value>
+  			</value-param>				
+      </init-params>
+    </component-plugin>		
+    
+		
+		
+    <component-plugin>
+      <name>forum.migrate.plugin</name>
+			<set-method>addMigrateForumDataPlugin</set-method>
+			<type>org.exoplatform.ks.datamigration.MigrateForumDataPlugin</type>
+			<description></description>
+  		<init-params>
+        <value-param>
+  				<name>dataInput</name>
+  				<description></description>
+  				<value>file:d:\forum_data_11.xml</value>
+  			</value-param>
+				<value-param>
+  				<name>dataOutput</name>
+  				<description></description>
+  				<value>d:\forum_data_121.xml</value>
+  			</value-param>
+      </init-params>
+    </component-plugin>
+		
+		<component-plugin>
+      <name>forum.new.data.plugin</name>
+			<set-method>addNewForumDataPlugin</set-method>
+			<type>org.exoplatform.ks.datamigration.NewForumDataPlugin</type>
+			<description></description>
+  		<init-params>
+        <value-param>
+  				<name>path</name>
+  				<description></description>
+  				<value>war:/conf/ks/migration/forum_data_12.xml</value>
+  			</value-param>				
+      </init-params>
+    </component-plugin>		
+  </external-component-plugins-->  
+		
+</configuration>
