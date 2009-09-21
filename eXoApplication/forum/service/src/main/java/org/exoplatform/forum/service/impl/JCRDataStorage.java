@@ -1839,7 +1839,6 @@ public class JCRDataStorage {
     	}
     }
     String pathQuery = stringBuffer.toString();
-    System.out.println("\n\n pathQuery: " + pathQuery);
     return pathQuery;
   }
 
@@ -3142,7 +3141,7 @@ public class JCRDataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), getActiveBBCode()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3303,7 +3302,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3337,7 +3336,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3373,7 +3372,7 @@ public class JCRDataStorage {
 						content = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content = StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
 						content = StringUtils.replace(content, "$ADD_TYPE", "Post");
-						content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content = StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");

@@ -26,7 +26,6 @@ import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -35,6 +34,8 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -125,7 +126,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
 		try {
-			s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+			s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
     } catch (Exception e) {}
     return s;
 	}

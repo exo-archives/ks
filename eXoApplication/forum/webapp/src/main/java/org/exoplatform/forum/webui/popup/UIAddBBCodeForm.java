@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -109,7 +110,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode() throws Exception {
-    return BBCodeData.getReplacementByBBcode(example, listBBCode, null);
+    return Utils.getReplacementByBBcode(example, listBBCode, null);
 	}
 	
 	static	public class SaveActionListener extends EventListener<UIAddBBCodeForm> {

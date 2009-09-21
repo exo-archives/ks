@@ -30,8 +30,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.w3c.dom.Document;
@@ -78,11 +76,10 @@ public abstract class RSSGenerate {
 		return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
 	}
 
-	public String getPageLink(){
+	public String getPageLink() throws Exception {
 		try{
-			PortalRequestContext portalContext = Util.getPortalRequestContext();
-			String url = (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private", "public");
-			return url;
+			org.exoplatform.portal.application.PortalRequestContext portalContext = org.exoplatform.portal.webui.util.Util.getPortalRequestContext();
+			return (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private", "public");
 		}catch(Exception e){
 			return null;
 		}
