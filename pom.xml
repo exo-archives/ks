@@ -47,7 +47,8 @@
     <module>eXoApplication/forum/webapp</module>
     <module>eXoApplication/forum/service</module>
    
-    
+    <module>server/tomcat/patch</module>
+		<module>server/jboss/patch</module>
     <!--module>eXoApplication/content/webapp</module>
     <module>eXoApplication/content/service</module-->
   </modules>
