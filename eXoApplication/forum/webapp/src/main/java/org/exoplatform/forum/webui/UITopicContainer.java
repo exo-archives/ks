@@ -32,7 +32,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;

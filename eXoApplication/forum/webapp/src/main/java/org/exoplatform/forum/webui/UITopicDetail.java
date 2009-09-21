@@ -31,7 +31,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.forum.BBCodeData;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
@@ -374,7 +373,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		}
     if(!listBBCode.isEmpty()){
 	    try {
-	    	s = BBCodeData.getReplacementByBBcode(s, listBBCode, forumService);
+	    	s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
 	    } catch (Exception e) {}
     }
     return s;
