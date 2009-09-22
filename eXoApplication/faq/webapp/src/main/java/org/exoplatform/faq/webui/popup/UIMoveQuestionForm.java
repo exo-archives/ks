@@ -109,7 +109,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			try{
 				if(!moveQuestionForm.faqSetting_.isAdmin()){
 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", new Object[]{"/"}, ApplicationMessage.WARNING)) ;
+					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", new Object[]{""}, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					return;
 				}
