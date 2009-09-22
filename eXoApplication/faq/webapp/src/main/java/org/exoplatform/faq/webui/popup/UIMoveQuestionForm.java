@@ -29,8 +29,6 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
