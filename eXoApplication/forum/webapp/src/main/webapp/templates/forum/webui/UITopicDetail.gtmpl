@@ -133,6 +133,7 @@
 				<div style="clear:left;"><span></span></div>
 			</div>
 		</div>
+		<% if(uicomponent.maxPage > 1) { %>
 		<div title="<%=_ctx.appRes(uiformId + ".title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
@@ -177,6 +178,7 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
+		<% } %>
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear:left;"><span></span></div>
 	</div>
@@ -1096,6 +1098,7 @@
 				</div>
 			</div>
 		</div>
+		<% if(uicomponent.maxPage > 1) { %>
 		<div title="<%=_ctx.appRes("UITopicDetail.title.GoPageNumber");%>" class="GotoPageIcon">
 			<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);" style="width:20px; height:16px;"><span></span></div>
 			<% /*Begin Popup Menu*/ %>
@@ -1140,6 +1143,7 @@
 			</div>
 			<% /*End Popup Menu*/ %>
 		</div>
+		<% } %>
 		<% _ctx.include("app:/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl"); %>
 		<div style="clear:left;"><span></span></div>
 	</div>

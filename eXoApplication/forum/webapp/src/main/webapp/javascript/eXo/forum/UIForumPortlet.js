@@ -383,9 +383,12 @@ UIForumPortlet.prototype.goLastPost = function(idLastPost) {
 	var isDesktop = document.getElementById('UIPageDesktop') ;
 	if(isDesktop === null){
 		if(idLastPost === "top") {
-			script:scroll(0,0);
-			var viewPage = document.getElementById('UIForumPortlet') ;
-			if(viewPage)viewPage.scrollIntoView(true) ;
+			var body = document.getElementsByTagName('body')[0];
+			if(body.scrollTop > 250) {
+				script:scroll(0,0);
+				var viewPage = document.getElementById('UIForumPortlet') ;
+				if(viewPage)viewPage.scrollIntoView(true) ;
+			}
 		} else {
 			var obj = document.getElementById(idLastPost);
 			if(obj)obj.scrollIntoView(true);
