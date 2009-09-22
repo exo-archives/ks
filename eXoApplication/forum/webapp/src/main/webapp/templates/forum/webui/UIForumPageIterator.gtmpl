@@ -8,6 +8,7 @@
 	String selected = "" + pageSelected ;
 %>
 <div class="UIForumPageIterator" id="$uicomponent.id">
+<% if(max_page > 1) {%>
 	<div class="PageIteratorContainer">
 		<div class="RightPageIteratorBlock">
 		<% if(pageSelected == 1) {%>
@@ -46,4 +47,5 @@
 		</div>
 	</div>
 	<div style="clear:right;"><span></span></div>
+<% } %>
 </div>
