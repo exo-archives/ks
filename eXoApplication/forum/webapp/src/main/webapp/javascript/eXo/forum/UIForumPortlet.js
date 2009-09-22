@@ -437,6 +437,8 @@ UIForumPortlet.prototype.showPicture = function(src) {
   imageNode.setAttribute('alt', 'Click to close') ;
   containerNode.appendChild(imageNode) ;
   containerNode.setAttribute('title', 'Click to close') ;
+  containerNode.setAttribute('style', 'text-align:center;') ;
+  containerNode.setAttribute('align', 'center') ;
   containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
 	this.showFullScreen(imageNode,containerNode);
   var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
@@ -455,15 +457,13 @@ UIForumPortlet.prototype.getImageSize = function(imageNode){
 	return size ;
 };
 
-UIForumPortlet.prototype.showFullScreen = function(imageNode,containerNode){
+UIForumPortlet.prototype.showFullScreen = function(imageNode, containerNode){
 	var imageSize = this.getImageSize(imageNode);
-	if(imageSize.width > eXo.core.Browser.getBrowserWidth()){
-		containerNode.style.width = eXo.core.Browser.getBrowserWidth() + "px";
-		containerNode.style.overflowX = "auto";
-	}
-	if(imageSize.height > eXo.core.Browser.getBrowserWidth()){
-		containerNode.style.height = eXo.core.Browser.getBrowserHeight() + "px";
-		containerNode.style.overflowY = "auto";
+	var widthMax = eXo.core.Browser.getBrowserWidth();
+	if((imageSize.width+40) > widthMax){
+		containerNode.style.width = widthMax + "px";
+		imageNode.width = (widthMax - 40);
+		imageNode.style.height = "auto";
 	}
 };
 
