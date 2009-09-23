@@ -238,9 +238,6 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var tmp = DOMUtil.findAncestorByClass(obj, "FAQContainer");
 	var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div","QuestionSelect") ;
 	printArea = printArea.cloneNode(true) ;
-	var cssContent = document.createElement("div") ;
-	cssContent.innerHTML='<style type="text/css">.DisablePrint{display:none;}</style>';
-	cssContent.style.display = "none";
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
 	var FAQContent = document.createElement("div") ;
@@ -251,11 +248,24 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
 	printAction.style.display = "block" ;
-	FAQContent.appendChild(cssContent) ;
+	var isIE = document.all?true:false;
+	if(!isIE){
+		var cssContent = document.createElement("div") ;
+		cssContent.innerHTML='<style type="text/css">.DisablePrint{display:none;}</style>';
+		cssContent.style.display = "block";
+		FAQContent.appendChild(cssContent) ;
+	}
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
 	FAQContainer.appendChild(printAction) ;
 	dummyPortlet.appendChild(FAQContainer) ;
+	if(isIE) {
+		var displayElms = DOMUtil.getElemementsByClass(dummyPortlet, "DisablePrint");
+		var i = displayElms.length ;
+		while(i--){
+			displayElms[i].style.display = "none";
+		}
+	}
 	dummyPortlet = this.removeLink(dummyPortlet);
 	//dummyPortlet.style.position ="absolute";
 	dummyPortlet.style.width ="98.5%";
