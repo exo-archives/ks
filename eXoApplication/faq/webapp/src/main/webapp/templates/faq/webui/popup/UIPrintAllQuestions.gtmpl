@@ -22,7 +22,7 @@
 				String responseBy = "..." ;
 				String date = "..." ;
 			%>
-				<div class="QuestionSelect" style="_width:97%;">
+				<div class="QuestionSelect" style="_width:98%; margin:auto;">
 					<div class="DecoratorTL">
 						<div class="DecoratorTR">
 							<div class="DecoratorTC"><span></span></div>

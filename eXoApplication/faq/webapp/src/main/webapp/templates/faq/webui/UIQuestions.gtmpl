@@ -948,7 +948,8 @@
 												</div>
 												
 												<!-- -------------------------------------- View all answer for this question ----------------------------------- -->
-												<div class="Response $classResponsse" id="SetWidthContent" style="padding-left:0px; _width:98%;">
+												<div class="Response $classResponsse" id="SetWidthContent">
+													<div style="padding-left:0px; _width:98%;">
 													<%
 													if(answers != null && answers.length > 0){
 														String actionAnswer = "";
@@ -1109,6 +1110,7 @@
 														</div>
 													</div>
 												<%}%>
+													</div>
 												</div>
 												<!-- -------------------------------------- finish View all answer for this question ----------------------------------- -->
 												
