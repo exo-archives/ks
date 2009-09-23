@@ -269,7 +269,7 @@ public class UICategories extends UIContainer{
 			questions.language_ = FAQUtils.getDefaultLanguage();
 			UIFAQPortlet faqPortlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
 			try {
-				questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
+				//questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
 				questions.setCategoryId(categoryId) ;
 				questions.updateCurrentQuestionList() ;
 				

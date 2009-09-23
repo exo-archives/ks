@@ -298,7 +298,10 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	private String getQuestionContent() {		
-		return languageMap.get(language_).getQuestion() ;
+		if(languageMap.containsKey(language_)) {
+			return languageMap.get(language_).getQuestion() ;
+		}
+		return "" ;
 	}
 	
 	private String getQuestionDetail() {		
@@ -380,6 +383,7 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public void setCategoryId(String categoryId)  throws Exception {
+		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
 		setListObject();
 	}
@@ -697,7 +701,7 @@ public class UIQuestions extends UIContainer {
 				if (canViewQuestion) {
 					uiQuestions.pageList.setObjectId(questionId);
 					uiQuestions.setCategoryId(categoryId) ;
-					uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(questionId) ;
+					//uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(questionId) ;
 					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;						
 					breadcumbs.setUpdataPath(categoryId);
 					UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);

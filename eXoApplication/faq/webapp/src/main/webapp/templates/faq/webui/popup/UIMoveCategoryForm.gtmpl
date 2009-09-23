@@ -37,8 +37,7 @@
 	    	for(int j = 0; j <= deep && i >0; j ++){
 	    		println "</div>";
     		}
-    		String link = uicomponent.event("Save",listCate.get(i).getCategory().getPath());
-    		println "" + link ;
+    		String link = uicomponent.event("Save",listCate.get(i).getCategory().getPath());    		
     		String categoryName = listCate.get(i).getCategory().getName();
     		String title = "" ; 
     		if(categoryName.length() > 50) {

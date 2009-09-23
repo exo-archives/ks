@@ -104,7 +104,7 @@ public class UIBreadcumbs extends UIContainer {
 				//categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				uiQuestions.backPath_ = "" ;
 				uiQuestions.language_ = FAQUtils.getDefaultLanguage();				
-				uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
+				//uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);
 				uiQuestions.setCategoryId(paths) ;
