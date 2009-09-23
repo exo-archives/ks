@@ -175,10 +175,19 @@ public class UICategories extends UIContainer{
 					newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, 
 							FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
 				}
-	    	
-				currentCategoryName = faqService_.getCategoryById(this.categoryId_).getName();
+	    	if(categoryId_.equals(Utils.CATEGORY_HOME)) {
+	    		currentCategoryName = faqService_.getCategoryById(categoryId_).getName();
+	    		currentCategoryName = "<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+currentCategoryName+"\"/>";
+	    	}else {
+	    		currentCategoryName = faqService_.getCategoryById(categoryId_).getName();
+	    	}
 			} catch(Exception e){
-				currentCategoryName = faqService_.getCategoryById(this.parentCateID_).getName();
+				if(parentCateID_.equals(Utils.CATEGORY_HOME)) {
+	    		currentCategoryName = faqService_.getCategoryById(parentCateID_).getName();
+	    		currentCategoryName = "<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+currentCategoryName+"\"/>";
+	    	}else {
+	    		currentCategoryName = faqService_.getCategoryById(parentCateID_).getName();
+	    	}
 				e.printStackTrace();
 			}
 			viewBackIcon = true;

@@ -26,14 +26,13 @@
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left:10px;font-size:12px; text-align:center;">
 	  				<%
-	  				if(uicomponent.getCurrentName().length() <=20){%>
-							<span class="TextTitle">
-								<%=uicomponent.getCurrentName()%>
-							</span>
+	  				String categoryName = uicomponent.getCurrentName();
+	  				if(categoryName.length() <=20 || categoryName.indexOf("<img") >= 0){%>
+							<span class="TextTitle"><%=categoryName%></span>
 	  				<%
 	  				} else {%>
 							<div class="TextTitle" title="<%=uicomponent.getCurrentName()%>">
-								<%=FAQUtils.getSubString(uicomponent.getCurrentName(), 20)%>
+								<span><%=FAQUtils.getSubString(categoryName, 20)%></span>
 							</div>
 						<%}%>
 					</div>

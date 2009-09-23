@@ -129,37 +129,42 @@
 		
 		}
 		navPath = uicomponent.arrangeList(navPath);
-%>
-	<div class="FAQViewerBar">
-		<% 
-		int i = 0;
-		String link = ids[0], viewName;
-		String url;
-		for(pathName in navPath) {
-			if(pathName.equals(Utils.CATEGORY_HOME)){ 
-				pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
-				link = Utils.CATEGORY_HOME;
-			}
-			viewName = pathName;
-			if(pathName.length() > 17){
-				viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 17);
-			}
-			if(i < ids.length && i > 0)
-				link = link + "/" + ids[i];
-			if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
-				url = uicomponent.url("ChangePath", link);
-				if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
+		if(navPath.size() > 1) {
 		%>
-			<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+			<div class="FAQViewerBar">
+				<% 
+				int i = 0;
+				String link = ids[0], viewName;
+				String url;
+				for(pathName in navPath) {
+					if(pathName.equals(Utils.CATEGORY_HOME)){ 
+						pathName = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME);
+						link = Utils.CATEGORY_HOME;
+					}
+					viewName = pathName;
+					if(pathName.length() > 17 && pathName.indexOf("<img") < 0){
+						viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 17);
+					}
+					if(pathName.indexOf("<img") >= 0){
+						pathName = "";
+					}
+					if(i < ids.length && i > 0)
+						link = link + "/" + ids[i];
+					if(i < (ids.length-1) || link.equals(Utils.CATEGORY_HOME)){
+						url = uicomponent.url("ChangePath", link);
+						if(link.equals(Utils.CATEGORY_HOME) && ids.length == 1){
+				%>
+					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
+						<%} else { %>
+					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+						<%} %>
 				<%} else { %>
-			<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
-				<%} %>
-		<%} else { %>
-			<span title="$pathName"><b>$viewName</b></span>
-		<%}
-		++i;
-		}%>
-	</div>
+					<span title="$pathName"><b>$viewName</b></span>
+				<%}
+				++i;
+				}%>
+			</div>
+		<%}%>	
 	<div class="FAQViewerQuestionContent">
 	<%for(questionCate in questionCates) { 
 			String question_ =	questionCate.getQuestion();

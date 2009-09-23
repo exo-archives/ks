@@ -17,34 +17,41 @@
 								if(uicomponent.getBreadcumbs().size() > 1){
 							%>
 							<% int t = 1 ;
+								String image = "";
 								for(namePath in uicomponent.getBreadcumbs()) {
 									String link = uicomponent.event("ChangePath", uicomponent.getPath(t-1)) ;
 									String url = uicomponent.url("ChangePath", uicomponent.getPath(t-1)) ;
 									String title = "" ;
-									if(namePath.equals(Utils.CATEGORY_HOME)){
-										namePath = _ctx.appRes("UIBreadcumbs.label."+ Utils.CATEGORY_HOME) ;
-									}else {
-										if(t < uicomponent.getMaxPath()) {
-											if(namePath.length() > 30) {
+									image = "";
+									if(t == 1){
+										image = "/faq/skin/DefaultSkin/webui/background/HomeIcon.gif";
+									}
+									if(t < uicomponent.getMaxPath()) {
+										if(namePath.length() > 30) {
+											title = FAQUtils.getTitle(namePath) ; 
+											namePath = FAQUtils.getSubString(namePath,30);
+										%>
+											<a href="$url" onclick="$link; return false;" class="Selected ControlButton" title="$title">$namePath</a>
+									<%} else { 
+										 	if(image.length() > 0){
+									%>
+											<a href="$url" onclick="$link; return false;" class="Selected ControlButton"><img src="$image" alt="$namePath"/></a>
+										<%} else { %>
+											<a href="$url" onclick="$link; return false;" class="Selected ControlButton">$namePath</a>
+										<%} %>
+									<%} %>
+										<div class="RightArrowIcon ControlButton"><span></span></div>
+								<%} else {
+								 		 if(namePath.length() > 30) {
 												title = FAQUtils.getTitle(namePath) ; 
 												namePath = FAQUtils.getSubString(namePath,30);
-											%>
-												<a href="$url" onclick="$link; return false;" class="Selected ControlButton" title="$title">$namePath</a>
-											<% } else { %>
-												<a href="$url" onclick="$link; return false;" class="Selected ControlButton">$namePath</a>
-											<% } %>
-											<div class="RightArrowIcon ControlButton"><span></span></div>
-								 <% } else {
-								 			if(namePath.length() > 30) {
-												title = FAQUtils.getTitle(namePath) ; 
-												namePath = FAQUtils.getSubString(namePath,30);
+												
 								%>
-												<div class="Selected ControlButton" title="$title">$namePath </div>
-											<% } else { %>
+												<div class="Selected ControlButton" title="$title">$namePath</div>
+									<% } else { %>
 												<div class="Selected ControlButton">$namePath</div>
-											<% } 
-										}
-									}									
+									<% } 
+									}
 						  	t = t + 1 ;
 						  } %>
 						 <div class="ScrollButtons" style="width:35px;_width:50px;padding: 4px 1px 0px 1px;">
