@@ -58,10 +58,14 @@ public class UIViewer extends UIContainer {
   private List<String> arrangeList(List<String> list) {
 		List<String> newList = new ArrayList<String>();
 		if(list.isEmpty() || list.size() == 0){
-			newList.add(Utils.CATEGORY_HOME);
+			newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+Utils.CATEGORY_HOME+"\"/>");
 		} else {
 			for (int i = (list.size()-1); i >= 0; i--) {
-				newList.add(list.get(i));
+				if(i == (list.size()-1)) {
+					newList.add("<img src=\"/faq/skin/DefaultSkin/webui/background/HomeIcon.gif\" alt=\""+list.get(i)+"\"/>");
+				} else {
+					newList.add(list.get(i));
+				}
 			}
 		}
 		return newList;
