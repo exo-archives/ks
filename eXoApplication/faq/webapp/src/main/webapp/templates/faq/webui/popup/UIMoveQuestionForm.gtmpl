@@ -8,7 +8,7 @@
   def rcontext = _ctx.getRequestContext() ;	
   rcontext.getJavascriptManager().addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 %>
-<div class="UIMoveQuestionForm $uicomponent.id"> hello
+<div class="UIMoveQuestionForm $uicomponent.id">
 	<% uiform.begin() %>
 	<div class="TitleMoveThreads"><%=_ctx.appRes(uicomponent.getName() + ".label." + "MoveQuestionTo")%>:</div>
 	  <div class="ViewQuestionsAtMove" style="margin:5px 0px 5px 0px; padding-top:10px;">

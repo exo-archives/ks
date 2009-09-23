@@ -272,6 +272,8 @@ public class UICategories extends UIContainer{
 				//questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
 				questions.setCategoryId(categoryId) ;
 				questions.updateCurrentQuestionList() ;
+				questions.viewingQuestionId_ = "" ;
+				questions.updateCurrentLanguage();
 				
 			} catch (Exception e) {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
