@@ -1537,7 +1537,7 @@ public class JCRDataStorage {
 				queryString.append("descending");
 			}
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();			
+			QueryResult result = query.execute();		
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
@@ -1786,7 +1786,6 @@ public class JCRDataStorage {
 			categoryNode.setProperty("exo:createdDate", GregorianCalendar.getInstance()) ;
 			categoryNode.setProperty("exo:isView", category.isView());
 		}
-		System.out.println("category.getIndex() ===>" + category.getIndex());
 		categoryNode.setProperty("exo:index", category.getIndex()) ;
 		categoryNode.setProperty("exo:name", category.getName()) ;
 		categoryNode.setProperty("exo:description", category.getDescription()) ;
@@ -2088,7 +2087,7 @@ public class JCRDataStorage {
 			if(faqSetting.isAdmin()) 
 				queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");				
 			else {
-				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate)") ;
+				queryString.append("/element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate=''") ;
 				if(limitedUsers != null){
 					for(String id : limitedUsers) {
 						queryString.append(" or @exo:userPrivate = '").append(id).append("' ") ;
