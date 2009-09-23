@@ -858,6 +858,7 @@
 
 .UIFAQPortlet .ResponseItemContainer .ResponseItemContainerRight{
 	margin-left: 130px;
+	padding-bottom: 5px;
 }
 
 .UIFAQPortlet .ResponseItemContainer .ResponseItemContainerRight .AnswerContent{

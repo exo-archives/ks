@@ -455,14 +455,14 @@
 																				if(backPath != null && backPath.trim().length() > 0) {
 																					String link = uicomponent.event("ViewQuestion",backPath);
 																				%>
-																					<td style="width:25px" style="margin-left:10px;">
+																					<td style="width:25px; margin-left:10px;" class="DisablePrint">
 																						<div onclick="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>" style="cursor:pointer">
 																							<div class="BackPageFAq"><span></span></div>
 																						</div>
 																					</td>
 																				<%}%>
 																				<!-- action print question -->
-																				<td style="width:25px">
+																				<td style="width:25px" class="DisablePrint">
 																					<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
 																							title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>" style="cursor:pointer">
 																						<div class="PrintScrintFAQ"><span></span></div>
@@ -471,17 +471,17 @@
 																			<%if(uicomponent.currentUser_ != null) {
 																					if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
 																			%>
-																				<td style="width:22px">
+																				<td style="width:22px" class="DisablePrint">
 																					<a onclick="<%=uicomponent.event("EditQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>" style="cursor:pointer">
 																						<div class="Edit" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
 																					</a>
 																				</td>
-																				<td style="width:22px">
+																				<td style="width:22px" class="DisablePrint">
 																					<a onclick="<%=uicomponent.event("DeleteQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>" style="cursor:pointer">
 																						<div class="Delete" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
 																					</a>
 																				</td>
-																				<td style="width:22px">
+																				<td style="width:22px" class="DisablePrint">
 																					<a onclick="<%=uicomponent.event("MoveQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.MoveQuestion")%>" style="cursor:pointer">
 																						<div class="MoveQuestion" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
 																					</a>
@@ -490,7 +490,7 @@
 																				} 
 																			%>
 																				<!-- action send mail for frend -->
-																				<td style="width:25px">
+																				<td style="width:25px" class="DisablePrint">
 																					<%
 																					String SendToFriend = "SendToFriend";
 																					if((!question.isApproved() || !question.isActivated())){
@@ -515,7 +515,7 @@
 																						String topicIdDiscuss = question.getTopicIdDiscuss();
 																						if(topicIdDiscuss == null || topicIdDiscuss.length() <= 0){
 																			%>
-																				<td style="width:25px">
+																				<td style="width:25px" class="DisablePrint">
 																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																						<div class="DiscussForum"><span></span></div>
 																					</a>
@@ -530,7 +530,7 @@
 																							}
 																						}
 																			%>
-																				<td style="width:25px">
+																				<td style="width:25px" class="DisablePrint">
 																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
 																					</div>
@@ -583,7 +583,7 @@
 																										}%>
 																									</div>
 																							<% } else { %>
-																									<div id="faqVoteSpace" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIFAQPortlet.hiddenTitle('faqMarkVoteSpace'); " 
+																									<div id="faqVoteSpace" class="faqVoteSpace" onmouseover="eXo.faq.UIFAQPortlet.viewTitle('faqVoteQuestion');eXo.faq.UIFAQPortlet.hiddenTitle('faqMarkVoteSpace'); " 
 																																					onmouseout="eXo.faq.UIFAQPortlet.viewTitle('faqMarkVoteSpace');eXo.faq.UIFAQPortlet.hiddenTitle('faqVoteQuestion');">
 																										<div id="faqMarkVoteSpace" style="display:block;">
 																										<%String classNameForStar = "";
@@ -749,7 +749,7 @@
 																				<%
 																				if(uicomponent.currentUser_ != null){
 																				%>
-																					<div class="UIAction" style="padding:2px;"> 
+																					<div class="UIAction DisablePrint" style="padding:2px;"> 
 																						<table class="ActionContainer">
 																							<tr>
 																								<td>
@@ -938,7 +938,7 @@
 																		<!-- action Sort answer by vote -->
 																	<td style="width:70px">
 																		<a href="<%=uicomponent.event("SortAnswer")%>" title="<%=_ctx.appRes("UIQuestions.action.SortAnswerByVote")%>" style="cursor:pointer; text-align:left;">
-																			<div class="SortAnswer"><span></span></div>
+																			<div class="SortAnswer DisablePrint"><span></span></div>
 																		</a>
 																	</td>
 																<%}%>
@@ -1046,14 +1046,14 @@
 																		</td>
 																	
 																	<% if(uicomponent.canEditQuestion){%>
-																		<td style="width:20px">
+																		<td style="width:20px" class="DisablePrint">
 																			<a title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
 																				<div class="ItemIcon Edit" style="height:20px;width:16px;">
 																						<span></span>
 																				</div>
 																			</a>
 																		</td>
-																		<td style="width:20px;">
+																		<td style="width:20px;" class="DisablePrint">
 																		<%
 																			actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
 																			if(answer.getApprovedAnswers()) {
@@ -1068,7 +1068,7 @@
 																				</a>
 																			<%}%>
 																		</td>
-																		<td style="width:20px;">
+																		<td style="width:20px;" class="DisablePrint">
 																			<%
 																				actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Activate");
 																				if(answer.getActivateAnswers()) {
@@ -1083,7 +1083,7 @@
 																				</a>
 																			<%}%>
 																		</td>
-																		<td style="width:20px">
+																		<td style="width:20px" class="DisablePrint">
 																				<a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
 																					<div class="DeleteAnswer"><span></span></div>
 																				</a>
@@ -1173,7 +1173,7 @@
 																		<%
 																		if(canEditComment){
 																			if (uicomponent.faqSetting_.isCanEdit()){%>
-																				<td style="width:20px;">
+																				<td style="width:20px;" class="DisablePrint">
 																					<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>" style="cursor:pointer;">
 																						<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																								<span></span>
@@ -1181,14 +1181,14 @@
 																					</a>
 																				</td>
 																		<%}%>
-																			<td style="width:20px">
+																			<td style="width:20px" class="DisablePrint">
 																				<a title="<%=_ctx.appRes("UIQuestions.action.EditComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/" + comment.getId())%>">
 																					<div class="ItemIcon Edit" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
 																				</a>
 																			</td>
-																			<td style="width:20px">
+																			<td style="width:20px" class="DisablePrint">
 																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																							<span></span>
@@ -1196,14 +1196,14 @@
 																				</a>
 																			</td>
 																	<%} else if (uicomponent.faqSetting_.isCanEdit()){%>
-																			<td style="width:20px">
+																			<td style="width:20px" class="DisablePrint">
 																				<a title="<%=_ctx.appRes("UIQuestions.action.CommentToAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("CommentToAnswer", comment.getId())%>">
 																					<div class="ItemIcon CommentToAnswer" style="height:24px;width:16px;">
 																							<span></span>
 																					</div>
 																				</a>
 																			</td>
-																			<td style="width:20px">
+																			<td style="width:20px" class="DisablePrint">
 																				<a title="<%=_ctx.appRes("UIQuestions.action.DeleteComment")%>"  style="cursor:pointer;" href="<%=uicomponent.event("DeleteComment", comment.getId())%>">
 																					<div class="ItemIcon Delete" style="height:24px;width:16px;">
 																							<span></span>
@@ -1225,32 +1225,7 @@
 														<%}%>	
 													</div>
 												<%}%>
-													<div class="UIAction">
-														<div style="float:right">
-															<div class="PrintAction" style="display:none ;">
-																<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
-																	<div class="ButtonLeft">
-																		<div class="ButtonRight">
-																			<div class="ButtonMiddle">
-																				<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-																<div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint()" class="ActionButton LightBlueStyle">
-																	<div class="ButtonLeft">
-																		<div class="ButtonRight">
-																			<div class="ButtonMiddle">
-																				<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "ClosePrintQuestion")%></a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-																
-														</div>
-														<div style="clear:both;"><span></span></div>
-													</div>
+													
 												</div>
 											</div>
 										</div>
@@ -1269,32 +1244,33 @@
 		%>
 		
 			<!-- -------------------------------------- Print function ------------------------------- -->
-			<div class="UIAction" style="display:none ;">			
-				<div style="float:right">			
-					<div class="PrintAction">
-						<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Print")%></a>
+			<div id="PrintAction" style="display:none;" align="center">
+				<div class="UIAction" style="padding:0px 0px 10px 0px; width:150px; margin:auto;">			
+					<div style="float:right">			
+						<div class="PrintAction">
+							<div onclick="javascript:window.print();" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">
+											<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Print")%></a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint();" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">
+											<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.ClosePrintQuestion")%></a>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div onclick="javascript:eXo.faq.UIFAQPortlet.closePrint();" class="ActionButton LightBlueStyle">
-							<div class="ButtonLeft">
-								<div class="ButtonRight">
-									<div class="ButtonMiddle">
-										<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.ClosePrintQuestion")%></a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+				</div>	
+				<div style="clear:right;"><span></span></div>
+				</div>
 			</div>	
-			<div style="clear:right;"><span></span></div>
-			</div>
-			
 		</div>
 		<%
 			if(uicomponent.getQuestionView() != null && uicomponent.getQuestionView().trim().length() > 0) {

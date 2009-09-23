@@ -238,16 +238,23 @@ UIFAQPortlet.prototype.printPreview = function(obj) {
 	var tmp = DOMUtil.findAncestorByClass(obj, "FAQContainer");
 	var printArea = DOMUtil.findFirstDescendantByClass(tmp, "div","QuestionSelect") ;
 	printArea = printArea.cloneNode(true) ;
+	var cssContent = document.createElement("div") ;
+	cssContent.innerHTML='<style type="text/css">.DisablePrint{display:none;}</style>';
+	cssContent.style.display = "none";
 	var dummyPortlet = document.createElement("div") ;
 	var FAQContainer = document.createElement("div") ;
 	var FAQContent = document.createElement("div") ;
-	var printAction = DOMUtil.findFirstDescendantByClass(printArea, "div", "PrintAction") ;
+	var printAction = document.createElement("div") ;
+	var printActionInApp = document.getElementById("PrintAction") ;
+	printAction.innerHTML = printActionInApp.innerHTML;
 	dummyPortlet.className = "UIFAQPortlet UIPrintPreview" ;
 	FAQContainer.className = "FAQContainer" ;
 	FAQContent.className = "FAQContent" ;
 	printAction.style.display = "block" ;
+	FAQContent.appendChild(cssContent) ;
 	FAQContent.appendChild(printArea) ;
 	FAQContainer.appendChild(FAQContent) ;
+	FAQContainer.appendChild(printAction) ;
 	dummyPortlet.appendChild(FAQContainer) ;
 	dummyPortlet = this.removeLink(dummyPortlet);
 	//dummyPortlet.style.position ="absolute";
@@ -284,15 +291,28 @@ UIFAQPortlet.prototype.closePrintAll = function() {
 UIFAQPortlet.prototype.removeLink = function(rootNode){
   var links = eXo.core.DOMUtil.findDescendantsByTagName(rootNode, "a") ;
   var len = links.length ;
-	var contextAnchors = this.findDescendantsByAttribute(rootNode,"div","onmousedown");
   for(var i = 0 ;i < len ; i++){
-    if(eXo.core.DOMUtil.hasClass(links[i], "ActionButton")) continue ;
     links[i].href = "javascript:void(0) ;"
     if(links[i].onclick != null) links[i].onclick = "javascript:void(0);" ;
   }
+  var contextAnchors = this.findDescendantsByAttribute(rootNode,"div","onmousedown");
 	i = contextAnchors.length ;
 	while(i--){
 		contextAnchors[i].onmousedown = null;
+		contextAnchors[i].onmousedown = null;
+	}
+	contextAnchors = this.findDescendantsByAttribute(rootNode,"div","onmouseover");
+	i = contextAnchors.length ;
+	while(i--){
+		contextAnchors[i].onmouseover = null;
+		contextAnchors[i].onmouseout = null;
+	}
+
+	contextAnchors = this.findDescendantsByAttribute(rootNode,"div","onclick");
+	i = contextAnchors.length ;
+	while(i--){
+		if(eXo.core.DOMUtil.hasClass(contextAnchors[i], "ActionButton")) continue ;
+		if(contextAnchors[i].onclick != null) contextAnchors[i].onclick = "javascript:void(0);" ;
 	}
   return rootNode ;
 } ;
