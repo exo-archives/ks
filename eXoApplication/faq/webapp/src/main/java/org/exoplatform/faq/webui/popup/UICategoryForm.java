@@ -23,8 +23,8 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -282,7 +282,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setViewAuthorInfor(viewAuthorInfor);
 			cat.setIndex(index);
 			cat.setModerators(users) ;
-			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;		
+			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;
+			
+			if(!isAddNew_) {
+				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class) ;
+				if(uiCategory.categoryId_.equals(categories.getCategoryPath())) {
+					UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+					questions.viewAuthorInfor = faqService_.isViewAuthorInfo(uiCategory.categoryId_) ;
+				}
+			}
+			
 			faqPortlet.cancelAction() ;
 			//questions.setQuestions() ; //?
 			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;

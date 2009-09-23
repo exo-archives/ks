@@ -218,7 +218,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   	try {
   		if(isMode || faqSetting_.isAdmin()) {
   			isMode = true;
-  		} else if(question_ != null && fAQService_.isCategoryModerator(question_.getCategoryId(), FAQUtils.getCurrentUser())){
+  		} else if(question_ != null && fAQService_.isCategoryModerator(question_.getPath(), FAQUtils.getCurrentUser())){
   			isMode = true;
   		}
   		return isMode ;
