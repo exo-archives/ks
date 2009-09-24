@@ -36,7 +36,6 @@ import org.exoplatform.faq.webui.popup.UIMoveCategoryForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
-import org.exoplatform.faq.webui.popup.UIRSSForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -406,7 +405,6 @@ public class UICategories extends UIContainer{
 	}
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UICategories> {
-		@SuppressWarnings("static-access")
     public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 			
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -658,8 +656,12 @@ public class UICategories extends UIContainer{
 			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
+			if(categoryId.indexOf("/true") > 0) {
+				categoryId =  categoryId.replaceFirst("/true", "");
+				uiMoveCategoryForm.setIsCateSelect(true);
+			}
 			try {
-					UIMoveCategoryForm uiMoveCategoryForm = popupContainer.addChild(UIMoveCategoryForm.class, null, null) ;
 					popupContainer.setId("MoveCategoryForm") ;
 					uiMoveCategoryForm.setCategoryID(categoryId) ;
 					uiMoveCategoryForm.setFAQSetting(uiCategories.faqSetting_) ;
