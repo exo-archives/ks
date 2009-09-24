@@ -3066,16 +3066,20 @@ public class JCRDataStorage {
 			}
 			List<String> listUser = new ArrayList<String>();
 			List<String> emailList = new ArrayList<String>();
+			List<String> emailListCate = new ArrayList<String>();
 			//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 			Node userProfileHome = null;
 			userProfileHome = getUserProfileHome(sProvider);
 	    
 			int count = 0;
 			if(post == null) {
-				catName = node.getParent().getProperty("exo:name").getString();
+				Node forumNode = node;
 				forumName = node.getProperty("exo:name").getString();
+				node = node.getParent();
+				catName = node.getProperty("exo:name").getString();
 				topicName = topic.getTopicName();
 				while (true) {
+					emailListCate.addAll(emailList);
 					emailList = new ArrayList<String>();
 					if (node.isNodeType("exo:forumWatching") && topic.getIsActive() && topic.getIsApproved() && topic.getIsActiveByForum() && !topic.getIsClosed() && !topic.getIsLock() && !topic.getIsWaiting()) {
 						// set Category Private
@@ -3110,6 +3114,9 @@ public class JCRDataStorage {
 							emailList.addAll(notyfys);
 						}
 					}
+					for (String string : emailListCate) {
+	          while(emailList.contains(string)) emailList.remove(string);
+          }
 					if (emailList.size() > 0) {
 						Message message = new Message();
 						message.setMimeType("text/html");
@@ -3158,9 +3165,9 @@ public class JCRDataStorage {
 						message.setBody(content_);
 						sendEmailNotification(emailList, message);
 					}
-					if(node.isNodeType("exo:forumCategory") || count > 1) break;
+					if(node.isNodeType("exo:forum") || count > 1) break;
 					++ count;
-					node = node.getParent();
+					node = forumNode;
 				}
 			} else {
 				if (!node.getName().replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
