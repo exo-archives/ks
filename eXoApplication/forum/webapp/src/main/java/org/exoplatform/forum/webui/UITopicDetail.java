@@ -841,7 +841,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
-				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
 				for (int i = 0; i < special.length(); i++) {
 					char c = special.charAt(i);
 					if(text.indexOf(c) >= 0) {
