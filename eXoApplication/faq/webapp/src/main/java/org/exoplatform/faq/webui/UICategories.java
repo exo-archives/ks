@@ -92,12 +92,12 @@ public class UICategories extends UIContainer{
 	//private boolean canEditQuestion = false ;
 	private boolean isModerator = false ;
 	private FAQSetting faqSetting_ = new FAQSetting();
-	private String[] firstActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
-	private String[] firstActionCateUnWatch_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
-	private String[] secondActionCate_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
-	private String[] secondActionCateUnWatch_ = new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
-	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
-	private String[] userActionsCateUnWatch_ = new String[]{"AddNewQuestion", "UnWatch"} ;
+	private String[] firstActionCate_ 				= 	new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] firstActionCateUnWatch_ 	=		new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
+	private String[] secondActionCate_ 				= 	new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "Watch"} ;
+	private String[] secondActionCateUnWatch_ = 	new String[]{"Export", "Import", "AddCategory", "AddNewQuestion", "EditSubCategory", "DeleteCategory", "MoveCategory", "UnWatch"} ;
+	private String[] userActionsCate_ 				= 	new String[]{"AddNewQuestion", "Watch"} ;
+	private String[] userActionsCateUnWatch_ 	= 	new String[]{"AddNewQuestion", "UnWatch"} ;
 	FAQService faqService_;
 	private String portalName = null;
 	private String currentUser = null;
@@ -406,11 +406,19 @@ public class UICategories extends UIContainer{
 	}
 	
 	static	public class DeleteCategoryActionListener extends EventListener<UICategories> {
-		public void execute(Event<UICategories> event) throws Exception {
+		@SuppressWarnings("static-access")
+    public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ; 			
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			UIFAQPortlet uiPortlet = uiCategories.getAncestorOfType(UIFAQPortlet.class);
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+			String tmp = "";
+			if(categoryId.indexOf("/true") > 0) {
+				categoryId =  categoryId.replaceFirst("/true", "");
+				tmp = categoryId;
+				if(tmp.indexOf("/") > 0) tmp = tmp.substring(0, tmp.lastIndexOf("/"));
+				uiCategories.setPathCategory(tmp);
+			}
 			try {
 				Category cate = uiCategories.faqService_.getCategoryById(categoryId) ;
 				if(uiCategories.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
@@ -418,6 +426,22 @@ public class UICategories extends UIContainer{
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				}
+				if(tmp.length() > 0) {
+					UIFAQContainer container = uiCategories.getAncestorOfType(UIFAQContainer.class);
+					UIQuestions questions = container.getChild(UIQuestions.class);
+					questions.pageSelect = 0;
+					questions.backPath_ = "" ;
+					questions.language_ = FAQUtils.getDefaultLanguage();
+					try {
+						questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(tmp);
+						questions.setCategoryId(tmp) ;
+						questions.updateCurrentQuestionList() ;
+						questions.viewingQuestionId_ = "" ;
+						questions.updateCurrentLanguage();
+					} catch (Exception e) {}
+					UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;			
+					breadcumbs.setUpdataPath(tmp);
 				}
 			} catch (Exception e) {
 				FAQUtils.findCateExist(uiCategories.faqService_, uiPortlet.findFirstComponentOfType(UIFAQContainer.class));
