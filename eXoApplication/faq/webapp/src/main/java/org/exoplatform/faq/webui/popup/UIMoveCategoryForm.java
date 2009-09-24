@@ -25,7 +25,11 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIBreadcumbs;
+import org.exoplatform.faq.webui.UICategories;
+import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -54,6 +58,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
 	private String homeCategoryName;
 	private FAQSetting faqSetting_ ;
+	private boolean isCateSelect = false;
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIMoveCategoryForm() throws Exception {
@@ -69,7 +74,9 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	public List<Cate> getListCate(){
 		return this.listCate ;
 	}
-
+	public void setIsCateSelect(boolean isCateSelect) {
+		this.isCateSelect = isCateSelect;
+  }
 	public void setFAQSetting(FAQSetting faqSetting){
 		this.faqSetting_ = faqSetting;		
 	}
@@ -88,7 +95,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
 		public void execute(Event<UIMoveCategoryForm> event) throws Exception {
 			UIMoveCategoryForm moveCategory = event.getSource() ;	
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
+			UIFAQPortlet faqPortlet = moveCategory.getAncestorOfType(UIFAQPortlet.class) ;
 			String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			String categoryId = moveCategory.getCategoryID() ;
 			try {
@@ -103,6 +110,27 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					return;
 				}
+				if(moveCategory.isCateSelect) {
+					String tmp = moveCategory.categoryId_;
+					if(tmp.indexOf("/") > 0) tmp = tmp.substring(0, tmp.lastIndexOf("/"));
+					UIFAQContainer container = faqPortlet.findFirstComponentOfType(UIFAQContainer.class);
+					UICategories uiCategories = container.findFirstComponentOfType(UICategories.class);
+					uiCategories.setPathCategory(tmp);
+					UIQuestions questions = container.getChild(UIQuestions.class);
+					questions.pageSelect = 0;
+					questions.backPath_ = "" ;
+					questions.language_ = FAQUtils.getDefaultLanguage();
+					try {
+						questions.viewAuthorInfor = faqService_.isViewAuthorInfo(tmp);
+						questions.setCategoryId(tmp) ;
+						questions.updateCurrentQuestionList() ;
+						questions.viewingQuestionId_ = "" ;
+						questions.updateCurrentLanguage();
+					} catch (Exception e) {}
+					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;			
+					breadcumbs.setUpdataPath(tmp);
+				}
+				moveCategory.isCateSelect = false;
 			}catch (Exception e) {
 				e.printStackTrace() ;
 				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;

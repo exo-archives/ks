@@ -24,7 +24,6 @@ import java.util.Map;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;

@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
@@ -56,8 +55,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -148,7 +145,7 @@ public class UIQuestions extends UIContainer {
 
 	
 	public UIFAQPageIterator pageIterator = null ;
-	long pageSelect = 0;
+	public long pageSelect = 0;
 
 	public UIQuestions()throws Exception {
 		backPath_ = null ;
