@@ -65,6 +65,15 @@ public class UIQuickSearchForm extends UIForm {
 			UIFormStringInput formStringInput = uiForm.getUIStringInput(FIELD_SEARCHVALUE) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text)) {
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
+				for (int i = 0; i < special.length(); i++) {
+					char c = special.charAt(i);
+					if(text.indexOf(c) >= 0) {
+						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
+						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						return ;
+					}
+				}
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				UserProfile userProfile = forumPortlet.getUserProfile() ;

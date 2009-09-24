@@ -296,7 +296,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			UISearchForm uiForm = event.getSource() ;
 			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(keyValue)) {
-				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
 				for (int i = 0; i < special.length(); i++) {
 					char c = special.charAt(i);
 					if(keyValue.indexOf(c) >= 0) {

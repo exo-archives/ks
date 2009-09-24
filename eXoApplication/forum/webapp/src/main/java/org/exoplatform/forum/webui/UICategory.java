@@ -596,7 +596,7 @@ public class UICategory extends UIForm	{
 			UIFormStringInput formStringInput = uiCategory.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
 			if(!ForumUtils.isEmpty(text) && !ForumUtils.isEmpty(path)) {
-				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=";
+				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
 				for (int i = 0; i < special.length(); i++) {
 					char c = special.charAt(i);
 					if(text.indexOf(c) >= 0) {
