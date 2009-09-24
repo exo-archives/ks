@@ -2104,7 +2104,6 @@ public class JCRDataStorage {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
 		}catch (Exception e) {
-			e.printStackTrace() ;
 		}finally {sProvider.close();}		
 		return catList ;
 	}

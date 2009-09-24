@@ -116,9 +116,10 @@
 															for(viewAction in categoryAction) {
 																String linkView = uicomponent.event(viewAction, category.getPath()) ;
 																String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
-																if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("DeleteCategory") || 
-																		viewAction.equals("EditCategory") || viewAction.equals("MoveCategory")))
+																if(category.getPath().equals(uicomponent.categoryId_) && (viewAction.equals("EditCategory") || viewAction.equals("MoveCategory")))
 																	continue;
+																if(category.getPath().equals(uicomponent.categoryId_) && viewAction.equals("DeleteCategory"))
+																	linkView = uicomponent.event(viewAction, category.getPath()+"/true") ;
 														%>
 																<div class="MenuItem">
 																		<div class="IconItem $viewAction">
