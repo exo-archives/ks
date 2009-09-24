@@ -3284,13 +3284,16 @@ public class JCRDataStorage {
 						fullName = userNode.getProperty("exo:fullName").getString();
 					} catch (Exception e) {
 					}
+//					send email by category
 					String content_ = "";
-					if (emailList.size() > 0) {
+					if (emailListCategory.size() > 0) {
 						Message message = new Message();
 						if(email != null && email.length() > 0) {
 							message.setFrom(fullName + " <" + email + ">");
 						}
 						message.setMimeType("text/html");
+						String categoryName = categoryNode.getProperty("exo:name").getString();
+						content_ = node.getProperty("exo:name").getString();
 						if(headerSubject != null && headerSubject.length() > 0) {
 							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
@@ -3299,8 +3302,8 @@ public class JCRDataStorage {
 							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
-						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
-						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
+						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
 						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
@@ -3308,17 +3311,22 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
-						content_ = StringUtils.replace(content_, "$POSTER", owner);
+						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
 						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
 						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
 						
 						message.setBody(content_);
-						sendEmailNotification(emailList, message);
+						sendEmailNotification(emailListCategory, message);
 					}
+					for (String string : emailListCategory) {
+	          while(emailListForum.contains(string)) emailListForum.remove(string);
+          }
+					
+//				send email by forum
 					if (emailListForum.size() > 0) {
 						Message message = new Message();
 						if(email != null && email.length() > 0) {
@@ -3353,14 +3361,20 @@ public class JCRDataStorage {
 						message.setBody(content_);
 						sendEmailNotification(emailListForum, message);
 					}
-					if (emailListCategory.size() > 0) {
+					for (String string : emailListCategory) {
+						while(emailList.contains(string)) emailList.remove(string);
+          }
+					for (String string : emailListForum) {
+						while(emailList.contains(string)) emailList.remove(string);
+					}
+					
+//				send email by topic					
+					if (emailList.size() > 0) {
 						Message message = new Message();
 						if(email != null && email.length() > 0) {
 							message.setFrom(fullName + " <" + email + ">");
 						}
 						message.setMimeType("text/html");
-						String categoryName = categoryNode.getProperty("exo:name").getString();
-						content_ = node.getProperty("exo:name").getString();
 						if(headerSubject != null && headerSubject.length() > 0) {
 							headerSubject = StringUtils.replace(headerSubject, "$CATEGORY", catName);
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
@@ -3369,25 +3383,25 @@ public class JCRDataStorage {
 							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
-						content = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
-						content = StringUtils.replace(content, "$OBJECT_WATCH_TYPE", "Category");
-						content = StringUtils.replace(content, "$ADD_TYPE", "Post");
-						content = StringUtils.replace(content, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
+						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
+						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
+						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
-						content = StringUtils.replace(content, "$TIME", formatter.format(createdDate)+" GMT+0");
+						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
-						content = StringUtils.replace(content, "$DATE", formatter.format(createdDate));
-						content = StringUtils.replace(content, "$POSTER", post.getOwner());
-						content = StringUtils.replace(content, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						content = StringUtils.replace(content, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
+						content_ = StringUtils.replace(content_, "$POSTER", owner);
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
 						content_ = StringUtils.replace(content_, "$TOPIC", topicName);
 						
-						message.setBody(content);
-						sendEmailNotification(emailListCategory, message);
+						message.setBody(content_);
+						sendEmailNotification(emailList, message);
 					}
 				}
 			}
