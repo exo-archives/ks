@@ -117,12 +117,15 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
 	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator" ;
-	private JCRPageList pageList ;
+	@SuppressWarnings("unchecked")
+  private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
 	private UIForumPageIterator pageIterator ;
+	private String notifyEmail_ = "";
+	private String notifyMove_ = "";
 	public UIForumAdministrationForm() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIListTopicOld.class, null, null) ;
@@ -190,11 +193,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
 		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
-		notifyEmail.setValue(value);
+		notifyEmail.setValue(value); this.notifyEmail_ = value;
 		value = administration.getNotifyEmailMoved();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
 		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
-		notifyEmailMoved.setValue(value);
+		notifyEmailMoved.setValue(value); this.notifyMove_ = value;
 		
 		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
 		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
@@ -497,7 +500,18 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			UIForumAdministrationForm uiForm = event.getSource();
+			int temp = uiForm.id;
 			uiForm.id = Integer.parseInt(id);
+			UIFormInputWithActions notifyEmailTab = uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB) ;
+			UIFormWYSIWYGInput notifyEmailForm = notifyEmailTab.getChildById(FIELD_NOTIFYEMAIL_TEXTAREA) ;
+			UIFormWYSIWYGInput notifyMoveForm = notifyEmailTab.getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA);
+			if(uiForm.id == 2) {
+				notifyEmailForm.setValue(uiForm.notifyEmail_);
+				notifyMoveForm.setValue(uiForm.notifyMove_);
+			} else if(temp == 2){
+				uiForm.notifyEmail_ = notifyEmailForm.getValue();
+				uiForm.notifyMove_ = notifyMoveForm.getValue();
+			}
 			if(uiForm.id == 3){
 				UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
 	      popupWindow.setWindowSize(650, 450) ;
