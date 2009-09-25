@@ -126,7 +126,7 @@ public class UIQuestions extends UIContainer {
 	public String viewingQuestionId_ = "" ;
 	private String currentUser_ = "";
 	private String link_ ="";
-	private static	FAQService faqService_;
+	private static	FAQService faqService_ = null;
 	private Map<String, QuestionLanguage> languageMap = new HashMap<String, QuestionLanguage>() ;
 	public boolean isChangeLanguage = false ;
 	public List<String> listLanguage = new ArrayList<String>() ;
@@ -142,6 +142,7 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
+	private boolean hasSetMode = true;
 
 	
 	public UIFAQPageIterator pageIterator = null ;
@@ -152,7 +153,7 @@ public class UIQuestions extends UIContainer {
 		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
 		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
-		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		if(faqService_ == null)faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		if(FAQUtils.isFieldEmpty(getId())) setId("UIQuestions");
 	}
 	
@@ -272,7 +273,8 @@ public class UIQuestions extends UIContainer {
 		}
 		pageSelect = this.pageList.getCurrentPage();
 		pageIterator.setSelectPage(pageSelect) ;
-		setIsModerators() ;
+		if(hasSetMode)setIsModerators() ;
+		else hasSetMode = true;
 	}
 
 	public void setFAQSetting(FAQSetting setting){
@@ -307,8 +309,8 @@ public class UIQuestions extends UIContainer {
 	
 
 	private void setIsModerators() throws Exception{
-		if(faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, currentUser_)) this.canEditQuestion = true ;
-		else this.canEditQuestion = false ;
+		if(faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, currentUser_)) canEditQuestion = true ;
+		else canEditQuestion = false ;
 	}
 	
 	//should be check canVote in Question object 
@@ -377,6 +379,8 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
+		hasSetMode = false;
+		setIsModerators();
 		setListObject();
 	}
 	

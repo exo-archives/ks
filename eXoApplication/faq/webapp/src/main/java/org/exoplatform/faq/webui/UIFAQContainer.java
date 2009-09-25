@@ -41,11 +41,10 @@ public class UIFAQContainer extends UIContainer  {
   	currentUser_ = FAQUtils.getCurrentUser() ;
   	faqSetting_ = new FAQSetting();
 		FAQUtils.getPorletPreference(faqSetting_);
-		if(currentUser_ != null && currentUser_.trim().length() > 0){
-			if(faqSetting_.getIsAdmin() == null || faqSetting_.getIsAdmin().trim().length() < 1){
-				if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
-				else faqSetting_.setIsAdmin("FALSE");
-			}
+		faqSetting_.setCurrentUser(currentUser_);
+		if(!FAQUtils.isFieldEmpty(currentUser_)){
+			if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
+			else faqSetting_.setIsAdmin("FALSE");
 			faqService_.getUserSetting(currentUser_, faqSetting_);
 		} else {
 			faqSetting_.setIsAdmin("FALSE");
