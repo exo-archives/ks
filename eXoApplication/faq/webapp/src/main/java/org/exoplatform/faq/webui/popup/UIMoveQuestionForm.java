@@ -58,7 +58,6 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 	private String link;
 	private String categoryId_ ;
 	private FAQSetting faqSetting_ ;
-	@SuppressWarnings("unused")
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIMoveQuestionForm() throws Exception {
@@ -107,7 +106,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
 			try{
-				if(!moveQuestionForm.faqSetting_.isAdmin()){
+				if(!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())){
 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", new Object[]{""}, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -115,7 +114,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 				}
 				try {
 					Question question = faqService_.getQuestionById(moveQuestionForm.questionId_) ;
-					if(cateId.indexOf(question.getCategoryId()) > 0) {
+					if(cateId.substring(cateId.lastIndexOf("/") + 1).equals(question.getCategoryId())) {
 						UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
 						uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
