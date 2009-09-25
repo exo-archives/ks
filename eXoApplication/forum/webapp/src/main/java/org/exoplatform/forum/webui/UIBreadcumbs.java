@@ -310,6 +310,11 @@ public class UIBreadcumbs extends UIContainer {
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				}else	if(path.lastIndexOf(Utils.TOPIC) >= 0) {
+					boolean isReply = false;
+					if(path.indexOf("/true") > 0){
+						isReply = true;
+						path = path.replaceFirst("/true", "");
+					}
 					String []id = path.split("/") ;
 					String postId = "";
 					int page = 0;
@@ -340,7 +345,6 @@ public class UIBreadcumbs extends UIContainer {
 							Category category = breadcums.forumService.getCategory(id[0]);
 							Forum forum = breadcums.forumService.getForum(id[0], id[1]) ;
 							if(breadcums.checkCanView(category, forum, topic)){
-								
 								forumPortlet.updateIsRendered(ForumUtils.FORUM);
 								UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 								UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
@@ -354,27 +358,30 @@ public class UIBreadcumbs extends UIContainer {
 								if(ForumUtils.isEmpty(postId)) {
 									uiTopicDetail.setIdPostView("top") ;
 								} else {
-									uiTopicDetail.setIdPostView("top") ;
+									uiTopicDetail.setIdPostView(postId) ;
 									uiTopicDetail.setLastPostId(postId) ;
-									try {
-										Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
-										if(post != null) {
-											boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), ForumSessionUtils.getCurrentUser());
-											UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-											UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-											UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-											postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
-											postForm.updatePost(postId, true, false, post) ;
-											postForm.setMod(isMod);
-											popupContainer.setId("UIQuoteContainer") ;
-											popupAction.activate(popupContainer, 900, 500) ;
-											event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-										} else {
-											uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
-											event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-											uiTopicDetail.setIdPostView("normal") ;
+									if(isReply){
+										uiTopicDetail.setIdPostView("top") ;
+										try {
+											Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
+											if(post != null) {
+												boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), ForumSessionUtils.getCurrentUser());
+												UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+												UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+												UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+												postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
+												postForm.updatePost(postId, true, false, post) ;
+												postForm.setMod(isMod);
+												popupContainer.setId("UIQuoteContainer") ;
+												popupAction.activate(popupContainer, 900, 500) ;
+												event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+											} else {
+												uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
+												event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+												uiTopicDetail.setIdPostView("normal") ;
+											}
+										} catch (Exception e) {
 										}
-									} catch (Exception e) {
 									}
 								}
 								if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {

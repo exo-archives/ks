@@ -3156,7 +3156,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", topic.getOwner());
 						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + topic.getLink().replace("public", "private") + "/" + postFistId + "/true\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
@@ -3319,8 +3319,8 @@ public class JCRDataStorage {
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") + "/" + post.getId() + "/true\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
@@ -3358,8 +3358,8 @@ public class JCRDataStorage {
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", post.getOwner());
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private") +"/"+post.getId()+ "/true\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);
@@ -3400,8 +3400,8 @@ public class JCRDataStorage {
 						formatter = new SimpleDateFormat("MM/dd/yyyy");
 						content_ = StringUtils.replace(content_, "$DATE", formatter.format(createdDate));
 						content_ = StringUtils.replace(content_, "$POSTER", owner);
-						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "\">click here</a><br/>");
-						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$VIEWPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink() + "/" + post.getId() + "\">click here</a><br/>");
+						content_ = StringUtils.replace(content_, "$REPLYPOST_LINK", "<a target=\"_blank\" href=\"" + post.getLink().replace("public", "private")+"/"+post.getId()+ "/true\">click here</a><br/>");
 						
 						content_ = StringUtils.replace(content_, "$CATEGORY", catName);
 						content_ = StringUtils.replace(content_, "$FORUM", forumName);

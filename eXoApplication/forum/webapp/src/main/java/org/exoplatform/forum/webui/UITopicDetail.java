@@ -572,9 +572,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			try {
 				if(!ForumUtils.isEmpty(lastPostId)){
 					int maxPost = this.userProfile.getMaxPostInPage().intValue();
-					long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
-					if(index <= maxPost) pageSelect = 1;
-					else pageSelect =  (int) (index/maxPost);
+					Long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
+					if(index.intValue() <= maxPost) pageSelect = 1;
+					else {
+						pageSelect =  (int) (index/maxPost);
+						if(maxPost*pageSelect < index) pageSelect = pageSelect + 1;
+					}
 					lastPostId = "";
 				}
       } catch (Exception e) {}
