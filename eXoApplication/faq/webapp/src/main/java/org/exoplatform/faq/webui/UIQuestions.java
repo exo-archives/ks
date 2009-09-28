@@ -142,7 +142,7 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
-	private boolean hasSetMode = true;
+	//private boolean hasSetMode = true;
 
 	
 	public UIFAQPageIterator pageIterator = null ;
@@ -273,8 +273,6 @@ public class UIQuestions extends UIContainer {
 		}
 		pageSelect = this.pageList.getCurrentPage();
 		pageIterator.setSelectPage(pageSelect) ;
-		if(hasSetMode)setIsModerators() ;
-		else hasSetMode = true;
 	}
 
 	public void setFAQSetting(FAQSetting setting){
@@ -347,6 +345,7 @@ public class UIQuestions extends UIContainer {
 	private Question[] getListQuestion(){
 		try{
 			updateCurrentQuestionList() ;
+			
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}		
@@ -384,8 +383,8 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
-		hasSetMode = false;
-		setIsModerators();
+		//hasSetMode = false;
+		//setIsModerators();
 		setListObject();
 	}
 	
