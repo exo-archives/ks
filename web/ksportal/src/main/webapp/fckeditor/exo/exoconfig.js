@@ -66,18 +66,26 @@ eXoPlugin.addBar = function(R) {
 	}
 };
 
+// using function of http://www.electrictoolbox.com
 eXoPlugin.getContent = function() {
 	var content = new String();
-	if (document.selection) {
-		var range = FCK.EditorWindow.document.selection.createRange();
-		content = range.text;
-	} else  {
-		var range = FCK.EditorWindow.getSelection();
-		content = range.getRangeAt(0);
+	var oFCKeditor = FCK;
+	//var oFCKeditor = FCKeditorAPI.GetInstance(instance_name);
+	var selection = (oFCKeditor.EditorWindow.getSelection ? oFCKeditor.EditorWindow.getSelection() : oFCKeditor.EditorDocument.selection);
+   
+	if(selection.createRange) {
+		var range = selection.createRange();
+		content = range.htmlText;
+	} else {
+		var range = selection.getRangeAt(selection.rangeCount - 1).cloneRange();
+		var clonedSelection = range.cloneContents();
+		var div = document.createElement('div');
+		div.appendChild(clonedSelection);
+		content = div.innerHTML;
 	}
+	
 	if (content) content = content.toString().replace(/^\s+|\s+$/g, "");
-	if (content != "") return content;
-	else return null;
+	return content;
 };
 
 eXoPlugin.addBar({newBar: "eXoBar", targetBar: "Default" });
