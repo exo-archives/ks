@@ -408,12 +408,14 @@
 														<!-- ========================================= view author's infor ================================ -->
 														<%
 															if(uicomponent.viewAuthorInfor){
+																String email = question.getEmail();
+																
 														%>
 															<div class="AuthorInfor" style="text-align:center;">
 																<a style="cursor:pointer" title="<%=_ctx.appRes("UIQuestionsInfo.title.ViewUserProfile")%>" href="<%=uicomponent.event("ViewUserProfile", question.getAuthor())%>">
 																	<span class="UserName"><%=FAQUtils.getFullName(question.getAuthor())%></span>
 																</a>
-																<%=question.getEmail()%>
+																<span title="$email"><%=FAQUtils.getSubString(email, 20)%></span>
 															</div>
 														<%}%>
 														</div>
