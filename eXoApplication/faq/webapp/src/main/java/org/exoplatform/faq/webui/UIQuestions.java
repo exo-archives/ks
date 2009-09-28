@@ -142,7 +142,6 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
-	//private boolean hasSetMode = true;
 
 	
 	public UIFAQPageIterator pageIterator = null ;
@@ -383,8 +382,6 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
-		//hasSetMode = false;
-		//setIsModerators();
 		setListObject();
 	}
 	
