@@ -24,7 +24,7 @@
 	String url = uicomponent.url("Setting", "OBJECTID");
 	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
-	//uicomponent.getQuestions(); 
+	uicomponent.setIsModerators(); //reset permission
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
 	
 %>
