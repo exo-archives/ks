@@ -2207,7 +2207,7 @@ public class JCRDataStorage {
 			//resetIndex(category, index)
 			// Should be update moderators for moving category
 		}catch (Exception e){ 
-			e.printStackTrace() ;
+			throw e ;
 		}finally { sProvider.close() ;}		
 	}
 	
