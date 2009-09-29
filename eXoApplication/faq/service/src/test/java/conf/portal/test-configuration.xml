@@ -173,6 +173,21 @@
   </component>
  -->
 
+	<external-component-plugins>
+		<target-component>org.exoplatform.faq.service.FAQService</target-component>
+		<component-plugin> 
+      <name>add.rss.init</name>
+      <set-method>addInitRssPlugin</set-method>
+      <type>org.exoplatform.faq.service.InitialRSSListener</type>
+      <init-params>		
+				<value-param>
+				  <name>initRss</name>
+				  <value>false</value>
+				</value-param>
+		  </init-params>
+		</component-plugin>  
+	</external-component-plugins>
+	
   <external-component-plugins>
     <target-component>org.exoplatform.services.database.HibernateService</target-component>
     <component-plugin> 

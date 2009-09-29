@@ -65,6 +65,7 @@ import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
+import org.exoplatform.faq.service.InitialRSSListener;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
@@ -111,6 +112,7 @@ public class JCRDataStorage {
 	private final String ADMIN_="ADMIN".intern();
 	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
+	private boolean isInitRssListener_ = true ;
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
@@ -135,6 +137,12 @@ public class JCRDataStorage {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
+		if(plugin instanceof InitialRSSListener) {
+			isInitRssListener_  = ((InitialRSSListener)plugin).isInitRssListener() ;
+		}		
 	}
 	
 	private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
@@ -357,6 +365,7 @@ public class JCRDataStorage {
 	
 	protected void addRSSListener(Node node) throws Exception{
 		try{
+			if(!isInitRssListener_)return;
 			if(rssListenerMap_.containsKey(node.getPath())) return ;
 			String wsName = node.getSession().getWorkspace().getName() ;
 			String path = node.getPath() ;
@@ -373,6 +382,7 @@ public class JCRDataStorage {
 	}
 	
 	public void reInitRSSEvenListener() throws Exception{
+		if(!isInitRssListener_)return;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node faqHome = getFAQServiceHome(sProvider) ;
 		QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();

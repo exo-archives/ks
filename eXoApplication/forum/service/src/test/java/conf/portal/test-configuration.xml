@@ -145,11 +145,6 @@
     <type>org.exoplatform.services.organization.impl.mock.DummyOrganizationService</type>
   </component-->
   
-<!--  <component>
-		<key>org.exoplatform.sample.service.ForumService</key>
-		<type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
-	</component>
--->
   <component>
     <key>org.exoplatform.services.database.HibernateService</key>
     <jmx-name>database:type=HibernateService</jmx-name>
@@ -183,7 +178,23 @@
   <component>
     <type>org.exoplatform.services.security.IdentityRegistry</type>
   </component>
-
+	
+	
+	<external-component-plugins>
+		<target-component>org.exoplatform.forum.service.ForumService</target-component>
+		<component-plugin> 
+      <name>add.rss.init</name>
+      <set-method>addInitRssPlugin</set-method>
+      <type>org.exoplatform.forum.service.conf.InitialRSSListener</type>
+      <init-params>		
+				<value-param>
+				  <name>initRss</name>
+				  <value>false</value>
+				</value-param>
+		  </init-params>
+		</component-plugin>  
+	</external-component-plugins>
+	
   <external-component-plugins>
     <target-component>org.exoplatform.services.database.HibernateService</target-component>
     <component-plugin> 

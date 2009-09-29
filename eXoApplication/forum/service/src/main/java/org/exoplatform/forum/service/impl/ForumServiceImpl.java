@@ -93,11 +93,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
-    storage_ = new JCRDataStorage(nodeHierarchyCreator);
+  	storage_ = new JCRDataStorage(nodeHierarchyCreator);
   }
 
 
-  
+  public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
+    storage_.addInitRssPlugin(plugin) ;
+  }
   
   public void addPlugin(ComponentPlugin plugin) throws Exception {
     storage_.addPlugin(plugin) ;
@@ -153,8 +155,8 @@ public class ForumServiceImpl implements ForumService, Startable {
   	//init RSS generate listener 
   	try{
   	  log.info("initializing RSS listeners...");
-//  	  TODO: JUnit test is fall.
-  		storage_.addRSSEventListenner();
+  		storage_.addRSSEventListenner();  
+  		
   	} catch (Exception e){
 //  		e.printStackTrace();
   	}
@@ -167,13 +169,11 @@ public class ForumServiceImpl implements ForumService, Startable {
 //  		e.printStackTrace();
   	}
   	
-  	
   	// initialize auto prune schedules
   	try{
   	  log.info("initializing prune schedulers...");
   		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
-//  		e.printStackTrace();
   	}
 
 //  TODO: JUnit test is fall.
@@ -183,7 +183,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   		manageStorage();  	
   		manageJobs();
     } catch (Exception e) {
-//	    e.printStackTrace();
     }
 	}
 
@@ -259,7 +258,6 @@ public class ForumServiceImpl implements ForumService, Startable {
 		  	saveForumStatistic(systemSession, forumStatistic) ;
 			}
 		}catch(Exception e){
-			e.printStackTrace() ;
 		}finally {
 			systemSession.close() ;
 		}		 	

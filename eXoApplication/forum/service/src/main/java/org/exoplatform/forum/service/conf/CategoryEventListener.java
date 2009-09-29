@@ -56,4 +56,7 @@ public class CategoryEventListener implements EventListener{
 		}		
 	}
   
+	public void removeEvent(EventIterator evIter){
+		evIter.remove();
+	}
 }

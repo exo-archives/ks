@@ -55,6 +55,8 @@ public interface FAQService extends FAQServiceLegacy{
 	 */
 	public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
 	
+	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
+	
 	/**
 	 * This method should check exists category or NOT to create new or update exists category
 	 * <p>
