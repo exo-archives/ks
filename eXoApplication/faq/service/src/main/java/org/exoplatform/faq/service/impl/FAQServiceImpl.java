@@ -92,6 +92,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 	  initDataPlugins.add(plugin);
 	}
 	
+	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
+		jcrData_.addInitRssPlugin(plugin) ;
+  }
+	
 	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
@@ -113,7 +117,7 @@ public class FAQServiceImpl implements FAQService, Startable{
         log.error("Error while initializing Data plugin " + plugin.getName(), e);
       }   
     }
-//    TODO: JUnit-test is fall.
+
 		try{
 		  log.info("initializing FAQ RSS listeners...");
 			jcrData_.reInitRSSEvenListener();			

@@ -68,6 +68,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception;
 	
+	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
+	
 	/**
 	 * Gets the categories.
 	 * 
@@ -953,5 +955,5 @@ public interface ForumService extends ForumServiceLegacy{
                                   String strOrderBy, int pageSize) throws Exception;
   
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
-  
+    
 }

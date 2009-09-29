@@ -47,6 +47,7 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -97,6 +98,7 @@ import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
 import org.exoplatform.forum.service.conf.InitBBCodePlugin;
+import org.exoplatform.forum.service.conf.InitialRSSListener;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
@@ -149,8 +151,7 @@ public class JCRDataStorage {
 	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
 	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
-
-	
+	private boolean isInitRssListener_ = true ;
 	
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
@@ -217,22 +218,31 @@ public class JCRDataStorage {
 		}
 	}
 
+	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
+		if(plugin instanceof InitialRSSListener) {
+			isInitRssListener_  = ((InitialRSSListener)plugin).isInitRssListener() ;
+		}		
+	}
+	
 	public void addRSSEventListenner() throws Exception{
+		if(!isInitRssListener_) return ;
+		System.out.println("isInitRssListener ==>" + isInitRssListener_);
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider) ;
 		try{
 			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
 			String wsName = categoryHome.getSession().getWorkspace().getName() ;
 			String repoName = ((RepositoryImpl)categoryHome.getSession().getRepository()).getName() ;
-			ForumRSSEventListener changePropertyListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
-			observation.addEventListener(changePropertyListener, Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
-			ForumRSSEventListener addNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			observation.addEventListener(forumRSSListener, Event.NODE_ADDED + 
+					Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
+			
+			/*ForumRSSEventListener addNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(addNodeListener, Event.NODE_ADDED ,categoryHome.getPath(), true, null, null, false) ;
 			ForumRSSEventListener removeNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
-			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;
+			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;*/
 		}catch(Exception e){ e.printStackTrace() ;} 
 		finally{ sProvider.close() ;}
-		
 	}
 	
 	public void addCalculateModeratorEventListenner() throws Exception{
@@ -436,10 +446,13 @@ public class JCRDataStorage {
 	}
 	
 	private Node getCategoryHome(SessionProvider sysProvider) throws Exception {
+		Node forumHome = getForumDataHome(sysProvider);
 		try{
-			return getForumDataHome(sysProvider).getNode(Utils.CATEGORY_HOME) ;
+			return forumHome.getNode(Utils.CATEGORY_HOME) ;
 		}catch(PathNotFoundException e) {
-			return getForumDataHome(sysProvider).addNode(Utils.CATEGORY_HOME, "exo:categoryHome") ;
+			Node categoryHome = forumHome.addNode(Utils.CATEGORY_HOME, "exo:categoryHome") ;
+			forumHome.getSession().save();
+			return categoryHome;
 		}catch(Exception e){
 			return null ;
 		}

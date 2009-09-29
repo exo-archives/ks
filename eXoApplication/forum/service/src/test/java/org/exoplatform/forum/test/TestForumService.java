@@ -14,6 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
+import javax.jcr.Repository;
+import javax.jcr.Session;
+import javax.jcr.observation.EventListenerIterator;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.BBCode;
@@ -34,7 +39,10 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 
@@ -62,13 +70,13 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_ = (ForumService) container.getComponentInstanceOfType(ForumService.class);
 		SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
 		sProvider = sessionProviderService.getSystemSessionProvider(null) ;
+	
 	}
 	
 	public void testForumService() throws Exception {
 		ForumStatistic forumStatistic = new ForumStatistic();
 		forumService_.saveForumStatistic(forumStatistic) ;
     assertNotNull(forumService_);
-//    assertNotNull();
   }
 	
 	public void testUserProfile() throws Exception {
@@ -148,6 +156,8 @@ public class TestForumService extends BaseForumTestCase{
     forumService_.saveCategory(createCategory(), true) ;
     Category category = forumService_.getCategory(catId); 
     assertNotNull("Category is null", category) ;
+    
+    System.out.println("\n\n category " + category.getPath());
     // get categories
 //    TODO: not get all categories.
 //    List<Category> categories = forumService_.getCategories() ;
