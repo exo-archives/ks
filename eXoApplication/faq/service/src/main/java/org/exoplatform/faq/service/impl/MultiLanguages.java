@@ -573,10 +573,12 @@ public class MultiLanguages {
   }
   
   public static void saveComment(Node questionNode, Comment comment, String language) throws Exception{
+  	String lang ;
   	Node commentHome ;
   	Node commentNode ;
   	if(language != null && language.length() > 0) {
   		Node languageNode = getLanguageNodeByLanguage(questionNode, language);
+  		lang = language ;
     	if(!languageNode.isNodeType("mix:faqi18n")) {
     		languageNode.addMixin("mix:faqi18n") ;
     	}
@@ -587,10 +589,11 @@ public class MultiLanguages {
     	}
   	}else {
   		try{
-    		commentHome = questionNode.getNode(Utils.COMMENT_HOME);
+    		commentHome = questionNode.getNode(Utils.COMMENT_HOME);    		
     	} catch (Exception e){
     		commentHome = questionNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
     	}
+    	lang = questionNode.getProperty("exo:language").getString() ;
   	}  	
   	try{
   		commentNode = commentHome.getNode(comment.getId());
@@ -601,6 +604,10 @@ public class MultiLanguages {
   	commentNode.setProperty("exo:comments", comment.getComments());
   	commentNode.setProperty("exo:commentBy", comment.getCommentBy());
   	commentNode.setProperty("exo:fullName", comment.getFullName());
+  	commentNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString());
+  	commentNode.setProperty("exo:questionId", questionNode.getName());
+  	commentNode.setProperty("exo:commentLanguage", lang);
+  	
   	if(commentNode.isNew()) {
   		java.util.Calendar calendar = null ;
   		calendar = GregorianCalendar.getInstance() ;
