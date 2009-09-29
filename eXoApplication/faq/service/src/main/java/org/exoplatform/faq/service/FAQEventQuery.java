@@ -46,6 +46,7 @@ public class FAQEventQuery {
 	private String email ;
 	private String question;
 	private String response ;
+	private String comment ;
 	private String attachment ;
 	private List<String> userMembers;
 	private Calendar fromDate ;
@@ -56,7 +57,7 @@ public class FAQEventQuery {
 	private List<String> viewingCategories ;
 	private boolean isQuestionLevelSearch = false ;
 	private boolean isLanguageLevelSearch = false ;
-	private boolean isAnswerLevelSearch = false ;
+	private boolean isAnswerCommentLevelSearch = false ;
 	private boolean isSearchOnDefaultLanguage = false ;
 	
 
@@ -415,7 +416,7 @@ public String getQuery() throws Exception {
     	//## (questionSearch (or|and) languageSearch or answerSearch) and CategoryScoping and fulltextSearch ##
     	queryString = new StringBuilder() ;
     	isQuestionLevelSearch = false ;
-    	isAnswerLevelSearch = false ;
+    	isAnswerCommentLevelSearch = false ;
     	isAnd = false ;
   		queryString.append("/jcr:root").append(path);
       queryString.append("//* [") ;
@@ -463,8 +464,17 @@ public String getQuery() throws Exception {
   			answerSearch.append("( exo:responseLanguage='").append(language).append("'");
   			answerSearch.append(" and jcr:contains(@exo:responses,'" + response + "')") ;  			
   			answerSearch.append(")") ;
-  			isAnswerLevelSearch = true ;
+  			isAnswerCommentLevelSearch = true ;
   		}  		
+  		
+  		//search on answers
+  		StringBuilder commentSearch = new StringBuilder("") ;  		
+  		if (comment != null && comment.length() > 0) {
+  			commentSearch.append("( exo:commentLanguage='").append(language).append("'");
+  			commentSearch.append(" and jcr:contains(@exo:comments,'" + comment + "')") ;
+  			commentSearch.append(")") ;
+  			isAnswerCommentLevelSearch = true ;
+  		}
   		
   		//if(answerSearch.length() > 2) isAnswerLevelSearch = true ;
   		//search on category scoping
@@ -509,7 +519,16 @@ public String getQuery() throws Exception {
   			}
   		}
   		
-  		if (isAdd)queryString.append(")") ;
+  		if(commentSearch.length() > 2) {
+  			if(isAdd) {
+  				queryString.append(" or ").append(commentSearch.toString()) ;
+  			}else {
+  				queryString.append("(").append(commentSearch.toString()) ;
+  				isAdd = true ;
+  			}
+  		}
+  		
+  		if (isAdd)queryString.append(")") ; // finish
   		
   		if(isAdd) {
   			queryString.append(" and ").append(searchCategoryScoping.toString()) ;
@@ -616,8 +635,8 @@ public String getQuery() throws Exception {
 		return isQuestionLevelSearch ;
 	}
 	
-	public boolean isAnswerLevelSearch() throws Exception{
-		return isAnswerLevelSearch ;
+	public boolean isAnswerCommentLevelSearch() throws Exception{
+		return isAnswerCommentLevelSearch ;
 	}
 
 	public void setSearchOnDefaultLanguage(boolean isSearchOnDefaultLanguage) {
@@ -634,6 +653,14 @@ public String getQuery() throws Exception {
 
 	public boolean isLanguageLevelSearch() {
 		return isLanguageLevelSearch;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getComment() {
+		return comment;
 	}
 }
 

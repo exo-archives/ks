@@ -73,6 +73,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 	final static private String FIELD_LANGUAGE = "Language" ;
 	final static private String FIELD_QUESTION = "Question" ;
 	final static private String FIELD_RESPONSE = "Response" ;
+	final static private String FIELD_COMMENT = "Comment" ;
 	//final static private String FIELD_ATTACHMENT = "attachment" ;
 	final static private String ITEM_EMPTY= "empty" ;
 	final static private String ITEM_CATEGORY="faqCategory" ;
@@ -137,6 +138,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = new UIFormSelectBox(FIELD_LANGUAGE, FIELD_LANGUAGE, list) ;
 		UIFormTextAreaInput question = new UIFormTextAreaInput(FIELD_QUESTION, FIELD_QUESTION, null) ;
 		UIFormTextAreaInput response = new UIFormTextAreaInput(FIELD_RESPONSE, FIELD_RESPONSE, null) ;
+		UIFormTextAreaInput comment = new UIFormTextAreaInput(FIELD_COMMENT, FIELD_COMMENT, null) ;
 		//UIFormStringInput attachment = new UIFormStringInput(FIELD_ATTACHMENT,FIELD_ATTACHMENT, null) ;
 		
 		addUIFormInput(text) ;
@@ -150,6 +152,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		addUIFormInput(language) ;
 		addUIFormInput(question) ;
 		addUIFormInput(response) ;
+		addUIFormInput(comment) ;
 		//addUIFormInput(attachment);
 		addUIFormInput(fromDate) ;
 		addUIFormInput(toDate) ;
@@ -178,12 +181,14 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(false) ;
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false) ;
+		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false) ;
 		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
 		question.setValue("") ;
 		response.setValue("") ;
+		comment.setValue("") ;
 	}
 	
 	public void setIsSearchQuestion(){
@@ -199,12 +204,14 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(true) ;
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(true) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(true) ;
+		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(true) ;
 		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
 		question.setValue("") ;
 		response.setValue("") ;
+		comment.setValue("") ;
 	}
 	
 	public void setIsQuickSearch(){
@@ -220,12 +227,14 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		UIFormSelectBox language = getUIFormSelectBox(FIELD_LANGUAGE).setRendered(false) ;
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false) ;
+		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false) ;
 		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
 		question.setValue("") ;
 		response.setValue("") ;
+		comment.setValue("") ;
 	}
 	
 	public String getLabel(ResourceBundle res, String id) throws Exception {
@@ -283,6 +292,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String language = advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).getValue() ;
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
+			String comment = advancedSearch.getUIFormTextAreaInput(FIELD_COMMENT).getValue() ;
 			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
 			try {
 				if(fromDate.getTimeInMillis() >= toDate.getTimeInMillis()){
@@ -312,7 +322,8 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			}
 			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
-					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(nameAttachment)) { 
+					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment) || 
+					FAQUtils.CheckSpecial(nameAttachment)) { 
 				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
@@ -334,6 +345,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			eventQuery.setAttachment(nameAttachment);
 			eventQuery.setQuestion(question) ;
 			eventQuery.setResponse(response) ;
+			eventQuery.setComment(comment) ;
 			if(language != null && language.length() > 0 && !language.equals(advancedSearch.defaultLanguage_)) {
 				eventQuery.setLanguage(language);
 				eventQuery.setSearchOnDefaultLanguage(false) ;
@@ -389,6 +401,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				if(toDate != null) advanced.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
 				advanced.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
 				advanced.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
+				advanced.getUIFormTextAreaInput(FIELD_COMMENT).setValue(comment) ;
 				//advanced.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
 			} else { // Reset form to search all questions and categories
 				advanced.setIsQuickSearch();
