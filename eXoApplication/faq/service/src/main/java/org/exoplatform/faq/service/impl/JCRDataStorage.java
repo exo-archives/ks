@@ -3236,8 +3236,9 @@ public class JCRDataStorage {
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(id) ;
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
-			return node.getProperty("exo:isModerateQuestions").getValue().getBoolean() ;
+			return node.getProperty("exo:isModerateAnswers").getBoolean() ;
 		}catch(Exception e) {
+			e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false ;
 	}
