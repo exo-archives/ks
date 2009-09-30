@@ -51,6 +51,11 @@
 	width: auto;
 }
 
+.UIFAQPortlet .UIRightClickPopupMenu .MenuItem:hover {
+	background-color: #DEE4F2;
+	color: orange;		
+}
+
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIFAQPortlet .UIBreadcumbs {
