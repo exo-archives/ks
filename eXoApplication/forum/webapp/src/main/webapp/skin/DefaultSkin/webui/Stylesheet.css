@@ -58,6 +58,11 @@
 	line-height: 24px;
 }
 
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon:hover {
+	background-color: #DEE4F2;
+	color: orange;
+}
+
 *html .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
 	width:110px;
 }
