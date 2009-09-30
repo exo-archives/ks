@@ -531,7 +531,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return contact ;
 	}
 	
-	private String getAvatarUrl(ForumContact contact, String userId, SessionProvider sessionProvider) throws Exception {
+	private String getAvatarUrl(ForumContact contact, String userId) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
 	}

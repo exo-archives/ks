@@ -320,12 +320,9 @@ public class UIForumPortlet extends UIPortletApplication {
 	public void updateAccessTopic(String topicId) throws Exception {
 		String userId = ForumSessionUtils.getCurrentUser() ;
 		if(userId != null && userId.length() > 0) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
 				forumService.updateTopicAccess(userId, topicId);
-			} finally {
-				sProvider.close();
-			}
+			} catch (Exception e) {}
 		}
 		userProfile.setLastTimeAccessTopic(topicId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
   }
@@ -333,12 +330,9 @@ public class UIForumPortlet extends UIPortletApplication {
 	public void updateAccessForum(String forumId) throws Exception {
 		String userId = ForumSessionUtils.getCurrentUser() ;
 		if(userId != null && userId.length() > 0) {
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try{
 				forumService.updateForumAccess(userId, forumId);
-			} finally {
-				sProvider.close();
-			}
+			} catch (Exception e) {}
 		}
 		userProfile.setLastTimeAccessForum(forumId, ForumUtils.getInstanceTempCalendar().getTimeInMillis());
 	}

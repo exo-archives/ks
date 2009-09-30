@@ -78,7 +78,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "false", "", "", "");
+		pageList	= forumService.getPosts(this.categoryId, this.forumId, this.topicId, "false", "", "", "");
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		List<Post> posts = pageList.getPage(pageSelect);
@@ -136,12 +136,9 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 			if(!haveCheck) {
 				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
 			} else {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					postUnApprove.forumService.modifyPost(sProvider, posts, 1) ;
-				}finally {
-					sProvider.close();
-				}
+					postUnApprove.forumService.modifyPost(posts, 1) ;
+				}catch (Exception e) {}
 			}
 			if(posts.size() == postUnApprove.listAllPost.size()) {
 				UIForumPortlet forumPortlet = postUnApprove.getAncestorOfType(UIForumPortlet.class) ;

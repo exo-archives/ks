@@ -145,12 +145,9 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			} 
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					forumService.addWatch(sProvider, 1, path, values_, ForumSessionUtils.getCurrentUser()) ;
-				} finally {
-					sProvider.close();
-				}
+					forumService.addWatch(1, path, values_, ForumSessionUtils.getCurrentUser()) ;
+				}catch (Exception e) {}
 			}
 			uiForm.path = "";
 			uiForm.initForm() ;

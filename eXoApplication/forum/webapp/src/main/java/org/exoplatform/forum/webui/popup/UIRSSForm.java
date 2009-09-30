@@ -32,7 +32,7 @@ import org.exoplatform.webui.form.UIForm;
  * Aus 01, 2007 2:48:18 PM 
  */
 
-@SuppressWarnings({ "unused", "unchecked" })
+@SuppressWarnings({ "unused" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/forum/webui/popup/UIRSSForm.gtmpl",

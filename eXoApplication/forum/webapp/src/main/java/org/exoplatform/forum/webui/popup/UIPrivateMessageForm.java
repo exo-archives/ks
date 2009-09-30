@@ -178,11 +178,9 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 				privateMessage.setSendTo(sendTo) ;
 				privateMessage.setName(mailTitle) ;
 				privateMessage.setMessage(message) ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					messageForm.forumService.savePrivateMessage(sProvider, privateMessage) ;
-				} finally {
-					sProvider.close();
+					messageForm.forumService.savePrivateMessage(privateMessage) ;
+				} catch (Exception e) {
 				}
 				areaInput.setValue("") ;
 				stringInput.setValue("") ;

@@ -75,7 +75,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 	
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<ForumPrivateMessage> getListInBoxPrivateMessage() throws Exception {
-		JCRPageList pageList = this.forumService.getPrivateMessage(ForumSessionUtils.getSystemProvider(), userName, Utils.RECEIVE_MESSAGE) ;
+		JCRPageList pageList = this.forumService.getPrivateMessage(userName, Utils.RECEIVE_MESSAGE) ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(10) ;
@@ -102,9 +102,8 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(!ForumUtils.isEmpty(objctId)) {
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.saveReadMessage(sProvider, objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
+					uicontainer.forumService.saveReadMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
 					ForumPrivateMessage privateMessage = uicontainer.getPrivateMessage(objctId) ;
 					UIPopupContainer popupContainer = uicontainer.getAncestorOfType(UIPopupContainer.class) ;
 					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
@@ -112,9 +111,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 					privateMessageForm.setPrivateMessage(privateMessage);
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 					forumPortlet.getUserProfile() ;
-				} finally {
-					sProvider.close();
-				}
+				} catch (Exception e) {}
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 			}
 		}
@@ -125,12 +122,9 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 			UIListInBoxPrivateMessage uicontainer = event.getSource() ;
 			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			if(!ForumUtils.isEmpty(objctId)) {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					uicontainer.forumService.removePrivateMessage(sProvider, objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
-				} finally {
-					sProvider.close();
-				}
+					uicontainer.forumService.removePrivateMessage(objctId, uicontainer.userName, Utils.RECEIVE_MESSAGE);
+				} catch (Exception e) {}
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

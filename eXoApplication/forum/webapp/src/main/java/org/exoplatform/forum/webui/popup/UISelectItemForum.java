@@ -72,7 +72,7 @@ public class UISelectItemForum extends UIForm implements UIPopupComponent {
 		}
 		if(this.forumLinks ==	null || this.forumLinks.size() <= 0) {
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			this.forumLinks = forumService.getAllLink(ForumSessionUtils.getSystemProvider(), "", "");
+			this.forumLinks = forumService.getAllLink("", "");
 		}
 	}
 	

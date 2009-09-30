@@ -153,7 +153,6 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				}
 			}
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 			String nodePath = "";
 			String categoryId = null;
 			String forumId = null;
@@ -186,7 +185,6 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				return;
 			}
 			InputStream inputStream = null;
-			sessionProvider.close();
 			if(file == null){
 				boolean isCreateZipFile = ((UIFormCheckBoxInput<Boolean>)exportForm.getChildById(exportForm.CREATE_ZIP)).isChecked();
 				inputStream = new ByteArrayInputStream(bos.toByteArray()) ;

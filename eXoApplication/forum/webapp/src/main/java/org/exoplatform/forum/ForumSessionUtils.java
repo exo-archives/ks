@@ -83,10 +83,6 @@ public class ForumSessionUtils {
 		return false;
 	}
 	
-	public static SessionProvider getSystemProvider() {
-		return SessionProviderFactory.createSystemProvider();
-	}
-	
 	public static String getUserAvatarURL(String userName, ForumService forumService, DownloadService dservice){
 		String url = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 		try{
