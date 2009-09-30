@@ -1084,6 +1084,10 @@ public class FAQServiceImpl implements FAQService, Startable{
 		return jcrData_.isModerateAnswer(id) ;
 	}
 	
+	public boolean isModerateQuestion(String id) throws Exception {
+		return jcrData_.isModerateQuestion(id) ;
+	}
+	
 	public String getParentCategoriesName(String path) throws Exception {
 		return jcrData_.getParentCategoriesName(path) ;
 	}
