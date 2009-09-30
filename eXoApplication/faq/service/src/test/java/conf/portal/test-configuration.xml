@@ -178,7 +178,7 @@
 		<component-plugin> 
       <name>add.rss.init</name>
       <set-method>addInitRssPlugin</set-method>
-      <type>org.exoplatform.faq.service.InitialRSSListener</type>
+      <type>org.exoplatform.ks.common.conf.InitialRSSListener</type>
       <init-params>		
 				<value-param>
 				  <name>initRss</name>

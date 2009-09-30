@@ -94,6 +94,15 @@
 	  	<propertyDefinition name="exo:fullName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>
+	  	<propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:questionId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+  		</propertyDefinition>
+  		<propertyDefinition name="exo:commentLanguage" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  			<valueConstraints/>
+	  	</propertyDefinition>
     </propertyDefinitions>
   </nodeType>
   
@@ -128,7 +137,12 @@
   <nodeType	name="exo:faqAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 	 	<supertypes>
 	 	  <supertype>nt:file</supertype>
-	 	</supertypes>	 		
+	 	</supertypes>
+	 	<propertyDefinitions>
+  	  <propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+  		<valueConstraints/>
+  	  </propertyDefinition>	  		
+  	</propertyDefinitions>		 		
   </nodeType>	 
   
   <nodeType name="exo:faqQuestion" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
