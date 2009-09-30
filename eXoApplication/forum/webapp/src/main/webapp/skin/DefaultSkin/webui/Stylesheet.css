@@ -58,6 +58,11 @@
 	line-height: 24px;
 }
 
+.UIForumPortlet .UIRightClickPopupMenu .ItemIcon:hover {
+	color: orange;
+	background-color: #DEE4F2;
+} 
+
 *html .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .ItemIcon {
 	width:110px;
 }
@@ -67,7 +72,7 @@
 }
 
 .UIForumPortlet .ContentAction .UIRightClickPopupMenu .ItemIcon:hover {
-	background-color:#DEE4F2;
+	background-color: #DEE4F2;
 }
 
 .UIForumPortlet .ContentAction .UIRightClickPopupMenu .UIRightPopupMenuContainer {
@@ -83,8 +88,8 @@
 }
 
 .UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer a:hover {
-  color: orange;
-  background-color: transparent;
+	color: orange;
+	background-color: transparent;
 }
 
 /**************************** UIActionForum *********************************/
