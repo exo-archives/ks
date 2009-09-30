@@ -32,8 +32,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -237,17 +235,14 @@ public class UICategories extends UIContainer	{
 			if(topicId.indexOf("/") >= 0) topicId = topicId.substring(topicPath.lastIndexOf("/")+1);
 			topic = maptopicLast.get(topicId) ;
 			if(topic == null) {
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				if(topicPath.indexOf("ForumService") < 0){
 					topicPath = forumService.getForumHomePath() + "/" + topicPath;
 				}
 				try {
 					topic = forumService.getTopicSummary(topicPath) ;
-			    } catch (Exception e) {
+			  } catch (Exception e) {
 					e.printStackTrace();
-				}finally {
-			    	sProvider.close();
-			    }
+				}
 				if(topic != null) maptopicLast.put(topic.getId(), topic) ;
 			}
 		}

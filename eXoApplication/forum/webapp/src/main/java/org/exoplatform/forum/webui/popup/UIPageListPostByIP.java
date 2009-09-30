@@ -33,8 +33,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -100,18 +98,15 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 	private List<Post> getPostsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		List<Post> posts = null;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() < 2) isMod = true;
-			JCRPageList pageList	= forumService.getListPostsByIP(ip_, strOrderBy, sProvider);
+			JCRPageList pageList	= forumService.getListPostsByIP(ip_, strOrderBy);
 			forumPageIterator.updatePageList(pageList) ;
 			if(pageList != null) pageList.setPageSize(6) ;
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}finally {
-			sProvider.close();
-		}
+		}catch (Exception e) {}
 		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;
 		return posts ;
@@ -138,9 +133,8 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 			if(uiForm.userProfile.getUserRole() > 0) {
 				String path =	post.getPath().replaceFirst("/exo:applications/ForumService/", "");
 				String []id = path.split("/") ;
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
-					Category category = uiForm.forumService.getCategory(sProvider, id[0]);
+					Category category = uiForm.forumService.getCategory(id[0]);
 					if(category == null) {
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						return ;
@@ -155,9 +149,9 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 					}
 					if(isRead) {
 						String path_ = "" ;
-						Forum forum = uiForm.forumService.getForum(sProvider,id[0] , id[1] ) ;
+						Forum forum = uiForm.forumService.getForum(id[0] , id[1] ) ;
 						if(forum != null ) path_ = forum.getPath()+"/"+id[2] ;
-						Topic topic = uiForm.forumService.getTopicByPath(sProvider, path_, false) ;
+						Topic topic = uiForm.forumService.getTopicByPath(path_, false) ;
 						if(forum == null || topic == null) {
 							String[] s = new String[]{};
 							uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
@@ -193,8 +187,6 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 				} catch (Exception e) {
 					String[] s = new String[]{};
 					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", s, ApplicationMessage.WARNING)) ;
-				}finally {
-					sProvider.close();
 				}
 			}
 			if(isRead){
@@ -223,19 +215,14 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 			String topicId = path[length - 2];
 			String forumId = path[length - 3];
 			String categoryId = path[length - 4];
-			SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 			if(topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(postId)){
 				try {
-					uiForm.forumService.removeTopic(sProvider, categoryId, forumId, topicId);
-				}finally {
-					sProvider.close();
-				}
+					uiForm.forumService.removeTopic(categoryId, forumId, topicId);
+				}catch (Exception e) {}
 			} else {
 				try {
-					uiForm.forumService.removePost(sProvider, categoryId, forumId, topicId, postId);
-				}finally {
-					sProvider.close();
-				}
+					uiForm.forumService.removePost(categoryId, forumId, topicId, postId);
+				}catch (Exception e) {}
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}

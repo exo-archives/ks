@@ -41,11 +41,9 @@ import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.portal.account.UIAccountSetting;
 import org.exoplatform.portal.webui.portal.UIPortal;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -110,7 +108,6 @@ public class UIBreadcumbs extends UIContainer {
 				path_.add("/"+ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			} else {
 				String tempPath = ""; int i = 0;
-				SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 				try {
 					for (String string : temp) {
 						
@@ -146,10 +143,7 @@ public class UIBreadcumbs extends UIContainer {
 						path_.add(tempPath);
 						++i;
 					}
-				} catch (Exception e) {
-				} finally {
-					sProvider.close();
-				}
+				} catch (Exception e) {}
 			}
 		} else {
 			path_.clear() ;
