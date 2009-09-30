@@ -575,11 +575,11 @@ public String getQuery() throws Exception {
     		for(String catId : viewingCategories) {
     			if(i > 0) queryString.append(" or ");
     			//on questions
-    			queryString.append("(@exo:categoryId='").append(catId).append("')");
+    			queryString.append("@exo:categoryId='").append(catId).append("'");
     			//on categories
     			queryString.append(" or @exo:id='").append(catId).append("'");
     			queryString.append(" and (") ;
-    			queryString.append(" not(@exo:userPrivate)") ;
+    			queryString.append(" @exo:userPrivate=''") ;
     			// search restricted audience in category
         	if(userMembers != null && userMembers.size() > 0) {
         		for(String id : userMembers) {
