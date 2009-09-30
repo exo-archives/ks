@@ -351,7 +351,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 				eventQuery.setSearchOnDefaultLanguage(false) ;
 			} else {
 				eventQuery.setLanguage(advancedSearch.defaultLanguage_) ;
-				eventQuery.setSearchOnDefaultLanguage(true) ;
+				eventQuery.setSearchOnDefaultLanguage(true) ;				
 			}
 			//eventQuery.getQuery() ;
 			

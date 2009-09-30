@@ -542,10 +542,17 @@ public String getQuery() throws Exception {
   				queryString.append(" and  jcr:contains(., '").append(text).append("')") ;
   			}else {
   				queryString.append("jcr:contains(., '").append(text).append("')") ;
-  			}   		
+  			} 
+				queryString.append(" and ( " )
+				.append(" exo:language='").append(language).append("'")
+				.append(" or exo:commentLanguage='").append(language).append("'")
+				.append(" or exo:responseLanguage='").append(language).append("'")
+				.append(")") ;
+				isLanguageLevelSearch = false ;
+				isAnswerCommentLevelSearch = false ;
+  			isQuestionLevelSearch = false ;
       }
-  		queryString.append("]") ;
-  		
+  		queryString.append("]") ;  		
   		
   	//######################### Quick Search ###############################   
     } else if(type.equals("categoryAndQuestion")){ // Quick search

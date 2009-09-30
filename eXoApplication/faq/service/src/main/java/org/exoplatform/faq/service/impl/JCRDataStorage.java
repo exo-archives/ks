@@ -1348,7 +1348,7 @@ public class JCRDataStorage {
 		try{
 			Node faqHome = getFAQServiceHome(sessionProvider);
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()). 
-																			append("//element(*,exo:faqCategory)[@exo:userPrivate] order by @exo:createdDate descending");
+																			append("//element(*,exo:faqCategory)[@exo:userPrivate != ''] order by @exo:createdDate descending");
 			QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();		
@@ -1357,8 +1357,8 @@ public class JCRDataStorage {
 			while(iter.hasNext()) {
 				if(usermemberships.size() > 0) {
 					Node cat = iter.nextNode() ;
-					String[] audiences = ValuesToArray(cat.getProperty("exo:userPrivate").getValues()) ;
 					try {
+						String[] audiences = ValuesToArray(cat.getProperty("exo:userPrivate").getValues()) ;
 						isAudience = false ;
 						for(String id : usermemberships) {							
 							for(String audien : audiences) {
@@ -2804,18 +2804,31 @@ public class JCRDataStorage {
 						}
 					}					
 				}
+				// mix all result for fultext search on questions
+				if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch() 
+						&& !eventQuery.isLanguageLevelSearch()) {
+					for(Node node : listAnswerandComment.values()) {
+						results.add(getResultObj(node));
+					}
+					for(Node node : listQuestion) {
+						results.add(getResultObj(node));
+					}
+					for(Node node : listLanguage) {
+						results.add(getResultObj(node));
+					}
+				}
 				return results ;
 				
 			} else if(eventQuery.getType().equals("categoryAndQuestion")){ // Quick search
 				String nodePath = "";
 				Session session = categoryHome.getSession();
 				Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
+				
 				while (iter.hasNext()) {
 					boolean isResult = true ;
 					nodeObj = iter.nextNode();
 					nodePath = nodeObj.getPath();
 					if(nodePath.indexOf("/Question") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Question")){
-						System.out.println("Search question");
 						nodePath = nodePath.substring(0, nodePath.indexOf("/Question") + 41);
 						nodeObj = (Node) session.getItem(nodePath);
 						if(!eventQuery.isAdmin()) {
@@ -2825,6 +2838,7 @@ public class JCRDataStorage {
 										|| (nodeObj.getProperty("exo:author").getString().equals(eventQuery.getUserId())
 												&& nodeObj.getProperty("exo:isActivated").getBoolean() == true)) {
 								//for retricted audiences
+									
 									if(retrictedCategoryList.size() > 0) {
 										String path = nodeObj.getPath() ;
 										for(String id : retrictedCategoryList) {
@@ -3248,7 +3262,7 @@ public class JCRDataStorage {
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
 			return node.getProperty("exo:isModerateAnswers").getBoolean() ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			//e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false ;
 	}
