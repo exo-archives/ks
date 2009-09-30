@@ -83,7 +83,7 @@ public class UIListTopicOld extends UIContainer {
 	@SuppressWarnings({ "unused", "unchecked" })
 	private List<Topic> getTopicsOld() throws Exception {
 		if(topics == null || topics.size() == 0 || isUpdate) {
-			JCRPageList pageList = forumService.getPageTopicOld(ForumSessionUtils.getSystemProvider(), date, "");
+			JCRPageList pageList = forumService.getPageTopicOld(date, "");
 			if(pageList != null) {
 				pageList.setPageSize(10) ;
 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
@@ -117,13 +117,10 @@ public class UIListTopicOld extends UIContainer {
 			topic.setIsActive(!isActive) ;
 			List<Topic> topics = new ArrayList<Topic>();
 			topics.add(topic);
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				administration.forumService.modifyTopic(sProvider, topics, 6) ;
+				administration.forumService.modifyTopic(topics, 6) ;
 				administration.isUpdate = true ;
-			} finally {
-				sProvider.close();
-			}
+			} catch (Exception e) {}
 			event.getRequestContext().addUIComponentToUpdateByAjax(administration);
 		}
 	}
@@ -134,12 +131,9 @@ public class UIListTopicOld extends UIContainer {
 			String ids = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			String []id = ids.split("/") ;
 			int l = id.length ;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				listTopicOld.forumService.removeTopic(sProvider, id[l-3], id[l-2],id[l-1]) ;
-			} finally {
-				sProvider.close();
-			}
+				listTopicOld.forumService.removeTopic(id[l-3], id[l-2],id[l-1]) ;
+			} catch (Exception e) {}
 			listTopicOld.isUpdate = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(listTopicOld.getAncestorOfType(UIForumPortlet.class));
 		}

@@ -273,18 +273,15 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
 					if(uiForm.isUpdate) {
 						poll.setId(uiForm.getId()) ;
 						if(newUser.length > 0) poll.setUserVote(newUser) ;
-						forumService.savePoll(sProvider, id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
+						forumService.savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
 					} else {
-						forumService.savePoll(sProvider, id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
+						forumService.savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
 					}
-				} finally {
-					sProvider.close();
-				}
+				} catch (Exception e) {}
 				uiForm.isUpdate = false ;
 				try {
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

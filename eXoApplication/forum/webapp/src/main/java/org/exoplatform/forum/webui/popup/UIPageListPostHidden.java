@@ -78,7 +78,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Post> getPosts() throws Exception {
-		pageList	= forumService.getPosts(ForumSessionUtils.getSystemProvider(), this.categoryId, this.forumId, this.topicId, "", "true", "", "");
+		pageList	= forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
 		List<Post> posts = pageList.getPage(pageSelect);
@@ -136,12 +136,9 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 			if (!haveCheck) {
 				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null));
 			} else {
-				SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 				try {
-					postHidden.forumService.modifyPost(sProvider, posts, 2);
-				}finally {
-					sProvider.close();
-				}
+					postHidden.forumService.modifyPost(posts, 2);
+				}catch (Exception e) {}
 			}
 			if(posts.size() == postHidden.listAllPost.size()) {
 				UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);

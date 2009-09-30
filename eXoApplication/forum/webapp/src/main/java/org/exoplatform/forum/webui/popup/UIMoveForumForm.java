@@ -80,7 +80,7 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
   private List<Category> getCategories() throws Exception {
 		ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		List<Category> categorys =	new ArrayList<Category>();
-		for (Category category :forumService.getCategories(ForumSessionUtils.getSystemProvider())) {
+		for (Category category :forumService.getCategories()) {
 			if( !category.getId().equals(categoryId_) ) {
 				categorys.add(category) ;
 			}
@@ -106,9 +106,8 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 			String categoryPath = event.getRequestContext().getRequestParameter(OBJECTID);
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
-			SessionProvider sProvider = ForumSessionUtils.getSystemProvider() ;
 			try {
-				forumService.moveForum(sProvider, forums, categoryPath) ;
+				forumService.moveForum(forums, categoryPath) ;
 				UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
 				if(uiForm.isForumUpdate) {
@@ -131,8 +130,6 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 	    	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 	    	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
 	    	return;
-      } finally{
-      	sProvider.close();
       }
 		}
 	}

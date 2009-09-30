@@ -34,8 +34,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
@@ -87,14 +85,11 @@ public class UIQuickReplyForm extends UIForm {
 		this.topicId = topicId;
 		this.isModerator = isModerator;
 		this.userName = ForumSessionUtils.getCurrentUser() ;
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			this.topic = forumService.getTopic(sProvider, categoryId, forumId, topicId, userName) ;
+			this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
     } catch (Exception e) {
     	topic = new Topic();
-    } finally {
-    	sProvider.close();
     }
   }
 	
@@ -108,7 +103,7 @@ public class UIQuickReplyForm extends UIForm {
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
 			UIQuickReplyForm quickReply = event.getSource() ;
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			ForumAdministration forumAdministration = forumService.getForumAdministration(ForumSessionUtils.getSystemProvider()) ;
+			ForumAdministration forumAdministration = forumService.getForumAdministration() ;
 			UIFormTextAreaInput textAreaInput = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;
 			String checksms = message ;
