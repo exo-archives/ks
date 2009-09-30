@@ -2857,7 +2857,6 @@ public class JCRDataStorage {
 							}
 						}						
 					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Category")){
-						System.out.println("Search category");
 						if(!eventQuery.isAdmin()) {
 							//for restricted audiences
 							if(retrictedCategoryList.size() > 0) {
