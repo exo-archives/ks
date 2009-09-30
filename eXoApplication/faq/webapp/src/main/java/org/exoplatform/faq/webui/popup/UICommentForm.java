@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -175,6 +176,8 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 						int t = ids.length;
 						linkForum = linkForum.replaceFirst("OBJECTID", topicId);
 						if(commentForm.isAddNew) {
+							PortletRequestImp request = event.getRequestContext().getRequest();
+			    		String remoteAddr = request.getRemoteAddr();
 							Post post = new Post();
 							post.setOwner(commentForm.currentUser_);
 							post.setIcon("ViewIcon");
@@ -182,6 +185,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 							post.setMessage(comment);
 							post.setLink(linkForum);
 							post.setIsApproved(false);
+							post.setRemoteAddr(remoteAddr);
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 	            } catch (Exception e) {
@@ -195,6 +199,8 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 									Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
 									boolean isNew = false;
 									if(post == null){
+										PortletRequestImp request = event.getRequestContext().getRequest();
+						    		String remoteAddr = request.getRemoteAddr();
 										post = new Post();
 										isNew = true;
 										post.setOwner(commentForm.currentUser_);
@@ -202,6 +208,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 										post.setName("Re: " + commentForm.question_.getQuestion());
 										commentForm.comment.setPostId(post.getId());
 										post.setLink(linkForum);
+										post.setRemoteAddr(remoteAddr);
 									}else{
 										post.setModifiedBy(commentForm.currentUser_);
 									}
