@@ -3267,6 +3267,18 @@ public class JCRDataStorage {
 		return false ;
 	}
 	
+	public boolean isModerateQuestion(String id) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node node = getFAQServiceHome(sProvider).getNode(id) ;
+			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
+			return node.getProperty("exo:isModerateQuestions").getBoolean() ;
+		}catch(Exception e) {
+			//e.printStackTrace() ;
+		}finally { sProvider.close() ;}
+		return false ;
+	}
+	
 	public boolean isViewAuthorInfo(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{

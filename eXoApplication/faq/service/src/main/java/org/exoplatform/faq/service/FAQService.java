@@ -593,7 +593,7 @@ public interface FAQService extends FAQServiceLegacy{
 	
 	public List<String> getQuestionContents(List<String> paths) throws Exception ;
 	
-	public boolean isModerateAnswer(String id) throws Exception ; 
+	public boolean isModerateAnswer(String id) throws Exception ;
 	
 	public Node getQuestionNodeById(String path) throws Exception ;
 	
@@ -656,6 +656,7 @@ public interface FAQService extends FAQServiceLegacy{
   
   public boolean isCategoryExist(String name, String path) ;
 
+  public boolean isModerateQuestion(String id) throws Exception  ;
 }
 
 

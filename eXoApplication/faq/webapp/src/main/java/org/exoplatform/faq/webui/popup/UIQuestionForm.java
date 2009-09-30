@@ -188,7 +188,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     addChild(selectLanguage);
     addChild(inputAuthor) ;
     addChild(inputEmailAddress) ;
-    isModerate = fAQService_.isModerateAnswer(getCategoryId());
+    isModerate = fAQService_.isModerateQuestion(getCategoryId());
     isAddCheckBox = false;
   	if(getIsModerator()){
   		if(questionId_ != null && questionId_.trim().length() > 0) {
