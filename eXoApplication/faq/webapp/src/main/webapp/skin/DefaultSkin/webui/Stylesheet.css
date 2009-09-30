@@ -42,6 +42,11 @@
 	padding: 1px 10px 1px 6px;
 }
 
+.UIFAQPortlet .UIRightClickPopupMenu .MenuItem:hover {
+	background-color: #DEE4F2;
+	color: orange;
+}
+
 .UIFAQPortlet .UIRightClickPopupMenu .IconItem {
 	cursor: pointer;
 	display: block;
