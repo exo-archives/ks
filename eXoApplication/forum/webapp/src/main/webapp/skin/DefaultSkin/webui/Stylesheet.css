@@ -613,3 +613,8 @@
 	text-decoration: underline;
 	font-style: italic;
 }
+
+.UIForumPortlet .fixPupupMenu {
+	position: absolute; 
+	*position: relative;
+}

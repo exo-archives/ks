@@ -57,7 +57,7 @@
 								</div>
 							</div>
 						</div>
-						<div style="position:relative;">
+						<div class="fixPupupMenu">
 						<% /*Begin Popup Menu*/ %>
 							<div class="UIPopupCategory" style="display:none; top:auto">
 								<div class="PopupCategoryDecorator">
