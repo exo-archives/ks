@@ -24,7 +24,6 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

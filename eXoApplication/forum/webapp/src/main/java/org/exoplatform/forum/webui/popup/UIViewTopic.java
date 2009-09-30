@@ -35,7 +35,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;

@@ -20,14 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

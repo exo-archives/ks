@@ -22,7 +22,6 @@ import java.util.List;
 import javax.jcr.ItemExistsException;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -32,7 +31,6 @@ import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

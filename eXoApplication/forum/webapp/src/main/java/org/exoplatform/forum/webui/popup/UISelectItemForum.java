@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;

@@ -437,12 +437,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	/*@SuppressWarnings("unused")
 	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
 		List<Tag> list = new ArrayList<Tag>();
-		SessionProvider sProvider = SessionProviderFactory.createSystemProvider();
 		try {
-			list = this.forumService.getTagsByTopic(sProvider, tagIds);
+			list = this.forumService.getTagsByTopic(tagIds);
     } catch (Exception e) {
-    }finally{
-    	sProvider.close();
     }
 		return list;	
 	}*/
