@@ -59,25 +59,23 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public void setObjectId(Object object){
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
 		if(object == null || object instanceof Category){
 			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			SessionProvider sessionProvider = ForumSessionUtils.getSystemProvider();
 			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 			try {
 				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
 				if(object == null){
-					for(Category category : service.getCategories(sessionProvider)){
+					for(Category category : service.getCategories()){
 						listObjects.add(category);
 						checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getId(), category.getId(), true);
 						checkBoxInput.setChecked(true);
 						formInputWithActions.addChild(checkBoxInput);
 					}
 				}else if(object instanceof Category){
-					for(Forum forum : service.getForums(sessionProvider, ((Category)object).getId(), null)){
+					for(Forum forum : service.getForums(((Category)object).getId(), null)){
 						listObjects.add(forum);
 						checkBoxInput = new UIFormCheckBoxInput<Boolean>(forum.getId(), forum.getId(), true);
 						checkBoxInput.setChecked(true);
@@ -117,7 +115,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		}
 	}
 	
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings("unchecked")
 	private List<String> getListSelected(){
 		List<String> listId = new ArrayList<String>();
 		UIFormCheckBoxInput<Boolean> checkBox = null;
@@ -159,8 +157,8 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				nodePath = forum.getPath();
 				categoryId = forum.getPath().split("/")[3];
 				forumId = forum.getId();
-			} else if(exportForm.object_ instanceof org.exoplatform.forum.service.Category) {
-				org.exoplatform.forum.service.Category category = (org.exoplatform.forum.service.Category)exportForm.object_;
+			} else if(exportForm.object_ instanceof Category) {
+				Category category = (Category)exportForm.object_;
 				nodePath = category.getPath();
 				categoryId = category.getId();
 			}
