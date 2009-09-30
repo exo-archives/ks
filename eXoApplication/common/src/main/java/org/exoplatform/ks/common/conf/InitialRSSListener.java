@@ -1,5 +1,5 @@
 /***************************************************************************
- * Copyright (C) 2003-2008 eXo Platform SAS.
+ * Copyright (C) 2003-2009 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service.conf;
+package org.exoplatform.ks.common.conf;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.conf.ManagedPlugin;
@@ -23,7 +23,7 @@ import org.exoplatform.ks.common.conf.ManagedPlugin;
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * 23-10-2008 - 08:25:33  
+ * 30-9-2009 - 15:25:33  
  */
 public class InitialRSSListener extends ManagedPlugin{
 	private boolean isInitRss_ = true ;
