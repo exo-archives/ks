@@ -23,6 +23,9 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
+import org.exoplatform.web.application.RequestContext;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -38,13 +41,24 @@ import org.exoplatform.webui.core.UIContainer;
 )
 public class UIForumInfos extends UIContainer	{
 	private UserProfile userProfile ;
+	private boolean enableIPLogging = true;
 	public UIForumInfos() throws Exception { 
 		addChild(UIPostRules.class, null, null);
 		addChild(UIForumModerator.class, null, null);
 	}
 	
+	private String getIPRemoter() throws Exception {
+		if(enableIPLogging) {
+			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+			PortletRequestImp request = context.getRequest() ;
+			return request.getRemoteAddr();
+		}
+		return "";
+	}
+	
 	public void setForum(Forum forum)throws Exception {
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class); 
+		enableIPLogging = forumPortlet.isEnableIPLogging() ;
 		this.userProfile = forumPortlet.getUserProfile() ;
 		List<String> moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		UIPostRules postRules = getChild(UIPostRules.class); 
@@ -55,14 +69,18 @@ public class UIForumInfos extends UIContainer	{
 			if(!isLock) isLock = forum.getIsLock() ;
 			if(!isLock && userProfile.getUserRole()!=0) {
 				if(!moderators.contains(userProfile.getUserId())) {
-					String []listUser = forum.getCreateTopicRole() ;
-					if(listUser != null && listUser.length > 0)
-						isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
-					if(isLock || listUser == null || listUser.length == 0 || listUser[0].equals(" ")){
-						ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-						listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopic");
-						if(listUser != null && listUser.length > 0 && !listUser[0].equals(" ")){
+					List<String> ipBaneds = forum.getBanIP();
+					if(ipBaneds.contains(getIPRemoter())) isLock =  true;
+					if(!isLock){
+						String []listUser = forum.getCreateTopicRole() ;
+						if(listUser != null && listUser.length > 0)
 							isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+						if(isLock || listUser == null || listUser.length == 0 || listUser[0].equals(" ")){
+							ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+							listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopic");
+							if(listUser != null && listUser.length > 0 && !listUser[0].equals(" ")){
+								isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
+							}
 						}
 					}
 				}
