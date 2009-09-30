@@ -57,6 +57,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
+import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -1213,6 +1214,8 @@ public class UIQuestions extends UIContainer {
 				link = link.replaceFirst("private", "public");
 				Question question = faqService_.getQuestionById(questionId);
 				String userName = question.getAuthor();
+				PortletRequestImp request = event.getRequestContext().getRequest();
+    		String remoteAddr = request.getRemoteAddr();
 				if(FAQUtils.getUserByUserId(userName) == null) {
 					String temp = userName;
 					//Category category = faqService_.getCategoryById(question.getCategoryId(), sProvider);
@@ -1240,6 +1243,7 @@ public class UIQuestions extends UIContainer {
 				topic.setIsModeratePost(true);
 				topic.setLink(link);
 				topic.setIsWaiting(true);
+				topic.setRemoteAddr(remoteAddr);
 				forumService.saveTopic(categoryId, forumId, topic, true, false, "");
 				faqService_.saveTopicIdDiscussQuestion(questionId, topicId);
 				Post post = new Post();
@@ -1259,6 +1263,7 @@ public class UIQuestions extends UIContainer {
 		        post.setOwner(answer.getResponseBy());
 		        post.setLink(link);
 		        post.setIsApproved(false);
+		        post.setRemoteAddr(remoteAddr);
 		        forumService.savePost(categoryId, forumId, topicId, post, true, "");
 		        answer.setPostId(post.getId());
 		        if(answer.getLanguage() == null) answer.setLanguage(question.getLanguage());
@@ -1282,6 +1287,7 @@ public class UIQuestions extends UIContainer {
 					post.setOwner(comment.getCommentBy());
 					post.setLink(link);
 					post.setIsApproved(false);
+					post.setRemoteAddr(remoteAddr);
 					forumService.savePost(categoryId, forumId, topicId, post, true, "");
 					comment.setPostId(post.getId());
 					faqService_.saveComment(questionId, comment, false);

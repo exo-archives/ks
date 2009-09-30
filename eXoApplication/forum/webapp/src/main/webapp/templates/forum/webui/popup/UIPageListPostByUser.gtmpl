@@ -64,6 +64,8 @@
 									String iconPost = post.getIcon() ;
 									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;
 									String createdDate = ForumUtils.getFormatDate(formatDate,postDate) ;
+									String remoteAddr = post.getRemoteAddr();
+									if(ForumUtils.isEmpty(remoteAddr)) remoteAddr = "";
 							%>
 								<tr class="$classRow">
 									<td class="Tdbox">
@@ -80,21 +82,21 @@
 									<%if(isAdmin){ 
 									    if(isShowIP) {
 									%>
-										<td><div title="<%=post.getRemoteAddr();%>"><%=post.getRemoteAddr();%></div></td>
+										<td><div title="<%=post.getRemoteAddr();%>">$remoteAddr</div></td>
 									<%  }
 									String link_ =  uicomponent.event("DeletePostLink", post.getId());
 									%>
 										<td class="Tdbox">
 											<div style="margin:0 auto; width:48px">
-												<div class="ItemIcon SetDeleteIcon" onclick="$link_" title="Delete this post." style="width:20px; height:24px; cursor:pointer; float:left"><span></span></div>
-												<a style="display:block; width:24px;float: left;" title="Go to topic." class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+												<div class="ItemIcon SetDeleteIcon" onclick="$link_" title="<%=_ctx.appRes("UIViewPost.action.DeletePost");%>" style="width:20px; height:24px; cursor:pointer; float:left"><span></span></div>
+												<a style="display:block; width:24px;float: left;" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
 												<div style="clear:left;"><span></span></div>
 											</div>
 										</td>
 									<%} else {%>
 										<td class="Tdbox">
 											<div style="margin:0 auto; width:28px">
-												<a style="display:block; width:24px; float:none; display:block;" title="Go to topic." class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
+												<a style="display:block; width:24px; float:none; display:block;" title="<%=_ctx.appRes("UIViewPost.action.OpenTopicLink");%>" class="HotThreadNoNewPost" href="<%=uicomponent.event("OpenTopicLink", post.getId());%>">&nbsp; &nbsp; &nbsp;</a>
 											</div>
 										</td>
 									<%}  %>
