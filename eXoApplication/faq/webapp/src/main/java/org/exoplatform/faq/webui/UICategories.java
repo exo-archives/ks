@@ -140,6 +140,7 @@ public class UICategories extends UIContainer{
 	
 	private void setIsModerators(String currentUser_) throws Exception{
 		categoryMod.clear() ;
+		isModerator = false;
 		if(faqSetting_.isAdmin()) isModerator = true;
 		if(!isModerator) isModerator = faqService_.isCategoryModerator(categoryId_, currentUser_);
 		if(!isModerator) {
@@ -149,10 +150,22 @@ public class UICategories extends UIContainer{
 		}		
 	}
 	
-	private boolean isCategoryModerator(String categoryId) {
-		if(isModerator) return isModerator ;
-		return categoryMod.get(categoryId) ;
-	}	
+	@SuppressWarnings("unused")
+  private boolean isCategoryModerator(String path) throws Exception {
+		if(faqSetting_.isAdmin()) return true;
+		if(!FAQUtils.isFieldEmpty(categoryId_) && path.indexOf(categoryId_) >= 0 && isModerator) return true;
+		String categoryId = path;
+		if(categoryId.indexOf("/") > 0) {
+			categoryId = categoryId.substring(categoryId.lastIndexOf("/")+1); 
+		}
+		if(categoryMod.containsKey(categoryId)){
+			return categoryMod.get(categoryId) ;
+		} else {
+			boolean isMod = faqService_.isCategoryModerator(path, currentUser);
+			categoryMod.put(categoryId, isMod);
+			return isMod;
+		}
+	}
 	
 	public String getCurrentName() {
 	  return currentCategoryName;
