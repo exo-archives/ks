@@ -1627,7 +1627,7 @@
 }
 
 .UIFAQPortlet .DustBinIcon {
-	background: url(background/DustBin.gif) no-repeat scroll right;
+	background: url(background/DustBin.gif) no-repeat scroll right top;
 	height:16px;
 	width:16px;
 	margin: 0px 3px;
