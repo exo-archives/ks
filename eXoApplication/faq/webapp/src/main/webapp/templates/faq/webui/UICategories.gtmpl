@@ -128,17 +128,16 @@
 																	continue;
 														%>
 																<div class="MenuItem">
-																		<div class="IconItem $viewAction">
-																				<a href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
+																		<div>
+																			<a class="IconItem $viewAction" href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
 																		</div>
-																</div>
-																
+																</div>																
 														<%
 															}
 															if(uicomponent.faqSetting_.isEnableAutomaticRSS()){%>
 															<div class="MenuItem">
-																<div class="IconItem FAQRSS">
-																	<a href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getId()))%>"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
+																<div>
+																	<a class="IconItem FAQRSS" href="javascript:void(0) ;" onmousedown="<%=uicomponent.event("RSS", uicomponent.getRSSLink(category.getId()))%>"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
 																</div>
 															</div>
 														<%}%>
