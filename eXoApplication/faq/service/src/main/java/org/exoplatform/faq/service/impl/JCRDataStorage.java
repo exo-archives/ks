@@ -49,6 +49,7 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.naming.directory.SearchResult;
 
 import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
@@ -2807,15 +2808,21 @@ public class JCRDataStorage {
 				// mix all result for fultext search on questions
 				if (!eventQuery.isQuestionLevelSearch() && !eventQuery.isAnswerCommentLevelSearch() 
 						&& !eventQuery.isLanguageLevelSearch()) {
+					Map<String, ObjectSearchResult> tmpResult = new HashMap<String, ObjectSearchResult>() ;
+					ObjectSearchResult rs ;
 					for(Node node : listAnswerandComment.values()) {
-						results.add(getResultObj(node));
+						rs = getResultObj(node) ;
+						tmpResult.put(rs.getId(), rs);
 					}
 					for(Node node : listQuestion) {
-						results.add(getResultObj(node));
+						rs = getResultObj(node) ;
+						tmpResult.put(rs.getId(), rs);
 					}
 					for(Node node : listLanguage) {
-						results.add(getResultObj(node));
+						rs = getResultObj(node) ;
+						tmpResult.put(rs.getId(), rs);
 					}
+					results.addAll(tmpResult.values()) ;
 				}
 				return results ;
 				
@@ -2856,7 +2863,7 @@ public class JCRDataStorage {
 								isResult = false ;
 							}
 						}						
-					} else if(nodePath.indexOf("/Category") > 0 && nodePath.lastIndexOf("/") >= nodePath.indexOf("/Category")){
+					} else if(nodeObj.isNodeType("exo:faqCategory")){
 						if(!eventQuery.isAdmin()) {
 							//for restricted audiences
 							if(retrictedCategoryList.size() > 0) {
@@ -2869,8 +2876,8 @@ public class JCRDataStorage {
 								}								
 							}
 						}
-						nodePath = nodePath.substring(0, nodePath.indexOf("/Category") + 41);
-						nodeObj = (Node) session.getItem(nodePath);
+						//nodePath = nodePath.substring(0, nodePath.indexOf("/Category") + 41);
+						//nodeObj = (Node) session.getItem(nodePath);
 					}	
 					//System.out.println("node path >>" + nodeObj.getPath());
 					if(!searchMap.containsKey(nodeObj.getName()) && isResult)	{						
