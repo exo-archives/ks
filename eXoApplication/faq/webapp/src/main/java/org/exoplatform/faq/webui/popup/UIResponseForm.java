@@ -79,14 +79,14 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static Question question_ = null ;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
-	@SuppressWarnings("unused")
 	private String questionDetail = new String();
 	private String questionContent = new String();
 
 	// form input :
 	private UIFormSelectBox questionLanguages_ ;
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
-	private UIFormCheckBoxInput checkShowAnswer_ ;
+	@SuppressWarnings("unchecked")
+  private UIFormCheckBoxInput checkShowAnswer_ ;
 	private UIFormCheckBoxInput<Boolean> isApproved_ ;
 
 	// question infor :
@@ -126,10 +126,11 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
   	listLanguageToReponse.clear() ;
   	listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
   	questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
-		questionLanguages_.setSelectedValues(new String[]{answer.getLanguage()}) ;
+  	questionLanguages_.setSelectedValues(new String[]{answer.getLanguage()}) ;
+  	getUIFormCheckBoxInput(SHOW_ANSWER).setChecked(answer.getActivateAnswers()) ;
+  	getUIFormCheckBoxInput(IS_APPROVED).setChecked(answer.getApprovedAnswers()) ;
   }
 
-	@SuppressWarnings("unchecked")
   public void setQuestionId(Question question, String languageViewed, boolean isAnswerApp){
 		this.isAnswerApproved = isAnswerApp;
 		try{
@@ -172,7 +173,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 		
 		checkShowAnswer_.setChecked(question_.isActivated()) ;
-		isApproved_.setChecked(question_.isApproved()) ;
+		isApproved_.setChecked(isAnswerApproved) ;
+		
 		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
 		questionLanguages_.setSelectedValues(new String[]{currentLanguage}) ;
 		questionLanguages_.setOnChange("ChangeLanguage") ;
@@ -181,7 +183,6 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		addChild(questionLanguages_) ;
 		addChild(isApproved_) ;
 		addChild(checkShowAnswer_) ;
-		
 	}
 	
 	@SuppressWarnings("unused")
@@ -312,16 +313,17 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 						answer.setResponseBy(currentUser);
 						answer.setFullName(FAQUtils.getFullName(currentUser)) ;
 						answer.setNew(true);
-						answer.setActivateAnswers(true);
-						answer.setApprovedAnswers(responseForm.isAnswerApproved);
 						answer.setResponses(responseQuestionContent);
 						answer.setLanguage(language) ;
 					}
+					// author: Vu Duy Tu. set show answer
+					answer.setApprovedAnswers(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(IS_APPROVED)).isChecked()) ;
+					answer.setActivateAnswers(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(SHOW_ANSWER)).isChecked()) ;
 					responseForm.mapAnswers.put(language, answer);
 				} else{
 					if(responseForm.mapAnswers.containsKey(language)){
 						answer = responseForm.mapAnswers.get(language);
-						answer.setNew(false) ;
+						answer.setNew(false) ;						
 						responseForm.mapAnswers.put(language, answer) ;
 					}
 				}
@@ -335,9 +337,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				
 				// set relateion of question:
 				question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
-				// set show question:
-				question_.setApproved(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(IS_APPROVED)).isChecked()) ;
-				question_.setActivated(((UIFormCheckBoxInput<Boolean>)responseForm.getChildById(SHOW_ANSWER)).isChecked()) ;
+				
 
 				//link
 				UIFAQPortlet portlet = responseForm.getAncestorOfType(UIFAQPortlet.class) ;
