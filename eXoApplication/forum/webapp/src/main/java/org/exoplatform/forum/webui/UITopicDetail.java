@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
@@ -66,7 +67,6 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -429,9 +429,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	
 	private String getIPRemoter() throws Exception {
 		if(enableIPLogging) {
-			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-			PortletRequestImp request = context.getRequest() ;
-			return request.getRemoteAddr();
+			try {
+				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+				HttpServletRequest request = context.getRequest();
+				return request.getRemoteAddr();
+	    } catch (Exception e) {}
 		}
 		return "";
 	}

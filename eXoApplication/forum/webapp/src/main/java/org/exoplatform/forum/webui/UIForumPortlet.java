@@ -23,6 +23,7 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
@@ -42,7 +43,6 @@ import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -346,9 +346,13 @@ public class UIForumPortlet extends UIPortletApplication {
 		try{
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(enableBanIP) {
-				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-				PortletRequestImp request = context.getRequest() ;
-				userProfile = forumService.getDefaultUserProfile(userId, request.getRemoteAddr()) ;
+				String remoteAddr = "";
+				try {
+					WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+					HttpServletRequest request = context.getRequest() ;
+					remoteAddr = request.getRemoteAddr();
+        } catch (Exception e) {}
+        userProfile = forumService.getDefaultUserProfile(userId, remoteAddr) ;
 			}else {
 				userProfile = forumService.getDefaultUserProfile(userId, null) ;
 			}

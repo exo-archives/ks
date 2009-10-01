@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
@@ -34,7 +35,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -94,9 +94,12 @@ public class UIQuickReplyForm extends UIForm {
   }
 	
 	private String getIPRemoter() throws Exception {
-		WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-		PortletRequestImp request = context.getRequest() ;
-		return request.getRemoteAddr();
+		try {
+			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
+			HttpServletRequest request = context.getRequest();
+			return request.getRemoteAddr();
+    } catch (Exception e) {}
+		return "";
 	}
 	
 	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
