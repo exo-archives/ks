@@ -68,7 +68,7 @@
 							<td style="text-align:right"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Relation")%>  :&nbsp;</td>
 							<td>
 								<div class="ItemIcon AddIcon" onclick="<%=uicomponent.event("AddRelation")%>" style="margin-left:10px;" title="<%=_ctx.appRes(uicomponent.getName() + ".action.AddRelation")%>"><span></span></div><br/>
-								<div style="width:100%; margin-top:10px;">
+								<div style="width:100%; margin-top:11px;">
 									<%
 									int i = 0 ;
 									String viewString = "" ;
@@ -79,7 +79,7 @@
 						          viewString = FAQUtils.getSubString(viewString, 85) ;
 						        }
 									%>
-										<div style="margin:0px 0px 3px 2px;">
+										<div style="margin:0px 0px 11px 2px;">
 											<div class="ItemIcon DustBinIcon" onclick="$action" style="margin-left:5px; float:left; cursor:pointer;" title="<%=_ctx.appRes(uicomponent.getName() + ".label." + "Remove")%>"><span></span></div>
 											&nbsp;$viewString  &nbsp;&nbsp;&nbsp;&nbsp;
 										</div>
