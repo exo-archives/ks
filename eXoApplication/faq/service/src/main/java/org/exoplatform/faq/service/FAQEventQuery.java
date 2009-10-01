@@ -539,7 +539,7 @@ public String getQuery() throws Exception {
   		
   		if(text != null && text.length() > 0 ) {
   			if(isAdd){
-  				queryString.append(" and  jcr:contains(., '").append(text).append("')") ;
+  				queryString.append(" or (  jcr:contains(., '").append(text).append("')") ;
   			}else {
   				queryString.append("jcr:contains(., '").append(text).append("')") ;
   			} 
@@ -548,6 +548,7 @@ public String getQuery() throws Exception {
 				.append(" or exo:commentLanguage='").append(language).append("'")
 				.append(" or exo:responseLanguage='").append(language).append("'")
 				.append(")") ;
+				if(isAdd) queryString.append(" ) " ) ;
 				isLanguageLevelSearch = false ;
 				isAnswerCommentLevelSearch = false ;
   			isQuestionLevelSearch = false ;
