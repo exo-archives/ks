@@ -85,14 +85,13 @@
 					for(category in uicomponent.getListCate()){
 						if(category.getPath().equals(uicomponent.categoryId_)) classCss = "FAQCategoryRightBlack";
 						else classCss = "FAQCategoryRight";
-						canEdit = uicomponent.isCategoryModerator(category.getId()) ; 
+						canEdit = uicomponent.isCategoryModerator(category.getPath()) ; 
 				%>
 						<div class="FAQTmpCategory"><span></span></div>
 						<div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
 							<div unselectable="on">
-								
 								<a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
-									<%=FAQUtils.getSubString(category.getName(), 20);%>
+									<span><%=FAQUtils.getSubString(category.getName(), 20);%>sss</span>
 								</a>
 								<%
 								String linkWacth = uicomponent.event("WatchManager", category.getPath());
