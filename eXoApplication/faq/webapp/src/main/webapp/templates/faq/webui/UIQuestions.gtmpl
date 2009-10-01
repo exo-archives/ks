@@ -107,8 +107,8 @@
 													%>
 																
 															<div onmousedown="$linkAction" class="MenuItem">
-																<div class="IconItem $action">
-																	<span>$itemLabelView</span>
+																<div>
+																	<a class="IconItem $action" href="#">$itemLabelView</a>
 																</div>
 															</div>
 													<%
@@ -307,8 +307,8 @@
 																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
 															%>
 																	<div class="MenuItem $lockFunction">
-																		<div class="IconItem $iconView">
-																			<a href="$linkView">$itemLabelView</a>
+																		<div>
+																			<a class="IconItem $iconView" href="$linkView">$itemLabelView</a>
 																		</div>
 																	</div>																
 															<%}%>
