@@ -16,6 +16,8 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -31,7 +33,6 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -176,8 +177,11 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 						int t = ids.length;
 						linkForum = linkForum.replaceFirst("OBJECTID", topicId);
 						if(commentForm.isAddNew) {
-							PortletRequestImp request = event.getRequestContext().getRequest();
-			    		String remoteAddr = request.getRemoteAddr();
+							String remoteAddr = "";
+							try {
+								HttpServletRequest request = event.getRequestContext().getRequest() ;
+								remoteAddr = request.getRemoteAddr();
+              } catch (Exception e) {}
 							Post post = new Post();
 							post.setOwner(commentForm.currentUser_);
 							post.setIcon("ViewIcon");
@@ -199,8 +203,11 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 									Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
 									boolean isNew = false;
 									if(post == null){
-										PortletRequestImp request = event.getRequestContext().getRequest();
-						    		String remoteAddr = request.getRemoteAddr();
+										String remoteAddr = "";
+										try {
+											HttpServletRequest request = event.getRequestContext().getRequest() ;
+											remoteAddr = request.getRemoteAddr();
+			              } catch (Exception e) {}
 										post = new Post();
 										isNew = true;
 										post.setOwner(commentForm.currentUser_);

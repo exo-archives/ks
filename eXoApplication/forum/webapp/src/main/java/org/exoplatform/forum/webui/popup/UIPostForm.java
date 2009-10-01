@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
@@ -40,7 +41,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -358,8 +358,10 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      	message = ForumTransformHTML.fixAddBBcodeAction(message);
 	      	String remoteAddr = "";
 	      	if(forumPortlet.isEnableIPLogging()) {
-	      		PortletRequestImp request = event.getRequestContext().getRequest();
-	      		remoteAddr = request.getRemoteAddr();
+	      		try {
+	      			HttpServletRequest request = event.getRequestContext().getRequest();
+	      			remoteAddr = request.getRemoteAddr();
+            } catch (Exception e) {}
 	      	}
 	      	checksms = checksms.replaceAll("&nbsp;", " ") ;
 	      	t = checksms.length() ;

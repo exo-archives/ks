@@ -23,6 +23,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
@@ -57,7 +59,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -1214,8 +1215,11 @@ public class UIQuestions extends UIContainer {
 				link = link.replaceFirst("private", "public");
 				Question question = faqService_.getQuestionById(questionId);
 				String userName = question.getAuthor();
-				PortletRequestImp request = event.getRequestContext().getRequest();
-    		String remoteAddr = request.getRemoteAddr();
+				String remoteAddr = "";
+				try {
+					HttpServletRequest request = event.getRequestContext().getRequest() ;
+					remoteAddr = request.getRemoteAddr();
+        } catch (Exception e) {}
 				if(FAQUtils.getUserByUserId(userName) == null) {
 					String temp = userName;
 					//Category category = faqService_.getCategoryById(question.getCategoryId(), sProvider);

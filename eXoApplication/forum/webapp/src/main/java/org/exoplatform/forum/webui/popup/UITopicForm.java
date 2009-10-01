@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
@@ -44,7 +45,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -612,10 +612,12 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							topicNew.setUserVoteRating(new String[] {}) ;
 							try {
 								String remoteAddr = "";
-								if(forumPortlet.isEnableIPLogging()) {
-									PortletRequestImp request = event.getRequestContext().getRequest();
-									remoteAddr = request.getRemoteAddr();
-								}
+				      	if(forumPortlet.isEnableIPLogging()) {
+				      		try {
+				      			HttpServletRequest request = event.getRequestContext().getRequest();
+				      			remoteAddr = request.getRemoteAddr();
+			            } catch (Exception e) {}
+				      	}
 								topicNew.setRemoteAddr(remoteAddr);
 								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 								if(userProfile.getIsAutoWatchMyTopics()) {
