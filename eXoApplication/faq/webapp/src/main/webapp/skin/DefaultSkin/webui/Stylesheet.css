@@ -1387,7 +1387,7 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -619px;
 }
 
-.UIFAQPortlet .Edit {
+.UIFAQPortlet .MenuItem .Edit {
 	background: url('background/FAQPortlet.gif') no-repeat 10px -619px;
 }
 
