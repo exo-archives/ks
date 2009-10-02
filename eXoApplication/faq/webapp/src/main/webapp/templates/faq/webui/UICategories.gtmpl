@@ -91,7 +91,7 @@
 						<div id="<%=category.getPath()%>" class="$classCss FAQCategory" unselectable="on" ctxMenuId="UIFAQPopupCategories$i" actionLink="<%=uicomponent.event("ChangeIndex",uicomponent.OBJECTID)%>">
 							<div unselectable="on">
 								<a title="<%=category.getName()%>" oncontextmenu="return false;" unselectable="on" onclick="<%=uicomponent.event("OpenCategory", category.getPath())%>">
-									<span><%=FAQUtils.getSubString(category.getName(), 20);%>sss</span>
+									<span><%=FAQUtils.getSubString(category.getName(), 20);%></span>
 								</a>
 								<%
 								String linkWacth = uicomponent.event("WatchManager", category.getPath());
