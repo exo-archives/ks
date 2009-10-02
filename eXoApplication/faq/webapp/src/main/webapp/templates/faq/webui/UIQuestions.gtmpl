@@ -335,8 +335,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                     if(question.getUsersWatch() != null && question.getUsersWatch().length > 0) {
                                                             %>
                                                                         <div class="MenuItem" href="javascript:void(0);">
-                                                                            <div class="IconItem WatchQuestionManager">
-                                                                                <a href="<%=uicomponent.event("WatchManager", question.getId())%>"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
+                                                                            <div>
+                                                                                <a class="IconItem WatchQuestionManager" href="<%=uicomponent.event("WatchManager", question.getId())%>"><%= _ctx.appRes("UIQuestions.title.watch-manager"); %></a>
                                                                             </div>
                                                                         </div>
                                                             <%  }
@@ -347,8 +347,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
 																																		String linkView = uicomponent.event("EditQuestion", question.getId());
 																																	%>	
 																																		<div class="MenuItem">
-																																			<div class="IconItem Edit">
-																																				<a href="$linkView">$itemLabelView</a>
+																																			<div>
+																																				<a class="IconItem Edit" href="$linkView">$itemLabelView</a>
 																																			</div>
 																																		</div>
 																																	<%	
@@ -359,8 +359,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                             String link = uicomponent.getLinkDiscuss();
                                                             %>
                                                                         <div class="MenuItem">
-                                                                            <div class="IconItem DiscussForum" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
-                                                                                <a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+                                                                            <div title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
+                                                                                <a class="IconItem DiscussForum" href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getId())%>;window.open('$link');"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
                                                                             </div>
                                                                         </div>
                                                             <%
@@ -374,8 +374,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                         link = FAQUtils.convertLinkToForum(link);
                                                             %>
                                                                         <div class="MenuItem">
-                                                                            <div class="IconItem DiscussForum">
-                                                                                <a onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
+                                                                            <div>
+                                                                                <a class="IconItem DiscussForum" onmousedown="window.open('$link'); return false;" style="display:block"><%= _ctx.appRes("UIQuestions.title.DiscussForum"); %></a>
                                                                             </div>
                                                                         </div>
                                                             <%  }
@@ -682,8 +682,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                                                                                                                 String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
                                                                                                         %>
                                                                                                                 <div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
-                                                                                                                    <div class="IconItem $iconView">
-                                                                                                                            <span>$itemLabelView</span>
+                                                                                                                    <div>
+                                                                                                                            <a class="IconItem $iconView" href="">$itemLabelView</a>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                         <%
@@ -694,8 +694,8 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
 																																																						String linkView = uicomponent.event("EditQuestion", question.getId());																				
 																																																				%>
 																																																					<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
-																																																						<div class="IconItem Edit">
-																																																								<span>$itemLabelView</span>
+																																																						<div>
+																																																								<a class="IconItem Edit" href="">$itemLabelView</a>
 																																																						</div>
 																																																					</div>
 																																																				<%}%>
