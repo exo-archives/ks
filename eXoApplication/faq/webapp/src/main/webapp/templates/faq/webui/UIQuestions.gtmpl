@@ -841,7 +841,7 @@
 																%>
 																		<div style="float:left; margin:10px 5px 0px 12px;" id="divId${fileName}">
 																			<div class="Image">
-																				<div onclick="eXo.faq.UIFAQPortlet.showPicture(this);">
+																				<div onclick="eXo.faq.UIFAQPortlet.showPicture('$attLink');">
 																					<img style="cursor:pointer;" id="imgView${fileName}" src="$attLink" width="100px" height="100px" alt="" class="AttachmentFile"/>
 																				</div>
 																			</div>
@@ -850,20 +850,20 @@
 														 						<div style="line-height:20px; white-space:nowrap;">
 															 						<div class="Size AttachmentLabel">
 															 							<%
-															 								downloadAtt = uicomponent.event("DownloadAttach");
+															 								String downloadAtt = uicomponent.event("DownloadAttach");
 															 							if(fileName.length() > 60){
 															 							%>
-						 																	<a class="AttachmentLabel" title="$fileName" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-							 																	<%=FAQUtils.getSubString(fileName, 60);%>
+						 																	<a class="AttachmentLabel" title="$fileName" onclick="ajaxRedirect('$linkImage');  if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+							 																	<span><%=FAQUtils.getSubString(fileName, 60);%></span>
 							 																</a>
 						 																<%}else{%>
-						 																	<a class="AttachmentLabel" onclick="if(eXo.core.Browser.browserType === 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$linkImage'); return false;" href="javaScript:void(0);">
-							 																	$fileName
+						 																	<a class="AttachmentLabel" onclick="ajaxRedirect('$linkImage'); if(eXo.core.Browser.browserType === 'ie') {$downloadAtt ; } return false;" href="javaScript:void(0);">
+							 																	<span>$fileName</span>
 							 																</a>
 						 																<%}%>
 															 						</div>
 															 						<div style="color:#1052b5; float:left;">
-															 							&nbsp;- <span style="color:gray;font-size:11px;">$size</span>
+															 							<span>&nbsp;- </span><span style="color:gray;font-size:11px;">$size</span>
 															 						</div>
 															 					</div>
 														 						<div style="clear:left;"><span></span></div>
