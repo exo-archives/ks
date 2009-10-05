@@ -428,7 +428,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		eventQueryCategory.setType("categoryAndQuestion");
 		eventQueryCategory.setAdmin(true);
 		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQueryCategory) ;
-		assertEquals("Can't get all questions have \"test\" charaters in content", listQuickSearch.size(), 6) ;// 1 category and 4 question
+		assertEquals("Can't get all questions have \"test\" charaters in content", listQuickSearch.size(), 4) ;// 1 category and 4 question
 //for (ObjectSearchResult objectSearchResult : listQuickSearch) {
 //	System.out.println("\n\n " + objectSearchResult.getType()  + " : " + objectSearchResult.getName());
 //}
