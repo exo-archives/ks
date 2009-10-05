@@ -427,7 +427,7 @@
 																<tr>
 																	<td>
 																		<!-- Action -->
-																		<table>
+																		<table class="DisablePrint">
 																			<tr>
 																				<!-- action translation question -->
 																				<td style="white-space:nowrap;font-weight:bold;text-align:right;padding-left:5px;">
@@ -457,14 +457,14 @@
 																				if(backPath != null && backPath.trim().length() > 0) {
 																					String link = uicomponent.event("ViewQuestion",backPath);
 																				%>
-																					<td style="width:25px; margin-left:10px;" class="DisablePrint">
+																					<td style="width:25px; margin-left:10px;">
 																						<div onclick="$link" title="<%=_ctx.appRes("UIQuestions.action.Back")%>" style="cursor:pointer">
 																							<div class="BackPageFAq"><span></span></div>
 																						</div>
 																					</td>
 																				<%}%>
 																				<!-- action print question -->
-																				<td style="width:25px" class="DisablePrint">
+																				<td style="width:25px">
 																					<a onclick="javaScript:eXo.faq.UIFAQPortlet.printPreview(this);"
 																							title="<%=_ctx.appRes("UIQuestions.action.PrintQuestion")%>" style="cursor:pointer">
 																						<div class="PrintScrintFAQ"><span></span></div>
@@ -473,12 +473,12 @@
 																			<%if(uicomponent.currentUser_ != null) {
 																					if(canEditQuestion || uicomponent.currentUser_.equals(question.getAuthor())){
 																			%>
-																				<td style="width:22px" class="DisablePrint">
+																				<td style="width:22px">
 																					<a onclick="<%=uicomponent.event("EditQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.EditQuestion")%>" style="cursor:pointer">
 																						<div class="Edit" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
 																					</a>
 																				</td>
-																				<td style="width:22px" class="DisablePrint">
+																				<td style="width:22px">
 																					<a onclick="<%=uicomponent.event("DeleteQuestion", qId);%>" title="<%=_ctx.appRes("UIQuestions.action.DeleteQuestion")%>" style="cursor:pointer">
 																						<div class="Delete" style="width:20px; height:22px; margin-left:3px;"><span></span></div>
 																					</a>
@@ -492,7 +492,7 @@
 																				} 
 																			%>
 																				<!-- action send mail for frend -->
-																				<td style="width:25px" class="DisablePrint">
+																				<td style="width:25px">
 																					<%
 																					String SendToFriend = "SendToFriend";
 																					if((!question.isApproved() || !question.isActivated())){
@@ -517,7 +517,7 @@
 																						String topicIdDiscuss = question.getTopicIdDiscuss();
 																						if(topicIdDiscuss == null || topicIdDiscuss.length() <= 0){
 																			%>
-																				<td style="width:25px" class="DisablePrint">
+																				<td style="width:25px">
 																					<a href="javascript:void(0);" onclick="<%=uicomponent.event("DiscussForum", question.getPath())%>" title="<%=_ctx.appRes("UIQuestions.title.DiscussForum");%>">
 																						<div class="DiscussForum"><span></span></div>
 																					</a>
@@ -532,7 +532,7 @@
 																							}
 																						}
 																			%>
-																				<td style="width:25px" class="DisablePrint">
+																				<td style="width:25px">
 																					<div onclick="window.open('$link'); return false;" title="<%= _ctx.appRes("UIQuestions.title.DiscussForum"); %>">
 																						<div class="MenuItem DiscussForum" style="margin-left:0px"><span></span></div>
 																					</div>
@@ -1007,7 +1007,7 @@
 																				</div>
 																				
 																				<!-- ============================= View mark vote answer ======================================== -->
-																				<div style="overflow:auto; margin-top:5px;">
+																				<div class="DisablePrint" style="overflow:auto; margin-top:5px;">
 																					<%
 																					if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
 																							String userVoteUpAnswer = "javaScript:alert('" + _ctx.appRes("UIQuestions.alert.LoginBeforVote") + "')";
