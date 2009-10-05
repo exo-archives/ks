@@ -20,13 +20,11 @@
 		    StringBuffer stringBuffer = new StringBuffer() ;
 		    String link = uicomponent.event("Ok",Utils.CATEGORY_HOME);
 		    %>
-		    <div class="Icon FAQCategoryViewMove"><span></span></div>
-		    <div id="FAQCateRoot" style="float:left">
+		    <div id="FAQCateRoot" style="padding-left:20px;">
 					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQRootChildren')" ondblclick="$link">
-						<%=uicomponent.homeCategoryName%>
+						<img src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="<%=uicomponent.homeCategoryName%>"/>
 					</a>
 				</div>
-				<div style="clear:left;"><span></span></div>
     		<div style="display:none; padding-left:30px; margin-top:10px;" id="FAQRootChildren">
 			   	<%
 			   	if(listCate!= null && !listCate.isEmpty()){
