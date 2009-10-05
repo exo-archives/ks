@@ -2,7 +2,7 @@
   <% uiform.begin() %>  
 	<div class="SearchForm">
 		<a class="AdvancedSearch" title="<%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%>" href="<%=uicomponent.event("AdvancedSearch");%>"></a>
-		<a class="Search" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
+		<a class="SearchForumIcon" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("Search");%>"></a>
 		<div class="Input">
 		<%  
 			uiform.renderChildren() ;

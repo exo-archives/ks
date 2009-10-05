@@ -23,7 +23,7 @@
 									<span></span>
 								</a>
 						<%}%>
-						<a class="Search" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
+						<a class="SearchForumIcon" style="float:right;" title="<%=_ctx.appRes("UIQuickSearchForm.label.Search")%>" href="<%=uicomponent.event("SearchUser");%>"></a>
 						<div class="Input" style="float:right;" onkeydown="javaScript: if(event.keyCode == 13){<%=uicomponent.event("SearchUser");%>}">
 							<%	
 								uiform.renderChild(uicomponent.FIELD_SEARCH_USER) ;
