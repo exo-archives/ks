@@ -43,6 +43,7 @@
 }
 
 .UIFAQPortlet .UIRightClickPopupMenu .MenuItem a {
+	display: block;
 	padding: 1px 10px 1px 34px;
 }
 
