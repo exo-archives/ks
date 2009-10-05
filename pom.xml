@@ -50,6 +50,9 @@
     
     <!--module>eXoApplication/content/webapp</module>
     <module>eXoApplication/content/service</module-->
+    
+    <module>packaging</module>
+
   </modules>
   <organization>
   	<name>eXo Platform SAS</name>
@@ -70,6 +73,7 @@
       <testResource>
         <directory>src/test/java</directory>
         <includes>
+          <include>**/*.zip</include>
           <include>**/*.properties</include>
           <include>**/*.xml</include>
         </includes>
@@ -167,6 +171,7 @@
         <org.exoplatform.pc.version>2.0.6</org.exoplatform.pc.version>
         <org.exoplatform.portal.version>2.5.3</org.exoplatform.portal.version>
         <org.exoplatform.ks.version>1.2-SNAPSHOT</org.exoplatform.ks.version>
+        <org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
         <test.classes>Test</test.classes>
         <test.skip>true</test.skip>
       </properties>
