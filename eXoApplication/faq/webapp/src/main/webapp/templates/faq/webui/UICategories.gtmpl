@@ -121,9 +121,7 @@
 																	linkView = uicomponent.event(viewAction, category.getPath()+"/true") ;
 														%>
 																<div class="MenuItem">
-																		<div class="IconItem $viewAction">
-																				<a href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
-																		</div>
+																	<a class="IconItem $viewAction" href="javascript:void(0) ;" onmousedown="$linkView">$itemLabelView</a>
 																</div>
 																
 														<%
@@ -132,9 +130,7 @@
 																String rssLink = uicomponent.getRSSLink(category.getPath()) ;
 															%>
 															<div class="MenuItem">
-																<div class="IconItem FAQRSS">
-																	<a href="$rssLink" target="_blank"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
-																</div>
+																<a class="IconItem FAQRSS" href="$rssLink" target="_blank"><%= _ctx.appRes("UICategories.label.RSS"); %></a>
 															</div>
 														<%}%>
 													</div>
