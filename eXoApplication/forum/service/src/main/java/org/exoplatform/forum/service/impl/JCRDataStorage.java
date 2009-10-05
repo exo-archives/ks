@@ -225,7 +225,6 @@ public class JCRDataStorage {
 	
 	public void addRSSEventListenner() throws Exception{
 		if(!isInitRssListener_) return ;
-		System.out.println("isInitRssListener ==>" + isInitRssListener_);
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider) ;
 		try{

@@ -337,34 +337,7 @@
 																			<div style="float:left; color:#721d95;">$date</div>
 																		</div>
 																		
-																		<!-- ============================= View mark vote answer ======================================== -->
-																		<div style="overflow:auto; margin-top:5px;">
-																			<%
-																			if(uicomponent.faqSetting_.isEnanbleVotesAndComments()){
-																				%>
-																					<div style="float:left;">
-																						<div style="float:left;" title="+1">
-																							<div class="VoteAnswerUp">
-																								<a style="width:16px; height:16px; display:block"></a>
-																							</div>
-																						</div>
-																					<%
-																						++i;
-																					%>
-																						<div style="float:left;" title="-1">
-																							<div class="VoteAnswerDown">
-																								<a style="width:16px; height:16px; display:block"></a>
-																							</div>
-																						</div>
-																						<div style="float:left; line-height:18px; margin-left:4px;">
-																							<%=answer.getMarkVotes()%>
-																						</div>
-																						<div style="clear:left;"><span></span></div>
-																					</div>
-																				<%
-																				}%>
-																				<div style="clear:left;"><span></span></div>
-																		</div>
+					
 																		
 																	</div>
 																	<div style="clear:left;"><span></span></div>
