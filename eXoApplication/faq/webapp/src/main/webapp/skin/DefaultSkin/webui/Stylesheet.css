@@ -39,21 +39,20 @@
 }
 
 .UIFAQPortlet .UIRightClickPopupMenu .MenuItem {
-	padding: 1px 10px 1px 6px;
+	padding: 0px;
+}
+
+.UIFAQPortlet .UIRightClickPopupMenu .MenuItem a {
+	display: block;
+	padding: 1px 10px 1px 34px;
 }
 
 .UIFAQPortlet .UIRightClickPopupMenu .IconItem {
 	cursor: pointer;
 	display: block;
 	line-height: 20px;
-	padding: 0px 0px 0px 22px;
 	white-space: nowrap;
 	width: auto;
-}
-
-.UIFAQPortlet .UIRightClickPopupMenu .MenuItem:hover {
-	background-color: #DEE4F2;
-	color: orange;		
 }
 
 /******************************************** UIBreadcumbs ****************************************/
@@ -1252,6 +1251,10 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -143px;
 }
 
+.UIFAQPortlet .MenuItem .FAQRSS {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -143px;
+}
+
 .UIFAQPortlet .CategoryManager {
 	background: url('background/FAQPortlet.gif') no-repeat left -370px;
 }
@@ -1274,6 +1277,10 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -57px;
 }
 
+.UIFAQPortlet .MenuItem .AddCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -57px;
+}
+
 .UIFAQPortlet .ActionsPrint {
 	background: url('background/FAQPortlet.gif') no-repeat left -685px;
 }
@@ -1294,16 +1301,32 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -260px;
 }
 
+.UIFAQPortlet .MenuItem .EditCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -260px;
+}
+
 .UIFAQPortlet .DeleteCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -282px;
+}
+
+.UIFAQPortlet .MenuItem .DeleteCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -282px;
 }
 
 .UIFAQPortlet .MoveCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -305px;
 }
 
+.UIFAQPortlet .MenuItem .MoveCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -305px;
+}
+
 .UIFAQPortlet .AddNewQuestion {
 	background: url('background/FAQPortlet.gif') no-repeat left -508px;
+}
+
+.UIFAQPortlet .MenuItem .AddNewQuestion {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -508px;
 }
 
 .UIFAQPortlet .MoveDown {
@@ -1322,24 +1345,52 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -393px;
 }
 
+.UIFAQPortlet .MenuItem .Watch {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -393px;
+}
+
 .UIFAQPortlet .EditSubCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -258px;
+}
+
+.UIFAQPortlet .MenuItem .EditSubCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -258px;
 }
 
 .UIFAQPortlet .DeleteSupCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -551px;
 }
 
+.UIFAQPortlet .MenuItem .DeleteSupCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -551px;
+}
+
 .UIFAQPortlet .MoveSupCategory {
 	background: url('background/FAQPortlet.gif') no-repeat left -572px;
+}
+
+.UIFAQPortlet .MenuItem .MoveSupCategory {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -572px;
+}
+
+.UIFAQPortlet .MenuItem .Comment {
+	background: url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/UserIcons/Comment.gif) no-repeat 10px center;
 }
 
 .UIFAQPortlet .ResponseQuestion {
 	background: url('background/FAQPortlet.gif') no-repeat left -597px;
 }
 
+.UIFAQPortlet .MenuItem .ResponseQuestion {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -597px;
+}
+
 .UIFAQPortlet .MoveQuestion {
 	background: url('background/FAQPortlet.gif') no-repeat left -663px;
+}
+
+.UIFAQPortlet .MenuItem .MoveQuestion {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -663px;
 }
 
 .UIFAQPortlet .CommentToAnswer {
@@ -1350,8 +1401,16 @@
 	background: url('background/FAQPortlet.gif') no-repeat left -619px;
 }
 
+.UIFAQPortlet .MenuItem .Edit {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -619px;
+}
+
 .UIFAQPortlet .Delete {
 	background: url('background/FAQPortlet.gif') no-repeat left -641px;
+}
+
+.UIFAQPortlet .MenuItem .Delete {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -641px;
 }
 
 .UIFAQPortlet .Print {
@@ -1368,12 +1427,18 @@
 
 .UIFAQPortlet .Export {
 	background: url('background/Export.gif') no-repeat left;
-	
+}
+
+.UIFAQPortlet .MenuItem .Export {
+	background: url('background/Export.gif') no-repeat 10px center;
 }
 
 .UIFAQPortlet .Import {
 	background: url('background/Import.gif') no-repeat left;
-	
+}
+
+.UIFAQPortlet .MenuItem .Import {
+	background: url('background/Import.gif') no-repeat 10px center;
 }
 
 .UIFAQPortlet .QuestionIcon {
@@ -1424,6 +1489,10 @@
 
 .UIFAQPortlet .Send {
 	background: url('background/FAQPortlet.gif') no-repeat left -706px;
+}
+
+.UIFAQPortlet .MenuItem .Send {
+	background: url('background/FAQPortlet.gif') no-repeat 10px -706px;
 }
 
 .UIFAQPortlet .AddRelation {
