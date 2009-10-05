@@ -464,13 +464,14 @@
 	white-space:nowrap;
 }
 
-.UIForumPortlet .Search {
+.UIForumPortlet .SearchForumIcon {
 	background:url('skinIcons/16x16/icons/SearchIcon.gif') no-repeat ;	
 	height:16px;
 	width:16px;
 	float:right;
 	margin:3px 5px 0px 0px;
 	cursor:pointer;
+	display: block;
 }
 
 .UIForumPortlet .ViewTopicCreatedByUser .UIAction {
