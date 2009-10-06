@@ -55,7 +55,6 @@ public class UIQuickSearchForm extends UIForm {
 	
 	public UIQuickSearchForm() throws Exception {
 		addChild(new UIFormStringInput(FIELD_SEARCHVALUE, FIELD_SEARCHVALUE, null)) ;
-		this.setSubmitAction(this.event("Search")) ;
 	}
 
 	
