@@ -24,6 +24,7 @@
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.loadTagScroll();") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInTopic');") ;
 	long setTime = 0;
 	String uiformId = uicomponent.getName() ;
 	String userLogin = "" ;
@@ -302,27 +303,29 @@
 													<div class="MiddleLeftRightClickPopupMenu">
 														<div class="MiddleRightRightClickPopupMenu">
 															<div class="UIRightPopupMenuContainer" style="width:165px">
-																<div class="InputPage" style="float:left;">
-																	<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
-																</div>
-																<div class="UIActionForum" style="float:left;">
-																	<div class="NormalButtom">
-																		<div class="ButtonLeft">
-																			<div class="ButtonRight">
-																				<div class="ButtonMiddle">
-																				 <a href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+																<div id="SearchInTopic">
+																	<div class="InputPage" style="float:left;">
+																		<% uicomponent.renderChild(ForumUtils.SEARCHFORM_ID) ; %>
+																	</div>
+																	<div class="UIActionForum" style="float:left;">
+																		<div class="NormalButtom">
+																			<div class="ButtonLeft">
+																				<div class="ButtonRight">
+																					<div class="ButtonMiddle">
+																					 <a class="SearchLink" href="<%=uicomponent.event("SearchForm")%>"><%=_ctx.appRes("UIForumPortlet.label.Search");%></a>
+																					</div>
 																				</div>
 																			</div>
 																		</div>
 																	</div>
+																	<div style="clear:left;"><span></span></div>
+																	<div class="LineMenu"><span></span></div>
+																	<div class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">	 
+																		<div class="ItemIcon AdvancedSearchIcon">
+																			<a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
+																		</div>
+																	</div>
 																</div>
-																<div style="clear:left;"><span></span></div>
-																<div class="LineMenu"><span></span></div>
-															<div class="MenuItem" onclick="<%=uicomponent.event("AdvancedSearch")%>">	 
-																<div class="ItemIcon AdvancedSearchIcon">
-																	<a href="javaScript:void(0)"><%=_ctx.appRes("UIForumPortlet.label.AdvancedSearch")%></a>
-																</div>
-															</div>
 															</div>
 														</div>
 													</div>
