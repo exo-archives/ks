@@ -15,10 +15,14 @@ import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Repository;
 import javax.jcr.Session;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.BBCode;
@@ -109,7 +113,23 @@ public class TestForumService extends BaseForumTestCase{
 	  userProfile = forumService_.getUserSettingProfile(userName);
 	  assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
 	  //
+	  setData();
+	  userProfile.addLastPostIdReadOfForum(forumId, topicId +"/IdLastPost2");
+	  userProfile.addLastPostIdReadOfTopic(topicId, "IdLastPost2");
+	  forumService_.saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
+	  QueryManager qm = root_.getSession().getWorkspace().getQueryManager();
+	  StringBuffer stringBuffer = new StringBuffer();
 	  
+		stringBuffer.append("/jcr:root").append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append(forumId+"*").append("'))]");
+		
+		System.out.println("\n\n\n test: " + stringBuffer.toString());
+		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+		
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+	  System.out.println("\n\n\n test: " + iter.getSize());
+	  Node node = (Node)root_.getSession().getItem("/exo:applications/ForumService/ForumSystem/UserProfileHome/tu.duy");
+	  System.out.println("\n\n\n lastReadPostOfForum: " + node.getProperty("exo:lastReadPostOfForum").getValues()[0].getString());
   }
   
 	public void testUserLogin() throws Exception{
@@ -145,7 +165,7 @@ public class TestForumService extends BaseForumTestCase{
   	assertNotNull(administration);
   	assertEquals(administration.getForumSortBy(), "forumName");
   }
-	
+	/*
   public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
@@ -303,7 +323,7 @@ public class TestForumService extends BaseForumTestCase{
     topic = createdTopic();
     topic.setOwner("demo");
     forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
-    /*// We have 21 topic: 20 by root and 1 by tu.duy
+    // We have 21 topic: 20 by root and 1 by tu.duy
     pagelist = forumService_.getPageTopicByUser("demo", false, "");
     List<Post> posts = pagelist.getPage(1);
     for (Post post : posts) {
@@ -311,7 +331,7 @@ public class TestForumService extends BaseForumTestCase{
     }
     System.out.println("\n\n " + pagelist.getAvailable());
     //assertEquals(pagelist.getAvailable(), 20);
-*/
+
     //	move Topic
 //	move topic from forum to forum 1
 		Forum forum1 = createdForum();
@@ -340,7 +360,7 @@ public class TestForumService extends BaseForumTestCase{
   	List<TopicType> listTopicType = forumService_.getTopicTypes();
   	assertEquals("Can not get all topic type. Size of topicTypes list is not 3.",listTopicType.size(), 3);
   }
-  
+  */
   private void setData() throws Exception {
   	if(forumService_.getCategory(categoryId) != null){
   		forumService_.removeCategory(categoryId);
@@ -355,7 +375,7 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveTopic(categoryId, forumId, topic, true, false, "");
 		this.topicId = topic.getId();
   }
-  
+  /*
   public void testPost() throws Exception {
 		//set Data
 		setData();
@@ -634,7 +654,7 @@ public class TestForumService extends BaseForumTestCase{
 	  listBBc.addAll(forumService_.getAllBBCode());
 	  assertEquals("Get all bbcode, get size of list BBcode is not 4", listBBc.size(), 4);
   }
-  
+  */
   private UserProfile createdUserProfile(String userName) {
   	UserProfile userProfile = new UserProfile();
   	userProfile.setUserId(userName);
