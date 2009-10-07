@@ -113,23 +113,6 @@ public class TestForumService extends BaseForumTestCase{
 	  userProfile = forumService_.getUserSettingProfile(userName);
 	  assertEquals("Edit AutoWatchMyTopics and can't save this property. AutoWatchMyTopics is false", userProfile.getIsAutoWatchMyTopics(), true);
 	  //
-	  setData();
-	  userProfile.addLastPostIdReadOfForum(forumId, topicId +"/IdLastPost2");
-	  userProfile.addLastPostIdReadOfTopic(topicId, "IdLastPost2");
-	  forumService_.saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
-	  QueryManager qm = root_.getSession().getWorkspace().getQueryManager();
-	  StringBuffer stringBuffer = new StringBuffer();
-	  
-		stringBuffer.append("/jcr:root").append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append(forumId+"*").append("'))]");
-		
-		System.out.println("\n\n\n test: " + stringBuffer.toString());
-		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-		
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
-	  System.out.println("\n\n\n test: " + iter.getSize());
-	  Node node = (Node)root_.getSession().getItem("/exo:applications/ForumService/ForumSystem/UserProfileHome/tu.duy");
-	  System.out.println("\n\n\n lastReadPostOfForum: " + node.getProperty("exo:lastReadPostOfForum").getValues()[0].getString());
   }
   
 	public void testUserLogin() throws Exception{
