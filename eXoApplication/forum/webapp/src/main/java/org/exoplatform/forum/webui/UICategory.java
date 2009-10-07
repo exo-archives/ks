@@ -569,20 +569,36 @@ public class UICategory extends UIForm	{
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
 				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			} else {
+				path = topic.getPath();
+				Forum forum;
+				if(path.indexOf(id[1]) < 0){
+					if(id[id.length-1].indexOf(Utils.POST) == 0){
+						path = path.substring(path.indexOf(Utils.CATEGORY))+"/"+id[id.length-1];
+					}else {
+						path = path.substring(path.indexOf(Utils.CATEGORY));
+					}
+					id = path.trim().split("/");
+					forum = uiCategory.forumService.getForum(id[0], id[1]);
+					forumPortlet.updateUserProfileInfo();
+				} else {
+					forum = uiCategory.getForum(id[1]);
+				}
 				forumPortlet.updateIsRendered(ForumUtils.FORUM);
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
 				uiForumContainer.setIsRenderChild(false) ;
 				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiForumContainer.getChild(UIForumDescription.class).setForum(uiCategory.getForum(id[0]));
-				uiTopicDetail.setUpdateForum(uiCategory.getForum(id[1])) ;
-				uiTopicDetail.setTopicFromCate(uiCategory.categoryId ,id[1], topic, 0) ;
-				String lastPostId = id[3];
-				uiTopicDetail.setLastPostId(lastPostId);
-				if(lastPostId == null || lastPostId.length() < 0) lastPostId = "lastpost";
-				uiTopicDetail.setIdPostView(lastPostId) ;
-				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(uiCategory.categoryId, id[1], topic.getId()) ;
-				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+id[1] + " "));
+				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+				uiTopicDetail.setUpdateForum(forum) ;
+				uiTopicDetail.setTopicFromCate(id[0] ,id[1], topic, 0) ;
+				if(id[id.length-1].indexOf(Utils.POST) == 0){
+					uiTopicDetail.setIdPostView(id[id.length-1]) ;
+					uiTopicDetail.setLastPostId(id[id.length-1]);
+				} else {
+					uiTopicDetail.setIdPostView("lastpost") ;
+				}
+				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
 			context.addUIComponentToUpdateByAjax(forumPortlet) ;

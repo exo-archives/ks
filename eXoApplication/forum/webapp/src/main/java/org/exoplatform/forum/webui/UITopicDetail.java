@@ -261,7 +261,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
+		if(ForumUtils.isEmpty(topic.getDescription())) {
+			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
+		} else this.topic = topic;
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -286,7 +288,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		isShowRule = forumPortlet.isShowRules();
 		enableIPLogging = forumPortlet.isEnableIPLogging();
 		cleanCheckedList();
-		this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
+		if(ForumUtils.isEmpty(topic.getDescription())) {
+			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
+		} else this.topic = topic;
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -601,7 +605,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				userProfile.addLastPostIdReadOfTopic(topicId, IdLastPost);
 				UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.getUserProfile().addLastPostIdReadOfForum(forumId, topicId+"/"+IdLastPost);
-				forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost);
+				forumPortlet.getUserProfile().addLastPostIdReadOfTopic(topicId, IdLastPost+","+ForumUtils.getInstanceTempCalendar().getTimeInMillis());
 				forumService.saveLastPostIdRead(userName, userProfile.getLastReadPostOfForum(), userProfile.getLastReadPostOfTopic());
 			}
 			//updateUserProfiles

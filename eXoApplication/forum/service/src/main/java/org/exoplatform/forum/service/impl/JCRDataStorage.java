@@ -2475,6 +2475,9 @@ public class JCRDataStorage {
 				userIdsp.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(userIdsp);
 			}
+			try {
+				calculateLastRead(sProvider, null, forumId, topicId);
+      } catch (Exception e) {}
 			return topic;
 		} catch (Exception e) {
 			return null;
@@ -2571,12 +2574,13 @@ public class JCRDataStorage {
 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.FORUM);
 			message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 			// ----------------------- finish ----------------------
-			
+			String destForumId = destForumNode.getName(), srcForumId = "";
 			for (Topic topic : topics) {
 				String topicPath = topic.getPath();
 				String newTopicPath = destForumPath + "/" + topic.getId();
 				// Forum remove Topic(srcForum)
 				Node srcForumNode = (Node) forumHomeNode.getSession().getItem(topicPath).getParent();
+				srcForumId =  srcForumNode.getName();
 				// Move Topic
 				forumHomeNode.getSession().getWorkspace().move(topicPath, newTopicPath);
 				// Set TopicCount srcForum
@@ -2611,6 +2615,11 @@ public class JCRDataStorage {
 				List<String> fullNameEmailOwnerTopic = getFullNameAndEmail(sProvider, topic.getOwner());
 				fullNameEmailOwnerTopic.remove(0);
 				sendEmailNotification(fullNameEmailOwnerTopic, message);
+				try {
+					calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
+	      } catch (Exception e) {
+		      e.printStackTrace();
+	      }
 			}
 			if(forumHomeNode.isNew()) {
 				forumHomeNode.getSession().save();
@@ -2622,6 +2631,69 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	private void calculateLastRead(SessionProvider sProvider, String destForumId, String srcForumId, String topicId) throws Exception {
+		Node profileHome = getUserProfileHome(sProvider);
+		QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("/jcr:root").append(profileHome.getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append("*"+topicId+"*").append("'))]");
+		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		List<String> list;
+		List<String> list2;
+		while (iter.hasNext()) {
+			list = new ArrayList<String>();
+			list2 = new ArrayList<String>();
+      Node profileNode = iter.nextNode();
+      list.addAll(ValuesToList(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+      list2.addAll(list);
+      boolean isRead = false;
+      for (String string : list) {
+      	if(destForumId != null && string.indexOf(destForumId) >= 0){ // this forum is read, can check last access topic forum and topic
+      		isRead = true;
+      		try {
+      			long lastAccessTopicTime = 0;
+      			long lastAccessForumTime = 0;
+	      		if(profileNode.hasProperty("exo:lastReadPostOfTopic")){// check last read of src topic
+	      			List<String> listAccess = new ArrayList<String>();
+	      			listAccess.addAll(ValuesToList(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+	      			for (String string2 : listAccess) {// for only run one.
+	              if(string2.indexOf(topicId) >= 0){
+	              	lastAccessTopicTime = Long.parseLong(string2.split(",")[2]) ;
+	              	if(lastAccessTopicTime > 0) {// check last read dest forum
+	  			      		Value[] values = profileNode.getProperty("exo:readForum").getValues() ;
+	  			   				for(Value vl : values) {// for only run one.
+	  			   					String str = vl.getString() ;
+	  			   					if(str.indexOf(destForumId) >= 0) {
+	  			   						if(str.indexOf(":") > 0) {
+	  			   							lastAccessForumTime = Long.parseLong(str.split(":")[1]) ;
+	  			   							break;
+	  			   						}
+	  			   					}
+	  			   				}
+	  		      		}
+	              	if(lastAccessTopicTime > lastAccessForumTime){
+	              		list2.remove(string);
+	              		list2.add(destForumId + "," + string2.substring(0, string2.lastIndexOf(","))); // replace topic,post id
+	  		      		}
+	              	break;
+	              }
+              }
+	      		}
+          } catch (Exception e) { e.printStackTrace(); }
+      	}
+      	if(string.indexOf(srcForumId) >=0 ){// remove last read src forum if last read this forum is this topic.
+      		list2.remove(string);
+      	} 
+      }
+      if(!isRead && destForumId != null){
+      	list2.add(destForumId+","+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POST));
+      }
+      profileNode.setProperty("exo:lastReadPostOfForum", list2.toArray(new String[]{}));
+    }
+		profileHome.save();
+	}
+	
 	public long getLastReadIndex(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;	
 		try {

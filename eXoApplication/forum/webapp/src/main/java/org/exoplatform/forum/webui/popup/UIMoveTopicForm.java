@@ -166,6 +166,7 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 					//
 					uiForm.forumService.moveTopic(uiForm.topics , forumPath, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.updateUserProfileInfo();
 					forumPortlet.cancelAction() ;
 					if(uiForm.isFormTopic) {
 						UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class) ;
