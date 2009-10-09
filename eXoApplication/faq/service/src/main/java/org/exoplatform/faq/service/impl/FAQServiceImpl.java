@@ -30,6 +30,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.BBCode;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryInfo;
@@ -99,7 +100,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	public void addTemplatePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
-	
+  
+	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
+		jcrData_.addInitBBCodePlugin(plugin) ;
+  }
+  
 	public void start() {
 		log.info("initializing FAQ default data...");
     try{
@@ -118,6 +123,13 @@ public class FAQServiceImpl implements FAQService, Startable{
       }   
     }
 
+    try {
+    	log.info("initializing FAQ default BBCode ...");
+	    jcrData_.initDefaultBBCode();
+    } catch (Exception e) {
+    	log.error("Error while initializing FAQ BBCode listeners", e);
+    }
+    
 		try{
 		  log.info("initializing FAQ RSS listeners...");
 			jcrData_.reInitRSSEvenListener();			
@@ -1287,6 +1299,26 @@ public class FAQServiceImpl implements FAQService, Startable{
   	return jcrData_.isCategoryExist(name, path) ;
   }
   
+	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
+		jcrData_.saveBBCode(bbcodes);
+	}
+	
+	public List<BBCode> getAllBBCode() throws Exception {
+		return jcrData_.getAllBBCode();
+	}
+
+	public List<String> getActiveBBCode() throws Exception {
+		return jcrData_.getActiveBBCode();
+	}
+	
+	public BBCode getBBcode(String id) throws Exception{
+		return jcrData_.getBBcode(id);
+	}
+	
+	public void removeBBCode(String bbcodeId) throws Exception {
+		jcrData_.removeBBCode(bbcodeId);
+	}
+
 }
 
 
