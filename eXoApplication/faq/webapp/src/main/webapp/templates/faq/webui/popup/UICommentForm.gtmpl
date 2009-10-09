@@ -40,7 +40,7 @@
 								<div class="QuestionDetail">
 								<%
 									String questionDetail = uicomponent.questionDetail ;
-									questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
+									questionDetail = uicomponent.getReplaceByBBCode(questionDetail);
 								%>
 									<span>$questionDetail</span>
 								</div>

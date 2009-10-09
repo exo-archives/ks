@@ -15,14 +15,14 @@
 							<td class="FieldLabel" style="white-space:nowrap; width:15%">
 								<%=_ctx.appRes("UIResponseForm.label.QuestionTitle")%> :
 							</td>
-							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.questionContent%></td>
+							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.getReplaceByBBCode(uicomponent.questionContent)%></td>
 						</tr>
 						
 						<tr>
 							<td class="FieldLabel" style="white-space:nowrap; width:15%">
 								<%=_ctx.appRes("UIResponseForm.label.QuestionContent")%> :
 							</td>
-							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.questionDetail%></td>
+							<td class="FieldComponent" style="width:85%; white-space:normal;"><%=uicomponent.getReplaceByBBCode(uicomponent.questionDetail)%></td>
 						</tr>
 					<% 
 					String url = uicomponent.url("AddRelation", "OBJECTID") ;
@@ -46,7 +46,7 @@
 											<div onclick="$link" style="float:left; cursor:pointer; border:1px solid red;"><div class="Icon AddRelation"><span></span></div></div>
 									<%}else if(field.getName().equals("QuestionContent") || field.getName().equals("QuestionTitle")){
 											String questionDetail = uicomponent.getValue(field.getName()) ;
-											questionDetail = org.exoplatform.faq.webui.ForumTransformHTML.convertCodeHTML(questionDetail);
+											questionDetail = uicomponent.getReplaceByBBCode(questionDetail);
 										%>
 											<div style="float:left; width:100%">
 												<div class="ViewQuestionNotApproved" style="white-space:normal; float:left;">

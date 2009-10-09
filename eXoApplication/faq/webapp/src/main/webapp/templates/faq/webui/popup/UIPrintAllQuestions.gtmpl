@@ -5,7 +5,6 @@
 	import org.exoplatform.faq.webui.FAQUtils;
 	import org.exoplatform.faq.service.FileAttachment;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
-	import org.exoplatform.faq.webui.ForumTransformHTML;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -131,7 +130,7 @@
 																		<div class="UIDetailContainer">
 																			<%
 																				if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
-																				String detailQuestion = ForumTransformHTML.convertCodeHTML(question.getDetail());
+																				String detailQuestion = uicomponent.getReplaceByBBCode(question.getDetail());
 																			%>
 																					$detailQuestion
 																			<%}%>
@@ -290,7 +289,7 @@
 												int i = 0;
 												for(Answer answer in answers) {
 													res = answer.getResponses();
-													res = ForumTransformHTML.convertCodeHTML(res);
+													res = uicomponent.getReplaceByBBCode(res);
 													if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 														continue;
 													}
@@ -408,7 +407,7 @@
 																		<div class="ResponseItemContainerRight">
 																			<%
 																				String commentDetail =comment.getComments() ;
-																				commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
+																				commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
 																			%>
 																			<span>$commentDetail</span>
 																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>

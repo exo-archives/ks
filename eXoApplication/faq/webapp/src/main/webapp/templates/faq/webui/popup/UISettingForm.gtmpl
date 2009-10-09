@@ -2,13 +2,72 @@
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Cate;
+import org.exoplatform.faq.webui.popup.UIBBCodeManagament;
 
 if(!uicomponent.isEditPortlet_){
 %>
-<div class="UISettingForm $uicomponent.id">
+<div class="UISettingForm">
 	<% uiform.begin() %>
- 					<form class="UIForm">
-	 					<div class="HorizontalLayout">
+
+	<div class="UITabPane">
+		<div style="padding:2px;">
+			<div class="WorkingArea">
+
+
+
+				<div class="UIHorizontalTabs">
+			 		<div class="LeftHorizontalTabs">
+			 			<div class="RightHorizontalTabs">
+			 				<div class="CenterHorizontalTabs">
+								<div class="TabsContainer">
+									<%
+										int count = 0;
+										String className="" ;
+										for(inputSet in uicomponent.getChildren()) {
+											if(inputSet.id.indexOf("Tab") < 0) continue;
+											String link = "javascript:void(0);";
+											if(uicomponent.getIsSelected(count)){
+												className="SelectedTab" ;
+											}else {
+												className="NormalTab" ;
+												link = uicomponent.event("SelectTab",""+count) ;
+											}
+											String tabNames = _ctx.appRes("UISettingForm.label."+inputSet.getId());
+											count ++;
+									%>
+											<div class="UITab NormalTabStyle">
+												<div class="$className">
+													<div class="LeftTab">
+														<div class="RightTab">
+															<div onclick="$link">
+																<div class="MiddleTab">$tabNames</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+									<% }%>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="UIForm">
+					<div class="HorizontalLayout" style="margin:0px;">
+						<div class="UITabContentContainer">
+						<%  
+							String display =	"block";
+							int j = 0;
+							for(tabconten in uicomponent.getChildren()){
+								if(tabconten.id.indexOf("Tab") > 0) {
+									if(uicomponent.getIsSelected(j))display =	"block";
+									else display = "none";
+						%>
+							<div style="display:$display" id="UITabContent" class="UITabContent">
+
+							<%if(tabconten.id.equals(uicomponent.USER_SETTING_TAB)){%>
+								
 			 					<table class="UIFormGrid">								
 									<tbody>
 									<%
@@ -16,26 +75,26 @@ if(!uicomponent.isEditPortlet_){
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.display-mode"); %></td>
 											<td class="FieldComponent">
-												<%uicomponent.renderField(uicomponent.DISPLAY_MODE)%>
+												<%uicomponent.renderField(tabconten.getChildById(uicomponent.DISPLAY_MODE));%>
 											</td>
 										</tr>
 								<%}%>
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-by"); %></td>
 											<td class="FieldComponent">
-												<%uicomponent.renderField(uicomponent.ORDER_BY)%>
+												<%uicomponent.renderField(tabconten.getChildById(uicomponent.ORDER_BY));%>
 											</td>
 										</tr>
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.order-type"); %></td>
 											<td class="FieldComponent">
-												<%uicomponent.renderField(uicomponent.ORDER_TYPE)%>
+												<%uicomponent.renderField(tabconten.getChildById(uicomponent.ORDER_TYPE));%>
 											</td>
 										</tr>
 										<tr>
 											<td class="FieldLabel"><%= _ctx.appRes("UISettingForm.label.option.vote"); %></td>
 											<td class="FieldComponent">
-												<%uicomponent.renderField(uicomponent.ITEM_VOTE)%>
+												<%uicomponent.renderField(tabconten.getChildById(uicomponent.ITEM_VOTE));%>
 											</td>
 										</tr>
 										<tr>
@@ -69,9 +128,25 @@ if(!uicomponent.isEditPortlet_){
 										</tr>
 									</tbody>
 								</table>
-				 		</div>
-				 	</form>
-			 	<div class="UIAction">
+								
+							<%} else { %>
+									<% uicomponent.renderField(tabconten.getChild(UIBBCodeManagament.class)) ;%>
+							<%}  %>
+							</div>
+						<% ++j;	
+								}
+							}  %>
+						</div>
+					</div>
+				</div>
+
+
+
+			</div>
+		</div>
+	</div>
+	
+		<div class="UIAction">
 			<table class="ActionContainer" style="text-align:center">
 				<tr>
 					<td>
