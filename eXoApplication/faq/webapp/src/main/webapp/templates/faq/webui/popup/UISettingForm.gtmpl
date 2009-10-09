@@ -13,7 +13,12 @@ if(!uicomponent.isEditPortlet_){
 		<div style="padding:2px;">
 			<div class="WorkingArea">
 
-
+			<%  
+				boolean isAdmin = uicomponent.getFaqSetting().isAdmin();
+				String style ="border:solid 1px #AEAEAE;";
+				if(isAdmin){
+					style = ""
+			%>
 
 				<div class="UIHorizontalTabs">
 			 		<div class="LeftHorizontalTabs">
@@ -52,10 +57,11 @@ if(!uicomponent.isEditPortlet_){
 						</div>
 					</div>
 				</div>
-				
+			<% } %>
+			
 				<div class="UIForm">
 					<div class="HorizontalLayout" style="margin:0px;">
-						<div class="UITabContentContainer">
+						<div class="UITabContentContainer" style="$style">
 						<%  
 							String display =	"block";
 							int j = 0;
@@ -128,10 +134,13 @@ if(!uicomponent.isEditPortlet_){
 										</tr>
 									</tbody>
 								</table>
-								
-							<%} else { %>
-									<% uicomponent.renderField(tabconten.getChild(UIBBCodeManagament.class)) ;%>
-							<%}  %>
+							<%
+								} else {
+										if(isAdmin) { 
+											uicomponent.renderField(tabconten.getChild(UIBBCodeManagament.class)) ;
+										}
+								}
+							%>
 							</div>
 						<% ++j;	
 								}

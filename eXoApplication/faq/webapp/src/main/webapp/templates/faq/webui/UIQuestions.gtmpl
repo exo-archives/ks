@@ -6,7 +6,6 @@
 	import org.exoplatform.faq.service.Comment;
 	import org.exoplatform.faq.webui.ValidatorDataInput;
 	import org.exoplatform.faq.webui.FAQUtils;
-	import org.exoplatform.faq.webui.ForumTransformHTML;
 	import org.exoplatform.web.application.JavascriptManager;
 
 	String compId = uicomponent.getId(); 
@@ -946,7 +945,7 @@
 														int i = 0;
 														for(Answer answer in answers) {
 															res = answer.getResponses();
-															res = ForumTransformHTML.convertCodeHTML(res);
+															res = uicomponent.getReplaceByBBCode(res);
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 																continue;
 															}
@@ -1154,7 +1153,7 @@
 																				<div class="ResponseItemContainerRight">
 																					<%
 																						String commentDetail =comment.getComments() ;
-																						commentDetail = ForumTransformHTML.convertCodeHTML(commentDetail);
+																						commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
 																					%>
 																					<span>$commentDetail</span>
 																					<div style="color:#721d95"><%=FAQUtils.getFormatDate(comment.getDateComment());%></div>
