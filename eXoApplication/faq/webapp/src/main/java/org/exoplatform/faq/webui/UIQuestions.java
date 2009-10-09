@@ -87,7 +87,6 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SettingActionListener.class),
 				@EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
-				@EventConfig(listeners = UIQuestions.BBCodeManagamentActionListener.class),
 				@EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.OpenQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.CloseQuestionActionListener.class),
@@ -282,7 +281,6 @@ public class UIQuestions extends UIContainer {
 
 	public void setFAQSetting(FAQSetting setting){
 		this.faqSetting_ = setting;
-		//setListObject();
 	}
 	
 	public void setFAQService(FAQService service){
@@ -597,19 +595,6 @@ public class UIQuestions extends UIContainer {
 			popupContainer.setId("FAQQuestionManagerment") ;
 			popupAction.activate(popupContainer, 900, 850) ;
 			questionManagerForm.setFAQSetting(questions.faqSetting_);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-		}
-	}
-
-	static  public class BBCodeManagamentActionListener extends EventListener<UIQuestions> {
-		public void execute(Event<UIQuestions> event) throws Exception {
-			UIQuestions questions = event.getSource() ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIBBCodeManagament codeManagament = popupContainer.addChild(UIBBCodeManagament.class, null, null);
-			popupContainer.setId("BBCodeManagament") ;
-			popupAction.activate(popupContainer, 750, 800) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
