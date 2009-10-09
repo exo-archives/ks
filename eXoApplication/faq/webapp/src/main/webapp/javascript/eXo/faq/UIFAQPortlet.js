@@ -696,4 +696,46 @@ UIFAQPortlet.prototype.createLink = function(cpId,isAjax) {
 	}
 } ;
 
+UIFAQPortlet.prototype.showBBCodeHelp = function(id, isIn){
+	var parentElm = document.getElementById(id);
+	var popupHelp = document.getElementById(id+"ID");
+	var bbCodeContentHelp = eXo.core.DOMUtil.findFirstDescendantByClass(parentElm,"div","BBCodeHelpContent");
+	if(bbCodeContentHelp){
+		if(isIn == "true"){
+			bbCodeContentHelp.style.display = "block";
+			var bbCodeHelpPopup = eXo.core.DOMUtil.findFirstDescendantByClass(bbCodeContentHelp,"div","BBCodeHelpPopup");
+			var contentHelp = eXo.core.DOMUtil.findFirstDescendantByClass(parentElm,"div","ContentHelp");
+			var contentPosition = eXo.core.DOMUtil.findFirstDescendantByClass(bbCodeContentHelp,"div","ContentPosition");
+			var l = String(contentHelp.innerHTML).length;
+			if(l < 100){
+				contentHelp.style.width = (20 + l*4) + "px"
+				bbCodeContentHelp.style.width = (20 + l*4 + 54) + "px"
+				contentPosition.style.height = "auto";
+			} else {
+				contentHelp.style.width = "400px"
+				bbCodeContentHelp.style.width = "454px"
+				contentPosition.style.height = (contentHelp.offsetHeight - 26) + "px";
+			}
+			var parPopup = document.getElementById("UIFAQPopupWindow");
+			var parPopup2 = document.getElementById("FAQChildWatchPopupWindow");
+			var left = 0;
+			var idField = String(id).replace("Help", "");
+			var field = document.getElementById(idField);
+			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + field.offsetWidth + 135;
+			var worksPace = document.getElementById('UIWorkingWorkspace');
+			var worksPaceW = 1*1;
+			if(worksPace) worksPaceW = (worksPace.offsetWidth)*1;
+			if((left > contentHelp.offsetWidth) && ((left + bbCodeContentHelp.offsetWidth)  > worksPaceW)) {
+				bbCodeContentHelp.style.left = "-"  + (contentHelp.offsetWidth + 50) + "px";
+				popupHelp.className = "LeftBBCodeHelpPopup";
+			} else {
+				bbCodeContentHelp.style.left = "12px";
+				popupHelp.className = "RightBBCodeHelpPopup";
+			}
+		} else {
+			bbCodeContentHelp.style.display = "none";
+		}
+	}
+};
+
 eXo.faq.UIFAQPortlet = new UIFAQPortlet() ;

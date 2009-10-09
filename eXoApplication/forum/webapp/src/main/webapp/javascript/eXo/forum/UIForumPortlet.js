@@ -903,7 +903,9 @@ UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
 			var field = document.getElementById(idField);
 			left = (parPopup.offsetLeft)*1 + (parPopup2.offsetLeft)*1 + field.offsetWidth + 135;
 			var worksPace = document.getElementById('UIWorkingWorkspace');
-			if((left > contentHelp.offsetWidth) && ((left + bbCodeContentHelp.offsetWidth)  > worksPace.offsetWidth)) {
+			var worksPaceW = 1*1;
+			if(worksPace) worksPaceW = (worksPace.offsetWidth)*1;
+			if((left > contentHelp.offsetWidth) && ((left + bbCodeContentHelp.offsetWidth)  > worksPaceW)) {
 				bbCodeContentHelp.style.left = "-"  + (contentHelp.offsetWidth + 50) + "px";
 				popupHelp.className = "LeftBBCodeHelpPopup";
 			} else {
