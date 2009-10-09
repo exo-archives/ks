@@ -16,14 +16,19 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.BBCode;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQContainer;
 import org.exoplatform.faq.webui.UIFAQPortlet;
@@ -32,7 +37,6 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,13 +76,12 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private boolean isAddNew = false;
 	private boolean isNotDefLg = false; 
 	private FAQSetting faqSetting_ ;
-	
+	private FAQService faqService ;
 	private String link_ = "";
-
-	public void activate() throws Exception { }
-	public void deActivate() throws Exception { }
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	
 	public UICommentForm() throws Exception{
+		faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		currentUser_ = FAQUtils.getCurrentUser();
 		this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
 		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, ""));
@@ -91,8 +94,10 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
   	return questionDetail;
   }
 	
+	public void activate() throws Exception { }
+	public void deActivate() throws Exception { }
+	
 	public void setInfor(Question question, String commentId, FAQSetting faqSetting, String language) throws Exception{
-		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		if(!language.equals(question.getLanguage())) {
 			try {
 				QuestionLanguage questionLanguage = faqService.getQuestionLanguageByLanguage(question.getPath(), language);
@@ -117,6 +122,47 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
+		
+		List<String> bbcName = new ArrayList<String>();
+		List<BBCode> bbcs = new ArrayList<BBCode>();
+		try {
+			bbcName = faqService.getActiveBBCode();
+    } catch (Exception e) {
+    }
+    boolean isAdd = true;
+    BBCode bbCode;
+    for (String string : bbcName) {
+    	isAdd = true;
+    	for (BBCode bbc : listBBCode) {
+    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+    			bbcs.add(bbc);
+    			isAdd = false;
+    			break;
+    		}
+    	}
+    	if(isAdd) {
+    		bbCode = new BBCode();
+    		if(string.indexOf("=") >= 0){
+    			bbCode.setOption(true);
+    			string = string.replaceFirst("=", "");
+    			bbCode.setId(string+"_option");
+    		}else {
+    			bbCode.setId(string);
+    		}
+    		bbCode.setTagName(string);
+    		bbcs.add(bbCode);
+    	}
+    }
+    listBBCode.clear();
+    listBBCode.addAll(bbcs);
+	}
+	
+	@SuppressWarnings("unused")
+  private String getReplaceByBBCode(String s) throws Exception {
+		try {
+			s = Utils.getReplacementByBBcode(s, listBBCode, faqService);
+    } catch (Exception e) {}
+    return s;
 	}
 	
 	public void setLink(String link) { this.link_ = link;}
@@ -137,7 +183,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UICommentForm> event) throws Exception {
 			UICommentForm commentForm = event.getSource() ;
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
-			FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
@@ -148,7 +193,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
         return;
 			}
-      if(!faqService.isExisting(commentForm.question_.getPath())){
+      if(!commentForm.faqService.isExisting(commentForm.question_.getPath())){
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -171,7 +216,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				String topicId = commentForm.question_.getTopicIdDiscuss();
 				if(topicId != null && topicId.length() > 0) {
 					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-					Topic topic = (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC);
+					Topic topic = (Topic)forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
 					if(topic != null) {
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
@@ -235,7 +280,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				String currentUser = FAQUtils.getCurrentUser() ;
 				commentForm.comment.setCommentBy(currentUser) ;
 				commentForm.comment.setFullName(FAQUtils.getFullName(currentUser)) ;
-				faqService.saveComment(commentForm.question_.getPath(), commentForm.comment, language);
+				commentForm.faqService.saveComment(commentForm.question_.getPath(), commentForm.comment, language);
 				if(!commentForm.languageSelected.equals(commentForm.question_.getLanguage())) {
 					try {
 						questions.updateCurrentLanguage() ;
