@@ -22,9 +22,9 @@ package org.exoplatform.forum.service;
  * May 5, 2008 - 2:33:00 AM  
  */
 public class ForumAdministration {
-	private String forumSortBy ;//Name , Order, createdDate, laspostDate, postCount, topicCount
+	private String forumSortBy ;//name , forumOrder, createdDate, laspostDate, postCount, topicCount
 	private String forumSortByType ;//ascending or descending
-	private String topicSortBy ;//Name, isLock, lastPostDate, postCount,  numberAttachments.
+	private String topicSortBy ;//name, isLock, lastPostDate, postCount,  numberAttachments.
 	private String topicSortByType; 
 	private String censoredKeyword = "";
 	private String headerSubject = "";

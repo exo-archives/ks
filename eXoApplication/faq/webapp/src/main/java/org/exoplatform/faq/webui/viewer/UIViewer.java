@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.BBCode;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
@@ -51,6 +52,7 @@ public class UIViewer extends UIContainer {
 	private FAQService fAqService;
 	private String path = Utils.CATEGORY_HOME;
 	private boolean useAjax = false;
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
@@ -89,9 +91,49 @@ public class UIViewer extends UIContainer {
     } catch (Exception e) {
     	e.printStackTrace();
     }
+    
+    List<String> bbcName = new ArrayList<String>();
+		List<BBCode> bbcs = new ArrayList<BBCode>();
+		try {
+			bbcName = fAqService.getActiveBBCode();
+    } catch (Exception e) {
+    }
+    boolean isAdd = true;
+    BBCode bbCode;
+    for (String string : bbcName) {
+    	isAdd = true;
+    	for (BBCode bbc : listBBCode) {
+    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+    			bbcs.add(bbc);
+    			isAdd = false;
+    			break;
+    		}
+    	}
+    	if(isAdd) {
+    		bbCode = new BBCode();
+    		if(string.indexOf("=") >= 0){
+    			bbCode.setOption(true);
+    			string = string.replaceFirst("=", "");
+    			bbCode.setId(string+"_option");
+    		}else {
+    			bbCode.setId(string);
+    		}
+    		bbCode.setTagName(string);
+    		bbcs.add(bbCode);
+    	}
+    }
+    listBBCode.clear();
+    listBBCode.addAll(bbcs);
 		return categoryInfo;
 	}
-	
+
+  private String getReplaceByBBCode(String s) throws Exception {
+		try {
+			s = Utils.getReplacementByBBcode(s, listBBCode, fAqService);
+    } catch (Exception e) {}
+    return s;
+	}
+  
 	static public class ChangePathActionListener extends EventListener<UIViewer> {
 		public void execute(Event<UIViewer> event) throws Exception {
 			String path = event.getRequestContext().getRequestParameter(OBJECTID);

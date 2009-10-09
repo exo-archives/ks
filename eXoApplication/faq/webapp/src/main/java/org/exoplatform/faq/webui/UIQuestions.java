@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
+import org.exoplatform.faq.service.BBCode;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -36,6 +37,7 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.webui.popup.UIBBCodeManagament;
 import org.exoplatform.faq.webui.popup.UICategoryForm;
 import org.exoplatform.faq.webui.popup.UICommentForm;
 import org.exoplatform.faq.webui.popup.UIDeleteQuestion;
@@ -85,6 +87,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UIQuestions.AddNewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.SettingActionListener.class),
 				@EventConfig(listeners = UIQuestions.QuestionManagamentActionListener.class),
+				@EventConfig(listeners = UIQuestions.BBCodeManagamentActionListener.class),
 				@EventConfig(listeners = UIQuestions.ViewQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.OpenQuestionActionListener.class),
 				@EventConfig(listeners = UIQuestions.CloseQuestionActionListener.class),
@@ -144,7 +147,8 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
-
+	private boolean isGetSv = true;
+	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	
 	public UIFAQPageIterator pageIterator = null ;
 	public long pageSelect = 0;
@@ -444,6 +448,52 @@ public class UIQuestions extends UIContainer {
 
 	private void setLink(String link) { this.link_ = link;}
 	
+	
+	private String getReplaceByBBCode(String s) throws Exception {
+		List<String> bbcName = new ArrayList<String>();
+		if(isGetSv) {
+			List<BBCode> bbcs = new ArrayList<BBCode>();
+			try {
+				bbcName = faqService_.getActiveBBCode();
+				isGetSv = false;
+			boolean isAdd = true;
+			BBCode bbCode;
+			for (String string : bbcName) {
+				isAdd = true;
+				for (BBCode bbc : listBBCode) {
+					if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+						bbcs.add(bbc);
+						isAdd = false;
+						break;
+					}
+				}
+				if(isAdd) {
+					bbCode = new BBCode();
+					if(string.indexOf("=") >= 0){
+						bbCode.setOption(true);
+						string = string.replaceFirst("=", "");
+						bbCode.setId(string+"_option");
+					}else {
+						bbCode.setId(string);
+					}
+					bbCode.setTagName(string);
+					bbcs.add(bbCode);
+				}
+			}
+			listBBCode.clear();
+			listBBCode.addAll(bbcs);
+			} catch (Exception e) {}
+		}
+		if(!listBBCode.isEmpty()){
+			try {
+				s = Utils.getReplacementByBBcode(s, listBBCode, faqService_);
+			} catch (Exception e) {}
+		}
+		return s;
+	}
+	
+	
+	
 	static public class DownloadAttachActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
@@ -547,6 +597,19 @@ public class UIQuestions extends UIContainer {
 			popupContainer.setId("FAQQuestionManagerment") ;
 			popupAction.activate(popupContainer, 900, 850) ;
 			questionManagerForm.setFAQSetting(questions.faqSetting_);
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+
+	static  public class BBCodeManagamentActionListener extends EventListener<UIQuestions> {
+		public void execute(Event<UIQuestions> event) throws Exception {
+			UIQuestions questions = event.getSource() ;
+			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIBBCodeManagament codeManagament = popupContainer.addChild(UIBBCodeManagament.class, null, null);
+			popupContainer.setId("BBCodeManagament") ;
+			popupAction.activate(popupContainer, 750, 800) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

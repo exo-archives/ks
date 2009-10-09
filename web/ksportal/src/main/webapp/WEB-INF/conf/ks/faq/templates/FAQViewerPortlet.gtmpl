@@ -169,6 +169,7 @@
 	<%for(questionCate in questionCates) { 
 			String question_ =	questionCate.getQuestion();
 			question_ = question_.replaceAll("<br/>", " ");
+			question_ = uicomponent.getReplaceByBBCode(question_);
 			String id_ = questionCate.getId();
 	%>
 		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
@@ -208,6 +209,7 @@
 			<ol>
 				<%for(questionInfo in questionInfos) { 
 						String question =	questionInfo.getQuestion();
+						question = uicomponent.getReplaceByBBCode(question);
 						String id = questionInfo.getId();
 				%>
 				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
@@ -219,13 +221,16 @@
 	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
 	<%for(questionCate in questionCates) { 
 			String question_ =	questionCate.getQuestion();
+			question_ = uicomponent.getReplaceByBBCode(question_);
 			String id_ = questionCate.getId();
 			List answers_ = questionCate.getAnswers();
 	%>
 		<div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
 		<div class="Answer" style="margin:3px 0px;">
 			<ol>
-			<%for(answer in answers_){ %>
+			<%for(answer in answers_){ 
+					answer = uicomponent.getReplaceByBBCode(answer);
+			%>
 				<li><span class="TextStyle">${answer}</span></li>
 			<%} %>
 			</ol>
@@ -248,6 +253,7 @@
 	<div class="FAQAnswerContainer">
 		<%for(questionInfo in questionInfos) {
 				String question = questionInfo.getQuestion();
+				question = uicomponent.getReplaceByBBCode(question);
 				List answers = questionInfo.getAnswers();
 				String qsId = questionInfo.getId();
 		%>
@@ -255,7 +261,9 @@
 			<div class="FAQAnswerIcon"><a name="${qsId}">$question</a></div>
 			<div class="Answer">
 				<ol>
-				<%for(answer in answers){ %>
+				<%for(answer in answers){ 
+						answer = uicomponent.getReplaceByBBCode(answer);
+				%>
 					<li><span class="TextStyle">${answer}</span></li>
 				<%} %>
 				</ol>

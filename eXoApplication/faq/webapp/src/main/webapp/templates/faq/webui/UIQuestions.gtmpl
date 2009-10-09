@@ -729,7 +729,7 @@
 																					<%
 																						String questionDetail = uicomponent.getQuestionDetail() ;
 																						if(questionDetail != null && questionDetail.trim().length() > 0){\
-																						questionDetail = ForumTransformHTML.convertCodeHTML(questionDetail);
+																						questionDetail = uicomponent.getReplaceByBBCode(questionDetail);
 																					%>
 																							$questionDetail
 																					<%}%>

@@ -1,0 +1,313 @@
+<div class="UIAddBBCodeForm">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInput">
+				<table class="UIFormGrid">
+					<tbody>
+					<% if(!uiform.getPriview()) {
+						String actionPriview = uicomponent.event("Preview",uiform.PREVIEW);
+						String id = "";
+					%>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_TAGNAME_INPUT);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></div>
+								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.faq.UIFAQPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></div>
+								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" style="margin:0px 0px 0px -3px;" id="$id" onmouseover="eXo.faq.UIFAQPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></div>
+								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.faq.UIFAQPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldComponent" style="width:360px;">
+								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></div>
+								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" style="margin:0px 0px 0px -3px;" id="$id" onmouseover="eXo.faq.UIFAQPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+							<td class="FieldComponent">
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="$actionPriview">
+																	<span><%=_ctx.appRes("UIAddBBCodeForm.action.Preview");%></span>
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_USEOPTION_CHECKBOX);%></td>
+							<td class="FieldComponent" colspan="2">
+								<div class="FloatLeft" id="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
+								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
+								<div class="IconBBCodeHelp ShowHelpIcon" id="$id" onmouseover="eXo.faq.UIFAQPortlet.showBBCodeHelp('$id', 'true')"  onmouseout="eXo.forum.UIForumPortlet.showBBCodeHelp('$id', 'false')">
+									<div style="position: absolute;">
+										<div class="BBCodeHelpContent">
+										
+											<div class="BBCodeHelpPopup">
+												<div id="${id}ID" class="LeftBBCodeHelpPopup">
+													<div class="BBCodeHelpTL">
+														<div class="BBCodeHelpTR">
+															<div class="BBCodeHelpTC"><span></span></div>
+														</div>
+													</div>
+													<div class="BBCodeHelpML">
+														<div class="BBCodeHelpMR">
+															<div class="ContentPosition">
+																<div class="ContentHelp"><%=_ctx.appRes("UIAddBBCodeForm.text." + id);%></div>
+															</div>
+														</div>
+													</div>
+													<div class="BBCodeHelpBL">
+														<div class="BBCodeHelpBR">
+															<div class="BBCodeHelpBC"><span></span></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										
+										</div>
+									</div>
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</td>
+						</tr>
+						<% } else { 
+							 String actionPriview = uicomponent.event("Preview","back");
+						%>
+						<tr>
+							<td class="FieldPriview"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+						</tr>
+						<tr>
+							<td class="FieldPriview"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE); %></td>
+						</tr>
+						<tr>
+							<td>
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="<%=uicomponent.event("Apply");%>"><%=_ctx.appRes("UIAddBBCodeForm.action.Apply");%></a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldPriview">
+								<div class="PreviewContainer">
+									<% String example = uiform.getReplaceByBBCode(); %>
+									<samp>$example</samp>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="UIAction"> 
+									<table class="ActionContainer">
+										<tr>
+											<td align="center">
+												<div class="ActionButton LightBlueStyle">
+													<div class="ButtonLeft">
+														<div class="ButtonRight">
+															<div class="ButtonMiddle">
+																<a href="$actionPriview"><%=_ctx.appRes("UIAddBBCodeForm.action.Back");%></a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+							 		</table> 
+								</div>
+							</td>
+						</tr>
+						<% } %>
+					</tbody>
+				</table>
+				<% 
+					 if(uiform.getPriview()) {
+				%>
+					<div style="display:none;">
+					<%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%>
+					<%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%>
+					<%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%>
+					</div>
+				<% } %>
+			</div>
+		</div>
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

@@ -55,6 +55,8 @@ public interface FAQService extends FAQServiceLegacy{
 	 */
 	public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
 	
+	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception ;
+	
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**
@@ -657,6 +659,13 @@ public interface FAQService extends FAQServiceLegacy{
   public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
 
   public boolean isModerateQuestion(String id) throws Exception  ;
+  
+  public void saveBBCode(List<BBCode> bbcodes) throws Exception ;
+  public List<BBCode> getAllBBCode() throws Exception ;
+  public List<String> getActiveBBCode() throws Exception;
+  public BBCode getBBcode(String id) throws Exception;
+  public void removeBBCode(String bbcodeId) throws Exception ;
+
 }
 
 
