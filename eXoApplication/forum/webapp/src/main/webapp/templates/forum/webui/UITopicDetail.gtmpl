@@ -988,11 +988,11 @@
 						</div>
 							<div class="FootPost" style="margin-bottom:2px;">
 								<div class="ButtonContainer" style="float:right;">
-									<div style="font-size:11px; color:gray;">
+									<div style="font-size:11px; color:gray; max-width:400px;" align="justify">
 										<%	
 											if(!ForumUtils.isEmpty(editBy)) {
 										%>
-												<div><%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <a href="#">$editBy</a> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate</div>
+												<div><%=_ctx.appRes("UITopicDetail.label.LastEditedBy");%> <span style="color:blue">$editBy</span> <%=_ctx.appRes("UITopicDetail.label.on");%> $editDate</div>
 												<%
 													String reason = post.getEditReason() ;
 													if(!ForumUtils.isEmpty(reason)) { 
@@ -1002,6 +1002,10 @@
 												<% } %>
 										<%} %>
 									</div>
+								</div>
+								<div style="clear:right;"><span></span></div>
+								<div><span></span></div>
+								<div class="ButtonContainer" style="float:right;">
 									<div class="UIActionForum">
 									<%
 									if(isShowMenu) {
@@ -1051,7 +1055,7 @@
 										<div style="clear:left"><span></span></div>
 									</div>
 								</div>
-								<div style="clear:both"><span></span></div>
+								<div style="clear:right;"><span></span></div>
 							</div>
 								
 						</td>
