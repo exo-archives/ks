@@ -410,19 +410,16 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				/*UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;*/
-				uiPortlet.cancelAction();
-				
 				List<BBCode> bbCodes = new ArrayList<BBCode>();
 				boolean inactiveAll = true;
+				BBCode code ;
 				for (BBCode bbc : settingForm.listBBCode) {
 					boolean isActive = true;
 					try {
-						isActive = (Boolean)settingForm.getUIFormCheckBoxInput(bbc.getId()).getValue();
-	        } catch (Exception e) {e.printStackTrace();
-	        }
+						isActive = settingForm.getUIFormCheckBoxInput(bbc.getId()).isChecked();
+	        } catch (Exception e) {}
 					if(bbc.isActive() != isActive){
-						bbc.setActive(isActive);
-						bbCodes.add(bbc);
+						bbCodes.add(settingForm.setBBCode(bbc));
 					}
 					if(isActive) inactiveAll = false;
 	      }
@@ -438,12 +435,12 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		      } catch (Exception e) {
 		      }
 				}
-//				settingForm.setCheckBoxBBCode();
 				
-				
+				uiPortlet.cancelAction();
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
 				categories.resetListCate();
+				questions.setIsGetSv(true);
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
 				questions.updateCurrentQuestionList() ;
@@ -451,6 +448,18 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			}
 			return ;
 		}
+	}
+	
+	private BBCode setBBCode(BBCode bbc) {
+		BBCode bbcode = new BBCode();
+		bbcode.setId(bbc.getId());
+		bbcode.setTagName(bbc.getTagName());
+		bbcode.setReplacement(bbc.getReplacement());
+		bbcode.setDescription(bbc.getDescription());
+		bbcode.setExample(bbc.getExample());
+		bbcode.setOption(bbc.isOption());
+		bbcode.setActive(!bbc.isActive());
+		return bbcode;
 	}
 	
 	static public class UserWatchManagerActionListener extends EventListener<UISettingForm> {
