@@ -467,14 +467,14 @@ public String getQuery() throws Exception {
   			isAnswerCommentLevelSearch = true ;
   		}  		
   		
-  		//search on answers
-  		StringBuilder commentSearch = new StringBuilder("") ;  		
+  		//search on comments
+  		/*StringBuilder commentSearch = new StringBuilder("") ;  		
   		if (comment != null && comment.length() > 0) {
   			commentSearch.append("( exo:commentLanguage='").append(language).append("'");
   			commentSearch.append(" and jcr:contains(@exo:comments,'" + comment + "')") ;
   			commentSearch.append(")") ;
   			isAnswerCommentLevelSearch = true ;
-  		}
+  		}*/
   		
   		//if(answerSearch.length() > 2) isAnswerLevelSearch = true ;
   		//search on category scoping
@@ -519,14 +519,14 @@ public String getQuery() throws Exception {
   			}
   		}
   		
-  		if(commentSearch.length() > 2) {
+  		/*if(commentSearch.length() > 2) {
   			if(isAdd) {
   				queryString.append(" or ").append(commentSearch.toString()) ;
   			}else {
   				queryString.append("(").append(commentSearch.toString()) ;
   				isAdd = true ;
   			}
-  		}
+  		}*/
   		
   		if (isAdd)queryString.append(")") ; // finish
   		
@@ -545,7 +545,7 @@ public String getQuery() throws Exception {
   			} 
 				queryString.append(" and ( " )
 				.append(" exo:language='").append(language).append("'")
-				.append(" or exo:commentLanguage='").append(language).append("'")
+				//.append(" or exo:commentLanguage='").append(language).append("'")
 				.append(" or exo:responseLanguage='").append(language).append("'")
 				.append(")") ;
 				if(isAdd) queryString.append(" ) " ) ;

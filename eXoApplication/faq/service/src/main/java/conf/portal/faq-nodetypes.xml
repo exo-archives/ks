@@ -94,7 +94,7 @@
 	  	<propertyDefinition name="exo:fullName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
 	  	</propertyDefinition>
-	  	<propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+	  	<!--propertyDefinition name="exo:categoryId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
   		</propertyDefinition>
   		<propertyDefinition name="exo:questionId" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -102,7 +102,7 @@
   		</propertyDefinition>
   		<propertyDefinition name="exo:commentLanguage" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
-	  	</propertyDefinition>
+	  	</propertyDefinition-->
     </propertyDefinitions>
   </nodeType>
   

@@ -180,7 +180,7 @@ public class JCRDataStorage {
 		    }
 			}
     } catch (Exception e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
     }finally { sProvider.close() ;}	  
   }
 	
@@ -870,9 +870,9 @@ public class JCRDataStorage {
     	commentNode.setProperty("exo:comments", comment.getComments()) ;
     	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
     	commentNode.setProperty("exo:fullName", comment.getFullName());
-    	commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
+    	/*commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
     	commentNode.setProperty("exo:questionId", quesNode.getName());
-    	commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());
+    	commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());*/
     	if(commentNode.isNew()) quesNode.getSession().save();
     	else quesNode.save();
   	}catch(Exception e) {
@@ -1774,7 +1774,7 @@ public class JCRDataStorage {
 						}
 					}
 					updateAnswers(question, catId) ;
-					updateComments(question,catId) ;
+					//updateComments(question,catId) ;
 					question.save() ;
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;

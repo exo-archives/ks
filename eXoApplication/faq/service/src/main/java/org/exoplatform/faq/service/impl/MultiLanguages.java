@@ -604,9 +604,9 @@ public class MultiLanguages {
   	commentNode.setProperty("exo:comments", comment.getComments());
   	commentNode.setProperty("exo:commentBy", comment.getCommentBy());
   	commentNode.setProperty("exo:fullName", comment.getFullName());
-  	commentNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString());
-  	commentNode.setProperty("exo:questionId", questionNode.getName());
-  	commentNode.setProperty("exo:commentLanguage", lang);
+  	//commentNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString());
+  	//commentNode.setProperty("exo:questionId", questionNode.getName());
+  	//commentNode.setProperty("exo:commentLanguage", lang);
   	
   	if(commentNode.isNew()) {
   		java.util.Calendar calendar = null ;
