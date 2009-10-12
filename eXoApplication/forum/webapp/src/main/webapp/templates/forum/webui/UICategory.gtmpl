@@ -12,6 +12,7 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	Category category = uicomponent.getCategory();
 	if(category == null) return ; 
+	UserProfile userProfile = uicomponent.getUserProfile();
 %>
 <% 
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
@@ -20,7 +21,6 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');") ;
 	String categoryId = category.getId();
-	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isShowMenu = !ForumSessionUtils.isAnonim();
 	String userLogin = userProfile.getUserId() ;
 	boolean isAdmin = false ;
