@@ -13,8 +13,8 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UICategories') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UICategories') ;") ;
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');") ;
 	UserProfile userProfile = uicomponent.getUserProfile();
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','" + uicomponent.useAjax + "');") ;
 	String userLogin = userProfile.getUserId() ;
 	boolean isAdmin = false ;
 	if(userProfile.userRole == 0) isAdmin = true ;
