@@ -103,7 +103,7 @@
 		</component-plugin>
 	<!-- BBcode plugins -->
 		<component-plugin>
-			<name>default.bbcode.data</name>
+			<name>default.faqBBCode.data</name>
 			<set-method>addInitBBCodePlugin</set-method>
 			<type>org.exoplatform.faq.service.InitBBCodePlugin</type>
 			<description>description</description>
@@ -806,7 +806,7 @@
 		
 		
 		<component-plugin>
-			<name>default.bbcode.data</name>
+			<name>default.forumBBCode.data</name>
 			<set-method>addInitBBCodePlugin</set-method>
 			<type>org.exoplatform.forum.service.conf.InitBBCodePlugin</type>
 			<description>description</description>

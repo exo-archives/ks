@@ -51,7 +51,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIBBCodeManagament extends UIContainer {
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private FAQService faqService;
-	public UIBBCodeManagament() throws Exception {
+	public UIBBCodeManagament() throws Exception { 
 		faqService = FAQUtils.getFAQService() ;
 		setListBBcode();
   }

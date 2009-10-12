@@ -446,6 +446,9 @@ public class UIQuestions extends UIContainer {
 
 	private void setLink(String link) { this.link_ = link;}
 	
+	public void setIsGetSv(boolean isGetSv) {
+	  this.isGetSv = isGetSv;
+  }
 	
 	private String getReplaceByBBCode(String s) throws Exception {
 		List<String> bbcName = new ArrayList<String>();
@@ -454,32 +457,32 @@ public class UIQuestions extends UIContainer {
 			try {
 				bbcName = faqService_.getActiveBBCode();
 				isGetSv = false;
-			boolean isAdd = true;
-			BBCode bbCode;
-			for (String string : bbcName) {
-				isAdd = true;
-				for (BBCode bbc : listBBCode) {
-					if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-						bbcs.add(bbc);
-						isAdd = false;
-						break;
+				boolean isAdd = true;
+				BBCode bbCode;
+				for (String string : bbcName) {
+					isAdd = true;
+					for (BBCode bbc : listBBCode) {
+						if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+							bbcs.add(bbc);
+							isAdd = false;
+							break;
+						}
+					}
+					if(isAdd) {
+						bbCode = new BBCode();
+						if(string.indexOf("=") >= 0){
+							bbCode.setOption(true);
+							string = string.replaceFirst("=", "");
+							bbCode.setId(string+"_option");
+						}else {
+							bbCode.setId(string);
+						}
+						bbCode.setTagName(string);
+						bbcs.add(bbCode);
 					}
 				}
-				if(isAdd) {
-					bbCode = new BBCode();
-					if(string.indexOf("=") >= 0){
-						bbCode.setOption(true);
-						string = string.replaceFirst("=", "");
-						bbCode.setId(string+"_option");
-					}else {
-						bbCode.setId(string);
-					}
-					bbCode.setTagName(string);
-					bbcs.add(bbCode);
-				}
-			}
-			listBBCode.clear();
-			listBBCode.addAll(bbcs);
+				listBBCode.clear();
+				listBBCode.addAll(bbcs);
 			} catch (Exception e) {}
 		}
 		if(!listBBCode.isEmpty()){
