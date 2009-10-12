@@ -125,10 +125,12 @@ public class MigrateService implements Startable{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node faqHome = getFAQHome(sProvider) ;
+			log.info("\n\nExporting FAQ data version 1.1 ...") ;
 			String file = params_.getValueParam("faqData1.1").getValue() ;
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			faqHome.getSession().exportSystemView(faqHome.getPath(), bos, false, false) ;
 			saveToFile(bos.toByteArray(), file) ;			
+			log.info("\nFAQ data has exported to " + file + "\n\n") ;
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}finally{ sProvider.close() ;} 
@@ -139,10 +141,12 @@ public class MigrateService implements Startable{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node forumHome = getForumHome(sProvider) ;
+			log.info("\n\nExporting Forum data version 1.1 ...") ;
 			String file = params_.getValueParam("forumData1.1").getValue() ;
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			forumHome.getSession().exportSystemView(forumHome.getPath(), bos, false, false) ;
 			saveToFile(bos.toByteArray(), file) ;
+			log.info("\nForum data has exported to " + file + "\n") ;
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}finally{ sProvider.close() ;}
@@ -176,9 +180,11 @@ public class MigrateService implements Startable{
     	//nodeTypes.getSession().save() ;
 			
 			//Register migrate data nodetypes
+			log.info("Register FAQ nodetypes for migrate data\n") ;
 			String ntFile = params_.getValueParam("migrationFAQNodetypes").getValue() ;
 			InputStream in = configManager_.getInputStream(ntFile) ;
-			ntManager_.registerNodeTypes(in, ExtendedNodeTypeManager.FAIL_IF_EXISTS) ;
+			ntManager_.registerNodeTypes(in, ExtendedNodeTypeManager.IGNORE_IF_EXISTS) ;
+			log.info("FAQ nodetypes for migrate data registered \n") ;
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally{sProvider.close() ;}
@@ -189,11 +195,11 @@ public class MigrateService implements Startable{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			//Register migrate data nodetypes
-			log.info("\n\nRegister nodetypes for migrate data") ;
+			log.info("Register Forum nodetypes for migrate data") ;
 			String ntFile = params_.getValueParam("migrationForumNodetypes").getValue() ;
 			InputStream in = configManager_.getInputStream(ntFile) ;
-			ntManager_.registerNodeTypes(in, ExtendedNodeTypeManager.FAIL_IF_EXISTS) ;
-			
+			ntManager_.registerNodeTypes(in, ExtendedNodeTypeManager.IGNORE_IF_EXISTS) ;
+			log.info("Forum nodetypes for migrate data registered \n") ;
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally{sProvider.close() ;}		
@@ -204,6 +210,7 @@ public class MigrateService implements Startable{
 		try{
 			Node faqHome = getFAQHome(sProvider) ;
 			//remove FAQ 1.1 nodetypes			
+			log.info("Removing FAQ 1.1 nodetypes in JCR") ;
 			Node nodeTypes = (Node)faqHome.getSession().getItem("/jcr:system/jcr:nodetypes") ;
 			String nt_migrate_File = params_.getValueParam("faqNodetypes1.1").getValue() ;
 			InputStream in_migrate = configManager_.getInputStream(nt_migrate_File) ;
@@ -222,7 +229,7 @@ public class MigrateService implements Startable{
     	}    				
     	faqHome.remove() ;
     	nodeTypes.getSession().save() ;
-			
+    	log.info("Nodetypes removed ") ;
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally{sProvider.close() ;}
@@ -240,7 +247,7 @@ public class MigrateService implements Startable{
     	DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
     	Document doc = docBuilder.parse(in_migrate);
     	NodeList list = doc.getElementsByTagName("nodeType") ;
-    	log.info("\n\nRemoving forum 1.1 nodetypes in JCR\n\n") ;
+    	log.info("Removing forum 1.1 nodetypes in JCR") ;
     	for(int i = 0; i < list.getLength(); i ++) {
     		try{
     			log.info("====>" + list.item(i).getAttributes().getNamedItem("name").getNodeValue()) ;
@@ -252,7 +259,7 @@ public class MigrateService implements Startable{
     	}    				
     	forumHome.remove() ;
     	nodeTypes.getSession().save() ;
-    	log.info("\n\nRemoved\n\n") ;			
+    	log.info("Nodetypes removed") ;			
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally{sProvider.close() ;}
@@ -272,7 +279,7 @@ public class MigrateService implements Startable{
     	Document doc = docBuilder.parse(in_migrate);
     	NodeList list = doc.getElementsByTagName("nodeType") ;
     	
-    	log.info("Removing migrate data nodetypes\n\n");
+    	log.info("Removing FAQ migrate data nodetypes");
     	for(int i = 0; i < list.getLength(); i ++) {
     		try{
     			log.info("====>" + list.item(i).getAttributes().getNamedItem("name").getNodeValue());
@@ -282,7 +289,7 @@ public class MigrateService implements Startable{
     			e.printStackTrace() ;
     		}
     	}
-    	log.info("\n\nNodetypes removed\n\n");			
+    	log.info("FAQ Nodetypes removed");			
     	//faqHome.remove() ;
     	nodeTypes.getSession().save() ;
 		}finally{sProvider.close() ;}
@@ -302,7 +309,7 @@ public class MigrateService implements Startable{
     	Document doc = docBuilder.parse(in_migrate);
     	NodeList list = doc.getElementsByTagName("nodeType") ;
     	
-    	log.info("Removing migrate data nodetypes\n\n");
+    	log.info("Removing forum migrate data nodetypes");
     	for(int i = 0; i < list.getLength(); i ++) {
     		try{
     			log.info("====>" + list.item(i).getAttributes().getNamedItem("name").getNodeValue());
@@ -312,7 +319,7 @@ public class MigrateService implements Startable{
     			e.printStackTrace() ;
     		}
     	}
-    	log.info("\n\nNodetypes removed\n\n");			
+    	log.info("Forum Nodetypes removed");			
     	//faqHome.remove() ;
     	nodeTypes.getSession().save() ;
 		}finally{sProvider.close() ;}
@@ -376,7 +383,7 @@ public class MigrateService implements Startable{
 				log.info(">>>>>> There is no FAQ's data for migrating!") ;
 				return ;
 			}			
-			Node faqTempHome = tempData.getNode(org.exoplatform.faq.service.Utils.FAQ_APP) ;			
+			Node faqTempHome = tempData.getNode("faqApp") ;			
 			//Migrate Category
 			if(faqTempHome.hasNode("catetories")) {
 				migrateFAQCategory(faqTempHome.getNode("catetories")) ;
@@ -394,20 +401,20 @@ public class MigrateService implements Startable{
 		try {
 			return	userApp.getNode("FAQ_TEMP") ;
 		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode("FAQ_TEMP", "nt:unstructured") ;
+			userApp.addNode("FAQ_TEMP", "nt:unstructured") ;
 			userApp.getSession().save() ;
-			return faqHome ;
+			return userApp.getNode("FAQ_TEMP") ;
 		}		
 	}
 	
 	private Node getFAQHome(SessionProvider sProvider) throws Exception {
 		Node userApp = nodeHierarchy_.getPublicApplicationNode(sProvider)	;
 		try {
-			return	userApp.getNode(org.exoplatform.faq.service.Utils.FAQ_APP) ;
+			return	userApp.getNode("faqApp") ;
 		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode(org.exoplatform.faq.service.Utils.FAQ_APP, "exo:faqHome") ;
+			userApp.addNode("faqApp", "exo:faqHome") ;
 			userApp.getSession().save() ;
-			return faqHome ;
+			return userApp.getNode("faqApp") ;
 		}		
 	}
 	
@@ -445,6 +452,7 @@ public class MigrateService implements Startable{
 	}
 	
 	private void repairQuestion() {
+		//repairing question that is created in root category
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node tempNode = getFAQTemp(sProvider) ;
@@ -491,6 +499,7 @@ public class MigrateService implements Startable{
 	}
 	
 	private void migrateQuestion(String categoryId, Node questionHome, Node tempData) {
+		log.info("Migrating questions .... \n") ;
 		try{
 			QueryManager qm = questionHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryBuffer = new StringBuffer();
@@ -501,21 +510,27 @@ public class MigrateService implements Startable{
 			NodeIterator iter = result.getNodes();
 			while(iter.hasNext()){
 				Node question = iter.nextNode() ;
-				migrateAnswer(question) ;
-				migrateComment(question) ;
-				migrateLanguage(question) ;
-				migrateAttachment(question) ;
-				//question.save() ;
-				questionHome.getSession().getWorkspace().move(question.getPath(), questionHome.getPath() + "/" + question.getName()) ;
-				questionHome.save() ;
-			}
-			
+				log.info("question ===> "+ question.getPath()) ;
+				try{					
+					migrateAnswer(question) ;
+					migrateComment(question) ;
+					migrateLanguage(question) ;
+					migrateAttachment(question) ;
+					//question.save() ;
+					questionHome.getSession().getWorkspace().move(question.getPath(), questionHome.getPath() + "/" + question.getName()) ;
+					questionHome.save() ;
+				}catch(Exception e) {
+					e.printStackTrace() ;
+				}				
+			}			
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		}
+		log.info("End migrate questions \n") ;
 	}
 	
 	private void migrateAttachment(Node question) {
+		log.info("===> Migrating attachments...");
 		try{
 			NodeIterator iter  = question.getNodes() ;
 			log.info("attsize ===>" + iter.getSize());
@@ -542,6 +557,7 @@ public class MigrateService implements Startable{
 	}
 	
 	private void migrateAnswer(Node question) {
+		log.info("===> Migrating anwsers...");
 		try{
 			if(question.hasNode(org.exoplatform.faq.service.Utils.ANSWER_HOME)) {
 				question.getSession().getWorkspace().move(question.getPath()+"/" + org.exoplatform.faq.service.Utils.ANSWER_HOME, question.getPath()+"/answerTemp") ;
@@ -568,6 +584,7 @@ public class MigrateService implements Startable{
 	}
 	
 	private void migrateComment(Node question) {
+		log.info("===> Migrating comments...");
 		try{
 			if(question.hasNode(org.exoplatform.faq.service.Utils.COMMENT_HOME)) {
 				question.getSession().getWorkspace().move(question.getPath()+"/" + org.exoplatform.faq.service.Utils.COMMENT_HOME, question.getPath()+"/commentTemp") ;
@@ -591,6 +608,7 @@ public class MigrateService implements Startable{
 	}
 	
 	private void migrateLanguage(Node question) {
+		log.info("===> Migrating other question languages ...");
 		try{
 			if(question.hasNode(org.exoplatform.faq.service.Utils.LANGUAGE_HOME)) {
 				question.getSession().getWorkspace().move(question.getPath()+"/" + org.exoplatform.faq.service.Utils.LANGUAGE_HOME, question.getPath()+"/languageTemp") ;
@@ -653,6 +671,18 @@ public class MigrateService implements Startable{
 			log.info("\n >>>>>> Data version 1.1 has imported \n");
 			migrateForumData() ;			
 			Node forumHome = getForumHome(sProvider) ;
+			
+			//remove old data
+			NodeIterator iter = forumHome.getNodes() ;
+			while(iter.hasNext()) {
+				Node data = iter.nextNode() ;
+				if(!data.getName().equals(Utils.FORUM_SYSTEM) && !data.getName().equals(Utils.FORUM_DATA)) {
+					log.info(" Removed ==> " + data.getPath());
+					data.remove() ;					
+				}				
+			}
+			forumHome.getSession().save() ;			
+			
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			forumHome.getSession().exportSystemView(forumHome.getPath(), bos, false, false) ;
 			String forumData12 = params_.getValueParam("forumData1.2").getValue() ;
@@ -695,9 +725,9 @@ public class MigrateService implements Startable{
 		try {
 			return	userApp.getNode("FORUM_TEMP") ;
 		} catch (PathNotFoundException ex) {
-			Node forumHome = userApp.addNode("FORUM_TEMP") ;
+			userApp.addNode("FORUM_TEMP") ;
 			userApp.getSession().save() ;
-			return forumHome ;
+			return userApp.getNode("FORUM_TEMP") ;
 		}		
 	}
 	
@@ -706,9 +736,9 @@ public class MigrateService implements Startable{
 		try {
 			return	userApp.getNode(Utils.FORUM_SERVICE) ;
 		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode(Utils.FORUM_SERVICE, "exo:forumHome") ;
+			userApp.addNode(Utils.FORUM_SERVICE, "exo:forumHome") ;
 			userApp.getSession().save() ;
-			return faqHome ;
+			return userApp.getNode(Utils.FORUM_SERVICE) ;
 		}		
 	}
 	
@@ -717,9 +747,9 @@ public class MigrateService implements Startable{
 		try {
 			return	forumHome.getNode(Utils.FORUM_SYSTEM) ;
 		} catch (PathNotFoundException ex) {
-			Node system = forumHome.addNode(Utils.FORUM_SYSTEM, "exo:forumSystem") ;
+			forumHome.addNode(Utils.FORUM_SYSTEM, "exo:forumSystem") ;
 			forumHome.getSession().save() ;
-			return system ;
+			return forumHome.getNode(Utils.FORUM_SYSTEM) ;
 		}		
 	}
 	
@@ -728,9 +758,9 @@ public class MigrateService implements Startable{
 		try {
 			return	forumHome.getNode(Utils.FORUM_DATA) ;
 		} catch (PathNotFoundException ex) {
-			Node data = forumHome.addNode(Utils.FORUM_DATA, "exo:forumData") ;
+			forumHome.addNode(Utils.FORUM_DATA, "exo:forumData") ;
 			forumHome.getSession().save() ;
-			return data ;
+			return forumHome.getNode(Utils.FORUM_DATA) ;
 		}		
 	}
 	
@@ -805,8 +835,9 @@ public class MigrateService implements Startable{
 			while(iter.hasNext()) {
 				try{
 					Node profile = iter.nextNode() ;
-					log.info("===>" + profileHome.getPath() + "/" + profile.getName());
 					profileHome.getSession().getWorkspace().move(profile.getPath(), profileHome.getPath() + "/" + profile.getName()) ;
+					profileHome.save() ;
+					log.info("===>" + profileHome.getPath() + "/" + profile.getName());
 				}catch(Exception e) {
 					e.printStackTrace() ;
 				}				
@@ -839,21 +870,22 @@ public class MigrateService implements Startable{
 	private void migrateForumStatistic(Node statistic) {
 		log.info("===> migrating Statistic");
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node statisticHome ;
-		try{
-			try{
-				statisticHome = getForumSystem(sProvider).getNode(Utils.STATISTIC_HOME) ;
-				if(statisticHome.hasNode(Utils.FORUM_STATISTIC)) {
-					statisticHome.getNode(Utils.FORUM_STATISTIC).remove() ;
-					statisticHome.save() ;
-				}
-			}catch(PathNotFoundException e) {
-				statisticHome = getForumSystem(sProvider).addNode(Utils.STATISTIC_HOME, "exo:statisticHome") ;
-				statisticHome.getSession().save() ;
+		try{			
+			Node statisticHome ;
+			Node systemHome ;
+			systemHome = getForumSystem(sProvider);
+			if(systemHome.hasNode(Utils.STATISTIC_HOME)) statisticHome = systemHome.getNode(Utils.STATISTIC_HOME) ;
+			else {
+				statisticHome = systemHome.addNode(Utils.STATISTIC_HOME, "exo:statisticHome") ;
+				systemHome.save() ;
 			}
-			log.info("===>" + statisticHome.getPath() + "/" + Utils.FORUM_STATISTIC);
-			statisticHome.getSession().getWorkspace().move(statistic.getPath(), statisticHome.getPath() + "/" + Utils.FORUM_STATISTIC) ;
+			if(statisticHome.hasNode(Utils.FORUM_STATISTIC)) {
+				statisticHome.getNode(Utils.FORUM_STATISTIC).remove() ;
+				statisticHome.save() ;
+			}
+			systemHome.getSession().getWorkspace().move(statistic.getPath(), statisticHome.getPath() + "/" + Utils.FORUM_STATISTIC) ;
 			statisticHome.getSession().save() ;
+			log.info("===>" + statisticHome.getPath() + "/" + Utils.FORUM_STATISTIC);
 		}catch(Exception e) {
 			e.printStackTrace() ;
 		} finally{ sProvider.close() ;}
