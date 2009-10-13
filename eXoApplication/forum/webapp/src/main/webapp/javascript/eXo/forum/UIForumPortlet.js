@@ -587,6 +587,7 @@ UIForumPortlet.prototype.setMaskLayer = function(id) {
 UIForumPortlet.prototype.onloadReSizeAvatar = function(idElm) {
 	setTimeout("eXo.forum.UIForumPortlet.reSizeAvatar('"+idElm+"')", 1000);
 };
+
 UIForumPortlet.prototype.reSizeAvatar = function(idElm) {
 	var imgElm = document.getElementById(idElm);
 	if(imgElm){
@@ -861,7 +862,12 @@ UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
 UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
 	var grid = document.getElementById(idChild);
 	var tableContent = document.getElementById(idParent);
-	if(grid.offsetWidth+10 >= (tableContent.offsetWidth)){
+	var isIE = document.all?true:false;
+	if(isIE){
+		tableContent.style.width = "auto";
+		grid.style.width = "auto";
+	}
+	if((grid.offsetWidth+10) >= (tableContent.offsetWidth)){
 		tableContent.style.paddingRight = "16px";
 		tableContent.style.width = "auto";
 	} else {
