@@ -708,8 +708,8 @@ public class UICategories extends UIContainer{
 					UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
 																		new Object[]{category.getName()}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					return;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;					
+					//return;
 				}
 			}catch (Exception e) {
 				e.printStackTrace();
