@@ -496,7 +496,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      } else {
 	      	forumPortlet.cancelAction() ;
 					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
-					topicDetail.setUpdateContainer(uiForm.categoryId, uiForm.forumId, uiForm.topic, 1);
+					topicDetail.setUpdateContainer(uiForm.categoryId, uiForm.forumId, uiForm.topic, 0);
 					uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

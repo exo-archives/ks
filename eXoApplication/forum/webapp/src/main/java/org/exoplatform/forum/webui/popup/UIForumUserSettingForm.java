@@ -685,7 +685,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(cateId, forum, 1) ;
+						uiTopicContainer.setUpdateForum(cateId, forum, 0) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId+"/"+forumId));
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					}

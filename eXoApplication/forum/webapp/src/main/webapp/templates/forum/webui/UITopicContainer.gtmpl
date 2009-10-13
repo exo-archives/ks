@@ -496,7 +496,7 @@
 									long postCount = topic.getPostCount();
 									if(postCount < 0) postCount = 0;
 									String postView = String.valueOf(topic.getViewCount());
-									String number = "1";
+									String number = "0";
 									
 									String hot = ""; 
 									 

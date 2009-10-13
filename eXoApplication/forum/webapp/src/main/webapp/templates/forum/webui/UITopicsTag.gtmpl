@@ -146,7 +146,7 @@
 									String attachment = String.valueOf(att);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());
-									String number = "1";
+									String number = "0";
 									boolean isReadTopic = ForumUtils.isStringInStrings(userProfile.getReadTopic(), topicId);
 									String title = "TitleBold";
 									String newPost = "New";

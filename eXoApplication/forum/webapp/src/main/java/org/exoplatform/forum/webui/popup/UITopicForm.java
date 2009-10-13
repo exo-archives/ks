@@ -667,7 +667,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 				} else {
 					forumPortlet.cancelAction() ;
 					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
-					topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum, 1);
+					topicContainer.setUpdateForum(uiForm.categoryId, uiForm.forum, 0);
 					uiApp.addMessage(new ApplicationMessage("UITopicForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);

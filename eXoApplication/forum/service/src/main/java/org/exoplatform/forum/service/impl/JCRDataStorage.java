@@ -6685,7 +6685,6 @@ public class JCRDataStorage {
 			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
 			profile.save() ;
 		} catch (Exception e) {
-			e.printStackTrace() ;
 		}finally{
 			sysSession.close() ;
 		}
@@ -6716,7 +6715,6 @@ public class JCRDataStorage {
 			profile.setProperty("exo:readForum", values.toArray(new String[]{})) ;
 			profile.save() ;
 		} catch (Exception e) {
-			e.printStackTrace() ;
 		}finally{
 			sysSession.close() ;
 		}

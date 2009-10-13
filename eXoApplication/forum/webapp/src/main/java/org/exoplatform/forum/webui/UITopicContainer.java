@@ -135,6 +135,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
   private String DEFAULT_ID = TopicType.DEFAULT_ID;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, TopicType> topicTypeM = new HashMap<String, TopicType>();
+	private Map<String, Integer> pageTopicRemember = new HashMap<String, Integer>();
 	public UITopicContainer() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
@@ -163,6 +164,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return userProfile.getLastPostIdReadOfTopic(topicId);
 	}
 	
+  private int getPageTopicRemember(String forumId) {
+  	if(pageTopicRemember.containsKey(forumId)) return pageTopicRemember.get(forumId);
+  	return 1;
+  }
+  
 	public void setUpdateForum(String categoryId, Forum forum, int page) throws Exception {
 		this.forum = forum ;
 		this.forumId = forum.getId() ;
@@ -170,6 +176,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.pageSelect = page ;
 		this.isUpdate = false ;
 		this.isReload = false;
+		if(page == 0) pageSelect = getPageTopicRemember(forumId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.isUseAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
@@ -234,6 +241,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.isUpdate = true ;
 		this.pageSelect = page ;
 		this.isReload = false;
+		if(page == 0) pageSelect = getPageTopicRemember(forumId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class);
 		this.isUseAjax = forumPortlet.isUseAjax();
 		enableIPLogging = forumPortlet.isEnableIPLogging() ;
@@ -381,6 +389,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
 		topicList = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
+		pageTopicRemember.put(forumId, pageSelect);
 		if(topicList == null) topicList = new ArrayList<Topic>();
 		isShowActive = false;
 		try {

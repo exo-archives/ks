@@ -345,7 +345,7 @@ public class UICategories extends UIContainer	{
 			uiForumContainer.setIsRenderChild(true) ;
 			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
 			uiForumContainer.getChild(UIForumDescription.class).setForum(categories.getForumById(id[0], id[1]));
-			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 1) ;
+			uiTopicContainer.updateByBreadcumbs(id[0], id[1], false, 0) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption(path);
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			categories.maptopicLast.clear();
