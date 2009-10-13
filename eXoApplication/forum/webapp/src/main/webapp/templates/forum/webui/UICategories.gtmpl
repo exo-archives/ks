@@ -41,7 +41,11 @@
 					if(isAdmin || uicomponent.getIsPrivate(category.getUserPrivate())) {
 						String title = category.getCategoryName();
 						if(uicomponent.userProfile.getUserRole() < 3){
-							 actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
+							if(uicomponent.isWatching(category.getPath())){
+								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("UnWatch", categoryId);
+							} else {
+								actionBookmark = uicomponent.event("AddBookMark","category//"+categoryId) + ";" + uicomponent.event("AddWatching", categoryId);
+							}
 						} else {
 							actionBookmark = uicomponent.event("ShareLink","category//" + categoryId);
 						}
@@ -209,7 +213,11 @@
 										}
 										String ids = categoryId + "/" + forumId;
 										if(uicomponent.userProfile.getUserRole() < 3){
-											actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+											if(uicomponent.isWatching(forum.getPath())){
+												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("UnWatch",ids);
+											} else {
+												actionBookmark = uicomponent.event("AddBookMark","forum//" + ids) + ";" + uicomponent.event("AddWatching",ids);
+											}
 										} else {
 											actionBookmark = uicomponent.event("ShareLink","forum//" + ids);
 										}
@@ -251,7 +259,11 @@
 											</td>
 											<%if(topicNewPost != null) {
 												if(uicomponent.userProfile.getUserRole() < 3){
-													actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+													if(uicomponent.isWatching(forum.getPath()+"/"+topicNewPost.getId())){
+														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("UnWatch",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+													} else {
+														actionBookmark = uicomponent.event("AddBookMark","topic//"+ topicPath)+ ";" + uicomponent.event("AddWatching",topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
+													}
 												} else {
 													actionBookmark = uicomponent.event("ShareLink","topic//" + topicPath) + ";" + uicomponent.getRSSLink(topicNewPost.getId()) + "," + uicomponent.event("RSS", topicNewPost.getId()).replace("javascript:","");
 												}
@@ -390,7 +402,7 @@
 						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 					</div>
 					<div class="ItemIcon AddWatchingIcon">
-						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
  					</div>
  					<div class="ItemIcon ForumRSSFeed">
 						<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>

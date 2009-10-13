@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
@@ -97,6 +98,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private int dayForumNewPost = 0;
 	private List<String>invisibleForums = new ArrayList<String>();
 	private List<String>invisibleCategories = new ArrayList<String>();
+	private List<Watch> listWatches = null;
 	public UIForumPortlet() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIBreadcumbs.class, null, null) ;
@@ -316,8 +318,17 @@ public class UIForumPortlet extends UIPortletApplication {
 		return this.userProfile ;
 	}
 	
+	public void updateWatchinh() throws Exception {
+		listWatches = forumService.getWatchByUser(userProfile.getUserId());
+  }
+	
+	public List<Watch> getWatchinhByCurrentUser() throws Exception {
+		if(listWatches == null) updateWatchinh();
+	  return listWatches;
+  }
+	
 	public void updateAccessTopic(String topicId) throws Exception {
-		String userId = ForumSessionUtils.getCurrentUser() ;
+		String userId = userProfile.getUserId() ;
 		if(userId != null && userId.length() > 0) {
 			try{
 				forumService.updateTopicAccess(userId, topicId);
@@ -327,7 +338,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 
 	public void updateAccessForum(String forumId) throws Exception {
-		String userId = ForumSessionUtils.getCurrentUser() ;
+		String userId = userProfile.getUserId() ;
 		if(userId != null && userId.length() > 0) {
 			try{
 				forumService.updateForumAccess(userId, forumId);
@@ -344,7 +355,6 @@ public class UIForumPortlet extends UIPortletApplication {
 			e.printStackTrace() ;
 		}
 		try{
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(enableBanIP) {
 				String remoteAddr = "";
 				try {

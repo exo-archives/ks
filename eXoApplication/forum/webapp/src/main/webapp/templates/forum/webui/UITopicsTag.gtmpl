@@ -176,12 +176,16 @@
 									}
 									
 									String actionBookmark;
+									String path = topic.getPath();
 									if(isShowMenu){
-										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										if(uicomponent.isWatching(path)) {
+											actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("UnWatch", path);
+										} else {
+											actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										}
 									}
 									actionBookmark += ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
-									String path = topic.getPath();
 									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
 									String url = uicomponent.url("OpenTopic", path);
 									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
@@ -445,7 +449,7 @@
 							<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 						</div>
 						<div class="ItemIcon AddWatchingIcon">
-							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 	 					</div>
 	 					<div class="ItemIcon ForumRSSFeed">
 							<a class="MenuItem AddRSS" href="#" ><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -32,6 +31,7 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,6 +57,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 				@EventConfig(listeners = UITopicsTag.OpenTopicActionListener.class),
 				@EventConfig(listeners = UITopicsTag.RemoveTopicActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddWatchingActionListener.class),
+				@EventConfig(listeners = UITopicsTag.UnWatchActionListener.class),
 				@EventConfig(listeners = UITopicsTag.AddBookMarkActionListener.class),
 				@EventConfig(listeners = UITopicsTag.RSSActionListener.class),
 				@EventConfig(listeners = UITopicsTag.SetOrderByActionListener.class),
@@ -72,6 +73,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private String strOrderBy = "";
 	private String userIdAndtagId ;
 	private UserProfile userProfile = null;
+	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
 	public UITopicsTag() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -81,7 +83,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		this.tagId = tagId ;
 		this.isUpdateTag = true ;
 		this.mapNumberPagePost.clear();
-		this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+		UIForumPortlet forumPortlet	= this.getAncestorOfType(UIForumPortlet.class) ;
+		this.userProfile	= forumPortlet.getUserProfile() ;
+		listWatches = forumPortlet.getWatchinhByCurrentUser();
 		if(!userProfile.getUserId().equals(UserProfile.USER_GUEST)){
 			this.userIdAndtagId = userProfile.getUserId() + ":" + tagId;
 		} else this.userIdAndtagId = tagId;
@@ -93,7 +97,9 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	  this.isUpdateTag = false;
 	  this.mapNumberPagePost.clear();
 	  this.userIdAndtagId = userIdAndtagId;
-	  this.userProfile	= this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+	  UIForumPortlet forumPortlet	= this.getAncestorOfType(UIForumPortlet.class) ;
+		this.userProfile	= forumPortlet.getUserProfile() ;
+		listWatches = forumPortlet.getWatchinhByCurrentUser();
   }
 	
 	private UserProfile getUserProfile() {
@@ -205,6 +211,23 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	private Forum getForum(String categoryId, String forumId) throws Exception {
 		return this.forumService.getForum(categoryId, forumId);
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean isWatching(String path) throws Exception {
+		for (Watch watch : listWatches) {
+			if(path.equals(watch.getNodePath())) return true;
+    }
+		return false;
+	}
+
+	private String getEmailWatching(String path) throws Exception {
+		for (Watch watch : listWatches) {
+			try {
+				if(watch.getNodePath().endsWith(path)) return watch.getEmail();
+      } catch (Exception e) {}
+		}
+		return "";
 	}
 	
 	static public class OpenTopicActionListener extends EventListener<UITopicsTag> {
@@ -347,13 +370,16 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					String path = topic.getPath();
 					path = path.substring(path.indexOf(Utils.CATEGORY));
 					List<String> values = new ArrayList<String>();
-					String userName = topicTag.userProfile.getUserId();
-					values.add(ForumSessionUtils.getUserByUserId(userName).getEmail());
-					topicTag.forumService.addWatch(1, path, values, ForumSessionUtils.getCurrentUser()) ;
+					values.add(topicTag.userProfile.getEmail());
+					topicTag.forumService.addWatch(1, path, values, topicTag.userProfile.getUserId()) ;
+					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.updateWatchinh();
+					topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
 					Object[] args = { };
 					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 				} catch (Exception e) {
 					e.printStackTrace();
 					Object[] args = { };
@@ -361,6 +387,30 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}					
+			}
+		}
+	}
+
+	static public class UnWatchActionListener extends EventListener<UITopicsTag> {
+		public void execute(Event<UITopicsTag> event) throws Exception {
+			UITopicsTag topicTag = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			try {
+				topicTag.forumService.removeWatch(1, path, topicTag.userProfile.getUserId()+"/"+topicTag.getEmailWatching(path)) ;
+				UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateWatchinh();
+				topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
+				Object[] args = { };
+				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Object[] args = { };
+				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}
 		}
 	}

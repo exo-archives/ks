@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -126,14 +127,18 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 					strings[j] = string; ++j;
 	      }
 				uiForm.setEmails(strings) ;
+				forumPortlet.updateWatchinh();
+				List<Watch> listWatches = forumPortlet.getWatchinhByCurrentUser();
 				if(uiForm.getIsTopic()){
 					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);
+					topicDetail.setListWatches(listWatches);
 					topicDetail.setIsEditTopic(true) ;
 					uiForm.isTopic = false;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				} else if(path.indexOf(Utils.CATEGORY) < path.lastIndexOf(Utils.FORUM)){
 					UITopicContainer topicContainer= forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 					topicContainer.setIdUpdate(true);
+					topicContainer.setListWatches(listWatches);
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 				} else {
 					UICategory uicategory = forumPortlet.findFirstComponentOfType(UICategory.class);

@@ -598,7 +598,11 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="AddWatchingIcon" style="padding-left:16px;">
+												<% if(uicomponent.isWatching(topic.getPath())){ %>
+													<a style="display:block;" href="<%=uicomponent.event("UnWatch")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+												<% } else { %>
 													<a style="display:block;" href="<%=uicomponent.event("AddWatching")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+												<% } %>
 												</div>
 											</div>
 										</div>

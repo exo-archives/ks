@@ -31,6 +31,7 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -56,6 +57,7 @@ import org.exoplatform.webui.event.EventListener;
 			@EventConfig(listeners = UICategories.OpenForumLinkActionListener.class),
 			@EventConfig(listeners = UICategories.AddBookMarkActionListener.class),
 			@EventConfig(listeners = UICategories.AddWatchingActionListener.class),
+			@EventConfig(listeners = UICategories.UnWatchActionListener.class),
 			@EventConfig(listeners = UICategories.RSSActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastTopicLinkActionListener.class),
 			@EventConfig(listeners = UICategories.OpenLastReadTopicActionListener.class)
@@ -74,6 +76,7 @@ public class UICategories extends UIContainer	{
 	private int dayForumNewPost = 0;
 	private UserProfile userProfile;
 	private List<String> collapCategories = null;
+	private List<Watch> listWatches = new ArrayList<Watch>();
 	public UICategories() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
@@ -113,7 +116,25 @@ public class UICategories extends UIContainer	{
 		} else if(collapCategories == null){
 			collapCategories = new ArrayList<String>();
 		}
+		listWatches = forumPortlet.getWatchinhByCurrentUser();
 		return this.userProfile ;
+	}
+	
+	@SuppressWarnings("unused")
+  private boolean isWatching(String path) throws Exception {
+		for (Watch watch : listWatches) {
+			if(path.equals(watch.getNodePath())) return true;
+    }
+		return false;
+	}
+
+	private String getEmailWatching(String path) throws Exception {
+		for (Watch watch : listWatches) {
+			try {
+				if(watch.getNodePath().endsWith(path)) return watch.getEmail();
+      } catch (Exception e) {}
+		}
+		return "";
 	}
 	
 	@SuppressWarnings("unused")
@@ -475,6 +496,8 @@ public class UICategories extends UIContainer	{
 			try {
 				values.add(uiContainer.userProfile.getEmail());
 				uiContainer.forumService.addWatch(1, path, values, userName) ;
+				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateWatchinh();
 				Object[] args = { };
 				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
@@ -486,6 +509,30 @@ public class UICategories extends UIContainer	{
 				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
+		}
+	}
+
+	static public class UnWatchActionListener extends EventListener<UICategories> {
+		public void execute(Event<UICategories> event) throws Exception {
+			UICategories uiContainer = event.getSource();
+			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			try {
+				uiContainer.forumService.removeWatch(1, path, uiContainer.userProfile.getUserId()+"/"+uiContainer.getEmailWatching(path)) ;
+				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
+				forumPortlet.updateWatchinh();
+				Object[] args = { };
+				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			} catch (Exception e) {
+				e.printStackTrace();
+				Object[] args = { };
+				UIApplication uiApp = uiContainer.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
 }

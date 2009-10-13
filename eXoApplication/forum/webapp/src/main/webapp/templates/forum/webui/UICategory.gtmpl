@@ -213,7 +213,11 @@
 								<div class="RightOverButton">
 									<div class="CenterOverButton">
 										<div class="AddWatchingIcon" style="padding-left:16px;">
+										<% if(uicomponent.isWatching(category.getPath())) {%>
+											<a style="display:block;" href="<%=uicomponent.event("UnWatch",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+										<% } else { %>
 											<a style="display:block;" href="<%=uicomponent.event("AddWatching",categoryId)%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+										<% } %>
 										</div>
 									</div>
 								</div>
@@ -359,7 +363,11 @@
 								titleIconForum = _ctx.appRes("UIForumIconState.label.CategoryClosedPosts");
 							}
 							if(uicomponent.userProfile.getUserRole() < 3){
-								actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
+								if(uicomponent.isWatching(forum.getPath())) {
+									actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("UnWatch",path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
+								} else {
+									actionBookmark = uicomponent.event("AddBookMark","forum//"+path) + ";" + uicomponent.event("AddWatching",path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
+								}
 							} else {
 								actionBookmark = uicomponent.event("ShareLink","forum//"+path) + ";" + uicomponent.getRSSLink(forumId) + "," + uicomponent.event("RSS", forumId).replace("javascript:","");
 							}
@@ -398,7 +406,11 @@
 									</td>
 						 <% if(topicNewPost != null) { 
 						 			if(uicomponent.userProfile.getUserRole() < 3){
-								 		actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
+						 				if(uicomponent.isWatching(forum.getPath()+"/"+topicId)) {
+								 			actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("UnWatch",path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
+								 		} else {
+								 			actionBookmark = uicomponent.event("AddBookMark","topic//"+path+"/"+topicId) + ";" + uicomponent.event("AddWatching",path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
+								 		}
 									} else {
 										actionBookmark = uicomponent.event("ShareLink","topic//"+path+"/"+topicId) + ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									}
@@ -532,10 +544,10 @@
 						<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 					</div>
 					<div class="ItemIcon AddWatchingIcon">
-						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+						<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
  					</div>
  					<div class="ItemIcon ForumRSSFeed">
-						<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
+						<a class="MenuItem AddRSS" href=""><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>
 					</div>
 				</div>
 			</div>
