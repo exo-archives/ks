@@ -389,7 +389,11 @@
 										<div class="RightOverButton">
 											<div class="CenterOverButton">
 												<div class="AddWatchingIcon" style="padding-left:16px;">
+												<% if(uicomponent.isWatching(forum.getPath())) {%>
+													<a style="display:block;" href="<%=uicomponent.event("UnWatch","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
+												<% } else { %>
 													<a style="display:block;" href="<%=uicomponent.event("AddWatching","forum")%>">&nbsp;<%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+												<% } %>
 												</div>
 											</div>
 										</div>
@@ -518,7 +522,11 @@
 									
 									String actionBookmark;
 									if(uicomponent.isLogin){
-										actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										if(uicomponent.isWatching(topic.getPath())) {
+											actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("UnWatch",topicId);
+										} else {
+											actionBookmark = uicomponent.event("AddBookMark",topicId) + ";" + uicomponent.event("AddWatching",topicId);
+										}
 									}
 									actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
@@ -888,7 +896,7 @@
 							<a class="MenuItem AddBookmark" href=""><%=_ctx.appRes("UIForumPortlet.label.AddBookmarkLink");%></a>
 						</div>
 						<div class="ItemIcon AddWatchingIcon">
-							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%></a>
+							<a href="" class="MenuItem AddWatching"><%=_ctx.appRes("UIForumPortlet.label.AddWatching");%>;<%=_ctx.appRes("UIForumPortlet.label.UnWatch");%></a>
 	 					</div>
 	 					<div class="ItemIcon ForumRSSFeed">
 							<a class="MenuItem AddRSS" href="#"><%=_ctx.appRes("UIBreadcumbs.label.Rss");%></a>

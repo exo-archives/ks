@@ -5843,6 +5843,7 @@ public class JCRDataStorage {
 	}
 
 	public void removeWatch(int watchType, String path, String values) throws Exception {
+		if(values == null || values.trim().length() == 0) return ;
 		Node watchingNode = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		Node categoryHome = getCategoryHome(sProvider) ;
