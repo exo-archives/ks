@@ -415,12 +415,13 @@ public class UIQuestions extends UIContainer {
 	
 	public void updateLanguageMap() throws Exception{
 		try {
+			languageMap.clear() ;
 			if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0){
 				List<QuestionLanguage> languages = faqService_.getQuestionLanguages(viewingQuestionId_)  ;
 				for(QuestionLanguage lang : languages) {
 					languageMap.put(lang.getLanguage(), lang) ;
 				}
-			} else languageMap.clear() ;
+			} 
     } catch (Exception e) {
     	viewingQuestionId_ = "";
     	e.printStackTrace();
