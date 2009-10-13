@@ -323,7 +323,7 @@ public class UIBreadcumbs extends UIContainer {
 						if(page > 0){
 							path = path.replace("/"+id[id.length-1], "");
 							id = new String[]{path};
-						} else page = 1;
+						} else page = 0;
 					}
 					try{
 						Topic topic ;
@@ -404,7 +404,7 @@ public class UIBreadcumbs extends UIContainer {
 					try {
 						Forum forum;
 						String cateId = null;
-						int page = 1;
+						int page = 0;
 						if(path.indexOf("/") > 0){
 							String []arr = path.split("/");
 							try {

@@ -204,7 +204,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 						uiForumContainer.setIsRenderChild(true) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(categoryId, forum, 1) ;
+						uiTopicContainer.setUpdateForum(categoryId, forum, 0) ;
 						forumPortlet.getChild(UIForumLinks.class).setValueOption((categoryId+"/"+id));
 					}
 				} else if(id.indexOf(Utils.CATEGORY) >= 0){

@@ -454,7 +454,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				forumContainer.setIsRenderChild(true) ;
 				if(id.length > 1) {
 					forumContainer.getChild(UIForumDescription.class).setForumIds(id[0], id[1]);
-					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 1) ;
+					forumContainer.getChild(UITopicContainer.class).updateByBreadcumbs(id[0], id[1], true, 0) ;
 				} else {
 					try {
 						Forum forum = (Forum)forumPortlet.forumService.getObjectNameById(path, Utils.FORUM);
@@ -462,7 +462,7 @@ public class UIForumPortlet extends UIPortletApplication {
 						path = path.substring(path.indexOf(Utils.CATEGORY));
 						id = path.split("/");
 						forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
-						forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum, 1) ;
+						forumContainer.getChild(UITopicContainer.class).setUpdateForum(id[0], forum, 0) ;
 					}catch(Exception e) {
 						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
 						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);

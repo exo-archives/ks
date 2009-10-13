@@ -536,7 +536,7 @@ public class UICategory extends UIForm	{
 				uiForumContainer.setIsRenderChild(true) ;
 				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 				UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-				uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 1) ;
+				uiTopicContainer.setUpdateForum(uiCategory.categoryId, forum, 0) ;
 				forumPortlet.getChild(UIForumLinks.class).setValueOption((uiCategory.categoryId+"/"+forumId));
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {

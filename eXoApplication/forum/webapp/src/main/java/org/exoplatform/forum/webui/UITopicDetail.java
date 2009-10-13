@@ -176,6 +176,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private List<String> listContactsGotten = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private List<Watch> listWatches = new ArrayList<Watch>();
+	private Map<String, Integer> pagePostRemember = new HashMap<String, Integer>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
@@ -236,6 +237,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	public String getLink() {return link;}
 	public void setLink(String link) {this.link = link;}
 	
+	private int getPagePostRemember(String topicId) {
+  	if(pagePostRemember.containsKey(topicId)) return pagePostRemember.get(topicId);
+  	return 1;
+  }
+	
 	public void setUpdateTopic(String categoryId, String forumId, String topicId) throws Exception {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -260,6 +266,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.forumId = forumId ;
 		this.topicId = topic.getId() ;
 		if(page > 0) pageSelect = page;
+		else pageSelect = getPagePostRemember(topicId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		isShowQuickReply = forumPortlet.isShowQuickReply();
 		isShowRule = forumPortlet.isShowRules();
@@ -288,6 +295,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.topicId = topic.getId() ;
 		this.pageSelect = numberPage ;
 		this.isEditTopic = false ;
+		if(pageSelect == 0) pageSelect = getPagePostRemember(topicId);
 		UIForumPortlet forumPortlet = this.getAncestorOfType(UIForumPortlet.class) ;
 		isShowQuickReply = forumPortlet.isShowQuickReply();
 		isShowRule = forumPortlet.isShowRules();
@@ -593,6 +601,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				}
       } catch (Exception e) {}
 			posts = pageList.getPage(pageSelect) ;
+//			pageSelect = pageList.getCurrentPage();
+			pagePostRemember.put(topicId, pageSelect);
 			if(posts == null) posts = new ArrayList<Post>(); 
 			List<String> userNames = new ArrayList<String>() ;
 			mapUserProfile.clear() ;
@@ -1424,7 +1434,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
 				uiForumContainer.setIsRenderChild(true) ;
 				UITopicContainer topicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-				topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum, 1) ;
+				topicContainer.setUpdateForum(topicDetail.categoryId, topicDetail.forum, 0) ;
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;

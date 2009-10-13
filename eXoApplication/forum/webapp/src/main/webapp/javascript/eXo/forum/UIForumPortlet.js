@@ -700,8 +700,8 @@ UIForumPortlet.prototype.RightClickBookMark = function(elmId) {
 	var itemmenuBookMark = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddBookmark") ;
 	var itemmenuWatching = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddWatching") ;
 	var itemmenuRSS = DOMUtil.findFirstDescendantByClass(popupContainer, "a", "AddRSS") ;
-	var labelWatchings = String(itemmenuWatching.innerHTML).split(";");
 	if(itemmenuWatching == null || itemmenuBookMark == null) return;
+	var labelWatchings = String(itemmenuWatching.innerHTML).split(";");
 	for(var i = 0; i < popupContents.length; i++){
 		var action = popupContents[i].getAttribute('action');
 		if(action.indexOf(";") < 0){
