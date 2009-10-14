@@ -82,11 +82,11 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private List<SelectItemOption<String>> listCategories = new ArrayList<SelectItemOption<String>>() ;
   private long pageSelect = 1 ;
   private long pageSelectNotAnswer = 1 ;
-  
+  private List<String> moderateCates  = new ArrayList<String>() ;
   private boolean isEditTab_ = true ;
   private boolean isResponseTab_ = false ;
   private boolean isChangeTab_ = false;
-  private String cateId_ = "All";
+  private String cateId_ = Utils.ALL;
   
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -102,11 +102,11 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   public void setFAQSetting(FAQSetting setting) throws Exception{
 	  this.faqSetting_ = setting;
 	  FAQUtils.getEmailSetting(faqSetting_, false, false);
-	  setListQuestion() ;
 	  setListCate();
     UIFormSelectBox selectCategory = new UIFormSelectBox(LIST_CATEGORIES, LIST_CATEGORIES, listCategories);
     selectCategory.setOnChange("ChangeCategory");
     this.addUIFormInput(selectCategory);
+    setListQuestion() ;
   }
   
   private boolean hasInGroup(List<String> listGroup, String[] listPermission){
@@ -119,13 +119,32 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
 	private void setListCate() throws Exception {
   	WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
     ResourceBundle res = context.getApplicationResourceBundle() ;
-  	this.listCategories.add(new SelectItemOption<String>(res.getString("UIQuestionsInfo.label.All"), "All")) ;
+  	this.listCategories.add(new SelectItemOption<String>(res.getString("UIQuestionsInfo.label.All"), Utils.ALL)) ;
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-    List<Cate> listCate = new ArrayList<Cate>();
-    listCate.addAll(faqService.listingCategoryTree()) ;
-    for(Cate cat : listCate) {
-    	this.listCategories.add(new SelectItemOption<String>(cat.getCategory().getName(), cat.getCategory().getPath())) ;
-    }
+  	if(faqSetting_.isAdmin()) {
+  		List<Cate> listCate = faqService.listingCategoryTree() ;
+  		this.listCategories.add(new SelectItemOption<String>(faqService_.getCategoryNameOf(Utils.CATEGORY_HOME), Utils.CATEGORY_HOME)) ;
+      for(Cate cat : listCate) {
+      	this.listCategories.add(new SelectItemOption<String>(cat.getCategory().getName(), cat.getCategory().getPath())) ;
+      }
+  	}else {
+  		List<String> listCate = faqService_.getListCateIdByModerator(FAQUtils.getCurrentUser()) ;  		
+  		moderateCates.clear() ;
+  		for(String str : listCate) {
+  			try{
+  				this.listCategories.add(new SelectItemOption<String>(str.substring(40), str.substring(0, 40))) ;
+    			moderateCates.add(str.substring(0,40)) ;
+  			}catch(StringIndexOutOfBoundsException e) {
+  				if(str.indexOf(Utils.CATEGORY_HOME) == 0) {
+  					this.listCategories.add(new SelectItemOption<String>(str.substring(Utils.CATEGORY_HOME.length()), Utils.CATEGORY_HOME)) ;
+      			moderateCates.add(Utils.CATEGORY_HOME) ;
+  				}
+  			}catch(Exception e) {
+  				e.printStackTrace() ;
+  			}
+  			
+  		}
+  	}    
   }
   
   private String[] getQuestionActions(){
@@ -165,48 +184,13 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     List<String>userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
-    if(!faqSetting_.isAdmin()) {
-      List<String> listCateId = new ArrayList<String>() ;
-      if(cateId_.equals("All")){
-	      listCateId.addAll(faqService_.getListCateIdByModerator(user)) ;
-	      int i = 0 ;
-	      while(i < listCateId.size()) {
-	        for(Category category : faqService_.getSubCategories(listCateId.get(i), faqSetting_, false, userPrivates)) {
-	          if(!listCateId.contains(category.getId())) {
-	            listCateId.add(category.getId()) ;
-	          }
-	        }
-	        i ++ ;
-	      }
-      } else {
-      	listCateId.add(this.cateId_);
-      }
-      if(!listCateId.isEmpty() && listCateId.size() > 0) {
-        this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false) ;
-        this.pageList.setPageSize(5);
-        pageIterator.updatePageList(this.pageList) ;
-        
-        this.pageListNotAnswer = faqService_.getQuestionsByListCatetory(listCateId, true) ;
-        this.pageListNotAnswer.setPageSize(5);
-        pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
-      } else {
-        this.pageList = null ;
-        this.pageList.setPageSize(5);
-        pageIterator.updatePageList(this.pageList) ;
-        
-        this.pageListNotAnswer = null ;
-        this.pageListNotAnswer.setPageSize(5);
-        pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
-      }
-    } else {
-    	if(this.cateId_.equals("All")){
+    if(faqSetting_.isAdmin()) {
+    	if(this.cateId_.equals(Utils.ALL)){
     		this.pageList = faqService_.getAllQuestions() ;
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer("All", false) ;
+    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(Utils.ALL, false) ;
     	} else {
     		String cateId = cateId_;
-    		if(cateId.indexOf("/") > 0){
-    			cateId = cateId.substring(cateId.lastIndexOf("/")+1);
-    		}
+    		if(cateId.indexOf("/") > 0) cateId = cateId.substring(cateId.lastIndexOf("/")+1);
     		this.pageList = faqService_.getAllQuestionsByCatetory(cateId, this.faqSetting_);
     		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(cateId, false) ;
     	}
@@ -215,6 +199,24 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       
       pageListNotAnswer.setPageSize(5);
       pageQuesNotAnswerIterator.updatePageList(pageListNotAnswer) ;
+    } else {
+    	List<String> listCateId = new ArrayList<String>() ;
+      if(cateId_.equals(Utils.ALL)){
+      	listCateId.addAll(moderateCates) ;      	
+      } else {
+      	if(cateId_.indexOf("/") > 0) listCateId.add(cateId_.substring(cateId_.lastIndexOf("/") + 1));
+      	else listCateId.add(cateId_);
+      }
+      
+      if(listCateId.size() > 0) {
+        this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false) ;
+        this.pageList.setPageSize(5);
+        pageIterator.updatePageList(this.pageList) ;
+        
+        this.pageListNotAnswer = faqService_.getQuestionsByListCatetory(listCateId, true) ;
+        this.pageListNotAnswer.setPageSize(5);
+        pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
+      }
     }
   }
   
@@ -460,22 +462,5 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   		}
       event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getAncestorOfType(UIPopupContainer.class)) ;
   	}
-  }
-  
-  /*public class Cate{
-    private Category category;
-    private int deft ;    
-    public Category getCategory() {
-      return category;
-    }
-    public void setCategory(Category category) {
-      this.category = category;
-    }
-    public int getDeft() {
-      return deft;
-    }
-    public void setDeft(int deft) {
-      this.deft = deft;
-    }
-  }*/
+  }  
 }

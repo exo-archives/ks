@@ -297,8 +297,15 @@ public class FAQUtils {
 
 	public static String[] splitForFAQ (String str) throws Exception {
 		if(str != null && str.length() > 0) {
-			if(str.contains(",")) return str.trim().split(",") ;
-			else return str.trim().split(";") ;
+			String[] temp ;			
+			if(str.contains(",")) temp = str.trim().split(",") ;
+			else if (str.contains(";")) temp = str.split(";") ;
+			else return new String[]{str} ;
+			List<String> ids = new ArrayList<String>() ;
+			for(String id : temp) {
+				ids.add(id.trim()) ;
+			}
+			return ids.toArray(new String[]{}) ;
 		} else return new String[] {} ;
 	}
 

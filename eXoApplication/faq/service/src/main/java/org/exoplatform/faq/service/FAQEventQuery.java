@@ -530,18 +530,11 @@ public String getQuery() throws Exception {
   		
   		if (isAdd)queryString.append(")") ; // finish
   		
-  		if(isAdd) {
-  			queryString.append(" and ").append(searchCategoryScoping.toString()) ;
-  		} else {
-  			queryString.append(searchCategoryScoping.toString()) ;
-  			isAdd = true ;
-  		}
-  		
   		if(text != null && text.length() > 0 ) {
   			if(isAdd){
-  				queryString.append(" or (  jcr:contains(., '").append(text).append("')") ;
+  				queryString.append(" or (  jcr:contains(., '").append(text).append("')") ;  				
   			}else {
-  				queryString.append("jcr:contains(., '").append(text).append("')") ;
+  				queryString.append("jcr:contains(., '").append(text).append("')") ;  				
   			} 
 				queryString.append(" and ( " )
 				.append(" exo:language='").append(language).append("'")
@@ -552,7 +545,17 @@ public String getQuery() throws Exception {
 				isLanguageLevelSearch = false ;
 				isAnswerCommentLevelSearch = false ;
   			isQuestionLevelSearch = false ;
+  			isAdd = true ;
       }
+  		
+  		if(isAdd) {
+  			queryString.append(" and ").append(searchCategoryScoping.toString()) ;
+  		} else {
+  			queryString.append(searchCategoryScoping.toString()) ;
+  			isAdd = true ;
+  		}
+  		
+  		
   		queryString.append("]") ;  		
   		
   	//######################### Quick Search ###############################   
