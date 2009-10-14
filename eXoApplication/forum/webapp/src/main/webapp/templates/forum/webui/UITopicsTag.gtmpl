@@ -239,7 +239,7 @@
 											<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$screemNamePost</a>
 											<% linkURL = uicomponent.url("OpenTopic", topicBy) ; %>
 											
-											<div style="position:relative;">
+											<div class="fixPupupMenu">
 												<div class="UIPopupCategory" style="display:none; left:2px; top:2px; width:140px">
 													<div class="UIRightClickPopupMenu" style="display:block;">
 														<div class="UIContextMenuContainer">
@@ -329,7 +329,7 @@
 											<a class="PostBy" href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewPostNewBy</a>
 											<% linkURL = uicomponent.url("OpenTopic", postNewBy) ; %>
 											
-											<div style="position:relative;">
+											<div class="fixPupupMenu">
 												<div class="UIPopupCategory" style="display:none; left:2px; top:2px; width:140px">
 													<div class="UIRightClickPopupMenu" style="display:block;">
 														<div class="UIContextMenuContainer">

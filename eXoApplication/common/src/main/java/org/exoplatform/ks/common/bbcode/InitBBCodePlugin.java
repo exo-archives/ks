@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service.conf;
+package org.exoplatform.ks.common.bbcode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.exoplatform.management.jmx.annotations.Property;
  * 23-10-2008 - 07:57:47  
  */
 @Managed
-@NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@NameTemplate({@Property(key="service", value="ks"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
 @ManagedDescription("Plugin that defines the initial BBCodes available")
 public class InitBBCodePlugin extends ManagedPlugin {
 	private BBCodePlugin initialData = new BBCodePlugin();

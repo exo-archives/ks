@@ -24,6 +24,7 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.organization.User;
 
 // TODO: Auto-generated Javadoc

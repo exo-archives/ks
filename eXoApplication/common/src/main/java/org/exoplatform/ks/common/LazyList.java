@@ -16,10 +16,10 @@
  */
 package org.exoplatform.ks.common;
 
-import java.util.AbstractList;
-import java.util.RandomAccess;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.AbstractList;
+import java.util.RandomAccess;
 
 /**
  * @TODO This implementation was borrowed to kernel 2.1. This class need to be removed when upgrade is done

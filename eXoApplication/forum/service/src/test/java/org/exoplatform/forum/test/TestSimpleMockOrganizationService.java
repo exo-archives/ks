@@ -3,14 +3,14 @@ package org.exoplatform.forum.test;
 
 import java.util.Date;
 
+import junit.framework.TestCase;
+
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.MembershipHandler;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserHandler;
-
-import junit.framework.TestCase;
 
 public class TestSimpleMockOrganizationService extends TestCase {
 
