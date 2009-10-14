@@ -105,19 +105,19 @@
 		<component-plugin>
 			<name>default.faqBBCode.data</name>
 			<set-method>addInitBBCodePlugin</set-method>
-			<type>org.exoplatform.faq.service.InitBBCodePlugin</type>
+			<type>org.exoplatform.ks.common.bbcode.InitBBCodePlugin</type>
 			<description>description</description>
 			<init-params>
 				<object-param>
 					<name>bbcode.default.configuration</name>
 					<description>initial bbcode</description>
-					<object type="org.exoplatform.faq.service.BBCodePlugin">
+					<object type="org.exoplatform.ks.common.bbcode.BBCodePlugin">
 						<field name="bbcodeDatas">
 								<!-- in field replacement: Use CDATA for value e.g: <![CDATA[value]]> -->
 							<collection type="java.util.ArrayList">
 								<!-- I/ B/ U/ -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>I</string>
 										</field>
@@ -139,7 +139,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>B</string>
 										</field>
@@ -161,7 +161,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>U</string>
 										</field>
@@ -184,7 +184,7 @@
 								</value>
 									<!-- COLOR/ SIZE/ FONT/ HIGHLIGHT -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>COLOR</string>
 										</field>
@@ -206,7 +206,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>SIZE</string>
 										</field>
@@ -228,7 +228,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>FONT</string>
 										</field>
@@ -250,7 +250,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>HIGHLIGHT</string>
 										</field>
@@ -273,7 +273,7 @@
 								</value>
 									<!-- LEFT/ RIGHT/ CENTER/ JUSTIFY -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LEFT</string>
 										</field>
@@ -295,7 +295,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>RIGHT</string>
 										</field>
@@ -317,7 +317,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CENTER</string>
 										</field>
@@ -339,7 +339,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>JUSTIFY</string>
 										</field>
@@ -362,7 +362,7 @@
 								</value>
 									<!-- EMAIL -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>EMAIL</string>
 										</field>
@@ -385,7 +385,7 @@
 								</value>
 									<!-- EMAIL HAS OPTION-->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>EMAIL</string>
 										</field>
@@ -408,7 +408,7 @@
 								</value>
 									<!-- URL -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>URL</string>
 										</field>
@@ -431,7 +431,7 @@
 								</value>
 									<!-- URL HAS OPTION-->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>URL</string>
 										</field>
@@ -454,7 +454,7 @@
 								</value>
 								<!-- GOTO -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>GOTO</string>
 										</field>
@@ -477,7 +477,7 @@
 								</value>
 								<!-- LIST -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LIST</string>
 										</field>
@@ -500,7 +500,7 @@
 								</value>
 								<!-- LIST HAS OPTION -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LIST</string>
 										</field>
@@ -523,7 +523,7 @@
 								</value>
 								<!-- IMG -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>IMG</string>
 										</field>
@@ -546,7 +546,7 @@
 								</value>
 								<!-- QUOTE -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>QUOTE</string>
 										</field>
@@ -569,7 +569,7 @@
 								</value>
 								<!-- QUOTE HAS OPTION -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>QUOTE</string>
 										</field>
@@ -592,7 +592,7 @@
 								</value>
 								<!-- CODE -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CODE</string>
 										</field>
@@ -615,7 +615,7 @@
 								</value>
 								<!-- CSS -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CSS</string>
 										</field>
@@ -638,7 +638,7 @@
 								</value>
 								<!-- SLIDESHARE -->
 								<value>
-									<object type="org.exoplatform.faq.service.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>SLIDESHARE</string>
 										</field>
@@ -808,19 +808,19 @@
 		<component-plugin>
 			<name>default.forumBBCode.data</name>
 			<set-method>addInitBBCodePlugin</set-method>
-			<type>org.exoplatform.forum.service.conf.InitBBCodePlugin</type>
+			<type>org.exoplatform.ks.common.bbcode.InitBBCodePlugin</type>
 			<description>description</description>
 			<init-params>
 				<object-param>
 					<name>bbcode.default.configuration</name>
 					<description>initial bbcode</description>
-					<object type="org.exoplatform.forum.service.conf.BBCodePlugin">
+					<object type="org.exoplatform.ks.common.bbcode.BBCodePlugin">
 						<field name="bbcodeDatas">
 								<!-- in field replacement: Use CDATA for value e.g: <![CDATA[value]]> -->
 							<collection type="java.util.ArrayList">
 								<!-- I/ B/ U/ -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>I</string>
 										</field>
@@ -842,7 +842,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>B</string>
 										</field>
@@ -864,7 +864,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>U</string>
 										</field>
@@ -887,7 +887,7 @@
 								</value>
 									<!-- COLOR/ SIZE/ FONT/ HIGHLIGHT -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>COLOR</string>
 										</field>
@@ -909,7 +909,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>SIZE</string>
 										</field>
@@ -931,7 +931,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>FONT</string>
 										</field>
@@ -953,7 +953,7 @@
 									</object>
 								</value>
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>HIGHLIGHT</string>
 										</field>
@@ -976,7 +976,7 @@
 								</value>
 									<!-- LEFT/ RIGHT/ CENTER/ JUSTIFY -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LEFT</string>
 										</field>
@@ -998,7 +998,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>RIGHT</string>
 										</field>
@@ -1020,7 +1020,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CENTER</string>
 										</field>
@@ -1042,7 +1042,7 @@
 									</object>
 								</value>
 								<value>	
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>JUSTIFY</string>
 										</field>
@@ -1065,7 +1065,7 @@
 								</value>
 									<!-- EMAIL -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>EMAIL</string>
 										</field>
@@ -1088,7 +1088,7 @@
 								</value>
 									<!-- EMAIL HAS OPTION-->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>EMAIL</string>
 										</field>
@@ -1111,7 +1111,7 @@
 								</value>
 									<!-- URL -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>URL</string>
 										</field>
@@ -1134,7 +1134,7 @@
 								</value>
 									<!-- URL HAS OPTION-->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>URL</string>
 										</field>
@@ -1157,7 +1157,7 @@
 								</value>
 								<!-- GOTO -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>GOTO</string>
 										</field>
@@ -1180,7 +1180,7 @@
 								</value>
 								<!-- LIST -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LIST</string>
 										</field>
@@ -1203,7 +1203,7 @@
 								</value>
 								<!-- LIST HAS OPTION -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>LIST</string>
 										</field>
@@ -1226,7 +1226,7 @@
 								</value>
 								<!-- IMG -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>IMG</string>
 										</field>
@@ -1249,7 +1249,7 @@
 								</value>
 								<!-- QUOTE -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>QUOTE</string>
 										</field>
@@ -1272,7 +1272,7 @@
 								</value>
 								<!-- QUOTE HAS OPTION -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>QUOTE</string>
 										</field>
@@ -1295,7 +1295,7 @@
 								</value>
 								<!-- CODE -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CODE</string>
 										</field>
@@ -1318,7 +1318,7 @@
 								</value>
 								<!-- CSS -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>CSS</string>
 										</field>
@@ -1341,7 +1341,7 @@
 								</value>
 								<!-- SLIDESHARE -->
 								<value>
-									<object type="org.exoplatform.forum.service.conf.BBCodeData">
+									<object type="org.exoplatform.ks.common.bbcode.BBCodeData">
 										<field name="tagName">
 											<string>SLIDESHARE</string>
 										</field>

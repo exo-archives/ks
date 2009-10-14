@@ -24,7 +24,6 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
-import org.exoplatform.faq.service.BBCode;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
@@ -37,6 +36,7 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.webui.util.Util;

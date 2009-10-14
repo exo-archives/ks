@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -54,7 +55,6 @@ public class Utils {
 	public final static String USER_PROFILE_HOME = "UserProfileHome".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
 	public final static String FORUM_BAN_IP = "forumBanIP".intern() ;
-	public final static String FORUM_BBCODE = "forumBBCode".intern() ;
 	public final static String FORUM_SUBSCRIOTION = "forumSubscription".intern() ;
 	public final static String TOPIC_TYPE_HOME = "TopicTypeHome".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
@@ -66,7 +66,6 @@ public class Utils {
 	public final static String POST = "post".intern() ;
 	public final static String POLL = "poll".intern() ;
 	public final static String TAG = "tag".intern() ;
-	public final static String BBCODE = "bbcode".intern() ;
 	public final static String TOPICTYPE = "topicType".intern() ;
 	
 	public final static String PRUNESETTING = "pruneSetting".intern() ;

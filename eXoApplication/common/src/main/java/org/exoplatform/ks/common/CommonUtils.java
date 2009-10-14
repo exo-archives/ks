@@ -14,28 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service.conf;
-
-import java.util.ArrayList;
-import java.util.List;
-
+package org.exoplatform.ks.common;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * May 6, 2009 - 4:27:49 AM  
+ * Oct 14, 2009 - 4:11:14 AM  
  */
-public class BBCodePlugin {
-	private List<BBCodeData> bbcodeDatas = new ArrayList<BBCodeData>();
-	public BBCodePlugin() {
-  }
-	public List<BBCodeData> getBbcodeDatas() {
-  	return bbcodeDatas;
-  }
-	public void setBbcodeDatas(List<BBCodeData> bbcodeDatas) {
-  	this.bbcodeDatas = bbcodeDatas;
-  }
+public class CommonUtils {
 	
-
-	
+	public final static String KS_SHARE_DATA = "ksShareData".intern() ;
+	public final static String KS_SHARE_DATA_NODE_TYPE = "exo:ksShareData".intern() ;
+	public final static String BBCODE_HOME = "ksBBCodeHome".intern() ;
+	public final static String BBCODE_HOME_NODE_TYPE = "exo:ksBBCodeHome".intern() ;
+	public final static String BBCODE_NODE_TYPE = "exo:ksBBCode".intern() ;
+	public final static String BBCODE = "ksBBCode".intern() ;
 }

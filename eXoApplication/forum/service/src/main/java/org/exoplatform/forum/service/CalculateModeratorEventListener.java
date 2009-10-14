@@ -16,10 +16,6 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.jcr.Node;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;

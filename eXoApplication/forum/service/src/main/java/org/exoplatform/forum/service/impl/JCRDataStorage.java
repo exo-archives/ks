@@ -61,7 +61,6 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
-import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
@@ -93,16 +92,16 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.SortSettings.Direction;
 import org.exoplatform.forum.service.SortSettings.SortField;
-import org.exoplatform.forum.service.conf.BBCodeData;
 import org.exoplatform.forum.service.conf.CategoryData;
 import org.exoplatform.forum.service.conf.CategoryEventListener;
 import org.exoplatform.forum.service.conf.ForumData;
-import org.exoplatform.forum.service.conf.InitBBCodePlugin;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.bbcode.BBCodeOperator;
+import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.PropertyReader;
@@ -143,7 +142,7 @@ public class JCRDataStorage {
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 	NodeHierarchyCreator nodeHierarchyCreator_;
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
-	
+	BBCodeOperator bbcodeObject_;
 
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
 	Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
@@ -156,6 +155,7 @@ public class JCRDataStorage {
 	
 	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
+		bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
 	}
 	public JCRDataStorage() {}
 	
@@ -352,16 +352,6 @@ public class JCRDataStorage {
 			Node forumHomeNode = appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
 			return forumHomeNode;
 		}
-	}
-
-	private Node getBBcodeHome(SessionProvider sProvider) throws Exception {
-		try {
-			return getForumDataHome(sProvider).getNode(Utils.FORUM_BBCODE);
-		} catch (PathNotFoundException e) {
-			return getForumDataHome(sProvider).addNode(Utils.FORUM_BBCODE, "exo:forumBBCodeHome");			
-		} catch(Exception e) {
-			return null ;
-		}		
 	}
 
 	private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
@@ -644,35 +634,6 @@ public class JCRDataStorage {
 		return new SortSettings(SortField.LASTPOST, Direction.DESC);
 	}	
 
-	
-	public void initDefaultBBCode() throws Exception{
-		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
-		try {
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			NodeIterator iter = bbCodeHome.getNodes();
-			if(iter.getSize() <= 0){ 
-				List<BBCode> bbCodes = new ArrayList<BBCode>();
-		    for (InitBBCodePlugin pln : defaultBBCodePlugins_) {
-		    	List<BBCodeData> codeDatas = pln.getBBCodePlugin().getBbcodeDatas();
-		    	for (BBCodeData codeData : codeDatas) {
-		        BBCode bbCode = new BBCode();
-		        bbCode.setTagName(codeData.getTagName());
-		        bbCode.setReplacement(codeData.getReplacement());
-		        bbCode.setDescription(codeData.getDescription());
-		        bbCode.setExample(codeData.getExample());
-		        bbCode.setOption(Boolean.parseBoolean(codeData.getIsOption()));
-		        bbCode.setActive(Boolean.parseBoolean(codeData.getIsActive()));
-		        bbCodes.add(bbCode);
-	        }
-	      }
-		    if(!bbCodes.isEmpty()){
-		    	this.saveBBCode(bbCodes);
-		    }
-			}
-    } catch (Exception e) {
-	    e.printStackTrace();
-    }finally { sProvider.close() ;}	  
-  }
 	
 	protected void initDefaultData() throws Exception {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
@@ -3232,7 +3193,7 @@ public class JCRDataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject_.getActiveBBCode()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3396,7 +3357,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3435,7 +3396,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3477,7 +3438,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -6440,7 +6401,7 @@ public class JCRDataStorage {
 		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider)));
 		
 		// Create BBCode file
-		listFiles.addAll(createFilesFromNode(getBBcodeHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(bbcodeObject_.getBBcodeHome(sessionProvider)));
 		
 		// Create BanIP file
 		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider)));
@@ -6527,7 +6488,7 @@ public class JCRDataStorage {
 				nodeType = "exo:forumTag";
 				nodeName = "TagHome";
 			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
-				nodePath = getBBcodeHome(sessionProvider).getPath();
+				nodePath = bbcodeObject_.getBBcodeHome(sessionProvider).getPath();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 				isReset = true;
 				nodeType = "exo:forumBBCode";
@@ -6875,122 +6836,7 @@ public class JCRDataStorage {
 			e.printStackTrace() ;
 		}finally { sysProvider.close() ; }	
 	}
-	
-	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		try {
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			Node bbcNode;
-			for (BBCode bbcode : bbcodes) {
-				String id = bbcode.getTagName();
-				if(bbcode.isOption()) id = id + "_option";
-				try {
-					bbcNode = bbCodeHome.getNode(bbcode.getId());
-					if(!id.equals(bbcode.getId())) {
-						bbcNode.remove();
-						bbcNode = bbCodeHome.addNode(id, "exo:forumBBCode");
-					}
-	      } catch (Exception e) {
-	      	bbcNode = bbCodeHome.addNode(id, "exo:forumBBCode");
-	      }
-				bbcNode.setProperty("exo:tagName", bbcode.getTagName());
-				bbcNode.setProperty("exo:replacement", bbcode.getReplacement());
-				bbcNode.setProperty("exo:example", bbcode.getExample());
-				bbcNode.setProperty("exo:description", bbcode.getDescription());
-				bbcNode.setProperty("exo:isActive", bbcode.isActive());
-				bbcNode.setProperty("exo:isOption", bbcode.isOption());
-	    }
-			if(bbCodeHome.isNew()){
-				bbCodeHome.getSession().save();
-			} else {
-				bbCodeHome.save();
-			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}finally { sProvider.close() ;}		
-	}
-	
-	private BBCode getBBCodeNode(Node bbcNode) throws Exception{
-		BBCode bbCode = new BBCode();
-		bbCode.setId(bbcNode.getName());
-    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
-    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
-    bbCode.setExample(bbcNode.getProperty("exo:example").getString());
-    if(bbcNode.hasProperty("exo:description"))
-    	bbCode.setDescription(bbcNode.getProperty("exo:description").getString());
-    bbCode.setActive(bbcNode.getProperty("exo:isActive").getBoolean());
-    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
-		return bbCode;
-	}
-	
-	public List<BBCode> getAllBBCode() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<BBCode> bbcodes = new ArrayList<BBCode>();
-		try {
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			NodeIterator iter = bbCodeHome.getNodes();
-			while (iter.hasNext()) {
-		    try{
-		    	Node bbcNode = iter.nextNode();
-			    bbcodes.add(getBBCodeNode(bbcNode));
-		    }catch(Exception e) {}				
-	    }			
-		}finally { sProvider.close() ;}
-		return bbcodes;		
-	}
-	
-	public List<String> getActiveBBCode() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<String> bbcodes = new ArrayList<String>();
-		try{
-			QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager();
-			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(getBBcodeHome(sProvider).getPath()).append("/element(*,exo:forumBBCode)[@exo:isActive='true']");
-			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();
-			String tagName = "";
-			while (iter.hasNext()) {
-		    Node bbcNode = iter.nextNode();
-		    tagName = bbcNode.getProperty("exo:tagName").getString();
-		    if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
-		    bbcodes.add(tagName);
-	    }
-		}finally { sProvider.close() ;}
-		return bbcodes;
-	}
-	
-	public BBCode getBBcode(String id) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		BBCode bbCode = new BBCode();
-		Node bbcNode;
-		try{
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			try {
-				bbcNode = bbCodeHome.getNode(id);
-				bbCode.setId(bbcNode.getName());
-		    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
-		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
-		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
-      } catch (Exception e) {
-      }
-		}finally { sProvider.close() ;}
-		return bbCode ;
-	}
-	
-	public void removeBBCode(String bbcodeId) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node bbCodeHome = getBBcodeHome(sProvider);
-		try {
-			bbCodeHome.getNode(bbcodeId).remove();
-			bbCodeHome.save();
-    } catch (Exception e) {
-    	e.printStackTrace() ;
-    }finally{
-    	sProvider.close();
-    }
-	}
-	
+
 	private PruneSetting getPruneSetting(Node prunNode) throws Exception {
 		PruneSetting pruneSetting = new PruneSetting();
 		pruneSetting.setId(prunNode.getName());

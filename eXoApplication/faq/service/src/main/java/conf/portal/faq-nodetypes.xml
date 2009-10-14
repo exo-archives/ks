@@ -540,56 +540,11 @@
   	</childNodeDefinitions>
   </nodeType>
 
-	
-	<nodeType name="exo:faqBBCode" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-		<supertypes>
-			<supertype>nt:base</supertype>
-		</supertypes>
-		<propertyDefinitions> 
-			<propertyDefinition name="exo:tagName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition> 		
-			<propertyDefinition name="exo:replacement" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:example" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:isActive" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-			<propertyDefinition name="exo:isOption" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
-				<valueConstraints/>
-			</propertyDefinition>
-		</propertyDefinitions>
-	</nodeType>
-	
-	<nodeType name="exo:faqBBCodeHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-		<supertypes>
-			<supertype>nt:base</supertype>
-		</supertypes> 
-		<childNodeDefinitions>
-			<childNodeDefinition name="*" defaultPrimaryType="exo:faqBBCode" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
-				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:faqBBCode</requiredPrimaryType>
-				</requiredPrimaryTypes>
-			</childNodeDefinition>
-		</childNodeDefinitions>
-	</nodeType>
-
-  <nodeType name="exo:faqSettingHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	<nodeType name="exo:faqSettingHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
    <supertypes>
     <supertype>nt:base</supertype>
    </supertypes>
    <childNodeDefinitions>
-	   <childNodeDefinition name="*" defaultPrimaryType="exo:faqBBCodeHome" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
-		    <requiredPrimaryTypes>
-		    	<requiredPrimaryType>exo:faqBBCodeHome</requiredPrimaryType>
-		    </requiredPrimaryTypes>
-	   </childNodeDefinition>  
 	   <childNodeDefinition name="*" defaultPrimaryType="exo:faqUserSettingHome" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
 		    <requiredPrimaryTypes>
 		    	<requiredPrimaryType>exo:faqUserSettingHome</requiredPrimaryType>
@@ -673,4 +628,58 @@
 			</childNodeDefinition>
 		</childNodeDefinitions>
 	</nodeType>
+	
+	<!-- BBCode Node Type -->	
+	<nodeType name="exo:ksBBCode" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes>
+		<propertyDefinitions> 
+			<propertyDefinition name="exo:tagName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition> 		
+			<propertyDefinition name="exo:replacement" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:description" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:example" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:isActive" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+			<propertyDefinition name="exo:isOption" requiredType="Boolean" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
+		</propertyDefinitions>
+	</nodeType>
+	
+	<nodeType name="exo:ksBBCodeHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:ksBBCode" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:ksBBCode</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+
+	<!-- nodeType name="exo:ksShareData" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:ksBBCodeHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:ksBBCodeHome</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType-->
+	
 </nodeTypes>  

@@ -17,7 +17,6 @@
 package org.exoplatform.ks.common.conf;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.common.conf.ManagedPlugin;
 
 /**
  * Created by The eXo Platform SAS

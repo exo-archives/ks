@@ -491,29 +491,6 @@ public interface ForumServiceLegacy {
   public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sessionProvider) throws Exception;
   
   /**
-   * @deprecated use {@link ForumService#saveBBCode(List<BBCode> bbcodes)}
-   */
-  public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception ;
-  
-  /**
-   * @deprecated use {@link ForumService#getAllBBCode()}
-   */
-  public List<BBCode> getAllBBCode(SessionProvider sProvider) throws Exception ;
-  
-  /**
-   * @deprecated use {@link ForumService#getActiveBBCode()}
-   */
-  public List<String> getActiveBBCode(SessionProvider sProvider) throws Exception;
-  /**
-   * @deprecated use {@link ForumService#getBBcode()}
-   */
-  public BBCode getBBcode(SessionProvider sProvider, String id) throws Exception;
-  
-  /**
-   * @deprecated use {@link ForumService#removeBBCode(String bbcodeId)}
-   */
-  public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception ;
-  /**
    * @deprecated use {@link ForumService#getAllPruneSetting()}
    */
   public List<PruneSetting> getAllPruneSetting(SessionProvider sProvider) throws Exception;

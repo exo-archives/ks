@@ -14,63 +14,72 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  ***************************************************************************/
-package org.exoplatform.forum.service.conf;
+package org.exoplatform.ks.common.bbcode;
+
+import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.services.jcr.util.IdGenerator;
+
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
  *          tu.duy@exoplatform.com
- * May 6, 2009 - 4:28:16 AM  
+ * Oct 7, 2009 - 6:57:52 AM  
  */
-public class BBCodeData {
+public class BBCode {
+	private String id;
 	private String tagName;
 	private String replacement;
 	private String description;
 	private String example;
-	private String isOption;
-	private String isActive;
-
-	public BBCodeData() {
+	private boolean isActive;
+	private boolean isOption;
+	
+	public BBCode() {
+		isOption = false;
+		isActive = true;
+		id =  CommonUtils.BBCODE + IdGenerator.generate();
   }
 	
+	public String getId() {
+  	return id;
+  }
+	public void setId(String id) {
+  	this.id = id;
+  }
 	public String getTagName() {
   	return tagName;
   }
-	public void setTagName(String tagName) {
-  	this.tagName = tagName;
+	public void setTagName(String name) {
+  	this.tagName = name;
   }
-	
 	public String getReplacement() {
-  	return replacement;
-  }
+		return replacement;
+	}
 	public void setReplacement(String replacement) {
-  	this.replacement = replacement;
-  }
-	
+		this.replacement = replacement;
+	}
 	public String getDescription() {
   	return description;
   }
 	public void setDescription(String description) {
   	this.description = description;
   }
-	
 	public String getExample() {
-  	return example;
-  }
+		return example;
+	}
 	public void setExample(String example) {
-  	this.example = example;
-  }
-	
-	public String getIsOption() {
-  	return isOption;
-  }
-	public void setIsOption(String isOption) {
-  	this.isOption = isOption;
-  }
-
-	public String getIsActive() {
+		this.example = example;
+	}
+	public boolean isActive() {
   	return isActive;
   }
-	public void setIsActive(String isActive) {
+	public void setActive(boolean isActive) {
   	this.isActive = isActive;
+  }
+	public boolean isOption() {
+  	return isOption;
+  }
+	public void setOption(boolean isOption) {
+  	this.isOption = isOption;
   }
 }

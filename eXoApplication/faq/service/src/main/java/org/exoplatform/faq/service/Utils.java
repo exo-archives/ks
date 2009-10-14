@@ -26,7 +26,7 @@ import javax.jcr.Value;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
-
+import org.exoplatform.ks.common.bbcode.BBCode;
 
 /**
  * Created by The eXo Platform SARL
@@ -45,8 +45,6 @@ public class Utils {
 	final public static String ANSWER_HOME = "faqAnswerHome".intern();
 	final public static String COMMENT_HOME = "faqCommentHome".intern();
 	final public static String LANGUAGE_HOME = "languages".intern();
-	final public static String BBCODE = "faqBbcode".intern() ;
-	public final static String FAQ_BBCODE = "faqBBCode".intern() ;
 	final public static String EXO_FAQQUESTIONHOME = "exo:faqQuestionHome".intern() ;
 	final public static String EXO_FAQCATEGORYHOME = "exo:faqCategoryHome".intern() ;
 	final public static String ALL = "All".intern() ;

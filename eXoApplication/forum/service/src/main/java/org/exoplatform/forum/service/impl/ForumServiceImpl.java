@@ -36,7 +36,6 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.forum.service.BBCode;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -59,9 +58,11 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.conf.InitBBCodePlugin;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.bbcode.BBCodeOperator;
+import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -86,6 +87,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   
   JCRDataStorage storage_ ;
+  BBCodeOperator bbcodeObject_;
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
   
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
@@ -94,6 +96,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
   	storage_ = new JCRDataStorage(nodeHierarchyCreator);
+  	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
   }
 
 
@@ -140,7 +143,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing default data...");
   		storage_.initDefaultData() ;
   		log.info("initializing default BBCodes...");
-  		storage_.initDefaultBBCode();
+  		bbcodeObject_.initDefaultBBCode();
   	}catch(Exception e) {
   		e.printStackTrace() ;
   	}  	
@@ -186,15 +189,9 @@ public class ForumServiceImpl implements ForumService, Startable {
     }
 	}
 
-
-
-
   private void manageStorage() {
     managed.registerStorageManager(storage_);
   }
-
-
-
 
   @SuppressWarnings("unchecked")
   private void manageJobs() {
@@ -214,9 +211,6 @@ public class ForumServiceImpl implements ForumService, Startable {
       log.error("failed to register jobs manager", e);
     }
   }
-
-
-
 
   private void managePlugins() {
     List<RoleRulesPlugin> plugins = storage_.rulesPlugins_;
@@ -1318,49 +1312,24 @@ public class ForumServiceImpl implements ForumService, Startable {
 		storage_.updateEmailWatch(listNodeId, newEmailAdd, userId);
 	}
 	
-	public void saveBBCode(SessionProvider sProvider, List<BBCode> bbcodes) throws Exception{
-		sProvider.close() ;
-		saveBBCode(bbcodes);
-	}
-	
 	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-		storage_.saveBBCode(bbcodes);
-	}
-	
-	public List<BBCode> getAllBBCode(SessionProvider sProvider) throws Exception {
-		sProvider.close() ;
-		return getAllBBCode();
+		bbcodeObject_.saveBBCode(bbcodes);
 	}
 	
 	public List<BBCode> getAllBBCode() throws Exception {
-		return storage_.getAllBBCode();
+		return bbcodeObject_.getAllBBCode();
 	}
 
-	public List<String> getActiveBBCode(SessionProvider sProvider) throws Exception {
-		sProvider.close() ;
-		return getActiveBBCode();
-	}
-	
 	public List<String> getActiveBBCode() throws Exception {
-		return storage_.getActiveBBCode();
-	}
-	
-	public BBCode getBBcode(SessionProvider sProvider, String id) throws Exception {
-		sProvider.close() ;
-		return getBBcode(id);
+		return bbcodeObject_.getActiveBBCode();
 	}
 	
 	public BBCode getBBcode(String id) throws Exception{
-		return storage_.getBBcode(id);
-	}
-	
-	public void removeBBCode(SessionProvider sProvider,  String bbcodeId) throws Exception {
-		sProvider.close() ;
-		removeBBCode(bbcodeId);
+		return bbcodeObject_.getBBcode(id);
 	}
 	
 	public void removeBBCode(String bbcodeId) throws Exception {
-		storage_.removeBBCode(bbcodeId);
+		bbcodeObject_.removeBBCode(bbcodeId);
 	}
 
 	public List<PruneSetting> getAllPruneSetting() throws Exception {
