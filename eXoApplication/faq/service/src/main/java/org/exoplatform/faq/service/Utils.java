@@ -49,6 +49,7 @@ public class Utils {
 	public final static String FAQ_BBCODE = "faqBBCode".intern() ;
 	final public static String EXO_FAQQUESTIONHOME = "exo:faqQuestionHome".intern() ;
 	final public static String EXO_FAQCATEGORYHOME = "exo:faqCategoryHome".intern() ;
+	final public static String ALL = "All".intern() ;
 	/**
 	 *  This method convert string to string[] split with comma
 	 * @param str
