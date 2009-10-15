@@ -293,12 +293,7 @@ public class UIBreadcumbs extends UIContainer {
 				String path = event.getRequestContext().getRequestParameter(OBJECTID) ;
 				UIForumPortlet forumPortlet = breadcums.getAncestorOfType(UIForumPortlet.class) ;
 				UIApplication uiApp = breadcums.getAncestorOfType(UIApplication.class) ;
-				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0) {
-					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-					categoryContainer.updateIsRender(true) ;
-					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
-				}else if(path.equals(FORUM_SERVICE)){
+				if(path.indexOf(ForumUtils.FIELD_EXOFORUM_LABEL) >= 0 || path.equals(FORUM_SERVICE)) {
 					forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 					UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 					categoryContainer.updateIsRender(true) ;
