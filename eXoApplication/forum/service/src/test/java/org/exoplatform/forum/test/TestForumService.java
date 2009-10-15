@@ -4,13 +4,27 @@
  **************************************************************************/
 package org.exoplatform.forum.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
+
+import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
+import org.exoplatform.forum.service.ForumEventQuery;
+import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
@@ -18,6 +32,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -121,7 +136,7 @@ public class TestForumService extends BaseForumTestCase{
   	assertNotNull(administration);
   	assertEquals(administration.getForumSortBy(), "forumName");
   }
-	/*
+
   public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
@@ -133,7 +148,6 @@ public class TestForumService extends BaseForumTestCase{
     Category category = forumService_.getCategory(catId); 
     assertNotNull("Category is null", category) ;
     
-    System.out.println("\n\n category " + category.getPath());
     // get categories
 //    TODO: not get all categories.
 //    List<Category> categories = forumService_.getCategories() ;
@@ -316,7 +330,7 @@ public class TestForumService extends BaseForumTestCase{
   	List<TopicType> listTopicType = forumService_.getTopicTypes();
   	assertEquals("Can not get all topic type. Size of topicTypes list is not 3.",listTopicType.size(), 3);
   }
-  */
+  
   private void setData() throws Exception {
   	if(forumService_.getCategory(categoryId) != null){
   		forumService_.removeCategory(categoryId);
@@ -331,7 +345,7 @@ public class TestForumService extends BaseForumTestCase{
 		forumService_.saveTopic(categoryId, forumId, topic, true, false, "");
 		this.topicId = topic.getId();
   }
-  /*
+  
   public void testPost() throws Exception {
 		//set Data
 		setData();
@@ -610,7 +624,7 @@ public class TestForumService extends BaseForumTestCase{
 	  listBBc.addAll(forumService_.getAllBBCode());
 	  assertEquals("Get all bbcode, get size of list BBcode is not 4", listBBc.size(), 4);
   }
-  */
+  
   private UserProfile createdUserProfile(String userName) {
   	UserProfile userProfile = new UserProfile();
   	userProfile.setUserId(userName);

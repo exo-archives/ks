@@ -42,6 +42,7 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.faq.test.FAQServiceTestCase;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
@@ -174,6 +175,17 @@ public class TestFAQService extends FAQServiceTestCase{
 		watch.setEmails(mail);
 		return watch;
 	}
+	
+	private BBCode createBBCode(String tag, String replacement, boolean isActive) {
+  	BBCode bbCode = new BBCode();
+  	bbCode.setTagName(tag);
+  	bbCode.setActive(isActive);
+  	bbCode.setDescription("Description!");
+  	bbCode.setExample("["+tag+"] text example [/"+tag+"]");
+  	bbCode.setOption(false);
+  	bbCode.setReplacement(replacement);
+  	return bbCode;
+  }
 	
 	private FileAttachment createUserAvatar(String fileName) throws Exception{
 		FileAttachment attachment = new FileAttachment();
@@ -667,6 +679,23 @@ public class TestFAQService extends FAQServiceTestCase{
     }*/
 	}
 	
+  public void testBBCode() throws Exception {
+	  List<BBCode> listBBc = new ArrayList<BBCode>();
+	  listBBc.add(createBBCode("I", "<i>{param}</i>", true));
+	  listBBc.add(createBBCode("B", "<b>{param}</b>", true));
+	  listBBc.add(createBBCode("U", "<u>{param}</u>", true));
+	  listBBc.add(createBBCode("URL", "<a target='_blank' href=\"{param}\">{param}</a>", false));
+	  faqService_.saveBBCode(listBBc);
+	  // get Active BBcodes
+	  List<String>bbcodes = new ArrayList<String>();
+	  bbcodes.addAll(faqService_.getActiveBBCode());
+	  assertEquals("Get active bbcodes, get size of list tag name BBcode active is not 3", bbcodes.size(), 3);
+	  // get All BBcodes
+	  listBBc = new ArrayList<BBCode>();
+	  listBBc.addAll(faqService_.getAllBBCode());
+	  assertEquals("Get all bbcode, get size of list BBcode is not 4", listBBc.size(), 4);
+  }
+  
 	public void testUserAvatar()throws Exception{
 		//	Add new avatar for user:
 		faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"));

@@ -56,8 +56,6 @@ public interface FAQService extends FAQServiceLegacy{
 	 */
 	public void addInitialDataPlugin(InitialDataPlugin plugin) throws Exception ;
 	
-	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception ;
-	
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
 	
 	/**

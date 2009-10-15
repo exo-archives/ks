@@ -100,6 +100,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
+import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
@@ -173,20 +174,18 @@ public class JCRDataStorage {
 	@ManagedDescription("workspace for the forum storage")
 	public String getWorkspace() throws Exception {
 	   SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-	    try{
-	      return getForumHomeNode(sProvider).getSession().getWorkspace().getName();
-	    } finally{ sProvider.close() ;}
-	    
-	  
+	   try{
+	     return getForumHomeNode(sProvider).getSession().getWorkspace().getName();
+	   } finally{ sProvider.close() ;}
 	}
 	
 	 @Managed
 	  @ManagedDescription("data path for forum storage")
 	  public String getPath() throws Exception {	    
-	     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-	      try{
-	        return getForumHomeNode(sProvider).getPath();
-	      } finally{ sProvider.close() ;}
+	    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+      try{
+        return getForumHomeNode(sProvider).getPath();
+      } finally{ sProvider.close() ;}
 	  }
 	
 
@@ -210,12 +209,6 @@ public class JCRDataStorage {
 		if(plugin instanceof InitializeForumPlugin) {
 			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
 		}		
-	}
-
-	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-		if(plugin instanceof InitBBCodePlugin) {
-			defaultBBCodePlugins_.add((InitBBCodePlugin)plugin) ;
-		}
 	}
 
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
@@ -347,9 +340,9 @@ public class JCRDataStorage {
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
 		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
 		try {
-			return appNode.getNode(Utils.FORUM_SERVICE);
+			return appNode.getNode(CommonUtils.FORUM_SERVICE);
 		} catch (PathNotFoundException e) {
-			Node forumHomeNode = appNode.addNode(Utils.FORUM_SERVICE, "exo:forumHome");
+			Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
 			return forumHomeNode;
 		}
 	}
@@ -367,9 +360,9 @@ public class JCRDataStorage {
 	private Node getForumSystemHome(SessionProvider sysProvider) throws Exception {
 		//SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
 		try{
-			return getForumHomeNode(sysProvider).getNode(Utils.FORUM_SYSTEM) ;
+			return getForumHomeNode(sysProvider).getNode(CommonUtils.FORUM_SYSTEM) ;
 		}catch(PathNotFoundException e) {
-			return getForumHomeNode(sysProvider).addNode(Utils.FORUM_SYSTEM, "exo:forumSystem") ;
+			return getForumHomeNode(sysProvider).addNode(CommonUtils.FORUM_SYSTEM, "exo:forumSystem") ;
 		}catch(Exception e){
 			return null ;
 		}/*finally{
@@ -380,9 +373,9 @@ public class JCRDataStorage {
 	private Node getForumDataHome(SessionProvider sysProvider) throws Exception {
 		//SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
 		try{
-			return getForumHomeNode(sysProvider).getNode(Utils.FORUM_DATA) ;
+			return getForumHomeNode(sysProvider).getNode(CommonUtils.FORUM_DATA) ;
 		}catch(PathNotFoundException e) {
-			return getForumHomeNode(sysProvider).addNode(Utils.FORUM_DATA, "exo:forumData") ;
+			return getForumHomeNode(sysProvider).addNode(CommonUtils.FORUM_DATA, "exo:forumData") ;
 		}catch(Exception e){
 			return null ;
 		}/*finally{
