@@ -778,10 +778,11 @@ public class JCRDataStorage {
 				addModeratorCalculateListener(catNode) ;
 			} else {
 				catNode = categoryHome.getNode(category.getId());
-				String[] oldcategoryMod = ValuesToArray(catNode.getProperty("exo:moderators").getValues());
+				String[] oldcategoryMod = new String[]{""} ;
+				try{ oldcategoryMod = ValuesToArray(catNode.getProperty("exo:moderators").getValues()); }catch(Exception e) {}
 				catNode.setProperty("exo:tempModerators", oldcategoryMod);
-				presentPoster = ValuesToList(catNode.getProperty("exo:poster").getValues());
-				presentViewer = ValuesToList(catNode.getProperty("exo:viewer").getValues());
+				try {presentPoster = ValuesToList(catNode.getProperty("exo:poster").getValues());} catch(Exception e) {}
+				try {presentViewer = ValuesToList(catNode.getProperty("exo:viewer").getValues());} catch (Exception e) {}
 			}
 			catNode.setProperty("exo:name", category.getCategoryName());
 			catNode.setProperty("exo:categoryOrder", category.getCategoryOrder());
