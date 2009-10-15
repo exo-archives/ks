@@ -2,16 +2,16 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>config</artifactId>
-    <version>1.0</version>
+    <version>1.1.1</version>
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.datamigration</artifactId>
-  <version>1.2.x</version>
+  <version>1.2.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>eXo FAQ application</name>
   <url>http://www.exoplatform.org</url>
-  <description>Migrate data from 1.1 to 1.2</description>
+  <description>Migrate data from 1.1 to 1.2.1</description>
   
   <dependencies> 
     
@@ -25,21 +25,21 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>1.2.x</version>
+      <version>1.2.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>1.2.x</version>
+      <version>1.2.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>1.2.x</version>
+      <version>1.2.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>    
   </dependencies>  
