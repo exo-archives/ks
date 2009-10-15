@@ -37,7 +37,7 @@ public class PruneSetting {
 	private boolean isActive = false ;
 	
 	public PruneSetting() {
-		id =  Utils.PRUNESETTING + IdGenerator.generate();
+		//id =  Utils.PRUNESETTING + IdGenerator.generate();
   }
 
 	public String getId() {

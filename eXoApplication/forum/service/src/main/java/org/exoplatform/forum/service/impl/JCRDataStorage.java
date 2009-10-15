@@ -1311,16 +1311,13 @@ public class JCRDataStorage {
 				}
 			}
 			catNode.save();
+			StringBuilder id = new StringBuilder();
+			id.append(catNode.getProperty("exo:categoryOrder").getString()) ;
+			id.append(catNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
+			id.append(forumNode.getProperty("exo:forumOrder").getString()) ;
+			id.append(forumNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
 			if(isNew) {
 				PruneSetting pruneSetting = new PruneSetting();
-				// set Id prune setting.
-				StringBuilder id = new StringBuilder();
-				String oderF = String.valueOf(catNode.getProperty("exo:categoryOrder").getString());
-				if(oderF.length() == 1) oderF = "0" + oderF;
-				id.append(Utils.PRUNESETTING).append(catNode.getName().replaceFirst(Utils.CATEGORY, "")).append(oderF);
-				oderF = String.valueOf(forum.getForumOrder());
-				if(oderF.length() == 1) oderF = "0" + oderF;
-				id.append(oderF).append(String.valueOf(Calendar.getInstance().getTimeInMillis()).substring(6));
 				pruneSetting.setId(id.toString());
 				pruneSetting.setForumPath(forum.getPath());
 				savePruneSetting(pruneSetting);
@@ -1328,6 +1325,10 @@ public class JCRDataStorage {
 				if (isModerateTopic != isNewModerateTopic) {
 					queryLastTopic(sProvider, forumNode.getPath());
 				}
+				//updatePruneId
+				Node pruneSetting = forumNode.getNode(Utils.PRUNESETTING) ;
+				pruneSetting.setProperty("exo:id", id.toString()) ;
+				pruneSetting.save() ;
 			}
 		} catch (Exception e) {
 			e.printStackTrace() ;
@@ -6855,14 +6856,15 @@ public class JCRDataStorage {
 		PruneSetting pruneSetting = new PruneSetting();
 		try {
 			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
-			NodeIterator iter = forumNode.getNodes();
-			while(iter.hasNext()){
+			pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
+			//NodeIterator iter = forumNode.getNodes();
+			/*while(iter.hasNext()){
 	      Node node = iter.nextNode();
 	      if(node.isNodeType("exo:pruneSetting")){
 	      	pruneSetting = getPruneSetting(node);
 	      	break;
 	      }
-      }
+      }*/
     } finally { sProvider.close() ;}
 		return pruneSetting;
 	}
@@ -6874,7 +6876,7 @@ public class JCRDataStorage {
 			Node categoryHNode = getCategoryHome(sProvider);
 			QueryManager qm = categoryHNode.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id descending");
+			pathQuery.append("/jcr:root").append(categoryHNode.getPath()).append("//element(*,exo:pruneSetting) order by @exo:id ascending");
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -6893,9 +6895,9 @@ public class JCRDataStorage {
 			Node forumNode = (Node) getForumHomeNode(sProvider).getSession().getItem(path);
 			Node pruneNode;
 			try {
-				pruneNode = forumNode.getNode(pruneSetting.getId());
+				pruneNode = forumNode.getNode(Utils.PRUNESETTING);
       } catch (Exception e) {
-      	pruneNode = forumNode.addNode(pruneSetting.getId(), "exo:pruneSetting");
+      	pruneNode = forumNode.addNode(Utils.PRUNESETTING, "exo:pruneSetting");
       	pruneNode.setProperty("exo:id", pruneSetting.getId());
       }
       pruneNode.setProperty("exo:inActiveDay", pruneSetting.getInActiveDay());
