@@ -5,18 +5,21 @@ package org.exoplatform.webservice.ks.forum;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.common.http.HTTPMethods;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.services.rest.CacheControl;
-import org.exoplatform.services.rest.HTTPMethod;
-import org.exoplatform.services.rest.OutputTransformer;
-import org.exoplatform.services.rest.Response;
-import org.exoplatform.services.rest.URIParam;
-import org.exoplatform.services.rest.URITemplate;
-import org.exoplatform.services.rest.container.ResourceContainer;
-import org.exoplatform.ws.frameworks.json.transformer.Bean2JsonOutputTransformer;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+
+
+
 
 /**
  * @author Uoc Nguyen
@@ -27,12 +30,13 @@ public class ForumWebservice implements ResourceContainer {
   protected final static String JSON_CONTENT_TYPE = "application/json";
   
   private String strQuery ;
-  private List<Object> ipsToJson = new ArrayList<Object>();
+  private List<BanIP> ipsToJson = new ArrayList<BanIP>();
   public ForumWebservice() {}
-  @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/getmessage/{maxcount}/")
-  @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response getMessage(@URIParam("maxcount") String maxcount) throws Exception {
+
+  @GET
+  @Path("/ks/forum/getmessage/{maxcount}/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getMessage(@PathParam("maxcount") String maxcount) throws Exception {
     int counter = 0 ;
     try {
       counter = Integer.parseInt(maxcount);
@@ -43,19 +47,21 @@ public class ForumWebservice implements ResourceContainer {
     cacheControl.setNoStore(true);
     ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
     List<Post> list = forumService.getNewPosts(counter) ;
-    List<Object> lastMessages = new ArrayList<Object>() ;
+    List<MessageBean> lastMessages = new ArrayList<MessageBean>() ;
     if(!list.isEmpty()) {
       for(Post post : list) {
         lastMessages.add(new MessageBean(post)) ;
       }
     }
-    return Response.Builder.ok(new BeanToJsons(lastMessages), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons(lastMessages), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
+
+
   
-  @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/filter/{strIP}/")
-  @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response filterIps(@URIParam("strIP") String str) throws Exception {
+  @GET
+  @Path("/ks/forum/filter/{strIP}/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterIps(@PathParam("strIP") String str) throws Exception {
   	CacheControl cacheControl = new CacheControl();
     cacheControl.setNoCache(true);
     cacheControl.setNoStore(true);
@@ -74,13 +80,13 @@ public class ForumWebservice implements ResourceContainer {
   		}
   		strQuery = str ;
     }    
-    return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
-  @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/filterIpBanforum/{strForumId}/{strIP}/")
-  @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response filterIpBanForum(@URIParam("strForumId") String forumId, @URIParam("strIP") String str) throws Exception {
+  @GET
+  @Path("/ks/forum/filterIpBanforum/{strForumId}/{strIP}/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterIpBanForum(@PathParam("strForumId") String forumId, @PathParam("strIP") String str) throws Exception {
   	CacheControl cacheControl = new CacheControl();
   	cacheControl.setNoCache(true);
   	cacheControl.setNoStore(true);
@@ -99,13 +105,13 @@ public class ForumWebservice implements ResourceContainer {
   		}
   		strQuery = str ;
   	}    
-  	return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+  	return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
-  @HTTPMethod(HTTPMethods.GET)
-  @URITemplate("/ks/forum/filterTagNameForum/{userAndTopicId}/{strTagName}/")
-  @OutputTransformer(Bean2JsonOutputTransformer.class)
-  public Response filterTagNameForum(@URIParam("strTagName") String str, @URIParam("userAndTopicId") String userAndTopicId) throws Exception {
+  @GET
+  @Path("/ks/forum/filterTagNameForum/{userAndTopicId}/{strTagName}/")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response filterTagNameForum(@PathParam("strTagName") String str, @PathParam("userAndTopicId") String userAndTopicId) throws Exception {
   	CacheControl cacheControl = new CacheControl();
   	cacheControl.setNoCache(true);
   	cacheControl.setNoStore(true);
@@ -125,7 +131,7 @@ public class ForumWebservice implements ResourceContainer {
   			if(ip.startsWith(str)) ipsToJson.add(new BanIP(ip)) ;
   		}
   	}    
-  	return Response.Builder.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
+  	return Response.ok(new BeanToJsons(ipsToJson), JSON_CONTENT_TYPE).cacheControl(cacheControl).build();
   }
 
 }

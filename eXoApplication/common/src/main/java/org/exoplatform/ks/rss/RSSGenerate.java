@@ -30,6 +30,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.w3c.dom.Document;
@@ -79,7 +81,7 @@ public abstract class RSSGenerate {
 	public String getPageLink() throws Exception {
 //		TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So, when run JUnit-test, you must comment content in this function and return null.
 		try{
-			org.exoplatform.portal.application.PortalRequestContext portalContext = org.exoplatform.portal.webui.util.Util.getPortalRequestContext();
+			PortalRequestContext portalContext = Util.getPortalRequestContext();
 			return (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private", "public");
 		}catch(Exception e){
 			return null;

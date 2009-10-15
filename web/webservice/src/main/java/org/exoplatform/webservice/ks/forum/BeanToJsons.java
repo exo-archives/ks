@@ -12,18 +12,18 @@ import java.util.List;
  *          tuan.pham@exoplatform.com
  * Oct 15, 2008  
  */
-public class BeanToJsons {
-  private List<Object> jsonList;
+public class BeanToJsons<T> {
+  private List<T> jsonList;
   
-  public BeanToJsons(List<Object> list) {
+  public BeanToJsons(List<T> list) {
     this.jsonList = list;
   }
   
-  public List<Object> getJsonList() {
+  public List<T> getJsonList() {
     return jsonList;
   }
   
-  public void setJsonList(List<Object> objectList) {
+  public void setJsonList(List<T> objectList) {
     this.jsonList = objectList;
   }
 }

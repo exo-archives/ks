@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
