@@ -124,7 +124,7 @@ public class UIQuestions extends UIContainer {
 	private Map<String, Question> questionMap_ = new LinkedHashMap<String, Question>() ;
 	public JCRPageList pageList ;
 	private boolean canEditQuestion = false ;
-	private Boolean isSortAnswer = null ;
+	private Boolean isSortAnswerUp = null ;
 	public String categoryId_ = null ;
 	public String viewingQuestionId_ = "" ;
 	private String currentUser_ = "";
@@ -224,6 +224,29 @@ public class UIQuestions extends UIContainer {
 	}
 
   private Answer[] getPageListAnswer(String questionId) throws Exception {
+  	if(isSortAnswerUp != null) {
+  		Answer[] answers = languageMap.get(language_).getAnswers() ;
+  		Answer temp ;
+			for(int i = 0; i < answers.length - 1; i ++) {
+				for(int j = i + 1; j < answers.length; j++) {
+					if(isSortAnswerUp) {
+						if(answers[j].getMarkVotes() < answers[i].getMarkVotes()) {
+							 temp = answers[i] ;
+							answers[i] = answers[j] ;
+							answers[j] = temp ;
+						}
+					}else {
+						if(answers[j].getMarkVotes() > answers[i].getMarkVotes()) {
+							temp = answers[i] ;
+							answers[i] = answers[j] ;
+							answers[j] = temp ;
+						}
+					}					
+				}
+			}
+  		return answers ;
+  		//sortAnswer(Answer[] answers, isSortAnswer) ;
+  	}
 		return languageMap.get(language_).getAnswers() ;
 	}
 
@@ -702,8 +725,8 @@ public class UIQuestions extends UIContainer {
 	static  public class SortAnswerActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			if(questions.isSortAnswer == null) questions.isSortAnswer = false;
-			else questions.isSortAnswer = !questions.isSortAnswer;
+			if(questions.isSortAnswerUp == null) questions.isSortAnswerUp = false;
+			else questions.isSortAnswerUp = !questions.isSortAnswerUp;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
 		}
 	}
@@ -724,7 +747,7 @@ public class UIQuestions extends UIContainer {
 			UIQuestions uiQuestions = event.getSource() ;
 			UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
-			uiQuestions.isSortAnswer = null;
+			uiQuestions.isSortAnswerUp = null;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			try{
 				if(questionId.indexOf("/language=") > 0) {
@@ -784,7 +807,7 @@ public class UIQuestions extends UIContainer {
 			Question question = uiQuestions.questionMap_.get(id) ;
 			if(uiQuestions.checkQuestionToView(question, uiApplication, event)) return;
 			language_ = question.getLanguage() ;
-			uiQuestions.isSortAnswer = null;
+			uiQuestions.isSortAnswerUp = null;
 			uiQuestions.backPath_ = "" ;
 			uiQuestions.viewingQuestionId_ = questionId ;
 			uiQuestions.updateLanguageMap() ;
@@ -795,7 +818,7 @@ public class UIQuestions extends UIContainer {
 	static  public class CloseQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ;
-			uiQuestions.isSortAnswer = null;			
+			uiQuestions.isSortAnswerUp = null;			
 			language_ = FAQUtils.getDefaultLanguage() ;
 			uiQuestions.backPath_ = "" ;			
 			uiQuestions.viewingQuestionId_ = "" ; 
@@ -1192,24 +1215,6 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
 			language_ = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			/*int index = Integer.parseInt(stringInput[0]) ;
-			//language_ = stringInput[1] ;
-			uiQuestions.viewingQuestionId_ ;*/
-			//FAQUtils.getQuestionLanguages()
-			/*QuestionLanguage questionLanguage = uiQuestions.languageMap.get(language_);
-			Question question = uiQuestions.listQuestion_.get(index);
-			question.setDetail(questionLanguage.getDetail());
-			question.setQuestion(questionLanguage.getQuestion());
-			question.setLanguage(questionLanguage.getLanguage());
-			String defaultLang = uiQuestions.listQuestionLanguage.get(0).getLanguage();*/
-			/*if(language_.equals(FAQUtils.getDefaultLanguage())) {
-				uiQuestions.pathToCurrentLanguage = "";				
-			} else {
-				uiQuestions.pathToCurrentLanguage = 
-					Utils.LANGUAGE_HOME + "/" + uiQuestions.languageMap.get(language_).getId();
-			}*/
-			//isChangeLg = true;
-			//uiQuestions.isChangeLanguage = true ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
 		}
 	}
