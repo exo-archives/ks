@@ -14,7 +14,7 @@
 					String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 					String portalName = "/" + Util.getUIPortal().getName() ;
 					String checkPath = ""; 
-					String id = "";
+					String id = "", linkHome="";
 					for(namePath in uicomponent.getBreadcumbs()) {
 					  checkPath = namePath;
 					  oncl = "";
@@ -30,7 +30,7 @@
 						if(namePath.equals(ForumUtils.FIELD_EXOFORUM_LABEL)) {
 							namePath = _ctx.appRes("UIBreadcumbs.label.eXoForum");
 							if(link.indexOf("?") > 0) {
-								link = link.substring(0, link.indexOf("?"));
+								linkHome = link.substring(0, link.indexOf("?"));
 							}
 						}
 						if(namePath.equals(ForumUtils.FIELD_SEARCHFORUM_LABEL)) {
@@ -40,11 +40,11 @@
 						namePath = namePath.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
 						if(t+1 < uicomponent.getMaxPath()) {
 				%>
-					<%if(uicomponent.useAjax || t == 0){%>
-							<a onclick="$event; return false;" href="$link" title="$namePath" class="Selected">$name</a>
+					<%if(uicomponent.useAjax){%>
+							<a href="$link" onclick="$event; return false;" title="$namePath" class="Selected">$name</a>
 					<%} else {%>
 							<a href="$link" title="$namePath" class="Selected">$name</a>
-					<%}%>
+					<%} %>
 					
 					<div class="RightArrowIcon"><span></span></div>
 				 <% } else {
