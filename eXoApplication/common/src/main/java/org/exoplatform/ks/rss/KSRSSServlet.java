@@ -22,10 +22,11 @@ import java.io.InputStream;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.web.AbstractHttpServlet;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
@@ -34,9 +35,10 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  *					ha.mai@exoplatform.com
  * Jan 14, 2009, 8:58:11 AM
  */
-public class KSRSSServlet extends HttpServlet {
-	public void init(ServletConfig config) throws ServletException {}  
-	public void service(HttpServletRequest request, HttpServletResponse response) 
+@SuppressWarnings("serial")
+public class KSRSSServlet extends AbstractHttpServlet {
+	public void afterInit(ServletConfig config) throws ServletException {}  
+	public void onService(ExoContainer container, HttpServletRequest request, HttpServletResponse response) 
           throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
     String pathInfo = request.getPathInfo() ;

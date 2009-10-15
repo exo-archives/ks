@@ -63,9 +63,14 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public void deActivate() throws Exception { }
   
   @SuppressWarnings("unused")
-  private static List<String> listCateSelected = new ArrayList<String>() ;
+  private List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCategory_ = new ArrayList<Cate>() ;
-  private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+ 
+  
+  private static FAQService getFAQService() {
+    return (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+    
+  }
   
   @SuppressWarnings("unused")
   private List<Cate> getListCate(){
@@ -75,7 +80,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public UIAddRelationForm() throws Exception {
     setActions(new String[]{"Save", "Cancel"}) ;
     FAQUtils.getPorletPreference(faqSetting_);
-    faqService.getUserSetting(FAQUtils.getCurrentUser(), faqSetting_);
+    getFAQService().getUserSetting(FAQUtils.getCurrentUser(), faqSetting_);
     
   }
   
@@ -86,7 +91,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
   public void setRelationed(List<String> listRelation) {
     quesIdsSelect = listRelation ;    
     try{ 
-    	homeCategoryName = faqService.getCategoryNameOf(Utils.CATEGORY_HOME);
+    	homeCategoryName = getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME);
     	setListCate(Utils.CATEGORY_HOME) ;
       initPage() ;
     } catch (Exception e) {
@@ -105,7 +110,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     for(Cate cate : listCategory_){
     	listIds.add(cate.getCategory().getId());
     }
-    listQuestion.addAll(faqService.getQuickQuestionsByListCatetory(listIds, false));  
+    listQuestion.addAll(getFAQService().getQuickQuestionsByListCatetory(listIds, false));  
     UIFormCheckBoxInput checkQuestion ;
     
     for(Question question : listQuestion) {
@@ -128,7 +133,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
     	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
     }*/
     this.listCategory_.clear() ;
-    this.listCategory_.addAll(faqService.listingCategoryTree()) ;
+    this.listCategory_.addAll(getFAQService().listingCategoryTree()) ;
     mapQuestion_.put(Utils.CATEGORY_HOME, new ArrayList<Question>()) ;
     for(Cate cat : listCategory_) {
     	mapQuestion_.put(cat.getCategory().getId(), new ArrayList<Question>()) ;
@@ -181,7 +186,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       }
       responseForm.setListIdQuesRela(listQuestionPath) ;
       
-      List<String> contents = faqService.getQuestionContents(listQuestionPath) ;
+      List<String> contents = getFAQService().getQuestionContents(listQuestionPath) ;
       
       responseForm.setListRelationQuestion(contents) ;
       //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;

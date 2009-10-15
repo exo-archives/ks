@@ -17,13 +17,12 @@
 package org.exoplatform.forum.service;
 
 import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.web.AbstractHttpSessionListener;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 /**
@@ -31,14 +30,14 @@ import org.exoplatform.services.security.ConversationState;
  * Date: Jan 25, 2003
  * Time: 5:25:52 PM
  */
-public class ForumSessionListener implements HttpSessionListener {
+public class ForumSessionListener extends AbstractHttpSessionListener {
 	
   protected static Log log = ExoLogger.getLogger("portal:PortalSessionListener");
   
   public ForumSessionListener() {
   }
   
-  public void sessionCreated(HttpSessionEvent event) {
+  public void onSessionCreated(ExoContainer container, HttpSessionEvent event) {
   }
 
   /**
@@ -57,11 +56,11 @@ public class ForumSessionListener implements HttpSessionListener {
    * 8) Flush the threadlocal for the PortalContainer
    * 
    */
-  public void sessionDestroyed(HttpSessionEvent event) {
+  public void onSessionDestroyed(ExoContainer container, HttpSessionEvent event) {
   	try {
       //String portalContainerName = event.getSession().getServletContext().getServletContextName() ;
       if(ConversationState.getCurrent() != null ){
-      	ExoContainer container = ExoContainerContext.getCurrentContainer();
+      	//ExoContainer container = ExoContainerContext.getCurrentContainer();
   	    //PortalContainer portalContainer = container.getPortalContainer(portalContainerName) ;
   	    ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
   	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
@@ -72,5 +71,10 @@ public class ForumSessionListener implements HttpSessionListener {
     } finally {
       PortalContainer.setInstance(null) ;
     }
+  }
+
+  @Override
+  protected boolean requirePortalEnvironment() {
+    return true;
   }  
 }

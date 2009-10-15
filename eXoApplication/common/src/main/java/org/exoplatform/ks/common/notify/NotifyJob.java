@@ -64,10 +64,9 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-//	  	RootContainer rootContainer = RootContainer.getInstance() ;
-//	    MailService mailService = (MailService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(MailService.class) ;
 	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
+	    PortalContainer portalContainer = rootContainer.getPortalContainer(PortalContainer.getCurrentPortalContainerName()) ;
+	    
 	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
 	    Common common = new Common() ;

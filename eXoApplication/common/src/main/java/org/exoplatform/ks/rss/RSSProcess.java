@@ -46,7 +46,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedOutput;
 
 public class RSSProcess extends RSSGenerate {
-	//public static String cateid = null;
+
 	protected String linkItem = "";
 	
 	public RSSProcess(InitParams params) throws Exception{

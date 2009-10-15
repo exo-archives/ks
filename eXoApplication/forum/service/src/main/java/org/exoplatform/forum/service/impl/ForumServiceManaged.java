@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -103,7 +104,8 @@ public class ForumServiceManaged implements ManagementAware {
       log.error("Failed to register contact provider for " + fqn  + ": " + e.getMessage());
       return;
     }
-    ExoContainerContext.getContainerByName("portal").registerComponentInstance(ContactProvider.class, instance);
+    String name = PortalContainer.getCurrentPortalContainerName();
+    ExoContainerContext.getContainerByName(name).registerComponentInstance(ContactProvider.class, instance);
   }
   
   

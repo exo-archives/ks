@@ -99,7 +99,8 @@ public class UIForumActionBar extends UIContainer	{
 	
   public String getUserToken()throws Exception {
   	ExoContainer container = RootContainer.getInstance();
-  	container = ((RootContainer)container).getPortalContainer("portal");
+  	String name = PortalContainer.getCurrentPortalContainerName();
+  	container = ((RootContainer)container).getPortalContainer(name);
   	ContinuationService continuation = (ContinuationService) container.getComponentInstanceOfType(ContinuationService.class);
     return continuation.getUserToken(userProfile.getUserId());
   }

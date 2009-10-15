@@ -51,7 +51,7 @@ import com.sun.syndication.io.SyndFeedOutput;
  * Apr 10, 2009, 10:10:14 AM
  */
 public abstract class RSSGenerate {
-	public static NodeHierarchyCreator nodeHierarchyCreator_;
+	public NodeHierarchyCreator nodeHierarchyCreator_;
 	public Node appHomeNode;
 	public final String KS_RSS = "ks.rss".intern();
 	public final String feedType = "rss_2.0".intern();

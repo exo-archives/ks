@@ -18,7 +18,6 @@ package org.exoplatform.forum.service;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
 import org.exoplatform.services.security.ConversationRegistry;
@@ -30,16 +29,18 @@ import org.exoplatform.services.security.ConversationState;
  * hung.nguyen@exoplatform.com Nov 23, 2007 3:09:21 PM
  */
 public class AuthenticationLogoutListener extends Listener<ConversationRegistry, ConversationState> {
-
-	public AuthenticationLogoutListener() throws Exception {	
+  
+  private ExoContainerContext context;
+	
+  public AuthenticationLogoutListener(ExoContainerContext context) throws Exception {	
+	  this.context = context;	  
 	}
 
 	@Override
 	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
-		ExoContainer container = ExoContainerContext.getCurrentContainer();
-    if (container instanceof RootContainer) {
-      container = RootContainer.getInstance().getPortalContainer("portal");
-    }
+	  String name = context.getPortalContainerName();
+		ExoContainer container = ExoContainerContext.getContainerByName(name);
+
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
   	fservice.userLogout(event.getData().getIdentity().getUserId()) ;
   	
