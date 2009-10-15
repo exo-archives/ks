@@ -104,10 +104,6 @@ public class FAQServiceImpl implements FAQService, Startable{
 		if(plugin instanceof TemplatePlugin) template_ = (TemplatePlugin)plugin ;
 	}
   
-	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-		bbcodeObject_.addInitBBCodePlugin(plugin) ;
-  }
-  
 	public void start() {
 		log.info("initializing FAQ default data...");
     try{
@@ -124,13 +120,6 @@ public class FAQServiceImpl implements FAQService, Startable{
       } catch (Exception e) {
         log.error("Error while initializing Data plugin " + plugin.getName(), e);
       }   
-    }
-
-    try {
-    	log.info("initializing FAQ default BBCode ...");
-    	bbcodeObject_.initDefaultBBCode();
-    } catch (Exception e) {
-    	log.error("Error while initializing FAQ BBCode listeners", e);
     }
     
 		try{

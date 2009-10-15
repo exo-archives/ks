@@ -117,7 +117,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-  	storage_.addInitBBCodePlugin(plugin) ;
+  	bbcodeObject_.addInitBBCodePlugin(plugin) ;
   }
   
   public void start() {

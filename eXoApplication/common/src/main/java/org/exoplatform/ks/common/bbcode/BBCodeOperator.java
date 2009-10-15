@@ -40,22 +40,20 @@ public class BBCodeOperator {
   	nodeHierarchyCreator_ = nodeHierarchyCreator ;
   }
   
-  private Node getKSShareDateNode(SessionProvider sProvider) throws Exception {
+  private Node getForumDataHome(SessionProvider sProvider) throws Exception {
   	Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
-		try {
-			return appNode.getNode(CommonUtils.KS_SHARE_DATA);
-		} catch (PathNotFoundException e) {
-			return appNode.addNode(CommonUtils.KS_SHARE_DATA);			
-		} catch(Exception e) {
-			return null ;
-		}		
+  	try {
+			return appNode.getNode(CommonUtils.FORUM_SERVICE+"/"+CommonUtils.FORUM_DATA);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
   public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
 		try {
-			return getKSShareDateNode(sProvider).getNode(CommonUtils.BBCODE_HOME);
+			return getForumDataHome(sProvider).getNode(CommonUtils.BBCODE_HOME);
 		} catch (PathNotFoundException e) {
-			return getKSShareDateNode(sProvider).addNode(CommonUtils.BBCODE_HOME, CommonUtils.BBCODE_HOME_NODE_TYPE);			
+			return getForumDataHome(sProvider).addNode(CommonUtils.BBCODE_HOME, CommonUtils.BBCODE_HOME_NODE_TYPE);			
 		} catch(Exception e) {
 			return null ;
 		}		
@@ -92,7 +90,6 @@ public class BBCodeOperator {
 		    }
 			}
     } catch (Exception e) {
-	    e.printStackTrace();
     }finally { sProvider.close() ;}	  
   }
 	
@@ -126,7 +123,6 @@ public class BBCodeOperator {
 				bbCodeHome.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
 		}finally { sProvider.close() ;}		
 	}
 	

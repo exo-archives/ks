@@ -36,7 +36,6 @@ import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.webui.util.Util;
@@ -50,7 +49,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
@@ -73,18 +71,14 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISettingForm.SaveActionListener.class),
 				@EventConfig(listeners = UISettingForm.UserWatchManagerActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChildTabChangeActionListener.class),
-				@EventConfig(listeners = UISettingForm.SelectTabActionListener.class),
 				@EventConfig(listeners = UISettingForm.ResetMailContentActionListener.class),
 				@EventConfig(listeners = UISettingForm.SelectCategoryForumActionListener.class),
 				@EventConfig(listeners = UISettingForm.ChangeAvatarActionListener.class),
 				@EventConfig(listeners = UISettingForm.SetDefaultAvatarActionListener.class),
-				@EventConfig(listeners = UISettingForm.CancelActionListener.class, phase=Phase.DECODE)
+				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
 public class UISettingForm extends UIForm implements UIPopupComponent	{
-	public final String USER_SETTING_TAB = "UserSettingTab";
-	public final String BBCODE_SETTING_TAB = "BBCodeSettingTab";
-
 	public final String DISPLAY_TAB = "DisplayTab";
 	public final String SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
 	public final String SET_DEFAULT_ADDNEW_QUESTION_TAB = "AddNewQuestionTab";
@@ -121,9 +115,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	private String avatarUrl ;
 	private String tabSelected = DISPLAY_TAB;
 	private List<Cate> listCate = new ArrayList<Cate>() ;
-	List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private FAQService faqService_;
-	private int id = 0;
 	public UISettingForm() throws Exception {
 		faqService_ = FAQUtils.getFAQService() ;
 		isEditPortlet_ = false;
@@ -260,43 +252,24 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			EmailEditQuestion.setRendered(true);
 			EmailTab.setRendered(true);
 		} else {
-			UIFormInputWithActions UserSetting = new UIFormInputWithActions(USER_SETTING_TAB);
-			UIFormInputWithActions BBCodeSetting = new UIFormInputWithActions(BBCODE_SETTING_TAB);
-			
+		
 			List<SelectItemOption<String>> orderBy = new ArrayList<SelectItemOption<String>>();
 			orderBy.add(new SelectItemOption<String>(ITEM_CREATE_DATE, FAQSetting.DISPLAY_TYPE_POSTDATE ));
 			orderBy.add(new SelectItemOption<String>(ITEM_ALPHABET + "/Index", FAQSetting.DISPLAY_TYPE_ALPHABET + "/Index" ));
-			
-			UserSetting.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
+			addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));
 			
 			List<SelectItemOption<String>> orderType = new ArrayList<SelectItemOption<String>>();
 			orderType.add(new SelectItemOption<String>(ASC, FAQSetting.ORDERBY_TYPE_ASC ));
 			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
+			addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
 			
-			UserSetting.addUIFormInput((new UIFormSelectBox(ORDER_TYPE, ORDER_TYPE, orderType)).setValue(String.valueOf(faqSetting_.getOrderType())));
-			
-			UserSetting.addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
+			addUIFormInput((new UIFormCheckBoxInput<Boolean>(ITEM_VOTE, ITEM_VOTE, false)).setChecked(faqSetting_.isSortQuestionByVote()));
 			
 			avatarUrl = FAQUtils.getFileSource(((FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class))
 																													.getUserAvatar(FAQUtils.getCurrentUser()), getApplicationComponent(DownloadService.class)) ;
 			
 			if(avatarUrl == null || avatarUrl.trim().length() < 1)
 				avatarUrl = Utils.DEFAULT_AVATAR_URL;
-			
-			UIBBCodeManagament codeManagament =  BBCodeSetting.addChild(UIBBCodeManagament.class, null, null);
-			addChild(UserSetting);
-			addChild(BBCodeSetting);
-			setCheckBoxBBCode(codeManagament.getListBBcode());
-		}
-	}
-	
-	public void setCheckBoxBBCode(List<BBCode> listBBCode) throws Exception {
-		this.listBBCode = listBBCode;
-		for (BBCode bbc : listBBCode) {
-			UIFormCheckBoxInput<Boolean>isActiveBBcode = new UIFormCheckBoxInput<Boolean>(bbc.getId(), bbc.getId(), false);
-	  	isActiveBBcode.setChecked(bbc.isActive());
-	  	if(getChildById(bbc.getId()) != null) removeChildById(bbc.getId());
-	  	addChild(isActiveBBcode);
 		}
 	}
 	
@@ -324,11 +297,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	  return tabSelected;
   }
 	
-  private boolean getIsSelected(int id) {
-		if(this.id == id) return true ;
-		return false ;
-	}
-  
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			
@@ -401,46 +369,16 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
         uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			} else {
-				UIFormInputWithActions UserSetting = settingForm.getChildById(settingForm.USER_SETTING_TAB);
-				
-				faqSetting.setOrderBy(String.valueOf(UserSetting.getUIFormSelectBox(ORDER_BY).getValue())) ;
-				faqSetting.setOrderType(String.valueOf(UserSetting.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
-				faqSetting.setSortQuestionByVote(UserSetting.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
+				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
+				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
+				faqSetting.setSortQuestionByVote(settingForm.getUIFormCheckBoxInput(settingForm.ITEM_VOTE).isChecked());
 				settingForm.faqService_.saveFAQSetting(faqSetting,FAQUtils.getCurrentUser()) ;
-				/*UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
+				UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 				uiPopupAction.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;*/
-				List<BBCode> bbCodes = new ArrayList<BBCode>();
-				boolean inactiveAll = true;
-				BBCode code ;
-				for (BBCode bbc : settingForm.listBBCode) {
-					boolean isActive = true;
-					try {
-						isActive = settingForm.getUIFormCheckBoxInput(bbc.getId()).isChecked();
-	        } catch (Exception e) {}
-					if(bbc.isActive() != isActive){
-						bbCodes.add(settingForm.setBBCode(bbc));
-					}
-					if(isActive) inactiveAll = false;
-	      }
-				if(settingForm.listBBCode.size() > 0 && inactiveAll){
-					UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIBBCodeManagament.msg.inactiveAllBBCode", new String[]{}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					return;
-				}
-				if(!bbCodes.isEmpty()){
-					try {
-						settingForm.faqService_.saveBBCode(bbCodes);
-		      } catch (Exception e) {
-		      }
-				}
-				
-				uiPortlet.cancelAction();
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 				UIQuestions questions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 				UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
 				categories.resetListCate();
-				questions.setIsGetSv(true);
 				questions.setFAQSetting(faqSetting);
 				questions.setListObject() ;
 				questions.updateCurrentQuestionList() ;
@@ -450,21 +388,10 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 		}
 	}
 	
-	private BBCode setBBCode(BBCode bbc) {
-		BBCode bbcode = new BBCode();
-		bbcode.setId(bbc.getId());
-		bbcode.setTagName(bbc.getTagName());
-		bbcode.setReplacement(bbc.getReplacement());
-		bbcode.setDescription(bbc.getDescription());
-		bbcode.setExample(bbc.getExample());
-		bbcode.setOption(bbc.isOption());
-		bbcode.setActive(!bbc.isActive());
-		return bbcode;
-	}
-	
 	static public class UserWatchManagerActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
@@ -476,6 +403,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class ChangeAvatarActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
+			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIAttachMentForm attachMentForm = popupAction.activate(UIAttachMentForm.class, 550) ;
@@ -551,15 +479,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				settingForm.isResetMail = true;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent()) ;
-		}
-	}
-
-	static public class SelectTabActionListener extends EventListener<UISettingForm> {
-		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;		
-			String id = event.getRequestContext().getRequestParameter(OBJECTID);
-			settingForm.id = Integer.parseInt(id);
-			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 		}
 	}
 	

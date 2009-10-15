@@ -42,9 +42,6 @@ public class Utils {
 	public final static String TYPE_TOPIC = "exo:topic".intern();
 	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
 	
-	public final static String FORUM_SERVICE = "ForumService".intern() ;
-	public final static String FORUM_SYSTEM = "ForumSystem".intern() ;
-	public final static String FORUM_DATA = "ForumData".intern() ;
 	public final static String BANIP_HOME = "BanIPHome".intern() ;
 	public final static String STATISTIC_HOME = "StatisticHome".intern() ;
 	public final static String ADMINISTRATION_HOME = "AdministrationHome".intern() ;
