@@ -209,13 +209,12 @@ public class ForumUtils {
 	}
 	
 	public static String unSplitForForum (String[] str) throws Exception {
+		if(str == null || str.length == 0) return "" ;
 		StringBuilder rtn = new StringBuilder();
-		int t = str.length, i=0 ;
-		if(t > 0 && !str[0].equals(" ")) {
+		if(!str[0].equals(" ")) {
 			for (String temp : str) {
-				if(i == (t-1))rtn.append(temp) ;
-				else rtn.append(temp).append(",") ;
-				++i;
+				if(rtn.length() > 1) rtn.append(",").append(temp.trim()) ;
+				else rtn.append(temp.trim()) ;				
 			}
 		}
 		return rtn.toString() ;
