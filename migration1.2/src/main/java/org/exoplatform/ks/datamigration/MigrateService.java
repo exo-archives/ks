@@ -926,6 +926,9 @@ public class MigrateService implements Startable{
 			categoryHome.getSession().getWorkspace().move(category.getPath(), categoryHome.getPath() + "/" + category.getName()) ;
 			categoryHome.getSession().save() ;
 			
+			//init default data for autoprune
+			Node movedCategory = categoryHome.getNode(category.getName()) ;
+			initAutoPrune(movedCategory) ;
 			//rename exo:KSRSS type to exo:forumRSS type
 			renameRSSType(categoryHome) ;
 		}catch(Exception e) {
@@ -966,6 +969,37 @@ public class MigrateService implements Startable{
 		}
 	}
 	
+	private void initAutoPrune(Node category) {
+		try{
+			log.info("Initiallizing prune for category " + category.getPath()) ;
+			NodeIterator iter = category.getNodes() ;
+			Node forum ;
+			while(iter.hasNext()) {
+				forum = iter.nextNode() ;
+				try{
+					if(forum.isNodeType("exo:forum")) {
+						StringBuilder id = new StringBuilder();
+						id.append(category.getProperty("exo:categoryOrder").getString()) ;
+						id.append(category.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
+						id.append(forum.getProperty("exo:forumOrder").getString()) ;
+						id.append(forum.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
+						Node pruneNode = forum.addNode(Utils.PRUNESETTING, "exo:pruneSetting") ;
+						pruneNode.setProperty("exo:id", id.toString()) ;
+						pruneNode.setProperty("exo:inActiveDay", 0);
+			      pruneNode.setProperty("exo:periodTime", 0);
+			      pruneNode.setProperty("exo:isActive", false);
+			      forum.save() ;
+			      log.info("Initiallized prune " + pruneNode.getPath()) ;
+					}
+				}catch(Exception e) {
+					e.printStackTrace() ;
+				}				
+			}
+			log.info("End") ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}
+	}
 	private void renameRSSType(Node categoryHome) throws Exception {
 		log.info("===> migrating rename Rss Type");
 		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
