@@ -1308,8 +1308,8 @@ public class JCRDataStorage {
 			StringBuilder id = new StringBuilder();
 			id.append(catNode.getProperty("exo:categoryOrder").getString()) ;
 			id.append(catNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
-			id.append(forumNode.getProperty("exo:forumOrder").getString()) ;
-			id.append(forumNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
+			id.append(forum.getForumOrder()) ;
+			id.append(forum.getCreatedDate().getTime()) ;
 			if(isNew) {
 				PruneSetting pruneSetting = new PruneSetting();
 				pruneSetting.setId(id.toString());
