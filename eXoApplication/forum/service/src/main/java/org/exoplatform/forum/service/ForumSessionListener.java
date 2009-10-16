@@ -31,6 +31,10 @@ import org.exoplatform.services.security.ConversationState;
  * Date: Jan 25, 2003
  * Time: 5:25:52 PM
  */
+/**
+ * @Deprecated replaced by AuthenticationLoginListener and AuthenticationLogoutListener
+*/
+@Deprecated
 public class ForumSessionListener implements HttpSessionListener {
 	
   protected static Log log = ExoLogger.getLogger("portal:PortalSessionListener");
