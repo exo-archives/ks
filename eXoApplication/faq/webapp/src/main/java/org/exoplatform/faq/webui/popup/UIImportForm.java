@@ -60,8 +60,8 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				
 				if(uploadInput.getUploadResource() == null){
 					uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(importForm) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 					return;
 				}
 				String fileName = uploadInput.getUploadResource().getFileName();
@@ -105,8 +105,8 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			} catch (Exception e){
 				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIFAQContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}			
 			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -128,9 +128,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
 				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			}catch(Exception e) {}
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			popupAction.deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			portlet.cancelAction();
 		}
 	}
 }
