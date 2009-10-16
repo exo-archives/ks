@@ -362,7 +362,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 */
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
-	public long getLastReadIndex(String path) throws Exception;
+	public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 	/**
 	 * Gets the page post by user.
 	 * 

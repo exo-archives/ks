@@ -532,8 +532,8 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage_.getPost(categoryId, forumId, topicId, postId);
   }
 
-  public long getLastReadIndex(String path) throws Exception {
-  	return storage_.getLastReadIndex(path);
+  public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception {
+  	return storage_.getLastReadIndex(path, isApproved, isHidden, userLogin);
   }
   
   public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
