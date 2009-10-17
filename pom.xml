@@ -58,7 +58,7 @@
     <!-- ************** -->
 
     <!-- maven-enforcer-plugin -->
-    <jdk.min.version>1.6</jdk.min.version>
+    <jdk.min.version>1.5</jdk.min.version>
 
     <!-- maven-release-plugin -->
     <arguments>-Prelease,pkg-tomcat,pkg-jbossas -Dexo.test.skip=true</arguments>
@@ -88,9 +88,10 @@
     <module>eXoApplication/faq/service</module>
 
 
-
+ <module>extension/config</module>
 
     <module>packaging</module>
+   
   </modules>
   <organization>
     <name>eXo Platform SAS</name>
