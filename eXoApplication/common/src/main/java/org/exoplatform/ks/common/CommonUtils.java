@@ -30,4 +30,14 @@ public class CommonUtils {
 	public final static String BBCODE_HOME_NODE_TYPE = "exo:forumBBCodeHome".intern() ;
 	public final static String BBCODE_NODE_TYPE = "exo:forumBBCode".intern() ;
 	public final static String BBCODE = "bbcode".intern() ;
+	public final static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
+  public final static String CATEGORY_HOME = "CategoryHome".intern() ;
+  public final static String TAG_HOME = "TagHome".intern() ;
+  public final static String TOPIC_TYPE_HOME = "TopicTypeHome".intern() ;
+  public final static String FORUM_BAN_IP = "forumBanIP".intern() ;
+  public final static String BANIP_HOME = "BanIPHome".intern() ;
+  public final static String STATISTIC_HOME = "StatisticHome".intern() ;
+  public final static String ADMINISTRATION_HOME = "AdministrationHome".intern() ;
+  public final static String USER_PROFILE_HOME = "UserProfileHome".intern() ;
+  public static final String FAQ_SERVICE = "faqApp".intern();
 }

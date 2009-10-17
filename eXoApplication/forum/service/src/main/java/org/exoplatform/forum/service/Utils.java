@@ -36,25 +36,16 @@ import org.exoplatform.services.organization.User;
  * Jun 2, 2008 - 3:33:33 AM	
  */
 public class Utils {
-	
-	public final static String TYPE_CATEGORY = "exo:forumCategory".intern();
+
+  public final static String TYPE_CATEGORY = "exo:forumCategory".intern();
 	public final static String TYPE_FORUM = "exo:forum".intern();
 	public final static String TYPE_TOPIC = "exo:topic".intern();
 	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
 	
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
-	public final static String BANIP_HOME = "BanIPHome".intern() ;
-	public final static String STATISTIC_HOME = "StatisticHome".intern() ;
-	public final static String ADMINISTRATION_HOME = "AdministrationHome".intern() ;
-	public final static String CATEGORY_HOME = "CategoryHome".intern() ;
-	public final static String TAG_HOME = "TagHome".intern() ;
-	
 	public final static String FORUM_STATISTIC = "forumStatistic".intern() ;
-	public final static String USER_PROFILE_HOME = "UserProfileHome".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
-	public final static String FORUM_BAN_IP = "forumBanIP".intern() ;
 	public final static String FORUM_SUBSCRIOTION = "forumSubscription".intern() ;
-	public final static String TOPIC_TYPE_HOME = "TopicTypeHome".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
@@ -336,4 +327,5 @@ public class Utils {
     }
 	  return false;
   }
+
 }

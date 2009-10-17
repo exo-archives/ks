@@ -30,7 +30,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -64,10 +63,12 @@ import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.scheduler.JobSchedulerService;
@@ -89,14 +90,21 @@ public class ForumServiceImpl implements ForumService, Startable {
   JCRDataStorage storage_ ;
   BBCodeOperator bbcodeObject_;
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
-  
+  String containerName;
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
   
   private String lastLogin_ = "";
-  
-  public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
-  	storage_ = new JCRDataStorage(nodeHierarchyCreator);
-  	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
+  private KSDataLocation locator;
+  public ForumServiceImpl(InitParams params, ExoContainerContext context, KSDataLocation locator)throws Exception {
+    try {
+      this.locator = locator;
+      this.containerName = context.getPortalContainerName();
+      storage_ = new JCRDataStorage(this.locator);
+      bbcodeObject_ = new BBCodeOperator(this.locator) ;
+    } catch (Exception e) {
+      log.error("Could not start ForumService. Storage is not ready", e);
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -121,21 +129,24 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   public void start() {
-  	SessionProvider systemSession = SessionProvider.createSystemProvider() ;
+    
+    // initialize the data storage
+    storage_.start();
+
   	try{
   	  log.info("initializing category listeners...");
   		storage_.initCategoryListener() ;
   		log.info("updating forum stats...");
-  		updateForumStatistic(systemSession);  		
+  		updateForumStatistic();  		
   	}catch (Exception e) {
-  	}finally{
-  		systemSession.close() ;
+  	  log.error("Error while updating forum statistics: "+ e.getMessage());
   	}
-  	systemSession = SessionProvider.createSystemProvider() ;
+    SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
   	  log.info("initializing user profiles...");
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
+  	  log.error("Error while initializing user profiles: "+ e.getMessage());
   	}finally{
   		systemSession.close() ;
   	}
@@ -145,14 +156,14 @@ public class ForumServiceImpl implements ForumService, Startable {
   		log.info("initializing default BBCodes...");
   		bbcodeObject_.initDefaultBBCode();
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  	  log.error("Error while initializing default data: "+ e.getMessage());
   	}  	
 
   	try{
   	  log.info("Calculating active users...");
   		storage_.evaluateActiveUsers("");
   	}catch (Exception e) {
-  		e.printStackTrace() ;  		
+  	  log.error("Error while calculating active users: "+ e.getMessage());  		
   	}
   	
   	//init RSS generate listener 
@@ -161,7 +172,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   		storage_.addRSSEventListenner();  
   		
   	} catch (Exception e){
-//  		e.printStackTrace();
+  	  log.error("Error while RSS listeners: "+ e.getMessage());
   	}
   	
   //init Calculate Moderators listeners
@@ -169,7 +180,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing Calculate Moderators listeners...");
   		storage_.addCalculateModeratorEventListenner();
   	} catch (Exception e){
-//  		e.printStackTrace();
+  	  log.error("Error while initializing Moderators listeners: "+ e.getMessage());
   	}
   	
   	// initialize auto prune schedules
@@ -177,15 +188,18 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing prune schedulers...");
   		storage_.initAutoPruneSchedules() ;
   	} catch (Exception e){
+  	  log.error("Error while initializing Prune schedulers: "+ e.getMessage());
   	}
 
 //  TODO: JUnit test is fall.
   	// management views
   	try {
+  	  log.info("initializing management view...");
   		managePlugins();
   		manageStorage();  	
   		manageJobs();
     } catch (Exception e) {
+      log.error("Error while initializing Management view: "+ e.getMessage());
     }
 	}
 
@@ -196,7 +210,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   @SuppressWarnings("unchecked")
   private void manageJobs() {
     try {
-        ExoContainer container = ExoContainerContext.getCurrentContainer();
+        ExoContainer container = ExoContainerContext.getContainerByName(containerName);
         JobSchedulerService schedulerService = 
           (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
         String groupName = "KnowledgeSuite-forum";
@@ -231,30 +245,23 @@ public class ForumServiceImpl implements ForumService, Startable {
 
 	public void stop() {}
 	
-  public void updateForumStatistic(SessionProvider sProvider) throws Exception{
-		sProvider.close() ;
-		updateForumStatistic() ; 	
-	}
-	
 	@SuppressWarnings("unchecked")
   public void updateForumStatistic() throws Exception{
-		SessionProvider systemSession = SessionProvider.createSystemProvider() ;
-		try{
-			ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
+			ForumStatistic forumStatistic = getForumStatistic() ;
 			if(forumStatistic.getActiveUsers() == 0 ) {
 				ExoContainer container = ExoContainerContext.getCurrentContainer();
 				OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-		  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
+		  	PageList pageList = organizationService.getUserHandler().getUserPageList(1) ;
 		  	List<User> userList = pageList.getAll() ;
 		  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
 		  	forumStatistic.setMembersCount(userList.size()) ;
 		  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
-		  	saveForumStatistic(systemSession, forumStatistic) ;
-			}
-		}catch(Exception e){
-		}finally {
-			systemSession.close() ;
-		}		 	
+		  	saveForumStatistic(forumStatistic) ;
+		  	log.info("Statistics updated");
+			} else {
+			  log.info("Statistics update skipped");
+			}	
+			
 	}
 	
 	@SuppressWarnings("unchecked")

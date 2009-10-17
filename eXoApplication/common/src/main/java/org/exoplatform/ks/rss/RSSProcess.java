@@ -36,8 +36,8 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -49,8 +49,16 @@ public class RSSProcess extends RSSGenerate {
 
 	protected String linkItem = "";
 	
-	public RSSProcess(InitParams params) throws Exception{
-		super(null);
+	 public RSSProcess(KSDataLocation dataLocator) throws Exception{
+	    super(dataLocator);
+	  }
+	
+	public RSSProcess(InitParams params, KSDataLocation dataLocator) throws Exception{
+		super(dataLocator);
+		
+		if (params == null) {
+		  return;
+		}
 		PropertiesParam proParams = params.getPropertiesParam("rss-limit-config");
 		if (proParams != null) {
 			String maximum = proParams.getProperty("maximum.rss");
@@ -62,11 +70,7 @@ public class RSSProcess extends RSSGenerate {
     		}
     	}
     }
-		System.out.println("\n\n-------------------------->max: " + maxSize);
-	}
-	
-	public RSSProcess(NodeHierarchyCreator nodeHierarchyCreator){
-		super(nodeHierarchyCreator);
+
 	}
 	
 	public RSSProcess(SessionProvider sProvider, String serviceType){

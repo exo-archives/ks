@@ -29,34 +29,26 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 
 public class BBCodeOperator {
-	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
-  public BBCodeOperator(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
-  	nodeHierarchyCreator_ = nodeHierarchyCreator ;
+	private KSDataLocation dataLocator;
+	private JCRSessionManager sessionManager;
+	
+  public BBCodeOperator(KSDataLocation dataLocator) throws Exception {
+    this.dataLocator = dataLocator;
+    this.sessionManager = dataLocator.getSessionManager();
   }
   
-  private Node getForumDataHome(SessionProvider sProvider) throws Exception {
-  	Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
-  	try {
-			return appNode.getNode(CommonUtils.FORUM_SERVICE+"/"+CommonUtils.FORUM_DATA);
-		} catch (Exception e) {
-			return null;
-		}
-	}
 
   public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
-		try {
-			return getForumDataHome(sProvider).getNode(CommonUtils.BBCODE_HOME);
-		} catch (PathNotFoundException e) {
-			return getForumDataHome(sProvider).addNode(CommonUtils.BBCODE_HOME, CommonUtils.BBCODE_HOME_NODE_TYPE);			
-		} catch(Exception e) {
-			return null ;
-		}		
+    String path = dataLocator.getBBCodesLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
 	}
 	
 	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
@@ -89,7 +81,6 @@ public class BBCodeOperator {
 		    	this.saveBBCode(bbCodes);
 		    }
 			}
-    } catch (Exception e) {
     }finally { sProvider.close() ;}	  
   }
 	

@@ -315,6 +315,8 @@ public class JCRDataStorage {
 	}
 	
 	protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
+	  
+	  
 		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
 		try {
 			return	userApp.getNode(Utils.FAQ_APP) ;
@@ -373,7 +375,7 @@ public class JCRDataStorage {
 			String path = node.getPath() ;
 			RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-			FAQRSSEventListener questionRSS = new FAQRSSEventListener(nodeHierarchyCreator_, wsName, repo.getName()) ;
+			FAQRSSEventListener questionRSS = new FAQRSSEventListener(wsName, repo.getName()) ;
 			questionRSS.setPath(path) ;
 			observation.addEventListener(questionRSS, Event.NODE_ADDED + Event.PROPERTY_CHANGED + Event.NODE_REMOVED,
 					                         path, true, null, null, false) ;

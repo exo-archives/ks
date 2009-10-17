@@ -49,6 +49,7 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
@@ -73,15 +74,16 @@ public class FAQServiceImpl implements FAQService, Startable{
 	private ConfigurationManager configManager_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
 	private Collection<InitialDataPlugin> initDataPlugins;
-	
+	private  KSDataLocation locator;
 	private static Log log = ExoLogger.getLogger(FAQServiceImpl.class);
 	
-	public FAQServiceImpl(ConfigurationManager configManager, NodeHierarchyCreator nodeHierarchy, InitParams params) throws Exception {
+	public FAQServiceImpl(ConfigurationManager configManager, NodeHierarchyCreator nodeHierarchy, InitParams params, KSDataLocation locator) throws Exception {
 		configManager_ = configManager ;
 		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
 		initDataPlugins = new ArrayList<InitialDataPlugin>();
-		bbcodeObject_ = new BBCodeOperator(nodeHierarchy) ;
+		this.locator = locator;
+		bbcodeObject_ = new BBCodeOperator(locator) ;
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {

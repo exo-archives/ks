@@ -74,8 +74,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the categories.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * 
 	 * @return the list category
 	 * 
 	 * @throws Exception the exception
@@ -85,7 +83,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the category.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category.
 	 * 
 	 * @return the category
@@ -98,7 +95,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Save category. Check exists category, if not to create new else update exists category
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param category is the category
 	 * @param isNew is the true when add new category or false when update category.
 	 * 
@@ -111,7 +107,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Removes the category. Check exists of category and remove it 
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category removed
 	 * 
 	 * @return the category 
@@ -123,7 +118,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the forums in the category identify. 
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category have list forum
 	 * 
 	 * @return the list forum
@@ -135,7 +129,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the forum in the category identify.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category identify.
 	 * @param forumId is the id of forum identify.
 	 * 
@@ -148,7 +141,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Modify this forum identify.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param forum is the object forum that should  be modified
 	 * @param type is choose when modify this forum.
 	 * 

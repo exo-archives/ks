@@ -19,31 +19,34 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
       <version>${org.exoplatform.jcr.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
       <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
 
 <dependency>
   <groupId>org.exoplatform.portal</groupId>
   <artifactId>exo.portal.webui.portal</artifactId>
   <version>${org.exoplatform.portal.version}</version>
+  <scope>provided</scope>
 </dependency>
 
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
       <version>0.9</version>
-      <scope>compile</scope>
     </dependency>
     
     

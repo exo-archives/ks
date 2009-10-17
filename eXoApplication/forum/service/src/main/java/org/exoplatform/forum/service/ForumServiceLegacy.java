@@ -16,16 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
-import javax.jcr.NodeIterator;
-
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.User;
-
-// TODO: Auto-generated Javadoc
 /**
  * Created by The eXo Platform SARL.
  */

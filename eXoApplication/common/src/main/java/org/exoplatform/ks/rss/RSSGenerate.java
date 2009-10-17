@@ -29,7 +29,7 @@ import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -67,15 +67,16 @@ public abstract class RSSGenerate {
 	public final String KS_FORUM = "forum".intern();
 	public final String FAQ_APP = "faqApp".intern();
 	public final String FORUM_APP = "ForumService".intern();
+	private KSDataLocation dataLocator;
 	
-	public RSSGenerate(NodeHierarchyCreator nodeHierarchyCreator){
-		nodeHierarchyCreator_ = nodeHierarchyCreator;
+	public RSSGenerate(KSDataLocation dataLocator){
+		this.dataLocator = dataLocator;
 		data = new RSS();
 	}
 
 	public Node getKSServiceHome(SessionProvider sProvider, String serviceType) throws Exception {
-		if(nodeHierarchyCreator_ == null) nodeHierarchyCreator_ = (NodeHierarchyCreator)PortalContainer.getInstance().getComponent(NodeHierarchyCreator.class) ;
-		return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
+	  String path = (FORUM_APP.equals(serviceType) ? dataLocator.getForumHomeLocation() : dataLocator.getFAQHomeLocation());
+	  return dataLocator.getSessionManager().getSession(sProvider).getRootNode().getNode(path);
 	}
 
 	public String getPageLink() throws Exception {

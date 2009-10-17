@@ -25,13 +25,11 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 public class CalculateModeratorEventListener implements EventListener{
-	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
 	
-	public CalculateModeratorEventListener(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
-		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
+	public CalculateModeratorEventListener() throws Exception {
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }

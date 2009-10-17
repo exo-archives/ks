@@ -63,6 +63,7 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.CalculateModeratorEventListener;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -104,6 +105,8 @@ import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.management.annotations.Managed;
@@ -137,11 +140,10 @@ import org.w3c.dom.Document;
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="storage")})
 @ManagedDescription("Data Storage for this forum")
 @SuppressWarnings("unchecked")
-public class JCRDataStorage {
+public class JCRDataStorage implements DataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
-	NodeHierarchyCreator nodeHierarchyCreator_;
-	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
+
 	BBCodeOperator bbcodeObject_;
 
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
@@ -151,43 +153,52 @@ public class JCRDataStorage {
 	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
 	private boolean isInitRssListener_ = true ;
+	private JCRSessionManager sessionManager;
+	private KSDataLocation dataLocator;
+	private String repository;
+	private String workspace;
 	
-	
-	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
-		nodeHierarchyCreator_ = nodeHierarchyCreator;
-		bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
+	public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
+		this.dataLocator = dataLocator;
+    sessionManager = dataLocator.getSessionManager();
+    repository = dataLocator.getRepository();
+    workspace = dataLocator.getWorkspace();
+    bbcodeObject_ = new BBCodeOperator(dataLocator);
 	}
-	public JCRDataStorage() {}
+
 	
+  /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getRepository()
+   */
   @Managed
   @ManagedDescription("repository for forum storage")
   public String getRepository() throws Exception {
-     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-      try{
-        return ((RepositoryImpl)getForumHomeNode(sProvider).getSession().getRepository()).getName();
-      } finally{ sProvider.close() ;}
+     return repository;
   }
 	
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getWorkspace()
+   */
 	@Managed
 	@ManagedDescription("workspace for the forum storage")
 	public String getWorkspace() throws Exception {
-	   SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-	   try{
-	     return getForumHomeNode(sProvider).getSession().getWorkspace().getName();
-	   } finally{ sProvider.close() ;}
+	   return workspace;
 	}
 	
-	 @Managed
+	 /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPath()
+   */
+	@Managed
 	  @ManagedDescription("data path for forum storage")
 	  public String getPath() throws Exception {	    
-	    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-      try{
-        return getForumHomeNode(sProvider).getPath();
-      } finally{ sProvider.close() ;}
+	    return dataLocator.getFaqHomeLocation();
 	  }
 	
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addPlugin(org.exoplatform.container.component.ComponentPlugin)
+   */
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
 			if(plugin instanceof EmailNotifyPlugin) {
@@ -198,24 +209,36 @@ public class JCRDataStorage {
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addRolePlugin(org.exoplatform.container.component.ComponentPlugin)
+   */
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof RoleRulesPlugin){
 			rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addInitialDataPlugin(org.exoplatform.container.component.ComponentPlugin)
+   */
 	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof InitializeForumPlugin) {
 			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
 		}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addInitRssPlugin(org.exoplatform.container.component.ComponentPlugin)
+   */
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof InitialRSSListener) {
 			isInitRssListener_  = ((InitialRSSListener)plugin).isInitRssListener() ;
 		}		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addRSSEventListenner()
+   */
 	public void addRSSEventListenner() throws Exception{
 		if(!isInitRssListener_) return ;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -224,7 +247,7 @@ public class JCRDataStorage {
 			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
 			String wsName = categoryHome.getSession().getWorkspace().getName() ;
 			String repoName = ((RepositoryImpl)categoryHome.getSession().getRepository()).getName() ;
-			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
+			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(wsName, repoName) ;
 			observation.addEventListener(forumRSSListener, Event.NODE_ADDED + 
 					Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
 			
@@ -236,6 +259,9 @@ public class JCRDataStorage {
 		finally{ sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addCalculateModeratorEventListenner()
+   */
 	public void addCalculateModeratorEventListenner() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider) ;
@@ -263,7 +289,7 @@ public class JCRDataStorage {
 		try{
 			String path = node.getPath();
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-			CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener(nodeHierarchyCreator_) ;
+			CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener() ;
 			moderatorListener.setPath(path) ;
 			observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED + Event.PROPERTY_CHANGED + Event.PROPERTY_REMOVED,
 					                         path, false, null, null, false) ;		
@@ -272,6 +298,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#initCategoryListener()
+   */
 	public void initCategoryListener() {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		listeners_.clear() ;
@@ -320,6 +349,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#isAdminRole(java.lang.String)
+   */
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
 			String []adminrules = new String[]{};
@@ -336,143 +368,85 @@ public class JCRDataStorage {
 		return false ;
 	}
 
-	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
-		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
-		try {
-			return appNode.getNode(CommonUtils.FORUM_SERVICE);
-		} catch (PathNotFoundException e) {
-			Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
-			return forumHomeNode;
-		}
+	
+
+	
+  /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#start()
+   */
+  public void start() {
+    try {
+      // TODO : Why needed ?
+      saveForumStatistic(new ForumStatistic());
+    } catch (Exception e) {
+      ;
+    }
+  }
+	
+
+  protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
+	  String path = dataLocator.getForumHomeLocation();
+	  return sessionManager.getSession(sProvider).getRootNode().getNode(path);	
 	}
 
-	private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
-		try {
-			return getForumDataHome(sProvider).getNode(Utils.TOPIC_TYPE_HOME);
-		} catch (PathNotFoundException e) {
-			return getForumDataHome(sProvider).addNode(Utils.TOPIC_TYPE_HOME, "exo:topicTypeHome");			
-		} catch(Exception e) {
-			return null ;
-		}		
+  private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getTopicTypesLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
 	}
 	
-	private Node getForumSystemHome(SessionProvider sysProvider) throws Exception {
-		//SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-		try{
-			return getForumHomeNode(sysProvider).getNode(CommonUtils.FORUM_SYSTEM) ;
-		}catch(PathNotFoundException e) {
-			return getForumHomeNode(sysProvider).addNode(CommonUtils.FORUM_SYSTEM, "exo:forumSystem") ;
-		}catch(Exception e){
-			return null ;
-		}/*finally{
-			sysProvider.close() ;
-		}*/
+	private Node getForumSystemHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getForumSystemLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
 	}
 	
-	private Node getForumDataHome(SessionProvider sysProvider) throws Exception {
-		//SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-		try{
-			return getForumHomeNode(sysProvider).getNode(CommonUtils.FORUM_DATA) ;
-		}catch(PathNotFoundException e) {
-			return getForumHomeNode(sysProvider).addNode(CommonUtils.FORUM_DATA, "exo:forumData") ;
-		}catch(Exception e){
-			return null ;
-		}/*finally{
-			sysProvider.close() ;
-		}*/
+	private Node getForumDataHome(SessionProvider sProvider) throws Exception {
+	   String path = dataLocator.getForumDataLocation();
+	   return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	private Node getBanIPHome(SessionProvider sysProvider) throws Exception {
-		try{
-			return getForumSystemHome(sysProvider).getNode(Utils.BANIP_HOME) ;
-		}catch(PathNotFoundException e) {
-			return getForumSystemHome(sysProvider).addNode(Utils.BANIP_HOME, "exo:banIPHome") ;
-		}catch(Exception e){
-			return null ;
-		}
+	private Node getBanIPHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getBanIPLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	protected Node getStatisticHome(SessionProvider sysProvider) throws Exception {
-		try{
-			return getForumSystemHome(sysProvider).getNode(Utils.STATISTIC_HOME) ;
-		}catch(PathNotFoundException e) {
-			Node staHome = getForumSystemHome(sysProvider).addNode(Utils.STATISTIC_HOME, "exo:statisticHome") ;
-			staHome.getSession().save() ;
-			ForumStatistic forumStatistic = new ForumStatistic() ;
-			saveForumStatistic(forumStatistic) ;
-			return staHome ;
-		}catch(Exception e){
-			return null ;
-		}
+	protected Node getStatisticHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getStatisticsLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+ 	}
+	
+	private Node getAdminHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getAdministrationLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	private Node getAdminHome(SessionProvider sysProvider) throws Exception {
-		try{
-			return getForumSystemHome(sysProvider).getNode(Utils.ADMINISTRATION_HOME) ;
-		}catch(PathNotFoundException e) {
-			return getForumSystemHome(sysProvider).addNode(Utils.ADMINISTRATION_HOME, "exo:administrationHome") ;
-		}catch(Exception e){
-			return null ;
-		}
+	protected Node getUserProfileHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getUserProfilesLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	protected Node getUserProfileHome(SessionProvider sysProvider) throws Exception {
-		try{
-			return getForumSystemHome(sysProvider).getNode(Utils.USER_PROFILE_HOME) ;
-		}catch(PathNotFoundException e) {
-			return getForumSystemHome(sysProvider).addNode(Utils.USER_PROFILE_HOME, "exo:userProfileHome") ;
-		}catch(Exception e){
-			return null ;
-		}
+	private Node getCategoryHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getCategoriesLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	private Node getCategoryHome(SessionProvider sysProvider) throws Exception {
-		Node forumHome = getForumDataHome(sysProvider);
-		try{
-			return forumHome.getNode(Utils.CATEGORY_HOME) ;
-		}catch(PathNotFoundException e) {
-			Node categoryHome = forumHome.addNode(Utils.CATEGORY_HOME, "exo:categoryHome") ;
-			forumHome.getSession().save();
-			return categoryHome;
-		}catch(Exception e){
-			return null ;
-		}
-	}
-	
-	private Node getTagHome(SessionProvider sysProvider) throws Exception {
-		try{
-			return getForumDataHome(sysProvider).getNode(Utils.TAG_HOME) ;
-		}catch(PathNotFoundException e) {
-			return getForumDataHome(sysProvider).addNode(Utils.TAG_HOME, "exo:tagHome") ;
-		}catch(Exception e){
-			return null ;
-		}
+	private Node getTagHome(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getTagsLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
 	private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception{
-		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
-		try {
-			return	userApp.getNode(KS_USER_AVATAR) ;
-		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode(KS_USER_AVATAR, "nt:unstructured") ;
-			userApp.getSession().save() ;
-			return faqHome ;
-		}	
+    String path = dataLocator.getAvatarsLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	private Node getForumBanNode(SessionProvider sysProvider) throws Exception {
-		//Node forumHomeNode = getForumHomeNode(sProvider);
-		try {
-			return getBanIPHome(sysProvider).getNode(Utils.FORUM_BAN_IP);
-		} catch (PathNotFoundException e) {
-			return getBanIPHome(sysProvider).addNode(Utils.FORUM_BAN_IP, "exo:banIP");
-			//if(forumHomeNode.isNew()) forumHomeNode.getSession().save();
-			//else forumHomeNode.save() ;
-		} catch (Exception e) {
-			return null ;
-		}		
+	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
+    String path = dataLocator.getForumBanIPLocation();
+    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#setDefaultAvatar(java.lang.String)
+   */
 	public void setDefaultAvatar(String userName)throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -489,6 +463,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ; }		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserAvatar(java.lang.String)
+   */
 	public ForumAttachment getUserAvatar(String userName) throws Exception{
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try{
@@ -525,6 +502,9 @@ public class JCRDataStorage {
 		}finally{ sysSession.close() ;}		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveUserAvatar(java.lang.String, org.exoplatform.forum.service.ForumAttachment)
+   */
 	public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception{
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try {
@@ -546,6 +526,9 @@ public class JCRDataStorage {
 		}finally{ sysSession.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveForumAdministration(org.exoplatform.forum.service.ForumAdministration)
+   */
 	public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -575,6 +558,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumAdministration()
+   */
 	public ForumAdministration getForumAdministration() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -600,6 +586,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumSortSettings()
+   */
 	public SortSettings getForumSortSettings() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
@@ -614,6 +603,9 @@ public class JCRDataStorage {
 		return new SortSettings(SortField.ORDER, Direction.ASC);
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicSortSettings()
+   */
 	public SortSettings getTopicSortSettings() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -684,13 +676,14 @@ public class JCRDataStorage {
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace() ;
 		}finally {
 			sProvider.close();
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getCategories()
+   */
 	public List<Category> getCategories() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> categories = new ArrayList<Category>();
@@ -714,6 +707,9 @@ public class JCRDataStorage {
 		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getCategory(java.lang.String)
+   */
 	public Category getCategory(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -723,6 +719,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;} 
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPermissionTopicByCategory(java.lang.String, java.lang.String)
+   */
 	public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
 		String[] canCreated = new String[]{" "};
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -762,6 +761,9 @@ public class JCRDataStorage {
 		return cat;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveCategory(org.exoplatform.forum.service.Category, boolean)
+   */
 	public void saveCategory(Category category, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> presentPoster = new ArrayList<String>();
@@ -822,6 +824,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveModOfCategory(java.util.List, java.lang.String, boolean)
+   */
 	public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -871,6 +876,9 @@ public class JCRDataStorage {
   }
 	
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#calculateModerator(java.lang.String, boolean)
+   */
 	public void calculateModerator(String nodePath, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1056,6 +1064,9 @@ public class JCRDataStorage {
 		return present;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#registerListenerForCategory(java.lang.String)
+   */
 	public void registerListenerForCategory(String path) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1075,6 +1086,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
  	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#unRegisterListenerForCategory(java.lang.String)
+   */
 	public void unRegisterListenerForCategory(String path) throws Exception{
  		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
  		try {
@@ -1090,6 +1104,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeCategory(java.lang.String)
+   */
 	public Category removeCategory(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
@@ -1118,11 +1135,17 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForums(java.lang.String, java.lang.String)
+   */
 	public List<Forum> getForums(String categoryId, String strQuery) throws Exception {
 	  return getForums(categoryId, strQuery, false);
 	}
 	
-	 public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
+	 /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumSummaries(java.lang.String, java.lang.String)
+   */
+	public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
 		 return getForums(categoryId, strQuery, true);
 	 }
 	
@@ -1175,6 +1198,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForum(java.lang.String, java.lang.String)
+   */
 	public Forum getForum(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
@@ -1185,6 +1211,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#modifyForum(org.exoplatform.forum.service.Forum, int)
+   */
 	public void modifyForum(Forum forum, int type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1228,6 +1257,9 @@ public class JCRDataStorage {
 		return mods;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveForum(java.lang.String, org.exoplatform.forum.service.Forum, boolean)
+   */
 	public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1417,6 +1449,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveModerateOfForums(java.util.List, java.lang.String, boolean)
+   */
 	public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHomeNode = getCategoryHome(sProvider);
@@ -1598,6 +1633,9 @@ public class JCRDataStorage {
 		return forum;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeForum(java.lang.String, java.lang.String)
+   */
 	public Forum removeForum(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Forum forum = new Forum();
@@ -1644,6 +1682,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#moveForum(java.util.List, java.lang.String)
+   */
 	public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1736,6 +1777,9 @@ public class JCRDataStorage {
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPageTopic(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
@@ -1754,6 +1798,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 	
+  /* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)
+   */
   public LazyPageList<Topic> getTopicList(String categoryId,
                                       String forumId,
                                       String xpathConditions,
@@ -1809,6 +1856,9 @@ public class JCRDataStorage {
     return pathQuery;
   }
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopics(java.lang.String, java.lang.String)
+   */
 	public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1827,6 +1877,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopic(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1848,6 +1901,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicSummary(java.lang.String, boolean)
+   */
 	public Topic getTopicSummary(String topicPath, boolean isLastPost) throws Exception {
 		Topic topic = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1880,6 +1936,9 @@ public class JCRDataStorage {
 	}
 	
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicByPath(java.lang.String, boolean)
+   */
 	public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception {
 		Topic topic = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -2067,6 +2126,9 @@ public class JCRDataStorage {
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPageTopicOld(long, java.lang.String)
+   */
 	public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2087,6 +2149,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAllTopicsOld(long, java.lang.String)
+   */
 	public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Topic> topics = new ArrayList<Topic>();
@@ -2116,6 +2181,9 @@ public class JCRDataStorage {
 		return topics;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTotalTopicOld(long, java.lang.String)
+   */
 	public long getTotalTopicOld(long date, String forumPatch) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2134,6 +2202,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
   }
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPageTopicByUser(java.lang.String, boolean, java.lang.String)
+   */
 	public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2159,6 +2230,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#modifyTopic(java.util.List, int)
+   */
 	public void modifyTopic(List<Topic> topics, int type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node forumHomeNode = getForumHomeNode(sProvider);
@@ -2254,6 +2328,9 @@ public class JCRDataStorage {
 		sProvider.close() ;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveTopic(java.lang.String, java.lang.String, org.exoplatform.forum.service.Topic, boolean, boolean, java.lang.String)
+   */
 	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2398,6 +2475,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeTopic(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2492,6 +2572,9 @@ public class JCRDataStorage {
 		return list;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#moveTopic(java.util.List, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2649,6 +2732,9 @@ public class JCRDataStorage {
 		profileHome.save();
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getLastReadIndex(java.lang.String)
+   */
 	public long getLastReadIndex(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;	
 		try {
@@ -2671,6 +2757,9 @@ public class JCRDataStorage {
 	  return 0;
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPosts(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		try {
@@ -2726,6 +2815,9 @@ public class JCRDataStorage {
 		return strBuilder;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAvailablePost(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {
@@ -2745,6 +2837,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPagePostByUser(java.lang.String, java.lang.String, boolean, java.lang.String)
+   */
 	public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2772,6 +2867,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPost(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2792,6 +2890,9 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getListPostsByIP(java.lang.String, java.lang.String)
+   */
 	public JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2865,6 +2966,9 @@ public class JCRDataStorage {
 		return postNew;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#savePost(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.forum.service.Post, boolean, java.lang.String)
+   */
 	public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3458,6 +3562,9 @@ public class JCRDataStorage {
 		}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#modifyPost(java.util.List, int)
+   */
 	public void modifyPost(List<Post> posts, int type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node forumHomeNode = getForumHomeNode(sProvider);
@@ -3559,6 +3666,9 @@ public class JCRDataStorage {
 		return postNode;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removePost(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Post post = new Post();
@@ -3621,6 +3731,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#movePost(java.util.List, java.lang.String, boolean, java.lang.String, java.lang.String)
+   */
 	public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3777,6 +3890,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPoll(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3821,6 +3937,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removePoll(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Poll poll = new Poll();
@@ -3843,6 +3962,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#savePoll(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.forum.service.Poll, boolean, boolean)
+   */
 	public void savePoll(String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3892,6 +4014,9 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#setClosedPoll(java.lang.String, java.lang.String, java.lang.String, org.exoplatform.forum.service.Poll)
+   */
 	public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3915,6 +4040,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addTag(java.util.List, java.lang.String, java.lang.String)
+   */
 	public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3953,6 +4081,9 @@ public class JCRDataStorage {
 		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#unTag(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public void unTag(String tagId, String userName, String topicPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4004,6 +4135,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTag(java.lang.String)
+   */
 	public Tag getTag(String tagId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4014,6 +4148,9 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTagNameInTopic(java.lang.String)
+   */
 	public List<String> getTagNameInTopic(String userAndTopicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> tagNames = new ArrayList<String>();
@@ -4094,6 +4231,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAllTagName(java.lang.String, java.lang.String)
+   */
 	public List<String> getAllTagName(String keyValue, String userAndTopicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> tagNames = new ArrayList<String>();
@@ -4150,6 +4290,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAllTags()
+   */
 	public List<Tag> getAllTags() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Tag> tags = new ArrayList<Tag>();
@@ -4180,6 +4323,9 @@ public class JCRDataStorage {
 		return newTag;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getMyTagInTopic(java.lang.String[])
+   */
 	public List<Tag> getMyTagInTopic(String[] tagIds) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Tag> tags = new ArrayList<Tag>();
@@ -4196,6 +4342,9 @@ public class JCRDataStorage {
 		} finally {sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicByMyTag(java.lang.String, java.lang.String)
+   */
 	public JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4228,6 +4377,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveTag(org.exoplatform.forum.service.Tag)
+   */
 	public void saveTag(Tag newTag) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4262,6 +4414,9 @@ public class JCRDataStorage {
 	}
 
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPageListUserProfile()
+   */
 	public JCRPageList getPageListUserProfile() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -4274,6 +4429,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#searchUserProfile(java.lang.String)
+   */
 	public JCRPageList searchUserProfile(String userSearch) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -4291,6 +4449,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getDefaultUserProfile(java.lang.String, java.lang.String)
+   */
 	public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)	return userProfile;
@@ -4367,6 +4528,9 @@ public class JCRDataStorage {
 		return userProfile ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateUserProfileSetting(org.exoplatform.forum.service.UserProfile)
+   */
 	public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception{
 			if (userProfile.getIsBanned()) {
 				SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -4386,6 +4550,9 @@ public class JCRDataStorage {
 	}
 	
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getScreenName(java.lang.String)
+   */
 	public String getScreenName(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String screenName = userName;
@@ -4408,6 +4575,9 @@ public class JCRDataStorage {
 		return false ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserSettingProfile(java.lang.String)
+   */
 	public UserProfile getUserSettingProfile(String userName) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0)	return userProfile;
@@ -4439,6 +4609,9 @@ public class JCRDataStorage {
 		return userProfile ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveUserSettingProfile(org.exoplatform.forum.service.UserProfile)
+   */
 	public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
@@ -4464,6 +4637,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getLastPostIdRead(org.exoplatform.forum.service.UserProfile, java.lang.String)
+   */
 	public UserProfile getLastPostIdRead(UserProfile userProfile, String isOfForum) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node profileNode = getUserProfileHome(sProvider).getNode(userProfile.getUserId());
@@ -4499,6 +4675,9 @@ public class JCRDataStorage {
 	  return userProfile;
   }
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveLastPostIdRead(java.lang.String, java.lang.String[], java.lang.String[])
+   */
 	public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node profileHome = getUserProfileHome(sProvider);
@@ -4512,6 +4691,9 @@ public class JCRDataStorage {
 		}finally{ sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserModerator(java.lang.String, boolean)
+   */
 	public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -4527,6 +4709,9 @@ public class JCRDataStorage {
 	  return list;
   }
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveUserModerator(java.lang.String, java.util.List, boolean)
+   */
 	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -4542,6 +4727,9 @@ public class JCRDataStorage {
 	}
 	
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserInfo(java.lang.String)
+   */
 	public UserProfile getUserInfo(String userName) throws Exception {
 		UserProfile userProfile = new UserProfile();
 		if (userName == null || userName.length() <= 0) return userProfile;
@@ -4609,6 +4797,9 @@ public class JCRDataStorage {
 		return userProfile;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getQuickProfiles(java.util.List)
+   */
 	public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception {
 		UserProfile userProfile ;
 		Node profileNode ;
@@ -4643,6 +4834,9 @@ public class JCRDataStorage {
 		return profiles ;		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getQuickProfile(java.lang.String)
+   */
 	public UserProfile getQuickProfile(String userName) throws Exception {
 		UserProfile userProfile ;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -4671,6 +4865,9 @@ public class JCRDataStorage {
 		return userProfile ;		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserInformations(org.exoplatform.forum.service.UserProfile)
+   */
 	public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4684,6 +4881,9 @@ public class JCRDataStorage {
 		return userProfile ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveUserProfile(org.exoplatform.forum.service.UserProfile, boolean, boolean)
+   */
 	public void saveUserProfile(UserProfile newUserProfile, boolean isOption, boolean isBan) throws Exception {
 		Node newProfileNode;
 		String userName = newUserProfile.getUserId();
@@ -4762,6 +4962,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getUserProfileManagement(java.lang.String)
+   */
 	public UserProfile getUserProfileManagement(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -4828,6 +5031,9 @@ public class JCRDataStorage {
 		return userProfile;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveUserBookmark(java.lang.String, java.lang.String, boolean)
+   */
 	public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception {
 		Node newProfileNode;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -4886,6 +5092,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveCollapsedCategories(java.lang.String, java.lang.String, boolean)
+   */
 	public void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileHome = getUserProfileHome(sProvider);
@@ -4938,6 +5147,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveReadMessage(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public void saveReadMessage(String messageId, String userName, String type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -4974,6 +5186,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}		
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPrivateMessage(java.lang.String, java.lang.String)
+   */
 	public JCRPageList getPrivateMessage(String userName, String type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -4991,6 +5206,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getNewPrivateMessage(java.lang.String)
+   */
 	public long getNewPrivateMessage(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -5007,6 +5225,9 @@ public class JCRDataStorage {
 		return -1;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#savePrivateMessage(org.exoplatform.forum.service.ForumPrivateMessage)
+   */
 	public void savePrivateMessage(ForumPrivateMessage privateMessage) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -5085,6 +5306,9 @@ public class JCRDataStorage {
 		return profileNode;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removePrivateMessage(java.lang.String, java.lang.String, java.lang.String)
+   */
 	public void removePrivateMessage(String messageId, String userName, String type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		Node userProfileNode = getUserProfileHome(sProvider);
@@ -5108,6 +5332,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumSubscription(java.lang.String)
+   */
 	public ForumSubscription getForumSubscription(String userId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		ForumSubscription forumSubscription = new ForumSubscription();
@@ -5124,6 +5351,9 @@ public class JCRDataStorage {
 		return forumSubscription;
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveForumSubscription(org.exoplatform.forum.service.ForumSubscription, java.lang.String)
+   */
 	public void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -5186,6 +5416,9 @@ public class JCRDataStorage {
 		return list.toArray(new String[]{});
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumStatistic()
+   */
 	public ForumStatistic getForumStatistic() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		ForumStatistic forumStatistic = new ForumStatistic();
@@ -5204,6 +5437,9 @@ public class JCRDataStorage {
 		return forumStatistic;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveForumStatistic(org.exoplatform.forum.service.ForumStatistic)
+   */
 	public void saveForumStatistic(ForumStatistic forumStatistic) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -5268,6 +5504,9 @@ public class JCRDataStorage {
 		return list;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getGreenwichMeanTime()
+   */
 	public Calendar getGreenwichMeanTime() {
 		Calendar calendar = GregorianCalendar.getInstance();
 		calendar.setLenient(false);
@@ -5276,11 +5515,14 @@ public class JCRDataStorage {
 		return calendar;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getObjectNameByPath(java.lang.String)
+   */
 	public Object getObjectNameByPath(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Object object = new Object();
 		try {
-			if(path.indexOf(Utils.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
+			if(path.indexOf(CommonUtils.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
 				path = getCategoryHome(sProvider).getPath() + "/" + path;
 			} else {
 				path = getTagHome(sProvider).getPath() + "/" + path;
@@ -5323,6 +5565,9 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getObjectNameById(java.lang.String, java.lang.String)
+   */
 	public Object getObjectNameById(String id, String type) throws Exception {
 		Object object = new Object();
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5353,6 +5598,9 @@ public class JCRDataStorage {
 		return object;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAllLink(java.lang.String, java.lang.String)
+   */
 	public List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception {
 		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>();
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5417,6 +5665,9 @@ public class JCRDataStorage {
 		return forumLinks;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getQuickSearch(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.List, java.util.List, java.util.List)
+   */
 	public List<ForumSearch> getQuickSearch(String textQuery, String type_, String pathQuery, String userId, List<String> listCateIds, List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5534,6 +5785,9 @@ public class JCRDataStorage {
 		return listSearchEvent;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAdvancedSearch(org.exoplatform.forum.service.ForumEventQuery, java.util.List, java.util.List)
+   */
 	public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
@@ -5737,6 +5991,9 @@ public class JCRDataStorage {
 		return mapList;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addWatch(int, java.lang.String, java.util.List, java.lang.String)
+   */
 	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception {
 		Node watchingNode = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -5798,6 +6055,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeWatch(int, java.lang.String, java.lang.String)
+   */
 	public void removeWatch(int watchType, String path, String values) throws Exception {
 		if(values == null || values.trim().length() == 0) return ;
 		Node watchingNode = null;
@@ -5849,6 +6109,9 @@ public class JCRDataStorage {
 		} finally{ sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateEmailWatch(java.util.List, java.lang.String, java.lang.String)
+   */
 	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -5895,6 +6158,9 @@ public class JCRDataStorage {
 		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getWatchByUser(java.lang.String)
+   */
 	public List<Watch> getWatchByUser(String userId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Watch> listWatches = new ArrayList<Watch>();
@@ -5992,6 +6258,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateForum(java.lang.String)
+   */
 	public void updateForum(String path) throws Exception {
 		Map<String, Long> topicMap = new HashMap<String, Long>() ;
 		Map<String, Long> postMap = new HashMap<String, Long>() ;
@@ -6090,6 +6359,9 @@ public class JCRDataStorage {
 		
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getMessageInfo(java.lang.String)
+   */
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
 		SendMessageInfo messageInfo = messagesInfoMap_.get(name);
 		messagesInfoMap_.remove(name);
@@ -6104,6 +6376,9 @@ public class JCRDataStorage {
 		return path;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getJobWattingForModerator(java.lang.String[])
+   */
 	public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<ForumSearch> list = new ArrayList<ForumSearch>();
@@ -6171,6 +6446,9 @@ public class JCRDataStorage {
 		return list;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getJobWattingForModeratorByUser(java.lang.String)
+   */
 	public int getJobWattingForModeratorByUser(String userId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		int job = 0;
@@ -6249,6 +6527,9 @@ public class JCRDataStorage {
 		return totalJob;
 	}
 //	TODO: JUnit test is fall.
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTotalJobWatting(java.util.List)
+   */
 	public void getTotalJobWatting(List<String> userIds) {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		try {
@@ -6279,6 +6560,9 @@ public class JCRDataStorage {
 		return continuation;
 	}
 	 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#search(java.lang.String)
+   */
 	public NodeIterator search(String queryString) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6292,6 +6576,9 @@ public class JCRDataStorage {
 		return null ;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#evaluateActiveUsers(java.lang.String)
+   */
 	public void evaluateActiveUsers(String query) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -6406,6 +6693,9 @@ public class JCRDataStorage {
 		return listFiles;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#exportXML(java.lang.String, java.lang.String, java.util.List, java.lang.String, java.io.ByteArrayOutputStream, boolean)
+   */
 	public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, 
 													ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
@@ -6449,6 +6739,9 @@ public class JCRDataStorage {
 		return file;
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#importXML(java.lang.String, java.io.ByteArrayInputStream, int)
+   */
 	public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception {
 		boolean isReset = false;
 		String nodeType = "";
@@ -6565,6 +6858,9 @@ public class JCRDataStorage {
 		sessionProvider.close() ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateDataImported()
+   */
 	public void updateDataImported() throws Exception{
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
 		
@@ -6615,6 +6911,9 @@ public class JCRDataStorage {
 		sessionProvider.close();
 	}
 
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateTopicAccess(java.lang.String, java.lang.String)
+   */
 	public void updateTopicAccess (String userId, String topicId) throws Exception {
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try {
@@ -6645,6 +6944,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateForumAccess(java.lang.String, java.lang.String)
+   */
 	public void updateForumAccess (String userId, String forumId) throws Exception {
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try {
@@ -6675,6 +6977,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getBookmarks(java.lang.String)
+   */
 	public List<String> getBookmarks(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node profile = getUserProfileHome(sProvider).getNode(userName) ;
@@ -6685,6 +6990,9 @@ public class JCRDataStorage {
 		return new ArrayList<String>() ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getBanList()
+   */
 	public List<String> getBanList() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6696,6 +7004,9 @@ public class JCRDataStorage {
 		return new ArrayList<String>() ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addBanIP(java.lang.String)
+   */
 	public boolean addBanIP(String ip) throws Exception {
 		List<String> ips = getBanList() ;
 		if (ips.contains(ip)) return false ;
@@ -6716,6 +7027,9 @@ public class JCRDataStorage {
 		return false ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeBan(java.lang.String)
+   */
 	public void removeBan(String ip) throws Exception {
 		List<String> ips = getBanList() ;
 		if (ips.contains(ip)){
@@ -6731,6 +7045,9 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getForumBanList(java.lang.String)
+   */
 	public List<String> getForumBanList(String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> list = new ArrayList<String>();
@@ -6747,6 +7064,9 @@ public class JCRDataStorage {
 		return list ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#addBanIPForum(java.lang.String, java.lang.String)
+   */
 	public boolean addBanIPForum(String ip, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> ips = new ArrayList<String>() ;
@@ -6771,6 +7091,9 @@ public class JCRDataStorage {
 		return false ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeBanIPForum(java.lang.String, java.lang.String)
+   */
 	public void removeBanIPForum(String ip, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> ips = new ArrayList<String>() ;
@@ -6809,6 +7132,9 @@ public class JCRDataStorage {
 		return list;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#updateStatisticCounts(long, long)
+   */
 	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
 		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -6845,6 +7171,9 @@ public class JCRDataStorage {
 		return pruneSetting;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPruneSetting(java.lang.String)
+   */
 	public PruneSetting getPruneSetting(String forumPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		PruneSetting pruneSetting = new PruneSetting();
@@ -6863,6 +7192,9 @@ public class JCRDataStorage {
 		return pruneSetting;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getAllPruneSetting()
+   */
 	public List<PruneSetting> getAllPruneSetting() throws Exception {
 		List<PruneSetting> prunList = new ArrayList<PruneSetting>();
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -6882,6 +7214,9 @@ public class JCRDataStorage {
 		return prunList;
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#savePruneSetting(org.exoplatform.forum.service.PruneSetting)
+   */
 	public void savePruneSetting(PruneSetting pruneSetting) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6931,10 +7266,16 @@ public class JCRDataStorage {
 		}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#runPrune(java.lang.String)
+   */
 	public void runPrune(String forumPath) throws Exception {
 		runPrune(getPruneSetting(forumPath)) ;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#runPrune(org.exoplatform.forum.service.PruneSetting)
+   */
 	public void runPrune(PruneSetting pSetting) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6962,6 +7303,9 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#checkPrune(org.exoplatform.forum.service.PruneSetting)
+   */
 	public long checkPrune(PruneSetting pSetting) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -6989,6 +7333,9 @@ public class JCRDataStorage {
 		return topicType;
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicTypes()
+   */
 	public List<TopicType> getTopicTypes() throws Exception {
 	  List<TopicType> listTT = new ArrayList<TopicType>();
 	  SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -7004,6 +7351,9 @@ public class JCRDataStorage {
 	  return listTT ;
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getTopicType(java.lang.String)
+   */
 	public TopicType getTopicType(String Id) throws Exception {
 		TopicType topicType = new TopicType();
 		 SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -7017,6 +7367,9 @@ public class JCRDataStorage {
 		return topicType;
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#saveTopicType(org.exoplatform.forum.service.TopicType)
+   */
 	public void saveTopicType(TopicType topicType)throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -7038,6 +7391,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
 	}
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#removeTopicType(java.lang.String)
+   */
 	public void removeTopicType(String topicTypeId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -7055,6 +7411,9 @@ public class JCRDataStorage {
 		}finally { sProvider.close() ;}
   }
 	
+	/* (non-Javadoc)
+   * @see org.exoplatform.forum.service.impl.DatStorage#getPageTopicByType(java.lang.String)
+   */
 	public JCRPageList getPageTopicByType(String type) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		try {

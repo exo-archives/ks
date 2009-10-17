@@ -8,6 +8,7 @@ import java.util.Map;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -116,7 +117,7 @@ public class ForumServiceManaged implements ManagementAware {
  
   }
 
-  public void registerStorageManager(JCRDataStorage storage) {
+  public void registerStorageManager(DataStorage storage) {
     if (context != null) {
       context.register(storage);
     }
