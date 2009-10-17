@@ -9,7 +9,9 @@
   <artifactId>exo.ks.packaging</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Packaging</name>
-
+  <modules>
+    <module>ear-ext</module>
+  </modules>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
