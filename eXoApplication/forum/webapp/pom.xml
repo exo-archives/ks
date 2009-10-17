@@ -20,7 +20,13 @@
       <version>${org.exoplatform.portal.version}</version>
       <scope>provided</scope>
     </dependency>
-		
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <version>${org.exoplatform.kernel.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    		
 		<dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
@@ -46,12 +52,14 @@
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.cometd.service</artifactId>
       <version>2.0.2</version> <!-- ${org.exoplatform.ws.version} -->
+      <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.json</artifactId>
       <version>${org.exoplatform.ws.version}</version>
+      <scope>provided</scope>
     </dependency> 
 		
   </dependencies>
