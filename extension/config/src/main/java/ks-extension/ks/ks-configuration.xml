@@ -14,12 +14,11 @@
   </component>
   
   <external-component-plugins>
-    <target-component>org.exoplatform.services.jcr.RepositoryService
-    </target-component>
+    <target-component>org.exoplatform.ks.common.jcr.KSDataLocation</target-component>
     <component-plugin>
       <name>ks.data.location</name>
       <set-method>setLocation</set-method>
-      <type>org.exoplatform.ks.common.conf.DefaultLocationPlugin</type>
+      <type>org.exoplatform.ks.common.conf.DataLocationPlugin</type>
       <init-params>
         <value-param>
           <name>repository</name>
@@ -29,7 +28,7 @@
         <value-param>
           <name>workspace</name>
           <description>workspace for KS data</description>
-          <value>portal-system</value>
+          <value>knowledge</value>
         </value-param>
       </init-params>
     </component-plugin>
@@ -66,7 +65,7 @@
         <value-param>
           <name>viewerTemplate</name>
           <description>Default template for viewer portlet</description>
-          <value>jar:/ks-extension/ks/faq/templates/FAQViewerPortlet.gtmpl</value>
+          <value>/faq/templates/FAQViewerPortlet.gtmpl</value>
         </value-param>
       </init-params>
     </component-plugin>
