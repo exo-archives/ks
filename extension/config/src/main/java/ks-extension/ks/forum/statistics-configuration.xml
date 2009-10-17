@@ -30,15 +30,6 @@
     </component-plugin>
   </external-component-plugins>  
   
-  <external-component-plugins>
-    <target-component>org.exoplatform.services.organization.OrganizationService</target-component>    
-    <component-plugin>
-      <name>forum.new.user.event.listener</name>
-      <set-method>addListenerPlugin</set-method>
-      <type>org.exoplatform.forum.service.conf.NewUserListener</type>
-      <description>creates a profile in forum for each new user</description>      
-    </component-plugin>             
-  </external-component-plugins>
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.listener.ListenerService</target-component>
