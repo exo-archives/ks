@@ -425,7 +425,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	private Node getCategoryHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getCategoriesLocation();
+    String path = dataLocator.getForumCategoriesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
