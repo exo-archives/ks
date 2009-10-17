@@ -41,7 +41,7 @@ public class KSDataLocation implements Startable {
   private String statisticsLocation;
   private String administrationLocation;
   private String userProfilesLocation;
-  private String categoriesLocation;
+  private String forumCategoriesLocation;
   private String tagsLocation;
   private String avatarsLocation;
   private String forumBanIPLocation;
@@ -50,6 +50,10 @@ public class KSDataLocation implements Startable {
   private String repository;
   private String workspace;
   private JCRSessionManager sessionManager;
+  private String faqSettingsLocation;
+  private String faqUserSettingsLocation;
+  private String faqCategoriesLocation;
+  private String faqTemplatesLocation;
   private static final Log log = ExoLogger.getLogger(KSDataLocation.class);
   
 
@@ -100,11 +104,15 @@ public class KSDataLocation implements Startable {
     
     forumDataLocation = getForumHomeLocation() + "/" + CommonUtils.FORUM_DATA;
     topicTypesLocation = getForumDataLocation() + "/" + CommonUtils.TOPIC_TYPE_HOME;
-    categoriesLocation = getForumDataLocation() + "/" + CommonUtils.CATEGORY_HOME;
+    forumCategoriesLocation = getForumDataLocation() + "/" + CommonUtils.CATEGORY_HOME;
     tagsLocation = getForumDataLocation() + "/" + CommonUtils.TAG_HOME;
     bbcodesLocation = getForumDataLocation() + "/" + CommonUtils.BBCODE_HOME;
     faqHomeLocation = getApplicationsLocation() + "/" + CommonUtils.FAQ_SERVICE;  
-    
+    faqSettingsLocation = getFaqHomeLocation() + "/" + CommonUtils.SETTING_HOME;
+    faqUserSettingsLocation = getFaqSettingsLocation() + "/" + CommonUtils.USER_SETTING_HOME;
+    faqCategoriesLocation = getFaqHomeLocation() + "/" + CommonUtils.CATEGORY_HOME;
+    faqTemplatesLocation = getFaqHomeLocation() + "/" + CommonUtils.TEMPLATE_HOME;
+
   }
   
 
@@ -125,13 +133,6 @@ public class KSDataLocation implements Startable {
     this.bbcodesLocation = bbcodesLocation;
   }
 
-  public String getFaqHomeLocation() {
-    return faqHomeLocation;
-  }
-
-  public void setFaqHomeLocation(String faqHomeLocation) {
-    this.faqHomeLocation = faqHomeLocation;
-  }
 
   public String getRepository() {
     return repository;
@@ -189,8 +190,8 @@ public class KSDataLocation implements Startable {
     this.userProfilesLocation = userProfilesLocation;
   }
 
-  public void setCategoriesLocation(String categoriesLocation) {
-    this.categoriesLocation = categoriesLocation;
+  public void setForumCategoriesLocation(String categoriesLocation) {
+    this.forumCategoriesLocation = categoriesLocation;
   }
 
   public void setTagsLocation(String tagsLocation) {
@@ -239,8 +240,8 @@ public class KSDataLocation implements Startable {
     return userProfilesLocation;
   }
 
-  public String getCategoriesLocation() {
-    return categoriesLocation;
+  public String getForumCategoriesLocation() {
+    return forumCategoriesLocation;
   }
 
   public String getTagsLocation() {
@@ -259,12 +260,12 @@ public class KSDataLocation implements Startable {
     return bbcodesLocation;
   }
 
-  public String getFAQHomeLocation() {
+  public String getFaqHomeLocation() {
     return faqHomeLocation;
   }
 
   public void start() {
-    log.info("initializing forum data storage...");
+    log.info("initializing KS data storage...");
     sessionManager.openSession();
     createIfNeeded(getApplicationsLocation(), "nt:unstructured");
     createIfNeeded(getAvatarsLocation(), "nt:unstructured");
@@ -279,16 +280,30 @@ public class KSDataLocation implements Startable {
 
     createIfNeeded(getForumDataLocation(), "exo:forumData");
     createIfNeeded(getTopicTypesLocation(), "exo:topicTypeHome");
-    createIfNeeded(getCategoriesLocation(), "exo:categoryHome");
+    createIfNeeded(getForumCategoriesLocation(), "exo:categoryHome");
     createIfNeeded(getTagsLocation(), "exo:tagHome");
     createIfNeeded(getBBCodesLocation(), CommonUtils.BBCODE_HOME_NODE_TYPE);
     
+    // FAQ
+
+    createIfNeeded(getFaqHomeLocation(), "exo:faqHome");
+    createIfNeeded(getFaqSettingsLocation(), "exo:faqSettingHome");
+    try {
+    Node categoryHome = createIfNeeded(getFaqCategoriesLocation(), "exo:faqCategory");
+    categoryHome.addMixin("mix:faqSubCategory") ;
+    categoryHome.setProperty("exo:name", "Root") ;
+    categoryHome.setProperty("exo:isView", true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    createIfNeeded(getFaqTemplatesLocation(), "exo:templateHome");
+ 
 
     sessionManager.closeSession(true);
-    log.info("Forum data storage initialized.");
+    log.info("KS data storage initialized.");
   }
 
-  private void createIfNeeded(String path, String nodeType) {
+  private Node createIfNeeded(String path, String nodeType) {
     try {
       // transform to relative path from root if needed
       path = (path.startsWith("/")) ? path.substring(1) : path;
@@ -296,9 +311,10 @@ public class KSDataLocation implements Startable {
       Node root = session.getRootNode();
       if (root.hasNode(path)) {
         log.info(path + " exists");
+        return root.getNode(path);
       } else {
         log.info("Creating " + path + "...");
-        root.addNode(path, nodeType);
+        return root.addNode(path, nodeType);
       }
 
     } catch (Exception e) {
@@ -309,6 +325,26 @@ public class KSDataLocation implements Startable {
   
   public void stop() {
 
+  }
+
+
+  public String getFaqSettingsLocation() {
+    return faqSettingsLocation;
+  }
+
+
+  public String getFaqUserSettingsLocation() {
+    return faqUserSettingsLocation;
+  }
+
+
+  public String getFaqCategoriesLocation() {
+    return faqCategoriesLocation;
+  }
+
+
+  public String getFaqTemplatesLocation() {
+    return faqTemplatesLocation;
   }
   
  

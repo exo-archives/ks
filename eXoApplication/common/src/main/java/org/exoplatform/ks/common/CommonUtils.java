@@ -40,4 +40,7 @@ public class CommonUtils {
   public final static String ADMINISTRATION_HOME = "AdministrationHome".intern() ;
   public final static String USER_PROFILE_HOME = "UserProfileHome".intern() ;
   public static final String FAQ_SERVICE = "faqApp".intern();
+  final public static String SETTING_HOME = "settingHome".intern() ;
+  final public static String USER_SETTING_HOME = "userSettingHome".intern() ;
+  final public static String TEMPLATE_HOME = "templateHome".intern() ;
 }

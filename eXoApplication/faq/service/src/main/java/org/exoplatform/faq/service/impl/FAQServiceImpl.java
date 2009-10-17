@@ -25,7 +25,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
@@ -50,9 +49,10 @@ import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
 import org.picocontainer.Startable;
 
@@ -62,7 +62,8 @@ import org.picocontainer.Startable;
  *          hung.nguyen@exoplatform.com
  * Mar 04, 2008  
  */
-public class FAQServiceImpl implements FAQService, Startable{	
+@ManagedBy(FAQServiceManaged.class)
+public class FAQServiceImpl implements FAQService, Startable {	
   
 	public static final int CATEGORY = 1 ;
 	public static final int QUESTION = 2 ;
@@ -75,14 +76,17 @@ public class FAQServiceImpl implements FAQService, Startable{
 	//private EmailNotifyPlugin emailPlugin_ ;
 	private Collection<InitialDataPlugin> initDataPlugins;
 	private  KSDataLocation locator;
+	
+	FAQServiceManaged managed; // will be automatically set at @ManagedBy processing
+	
 	private static Log log = ExoLogger.getLogger(FAQServiceImpl.class);
 	
-	public FAQServiceImpl(ConfigurationManager configManager, NodeHierarchyCreator nodeHierarchy, InitParams params, KSDataLocation locator) throws Exception {
+	public FAQServiceImpl(InitParams params, KSDataLocation locator, ConfigurationManager configManager) throws Exception {
 		configManager_ = configManager ;
-		jcrData_ = new JCRDataStorage(nodeHierarchy) ;
 		multiLanguages_ = new MultiLanguages() ;
 		initDataPlugins = new ArrayList<InitialDataPlugin>();
 		this.locator = locator;
+    jcrData_ = new JCRDataStorage(locator) ;
 		bbcodeObject_ = new BBCodeOperator(locator) ;
 	}
 	
@@ -137,6 +141,15 @@ public class FAQServiceImpl implements FAQService, Startable{
     } catch (Exception e) {
       log.error("Error while initializing FAQ template", e);
     }  
+    
+    // management views
+    try {
+      log.info("initializing management view...");
+      // TODO call FAQServiceManaged to register mgmt beans
+    } catch (Exception e) {
+      log.error("Error while initializing Management view: "+ e.getMessage());
+    }
+    
 	}
 
 	public void stop() {}

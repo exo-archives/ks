@@ -75,7 +75,7 @@ public abstract class RSSGenerate {
 	}
 
 	public Node getKSServiceHome(SessionProvider sProvider, String serviceType) throws Exception {
-	  String path = (FORUM_APP.equals(serviceType) ? dataLocator.getForumHomeLocation() : dataLocator.getFAQHomeLocation());
+	  String path = (FORUM_APP.equals(serviceType) ? dataLocator.getForumHomeLocation() : dataLocator.getFaqHomeLocation());
 	  return dataLocator.getSessionManager().getSession(sProvider).getRootNode().getNode(path);
 	}
 
