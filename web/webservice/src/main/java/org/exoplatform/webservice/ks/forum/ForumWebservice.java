@@ -53,7 +53,7 @@ public class ForumWebservice implements ResourceContainer {
         lastMessages.add(new MessageBean(post)) ;
       }
     }
-    return Response.ok(new BeanToJsons(lastMessages), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    return Response.ok(new BeanToJsons<MessageBean>(lastMessages), MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
 
 
