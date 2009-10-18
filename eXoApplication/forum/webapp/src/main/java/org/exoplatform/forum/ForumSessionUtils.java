@@ -19,6 +19,8 @@ package org.exoplatform.forum;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
@@ -55,22 +57,20 @@ public class ForumSessionUtils {
 		return email;
 	}
 	
-	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
+	@SuppressWarnings("unchecked")
+  public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
 		List<String> listOfUser = new ArrayList<String>();
-		listOfUser.add(userId);
+		listOfUser.add(userId); //himself
 		String value = "";
-		String id = "";
-		Membership membership = null;
 		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-			id = object.toString();
-			id = id.replace("Membership[", "").replace("]", "");
-			membership = organizationService_.getMembershipHandler().findMembership(id);
-			value = membership.getGroupId();
-			listOfUser.add(value);
-			value = membership.getMembershipType() + ":" + value;
-			listOfUser.add(value);
-		}
+		Collection<Membership> memberships = organizationService_.getMembershipHandler().findMembershipsByUser(userId);
+		for (Membership membership : memberships) {
+	     value = membership.getGroupId();
+	      listOfUser.add(value); // its groups
+	      value = membership.getMembershipType() + ":" + value;
+	      listOfUser.add(value);  // its memberships
+    }
+		
 		return listOfUser;
 	}
 	
