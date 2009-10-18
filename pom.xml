@@ -38,6 +38,7 @@
     <org.exoplatform.kernel.version>2.2.0-Beta02</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.3.0-Beta02</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.0-Beta02</org.exoplatform.ws.version>
+    <org.exoplatform.comet.version>2.1-SNAPSHOT</org.exoplatform.comet.version>
     <org.exoplatform.jcr.version>1.12.0-Beta02</org.exoplatform.jcr.version>
     <org.exoplatform.ks.version>2.0.0-M1-SNAPSHOT</org.exoplatform.ks.version>
     <org.exoplatform.portal.version>3.0.0-Beta02-SNAPSHOT</org.exoplatform.portal.version>

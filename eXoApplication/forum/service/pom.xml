@@ -61,12 +61,33 @@
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
-    </dependency>   
+    </dependency>  
+     
 
+    
+    <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.frameworks.json</artifactId>
+      <version>${org.exoplatform.ws.version}</version>
+      <scope>provided</scope>
+    </dependency> 
+    
+
+    
+    <!-- 
+    
+        <dependency>
+      <groupId>org.exoplatform.comet</groupId>
+      <artifactId>exo-comet-service</artifactId>   
+      <version>${org.exoplatform.comet.version}</version>
+    </dependency>
+    -->
+    
+    <!-- replace the following dependency by exo-comet-service when it is available in repo -->
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.cometd.service</artifactId>
-      <version>2.0.2</version> <!-- ${org.exoplatform.ws.version} -->
+      <version>2.0.2</version> 
       <exclusions>
         <exclusion>
           <groupId>org.exoplatform.kernel</groupId>
@@ -91,13 +112,7 @@
       </exclusions>
       
     </dependency>
-    
-    <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>exo.ws.frameworks.json</artifactId>
-      <version>${org.exoplatform.ws.version}</version><!--  -->
-      <scope>provided</scope>
-    </dependency> 
+  
 
   </dependencies>
 

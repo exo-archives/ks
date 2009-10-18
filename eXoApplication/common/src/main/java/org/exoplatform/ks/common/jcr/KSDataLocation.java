@@ -22,16 +22,24 @@ import javax.jcr.Session;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.conf.DataLocationPlugin;
+import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.picocontainer.Startable;
 
 /**
  * Defines pathes used by Forum JCR data storage
  */
-public class KSDataLocation implements Startable {
+public class KSDataLocation {
   
+  private static final Log log = ExoLogger.getLogger(KSDataLocation.class);
+  
+  
+  public static final String REPOSITORY_PARAM = "repository";
+  public static final String WORKSPACE_PARAM = "workspace";
+  public static final String DEFAULT_REPOSITORY_NAME = "repository";
+  public static final String DEFAULT_WORKSPACE_NAME = "portal-system";
   public static final String DEFAULT_APPS_LOCATION = "exo:applications";
+  
   private String appsLocation = DEFAULT_APPS_LOCATION;
   private String forumHomeLocation;
   private String forumDataLocation;
@@ -47,43 +55,66 @@ public class KSDataLocation implements Startable {
   private String forumBanIPLocation;
   private String bbcodesLocation;
   private String faqHomeLocation;
-  private String repository;
-  private String workspace;
-  private JCRSessionManager sessionManager;
+
   private String faqSettingsLocation;
   private String faqUserSettingsLocation;
   private String faqCategoriesLocation;
   private String faqTemplatesLocation;
-  private static final Log log = ExoLogger.getLogger(KSDataLocation.class);
+  
+  private NodeHierarchyCreator creator;
+  private String repository;
+  private String workspace;
+  private JCRSessionManager sessionManager;
+
+
+  private String forumStatisticsLocation; 
   
 
-  public KSDataLocation(String repository, String workspace) {
-    this.repository = repository;
-    this.workspace = workspace;
+  
+  /**
+   * 
+   * @param params repository and workspace as value-param 
+   * @param creator only passed to ensure that the data structure is initialized before we start
+   */
+  public KSDataLocation(InitParams params, NodeHierarchyCreator creator) {
+    this.creator = creator;
+    this.repository = getRepository(params);
+    this.workspace = getWorkspace(params);
     this.sessionManager = new JCRSessionManager(repository, workspace);
-    init();
+    initPathes();
   }
-  
-  
-  public KSDataLocation(InitParams params) {
+
+
+  private String getRepository(InitParams params) {
+    String result = null;
     try {
-      repository = params.getValueParam("repository").getValue();
-      workspace = params.getValueParam("workspace").getValue();
+      result = params.getValueParam(REPOSITORY_PARAM).getValue();
     } catch (Exception e) {
-      log.error("failed to parse init-params. Using defaults.");
+      log.warn("No '"+ REPOSITORY_PARAM +"' value-param. Using default value: " + DEFAULT_REPOSITORY_NAME);
     }
 
-    if (repository == null) {
-      repository = "repository";
+    if (result == null) {
+      result = DEFAULT_REPOSITORY_NAME;
     }
-
-    if (workspace == null) {
-      workspace = "portal-system";
-    }
-    this.sessionManager = new JCRSessionManager(repository, workspace);
-    init();
+    return result;
   }
-  
+
+
+  private String getWorkspace(InitParams params) {
+    String result = null;
+    try {
+      result = params.getValueParam(WORKSPACE_PARAM).getValue();
+    } catch (Exception e) {
+      log.warn("No '"+ WORKSPACE_PARAM +"' value-param. Using default value: " + DEFAULT_WORKSPACE_NAME);
+    }
+
+    if (result == null) {
+      result = DEFAULT_WORKSPACE_NAME;
+    }
+    return result;
+  }
+
+
   public void setLocation(DataLocationPlugin plugin) {
     this.repository = plugin.getRepository();
     this.workspace = plugin.getWorkspace();
@@ -91,13 +122,40 @@ public class KSDataLocation implements Startable {
   }
 
 
-  private void init() {
+  private void initPathes() {
+    forumHomeLocation = getPath(CommonUtils.FORUM_SERVICE);   
+    avatarsLocation = getPath(CommonUtils.KS_USER_AVATAR);
+    
+    forumSystemLocation = getPath(CommonUtils.FORUM_SYSTEM);
+    userProfilesLocation = getPath(CommonUtils.USER_PROFILE_HOME);   
+    statisticsLocation = getPath(CommonUtils.STATISTIC_HOME);
+    forumStatisticsLocation = getPath(CommonUtils.FORUM_STATISTIC);
+    
+    administrationLocation = getPath(CommonUtils.ADMINISTRATION_HOME);   
+    banIPLocation = getPath(CommonUtils.BANIP_HOME);
+    forumBanIPLocation = getPath(CommonUtils.FORUM_BAN_IP);
+    
+    forumDataLocation = getPath(CommonUtils.FORUM_DATA);
+    topicTypesLocation = getPath(CommonUtils.TOPIC_TYPE_HOME);
+    forumCategoriesLocation = getPath(CommonUtils.CATEGORY_HOME);
+    tagsLocation = getPath(CommonUtils.TAG_HOME);
+    bbcodesLocation = getPath(CommonUtils.BBCODE_HOME);
+    faqHomeLocation = getPath(CommonUtils.FAQ_SERVICE);  
+    faqSettingsLocation = getPath(CommonUtils.SETTING_HOME);
+    faqUserSettingsLocation = getPath(CommonUtils.USER_SETTING_HOME);
+    faqCategoriesLocation = getPath(CommonUtils.CATEGORY_HOME);
+    faqTemplatesLocation = getPath(CommonUtils.TEMPLATE_HOME);   
+    
+    
+    /*
     forumHomeLocation = getApplicationsLocation() + "/" + CommonUtils.FORUM_SERVICE;   
     avatarsLocation = getApplicationsLocation() + "/" + CommonUtils.KS_USER_AVATAR;
     
     forumSystemLocation = getForumHomeLocation() + "/" + CommonUtils.FORUM_SYSTEM;
     userProfilesLocation = getForumSystemLocation() + "/" + CommonUtils.USER_PROFILE_HOME;   
     statisticsLocation = getForumSystemLocation() + "/" + CommonUtils.STATISTIC_HOME;
+    forumStatisticsLocation = getStatisticsLocation() + "/" + CommonUtils.FORUM_STATISTIC;
+    
     administrationLocation = getForumSystemLocation() + "/" + CommonUtils.ADMINISTRATION_HOME;   
     banIPLocation = getForumSystemLocation() + "/" + CommonUtils.BANIP_HOME;
     forumBanIPLocation = getBanIPLocation() + "/" + CommonUtils.FORUM_BAN_IP;
@@ -112,9 +170,25 @@ public class KSDataLocation implements Startable {
     faqUserSettingsLocation = getFaqSettingsLocation() + "/" + CommonUtils.USER_SETTING_HOME;
     faqCategoriesLocation = getFaqHomeLocation() + "/" + CommonUtils.CATEGORY_HOME;
     faqTemplatesLocation = getFaqHomeLocation() + "/" + CommonUtils.TEMPLATE_HOME;
-
+*/
   }
   
+  /**
+   * Get a path by alias. 
+   * @param name
+   * @return the path corresponding the alias name in NodeHierarchyCreator or name if the creator was not set
+   */
+  public String getPath(String alias) {
+    if (creator == null) {
+      return alias;
+    }
+    
+    String path = creator.getJcrPath(alias);
+    if (path != null) {
+      path = path.substring(1);
+    }
+    return path;
+  }
 
   
   public String getAppsLocation() {
@@ -265,8 +339,12 @@ public class KSDataLocation implements Startable {
   }
 
   public void start() {
+    /*   
     log.info("initializing KS data storage...");
     sessionManager.openSession();
+    
+    // now delegated to NodeHerarchyCreator
+ 
     createIfNeeded(getApplicationsLocation(), "nt:unstructured");
     createIfNeeded(getAvatarsLocation(), "nt:unstructured");
     createIfNeeded(getForumHomeLocation(), "exo:forumHome");
@@ -274,6 +352,8 @@ public class KSDataLocation implements Startable {
     createIfNeeded(getForumSystemLocation(), "exo:forumSystem");
     createIfNeeded(getUserProfilesLocation(), "exo:userProfileHome");
     createIfNeeded(getStatisticsLocation(), "exo:statisticHome");
+    createIfNeeded(getForumStatisticsLocation(), "exo:forumStatistic");
+    
     createIfNeeded(getAdministrationLocation(), "exo:administrationHome");
     createIfNeeded(getBanIPLocation(), "exo:banIPHome");
     createIfNeeded(getForumBanIPLocation(), "exo:banIP");
@@ -288,6 +368,9 @@ public class KSDataLocation implements Startable {
 
     createIfNeeded(getFaqHomeLocation(), "exo:faqHome");
     createIfNeeded(getFaqSettingsLocation(), "exo:faqSettingHome");
+    createIfNeeded(getFaqUserSettingsLocation(), "exo:faqUserSettingHome");
+    createIfNeeded(getFaqTemplatesLocation(), "exo:templateHome");
+
     try {
     Node categoryHome = createIfNeeded(getFaqCategoriesLocation(), "exo:faqCategory");
     categoryHome.addMixin("mix:faqSubCategory") ;
@@ -296,11 +379,12 @@ public class KSDataLocation implements Startable {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    createIfNeeded(getFaqTemplatesLocation(), "exo:templateHome");
+
  
 
     sessionManager.closeSession(true);
     log.info("KS data storage initialized.");
+        */
   }
 
   private Node createIfNeeded(String path, String nodeType) {
@@ -310,7 +394,7 @@ public class KSDataLocation implements Startable {
       Session session = JCRSessionManager.getSession();
       Node root = session.getRootNode();
       if (root.hasNode(path)) {
-        log.info(path + " exists");
+        log.debug(path + " exists");
         return root.getNode(path);
       } else {
         log.info("Creating " + path + "...");
@@ -345,6 +429,11 @@ public class KSDataLocation implements Startable {
 
   public String getFaqTemplatesLocation() {
     return faqTemplatesLocation;
+  }
+
+
+  public String getForumStatisticsLocation() {
+    return forumStatisticsLocation;
   }
   
  

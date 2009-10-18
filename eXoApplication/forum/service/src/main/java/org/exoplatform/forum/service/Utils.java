@@ -43,7 +43,6 @@ public class Utils {
 	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
 	
 	public final static String FORUM_SERVICE = "ForumService".intern() ;
-	public final static String FORUM_STATISTIC = "forumStatistic".intern() ;
 	public final static String USER_PROFILES = "UserProfile".intern() ;
 	public final static String FORUM_SUBSCRIOTION = "forumSubscription".intern() ;
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;

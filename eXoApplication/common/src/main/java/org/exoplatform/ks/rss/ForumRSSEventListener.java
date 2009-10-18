@@ -32,11 +32,12 @@ public class ForumRSSEventListener implements EventListener{
 	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
 																																						 "exo:userWatching"}));
 	private KSDataLocation locator;
-	public ForumRSSEventListener(String ws, String repo) throws Exception {
+	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
-		workspace_ = ws ;
-		repository_ = repo ;
-		this.locator = new KSDataLocation(ws, repo);
+	   this.locator = dataLocator;
+		workspace_ = dataLocator.getWorkspace();
+		repository_ = dataLocator.getRepository();
+
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }

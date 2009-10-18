@@ -43,4 +43,5 @@ public class CommonUtils {
   final public static String SETTING_HOME = "settingHome".intern() ;
   final public static String USER_SETTING_HOME = "userSettingHome".intern() ;
   final public static String TEMPLATE_HOME = "templateHome".intern() ;
+  public final static String FORUM_STATISTIC = "forumStatistic".intern() ;
 }
