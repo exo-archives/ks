@@ -1564,7 +1564,7 @@ public class JCRDataStorage implements DataStorage {
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#moveQuestions(java.util.List, java.lang.String)
    */
-	public void moveQuestions(List<String> questions, String destCategoryId) throws Exception {
+	public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node faqHome = getFAQServiceHome(sProvider) ;
@@ -1580,10 +1580,10 @@ public class JCRDataStorage implements DataStorage {
 				try{
 					faqHome.getSession().move(homePath+ "/" + id, destQuestionHome.getPath() + id.substring(id.lastIndexOf("/"))) ;
 					faqHome.getSession().save() ;
-					Node question = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
+					Node questionNode = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
 					String catId = destCategoryId.substring(destCategoryId.lastIndexOf("/")+ 1) ;
-					question.setProperty("exo:categoryId", catId) ;
-					NodeIterator iter = question.getNodes() ;
+					questionNode.setProperty("exo:categoryId", catId) ;
+					NodeIterator iter = questionNode.getNodes() ;
 					Node attNode ;
 					while(iter.hasNext()) {
 						attNode = iter.nextNode() ;
@@ -1591,9 +1591,14 @@ public class JCRDataStorage implements DataStorage {
 							attNode.setProperty("exo:categoryId", catId) ;
 						}
 					}
-					updateAnswers(question, catId) ;
-					updateComments(question,catId) ;
-					question.save() ;
+					updateAnswers(questionNode, catId) ;
+					updateComments(questionNode,catId) ;
+					questionNode.save() ;
+//				send email notify to author question. by Duy Tu	
+					try {
+						sendNotifyMoveQuestion(questionNode, catId, questionLink, faqSetting);
+          } catch (Exception e) {e.printStackTrace();}
+					
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;
 				}
@@ -1603,6 +1608,25 @@ public class JCRDataStorage implements DataStorage {
 		}finally { sProvider.close() ;}
 		
 	} 
+	
+	private void sendNotifyMoveQuestion(Node questionNode,String cateId, String link, FAQSetting faqSetting) throws Exception {
+		String contentMail = faqSetting.getEmailMoveQuestion();
+		String categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
+		Message message = new Message();
+		message.setMimeType(MIMETYPE_TEXTHTML) ;
+		message.setFrom(questionNode.getProperty("exo:author").getString() + "<email@gmail.com>");
+		message.setSubject(faqSetting.getEmailSettingSubject() + ": " + questionNode.getProperty("exo:title").getString());
+		if(categoryName == null || categoryName.trim().length() < 1) categoryName = "Root";
+		String questionDetail = questionNode.getProperty("exo:title").getString();
+		if(questionNode.hasProperty("exo:name")){
+			questionDetail = questionDetail + "<br/> <span style=\"font-weight:normal\"> " + questionNode.getProperty("exo:name").getString() + "</span>";
+		}
+		contentMail = contentMail.replace("&questionContent_", questionDetail).
+															replace("&categoryName_", categoryName).
+															replace("&questionLink_", link);
+		message.setBody(contentMail);
+		sendEmailNotification(Arrays.asList(new String[]{questionNode.getProperty("exo:email").getString()}), message) ;
+	}
 	
 	private void updateComments(Node question, String catId) throws Exception {
 		try {

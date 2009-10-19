@@ -26,10 +26,9 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 /**
- * Created by The eXo Platform SAS        
- * Date: Jan 25, 2003
- * Time: 5:25:52 PM
- */
+ * @Deprecated replaced by AuthenticationLoginListener and AuthenticationLogoutListener
+*/
+@Deprecated
 public class ForumSessionListener extends AbstractHttpSessionListener {
 	
   protected static Log log = ExoLogger.getLogger("portal:PortalSessionListener");

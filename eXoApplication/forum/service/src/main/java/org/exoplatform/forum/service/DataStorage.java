@@ -151,7 +151,7 @@ public interface DataStorage {
 
   void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
 
-  long getLastReadIndex(String path) throws Exception;
+  long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
 
   JCRPageList getPosts(String categoryId,
                        String forumId,

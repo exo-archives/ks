@@ -112,7 +112,7 @@ public interface DataStorage {
 
   String getCategoryPathOfQuestion(String questionPath) throws Exception;
 
-  void moveQuestions(List<String> questions, String destCategoryId) throws Exception;
+  void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception;
 
   void changeStatusCategoryView(List<String> listCateIds) throws Exception;
 

@@ -1338,8 +1338,8 @@ public class JCRDataStorage implements DataStorage {
 			StringBuilder id = new StringBuilder();
 			id.append(catNode.getProperty("exo:categoryOrder").getString()) ;
 			id.append(catNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
-			id.append(forumNode.getProperty("exo:forumOrder").getString()) ;
-			id.append(forumNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
+			id.append(forum.getForumOrder()) ;
+			id.append(forum.getCreatedDate().getTime()) ;
 			if(isNew) {
 				PruneSetting pruneSetting = new PruneSetting();
 				pruneSetting.setId(id.toString());
@@ -2733,7 +2733,7 @@ public class JCRDataStorage implements DataStorage {
 	/* (non-Javadoc)
    * @see org.exoplatform.forum.service.impl.DatStorage#getLastReadIndex(java.lang.String)
    */
-	public long getLastReadIndex(String path) throws Exception {
+	public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;	
 		try {
 			Node catNode = getCategoryHome(sProvider);
@@ -2741,14 +2741,26 @@ public class JCRDataStorage implements DataStorage {
 			if(postNode != null) {
 				Calendar cal = postNode.getProperty("exo:createdDate").getDate();
 				StringBuilder builder = new StringBuilder();
-				builder.append("/jcr:root").append(postNode.getParent().getPath()).append("/element(*,exo:post)").
-								append("[(@exo:createdDate <= xs:dateTime('").append(ISO8601.format(cal)).append("'))]");
-				
+				builder.append("/jcr:root").append(postNode.getParent().getPath()).append("/element(*,exo:post)");
+				StringBuilder strBd = getPathQuery(isApproved, isHidden, userLogin);
+				if(strBd.length() > 0) builder.append(strBd.toString().replace("]", "")).append(" and ");
+				else builder.append("[");
+				builder.append("(@exo:createdDate <= xs:dateTime('").append(ISO8601.format(cal)).append("'))]");
 				QueryManager qm = postNode.getSession().getWorkspace().getQueryManager();
 				Query query = qm.createQuery(builder.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iter = result.getNodes();
-				return iter.getSize();
+				long size = iter.getSize();
+				boolean isView = false;
+				while (iter.hasNext()) {
+	        if(iter.nextNode().getName().equals(postNode.getName())) {
+	        	isView = true;
+	        	break;
+	        }
+        }
+				// if user can not view post open, return page 1.
+				if(!isView) size = 1;
+				return size;
 			}
     } catch (Exception e) {
     }

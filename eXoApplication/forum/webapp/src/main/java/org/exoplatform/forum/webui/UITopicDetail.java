@@ -172,7 +172,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   private boolean isShowRule = true;
   private boolean isDoubleClickQuickReply = false;
 	private String lastPoistIdSave = "";
-	private String lastPostId = "";
+	private String lastPostId = "", isApprove="", isHidden="";
 	private List<String> listContactsGotten = new ArrayList<String>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private List<Watch> listWatches = new ArrayList<Watch>();
@@ -561,8 +561,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		isGetSv = true;
 		listContactsGotten =  new ArrayList<String>();
 		try {
-				String isApprove = "";
-				String isHidden = "";
+				isApprove = "";
+				isHidden = "";
 				if(!isMod) isHidden = "false"; 
 				if (this.forum.getIsModeratePost() || this.topic.getIsModeratePost()) {
 					isModeratePost = true;
@@ -591,7 +591,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			try {
 				if(!ForumUtils.isEmpty(lastPostId)){
 					int maxPost = this.userProfile.getMaxPostInPage().intValue();
-					Long index = forumService.getLastReadIndex(categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId);
+					Long index = forumService.getLastReadIndex((categoryId+"/"+forumId+"/"+topicId+"/"+lastPostId), isApprove, isHidden, userName);
 					if(index.intValue() <= maxPost) pageSelect = 1;
 					else {
 						pageSelect =  (int) (index/maxPost);
@@ -1763,6 +1763,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	  						buffer.append("&gt;") ;
 	  					} else if(c == '\''){
 	  						buffer.append("&apos;") ;
+	  					} else if(c == '&' || (int)c == 38){
+	  						buffer.append("&#x26;");
 	  					} else{
 	  						buffer.append(c) ;
 	  					}
@@ -1856,6 +1858,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 						buffer.append("&lt;") ;
 					} else if((int)c == 62){
 						buffer.append("&gt;") ;
+					} else if(c == '&' || (int)c == 38){
+						buffer.append("&#x26;");
 					} else {
 						buffer.append(c) ;
 					}
