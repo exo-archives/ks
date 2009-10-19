@@ -20,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
@@ -185,8 +184,6 @@ public class ForumSessionUtils {
 		if(values != null && values.trim().length() > 0) {
 			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
 			String[] userIds = values.split(",");
-			boolean isUser = false ;
-			List<User> users = ForumSessionUtils.getAllUser() ;
 			for (String str : userIds) {
 				str = str.trim() ;
 				if(str.indexOf("/") >= 0) {
@@ -195,14 +192,7 @@ public class ForumSessionUtils {
 						else erroUser = erroUser + ", " + str;
 					}
 				}else {//user
-					isUser = false ;
-					for (User user : users) {
-						if(user.getUserName().equals(str)) {
-							isUser = true ;
-							break;
-						}
-					}
-					if(!isUser) {
+					if((organizationService.getUserHandler().findUserByName(str) == null)) {
 						if(erroUser == null) erroUser = str ;
 						else erroUser = erroUser + ", " + str;
 					}
