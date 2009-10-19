@@ -72,6 +72,9 @@
 								<value>
 									<string>wsrp-producer</string>
 								</value>	
+                                    <value>
+                                      <string>cometd</string>
+                                    </value>                
                                 <value>
                                   <string>ksResources</string>
                                 </value>   
