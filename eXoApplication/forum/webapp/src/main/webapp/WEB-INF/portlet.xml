@@ -333,4 +333,27 @@
 			<name>ForumLinkEvent</name>
 		</supported-processing-event>
 	</portlet>
+  
+  <event-definition>
+    <name>ForumLinkEvent</name>
+  </event-definition>
+  <event-definition>
+    <name>ReLoadPortletEvent</name>
+  </event-definition>
+  <event-definition>
+    <name>OpenLink</name>
+  </event-definition>
+  <event-definition>
+    <name>ForumPollEvent</name>
+  </event-definition>
+  <event-definition>
+    <name>ForumModerateEvent</name>
+  </event-definition>
+  <event-definition>
+    <name>ForumRuleEvent</name>
+  </event-definition>
+  <event-definition>
+    <name>QuickReplyEvent</name>
+  </event-definition>     
+  
 </portlet-app>
