@@ -419,11 +419,11 @@ public class FAQServiceImpl implements FAQService, Startable{
 	 */
 	public void moveQuestions(List<String> questions, String destCategoryId, SessionProvider sProvider) throws Exception {
 		sProvider.close() ;
-		moveQuestions(questions, destCategoryId) ;
+		this.moveQuestions(questions, destCategoryId, "", new FAQSetting()) ;
 	}
 	
-	public void moveQuestions(List<String> questions, String destCategoryId) throws Exception {
-		jcrData_.moveQuestions(questions, destCategoryId) ;
+	public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
+		jcrData_.moveQuestions(questions, destCategoryId, questionLink, faqSetting) ;
 	}
 	/**
 	 * Remove one category in list
