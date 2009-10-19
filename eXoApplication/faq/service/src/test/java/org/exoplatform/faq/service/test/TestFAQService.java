@@ -396,7 +396,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		listId.add(qsId2);
 		assertEquals("Category 2 have some questions before move question 2", 
 							faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 0);
-		faqService_.moveQuestions(listId, cate2.getPath());
+		faqService_.moveQuestions(listId, cate2.getPath(), "", faqSetting_);
 		assertEquals("Category 2 have more than one question after move question 2", 
 								faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 1);
 		

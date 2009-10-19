@@ -347,11 +347,12 @@ public interface FAQService extends FAQServiceLegacy{
    * 
    * @param questions the questions
    * @param destCategoryId the dest category id
+   * @param questionLink TODO
+   * @param faqSetting TODO
    * @param sProvider the s provider
-   * 
    * @throws Exception the exception
    */
-  public void moveQuestions(List<String> questions, String destCategoryId) throws Exception ;  
+  public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception ;  
   
   /**
    * This method to update FAQ setting.
