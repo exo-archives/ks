@@ -99,7 +99,6 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
@@ -107,6 +106,7 @@ import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -5531,7 +5531,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Object object = new Object();
 		try {
-			if(path.indexOf(CommonUtils.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
+			if(path.indexOf(Locations.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
 				path = getCategoryHome(sProvider).getPath() + "/" + path;
 			} else {
 				path = getTagHome(sProvider).getPath() + "/" + path;
@@ -6277,7 +6277,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		//Node forumHome = getForumHomeNode(sProvider) ;		
 		try{
-			Node forumStatisticNode = getStatisticHome(sProvider).getNode(CommonUtils.FORUM_STATISTIC);
+			Node forumStatisticNode = getStatisticHome(sProvider).getNode(Locations.FORUM_STATISTIC);
 			QueryManager qm = forumStatisticNode.getSession().getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery("/jcr:root" + path + "//element(*,exo:topic)", Query.XPATH) ;
 			QueryResult result = query.execute();
@@ -6603,8 +6603,8 @@ public class JCRDataStorage implements DataStorage {
 			}
 			NodeIterator iter = search(stringBuilder.toString()) ;
 			Node statisticHome = getStatisticHome(sProvider);
-			if(statisticHome.hasNode(CommonUtils.FORUM_STATISTIC)) {
-				statisticHome.getNode(CommonUtils.FORUM_STATISTIC).setProperty("exo:activeUsers", iter.getSize());
+			if(statisticHome.hasNode(Locations.FORUM_STATISTIC)) {
+				statisticHome.getNode(Locations.FORUM_STATISTIC).setProperty("exo:activeUsers", iter.getSize());
 				statisticHome.save() ;
 			}else {
 				ForumStatistic forumStatistic = new ForumStatistic();
@@ -7149,7 +7149,7 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			//Node forumHomeNode = getForumHomeNode(sysProvider);
 			//Node forumStatisticNode;
-			Node forumStatisticNode = getStatisticHome(sysProvider).getNode(CommonUtils.FORUM_STATISTIC);
+			Node forumStatisticNode = getStatisticHome(sysProvider).getNode(Locations.FORUM_STATISTIC);
 			if(topicCount != 0) {				
 				long count = forumStatisticNode.getProperty("exo:topicCount").getLong() + topicCount;
 				if(count < 0) count = 0 ;

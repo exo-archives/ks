@@ -24,7 +24,7 @@ import javax.jcr.Node;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
-import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
@@ -52,26 +52,24 @@ public class TestKSDataLocation extends TestCase {
     assertEquals(ws, location.getSessionManager().getWorkspaceName());      
     
     // if not NodeHierarchyCreator is null, no prefix is used for pathes
-    assertEquals(KSDataLocation.DEFAULT_APPS_LOCATION, location.getAppsLocation());
-  
-    assertEquals(CommonUtils.KS_USER_AVATAR, location.getAvatarsLocation());
-    assertEquals(CommonUtils.BANIP_HOME, location.getBanIPLocation());
-    assertEquals(CommonUtils.BBCODE_HOME, location.getBBCodesLocation());
-    assertEquals(CommonUtils.FAQ_CATEGORY_HOME, location.getFaqCategoriesLocation());
-    assertEquals(CommonUtils.FAQ_SERVICE, location.getFaqHomeLocation());
-    assertEquals(CommonUtils.SETTING_HOME, location.getFaqSettingsLocation());
-    assertEquals(CommonUtils.TEMPLATE_HOME, location.getFaqTemplatesLocation());
-    assertEquals(CommonUtils.USER_SETTING_HOME, location.getFaqUserSettingsLocation());
-    assertEquals(CommonUtils.FORUM_BAN_IP, location.getForumBanIPLocation());
-    assertEquals(CommonUtils.CATEGORY_HOME, location.getForumCategoriesLocation());
-    assertEquals(CommonUtils.FORUM_DATA, location.getForumDataLocation());
-    assertEquals(CommonUtils.FORUM_SERVICE, location.getForumHomeLocation());
-    assertEquals(CommonUtils.FORUM_STATISTIC, location.getForumStatisticsLocation());
-    assertEquals(CommonUtils.FORUM_SYSTEM, location.getForumSystemLocation());
-    assertEquals(CommonUtils.STATISTIC_HOME, location.getStatisticsLocation());
-    assertEquals(CommonUtils.TAG_HOME, location.getTagsLocation());
-    assertEquals(CommonUtils.TOPIC_TYPE_HOME, location.getTopicTypesLocation());
-    assertEquals(CommonUtils.USER_PROFILE_HOME, location.getUserProfilesLocation());
+    assertEquals(Locations.KS_USER_AVATAR, location.getAvatarsLocation());
+    assertEquals(Locations.BANIP_HOME, location.getBanIPLocation());
+    assertEquals(Locations.BBCODE_HOME, location.getBBCodesLocation());
+    assertEquals(Locations.FAQ_CATEGORY_HOME, location.getFaqCategoriesLocation());
+    assertEquals(Locations.FAQ_SERVICE, location.getFaqHomeLocation());
+    assertEquals(Locations.SETTING_HOME, location.getFaqSettingsLocation());
+    assertEquals(Locations.TEMPLATE_HOME, location.getFaqTemplatesLocation());
+    assertEquals(Locations.USER_SETTING_HOME, location.getFaqUserSettingsLocation());
+    assertEquals(Locations.FORUM_BAN_IP, location.getForumBanIPLocation());
+    assertEquals(Locations.CATEGORY_HOME, location.getForumCategoriesLocation());
+    assertEquals(Locations.FORUM_DATA, location.getForumDataLocation());
+    assertEquals(Locations.FORUM_SERVICE, location.getForumHomeLocation());
+    assertEquals(Locations.FORUM_STATISTIC, location.getForumStatisticsLocation());
+    assertEquals(Locations.FORUM_SYSTEM, location.getForumSystemLocation());
+    assertEquals(Locations.STATISTIC_HOME, location.getStatisticsLocation());
+    assertEquals(Locations.TAG_HOME, location.getTagsLocation());
+    assertEquals(Locations.TOPIC_TYPE_HOME, location.getTopicTypesLocation());
+    assertEquals(Locations.USER_PROFILE_HOME, location.getUserProfilesLocation());
    
 
   }
@@ -90,25 +88,25 @@ public class TestKSDataLocation extends TestCase {
   public void testConstructorWithCreator() {
     
     Map<String, String> pathes = new HashMap<String, String>();
-    pathes.put(CommonUtils.ADMINISTRATION_HOME, "/forum/settings");
-    pathes.put(CommonUtils.KS_USER_AVATAR, "/user-data/avatars");
-    pathes.put(CommonUtils.BANIP_HOME, "/forum/data/bans/global");
-    pathes.put(CommonUtils.BBCODE_HOME, "/shared/bbcodes");
-    pathes.put(CommonUtils.FAQ_CATEGORY_HOME, "/faq/categories");
-    pathes.put(CommonUtils.FAQ_SERVICE, "/faq");
-    pathes.put(CommonUtils.SETTING_HOME, "/faq/settings");
-    pathes.put(CommonUtils.TEMPLATE_HOME, "/faq/templates");
-    pathes.put(CommonUtils.USER_SETTING_HOME, "/user-data/settings/faq");
-    pathes.put(CommonUtils.FORUM_BAN_IP, "/forum/data/bans/forum");
-    pathes.put(CommonUtils.CATEGORY_HOME, "/forum/data/categories");
-    pathes.put(CommonUtils.FORUM_DATA, "/forum/data");
-    pathes.put(CommonUtils.FORUM_SERVICE, "/forum");
-    pathes.put(CommonUtils.FORUM_STATISTIC, "/statistics/forum");
-    pathes.put(CommonUtils.FORUM_SYSTEM, "/forum/system");
-    pathes.put(CommonUtils.STATISTIC_HOME, "/statistics");
-    pathes.put(CommonUtils.TAG_HOME, "/shared/tags");
-    pathes.put(CommonUtils.TOPIC_TYPE_HOME, "/forum/data/topic-types");
-    pathes.put(CommonUtils.USER_PROFILE_HOME, "/user-data/profiles");
+    pathes.put(Locations.ADMINISTRATION_HOME, "/forum/settings");
+    pathes.put(Locations.KS_USER_AVATAR, "/user-data/avatars");
+    pathes.put(Locations.BANIP_HOME, "/forum/data/bans/global");
+    pathes.put(Locations.BBCODE_HOME, "/shared/bbcodes");
+    pathes.put(Locations.FAQ_CATEGORY_HOME, "/faq/categories");
+    pathes.put(Locations.FAQ_SERVICE, "/faq");
+    pathes.put(Locations.SETTING_HOME, "/faq/settings");
+    pathes.put(Locations.TEMPLATE_HOME, "/faq/templates");
+    pathes.put(Locations.USER_SETTING_HOME, "/user-data/settings/faq");
+    pathes.put(Locations.FORUM_BAN_IP, "/forum/data/bans/forum");
+    pathes.put(Locations.CATEGORY_HOME, "/forum/data/categories");
+    pathes.put(Locations.FORUM_DATA, "/forum/data");
+    pathes.put(Locations.FORUM_SERVICE, "/forum");
+    pathes.put(Locations.FORUM_STATISTIC, "/statistics/forum");
+    pathes.put(Locations.FORUM_SYSTEM, "/forum/system");
+    pathes.put(Locations.STATISTIC_HOME, "/statistics");
+    pathes.put(Locations.TAG_HOME, "/shared/tags");
+    pathes.put(Locations.TOPIC_TYPE_HOME, "/forum/data/topic-types");
+    pathes.put(Locations.USER_PROFILE_HOME, "/user-data/profiles");
 
     KSDataLocation location = new KSDataLocation(initParams(), new TestNodeHierarchyCreator(pathes));
     

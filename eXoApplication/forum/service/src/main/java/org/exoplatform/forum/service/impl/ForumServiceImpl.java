@@ -59,12 +59,12 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
@@ -1015,7 +1015,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
     	userProfileHome.save() ;
     	// update most online users
-    	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(CommonUtils.FORUM_STATISTIC) ;
+    	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Locations.FORUM_STATISTIC) ;
     	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
   		if(array.length > 1) {
     		int ol = onlineUserList_.size() ;
