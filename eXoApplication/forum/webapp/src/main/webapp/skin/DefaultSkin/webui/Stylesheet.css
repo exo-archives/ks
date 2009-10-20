@@ -119,7 +119,7 @@
 }
 
 .UIForumPortlet .UIActionForum .NormalStyle .ButtonMiddle {
-	line-height:20px;
+	line-height:18px;
 	background:url('background/buttons/MiddleNormalStyleButton1x22.gif') repeat-x top;
 }
 
@@ -127,6 +127,7 @@
 	background-repeat:no-repeat;
 	padding:0px 3px 0px 20px;
 	cursor:pointer;
+	height: 20px;
 }
 
 .UIForumPortlet .LockActionForum .NormalStyle .IconButton {
@@ -134,7 +135,7 @@
 }
 
 .UIForumPortlet .UIActionForum .NormalStyle .LabelIcon {
-	line-height:20px;
+	line-height:18px;
 }
 
 /**************************** UIForumPortlet ForumToolBar *********************************/

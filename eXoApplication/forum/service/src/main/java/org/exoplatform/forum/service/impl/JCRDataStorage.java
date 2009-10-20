@@ -1309,13 +1309,14 @@ public class JCRDataStorage {
 			id.append(catNode.getProperty("exo:categoryOrder").getString()) ;
 			id.append(catNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
 			id.append(forum.getForumOrder()) ;
-			id.append(forum.getCreatedDate().getTime()) ;
 			if(isNew) {
+				id.append(getGreenwichMeanTime()) ;
 				PruneSetting pruneSetting = new PruneSetting();
 				pruneSetting.setId(id.toString());
 				pruneSetting.setForumPath(forum.getPath());
 				savePruneSetting(pruneSetting);
 			} else {
+				id.append(forum.getCreatedDate().getTime()) ;
 				if (isModerateTopic != isNewModerateTopic) {
 					queryLastTopic(sProvider, forumNode.getPath());
 				}
