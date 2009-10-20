@@ -1731,7 +1731,7 @@ public class JCRDataStorage {
 //					send email notify to author question. by Duy Tu	
 					try {
 						sendNotifyMoveQuestion(questionNode, catId, questionLink, faqSetting);
-					} catch (Exception e) {e.printStackTrace();}
+					} catch (Exception e) {}
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;
 				}

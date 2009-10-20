@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
@@ -147,7 +149,6 @@ public class TestForumService extends BaseForumTestCase{
     forumService_.saveCategory(createCategory(), true) ;
     Category category = forumService_.getCategory(catId); 
     assertNotNull("Category is null", category) ;
-    
     // get categories
 //    TODO: not get all categories.
 //    List<Category> categories = forumService_.getCategories() ;
@@ -251,13 +252,17 @@ public class TestForumService extends BaseForumTestCase{
 		Forum forum = createdForum();
 		forumService_.saveForum(cat.getId(), forum, true);
 		
+		List<String> listTopicId = new ArrayList<String>() ;
 		// add 10 Topics
     List<Topic> list = new ArrayList<Topic>() ;
+    Topic topic;
     for (int i = 0; i < 10; i++) {
-      list.add(createdTopic());
-      forumService_.saveTopic(cat.getId(), forum.getId(), list.get(i), true, false, "");
+    	topic = createdTopic("Owner");
+      list.add(topic);
+      listTopicId.add(topic.getId());
+      forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
     }
-    Topic topic = list.get(8);
+    topic = list.get(8);
     
 		// get Topic - topic in position 8
     Topic topica = forumService_.getTopic(cat.getId(), forum.getId(), topic.getId(), "");
@@ -290,17 +295,11 @@ public class TestForumService extends BaseForumTestCase{
     assertEquals(pagelist.getAvailablePage(), 2);
 
     // get Topic By User
-    topic = createdTopic();
-    topic.setOwner("demo");
+    topic = createdTopic("demo");
     forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
-    // We have 21 topic: 20 by root and 1 by tu.duy
-    pagelist = forumService_.getPageTopicByUser("demo", false, "");
-    List<Post> posts = pagelist.getPage(1);
-    for (Post post : posts) {
-	    System.out.println("\n\n post: " + post.getName());
-    }
-    System.out.println("\n\n " + pagelist.getAvailable());
-    //assertEquals(pagelist.getAvailable(), 20);
+    // We have 21 topic: 10 by Owner and 1 by demo
+    pagelist = forumService_.getPageTopicByUser("Owner", true, "");
+//    assertEquals(pagelist.getAvailable(), 10);
 
     //	move Topic
 //	move topic from forum to forum 1
@@ -313,7 +312,13 @@ public class TestForumService extends BaseForumTestCase{
     assertNotNull(forumService_.getTopic(cat.getId(), forum1.getId(), topica.getId(), ""));
     
 		//test remove Topic return Topic
-		assertNotNull(forumService_.removeTopic(cat.getId(), forum1.getId(), topica.getId()));
+    String id="";
+    for (String topicId : listTopicId) {
+    	forumService_.removeTopic(cat.getId(), forum.getId(), topicId);
+    	id = topicId;
+    }
+    assertNull("This topic not revove.", forumService_.getTopic(cat.getId(), forum.getId(), id, ""));
+		forumService_.removeForum(cat.getId(), forum.getId());
   }
   
   
@@ -341,7 +346,7 @@ public class TestForumService extends BaseForumTestCase{
 		Forum forum = createdForum();
 		this.forumId = forum.getId();
 		forumService_.saveForum(categoryId, forum, true);
-		Topic topic = createdTopic();
+		Topic topic = createdTopic("root");
 		forumService_.saveTopic(categoryId, forumId, topic, true, false, "");
 		this.topicId = topic.getId();
   }
@@ -376,7 +381,7 @@ public class TestForumService extends BaseForumTestCase{
 		assertEquals("New message", forumService_.getPost(categoryId, forumId, topicId, newPost.getId()).getMessage());
 		
 		//test movePost
-		Topic topicnew = createdTopic();
+		Topic topicnew = createdTopic("root");
 		forumService_.saveTopic(categoryId, forumId, topicnew, true, false, "");
 		topicnew = forumService_.getTopic(categoryId, forumId, topicnew.getId(), "root");
 		List<Post> listPost = new ArrayList<Post>();
@@ -653,10 +658,10 @@ public class TestForumService extends BaseForumTestCase{
 		return post;
   }
   
-  private Topic createdTopic() {
+  private Topic createdTopic(String owner) {
 		Topic topicNew = new Topic();
 			  
-		topicNew.setOwner("root");
+		topicNew.setOwner(owner);
 		topicNew.setTopicName("TestTopic");
 		topicNew.setCreatedDate(new Date());
 		topicNew.setModifiedBy("root");
@@ -772,6 +777,5 @@ public class TestForumService extends BaseForumTestCase{
   	topicType.setIcon("BlueIcon");
   	topicType.setName(name);
   	return topicType;
-  }
-  
+  } 
 }
