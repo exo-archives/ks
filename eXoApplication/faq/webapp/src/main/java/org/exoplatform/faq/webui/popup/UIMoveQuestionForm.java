@@ -124,7 +124,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					
 					String questionId = question.getId();
 					questionId = questionId.substring(questionId.lastIndexOf("/")+1);
-					questionId = cateId + "/" + questionId;
+					questionId = cateId + "/" + Utils.QUESTION_HOME + "/" + questionId;
 					String link = FAQUtils.getLink(moveQuestionForm.link, moveQuestionForm.getId(), "UIQuestions", "Cancel", "ViewQuestion", questionId);
 //					question.setLink(link);
 					FAQUtils.getEmailSetting(moveQuestionForm.faqSetting_, false, false);
