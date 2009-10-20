@@ -26,7 +26,7 @@ import org.exoplatform.commons.utils.PageList;
  * 
  * @version $Revision$
  */
-abstract public class JCRPageList<E> extends PageList{
+abstract public class JCRPageList<E> extends PageList<E>{
 
 	protected int pageSelected = 1;
 	

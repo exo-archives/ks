@@ -1809,7 +1809,7 @@ public class JCRDataStorage implements DataStorage {
       Node forumNode = categoryNode.getNode(forumId);
       String forumPath = forumNode.getPath();
       String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
-      TopicListAccess topicListAccess = new TopicListAccess(topicQuery);
+      TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
       log.error("Failed to retrieve topic list for forum " + forumId);
@@ -2331,6 +2331,7 @@ public class JCRDataStorage implements DataStorage {
    */
 	public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+
 		try {
 			Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId);
 			Node topicNode;
