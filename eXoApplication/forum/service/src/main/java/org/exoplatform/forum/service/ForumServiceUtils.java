@@ -61,7 +61,7 @@ public class ForumServiceUtils {
 		IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
 		Identity identity = identityRegistry.getIdentity(userId);
 		if (identity == null) {
-			log.warn("Could not retrieve permissions for " + userId + ". Permissions could not be verified.");
+			if (log.isDebugEnabled()) log.debug("Could not retrieve identity for " + userId + ". Permissions not granted.");
 			return false;
 		}
 		
