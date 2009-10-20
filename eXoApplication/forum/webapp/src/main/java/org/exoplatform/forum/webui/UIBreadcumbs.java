@@ -373,8 +373,9 @@ public class UIBreadcumbs extends UIContainer {
 										}
 									}
 								}
-								if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
-									breadcums.forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
+								if (!ForumSessionUtils.isAnonim()) {
+								//if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+									breadcums.forumService.updateTopicAccess(ForumSessionUtils.getCurrentUser(),  topic.getId()) ;
 									forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 								}
 							} else {
