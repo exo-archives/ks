@@ -427,8 +427,8 @@
                          
                    <value>               
                   <object type="org.exoplatform.services.jcr.ext.hierarchy.impl.HierarchyConfig$JcrPath">                 
-                    <field  name="alias"><string>CategoryHome</string></field>
-                    <field  name="path"><string>/exo:applications/faqApp/CategoryHome</string></field>                 <field  name="path"><string>/exo:applications/faqApp/CategoryHome</string></field> 
+                    <field  name="alias"><string>FAQCategoryHome</string></field>
+                    <field  name="path"><string>/exo:applications/faqApp/CategoryHome</string></field>
                     <field  name="nodeType"><string>exo:faqCategory</string></field>   
                     <field  name="mixinTypes">
                       <collection type="java.util.ArrayList">               

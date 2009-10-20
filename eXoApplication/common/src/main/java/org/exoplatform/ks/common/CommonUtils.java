@@ -32,6 +32,7 @@ public class CommonUtils {
 	public final static String BBCODE = "bbcode".intern() ;
 	public final static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
   public final static String CATEGORY_HOME = "CategoryHome".intern() ;
+  public final static String FAQ_CATEGORY_HOME = "FAQCategoryHome".intern() ;
   public final static String TAG_HOME = "TagHome".intern() ;
   public final static String TOPIC_TYPE_HOME = "TopicTypeHome".intern() ;
   public final static String FORUM_BAN_IP = "forumBanIP".intern() ;

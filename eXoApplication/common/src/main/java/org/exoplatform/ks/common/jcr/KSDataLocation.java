@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ks.common.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.Session;
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.conf.DataLocationPlugin;
@@ -143,34 +140,8 @@ public class KSDataLocation {
     faqHomeLocation = getPath(CommonUtils.FAQ_SERVICE);  
     faqSettingsLocation = getPath(CommonUtils.SETTING_HOME);
     faqUserSettingsLocation = getPath(CommonUtils.USER_SETTING_HOME);
-    faqCategoriesLocation = getPath(CommonUtils.CATEGORY_HOME);
+    faqCategoriesLocation = getPath(CommonUtils.FAQ_CATEGORY_HOME);
     faqTemplatesLocation = getPath(CommonUtils.TEMPLATE_HOME);   
-    
-    
-    /*
-    forumHomeLocation = getApplicationsLocation() + "/" + CommonUtils.FORUM_SERVICE;   
-    avatarsLocation = getApplicationsLocation() + "/" + CommonUtils.KS_USER_AVATAR;
-    
-    forumSystemLocation = getForumHomeLocation() + "/" + CommonUtils.FORUM_SYSTEM;
-    userProfilesLocation = getForumSystemLocation() + "/" + CommonUtils.USER_PROFILE_HOME;   
-    statisticsLocation = getForumSystemLocation() + "/" + CommonUtils.STATISTIC_HOME;
-    forumStatisticsLocation = getStatisticsLocation() + "/" + CommonUtils.FORUM_STATISTIC;
-    
-    administrationLocation = getForumSystemLocation() + "/" + CommonUtils.ADMINISTRATION_HOME;   
-    banIPLocation = getForumSystemLocation() + "/" + CommonUtils.BANIP_HOME;
-    forumBanIPLocation = getBanIPLocation() + "/" + CommonUtils.FORUM_BAN_IP;
-    
-    forumDataLocation = getForumHomeLocation() + "/" + CommonUtils.FORUM_DATA;
-    topicTypesLocation = getForumDataLocation() + "/" + CommonUtils.TOPIC_TYPE_HOME;
-    forumCategoriesLocation = getForumDataLocation() + "/" + CommonUtils.CATEGORY_HOME;
-    tagsLocation = getForumDataLocation() + "/" + CommonUtils.TAG_HOME;
-    bbcodesLocation = getForumDataLocation() + "/" + CommonUtils.BBCODE_HOME;
-    faqHomeLocation = getApplicationsLocation() + "/" + CommonUtils.FAQ_SERVICE;  
-    faqSettingsLocation = getFaqHomeLocation() + "/" + CommonUtils.SETTING_HOME;
-    faqUserSettingsLocation = getFaqSettingsLocation() + "/" + CommonUtils.USER_SETTING_HOME;
-    faqCategoriesLocation = getFaqHomeLocation() + "/" + CommonUtils.CATEGORY_HOME;
-    faqTemplatesLocation = getFaqHomeLocation() + "/" + CommonUtils.TEMPLATE_HOME;
-*/
   }
   
   /**
@@ -178,7 +149,7 @@ public class KSDataLocation {
    * @param name
    * @return the path corresponding the alias name in NodeHierarchyCreator or name if the creator was not set
    */
-  public String getPath(String alias) {
+  protected String getPath(String alias) {
     if (creator == null) {
       return alias;
     }
@@ -198,15 +169,6 @@ public class KSDataLocation {
   public void setAppsLocation(String appsLocation) {
     this.appsLocation = appsLocation;
   }
-
-  public String getBbcodesLocation() {
-    return bbcodesLocation;
-  }
-
-  public void setBbcodesLocation(String bbcodesLocation) {
-    this.bbcodesLocation = bbcodesLocation;
-  }
-
 
   public String getRepository() {
     return repository;
@@ -337,80 +299,6 @@ public class KSDataLocation {
   public String getFaqHomeLocation() {
     return faqHomeLocation;
   }
-
-  public void start() {
-    /*   
-    log.info("initializing KS data storage...");
-    sessionManager.openSession();
-    
-    // now delegated to NodeHerarchyCreator
- 
-    createIfNeeded(getApplicationsLocation(), "nt:unstructured");
-    createIfNeeded(getAvatarsLocation(), "nt:unstructured");
-    createIfNeeded(getForumHomeLocation(), "exo:forumHome");
-
-    createIfNeeded(getForumSystemLocation(), "exo:forumSystem");
-    createIfNeeded(getUserProfilesLocation(), "exo:userProfileHome");
-    createIfNeeded(getStatisticsLocation(), "exo:statisticHome");
-    createIfNeeded(getForumStatisticsLocation(), "exo:forumStatistic");
-    
-    createIfNeeded(getAdministrationLocation(), "exo:administrationHome");
-    createIfNeeded(getBanIPLocation(), "exo:banIPHome");
-    createIfNeeded(getForumBanIPLocation(), "exo:banIP");
-
-    createIfNeeded(getForumDataLocation(), "exo:forumData");
-    createIfNeeded(getTopicTypesLocation(), "exo:topicTypeHome");
-    createIfNeeded(getForumCategoriesLocation(), "exo:categoryHome");
-    createIfNeeded(getTagsLocation(), "exo:tagHome");
-    createIfNeeded(getBBCodesLocation(), CommonUtils.BBCODE_HOME_NODE_TYPE);
-    
-    // FAQ
-
-    createIfNeeded(getFaqHomeLocation(), "exo:faqHome");
-    createIfNeeded(getFaqSettingsLocation(), "exo:faqSettingHome");
-    createIfNeeded(getFaqUserSettingsLocation(), "exo:faqUserSettingHome");
-    createIfNeeded(getFaqTemplatesLocation(), "exo:templateHome");
-
-    try {
-    Node categoryHome = createIfNeeded(getFaqCategoriesLocation(), "exo:faqCategory");
-    categoryHome.addMixin("mix:faqSubCategory") ;
-    categoryHome.setProperty("exo:name", "Root") ;
-    categoryHome.setProperty("exo:isView", true);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
- 
-
-    sessionManager.closeSession(true);
-    log.info("KS data storage initialized.");
-        */
-  }
-
-  private Node createIfNeeded(String path, String nodeType) {
-    try {
-      // transform to relative path from root if needed
-      path = (path.startsWith("/")) ? path.substring(1) : path;
-      Session session = JCRSessionManager.getSession();
-      Node root = session.getRootNode();
-      if (root.hasNode(path)) {
-        log.debug(path + " exists");
-        return root.getNode(path);
-      } else {
-        log.info("Creating " + path + "...");
-        return root.addNode(path, nodeType);
-      }
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-  
-  public void stop() {
-
-  }
-
 
   public String getFaqSettingsLocation() {
     return faqSettingsLocation;
