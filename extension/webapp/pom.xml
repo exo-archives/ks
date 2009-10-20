@@ -1,3 +1,4 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -6,9 +7,12 @@
   </parent>
     
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>exo.ks.extension.config</artifactId>
-  <name>KS Extension Configuration</name>
-  <packaging>jar</packaging>
+  <artifactId>exo.ks.extension.webapp</artifactId>
+  <name>KS Extension Web Application</name>
+  <packaging>war</packaging>
   <url>http://www.exoplatform.org</url> 
-  <description>KS Extension Configuration for GateIn </description>
+  <description>KS Extension WAR for GateIn </description>
+  <build>
+    <finalName>ks</finalName>
+  </build>
 </project>

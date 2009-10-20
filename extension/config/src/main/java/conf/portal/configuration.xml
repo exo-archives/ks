@@ -44,7 +44,7 @@
     <import>jar:/ks-extension/ks/forum/prune-configuration.xml</import>
  
     <!-- Forum statistics  -->
-    <import>jar:/ks-extension/ks/forum/statistics-configuration.xml</import>
+    <import>jar:/ks-extension/ks/forum/statistics-configuration.xml</import>        
         
     <!-- roles rules -->
     <import>jar:/ks-extension/ks/faq/roles-configuration.xml</import>
