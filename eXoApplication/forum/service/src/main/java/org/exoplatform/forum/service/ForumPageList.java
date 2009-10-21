@@ -28,10 +28,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
@@ -40,7 +37,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 public class ForumPageList extends JCRPageList {
 	private boolean isQuery_ = false ;
 	private String value_ ;
-	private SessionProvider sProvider_ ;
+	private JCRSessionManager sessionManager;
 	private NodeIterator iter_ = null;
 	private List listValue_ = null;
 	
@@ -49,20 +46,25 @@ public class ForumPageList extends JCRPageList {
 		setAvailablePage(size);
 	};
 	
-	public ForumPageList(NodeIterator iter, int pageSize, String value, boolean isQuery ) throws Exception{
-		super(pageSize) ;
-		value_ = value ;
-		isQuery_ = isQuery ;
-		if(iter == null) {
-			sProvider_ = ForumServiceUtils.getSessionProvider();
-			iter = setQuery(sProvider_, isQuery_, value_) ;
-			sProvider_.close();
-		}
-		if(iter != null){
-			iter_ = iter ;
-			setAvailablePage((int)iter.getSize()) ;
-		}
-	}
+  public ForumPageList(NodeIterator iter, int pageSize, String value, boolean isQuery) throws Exception {
+    super(pageSize);
+    value_ = value;
+    isQuery_ = isQuery;
+
+    this.sessionManager = ForumServiceUtils.getSessionManager();
+    try {
+      if (iter == null) {
+        sessionManager.openSession();
+        iter = setQuery(isQuery_, value_);
+      }
+      if (iter != null) {
+        iter_ = iter;
+        setAvailablePage((int) iter.getSize());
+      }
+    } finally {
+      sessionManager.closeSession();
+    }
+  }
 	
 	/**
 	 * Set ForumPageList for search user.
@@ -72,14 +74,15 @@ public class ForumPageList extends JCRPageList {
 		super(listResult.size()) ;
 		isQuery_ = false;
 		listValue_ = listResult;
+		this.sessionManager = ForumServiceUtils.getSessionManager();
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(int page) throws Exception	{
 		if(iter_ == null) {
-			sProvider_ = ForumServiceUtils.getSessionProvider();
-			iter_ = setQuery(sProvider_, isQuery_, value_) ;
-			sProvider_.close();
+		  sessionManager.openSession();
+			iter_ = setQuery(isQuery_, value_) ;
+			sessionManager.closeSession();
 			setAvailablePage((int) iter_.getSize()) ;
 			
 			if(page == 0) currentPage_ = 0;  // nasty trick for getAll()
@@ -123,9 +126,9 @@ public class ForumPageList extends JCRPageList {
 	
 	@SuppressWarnings("unchecked")
 	protected void populateCurrentPage(String valueString) throws Exception	{
-		NodeIterator nodeIterator = setQuery(sProvider_, isQuery_, value_) ;
+		NodeIterator nodeIterator = setQuery(isQuery_, value_) ;
 		if(iter_ == null) {
-			iter_ = setQuery(sProvider_, isQuery_, value_) ;
+			iter_ = setQuery( isQuery_, value_) ;
 		}
 		int pos = 0;
 		for(int i = 0; i < nodeIterator.getSize(); i ++){
@@ -180,9 +183,9 @@ public class ForumPageList extends JCRPageList {
 
 
 	
-	private NodeIterator setQuery(SessionProvider sProvider, boolean isQuery, String value) throws Exception {
+	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
-		Session session = getJCRSession(sProvider);
+		Session session = JCRSessionManager.getCurrentSession();
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);
@@ -385,13 +388,7 @@ public class ForumPageList extends JCRPageList {
 		return Str;
 	}
 	
-	private Session getJCRSession(SessionProvider sProvider) throws Exception {
-		ExoContainer container = ExoContainerContext.getCurrentContainer();
-		RepositoryService	repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
-		String defaultWS = 
-			repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-		return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
-	}
+
 
   @Override
   protected void populateCurrentPageList(int page, List list) throws Exception{

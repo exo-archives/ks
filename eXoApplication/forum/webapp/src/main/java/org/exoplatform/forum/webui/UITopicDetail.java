@@ -605,7 +605,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					}
 					lastPostId = "";
 				}
-      } catch (Exception e) {}
+      } catch (Exception e) {e.printStackTrace();}
 			posts = pageList.getPage(pageSelect) ;
 //			pageSelect = pageList.getCurrentPage();
 			pagePostRemember.put(topicId, pageSelect);
