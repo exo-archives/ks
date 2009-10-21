@@ -151,6 +151,7 @@ public class BBCodeOperator {
 		List<String> bbcodes = new ArrayList<String>();
 		try{
 			Node bbCodeHome = getBBcodeHome(sProvider);
+			if (bbCodeHome == null) return bbcodes ;
 			QueryManager qm = bbCodeHome.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
 			pathQuery.append("/jcr:root").append(bbCodeHome.getPath()).append("/element(*,").append(CommonUtils.BBCODE_NODE_TYPE).append(")[@exo:isActive='true']");

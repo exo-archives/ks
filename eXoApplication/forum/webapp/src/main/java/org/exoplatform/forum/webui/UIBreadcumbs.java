@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
@@ -44,6 +45,8 @@ import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -70,6 +73,9 @@ import org.exoplatform.webui.event.EventListener;
 )
 @SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
+  
+  private static Log log = ExoLogger.getExoLogger(UIBreadcumbs.class);
+  
   private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
@@ -299,13 +305,16 @@ public class UIBreadcumbs extends UIContainer {
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				}else	if(path.lastIndexOf(Utils.TOPIC) >= 0) {
-					boolean isReply = false;
+					boolean isReply = false, isQuote = false;
 					if(path.indexOf("/true") > 0){
-						isReply = true;
+						isQuote = true;
 						path = path.replaceFirst("/true", "");
+					} else	if(path.indexOf("/false") > 0){
+						isReply = true;
+						path = path.replaceFirst("/false", "");
 					}
 					String []id = path.split("/") ;
-					String postId = "";
+					String postId = "top";
 					int page = 0;
 					if(path.indexOf(Utils.POST) > 0) {
 						postId = id[id.length-1];
@@ -344,33 +353,39 @@ public class UIBreadcumbs extends UIContainer {
 								uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, page) ;
 								uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 								forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
-								if(ForumUtils.isEmpty(postId)) {
-									uiTopicDetail.setIdPostView("top") ;
-								} else {
-									uiTopicDetail.setIdPostView(postId) ;
-									uiTopicDetail.setLastPostId(postId) ;
-									if(isReply){
+								uiTopicDetail.setIdPostView(postId) ;
+								if(isReply || isQuote){
+									if(uiTopicDetail.getCanPost()) {
 										uiTopicDetail.setIdPostView("top") ;
 										try {
-											Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
-											if(post != null) {
-												boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), UserHelper.getCurrentUser());
-												UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-												UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-												UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-												postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
-												postForm.updatePost(postId, true, false, post) ;
-												postForm.setMod(isMod);
-												popupContainer.setId("UIQuoteContainer") ;
-												popupAction.activate(popupContainer, 900, 500) ;
-												event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-											} else {
-												uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
-												event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-												uiTopicDetail.setIdPostView("normal") ;
-											}
+											  UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+											  UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+											  UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+											  boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), breadcums.userProfile.getUserId());
+											  postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
+											  postForm.setMod(isMod);
+											  if(isQuote){
+												  uiTopicDetail.setLastPostId(postId) ;
+												  Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
+												  if(post != null) {
+													  postForm.updatePost(postId, true, false, post) ;
+													  popupContainer.setId("UIQuoteContainer") ;
+												  } else {
+													  uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
+													  event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+													  uiTopicDetail.setIdPostView("normal") ;
+												  }
+											  } else {
+												  postForm.updatePost("", false, false, null) ;
+												  popupContainer.setId("UIAddPostContainer") ;
+											  }
+											  popupAction.activate(popupContainer, 900, 500) ;
+											  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 										} catch (Exception e) {
+										  log.error(e);
 										}
+									} else {
+										uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", new String[]{}, ApplicationMessage.WARNING)) ;
 									}
 								}
 								if (!UserHelper.isAnonim()) {

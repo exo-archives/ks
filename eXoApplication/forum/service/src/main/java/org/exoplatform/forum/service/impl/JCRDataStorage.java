@@ -112,6 +112,7 @@ import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -1339,13 +1340,14 @@ public class JCRDataStorage implements DataStorage {
 			id.append(catNode.getProperty("exo:categoryOrder").getString()) ;
 			id.append(catNode.getProperty("exo:createdDate").getDate().getTimeInMillis()) ;
 			id.append(forum.getForumOrder()) ;
-			id.append(forum.getCreatedDate().getTime()) ;
 			if(isNew) {
+				id.append(getGreenwichMeanTime()) ;
 				PruneSetting pruneSetting = new PruneSetting();
 				pruneSetting.setId(id.toString());
 				pruneSetting.setForumPath(forum.getPath());
 				savePruneSetting(pruneSetting);
 			} else {
+				id.append(forum.getCreatedDate().getTime()) ;
 				if (isModerateTopic != isNewModerateTopic) {
 					queryLastTopic(sProvider, forumNode.getPath());
 				}

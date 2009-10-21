@@ -243,6 +243,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   	return 1;
   }
 	
+	private boolean isNotLogin() throws Exception {
+		if(userProfile.getUserId().equals(UserProfile.USER_GUEST) && !forum.getIsLock() && !topic.getIsLock()) return true;
+		return false;
+	}
 	public void setUpdateTopic(String categoryId, String forumId, String topicId) throws Exception {
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
@@ -413,7 +417,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return canCreateTopic;
 	}
 	
-	private boolean getCanPost() throws Exception {
+	public boolean getCanPost() throws Exception {
 	  if(isEditTopic) {
 	  	isCanPost = isCanPostReply();
 	  }
