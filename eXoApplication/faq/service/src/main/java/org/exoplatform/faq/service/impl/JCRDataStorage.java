@@ -80,6 +80,7 @@ import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -115,9 +116,11 @@ public class JCRDataStorage {
 	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private boolean isInitRssListener_ = true ;
+	private RepositoryService rService_ ;
 	
-	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator)throws Exception {
+	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService)throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator ;
+		rService_ = rService ;
 	}	
 	
 	public JCRDataStorage() {}
@@ -315,12 +318,15 @@ public class JCRDataStorage {
 	}
 	
 	protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
-		Node userApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
+		Node publicApp = nodeHierarchyCreator_.getPublicApplicationNode(sProvider)	;
+		Session session = SessionProvider.createSystemProvider().getSession(rService_.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
+				, rService_.getCurrentRepository()) ;			
+		Node faqApp = (Node)session.getItem(publicApp.getPath()) ;
 		try {
-			return	userApp.getNode(Utils.FAQ_APP) ;
+			return	faqApp.getNode(Utils.FAQ_APP) ;
 		} catch (PathNotFoundException ex) {
-			Node faqHome = userApp.addNode(Utils.FAQ_APP, "exo:faqHome") ;
-			userApp.getSession().save() ;
+			Node faqHome = faqApp.addNode(Utils.FAQ_APP, "exo:faqHome") ;
+			faqApp.getSession().save() ;
 			return faqHome ;
 		}		
 	}
@@ -403,8 +409,12 @@ public class JCRDataStorage {
 		try {
 			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
 		} catch (PathNotFoundException ex) {
-			initRootCategory();
-			return faqServiceHome.getNode(Utils.CATEGORY_HOME) ;
+			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
+      categoryHome.addMixin("mix:faqSubCategory") ;
+      categoryHome.setProperty("exo:name", "Root") ;
+      categoryHome.setProperty("exo:isView", true);
+      faqServiceHome.save() ;
+			return categoryHome ;
 		}
 	}
 
@@ -412,12 +422,10 @@ public class JCRDataStorage {
     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider) ;
-      
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
         log.debug("root category is already created");
         return false;
-      }
-      
+      }      
       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
       categoryHome.addMixin("mix:faqSubCategory") ;
       categoryHome.setProperty("exo:name", "Root") ;
@@ -428,7 +436,7 @@ public class JCRDataStorage {
     }catch (Exception e) {
       log.error("Could not initialize root category", e);
       return false;
-    }finally { sProvider.close() ;}
+    }finally {sProvider.close() ; }
 
   }
 	

@@ -1,4 +1,3 @@
-/* CS libraries */
-JavascriptService.addJavascript("eXo.ks.Cometd", "/javascript/eXo/ks/Cometd.js", ServletContext);
+/* KS libraries */
 JavascriptService.addJavascript("eXo.ks.KSUtils", "/javascript/eXo/ks/KSUtils.js", ServletContext);
 JavascriptService.addJavascript("eXo.ks.MaskLayerControl", "/javascript/eXo/ks/MaskLayerControl.js", ServletContext);

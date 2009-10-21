@@ -65,6 +65,7 @@ import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
@@ -94,9 +95,9 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   private String lastLogin_ = "";
   
-  public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, InitParams params)throws Exception {
-  	storage_ = new JCRDataStorage(nodeHierarchyCreator);
-  	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
+  public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService, InitParams params)throws Exception {
+  	storage_ = new JCRDataStorage(nodeHierarchyCreator, rService);
+  	bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator, rService) ;
   }
 
 
