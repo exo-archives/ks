@@ -337,21 +337,16 @@ public class JCRDataStorage {
 	}
 
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
+		Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(SessionProvider.createSystemProvider());
+		Session session = sProvider.getSession(rService_.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
+				, rService_.getCurrentRepository()) ;			
+		Node appNode = (Node)session.getItem(tmpNode.getPath()) ;			
 		try {
-			Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(SessionProvider.createSystemProvider());
-			Session session = sProvider.getSession(rService_.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
-					, rService_.getCurrentRepository()) ;			
-			Node appNode = (Node)session.getItem(tmpNode.getPath()) ;			
-			try {
-				return appNode.getNode(CommonUtils.FORUM_SERVICE);
-			} catch (PathNotFoundException e) {
-				Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
-				return forumHomeNode;
-			}
-		}catch (Exception e) {
-			e.printStackTrace() ;
-		}
-		return null ;
+			return appNode.getNode(CommonUtils.FORUM_SERVICE);
+		} catch (PathNotFoundException e) {
+			Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
+			return forumHomeNode;
+		}		
 	}
 
 	private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
