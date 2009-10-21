@@ -12,7 +12,7 @@
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.forum.service.user.ForumContact;
+	import org.exoplatform.ks.common.user.CommonContact;
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
@@ -648,7 +648,7 @@
 			for(post in posts) {
 			  String postId = post.getId();
 				String owner = post.getOwner() ;
-				ForumContact contact = uiform.getPersonalContact(owner) ;
+				CommonContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;

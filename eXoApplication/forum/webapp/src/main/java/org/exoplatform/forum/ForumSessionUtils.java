@@ -24,8 +24,8 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.user.ContactProvider;
-import org.exoplatform.forum.service.user.ForumContact;
+import org.exoplatform.ks.common.user.CommonContact;
+import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 
@@ -43,7 +43,7 @@ public class ForumSessionUtils {
 			ForumAttachment attachment = forumService.getUserAvatar(userName);
 			url = ForumSessionUtils.getFileSource(attachment.getInputStream(), attachment.getName(), dservice);
 			if(url == null || url.trim().length() < 1){
-				ForumContact contact = getPersonalContact(userName) ;
+				CommonContact contact = getPersonalContact(userName) ;
 				if(contact.getAvatarUrl() != null && contact.getAvatarUrl().trim().length() > 0){
 					url = contact.getAvatarUrl();
 				}
@@ -67,12 +67,12 @@ public class ForumSessionUtils {
 		return null;
 	}
 	
-	public static ForumContact getPersonalContact(String userId) throws Exception {
+	public static CommonContact getPersonalContact(String userId) throws Exception {
 		try {
 			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
-			return provider.getForumContact(userId);
+			return provider.getCommonContact(userId);
 		}catch (Exception e) {
-			return new ForumContact();
+			return new CommonContact();
 		}
 	}
 	

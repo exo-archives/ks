@@ -34,10 +34,10 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -201,10 +201,10 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	}
 	
 	@SuppressWarnings("unused")
-	private ForumContact getPersonalContact(String userId) throws Exception {
-		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+	  CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 		return contact ;
 	}

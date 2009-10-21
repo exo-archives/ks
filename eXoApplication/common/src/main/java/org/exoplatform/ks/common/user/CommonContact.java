@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service.user;
+package org.exoplatform.ks.common.user;
 
 /**
  * 
@@ -24,22 +24,24 @@ package org.exoplatform.forum.service.user;
  * Aug 21, 2008  
  *
  */
-public class ForumContact {
-	private String firstName;
-  private String lastName;
-	private String emailAddress;
-  private String city;
-  private String country;
-  private String avatarUrl;
-  private String birthday;
-  private String gender;
-  private String job;
-  private String phone;
-  private String mobile;
-  private String webSite;
-  
-  
-  public ForumContact() {  	
+public class CommonContact {
+  private String emailAddress = "";
+  private String city = "";
+  private String country = "";
+  private String avatarUrl = "";
+  private String birthday = "";
+  private String gender = "";
+  private String job = "";
+  private String phone = "";
+  private String mobile = "";
+  private String webSite = "";
+  private String firstName = "";
+  private String lastName = "";
+
+
+
+  public CommonContact() {
+    
   }
   
   public String getEmailAddress() {
@@ -48,23 +50,7 @@ public class ForumContact {
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
   }
-  public void setFirstName(String givenName) {
-		this.firstName = givenName;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setLastName(String familyName) {
-		this.lastName = familyName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public String getCity() {
+  public String getCity() {
     return city;
   }
   public void setCity(String city) {
@@ -118,6 +104,22 @@ public class ForumContact {
   public void setWebSite(String webSite) {
     this.webSite = webSite;
   }
-  
+
+  public void setFirstName(String givenName) {
+    this.firstName = givenName;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public void setLastName(String familyName) {
+    this.lastName = familyName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
 
 }

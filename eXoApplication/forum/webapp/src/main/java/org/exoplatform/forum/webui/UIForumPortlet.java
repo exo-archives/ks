@@ -36,7 +36,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
@@ -45,6 +44,7 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -486,10 +486,10 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 	}
 	
-	private ForumContact getPersonalContact(String userId) throws Exception {
-		ForumContact contact  = ForumSessionUtils.getPersonalContact(userId) ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+	  CommonContact contact  = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 	return contact ;
 }
@@ -507,7 +507,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				e.printStackTrace() ;
 			}
 			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
-			ForumContact contact = forumPortlet.getPersonalContact(userId.trim());
+			CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
 			viewUserProfile.setContact(contact) ;
 			popupAction.activate(viewUserProfile, 670, 400, true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

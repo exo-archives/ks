@@ -39,6 +39,8 @@ public class JCRSessionManager {
   String workspaceName = "portal-system";
   String repositoryName = "repository";
   
+ 
+  
   public JCRSessionManager(String repository, String workspace) {
     this.workspaceName = workspace;
     this.repositoryName = repository;

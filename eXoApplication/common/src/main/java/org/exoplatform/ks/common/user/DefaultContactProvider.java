@@ -17,7 +17,6 @@
 package org.exoplatform.ks.common.user;
 
 import org.exoplatform.services.log.Log;
-import org.exoplatform.ks.common.CommonContact;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -58,7 +57,8 @@ public class DefaultContactProvider implements ContactProvider {
         User user = orgService.getUserHandler().findUserByName(userId);
         UserProfile profile = orgService.getUserProfileHandler().findUserProfileByName(userId);
         contact.setEmailAddress(user.getEmail());
-        
+        contact.setFirstName(user.getFirstName());
+        contact.setLastName(user.getLastName());
         contact.setAvatarUrl(profile.getAttribute("user.other-info.avatar.url"));
         contact.setBirthday(profile.getAttribute("user.bdate"));
         contact.setCity(profile.getAttribute("user.home-info.postal.city"));

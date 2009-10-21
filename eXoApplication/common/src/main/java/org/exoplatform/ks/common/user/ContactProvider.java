@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ks.common.user;
 
-import org.exoplatform.ks.common.CommonContact;
 
 
 /**

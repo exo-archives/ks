@@ -4,20 +4,40 @@
   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+
+  <component>
+    <key>org.exoplatform.ks.common.user.ContactProvider</key>
+    <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>
+  </component>
   <!--
-    Uncomment the following block to use CS contact for forum user
-    profile
+    Use this provider to display CS contact information in forum profile
   -->
   <!--
     component>
     <key>org.exoplatform.forum.service.user.ContactProvider</key>
     <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
-    </componen
+    </component>
   -->
+  
+  <!-- Use this provider to display personal information from the profile  -->
+  <!-- 
   <component>
-    <key>org.exoplatform.forum.service.user.ContactProvider</key>
-    <type>org.exoplatform.forum.service.user.PersonalProfileContactProvider</type>
+    <key>org.exoplatform.ks.common.user.ContactProvider</key>
+    <type>org.exoplatform.ks.common.user.PersonalProfileContactProvider</type>
   </component>
+   -->
+   
+   <!-- Use this provider to display business information from the profile  -->
+   <!-- 
+    <component>
+    <key>org.exoplatform.ks.common.user.ContactProvider</key>
+    <type>org.exoplatform.ks.common.user.BusinessProfileContactProvider</type>
+  </component>
+   -->
+   
+   
+
+
   
   <!-- TODO : remove the following services when when they'll be provided by platform -->
   <component>
@@ -55,21 +75,8 @@
 
 
 
-  <!--
-    <component>
-    <key>org.exoplatform.forum.bench.ForumDataInitializer</key>
-    <type>org.exoplatform.forum.bench.ForumDataInitializer</type>
-    </component> <component>
-    <key>org.exoplatform.forum.bench.ForumDataProvider</key>
-    <type>org.exoplatform.forum.bench.RandomForumDataProvider</type>
-    <init-params>
-    <value-param><name>maxCategories</name><value>1</value></value-param>
-    <value-param><name>maxForums</name><value>1</value></value-param>
-    <value-param><name>maxTopics</name><value>200</value></value-param>
-    <value-param><name>maxPosts</name><value>1</value></value-param>
-    <value-param><name>randomize</name><value>true</value></value-param>
-    </init-params> </component>
-  -->
+
+  
 
   <!-- FAQ plugins -->
 
