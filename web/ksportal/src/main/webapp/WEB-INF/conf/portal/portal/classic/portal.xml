@@ -12,7 +12,7 @@
       <show-info-bar>false</show-info-bar>
     </application>
     <application>
-      <instance-id>portal#classic:/web/NavigationPortlet/menu</instance-id>
+      <instance-id>portal#classic:/web/NavigationPortlet/toolbar</instance-id>
       <show-info-bar>false</show-info-bar>
     </application>
     
