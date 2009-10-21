@@ -23,25 +23,32 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 
 public class BBCodeOperator {
 	private NodeHierarchyCreator nodeHierarchyCreator_;
+	private RepositoryService rService_ ;
 	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
-  public BBCodeOperator(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
+  public BBCodeOperator(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService) throws Exception {
+  	rService_ = rService ;
   	nodeHierarchyCreator_ = nodeHierarchyCreator ;
   }
   
   private Node getForumDataHome(SessionProvider sProvider) throws Exception {
-  	Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
+  	Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
+  	Session session = sProvider.getSession(rService_.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
+				, rService_.getCurrentRepository()) ;			
+		Node appNode = (Node)session.getItem(tmpNode.getPath()) ;
   	try {
 			return appNode.getNode(CommonUtils.FORUM_SERVICE+"/"+CommonUtils.FORUM_DATA);
 		} catch (Exception e) {
@@ -160,6 +167,7 @@ public class BBCodeOperator {
 		List<String> bbcodes = new ArrayList<String>();
 		try{
 			Node bbCodeHome = getBBcodeHome(sProvider);
+			if (bbCodeHome == null) return bbcodes ;
 			QueryManager qm = bbCodeHome.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
 			pathQuery.append("/jcr:root").append(bbCodeHome.getPath()).append("/element(*,").append(CommonUtils.BBCODE_NODE_TYPE).append(")[@exo:isActive='true']");

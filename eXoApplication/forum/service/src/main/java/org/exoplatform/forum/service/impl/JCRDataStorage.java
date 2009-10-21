@@ -110,6 +110,7 @@ import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
@@ -141,8 +142,8 @@ public class JCRDataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 	NodeHierarchyCreator nodeHierarchyCreator_;
+	private RepositoryService rService_ ;
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
-	BBCodeOperator bbcodeObject_;
 
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
 	Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
@@ -150,12 +151,11 @@ public class JCRDataStorage {
 	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
 	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
-	private boolean isInitRssListener_ = true ;
+	private boolean isInitRssListener_ = true ;	
 	
-	
-	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator) throws Exception {
+	public JCRDataStorage(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService) throws Exception {
 		nodeHierarchyCreator_ = nodeHierarchyCreator;
-		bbcodeObject_ = new BBCodeOperator(nodeHierarchyCreator) ;
+		rService_ = rService ;
 	}
 	public JCRDataStorage() {}
 	
@@ -337,13 +337,21 @@ public class JCRDataStorage {
 	}
 
 	protected Node getForumHomeNode(SessionProvider sProvider) throws Exception {
-		Node appNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider);
 		try {
-			return appNode.getNode(CommonUtils.FORUM_SERVICE);
-		} catch (PathNotFoundException e) {
-			Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
-			return forumHomeNode;
+			Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(SessionProvider.createSystemProvider());
+			Session session = sProvider.getSession(rService_.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
+					, rService_.getCurrentRepository()) ;			
+			Node appNode = (Node)session.getItem(tmpNode.getPath()) ;			
+			try {
+				return appNode.getNode(CommonUtils.FORUM_SERVICE);
+			} catch (PathNotFoundException e) {
+				Node forumHomeNode = appNode.addNode(CommonUtils.FORUM_SERVICE, "exo:forumHome");
+				return forumHomeNode;
+			}
+		}catch (Exception e) {
+			e.printStackTrace() ;
 		}
+		return null ;
 	}
 
 	private Node getTopicTypeHome(SessionProvider sProvider) throws Exception {
@@ -3095,6 +3103,7 @@ public class JCRDataStorage {
 		Node forumAdminNode = null;
 		String headerSubject="",catName="",forumName="",topicName="";
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		BBCodeOperator bbcodeObject = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
 		try {
 			try {
 				forumAdminNode = getAdminHome(sProvider).getNode(Utils.FORUMADMINISTRATION);
@@ -3200,7 +3209,7 @@ public class JCRDataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject.getActiveBBCode()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3364,7 +3373,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3403,7 +3412,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3445,7 +3454,7 @@ public class JCRDataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject.getActiveBBCode()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3467,6 +3476,7 @@ public class JCRDataStorage {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			bbcodeObject = null ;
 			sProvider.close() ;
 		}
 	}
@@ -6295,7 +6305,7 @@ public class JCRDataStorage {
 	public NodeIterator search(String queryString) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager() ;
+			QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager() ;			
 			Query query = qm.createQuery(queryString, Query.XPATH);
 			QueryResult result = query.execute();
 			return result.getNodes();
@@ -6408,7 +6418,9 @@ public class JCRDataStorage {
 		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider)));
 		
 		// Create BBCode file
-		listFiles.addAll(createFilesFromNode(bbcodeObject_.getBBcodeHome(sessionProvider)));
+		BBCodeOperator bbcodeObject = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
+		listFiles.addAll(createFilesFromNode(bbcodeObject.getBBcodeHome(sessionProvider)));
+		bbcodeObject = null ;
 		
 		// Create BanIP file
 		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider)));
@@ -6495,7 +6507,9 @@ public class JCRDataStorage {
 				nodeType = "exo:forumTag";
 				nodeName = "TagHome";
 			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
-				nodePath = bbcodeObject_.getBBcodeHome(sessionProvider).getPath();
+				BBCodeOperator bbcodeObject  = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
+				nodePath = bbcodeObject.getBBcodeHome(sessionProvider).getPath();
+				bbcodeObject = null ;
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 				isReset = true;
 				nodeType = "exo:forumBBCode";

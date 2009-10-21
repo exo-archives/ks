@@ -297,9 +297,10 @@ public class TestForumService extends BaseForumTestCase{
     // get Topic By User
     topic = createdTopic("demo");
     forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
+
     // We have 21 topic: 10 by Owner and 1 by demo
     pagelist = forumService_.getPageTopicByUser("Owner", true, "");
-//    assertEquals(pagelist.getAvailable(), 10);
+    assertEquals(pagelist.getAvailable(), 10);
 
     //	move Topic
 //	move topic from forum to forum 1
