@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
@@ -297,8 +295,7 @@ public class TestForumService extends BaseForumTestCase{
     // get Topic By User
     topic = createdTopic("demo");
     forumService_.saveTopic(cat.getId(), forum.getId(), topic, true, false, "");
-
-    // We have 21 topic: 10 by Owner and 1 by demo
+    // We have 11 topic: 10 by Owner and 1 by demo
     pagelist = forumService_.getPageTopicByUser("Owner", true, "");
     assertEquals(pagelist.getAvailable(), 10);
 
