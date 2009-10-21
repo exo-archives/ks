@@ -890,7 +890,7 @@
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
 									String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
 							%>
-									<div class="Signature">__________________<br/><%=signature;%></div>
+									<div class="Signature">__________________<br/>$signature</div>
 							<%} %>
 						</div>
 							<div class="FootPost" style="margin-bottom:2px;">
