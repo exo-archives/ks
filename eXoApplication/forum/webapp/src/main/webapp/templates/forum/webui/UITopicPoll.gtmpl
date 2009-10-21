@@ -1,7 +1,7 @@
 <%	
 	import org.exoplatform.forum.webui.UITopicPoll ;
 	import org.exoplatform.forum.service.Poll ;
-	import org.exoplatform.forum.ForumSessionUtils; 
+	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.service.UserProfile 
 	import java.util.GregorianCalendar;
@@ -15,7 +15,7 @@
 		question = question.trim();
 		if(question.lastIndexOf("?") != question.length() - 1) question = question + " ?";
 		long timeOut = poll.getTimeOut() ;
-		boolean isAnonim = ForumSessionUtils.isAnonim();
+		boolean isAnonim = UserHelper.isAnonim();
 		boolean isAgain = poll.getIsAgainVote() ;
 		boolean isTimeOut = false;
 		String timeOutDate = "";

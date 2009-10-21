@@ -21,11 +21,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIContainer;
@@ -68,7 +68,7 @@ public class UICategoryInfo extends UIContainer	{
      	UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
      	userProfile = forumPortlet.getUserProfile();
      } catch (Exception e) {
-    	 String userId = ForumSessionUtils.getCurrentUser();
+    	 String userId = UserHelper.getCurrentUser();
      	userProfile = forumService.getDefaultUserProfile(userId, "");
      }
     return userProfile;

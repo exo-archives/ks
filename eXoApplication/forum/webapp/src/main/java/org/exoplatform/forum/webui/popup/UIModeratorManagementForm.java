@@ -45,6 +45,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
@@ -599,7 +600,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIViewUserProfile viewUserProfile = popupAction.activate(UIViewUserProfile.class, 670) ;
 			viewUserProfile.setUserProfile(uiForm.getUserProfile(userId)) ;
-			String userLogin = ForumSessionUtils.getCurrentUser() ;
+			String userLogin = UserHelper.getCurrentUser() ;
 			viewUserProfile.setUserProfileLogin(uiForm.getUserProfile(userLogin));
 			viewUserProfile.setContact(null) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
@@ -821,7 +822,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			} catch (Exception e) {
 				e.printStackTrace() ;
 			} 
-			if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
+			if(userProfile.getUserId().equals(UserHelper.getCurrentUser())) {
 				forumPortlet.updateUserProfileInfo() ;
 				userProfile = forumPortlet.getUserProfile();
 				forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;

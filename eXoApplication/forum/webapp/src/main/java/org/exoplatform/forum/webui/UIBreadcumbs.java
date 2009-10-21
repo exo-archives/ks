@@ -24,7 +24,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
@@ -39,6 +38,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.account.UIAccountSetting;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
@@ -354,7 +354,7 @@ public class UIBreadcumbs extends UIContainer {
 										try {
 											Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
 											if(post != null) {
-												boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), ForumSessionUtils.getCurrentUser());
+												boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), UserHelper.getCurrentUser());
 												UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 												UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 												UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
@@ -373,9 +373,9 @@ public class UIBreadcumbs extends UIContainer {
 										}
 									}
 								}
-								if (!ForumSessionUtils.isAnonim()) {
+								if (!UserHelper.isAnonim()) {
 								//if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
-									breadcums.forumService.updateTopicAccess(ForumSessionUtils.getCurrentUser(),  topic.getId()) ;
+									breadcums.forumService.updateTopicAccess(UserHelper.getCurrentUser(),  topic.getId()) ;
 									forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 								}
 							} else {

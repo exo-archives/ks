@@ -5,6 +5,7 @@
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import java.util.GregorianCalendar;
 	import org.exoplatform.forum.ForumSessionUtils; 
+	import org.exoplatform.ks.common.UserHelper; 	
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.web.application.JavascriptManager;
@@ -21,7 +22,7 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.submitSearch('SearchInCategory');") ;
 	String categoryId = category.getId();
-	boolean isShowMenu = !ForumSessionUtils.isAnonim();
+	boolean isShowMenu = !UserHelper.isAnonim();
 	String userLogin = userProfile.getUserId() ;
 	boolean isAdmin = false ;
 	if(userProfile.getUserRole() == 0) isAdmin = true ;

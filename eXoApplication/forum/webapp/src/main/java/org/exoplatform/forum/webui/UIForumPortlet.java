@@ -44,6 +44,7 @@ import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
 import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -102,7 +103,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	public UIForumPortlet() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIBreadcumbs.class, null, null) ;
-		boolean isRenderBar = !ForumSessionUtils.isAnonim() ;
+		boolean isRenderBar = !UserHelper.isAnonim() ;
 		addChild(UIForumActionBar.class, null, null).setRendered(isRenderBar);
 		addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
@@ -120,7 +121,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	    		if(getChild(UISettingEditModeForm.class) != null)
 	    			removeChild(UISettingEditModeForm.class);
 		    	addChild(UIBreadcumbs.class, null, null) ;
-		  		addChild(UIForumActionBar.class, null, null).setRendered(!ForumSessionUtils.isAnonim());
+		  		addChild(UIForumActionBar.class, null, null).setRendered(!UserHelper.isAnonim());
 		  		UICategoryContainer categoryContainer = addChild(UICategoryContainer.class, null, null).setRendered(isCategoryRendered) ;
 		  		addChild(UIForumContainer.class, null, null).setRendered(isForumRendered) ;
 		  		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
@@ -350,7 +351,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	public void updateUserProfileInfo() throws Exception {
 		String userId = "" ;
 		try {
-			userId = ForumSessionUtils.getCurrentUser() ;
+			userId = UserHelper.getCurrentUser() ;
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
@@ -367,7 +368,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				userProfile = forumService.getDefaultUserProfile(userId, null) ;
 			}
 			if(!ForumUtils.isEmpty(userId))
-				userProfile.setEmail(ForumSessionUtils.getUserByUserId(userId).getEmail());
+				userProfile.setEmail(UserHelper.getUserByUserId(userId).getEmail());
 		}catch (Exception e) {}			
 	}
 	

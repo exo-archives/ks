@@ -1,9 +1,9 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.forum.ForumSessionUtils ;
+	import org.exoplatform.ks.common.UserHelper ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isBan = userProfile.getIsBanned() ;
-	boolean isNotLogin= ForumSessionUtils.isAnonim();
+	boolean isNotLogin= UserHelper.isAnonim();
 	String canCreatThread = "";
 	String canPost = "";
 	String you = _ctx.appRes("UIPostRules.label.You") ;

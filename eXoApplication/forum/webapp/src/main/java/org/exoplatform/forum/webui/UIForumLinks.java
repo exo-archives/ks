@@ -23,7 +23,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumLinkPortlet;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -84,7 +84,7 @@ public class UIForumLinks extends UIForm {
 		try {
 			this.userProfile = forumPortlet.getUserProfile() ;
     } catch (Exception e) {
-    	String userName = ForumSessionUtils.getCurrentUser();
+    	String userName = UserHelper.getCurrentUser();
 			if (userName != null) {
 				try {
 					userProfile = forumService.getQuickProfile(userName);
@@ -95,7 +95,7 @@ public class UIForumLinks extends UIForm {
     }
 		String strQueryCate = "";
 		String strQueryForum = "";
-		List<String>listUser = ForumSessionUtils.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
+		List<String>listUser = UserHelper.getAllGroupAndMembershipOfUser(this.userProfile.getUserId());
 		if(this.userProfile.getUserRole() > 0) {
 			// set Query for Forum 
 			strQueryForum = getStrQuery(listUser, "@exo:moderators") ;

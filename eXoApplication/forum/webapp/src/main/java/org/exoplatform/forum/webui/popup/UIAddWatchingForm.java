@@ -26,6 +26,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,7 +69,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 	
 	public void initForm() throws Exception	{
 		List<String> list = new ArrayList<String>() ;
-		String userId = ForumSessionUtils.getCurrentUser() ;
+		String userId = UserHelper.getCurrentUser() ;
 		if(!ForumUtils.isEmpty(userId)) {
 			UIFormStringInput userName = getUIStringInput(USER_NAME) ;
 			userName.setEditable(false) ;
@@ -145,7 +146,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 				try {
-					forumService.addWatch(1, path, values_, ForumSessionUtils.getCurrentUser()) ;
+					forumService.addWatch(1, path, values_, UserHelper.getCurrentUser()) ;
 				}catch (Exception e) {}
 			}
 			uiForm.path = "";

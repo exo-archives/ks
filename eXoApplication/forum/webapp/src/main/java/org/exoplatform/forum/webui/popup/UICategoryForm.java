@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -229,7 +229,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String []moderators = ForumUtils.splitForForum(moderator);
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(!ForumUtils.isEmpty(moderator)) {
-				String erroUser = ForumSessionUtils.checkValueUser(moderator) ;
+				String erroUser = UserHelper.checkValueUser(moderator) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					Object[] args = { uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -246,7 +246,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
 			String []userPrivates = ForumUtils.splitForForum(userPrivate);
 			if(!ForumUtils.isEmpty(userPrivate)) {
-				String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
+				String erroUser = UserHelper.checkValueUser(userPrivate) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -264,22 +264,22 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			postable = ForumUtils.removeSpaceInString(postable) ;
 			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
-			String erroUser = ForumSessionUtils.checkValueUser(topicable) ;
-			erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+			String erroUser = UserHelper.checkValueUser(topicable) ;
+			erroUser = UserHelper.checkValueUser(topicable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(postable) ;
+			erroUser = UserHelper.checkValueUser(postable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(viewer) ;
+			erroUser = UserHelper.checkValueUser(viewer) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -291,7 +291,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String []setPostable = ForumUtils.splitForForum(postable);
 			String []setViewer = ForumUtils.splitForForum(viewer) ;
 			
-			String userName = ForumSessionUtils.getCurrentUser();
+			String userName = UserHelper.getCurrentUser();
 			Category cat = new Category();
 			cat.setOwner(userName) ;
 			cat.setCategoryName(categoryTitle.trim()) ;

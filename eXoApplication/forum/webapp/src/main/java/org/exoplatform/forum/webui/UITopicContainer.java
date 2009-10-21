@@ -25,7 +25,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
@@ -48,6 +47,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
@@ -140,7 +140,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
-		if(!ForumSessionUtils.isAnonim()) isLogin = true;
+		if(!UserHelper.isAnonim()) isLogin = true;
 		isLink = true;
 	}
 
@@ -338,7 +338,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
 			if(!isView) {
 				strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
-				for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
+				for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
 					strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
 				}
 				strQuery.append(")");

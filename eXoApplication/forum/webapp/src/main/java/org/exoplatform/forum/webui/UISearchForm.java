@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSearch;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UISelector;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -358,7 +358,7 @@ public class UISearchForm extends UIForm implements UISelector {
       } catch (Exception e) {
       }
 			ForumEventQuery eventQuery = new ForumEventQuery() ;
-			eventQuery.setListOfUser(ForumSessionUtils.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
+			eventQuery.setListOfUser(UserHelper.getAllGroupAndMembershipOfUser(uiForm.userProfile.getUserId()));
 			eventQuery.setUserPermission(uiForm.userProfile.getUserRole());
 			eventQuery.setType(type) ;
 			eventQuery.setKeyValue(keyValue) ;

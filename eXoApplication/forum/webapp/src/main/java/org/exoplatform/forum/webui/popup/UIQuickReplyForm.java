@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -84,7 +85,7 @@ public class UIQuickReplyForm extends UIForm {
 		this.forumId = forumId;
 		this.topicId = topicId;
 		this.isModerator = isModerator;
-		this.userName = ForumSessionUtils.getCurrentUser() ;
+		this.userName = UserHelper.getCurrentUser() ;
 		try {
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;

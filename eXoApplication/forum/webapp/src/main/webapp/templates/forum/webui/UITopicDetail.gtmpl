@@ -6,7 +6,7 @@
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.ForumSessionUtils; 
+	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
@@ -50,7 +50,7 @@
 	if(topic == null) isNull = true;
 	if(!isNull) {
 		uicomponent.initPage() ;
-		isShowMenu = !ForumSessionUtils.isAnonim();
+		isShowMenu = !UserHelper.isAnonim();
 		userProfile = uicomponent.getUserProfile();	
 		userLogin = userProfile.getUserId() ;
 		setTime = (long)(userProfile.getTimeZone()*3600000) ;

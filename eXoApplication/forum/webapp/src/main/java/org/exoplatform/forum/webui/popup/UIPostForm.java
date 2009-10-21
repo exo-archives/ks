@@ -41,6 +41,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -242,7 +243,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			UIForumInputWithActions threadContent = uiForm.getChildById(FIELD_THREADCONTEN_TAB) ;
 			int t = 0, k = 1 ;
 			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
-			String userName = ForumSessionUtils.getCurrentUser() ;
+			String userName = UserHelper.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;

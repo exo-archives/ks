@@ -65,6 +65,7 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -757,7 +758,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
-				String userName = ForumSessionUtils.getCurrentUser() ;
+				String userName = UserHelper.getCurrentUser() ;
 				String[] userVoteRating = topicDetail.topic.getUserVoteRating() ;
 				boolean erro = false ;
 				for (String string : userVoteRating) {

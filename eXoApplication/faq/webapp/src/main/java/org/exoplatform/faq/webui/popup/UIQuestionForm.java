@@ -37,6 +37,7 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -411,7 +412,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-null", null, ApplicationMessage.WARNING)) ;
 	      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 	      	return ;
-	      } else if(FAQUtils.getCurrentUser() == null && FAQUtils.getUserByUserId(author) != null){
+	      } else if(FAQUtils.getCurrentUser() == null && UserHelper.getUserByUserId(author) != null){
 	      	UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
 	      	uiApplication.addMessage(new ApplicationMessage("UIQuestionForm.msg.author-is-duplicate", null, ApplicationMessage.WARNING)) ;
 	      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
