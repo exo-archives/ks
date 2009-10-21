@@ -56,7 +56,7 @@ public class ForumServiceManaged implements ManagementAware {
   @ManagedDescription("rules that define administrators")
   public List<String> getAdminRules() {
     List<String> adminRules = new ArrayList<String>();
-    List<RoleRulesPlugin>  plugins = forumService.storage_.rulesPlugins_;
+    List<RoleRulesPlugin>  plugins = forumService.storage_.getRulesPlugins();
     
     for (RoleRulesPlugin plugin : plugins) {
       Collection<List<String>> allrules = plugin.getAllRules().values();
@@ -74,18 +74,11 @@ public class ForumServiceManaged implements ManagementAware {
   public boolean hasForumAdminRole(String username) throws Exception {
     return forumService.storage_.isAdminRole(username);
   }
-  
-  
-  @Managed
-  @ManagedDescription("recalculate forum statistics")
-  public void updateStatistics() throws Exception {
-    forumService.updateForumStatistic();
-  }
 
   @Managed
   @ManagedDescription("get the configuration of the mail service used for notifications in KS")
   public Map<String,String> getMailServiceConfig() {
-    return forumService.storage_.serverConfig_;
+    return forumService.storage_.getServerConfig_();
   }
   
   @Managed

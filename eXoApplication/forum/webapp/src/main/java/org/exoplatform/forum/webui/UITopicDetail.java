@@ -244,7 +244,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 	
 	private boolean isNotLogin() throws Exception {
-		if(userProfile.getUserId().equals(UserProfile.USER_GUEST) && !forum.getIsLock() && !topic.getIsLock()) return true;
+	  
+		if(UserHelper.isAnonim() && !forum.getIsLock() && !topic.getIsLock()) return true;
 		return false;
 	}
 	public void setUpdateTopic(String categoryId, String forumId, String topicId) throws Exception {

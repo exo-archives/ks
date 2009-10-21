@@ -20,6 +20,10 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.ForumStatisticsService;
+import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserEventListener;
 
@@ -29,47 +33,52 @@ import org.exoplatform.services.organization.UserEventListener;
  */
 public class NewUserListener extends UserEventListener {
 
-  //private ForumService fservice_ ;
+  private static Log log = ExoLogger.getLogger(NewUserListener.class);
+
   public NewUserListener(InitParams params) throws Exception {
-    //fservice_ = fservice;
+
   }
 
   public void postSave(User user, boolean isNew) throws Exception {
-  	ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-    if(isNew) {
-	    //Update forum statistic
-	    try{    	    	
-	    	ForumStatistic statistic = fservice.getForumStatistic() ;
-	      statistic.setNewMembers(user.getUserName()) ;
-	      statistic.setMembersCount(statistic.getMembersCount() + 1) ;
-	      fservice.saveForumStatistic(statistic) ;
-	    }catch(Exception e) {
-	    	e.printStackTrace() ;
-	    }
-	    //Create Profile
-	    try{
-	    	fservice.createUserProfile(user) ;
-	    }catch(Exception e) {
-	    	e.printStackTrace() ;
-	    }
+    if (isNew) {
+      try {
+        UserProfile template = newDefaultProfileTemplte();
+        getForumService().addMember(user, template);
+
+      } catch (Exception e) {
+        log.warn("Error while adding new forum member: " + e.getMessage(), e);
+      }
+
     } else {
-    	fservice.saveEmailUserProfile(user.getUserName(), user.getEmail());
+
+      try {
+        getForumService().updateUserProfile(user);
+      } catch (Exception e) {
+        log.warn("Error while updating forum profile: " + e.getMessage(), e);
+      }
     }
+  }
+
+  /**
+   * @TODO implement by using  init-params
+   * @return
+   */
+  private UserProfile newDefaultProfileTemplte() {
+    return null;
+  }
+
+  private ForumService getForumService() {
+    return (ForumService) ExoContainerContext.getCurrentContainer()
+                                             .getComponentInstanceOfType(ForumService.class);
   }
 
   @Override
   public void postDelete(User user) throws Exception {
-    ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-    try{
-    	ForumStatistic statistic = fservice.getForumStatistic() ;
-      if(user.getUserName().equals(statistic.getNewMembers())) {
-      	fservice.updateForumStatistic() ;
-      }else {
-      	statistic.setMembersCount(statistic.getMembersCount() - 1) ;
-        fservice.saveForumStatistic(statistic) ;
-      }      
-    }catch(Exception e) {
-    	e.printStackTrace() ;
+    try {
+      getForumService().removeMember(user);
+    } catch (Exception e) {
+      log.warn("failed to remove member : " + e.getMessage(), e);
     }
+
   }
 }

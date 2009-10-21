@@ -89,7 +89,7 @@
     <module>eXoApplication/faq/service</module>
 
 
- <module>extension/config</module>
+ <module>extension</module>
 
     <module>packaging</module>
    

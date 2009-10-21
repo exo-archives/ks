@@ -4,12 +4,7 @@
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-  <component>
-    <key>org.exoplatform.forum.service.ForumService</key>
-    <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
-  </component>
-
-  <component>
+ <component>
     <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
     <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
     <init-params>
@@ -30,8 +25,17 @@
   <component>
     <key>org.exoplatform.forum.service.DataStorage</key>
     <type>org.exoplatform.forum.service.impl.JCRDataStorage</type>
-  </component>   
+  </component>  
+
+  <component>
+    <key>org.exoplatform.forum.service.ForumService</key>
+    <type>org.exoplatform.forum.service.impl.ForumServiceImpl</type>
+  </component>
   
+   <component>
+    <key>org.exoplatform.forum.service.ForumStatisticsService</key>
+    <type>org.exoplatform.forum.service.impl.ForumStatisticsServiceImpl</type>
+  </component> 
 
   <!--external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      

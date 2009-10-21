@@ -112,13 +112,13 @@ import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
+import org.exoplatform.services.organization.User;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
@@ -155,7 +155,9 @@ public class JCRDataStorage implements DataStorage {
 	private boolean isInitRssListener_ = true ;
 	private JCRSessionManager sessionManager;
 	private KSDataLocation dataLocator;
-	private String repository;
+
+
+  private String repository;
 	private String workspace;
 	
 	public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
@@ -192,7 +194,7 @@ public class JCRDataStorage implements DataStorage {
 	@Managed
 	  @ManagedDescription("data path for forum storage")
 	  public String getPath() throws Exception {	    
-	    return dataLocator.getFaqHomeLocation();
+	    return dataLocator.getForumHomeLocation();
 	  }
 	
 
@@ -326,7 +328,7 @@ public class JCRDataStorage implements DataStorage {
 		}
 	}
 	
-	protected void initAutoPruneSchedules() throws Exception {
+	public void initAutoPruneSchedules() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node categoryHNode = getCategoryHome(sProvider);
@@ -418,10 +420,19 @@ public class JCRDataStorage implements DataStorage {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
+	/**
+	 * 
+	 * @deprecated use {@link #getUserProfileHome()}
+	 */
+	@Deprecated
 	protected Node getUserProfileHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getUserProfilesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
+	
+	 private Node getUserProfileHome() throws Exception {
+	    return getNodeAt(dataLocator.getUserProfilesLocation());
+	  }
 	
 	private Node getCategoryHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getForumCategoriesLocation();
@@ -441,6 +452,16 @@ public class JCRDataStorage implements DataStorage {
 	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getForumBanIPLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	}
+	
+	/**
+	 * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
+	 * Note that a session must have been iniitalized by {@link JCRSessionManager#openSession() before calling this method
+	 * @param relPath path relative to root node of the workspace
+	 * @return JCR node located at relPath relative path from root node of the current workspace
+	 */
+	private Node getNodeAt(String relPath) throws Exception {
+    return JCRSessionManager.getCurrentSession().getRootNode().getNode(relPath);	  
 	}
 
 	/* (non-Javadoc)
@@ -618,7 +639,7 @@ public class JCRDataStorage implements DataStorage {
 	}	
 
 	
-	protected void initDefaultData() throws Exception {
+	public void initDefaultData() throws Exception {
 		SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
@@ -7443,8 +7464,116 @@ public class JCRDataStorage implements DataStorage {
 		}catch (Exception e) {
 		}
 	  return null;
-  }	
-	
+  }
+
+
+  public void populateUserProfile(User user, boolean isNew) throws Exception {
+    sessionManager.openSession();
+    try {
+
+      Node profile = null;
+      Node profileHome = getUserProfileHome();
+      if (isNew) {
+        profile = profileHome.addNode(user.getUserName(), Utils.USER_PROFILES_TYPE);
+      } else {
+        profile = profileHome.getNode(user.getUserName());
+      }
+
+      Calendar cal = getGreenwichMeanTime();
+      profile.setProperty("exo:userId", user.getUserName());
+      profile.setProperty("exo:lastLoginDate", cal);
+      profile.setProperty("exo:email", user.getEmail());
+      profile.setProperty("exo:fullName", user.getFullName());
+      cal.setTime(user.getCreatedDate());
+      profile.setProperty("exo:joinedDate", cal);
+      if (isAdminRole(user.getUserName())) {
+        profile.setProperty("exo:userTitle", "Administrator");
+        profile.setProperty("exo:userRole", 0);
+      }
+
+    } catch (Exception e) {
+      log.error("Errow while populating user profile: " + e.getMessage());
+      throw e;
+    } finally {
+      sessionManager.closeSession(true);
+    }
+  }
+
+
+  public void deleteUserProfile(User user) throws Exception {
+    sessionManager.openSession();
+    try {
+      Node profile = getUserProfileHome().getNode(user.getUserName());
+      profile.remove();
+    } catch (Exception e) {
+      log.error("Errow while removing user profile: " + e.getMessage());
+      throw e;
+    } finally {
+      sessionManager.closeSession(true);
+    }
+  }
+
+
+  public List<InitBBCodePlugin> getDefaultBBCodePlugins() {
+    
+    return defaultBBCodePlugins_;
+  }
+
+
+  public List<InitializeForumPlugin> getDefaultPlugins() {
+    
+    return defaultPlugins_;
+  }
+
+
+  public List<RoleRulesPlugin> getRulesPlugins() {
+    
+    return rulesPlugins_;
+  }
+
+
+  public void updateLastLoginDate(String userId) throws Exception {
+    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+    try {
+    
+    Node userProfileHome = getUserProfileHome(sysProvider); 
+    userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", getGreenwichMeanTime()) ;
+    userProfileHome.save() ;
+    }finally{sysProvider.close() ;}
+  }
+
+
+  public List<Post> getNewPosts(int number) throws Exception {
+    List<Post> list = null ;
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    Node forumHomeNode = getForumHomeNode(sProvider) ;
+    QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+    StringBuffer stringBuffer = new StringBuffer();
+    stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending" );
+    Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes();
+    int count = 0 ;
+    while(iter.hasNext() && count++ < number){
+      if(list == null) list = new ArrayList<Post>() ;
+      Post p = getPost(iter.nextNode())  ;
+      list.add(p) ;
+    }
+    return list;
+  }
+
+
+  public Map<String, String> getServerConfig_() {
+    return serverConfig_;
+  }
+
+
+
+  public KSDataLocation getDataLocation() {
+    return dataLocator;
+  }
+
+
 	
 	
 	

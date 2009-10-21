@@ -20,13 +20,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
+import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
+import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.services.organization.User;
 
 /**
  * Created by The eXo Platform SAS
@@ -373,5 +380,32 @@ public interface DataStorage {
   void removeTopicType(String topicTypeId) throws Exception;
 
   JCRPageList getPageTopicByType(String type) throws Exception;
+  
+  /**
+   * Create or update a forum user profile
+   * @param user user whose profile must be created
+   * @param isNew
+   */
+  public void populateUserProfile(User user, boolean isNew) throws Exception;;
+  public void deleteUserProfile(User user) throws Exception;
+
+  void initDefaultData() throws Exception;
+
+  List<RoleRulesPlugin> getRulesPlugins();
+
+  List<InitializeForumPlugin> getDefaultPlugins();
+
+  List<InitBBCodePlugin> getDefaultBBCodePlugins();
+
+  void initAutoPruneSchedules() throws Exception;
+
+  void updateLastLoginDate(String userId) throws Exception;
+
+  List<Post> getNewPosts(int number) throws Exception;
+
+  Map<String, String> getServerConfig_();
+
+  KSDataLocation getDataLocation();
+
 
 }

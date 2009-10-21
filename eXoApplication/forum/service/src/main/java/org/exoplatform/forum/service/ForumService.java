@@ -622,6 +622,10 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
+
+	 /**
+   * @deprecated use {@link #updateUserProfile(User)}
+   */
 	public void saveEmailUserProfile(String userId, String email) throws Exception;
 	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
 	/**
@@ -881,9 +885,12 @@ public interface ForumService extends ForumServiceLegacy{
   public List<Post> getNewPosts(int number) throws Exception ;
   
   public NodeIterator search(String queryString) throws Exception ;
-  public void updateForumStatistic() throws Exception ;
+  
+  
+  //public void updateForumStatistic() throws Exception ;
   public void evaluateActiveUsers(String query) throws Exception ;
   public void createUserProfile (User user) throws Exception ;
+  public void updateUserProfile (User user) throws Exception ;
 
   public void updateTopicAccess (String userId, String topicId) throws Exception ;
   public void updateForumAccess (String userId, String forumId) throws Exception ;
@@ -948,5 +955,20 @@ public interface ForumService extends ForumServiceLegacy{
                                   String strOrderBy, int pageSize) throws Exception;
   
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
+
+  /**
+   * <p>Add a new member to the forum. The forum profile is created and statistics updated</p>
+   * @param user user that becomes a new forum member
+   * @param profileTemplate user profile template to be used for default settings
+   * @throws Exception 
+   */
+  public void addMember(User user, UserProfile profileTemplate) throws Exception;
+
+  /**
+   * <p>Removes an existing member from the forum. The forum profile is deleted and statistics updated</p>
+   * @param user user that leaves forum 
+   * @throws Exception 
+   */
+  public void removeMember(User user) throws Exception;
     
 }

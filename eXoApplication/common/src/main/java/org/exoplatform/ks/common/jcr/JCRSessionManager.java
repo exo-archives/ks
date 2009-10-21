@@ -61,11 +61,12 @@ public class JCRSessionManager {
   }
 
   /**
-   * <p>Returns the session currently associated with the current thread of execution.</p>
+   * <p>Returns the session currently associated with the current thread of execution.<br/>
+   * The current session is set with {@link #openSession()} </p>
    *
-   * @return the current session
+   * @return the current session if exists, null otherwhise
    */
-  public static Session getSession()
+  public static Session getCurrentSession()
   {
      return currentSession.get();
   }

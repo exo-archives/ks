@@ -18,24 +18,17 @@ package org.exoplatform.forum.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
 
-import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -45,6 +38,7 @@ import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
+import org.exoplatform.forum.service.ForumStatisticsService;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
@@ -55,7 +49,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
@@ -63,14 +56,10 @@ import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.picocontainer.Startable;
@@ -88,20 +77,21 @@ public class ForumServiceImpl implements ForumService, Startable {
   private static final Log log = ExoLogger.getLogger(ForumServiceImpl.class);
   
   
-  JCRDataStorage storage_ ;
+  DataStorage storage_ ;
   BBCodeOperator bbcodeObject_;
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
-  String containerName;
+  //String containerName;
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
   
   private String lastLogin_ = "";
-  private KSDataLocation locator;
-  public ForumServiceImpl(InitParams params, ExoContainerContext context, KSDataLocation locator)throws Exception {
+  private ForumStatisticsService forumStatisticsService;
+  
+  public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService forumStatisticsService)throws Exception {
     try {
-      this.locator = locator;
-      this.containerName = context.getPortalContainerName();
-      storage_ = new JCRDataStorage(this.locator);
-      bbcodeObject_ = new BBCodeOperator(this.locator) ;
+      //this.containerName = context.getPortalContainerName();
+      this.storage_ = dataStorage;
+      this.bbcodeObject_ = new BBCodeOperator(storage_.getDataLocation()) ;
+      this.forumStatisticsService = forumStatisticsService;
     } catch (Exception e) {
       log.error("Could not start ForumService. Storage is not ready", e);
       throw new RuntimeException(e);
@@ -136,16 +126,23 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   	try{
   	  log.info("initializing category listeners...");
-  		storage_.initCategoryListener() ;
-  		log.info("updating forum stats...");
-  		updateForumStatistic();  		
+  		storage_.initCategoryListener() ;		
   	}catch (Exception e) {
-  	  log.error("Error while updating forum statistics: "+ e.getMessage());
+  	  log.error("Error while updating category listeners "+ e.getMessage());
   	}
+  	
+  	/*
+    try{
+      log.info("updating forum stats...");
+      updateForumStatistic();     
+    }catch (Exception e) {
+      log.error("Error while updating forum statistics "+ e.getMessage());
+    }
+  	*/
     SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
   	  log.info("initializing user profiles...");
-  		initUserProfile(systemSession);  		
+  		//initUserProfile(systemSession);  		
   	}catch (Exception e) {
   	  log.error("Error while initializing user profiles: "+ e.getMessage());
   	}finally{
@@ -211,7 +208,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   @SuppressWarnings("unchecked")
   private void manageJobs() {
     try {
-        ExoContainer container = ExoContainerContext.getContainerByName(containerName);
+        ExoContainer container = ExoContainerContext.getCurrentContainer();
         JobSchedulerService schedulerService = 
           (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
         String groupName = "KnowledgeSuite-forum";
@@ -228,24 +225,24 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   private void managePlugins() {
-    List<RoleRulesPlugin> plugins = storage_.rulesPlugins_;
+    List<RoleRulesPlugin> plugins = storage_.getRulesPlugins();
   	for (RoleRulesPlugin plugin2 : plugins) {
   	  managed.registerPlugin(plugin2);
     }
   	
-    List<InitializeForumPlugin> defaultPlugins = storage_.defaultPlugins_;
+    List<InitializeForumPlugin> defaultPlugins = storage_.getDefaultPlugins();
     for (InitializeForumPlugin plugin2 : defaultPlugins) {
       managed.registerPlugin(plugin2);
     }
  
-    List<InitBBCodePlugin> defaultBBCodePlugins = storage_.defaultBBCodePlugins_;
+    List<InitBBCodePlugin> defaultBBCodePlugins = storage_.getDefaultBBCodePlugins();
     for (InitBBCodePlugin plugin2 : defaultBBCodePlugins) {
       managed.registerPlugin(plugin2);
     }
   }
 
 	public void stop() {}
-	
+	/*
 	@SuppressWarnings("unchecked")
   public void updateForumStatistic() throws Exception{
 			ForumStatistic forumStatistic = getForumStatistic() ;
@@ -278,62 +275,39 @@ public class ForumServiceImpl implements ForumService, Startable {
     	}
   	}
 	}
+	*/
 	
-	public void createUserProfile (SessionProvider sProvider, User user) throws Exception  {
-		sProvider.close() ;
-		createUserProfile(user) ;
-	}
+
+	/**
+	 * @TODO : profileTemplate is currently ignored
+	 */
+  public void addMember(User user, UserProfile profileTemplate) throws Exception {
+    storage_.populateUserProfile(user, true); 
+    forumStatisticsService.addMember(user.getUserName());
+  }
+
+
+  public void removeMember(User user) throws Exception {
+    storage_.deleteUserProfile(user);
+    forumStatisticsService.removeMember(user.getUserName());
+  }
+	
 	
 	public void createUserProfile (User user) throws Exception  {
-		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
-		try{
-			Node profileHome = storage_.getUserProfileHome(sysSession) ;  	
-			if(!profileHome.hasNode(user.getUserName())){
-	  		Node profile = profileHome.addNode(user.getUserName(), Utils.USER_PROFILES_TYPE) ;
-	  		Calendar cal = storage_.getGreenwichMeanTime() ;
-	  		profile.setProperty("exo:userId", user.getUserName()) ;
-	  		profile.setProperty("exo:lastLoginDate", cal) ;
-	  		profile.setProperty("exo:email", user.getEmail()) ;
-	  		profile.setProperty("exo:fullName", user.getFullName()) ;
-	  		cal.setTime(user.getCreatedDate()) ;
-	  		profile.setProperty("exo:joinedDate", cal) ;  		
-	  		if(isAdminRole(user.getUserName())) {
-	  			profile.setProperty("exo:userTitle", "Administrator") ;
-	    		profile.setProperty("exo:userRole", 0) ;
-	  		}
-	  		if(profileHome.isNew()) {
-	    		profileHome.getSession().save() ;
-	    	}else {
-	    		profileHome.save() ;
-	    	}  		
-			}
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}finally {
-			sysSession.close() ;
-		}		
+	 
 	}
 	
-	public void saveEmailUserProfile(String userId, String email) throws Exception{
-		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
-		try{
-			Node profileHome = storage_.getUserProfileHome(sysSession) ;
-			if(profileHome.hasNode(userId)) {
-				Node profile = profileHome.getNode(userId) ;
-				if(profile.hasProperty("exo:email")) {
-					if(!profile.getProperty("exo:email").equals(email)){
-						profile.setProperty("exo:email", email) ;
-						profileHome.save() ;
-					}
-				}else{
-					profile.setProperty("exo:email", email) ;
-					profileHome.save() ;
-				}
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void updateUserProfile (User user) throws Exception {
+	  storage_.populateUserProfile(user, true);
 	}
+	
+	/**
+	 * @deprecated use {@link #updateUserProfile(User)}
+	 */
+	public void saveEmailUserProfile(String userId, String email) throws Exception{
+
+	}
+	
 	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
 		sProvider.close() ;
@@ -631,10 +605,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   public String getForumHomePath() throws Exception {
-  	SessionProvider sProvider  = SessionProvider.createSystemProvider() ;
-  	try {
-  		return storage_.getForumHomeNode(sProvider).getPath() ;
-  	}finally { sProvider.close() ;}
+  	return storage_.getDataLocation().getForumHomeLocation();
   }
 
   public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
@@ -1005,31 +976,38 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void userLogin(String userId) throws Exception {
-  	lastLogin_ = userId ;
+    
+    // TODO: login and onlineUserlist shoudl be anaged by forumStatisticsService.memberIn();
+    
+    
+    lastLogin_ = userId ;
     if(!onlineUserList_.contains(userId)) {
-    	onlineUserList_.add(userId);
+      onlineUserList_.add(userId);
     }
-    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-    try {
-    	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
-    	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
-    	userProfileHome.save() ;
-    	// update most online users
-    	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Locations.FORUM_STATISTIC) ;
-    	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
-  		if(array.length > 1) {
-    		int ol = onlineUserList_.size() ;
-    		if(ol > Integer.parseInt(array[0].trim())) {
-    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
-      		statisticNode.save() ;
-    		}
-    	}else {
-    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
-    		statisticNode.save() ;
-    	}    	
-    }catch(Exception e) {
-    	e.printStackTrace() ;
-    }finally{sysProvider.close() ;}
+
+      storage_.updateLastLoginDate(userId);
+      
+      // update most online users
+      
+
+      
+      ForumStatistic stats = getForumStatistic();
+      String mostUsersOnline = stats.getMostUsersOnline();
+      String[] array = mostUsersOnline.split(",") ; // OMG responsible of this should loose a finger!
+       int mostOnline = 0;
+       try {mostOnline = Integer.parseInt(array[0].trim()); }
+       catch (Exception e) {;}
+
+      int ol = onlineUserList_.size() ;
+      if(ol > mostOnline) {
+        stats.setMostUsersOnline(ol+ ", at " + storage_.getGreenwichMeanTime().getTimeInMillis());
+      } else {
+        stats.setMostUsersOnline("1, at " + storage_.getGreenwichMeanTime().getTimeInMillis());
+      }
+    
+      saveForumStatistic(stats);
+
+
   }
 
   public void userLogout(String userId) throws Exception {
@@ -1074,22 +1052,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public List<Post> getNewPosts(int number) throws Exception{
-    List<Post> list = null ;
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    Node forumHomeNode = storage_.getForumHomeNode(sProvider) ;
-    QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-    StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append("/jcr:root").append(forumHomeNode.getPath()).append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending" );
-    Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    NodeIterator iter = result.getNodes();
-    int count = 0 ;
-    while(iter.hasNext() && count++ < number){
-      if(list == null) list = new ArrayList<Post>() ;
-      Post p = storage_.getPost(iter.nextNode())  ;
-      list.add(p) ;
-    }
-    return list;
+    return storage_.getNewPosts(number);
   }
   
   public NodeIterator search(String queryString, SessionProvider sProvider) throws Exception {
@@ -1398,4 +1361,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void saveTopicType(TopicType topicType) throws Exception {
 	  storage_.saveTopicType(topicType);
   }
+
+
+
 }
