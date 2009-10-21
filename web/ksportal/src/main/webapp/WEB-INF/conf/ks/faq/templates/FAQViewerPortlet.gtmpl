@@ -142,8 +142,8 @@
 						link = Utils.CATEGORY_HOME;
 					}
 					viewName = pathName;
-					if(pathName.length() > 17 && pathName.indexOf("<img") < 0){
-						viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 17);
+					if(pathName.length() > 40 && pathName.indexOf("<img") < 0){
+						viewName = org.exoplatform.faq.webui.FAQUtils.getSubString(pathName, 40);
 					}
 					if(pathName.indexOf("<img") >= 0){
 						pathName = "";
