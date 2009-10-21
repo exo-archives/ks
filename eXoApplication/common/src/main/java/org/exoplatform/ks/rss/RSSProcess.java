@@ -34,6 +34,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -74,7 +75,7 @@ public class RSSProcess extends RSSGenerate {
 	}
 	
 	public RSSProcess(SessionProvider sProvider, String serviceType){
-		super(null);
+		super((KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class));
 		try {
 			if(serviceType.equals(KS_FAQ)) appHomeNode = getKSServiceHome(sProvider, FAQ_APP);
 			else appHomeNode = getKSServiceHome(sProvider, FORUM_APP);
