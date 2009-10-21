@@ -23,6 +23,7 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -30,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.w3c.dom.Document;
@@ -73,7 +75,12 @@ public abstract class RSSGenerate {
 
 	public Node getKSServiceHome(SessionProvider sProvider, String serviceType) throws Exception {
 		if(nodeHierarchyCreator_ == null) nodeHierarchyCreator_ = (NodeHierarchyCreator)PortalContainer.getInstance().getComponent(NodeHierarchyCreator.class) ;
-		return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
+		Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
+		RepositoryService rService = (RepositoryService)PortalContainer.getInstance().getComponent(RepositoryService.class) ;
+		Session session = sProvider.getSession(rService.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
+				, rService.getCurrentRepository()) ;			
+		return (Node)session.getItem(tmpNode.getPath()) ;
+		//return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
 	}
 
 	public String getPageLink() throws Exception {
