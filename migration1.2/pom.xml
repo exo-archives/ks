@@ -7,7 +7,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.datamigration</artifactId>
-  <version>1.2.1-SNAPSHOT</version>
+  <version>1.2.1</version>
   <packaging>jar</packaging>
   <name>eXo FAQ application</name>
   <url>http://www.exoplatform.org</url>
@@ -18,28 +18,28 @@
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>1.10.1</version>      
+      <version>1.10.5</version>      
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>1.2.1-SNAPSHOT</version>
+      <version>1.2.1</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>1.2.1-SNAPSHOT</version>
+      <version>1.2.1</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>1.2.1-SNAPSHOT</version>
+      <version>1.2.1</version>
       <scope>provided</scope>
     </dependency>    
   </dependencies>  
