@@ -155,7 +155,11 @@ public class UserHelper {
 
   @SuppressWarnings("unchecked")
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-  	List<String> listOfUser = new ArrayList<String>();
+    List<String> listOfUser = new ArrayList<String>();
+    if (userId == null) {
+      return listOfUser; // should we throw an IllegalArgumentException instead ?
+    }
+
   	listOfUser.add(userId); //himself
   	String value = "";
   	Collection<Membership> memberships = getOrganizationService().getMembershipHandler().findMembershipsByUser(userId);
