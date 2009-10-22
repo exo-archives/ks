@@ -514,7 +514,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
-			uiUserSelector.setShowSearchGroup(true);
+			uiUserSelector.setShowSearchGroup(false);
 			uiPopupWindow.setUIComponent(uiUserSelector);
 			uiPopupWindow.setShow(true);
 			uiPopupWindow.setWindowSize(740, 400);
