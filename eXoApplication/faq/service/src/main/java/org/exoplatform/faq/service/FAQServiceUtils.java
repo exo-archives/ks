@@ -22,8 +22,11 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -121,5 +124,10 @@ public class FAQServiceUtils {
       extNode.setPermission(accessControlEntry.getIdentity(), arrayPers) ;      
     } 
 	}
+
+  public static JCRSessionManager getSessionManager() {
+    KSDataLocation location =  (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
+    return location.getSessionManager();
+  }
 }
 
