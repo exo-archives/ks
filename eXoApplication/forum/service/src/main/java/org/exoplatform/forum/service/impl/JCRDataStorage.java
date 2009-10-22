@@ -5554,7 +5554,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Object object = new Object();
 		try {
-			if(path.indexOf(Locations.CATEGORY_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
+			if(path.indexOf(KSDataLocation.Locations.FORUM_CATEGORIES_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
 				path = getCategoryHome(sProvider).getPath() + "/" + path;
 			} else {
 				path = getTagHome(sProvider).getPath() + "/" + path;

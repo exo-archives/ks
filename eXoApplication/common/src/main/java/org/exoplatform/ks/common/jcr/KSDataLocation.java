@@ -112,13 +112,13 @@ public class KSDataLocation {
     
     forumDataLocation = getPath(Locations.FORUM_DATA);
     topicTypesLocation = getPath(Locations.TOPIC_TYPE_HOME);
-    forumCategoriesLocation = getPath(Locations.CATEGORY_HOME);
+    forumCategoriesLocation = getPath(Locations.FORUM_CATEGORIES_HOME);
     tagsLocation = getPath(Locations.TAG_HOME);
     bbcodesLocation = getPath(Locations.BBCODE_HOME);
     faqHomeLocation = getPath(Locations.FAQ_SERVICE);  
     faqSettingsLocation = getPath(Locations.SETTING_HOME);
     faqUserSettingsLocation = getPath(Locations.USER_SETTING_HOME);
-    faqCategoriesLocation = getPath(Locations.FAQ_CATEGORY_HOME);
+    faqCategoriesLocation = getPath(Locations.FAQ_CATEGORIES_HOME);
     faqTemplatesLocation = getPath(Locations.TEMPLATE_HOME);   
   }
   
@@ -350,8 +350,9 @@ public class KSDataLocation {
     public static final String FORUM_BAN_IP = "forumBanIP";
     public static final String TOPIC_TYPE_HOME = "TopicTypeHome";
     public static final String TAG_HOME = "TagHome";
-    public static final String FAQ_CATEGORY_HOME = "FAQCategoryHome";
-    public static final String CATEGORY_HOME = "CategoryHome";
+    public static final String FAQ_CATEGORIES_HOME = "categories";
+    public static final String FORUM_CATEGORIES_HOME = "CategoryHome";
+    
     public static final String KS_USER_AVATAR = "ksUserAvatar";
     public static final String BBCODE = "bbcode";
     public static final String BBCODE_HOME = "forumBBCode";

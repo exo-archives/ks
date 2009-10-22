@@ -30,6 +30,7 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
@@ -81,6 +82,8 @@ public class QuestionPageList extends JCRPageList {
   
   final private static String ANSWER_HOME = "faqAnswerHome".intern();
   final private static String COMMENT_HOME = "faqCommentHome".intern();
+  
+  private JCRSessionManager sessionManager;
   
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not

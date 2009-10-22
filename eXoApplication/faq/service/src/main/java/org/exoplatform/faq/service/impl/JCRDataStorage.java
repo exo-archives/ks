@@ -405,7 +405,7 @@ public class JCRDataStorage implements DataStorage {
       
       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
       categoryHome.addMixin("mix:faqSubCategory") ;
-      categoryHome.setProperty("exo:name", "Root") ;
+      categoryHome.setProperty("exo:name", "Answers") ;
       categoryHome.setProperty("exo:isView", true);
       faqServiceHome.save() ;  
       log.info("Initialized root category : " + categoryHome.getPath());
@@ -1786,6 +1786,7 @@ public class JCRDataStorage implements DataStorage {
 			Node newCategory ;
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
+				Node home = getCategoryHome(sProvider, null);
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
 			  newCategory.addMixin("mix:faqSubCategory") ;
 //			  TODO: JUnit test is fall

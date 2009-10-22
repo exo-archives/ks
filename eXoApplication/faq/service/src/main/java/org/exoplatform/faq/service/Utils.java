@@ -27,6 +27,7 @@ import javax.jcr.Value;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 /**
  * Created by The eXo Platform SARL
@@ -38,7 +39,7 @@ public class Utils {
 	final public static String FAQ_APP = "faqApp".intern() ;
 	final public static String DEFAULT_AVATAR_URL = "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
 	final public static String QUESTION_HOME = "questions".intern() ;
-	final public static String CATEGORY_HOME = "categories".intern() ;
+	final public static String CATEGORY_HOME = KSDataLocation.Locations.FAQ_CATEGORIES_HOME;
 	final public static String ANSWER_HOME = "faqAnswerHome".intern();
 	final public static String COMMENT_HOME = "faqCommentHome".intern();
 	final public static String LANGUAGE_HOME = "languages".intern();

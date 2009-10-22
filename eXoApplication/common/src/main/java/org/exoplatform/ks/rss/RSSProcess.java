@@ -342,9 +342,7 @@ public class RSSProcess extends RSSGenerate {
 				//}
 			}			
 		}catch(Exception e) {
-			//e.printStackTrace() ;
-		}finally{
-			sProvider.close() ;
+			e.printStackTrace() ;
 		}
 	}
 
