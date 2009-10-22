@@ -76,6 +76,7 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
@@ -3168,7 +3169,7 @@ public class JCRDataStorage implements DataStorage {
 	public boolean isCategoryModerator(String categoryPath, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			List<String> userGroups = FAQServiceUtils.getAllGroupAndMembershipOfUser(user) ;
+			List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
 			Node node = getFAQServiceHome(sProvider).getNode(categoryPath) ;
 			if(!node.hasProperty("exo:moderators")) return false ;
 			 List<String> values = ValuesToList(node.getProperty("exo:moderators").getValues()) ;

@@ -7,7 +7,6 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.common</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
   <name>eXo Common</name>
   <url>http://www.exoplatform.org</url>
@@ -48,23 +47,6 @@
       <artifactId>rome</artifactId>
       <version>0.9</version>
     </dependency>
-    
-    
-    <!-- 
-    <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.security.core</artifactId>
-      <version>${org.exoplatform.core.version}</version>
-    </dependency>
 
-
-
-    <dependency>
-      <groupId>org.jcrom</groupId>
-      <artifactId>jcrom</artifactId>
-      <version>1.2</version>
-      <scope>compile</scope>
-    </dependency>
--->
   </dependencies>
 </project>

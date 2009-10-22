@@ -7,7 +7,6 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
   <name>eXo FAQ service</name>
   <url>http://www.exoplatform.org</url>
@@ -51,13 +50,6 @@
       <version>0.9</version>
       <scope>compile</scope>
     </dependency>
-<!--     
-    <dependency>
-      <groupId>org.jcrom</groupId>
-      <artifactId>jcrom</artifactId>
-      <version>1.2</version>
-      <scope>compile</scope>
-    </dependency>
-    -->
+
   </dependencies>
 </project>

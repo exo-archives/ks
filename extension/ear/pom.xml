@@ -4,7 +4,6 @@
     <artifactId>ks</artifactId>
     <version>2.0.0-M1-SNAPSHOT</version>
   </parent>
-	
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.extension.ear</artifactId>
   <packaging>ear</packaging>
@@ -20,57 +19,57 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.config</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
     </dependency>      
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
     </dependency>
      <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
       <type>war</type>
     </dependency>    
      <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.ksResources</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
       <type>war</type>
     </dependency>              
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.webservice</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
     </dependency> 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.webapp</artifactId>
-      <version>2.0.0-M1-SNAPSHOT</version>
+      <version>${org.exoplatform.ks.version}</version>
       <type>war</type>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web</artifactId>
-      <version>3.0.0-Beta02-SNAPSHOT</version>
+      <version>3.0.0-Beta02</version>
       <scope>provided</scope>
     </dependency>       
   </dependencies>  

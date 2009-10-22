@@ -7,7 +7,6 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.web.webservice</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
   <name>eXo webservice</name>
   <url>http://www.exoplatform.org</url>

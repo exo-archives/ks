@@ -46,14 +46,14 @@
 									<string>rest</string>
 								</value>
 								<value>
-									<string>web</string>
+								  <string>web</string>
 								</value>
 								<value>
-									<string>wsrp-producer</string>
+								  <string>wsrp-producer</string>
 								</value>	
-                                    <value>
-                                      <string>cometd</string>
-                                    </value>                
+                                <value>
+                                  <string>cometd</string>
+                                </value>                
                                 <value>
                                   <string>ksResources</string>
                                 </value>   
@@ -64,7 +64,7 @@
                                   <string>forum</string>
                                 </value>                                                                                                 					
 								<value>
-									<string>ks</string>
+								  <string>ks</string>
 								</value>                            
 							</collection>
 						</field>

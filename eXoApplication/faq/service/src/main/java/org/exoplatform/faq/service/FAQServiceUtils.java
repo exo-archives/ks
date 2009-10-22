@@ -23,6 +23,7 @@ import java.util.List;
 import javax.jcr.Node;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -96,24 +97,12 @@ public class FAQServiceUtils {
 		return users ;
   }
   
+  /**
+   * @deprecated use {@link UserHelper#getAllGroupAndMembershipOfUser(String)}
+   */
+  @Deprecated
   public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-  	List<String> userGroupMembership = new ArrayList<String>();
-  	if(userId == null || userId.equals("null")) return userGroupMembership ; //for anonimous users  	
-		userGroupMembership.add(userId);
-		String value = "";
-		String id = "";
-		Membership membership = null;
-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-			id = object.toString();
-			id = id.replace("Membership[", "").replace("]", "");
-			membership = organizationService_.getMembershipHandler().findMembership(id);
-			value = membership.getGroupId();
-			userGroupMembership.add(value);
-			value = membership.getMembershipType() + ":" + value;
-			userGroupMembership.add(value);
-		}
-		return userGroupMembership;
+    return UserHelper.getAllGroupAndMembershipOfUser(userId);
   }
   
   /**

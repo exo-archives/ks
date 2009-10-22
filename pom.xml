@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.gatein</groupId>
     <artifactId>gatein-parent</artifactId>
-    <version>1.0.0-Beta02</version>
+    <version>1.0.0-Beta03</version>
   </parent>
   
 
@@ -38,23 +38,15 @@
     <org.exoplatform.kernel.version>2.2.0-Beta02</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.3.0-Beta02</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.0-Beta02</org.exoplatform.ws.version>
-    <org.exoplatform.comet.version>2.1-SNAPSHOT</org.exoplatform.comet.version>
+    <org.exoplatform.comet.version>2.1.0-SNAPSHOT</org.exoplatform.comet.version>
     <org.exoplatform.jcr.version>1.12.0-Beta02</org.exoplatform.jcr.version>
     <org.exoplatform.ks.version>2.0.0-M1-SNAPSHOT</org.exoplatform.ks.version>
-    <org.exoplatform.portal.version>3.0.0-Beta02-SNAPSHOT</org.exoplatform.portal.version>
+    <org.exoplatform.portal.version>3.0.0-Beta02</org.exoplatform.portal.version>
+    <org.exoplatform.comet.version>2.1.0-SNAPSHOT</org.exoplatform.comet.version>
     <org.jibx.version>1.2.1</org.jibx.version>
     <org.shindig.version>SNAPSHOT-r790473</org.shindig.version>
-    <org.gatein.common.version>2.0.0-Beta03</org.gatein.common.version>
-    <org.gatein.wci.version>2.0.0-Beta02</org.gatein.wci.version>
-    <org.gatein.pc.version>2.1.0-SNAPSHOT</org.gatein.pc.version>
-    <org.jboss.identity.idm>1.0.0.Beta3</org.jboss.identity.idm>
-    <org.gatein.wsrp.version>1.0.0-SNAPSHOT</org.gatein.wsrp.version>
-    <org.gatein.mop.version>1.0.0-Beta09</org.gatein.mop.version>
-    <version.chromattic>1.0.0-beta5</version.chromattic>
-    <version.reflect>1.0.0-beta3</version.reflect>
-    
 
-    <!-- ************** -->
+	    <!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->
 
@@ -77,17 +69,24 @@
 
 
   <modules>
+
     <module>web/ksportal</module>
+  
     <module>web/ksResources</module>
     <module>web/webservice</module>
 
+  
     <module>eXoApplication/common</module>
-    
+ 
      <module>eXoApplication/forum/webapp</module>
+      
     <module>eXoApplication/forum/service</module>
+       
+   
     <module>eXoApplication/faq/webapp</module>
+     
     <module>eXoApplication/faq/service</module>
-
+ 
 
  <module>extension</module>
 

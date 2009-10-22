@@ -31,6 +31,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuickSearch;
 import org.exoplatform.faq.webui.UIResultContainer;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -366,7 +367,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			}*/
 			String userName = FAQUtils.getCurrentUser();
 			eventQuery.setUserId(userName) ;
-			eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(userName));
+			eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(userName));
 			eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));
 			
 			UIFAQPortlet uiPortlet = advancedSearch.getAncestorOfType(UIFAQPortlet.class);

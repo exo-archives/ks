@@ -7,7 +7,6 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
   <name>eXo Forum service</name>
   <url>http://www.exoplatform.org</url>
@@ -71,21 +70,14 @@
       <version>${org.exoplatform.ws.version}</version>
       <scope>provided</scope>
     </dependency> 
-    
 
- 
-  <!--   
     <dependency>
-      <groupId>org.exoplatform.comet</groupId>
-      <artifactId>exo-comet-service</artifactId>   
+      <groupId>org.exoplatform.comet</groupId>
+      <artifactId>exo-comet-service</artifactId>
       <version>${org.exoplatform.comet.version}</version>
-    </dependency>
--->
-    <dependency>
-    <groupId>org.exoplatform.comet</groupId>
-    <artifactId>exo-comet-service</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
-    </dependency>
+      <scope>provided</scope>
+    </dependency>  
+
     
     <!-- replace the following dependency by exo-comet-service when it is available in repo -->
     <!-- 
