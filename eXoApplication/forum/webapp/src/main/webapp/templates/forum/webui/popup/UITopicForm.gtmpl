@@ -6,7 +6,7 @@
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('CanView','CanPost');");
 %>
 <div class="UITopicForm" style="width:auto;">
-	
+	<% uiform.begin() %>
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
 			<div class="TabPaneContent">
@@ -50,7 +50,7 @@
 							</div>
 						</div>
 					</div>
-					<% uiform.begin() %>
+					
 					<div class="HorizontalLayout">
 						<div class="UITabContentContainer">
 						<% 
@@ -73,7 +73,7 @@
 						<% ++j;} %>
 						</div>
 					</div>
-					<%uiform.end()%>
+					
 				</div>
 				
 			</div>	
@@ -101,4 +101,16 @@
 			</tr>
  		</table> 
 	</div>
+	<%uiform.end()%>
 </div>
+<script type="text/javascript">
+	function setZIndex() {
+    var popupTopic = document.getElementById('UIForumPopupWindow');
+    var popupUser = document.getElementById('UIForumUserPopupWindow');
+    if(popupUser){
+    		popupUser.style.zIndex = "8"; 
+    		popupTopic.style.zIndex = "7";
+    }
+  }
+	setTimeout('setZIndex()', 1000);
+</script>
