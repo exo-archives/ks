@@ -1566,6 +1566,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#moveQuestions(java.util.List, java.lang.String)
    */
 	public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
+
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node faqHome = getFAQServiceHome(sProvider) ;
@@ -1600,6 +1601,7 @@ public class JCRDataStorage implements DataStorage {
 						sendNotifyMoveQuestion(questionNode, catId, questionLink, faqSetting);
           } catch (Exception e) {e.printStackTrace();}
 					
+
 				}catch(ItemNotFoundException ex){
 					ex.printStackTrace() ;
 				}
@@ -2052,13 +2054,15 @@ public class JCRDataStorage implements DataStorage {
 				queryString.append(" )] order by @exo:index");				
 			}
 			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			String qString = queryString.toString();
+			Query query = qm.createQuery(qString, Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes() ;
 			while(iter.hasNext()) {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
 		}catch (Exception e) {
+		  e.printStackTrace();
 		}finally {sProvider.close();}		
 		return catList ;
 	}

@@ -462,13 +462,16 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
     	}
 			int maxText = ForumUtils.MAXSIGNATURE ;
 			String signature = inputSetProfile.getUIFormTextAreaInput(FIELD_SIGNATURE_TEXTAREA).getValue() ;
-			if(!ForumUtils.isEmpty(signature) && signature.length() > maxText) {
+			if (ForumUtils.isEmpty(signature)) {
+				signature = "" ;
+			} else if (signature.trim().length() > maxText) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				Object[] args = { uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
-			} else signature = "";
+			}
+		
 			signature = ForumTransformHTML.enCodeHTML(signature);
 			boolean isDisplaySignature = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYSIGNATURE_CHECKBOX).getValue() ;
 			Boolean isDisplayAvatar = (Boolean)inputSetProfile.getUIFormCheckBoxInput(FIELD_ISDISPLAYAVATAR_CHECKBOX).getValue() ;
@@ -483,7 +486,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			String longDateFormat = inputSetOption.getUIFormSelectBox(FIELD_LONGDATEFORMAT_SELECTBOX).getValue();
 			String timeFormat = inputSetOption.getUIFormSelectBox(FIELD_TIMEFORMAT_SELECTBOX).getValue();
 			boolean isJump = (Boolean)inputSetOption.getUIFormCheckBoxInput(FIELD_FORUMJUMP_CHECKBOX).getValue() ;
-			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			userProfile.setUserTitle(userTitle);
 			userProfile.setScreenName(screenName);

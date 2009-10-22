@@ -89,8 +89,9 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		@SuppressWarnings("deprecation")
     public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
-
+			
 			UIForumPortlet forumPortlet = importForm.getAncestorOfType(UIForumPortlet.class) ;
+
 			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
 			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			if(uploadInput.getUploadResource() == null){
@@ -109,6 +110,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			} else {
 				nodePath = importForm.categoryPath;
 			}
+			
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			boolean isUdateForm = false;
 			boolean isErr = false;
@@ -149,7 +151,11 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				isErr = true;
 			} catch (ConstraintViolationException con) {
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", null, ApplicationMessage.WARNING));
+					if(ForumUtils.isEmpty(importForm.categoryPath)){
+						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception-category", null, ApplicationMessage.WARNING));
+					} else {
+						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception-forum", null, ApplicationMessage.WARNING));
+					}
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				isErr = true;
 			} catch(ItemExistsException ie){

@@ -14,7 +14,11 @@ import org.exoplatform.web.application.JavascriptManager;
 				if(!uiform.listObjects.isEmpty()){%>
 					<div>
 						<fieldset style="color:rgb(51, 51, 51); margin:10px;">
+						<%if(uicomponent.object_ == null){%>
 							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.Selectcategories");%></legend>
+						<%}else if(uicomponent.object_ instanceof Category){%>	
+							<legend class="StyleLegend" style="cursor:pointer;"><%=_ctx.appRes("UIExportForm.label.SelectForums");%></legend>
+						<%}%>
 							<div style="height:160px; overflow:auto;">
 								<table class="UIGrid" style="margin:2px auto; width:95%;">
 									<thead>

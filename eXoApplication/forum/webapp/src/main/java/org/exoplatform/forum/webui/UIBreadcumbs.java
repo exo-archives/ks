@@ -358,29 +358,29 @@ public class UIBreadcumbs extends UIContainer {
 									if(uiTopicDetail.getCanPost()) {
 										uiTopicDetail.setIdPostView("top") ;
 										try {
-											  UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-											  UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-											  UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
-											  boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), breadcums.userProfile.getUserId());
-											  postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
-											  postForm.setMod(isMod);
-											  if(isQuote){
-												  uiTopicDetail.setLastPostId(postId) ;
-												  Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
-												  if(post != null) {
-													  postForm.updatePost(postId, true, false, post) ;
-													  popupContainer.setId("UIQuoteContainer") ;
-												  } else {
-													  uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
-													  event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-													  uiTopicDetail.setIdPostView("normal") ;
-												  }
-											  } else {
-												  postForm.updatePost("", false, false, null) ;
-												  popupContainer.setId("UIAddPostContainer") ;
-											  }
-											  popupAction.activate(popupContainer, 900, 500) ;
-											  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+											UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+											UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+											UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+											boolean isMod = ForumServiceUtils.hasPermission(forum.getModerators(), breadcums.userProfile.getUserId());
+											postForm.setPostIds(id[0], id[1], topic.getId(), topic) ;
+											postForm.setMod(isMod);
+											if(isQuote){
+												uiTopicDetail.setLastPostId(postId) ;
+												Post post = breadcums.forumService.getPost(id[0], id[1], topic.getId(), postId);
+												if(post != null) {
+													postForm.updatePost(postId, true, false, post) ;
+													popupContainer.setId("UIQuoteContainer") ;
+												} else {
+													uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.post-no-longer-exist", null, ApplicationMessage.WARNING)) ;
+													event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+													uiTopicDetail.setIdPostView("normal") ;
+												}
+											} else {
+												postForm.updatePost("", false, false, null) ;
+												popupContainer.setId("UIAddPostContainer") ;
+											}
+											popupAction.activate(popupContainer, 900, 500) ;
+											event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 										} catch (Exception e) {
 										  log.error(e);
 										}
