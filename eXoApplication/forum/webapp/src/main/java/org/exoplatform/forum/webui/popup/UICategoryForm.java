@@ -137,8 +137,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		int i = 0;
 		for(String string : strings) {
 			ad = new ActionData() ;
-			if(i==0) ad.setActionListener("AddUser") ;
-      else ad.setActionListener("AddValuesUser") ;
+			if(i==0) ad.setActionListener("AddValuesUser") ;
+      else ad.setActionListener("AddPrivate") ;
 			ad.setActionParameter(String.valueOf(i)+","+FIELD_USERPRIVATE_MULTIVALUE) ;
 			ad.setCssIconClass(string + "Icon") ;
 			ad.setActionName(string);
@@ -152,11 +152,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	    i = 0;
 	    for(String string : strings) {
 	    	ad = new ActionData() ;
-	    	if(i==0){
-					ad.setActionListener("AddValuesUser") ;
-	      } else {
-	      	ad.setActionListener("AddPrivate") ;
-	      }
+	    	if(i==0) ad.setActionListener("AddValuesUser") ;
+	      else ad.setActionListener("AddPrivate") ;
 	    	ad.setActionParameter(String.valueOf(i)+","+field) ;
 	    	ad.setCssIconClass(string + "Icon") ;
 	    	ad.setActionName(string);
