@@ -39,6 +39,7 @@
 	String forumName = forum.getForumName();
 	String subForumName = ForumUtils.getSubString(forumName, 35);
 	UserProfile userProfile = uicomponent.getUserProfile();
+	boolean isBanned = userProfile.getIsBanned();
 	boolean isShowMenu = true;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	boolean canEdit = uicomponent.isModerator;
@@ -56,7 +57,7 @@
 <div class="UITopicContainer">
 	<% uiform.begin() %>
 	<div class="ButtomAndPageListContainer">
-	<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+	<% if(isLock || !isShowMenu || !hasCreadTopic || isBanned) { %>
 		<div class="LockActionForum UIActionForum" style="float:left;">
 	<% } else { %>
 		<div class="UIActionForum" style="float:left;">
@@ -66,7 +67,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+							<% if(isLock || !isShowMenu || !hasCreadTopic || isBanned) { %>
 									<div class="IconButton LockIcon" title="<%= _ctx.appRes("UITopicContainer.tooltip.forumClosePosting"); %>"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 									<div class="IconButton AddTheradIcon">
@@ -803,7 +804,7 @@
 		</div>
 	</div>
 	<div class="ButtomAndPageListContainer">
-		<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+		<% if(isLock || !isShowMenu || !hasCreadTopic || isBanned) { %>
 			<div class="LockActionForum UIActionForum" style="float:left;">
 		<% } else { %>
 			<div class="UIActionForum" style="float:left;">
@@ -813,7 +814,7 @@
 					<div class="ButtonLeft">
 						<div class="ButtonRight">
 							<div class="ButtonMiddle">
-							<% if(isLock || !isShowMenu || !hasCreadTopic) { %>
+							<% if(isLock || !isShowMenu || !hasCreadTopic || isBanned) { %>
 								<div class="IconButton LockIcon" title="Forum is Closed for Posting"><span class="LockLabel"></span><%=_ctx.appRes("UITopicContainer.action.NewTheard");%></div>
 							<% } else { %>
 								
