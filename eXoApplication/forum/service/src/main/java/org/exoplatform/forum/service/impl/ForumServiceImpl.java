@@ -26,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -288,6 +289,8 @@ public class ForumServiceImpl implements ForumService, Startable {
 	  		profile.setProperty("exo:lastLoginDate", cal) ;
 	  		profile.setProperty("exo:email", user.getEmail()) ;
 	  		profile.setProperty("exo:fullName", user.getFullName()) ;
+	  		profile.setProperty("exo:firstName", user.getFirstName()) ;
+	  		profile.setProperty("exo:lastName", user.getLastName()) ;
 	  		cal.setTime(user.getCreatedDate()) ;
 	  		profile.setProperty("exo:joinedDate", cal) ;  		
 	  		if(isAdminRole(user.getUserName())) {
@@ -311,21 +314,25 @@ public class ForumServiceImpl implements ForumService, Startable {
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try{
 			Node profileHome = storage_.getUserProfileHome(sysSession) ;
-			if(profileHome.hasNode(userId)) {
-				Node profile = profileHome.getNode(userId) ;
-				if(profile.hasProperty("exo:email")) {
-					if(!profile.getProperty("exo:email").equals(email)){
-						profile.setProperty("exo:email", email) ;
-						profileHome.save() ;
-					}
-				}else{
-					profile.setProperty("exo:email", email) ;
-					profileHome.save() ;
-				}
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+			Node profile = profileHome.getNode(userId) ;
+			profile.setProperty("exo:email", email) ;
+			profileHome.save() ;			
+		}catch(Exception e) {			
+		} finally{ sysSession.close() ;}
+	}
+	
+	public void updateUserProfile(User user) throws Exception{
+		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
+		try{
+			Node profileHome = storage_.getUserProfileHome(sysSession) ;
+			Node profile = profileHome.getNode(user.getUserName()) ;
+			profile.setProperty("exo:email", user.getEmail()) ;
+			profile.setProperty("exo:firstName", user.getFirstName()) ;
+			profile.setProperty("exo:lastName", user.getLastName()) ;
+			profile.save() ;			
+		}catch (PathNotFoundException e) {
+			createUserProfile(user) ;
+		} finally{ sysSession.close() ;}
 	}
 	
 	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {

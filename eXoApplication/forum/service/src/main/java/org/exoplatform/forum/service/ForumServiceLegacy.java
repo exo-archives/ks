@@ -503,4 +503,9 @@ public interface ForumServiceLegacy {
    * @deprecated use {@link ForumService#savePruneSetting()}
    */
   public void savePruneSetting(SessionProvider sProvider, PruneSetting pruneSetting) throws Exception;
+  
+  /**
+   * @deprecated use {@link ForumService#saveUserProfile(User user)}
+   */
+  public void saveEmailUserProfile(String userId, String email) throws Exception;
 }

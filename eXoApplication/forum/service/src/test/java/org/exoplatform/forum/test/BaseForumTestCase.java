@@ -56,7 +56,7 @@ public class BaseForumTestCase extends BasicTestCase {
   }
   
   public void tearDown() throws Exception {
-
+  	System.out.println(" ===============> teardown");
   }
   protected void startSystemSession() {
   	sProvider = sessionProviderService.getSystemSessionProvider(null) ;
