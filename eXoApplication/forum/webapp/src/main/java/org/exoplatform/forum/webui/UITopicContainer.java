@@ -287,7 +287,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		String userId = userProfile.getUserId() ;
 		List<String> ipBaneds = forum.getBanIP();
 		isModerator = false ;
-		if(userProfile.getUserRole() == 0 || (!moderators.isEmpty() && moderators.contains(userId))) isModerator = true;
+		if(userProfile.getUserRole() == 0 || (!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId))) isModerator = true;
 		if(ipBaneds != null && ipBaneds.size() > 0) {
 			if(!ipBaneds.contains(getIPRemoter())) {
 				String[] strings = this.forum.getCreateTopicRole() ;
