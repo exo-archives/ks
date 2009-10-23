@@ -4298,7 +4298,9 @@ public class JCRDataStorage {
 			Node userProfileHome = getUserProfileHome(sProvider);
 			QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("/jcr:root").append(userProfileHome.getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(., '").append(userSearch).append("'))]");
+			stringBuffer.append("/jcr:root").append(userProfileHome.getPath())
+			.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")")
+			.append("[(jcr:contains(., '").append(userSearch).append("'))]");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();

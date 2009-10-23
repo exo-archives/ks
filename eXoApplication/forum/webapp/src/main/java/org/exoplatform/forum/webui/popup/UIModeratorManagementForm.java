@@ -547,42 +547,8 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
 	private void searchUserProfileByKey(String keyword) throws Exception {
 		try {
-			Map<String, Object> mapObject = new HashMap<String, Object>();
-			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
 			keyword = "*" + keyword + "*" ;
-			List results = new CopyOnWriteArrayList() ;
-			Query q; 
-			q = new Query() ;
-			q.setUserName(keyword) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), obj);
-			}
-			
-			q = new Query() ;
-			q.setLastName(keyword) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), obj);
-			}
-			
-			q = new Query() ;
-			q.setFirstName(keyword) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), obj);
-			}
-			
-			q = new Query() ;
-			q.setEmail(keyword) ;
-			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), obj);
-			}
-			
-			for(Object object : this.forumService.searchUserProfile(keyword).getAll()){
-				mapObject.put(((UserProfile)object).getUserId(), object);
-			}
-			
-			results.addAll(Arrays.asList(mapObject.values().toArray()));
-			
-			this.userPageList = new ForumPageList(results);
+			this.userPageList = this.forumService.searchUserProfile(keyword);
 			this.userPageList.setPageSize(5);
 			this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;	
 			this.isViewSearchUser = true;

@@ -53,7 +53,7 @@ public class NewUserListener extends UserEventListener {
 	    	e.printStackTrace() ;
 	    }
     } else {
-    	fservice.saveEmailUserProfile(user.getUserName(), user.getEmail());
+    	fservice.updateUserProfile(user);
     }
   }
 
