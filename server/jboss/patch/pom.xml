@@ -24,7 +24,7 @@
    </dependencies>
   <build>
 	
-	 <!--plugins>
+	 <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -43,7 +43,7 @@
           </execution>
         </executions>
       </plugin>
-    </plugins-->
+    </plugins>
 		<resources>
 			<resource>
 				<directory>src/main/jboss</directory>
