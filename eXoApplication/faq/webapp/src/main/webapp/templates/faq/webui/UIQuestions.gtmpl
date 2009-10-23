@@ -423,13 +423,12 @@
 																				<!-- action translation question -->
 																				<td style="white-space:nowrap;font-weight:bold;text-align:right;padding-left:5px;">
 																					<%
-																						int countLanguage = 1;
+																						int countLanguage = 2;
 																						for(String quesLanguage in listQuestLanguage) {
 																							String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
-																							String color = "";
+																							String color = "#914ab6";
 																							if(quesLanguage.equals(uicomponent.language_)){
-																								linkView = "javaScript:void(0)";
-																								color = "#914ab6";
+																								continue;
 																							}
 																					%>
 																							<a style="line-height:20px;color:$color;" href="$linkView">$quesLanguage</a>
