@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<page-set>
+  <!-- page>
+    <page-id>portal::classic::homepage</page-id>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <name>homepage</name>
+    <title>Home Page</title>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <application>
+      <instance-id>portal#classic:/web/HomePagePortlet/homepageportlet</instance-id>
+      <title>Home Page</title>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
+    </application>
+  </page-->
+  <page>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <name>forum</name>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <application>
+      <instance-id>portal#classic:/forum/ForumPortlet/forum</instance-id>
+      <title>Forum Portlet</title>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
+    </application>
+  </page>
+  <page>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <name>answers</name>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <application>
+      <instance-id>portal#classic:/faq/AnswersPortlet/answers</instance-id>
+      <title>Answers Portlet</title>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
+    </application>
+  </page>
+  <page>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <name>faq</name>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <application>
+      <instance-id>portal#classic:/faq/FAQPortlet/faq</instance-id>
+      <title>FAQ Portlet</title>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
+    </application>
+  </page>  
+  <page>
+    <owner-type>portal</owner-type>
+    <owner-id>classic</owner-id>
+    <name>tour</name>
+    <title>KS Tour</title>
+    <access-permissions>Everyone</access-permissions>
+    <edit-permission>*:/platform/administrators</edit-permission>
+    <application>
+      <instance-id>portal#classic:/web/HomePagePortlet/tour</instance-id>
+      <title>Tour</title>
+      <show-info-bar>false</show-info-bar>
+      <show-application-state>false</show-application-state>
+      <show-application-mode>false</show-application-mode>
+    </application>
+  </page>  
+</page-set>

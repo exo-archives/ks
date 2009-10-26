@@ -6,19 +6,14 @@
     <version>2.0.0-M1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>exo.ks.extension</artifactId>
-  <name>KS Extension</name>
+  <artifactId>exo.ks.demo</artifactId>
+  <name>KS Demo</name>
   <packaging>pom</packaging>
-  <description>KS Extension Root Pom</description>
+  <description>eXo KS Demo</description>
 
   <modules>
 	<module>config</module>
-	<module>webapp</module>
-	<!--
-	<module>jar</module>
-
-	
-	-->
-	<module>ear</module>
+	<module>war</module>
+	<module>rest-war</module>
   </modules>
 </project>

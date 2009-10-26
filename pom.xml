@@ -70,8 +70,8 @@
 
   <modules>
 
-    <module>web/ksportal</module>
-  
+    <!--module>web/ksportal</module-->
+     <module>demo</module>
     <module>web/ksResources</module>
     <module>web/webservice</module>
 

@@ -1,0 +1,67 @@
+<%
+	import org.exoplatform.portal.webui.util.Util; 
+	String url = Util.getPortalRequestContext().getPortalURI();
+	String tourUrl = url + "tour";
+	String registerUri = url + "register";
+	registerUri.replaceFirst("private", "public");
+%>
+
+<div class="SideBar">
+	<div class="PortletDecoration">
+		<div class="PortletDecorationTL">
+			<div class="PortletDecorationTR">
+				<div class="PortletDecorationTC"><span></span>
+				</div>
+			</div>
+		</div>
+		<div class="PortletDecorationML">
+			<div class="PortletDecorationMR">
+				<div class="HomePortletAdBackround" style="padding:20px 8px 0px 8px;">
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 6px;"><span></span></div>
+								<a href="$registerUri" style="color: white; font-size: 14px">Try now</a>
+								<a href="$registerUri" style="color: white; font-size: 11px" class="TextCreatDemo">Create a demo account</a>
+							</div>
+						</div>
+					</div>
+					<div class="DotLine"><span></span></div>
+					<div class="DownloadButton">
+						<div style="height: 45px"><span></span></div>
+						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949" style="color: white;" class="TextDownload">DOWN LOAD</a><br/>
+						<a href="http://forge.objectweb.org/project/shownotes.php?release_id=2949" style="color: white;">Community Version</a>
+					</div>
+					<div class="DotLine"><span></span></div>
+					<div class="VersionIcon"><span></span></div>
+					<div class="ArowIcon">For support, check our<br/>
+					<a href="http://www.exoplatform.com/portal/public/en/download/dl_compare" class="ProVersion">professional version</a>
+					</div>
+					
+					<div class="DotLine"><span></span></div>
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 8px;"><span></span></div>
+								<a href="$tourUrl" style="color: white; font-size: 18px;">Take a tour</a>
+							</div>
+						</div>
+					</div>
+					<div class="LeftButton">
+						<div class="RightButton">
+							<div class="CenterButton">
+								<div style="height: 8px;"><span></span></div>
+								<a href="mailto:ks@exoplatform.com?subject=KS demo feedback" style="color: white; font-size: 18px;">Feedback</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="PortletDecorationBL">
+			<div class="PortletDecorationBR">
+				<div class="PortletDecorationBC"><span></span></div>
+			</div>
+		</div>
+	</div>
+</div>

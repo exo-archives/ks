@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
 	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 	<external-component-plugins>
@@ -13,14 +14,14 @@
 			<type>org.exoplatform.container.definition.PortalContainerDefinitionPlugin</type>
 			<init-params>
 				<object-param>
-					<name>portal</name>
+					<name>ksdemo</name>
 					<object type="org.exoplatform.container.definition.PortalContainerDefinition">
 						<!-- The name of the portal container -->
-						<field name="name"><string>portal</string></field>
+						<field name="name"><string>ksdemo</string></field>
 						<!-- The name of the context name of the rest web application -->
-						<field name="restContextName"><string>rest</string></field>
+						<field name="restContextName"><string>rest-ksdemo</string></field>
 						<!-- The name of the realm -->
-						<field name="realmName"><string>exo-domain</string></field>						
+						<field name="realmName"><string>exo-domain-ksdemo</string></field>						
 						<!-- All the dependencies of the portal container ordered by loading priority -->
 						<field name="dependencies">
 							<collection type="java.util.ArrayList">
@@ -43,16 +44,16 @@
 									<string>eXoGadgetServer</string>
 								</value>
 								<value>
-									<string>rest</string>
+									<string>rest-ksdemo</string>
 								</value>
 								<value>
-								  <string>web</string>
+									<string>web</string>
 								</value>
-                <!-- 
-								<value>
-								  <string>wsrp-producer</string>
-								</value>	
-                -->
+								<!-- No wsrp in beta02
+                                <value>
+									<string>wsrp-producer</string>
+								</value>
+                                -->
                                 <value>
                                   <string>cometd</string>
                                 </value>                
@@ -64,10 +65,13 @@
                                 </value> 
                                 <value>
                                   <string>forum</string>
-                                </value>                                                                                                 					
+                                </value>                                                                                                          
+                                <value>
+                                  <string>ks</string>
+                                </value>                                  
 								<value>
-								  <string>ks</string>
-								</value>                            
+									<string>ksdemo</string>
+								</value>
 							</collection>
 						</field>
 					</object>
