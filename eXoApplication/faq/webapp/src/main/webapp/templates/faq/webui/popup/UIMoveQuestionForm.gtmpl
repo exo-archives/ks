@@ -21,7 +21,7 @@
 		    String link = uicomponent.event("Ok",Utils.CATEGORY_HOME);
 		    %>
 		    <div id="FAQCateRoot" style="padding-left:20px;">
-					<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQRootChildren')" ondblclick="$link">
+					<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQRootChildren')" ondblclick="$link">
 						<img src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="<%=uicomponent.homeCategoryName%>"/>
 					</a>
 				</div>
@@ -45,13 +45,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -71,13 +71,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -96,13 +96,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
 					    			<% } else { %>
 					    			<div id="FAQCate$i" style="float:left">
-					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+					    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
 					    					$categoryName
 					    				</a>
 					    			</div>
@@ -123,13 +123,13 @@
 					    				categoryName = FAQUtils.getSubString(categoryName, 50);
 					    			 %>
 						    			<div id="FAQCate$i" style="float:left">
-						    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
+						    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" title="$title" ondblclick="$link">
 						    					$categoryName
 						    				</a>
 						    			</div>
 					    			<%} else { %>
 							    			<div id="FAQCate$i" style="float:left">
-							    				<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
+							    				<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')" ondblclick="$link">
 							    					$categoryName
 							    				</a>
 							    			</div>

@@ -27,10 +27,10 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -97,7 +97,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
 		public void execute(Event<UIMoveCategoryForm> event) throws Exception {
 			UIMoveCategoryForm moveCategory = event.getSource() ;	
-			UIFAQPortlet faqPortlet = moveCategory.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet answerPortlet = moveCategory.getAncestorOfType(UIAnswersPortlet.class) ;
 			String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			String categoryId = moveCategory.getCategoryID() ;
 			try {
@@ -115,7 +115,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 				if(moveCategory.isCateSelect) {
 					String tmp = moveCategory.categoryId_;
 					if(tmp.indexOf("/") > 0) tmp = tmp.substring(0, tmp.lastIndexOf("/"));
-					UIFAQContainer container = faqPortlet.findFirstComponentOfType(UIFAQContainer.class);
+					UIAnswersContainer container = answerPortlet.findFirstComponentOfType(UIAnswersContainer.class);
 					UICategories uiCategories = container.findFirstComponentOfType(UICategories.class);
 					uiCategories.setPathCategory(tmp);
 					UIQuestions questions = container.getChild(UIQuestions.class);
@@ -129,7 +129,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 						questions.viewingQuestionId_ = "" ;
 						questions.updateCurrentLanguage();
 					} catch (Exception e) {}
-					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;			
+					UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;			
 					breadcumbs.setUpdataPath(tmp);
 				}
 				moveCategory.isCateSelect = false;
@@ -143,15 +143,15 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
-			faqPortlet.cancelAction() ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
+			answerPortlet.cancelAction() ;
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIMoveCategoryForm> {
 		public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
-			faqPortlet.cancelAction() ;
+			UIAnswersPortlet answerPortlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class) ;
+			answerPortlet.cancelAction() ;
 		}
 	}
 }

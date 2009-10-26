@@ -30,9 +30,9 @@ import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
@@ -300,7 +300,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;			
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			FAQSetting faqSetting = settingForm.faqSetting_ ;
 			if(settingForm.isEditPortlet_){
 				UIFormInputWithActions inputWithActions = settingForm.getChildById(settingForm.CATEGORY_SCOPING);
@@ -391,7 +391,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class UserWatchManagerActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
@@ -403,7 +403,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class ChangeAvatarActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIWatchContainer watchContainer = settingForm.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIAttachMentForm attachMentForm = popupAction.activate(UIAttachMentForm.class, 550) ;
@@ -416,7 +416,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class SetDefaultAvatarActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			settingForm.faqService_.setDefaultAvatar(FAQUtils.getCurrentUser());
 			settingForm.setAvatarUrl(Utils.DEFAULT_AVATAR_URL);
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm.getParent()) ;
@@ -485,7 +485,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class SelectCategoryForumActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;		
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			try {
 				UIWatchContainer pupupContainer = settingForm.getParent() ;
 				UIPopupAction popupAction = pupupContainer.getChild(UIPopupAction.class) ;
@@ -507,13 +507,13 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 	static public class CancelActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
 			UISettingForm settingForm = event.getSource() ;		
-			UIFAQPortlet uiPortlet = settingForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			uiQuestions.setDefaultLanguage();
 			UIPopupAction uiPopupAction = settingForm.getAncestorOfType(UIPopupAction.class) ;
 			uiPopupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.findFirstComponentOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet.findFirstComponentOfType(UIAnswersContainer.class)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}

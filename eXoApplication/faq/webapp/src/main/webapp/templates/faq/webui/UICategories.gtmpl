@@ -9,9 +9,9 @@
 	uicomponent.setListCate();
 	
     JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
-	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImages');
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.controlWorkSpace();");
+	jsmanager.importJavascript('eXo.faq.UIAnswersPortlet','/faq/javascript/');
+	jsmanager.addOnResizeJavascript('eXo.faq.UIAnswersPortlet.reSizeImages');
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.controlWorkSpace();");
 	jsmanager.addJavascript('eXo.webui.UIRightClickPopupMenu.disableContextMenu("'+compId+'") ;') ;
 	if(uicomponent.isModerator)	jsmanager.addJavascript('eXo.faq.DragDrop.init("'+compId+'") ;') ;
 	
@@ -21,7 +21,7 @@
 %>
 <div id="$uicomponent.id" style="padding:0px 5px 2px 5px; line-height:28px;">
 	<div>
-		<div class="FAQToolbar">
+		<div class="AnswerToolbar">
 	  	<div class="LeftBar">
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left:10px;font-size:12px; text-align:center;">
@@ -39,7 +39,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height:auto; padding:0px 0px 5px 10px; margin-bottom:5px; line-height:18px;_width:182px;">
+		<div class="AnswersContainer" style="height:auto; padding:0px 0px 5px 10px; margin-bottom:5px; line-height:18px;_width:182px;">
 			<%
 			long[] cateInfo = uicomponent.getCategoryInfo() ;
 			long numberOfSubCate = cateInfo[0] ;
@@ -48,17 +48,17 @@
 			long questionNotApproved = cateInfo[3] ;
 			%>
 			<!-- <div style="margin-top:2px;">$numberOfSubCate <%= _ctx.appRes("UICategories.label.SubCategories"); %></div> -->
-			<a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_QUESTIONS)%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
-			<a id="uicategoriesCateInfors1" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
+			<a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_QUESTIONS)%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
+			<a id="uicategoriesCateInfors1" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[1]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(1);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_OPEN_QUESTIONS)%>">$questionNotAnswer <%= _ctx.appRes("UICategories.label.QuestionsNotAnswer"); %></a><br/>
 			<%
 			if(uicomponent.isModerator){%>
-				<a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIFAQPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
+				<a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
 			<%}%>
 		</div>
 	</div>
 	
 	<div>
-		<div class="FAQToolbar">
+		<div class="AnswerToolbar">
 	  	<div class="LeftBar">
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left:10px; font-size:12px; text-align:center;">
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer"  style="height:290px; margin-bottom:5px; overflow:auto;_width:187px;">
+		<div class="AnswersContainer"  style="height:290px; margin-bottom:5px; overflow:auto;_width:187px;">
 			<div class="UICategories">
 				<%
 		     if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>
@@ -150,7 +150,7 @@
 		</div>
 	<!--
 	<div>
-		<div class="FAQToolbar">
+		<div class="AnswerToolbar">
 	  	<div class="LeftBar">
 	  		<div class="RightBar">
 	  			<div class="CenterBar" style="padding-left:10px;">
@@ -159,7 +159,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="FAQContainer" style="height:auto; padding-left:5px; margin-bottom:5px; _width:182px;">
+		<div class="AnswersContainer" style="height:auto; padding-left:5px; margin-bottom:5px; _width:182px;">
 			All Tags
 		</div>
 	</div>

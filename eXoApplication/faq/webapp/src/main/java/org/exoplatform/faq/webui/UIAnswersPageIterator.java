@@ -34,18 +34,18 @@ import org.exoplatform.webui.event.EventListener;
  */
 
 @ComponentConfig(
-   template = "app:/templates/faq/webui/UIFAQPageIterator.gtmpl",
+   template = "app:/templates/faq/webui/UIAnswersPageIterator.gtmpl",
    events = {
-     @EventConfig(listeners = UIFAQPageIterator.GoPageActionListener.class)
+     @EventConfig(listeners = UIAnswersPageIterator.GoPageActionListener.class)
    }
  )
 
-public class UIFAQPageIterator extends UIContainer {
+public class UIAnswersPageIterator extends UIContainer {
   private JCRPageList pageList ;
   private long page = 1 ;
   private int endTabPage = 0;
   private int beginTabPage = 0;
-  public UIFAQPageIterator () throws Exception {
+  public UIAnswersPageIterator () throws Exception {
   }
   
   public void updatePageList(JCRPageList pageList ) {
@@ -105,9 +105,9 @@ public class UIFAQPageIterator extends UIContainer {
     return this.page ;
   }
     
-  static public class GoPageActionListener extends EventListener<UIFAQPageIterator> {
-    public void execute(Event<UIFAQPageIterator> event) throws Exception {
-      UIFAQPageIterator faqPageIterator = event.getSource() ;
+  static public class GoPageActionListener extends EventListener<UIAnswersPageIterator> {
+    public void execute(Event<UIAnswersPageIterator> event) throws Exception {
+      UIAnswersPageIterator faqPageIterator = event.getSource() ;
       String stateClick = event.getRequestContext().getRequestParameter(OBJECTID).trim() ;
       long maxPage = faqPageIterator.pageList.getAvailablePage() ;
       long presentPage  = faqPageIterator.page ;

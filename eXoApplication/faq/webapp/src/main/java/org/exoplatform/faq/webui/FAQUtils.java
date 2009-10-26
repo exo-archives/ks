@@ -102,11 +102,11 @@ public class FAQUtils {
 	 * B and test again.<br/>
 	 * This processing is done until find a category already exist.
 	 * @param faqService_			FAQ Service
-	 * @param fAQContainer		UIFAQContainer this component is used to updated data
+	 * @param fAQContainer		UIAnswersContainer this component is used to updated data
 	 * @param sessionProvider	SessionProvider
 	 * @throws Exception
 	 */
-	public static void findCateExist(FAQService faqService_, UIFAQContainer fAQContainer) throws Exception{
+	public static void findCateExist(FAQService faqService_, UIAnswersContainer fAQContainer) throws Exception{
 		UIBreadcumbs breadcumbs = fAQContainer.findFirstComponentOfType(UIBreadcumbs.class) ;
 		String pathCate = "" ;
 		for(String path : breadcumbs.pathList_.get(breadcumbs.pathList_.size() - 1).split("/")){

@@ -25,8 +25,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -285,8 +285,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       String[] users = FAQUtils.splitForFAQ(moderator) ;
       
 			
-			UIFAQPortlet faqPortlet = uiCategory.getAncestorOfType(UIFAQPortlet.class) ;
-			//UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			UIAnswersPortlet answerPortlet = uiCategory.getAncestorOfType(UIAnswersPortlet.class) ;
+			//UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Category cat ;
 			if(isAddNew_) {
@@ -306,16 +306,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;
 			
 			if(!isAddNew_) {
-				UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class) ;
+				UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class) ;
 				if(uiCategory.categoryId_.equals(categories.getCategoryPath())) {
-					UIQuestions questions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+					UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
 					questions.viewAuthorInfor = faqService_.isViewAuthorInfo(uiCategory.categoryId_) ;
 				}
 			}
 			
-			faqPortlet.cancelAction() ;
+			answerPortlet.cancelAction() ;
 			//questions.setQuestions() ; //?
-			event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
 		}
 	}
 
@@ -351,8 +351,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent() ;
       uiPoupPopupWindow.setUIComponent(null);
 			uiPoupPopupWindow.setShow(false);
-			UIFAQPortlet faqPortlet = uiUserSelector.getAncestorOfType(UIFAQPortlet.class) ;
-  		UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class) ;
+			UIAnswersPortlet answerPortlet = uiUserSelector.getAncestorOfType(UIAnswersPortlet.class) ;
+  		UIPopupAction popupAction = answerPortlet.getChild(UIPopupAction.class) ;
   		popupAction.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
@@ -376,8 +376,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   	public void execute(Event<UIUserSelector> event) throws Exception {
   		UIUserSelector uiUserSelector = event.getSource() ;
   		String values = uiUserSelector.getSelectedUsers();
-  		UIFAQPortlet faqPortlet = uiUserSelector.getAncestorOfType(UIFAQPortlet.class) ;
-  		UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class);
+  		UIAnswersPortlet answerPortlet = uiUserSelector.getAncestorOfType(UIAnswersPortlet.class) ;
+  		UIPopupAction popupAction = answerPortlet.getChild(UIPopupAction.class);
   		UICategoryForm categoryForm = popupAction.findFirstComponentOfType(UICategoryForm.class);
   		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
   		org.exoplatform.webui.core.UIPopupContainer uiContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
@@ -401,8 +401,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		public void execute(Event<UICategoryForm> event) throws Exception {
 			UICategoryForm categoryForm = event.getSource() ;
 			String id = "PopupContainer"+event.getRequestContext().getRequestParameter(OBJECTID).replace("0,", "")	;
-			UIFAQPortlet faqPortlet = categoryForm.getAncestorOfType(UIFAQPortlet.class) ;
-			UIPopupAction popupAction = faqPortlet.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAnswersPortlet answerPortlet = categoryForm.getAncestorOfType(UIAnswersPortlet.class) ;
+			UIPopupAction popupAction = answerPortlet.getChild(UIPopupAction.class).setRendered(true) ;
 			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
 			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);

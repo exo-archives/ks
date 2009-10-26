@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -97,7 +97,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
 				popupAction.deActivate();
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
-	      UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+	      UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
 	      portlet.cancelAction();
       }
 		}
@@ -107,7 +107,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UISelectCategoryForumForm> event) throws Exception {
 			UISelectCategoryForumForm uiForm = event.getSource() ;
 			String allPath = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
 			UISettingForm settingForm = portlet.findFirstComponentOfType(UISettingForm.class);
 			settingForm.setPathCatygory(uiForm.getPathName(allPath));
 			event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;

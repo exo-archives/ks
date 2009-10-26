@@ -26,11 +26,11 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPageIterator;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPageIterator;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -59,11 +59,11 @@ import org.exoplatform.webui.form.UIFormTabPane;
 public class UIUserWatchManager  extends UIFormTabPane implements UIPopupComponent{
 	private FAQSetting faqSetting_ = null;
 	@SuppressWarnings("unused")
-	private UIFAQPageIterator pageIteratorCate ;
+	private UIAnswersPageIterator pageIteratorCate ;
 	@SuppressWarnings("unused")
 	private JCRPageList pageListCate ;
-	private UIFAQPageIterator pageIteratorQues ;
-	private UIFAQPageIterator pageIteratorCates ;
+	private UIAnswersPageIterator pageIteratorQues ;
+	private UIAnswersPageIterator pageIteratorCates ;
 	private JCRPageList pageListQues ;
 	private JCRPageList pageListCates ;
 	private String LIST_QUESTIONS_WATCHED = "listQuestionsWatch";
@@ -76,8 +76,8 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {
 		super("UIUswerWatchManager");
-		addChild(UIFAQPageIterator.class, null, LIST_QUESTIONS_WATCHED) ;
-	  addChild(UIFAQPageIterator.class, null, LIST_CATES_WATCHED) ;
+		addChild(UIAnswersPageIterator.class, null, LIST_QUESTIONS_WATCHED) ;
+	  addChild(UIAnswersPageIterator.class, null, LIST_CATES_WATCHED) ;
 	  emailAddress = FAQUtils.getEmailUser(FAQUtils.getCurrentUser());
 		this.setActions(new String[]{"Cancel"}) ;
 	}
@@ -129,7 +129,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   		List<Category> listCategories = new ArrayList<Category>();
 			listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(pageSelect, null)) ;
 			if(listCategories.isEmpty()){
-				UIFAQPageIterator pageIterator = null ;
+				UIAnswersPageIterator pageIterator = null ;
 				while(listCategories.isEmpty() && pageSelect > 1) {
 					pageIterator = this.getChildById(LIST_CATES_WATCHED) ;
 					listCategories.addAll(this.pageListCates.getPageResultCategoriesSearch(--pageSelect, null)) ;
@@ -157,7 +157,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
       List<Question> listQuestion_ = new ArrayList<Question>();
       listQuestion_.addAll(this.pageListQues.getPage(pageSelect, null)) ;
       if(listQuestion_.isEmpty()){
-        UIFAQPageIterator pageIterator = null ;
+        UIAnswersPageIterator pageIterator = null ;
         while(listQuestion_.isEmpty() && pageSelect > 1) {
           pageIterator = this.getChildById(LIST_QUESTIONS_WATCHED) ;
           listQuestion_.addAll(this.pageListQues.getPage(--pageSelect, null)) ;
@@ -173,7 +173,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
   
   @SuppressWarnings("unused")
   private long getTotalpages(String pageInteratorId) {
-    UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
+    UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId) ;
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
@@ -186,7 +186,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
       if(!faqService_.isExisting(categoryId)) {
         UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
@@ -205,7 +205,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	    breadcumbs.setUpdataPath(categoryId) ;
 			categories.setPathCategory(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-	    UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+	    UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class) ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 	    uiPortlet.cancelAction() ;
 		}
@@ -215,7 +215,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 		public void execute(Event<UIUserWatchManager> event) throws Exception {
 			UIUserWatchManager watchManager = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class);
 			if(!faqService_.isExisting(categoryId)) {
         UIApplication uiApplication = watchManager.getAncestorOfType(UIApplication.class) ;
         uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;

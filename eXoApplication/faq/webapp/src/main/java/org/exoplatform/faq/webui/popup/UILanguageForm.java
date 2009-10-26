@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -118,7 +118,7 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
 			UIPopupContainer popupContainer = languageForm.getAncestorOfType(UIPopupContainer.class) ;
       UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
       if(questionForm == null ) {
-        UIFAQPortlet portlet = languageForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIAnswersPortlet portlet = languageForm.getAncestorOfType(UIAnswersPortlet.class) ;
         UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
         questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
       }

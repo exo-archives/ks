@@ -11,8 +11,8 @@
 	import org.exoplatform.faq.service.Comment;
 	def rcontext = _ctx.getRequestContext() ;
   JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnResizeJavascript('eXo.faq.UIFAQPortlet.reSizeImagesView');
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.reSizeImagesView();");
+	jsmanager.addOnResizeJavascript('eXo.faq.UIAnswersPortlet.reSizeImagesView');
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.reSizeImagesView();");
  %>
 <div class="UIPopupViewQuestion">
 	<% uiform.begin() %>
@@ -84,7 +84,7 @@
 							    %>
 							    	<div  style="float:left; margin-left:5px;" id="divId${fileName}">
 								    	<div class="Image">
-								    		<div onclick="eXo.faq.UIFAQPortlet.showPicture('$attLink');" style="cursor:pointer">
+								    		<div onclick="eXo.faq.UIAnswersPortlet.showPicture('$attLink');" style="cursor:pointer">
 													<img id="imgView${fileName}" src="$attLink" width="100" height="100" class="AttachmentFile" alt=""/>
 												</div>
 								    	</div>

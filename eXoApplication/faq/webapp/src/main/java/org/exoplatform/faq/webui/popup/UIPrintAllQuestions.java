@@ -31,7 +31,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -228,9 +228,9 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	static public class CloseActionListener extends EventListener<UIPrintAllQuestions> {
     public void execute(Event<UIPrintAllQuestions> event) throws Exception {
     	WebuiRequestContext ctx = WebuiRequestContext.getCurrentInstance();
-    	ctx.getJavascriptManager().addJavascript("eXo.faq.UIFAQPortlet.closePrint();"); 
+    	ctx.getJavascriptManager().addJavascript("eXo.faq.UIAnswersPortlet.closePrint();"); 
     	UIPrintAllQuestions uiForm = event.getSource() ;
-        UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

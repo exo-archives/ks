@@ -4,7 +4,7 @@
 	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.FAQChangeHeightToAuto');
+	jsmanager.addOnLoadJavascript('eXo.faq.UIAnswersPortlet.FAQChangeHeightToAuto');
 %>
 
 <div class="FAQUIQuestionManagerForm $uicomponent.id" style="height:auto;" id="Parent$uicomponent.id">

@@ -28,7 +28,7 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -168,7 +168,7 @@ public class UIAddRelationForm extends UIForm implements UIPopupComponent {
       UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
       UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
       if(responseForm == null) {
-        UIFAQPortlet portlet = addRelationForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIAnswersPortlet portlet = addRelationForm.getAncestorOfType(UIAnswersPortlet.class) ;
         UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
         responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
       }

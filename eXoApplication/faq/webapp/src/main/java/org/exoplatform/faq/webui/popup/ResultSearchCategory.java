@@ -24,11 +24,11 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPageIterator;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPageIterator;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -56,10 +56,10 @@ import org.exoplatform.webui.form.UIForm;
 public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	private List<Category> listCategory_ = null ;
 	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
-	private UIFAQPageIterator pageIterator ;
+	private UIAnswersPageIterator pageIterator ;
 	private JCRPageList pageList ;
 	public ResultSearchCategory() throws Exception {
-		addChild(UIFAQPageIterator.class, null, LIST_RESULT_SEARCH) ;
+		addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH) ;
 	}
 
 	@SuppressWarnings("unused")
@@ -88,7 +88,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 
 	@SuppressWarnings("unused")
 	private long getTotalpages(String pageInteratorId) {
-		UIFAQPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
+		UIAnswersPageIterator pageIterator = this.getChildById(LIST_RESULT_SEARCH) ;
 		try {
 			return pageIterator.getInfoPage().get(3) ;
 		} catch (Exception e) {
@@ -103,10 +103,10 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 	static	public class LinkActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {
 			ResultSearchCategory resultSearch = event.getSource() ;
-			UIFAQPortlet faqPortlet = resultSearch.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet answerPortlet = resultSearch.getAncestorOfType(UIAnswersPortlet.class) ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			FAQService faqService = FAQUtils.getFAQService() ;
-			UIQuestions uiQuestions = faqPortlet.findFirstComponentOfType(UIQuestions.class) ;
+			UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			try {
 				faqService.isExisting(categoryId) ;
 			} catch (Exception e) {
@@ -117,7 +117,7 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			}
 			uiQuestions.setCategoryId(categoryId) ;
 			uiQuestions.setDefaultLanguage() ;
-			UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+			UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 			//breadcumbs.setUpdataPath(null) ;
 			/*String oldPath = "" ;
 			List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
@@ -128,18 +128,18 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			//uiQuestions.setPath(newPath) ;
 			breadcumbs.setUpdataPath(categoryId);
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-			UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+			UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setPathCategory(breadcumbs.getPaths());
-			UIFAQContainer fAQContainer = uiQuestions.getAncestorOfType(UIFAQContainer.class) ;
+			UIAnswersContainer fAQContainer = uiQuestions.getAncestorOfType(UIAnswersContainer.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
-			faqPortlet.cancelAction() ;
+			answerPortlet.cancelAction() ;
 		}
 	}
 
 	static	public class CloseActionListener extends EventListener<ResultSearchCategory> {
 		public void execute(Event<ResultSearchCategory> event) throws Exception {
-			UIFAQPortlet faqPortlet = event.getSource().getAncestorOfType(UIFAQPortlet.class) ;
-			faqPortlet.cancelAction() ;
+			UIAnswersPortlet answerPortlet = event.getSource().getAncestorOfType(UIAnswersPortlet.class) ;
+			answerPortlet.cancelAction() ;
 		}
 	}
 }
