@@ -73,7 +73,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 				)
 			,
 		    @ComponentConfig(
-             id = "UIForumUserPopupWindow",
+             id = "UIUserSearhPopupWindow",
              type = UIPopupWindow.class,
              template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
              events = {
@@ -463,6 +463,8 @@ public class UISearchForm extends UIForm implements UISelector {
       UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
       uiPoupPopupWindow.setUIComponent(null);
 			uiPoupPopupWindow.setShow(false);
+			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+			popupAction.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
       forumPortlet.cancelAction();
     }
   }
@@ -474,7 +476,8 @@ public class UISearchForm extends UIForm implements UISelector {
   		UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
   		UISearchForm searchForm = forumPortlet.findFirstComponentOfType(UISearchForm.class);
   		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
-  		UIPopupContainer uiContainer = uiPoupPopupWindow.getAncestorOfType(UIPopupContainer.class);
+  		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
+  		org.exoplatform.webui.core.UIPopupContainer uiContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
   		String id = uiContainer.getId();
   		if(id.equals("PopupContainer"+FIELD_SEARCHUSER_INPUT)){
   			UIFormStringInput searchUser = searchForm.getUIStringInput(FIELD_SEARCHUSER_INPUT);
@@ -495,6 +498,7 @@ public class UISearchForm extends UIForm implements UISelector {
   		}
 			uiPoupPopupWindow.setUIComponent(null);
 			uiPoupPopupWindow.setShow(false);
+			popupAction.removeChildById(id);
   		forumPortlet.cancelAction();
 			event.getRequestContext().addUIComponentToUpdateByAjax(searchForm) ;
   	}
@@ -506,11 +510,11 @@ public class UISearchForm extends UIForm implements UISelector {
 			UIForumPortlet forumPortlet = searchForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
 			String id = "PopupContainer" + event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIPopupContainer uiPopupContainer = popupAction.getChild(UIPopupContainer.class);
-			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(UIPopupContainer.class, null, null);
+			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
+			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);
-			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIForumUserPopupWindow");
-			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIForumUserPopupWindow", "UIForumUserPopupWindow") ;
+			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIUserSearhPopupWindow");
+			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIUserSearhPopupWindow", "UIUserSearhPopupWindow") ;
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
