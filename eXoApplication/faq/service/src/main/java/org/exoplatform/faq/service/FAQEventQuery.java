@@ -476,13 +476,12 @@ public String getQuery() throws Exception {
   			isAnswerCommentLevelSearch = true ;
   		}*/
   		
-  		//if(answerSearch.length() > 2) isAnswerLevelSearch = true ;
   		//search on category scoping
   		StringBuilder searchCategoryScoping = new StringBuilder("(") ;  		
   		for(String category : getViewingCategories()) {
   			if(searchCategoryScoping.length() > 1) searchCategoryScoping.append(" or ");
   			searchCategoryScoping.append("exo:categoryId='").append(category).append("'");
-  		}
+  		}  		
   		searchCategoryScoping.append(")") ;
   		
   		boolean isAdd = false ;
@@ -569,6 +568,9 @@ public String getQuery() throws Exception {
     	if(!isAdmin) {
     		queryString.append(" and ( ") ;
     		queryString.append("not(@exo:isApproved) or @exo:isApproved='true'") ;
+    		if(userId != null && userId.length() > 0) {
+    			queryString.append(" or exo:author='" + userId + "'") ;
+    		}
     		queryString.append(" ) ") ;
     	}
     	
