@@ -8,7 +8,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIFAQPortlet.printAll("'+ uicomponent.getId() +'");');
+	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.printAll("'+ uicomponent.getId() +'");');
 %>
 
 <div class="UIPrintAllQuestions $uicomponent.id">
@@ -446,7 +446,7 @@
 				<tr>
 					<td>
 	        <% for(action in uicomponent.getActions()) { 
-	        	 String actionLabel = _ctx.appRes("UIFAQPortlet.action." + action); 
+	        	 String actionLabel = _ctx.appRes("UIAnswersPortlet.action." + action); 
 	           String link = uicomponent.event(action) ;
 	        %>
 	        		<div onclick="window.print();" class="ActionButton LightBlueStyle">

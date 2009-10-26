@@ -2,7 +2,7 @@
 	import org.exoplatform.faq.webui.popup.UIPopupAction ;
 %>
 
-<div class="UIFAQPortlet" id="$uicomponent.id">
+<div class="UIAnswersPortlet" id="$uicomponent.id">
 	<%
 		List children = uicomponent.getChildren() ;
     for(component in children) {

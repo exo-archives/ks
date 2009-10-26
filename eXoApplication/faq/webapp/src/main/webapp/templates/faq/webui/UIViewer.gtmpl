@@ -5,7 +5,7 @@
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.createLink('UIFAQViewerPortlet','"+uicomponent.useAjax+"');") ;
+	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.createLink('UIFAQViewerPortlet','"+uicomponent.useAjax+"');") ;
 %>
 
 <style type="text/css">

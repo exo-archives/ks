@@ -4,7 +4,7 @@
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.importJavascript('eXo.faq.UIFAQPortlet','/faq/javascript/');
+	jsmanager.importJavascript('eXo.faq.UIAnswersPortlet','/faq/javascript/');
 %>
 <link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />
 <div id="$uicomponent.id" class="UIFAQViewerPortlet">

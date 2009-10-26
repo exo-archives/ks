@@ -87,7 +87,7 @@
 											      if(i == 1) {%>
 												      <div class="FAQDomNode" style="padding-left:30px">
 																<div style="margin:6px 0px;line-height:22px;" id="FAQCate$i">
-																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+																	<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																 	</div>
 																	<div class="LabelNameCategory">
@@ -104,7 +104,7 @@
 											        	</div>
 												      <div class="FAQDomNode" style="padding-left:30px">
 											        	<div style="margin:6px 0px;line-height:22px;">
-											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+											        			<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																			<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																		</div>
 																		<div class="LabelNameCategory">
@@ -119,7 +119,7 @@
 													      <div class="FAQDomNode" style="padding-left:30px">
 																	<div style="margin:6px 0px;line-height:22px;">
 															    	<div id="FAQCate$i">
-															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+															    		<div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																				<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																			</div>
 															    		<div class="LabelNameCategory">
@@ -137,7 +137,7 @@
 											     		<%}%>
 												      <div class="FAQDomNode" style="padding-left:30px">
 															 <div style="margin:6px 0px;line-height:22px;">
-															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIFAQPortlet.checkedNode(this);">
+															 	 <div class="Icon CategoryIcon" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this);">
 																		<input type="checkbox" class="checkbox" value="false" name="$cateId" $checked/>
 																 </div>
 																 <div class="LabelNameCategory">

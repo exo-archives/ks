@@ -53,7 +53,7 @@
 								<%	
 									avatarUrl = uiform.getAvatarUrl(contact) ;
 								%>
-								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" alt=""/>
+								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" alt=""/>
 								<div class="Rank"><%=user.getFullName();%></div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>

@@ -70,8 +70,8 @@
 														*
 												<%}
 													if(input.getName().equals("To")){%>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
-													| <a href="#" onclick="eXo.faq.UIFAQPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
+													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddCc')"><%= _ctx.appRes("UISendMailForm.label.AddCc"); %></a>
+													| <a href="#" onclick="eXo.faq.UIAnswersPortlet.viewDivById('divAddBcc')"><%= _ctx.appRes("UISendMailForm.label.AddBcc"); %></a> |
 												<%}%>
 											</div>
 										</div>

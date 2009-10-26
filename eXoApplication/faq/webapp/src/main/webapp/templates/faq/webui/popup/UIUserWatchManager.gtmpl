@@ -200,7 +200,7 @@
 						  	  	<div class="ButtonLeft">
 						    	  	<div class="ButtonRight">
 						      	  	<div class="ButtonMiddle">
-						      	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIFAQPortlet.action.Cancel")%></a>
+						      	  		<a href="javascript:void(0);"><%=_ctx.appRes("UIAnswersPortlet.action.Cancel")%></a>
 					      	  		</div>
 						        	</div>
 						      	</div>
