@@ -23,11 +23,11 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Watch;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPageIterator;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPageIterator;
-import org.exoplatform.faq.webui.UIFAQPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -57,12 +57,12 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	private static String categoryId_ = "";
 	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
-	private UIFAQPageIterator pageIterator ;
+	private UIAnswersPageIterator pageIterator ;
 	private JCRPageList pageList ;
 	public long curentPage_ = 1;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIWatchManager() throws Exception {
-		addChild(UIFAQPageIterator.class, null, LIST_EMAILS_WATCH) ;
+		addChild(UIAnswersPageIterator.class, null, LIST_EMAILS_WATCH) ;
 		this.setActions(new String[]{"Cancel"}) ;
 	}
 
@@ -96,7 +96,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   
   @SuppressWarnings("unused")
   private long getTotalpages(String pageInteratorId) {
-    UIFAQPageIterator pageIterator = this.getChildById(LIST_EMAILS_WATCH) ;
+    UIAnswersPageIterator pageIterator = this.getChildById(LIST_EMAILS_WATCH) ;
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
@@ -117,7 +117,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   	try {
   		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
   		if(listWatchs_.isEmpty()){
-  			UIFAQPageIterator pageIterator = null ;
+  			UIAnswersPageIterator pageIterator = null ;
         while(listWatchs_.isEmpty() && pageSelected > 1) {
           pageIterator = this.getChildById(LIST_EMAILS_WATCH) ;
       		listWatchs_.addAll(pageList.getPageListWatch(pageSelected, FAQUtils.getCurrentUser()));
@@ -157,7 +157,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			
 			uiQuestions.setCategoryId(categoryId) ;
@@ -169,7 +169,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			breadcumbs.setUpdataPath(categoryId) ;
 			uiPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 
@@ -180,7 +180,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
 			faqService_.deleteCategoryWatch(categoryId_, user);
 			watchManager.setCategoryID(categoryId_);
-			UIFAQPortlet uiPortlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;			
 		}
 	}
@@ -188,7 +188,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	static	public class CancelActionListener extends EventListener<UIWatchManager> {
 		public void execute(Event<UIWatchManager> event) throws Exception {
 			UIWatchManager watchManager = event.getSource() ;
-			UIFAQPortlet portlet = watchManager.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

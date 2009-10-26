@@ -26,8 +26,8 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -103,8 +103,8 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIMoveQuestionForm> event) throws Exception {
 			UIMoveQuestionForm moveQuestionForm = event.getSource() ;
 			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+			UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 			try{
 				if(!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())){
 					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
@@ -156,7 +156,7 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 	static public class CancelActionListener extends EventListener<UIMoveQuestionForm> {
 		public void execute(Event<UIMoveQuestionForm> event) throws Exception {
 			UIMoveQuestionForm moveQuestionForm = event.getSource() ;
-			UIFAQPortlet portlet = moveQuestionForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

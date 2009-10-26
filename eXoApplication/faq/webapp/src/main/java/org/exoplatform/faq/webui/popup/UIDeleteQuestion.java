@@ -19,8 +19,8 @@ package org.exoplatform.faq.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -84,8 +84,8 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
       deleteQuestion.faqService.removeQuestion(deleteQuestion.question_.getPath()) ;
-      UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class) ;
+      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
       questions.setDefaultLanguage() ;
       questions.updateCurrentQuestionList() ;
     	if(deleteQuestion.question_.getPath().equals(questions.viewingQuestionId_)){
@@ -101,7 +101,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
       }
-      event.getRequestContext().addUIComponentToUpdateByAjax(portlet.findFirstComponentOfType(UIFAQContainer.class)) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(portlet.findFirstComponentOfType(UIAnswersContainer.class)) ;
     }
   }
   
@@ -109,7 +109,7 @@ public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
     public void execute(Event<UIDeleteQuestion> event) throws Exception {
       UIDeleteQuestion deleteQuestion = event.getSource() ;
       if(!deleteQuestion.isManagement_) {
-        UIFAQPortlet portlet = deleteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+        UIAnswersPortlet portlet = deleteQuestion.getAncestorOfType(UIAnswersPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

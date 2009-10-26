@@ -30,7 +30,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.services.mail.Message;
@@ -300,7 +300,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			}
 			uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-			UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = sendMailForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -403,7 +403,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	static public class CancelActionListener extends EventListener<UISendMailForm> {
 		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;		
-			UIFAQPortlet portlet = sendMailForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = sendMailForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

@@ -26,8 +26,8 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -93,9 +93,9 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
     	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
     	FAQUtils.getEmailSetting(voteQuestion.faqSetting_, false, false);
     	faqService_.saveQuestion(voteQuestion.question_, false, voteQuestion.faqSetting_);
-    	UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+    	UIAnswersPortlet portlet = voteQuestion.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
       //questions.setIsNotChangeLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
       popupAction.deActivate() ;
@@ -119,9 +119,9 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 				answer.setMarksVoteAnswer(markVote);
 				faqService_.saveAnswer(voteQuestion.question_.getPath(), answer, false);
 			}
-			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = voteQuestion.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+			UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 			//questions.setIsNotChangeLanguage() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 			popupAction.deActivate() ;
@@ -132,7 +132,7 @@ public class UIVoteQuestion extends UIForm implements UIPopupComponent {
 	static public class CancelActionListener extends EventListener<UIVoteQuestion> {
 		public void execute(Event<UIVoteQuestion> event) throws Exception {
 			UIVoteQuestion voteQuestion = event.getSource() ;
-			UIFAQPortlet portlet = voteQuestion.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = voteQuestion.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

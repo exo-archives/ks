@@ -33,8 +33,8 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
@@ -383,8 +383,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				
 
 				//link
-				UIFAQPortlet portlet = responseForm.getAncestorOfType(UIFAQPortlet.class) ;
-				UIQuestions uiQuestions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+				UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class) ;
+				UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 				
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
@@ -422,7 +422,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ; 
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ; 
 				} else {
 					UIQuestionManagerForm questionManagerForm = responseForm.getParent() ;
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
@@ -441,7 +441,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		static public class CancelActionListener extends EventListener<UIResponseForm> {
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm response = event.getSource() ;
-				UIFAQPortlet portlet = response.getAncestorOfType(UIFAQPortlet.class) ;
+				UIAnswersPortlet portlet = response.getAncestorOfType(UIAnswersPortlet.class) ;
 				if(!response.isChildOfQuestionManager_) {
 					UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 					popupAction.deActivate() ;

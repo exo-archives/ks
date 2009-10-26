@@ -76,7 +76,7 @@ public class UIQuickSearch  extends UIForm {
 		public void execute(Event<UIQuickSearch> event) throws Exception {
 			UIQuickSearch uiQuickSearch = event.getSource() ;
 			UIFormStringInput formStringInput = uiQuickSearch.getUIStringInput(FIELD_SEARCHVALUE) ;
-			UIFAQPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -121,7 +121,7 @@ public class UIQuickSearch  extends UIForm {
 	static public class AdvancedSearchActionListener extends EventListener<UIQuickSearch> {
 		public void execute(Event<UIQuickSearch> event) throws Exception {
 			UIQuickSearch uiForm = event.getSource() ;
-			UIFAQPortlet uiPortlet = uiForm.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 500) ;
 			resultContainer.setIsRenderedContainer(1) ;

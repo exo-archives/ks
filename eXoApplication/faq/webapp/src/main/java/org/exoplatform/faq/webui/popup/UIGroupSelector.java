@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -161,7 +161,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
       uiPopup.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;      
       // add
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup.getAncestorOfType(UIFAQPortlet.class).findFirstComponentOfType(UICategoryForm.class)) ;      
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup.getAncestorOfType(UIAnswersPortlet.class).findFirstComponentOfType(UICategoryForm.class)) ;      
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
     }
   }

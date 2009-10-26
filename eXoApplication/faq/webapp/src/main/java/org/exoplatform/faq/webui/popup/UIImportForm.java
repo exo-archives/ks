@@ -8,8 +8,8 @@ import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.upload.UploadService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -51,7 +51,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-			UIFAQPortlet portlet = importForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			try{
 				service.getCategoryById(importForm.categoryId_);
@@ -103,14 +103,14 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
 				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			} catch (Exception e){
-				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIFAQContainer.class));
+				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}			
 			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIFAQContainer faqContainer = portlet.getChild(UIFAQContainer.class);
+			UIAnswersContainer faqContainer = portlet.getChild(UIAnswersContainer.class);
 			faqContainer.getChild(UIQuestions.class).setDefaultLanguage() ;
 	    event.getRequestContext().addUIComponentToUpdateByAjax(faqContainer) ;
 			popupAction.deActivate() ;
@@ -121,7 +121,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	static public class CancelActionListener extends EventListener<UIImportForm> {
 		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
-			UIFAQPortlet portlet = importForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class) ;
 //		remove temp file in upload service and server
 			try{
 				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
