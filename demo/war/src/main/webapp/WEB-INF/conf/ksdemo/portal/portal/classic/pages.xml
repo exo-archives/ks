@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <page-set>
-  <!-- page>
-    <page-id>portal::classic::homepage</page-id>
-    <owner-type>portal</owner-type>
-    <owner-id>classic</owner-id>
+  <page>
     <name>homepage</name>
     <title>Home Page</title>
-    <access-permissions>Everyone</access-permissions>
-    <edit-permission>*:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>portal#classic:/web/HomePagePortlet/homepageportlet</instance-id>
-      <title>Home Page</title>
+	  <access-permissions>Everyone</access-permissions>
+	  <edit-permission>*:/platform/administrators</edit-permission>
+    <portlet-application>
+      <portlet>
+        <application-ref>web</application-ref>
+        <portlet-ref>HomePagePortlet</portlet-ref>
+        <preferences>
+          <preference>
+            <name>template</name>
+            <value>system:/templates/home.gtmpl</value>
+            <read-only>false</read-only>
+          </preference>
+        </preferences>
+      </portlet>
+      <title>Home Page portlet</title>
+      <access-permissions>Everyone</access-permissions>
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
-    </application>
-  </page-->
+    </portlet-application>
+  </page>
   <page>
     <owner-type>portal</owner-type>
     <owner-id>classic</owner-id>
