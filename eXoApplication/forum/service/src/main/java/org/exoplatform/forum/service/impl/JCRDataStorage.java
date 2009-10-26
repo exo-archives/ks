@@ -45,6 +45,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
@@ -6529,6 +6530,10 @@ public class JCRDataStorage {
 		}else{
 			isReset = false;
 			if(typeNodeExport.equals("exo:forumCategory"))
+				// Check if import forum but the data import have structure of a category --> Error
+				if (nodePath.split("/").length == 6) {
+					throw new ConstraintViolationException();
+				}
 				nodePath = getCategoryHome(sessionProvider).getPath();
 		}
 		
