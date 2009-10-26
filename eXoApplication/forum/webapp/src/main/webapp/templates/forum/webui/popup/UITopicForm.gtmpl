@@ -106,7 +106,7 @@
 <script type="text/javascript">
 	function setZIndex() {
     var popupTopic = document.getElementById('UIForumPopupWindow');
-    var popupUser = document.getElementById('UIForumUserPopupWindow');
+    var popupUser = document.getElementById('UITopicUserPopupWindow');
     if(popupUser){
     		popupUser.style.zIndex = "8"; 
     		popupTopic.style.zIndex = "7";
