@@ -3,8 +3,8 @@
   <page>
     <name>homepage</name>
     <title>Home Page</title>
-	  <access-permissions>Everyone</access-permissions>
-	  <edit-permission>*:/platform/administrators</edit-permission>
+	<access-permissions>Everyone</access-permissions>
+	<edit-permission>*:/platform/administrators</edit-permission>
     <portlet-application>
       <portlet>
         <application-ref>web</application-ref>
@@ -25,60 +25,78 @@
     </portlet-application>
   </page>
   <page>
-    <owner-type>portal</owner-type>
-    <owner-id>classic</owner-id>
     <name>forum</name>
+    <title>Forum</title>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>portal#classic:/forum/ForumPortlet/forum</instance-id>
+    <portlet-application>
+      <portlet>
+        <application-ref>forum</application-ref>
+        <portlet-ref>ForumPortlet</portlet-ref>
+      </portlet>
       <title>Forum Portlet</title>
+      <access-permissions>Everyone</access-permissions>
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
-    </application>
+    </portlet-application>
   </page>
   <page>
-    <owner-type>portal</owner-type>
-    <owner-id>classic</owner-id>
     <name>answers</name>
+    <title>Answers</title>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>portal#classic:/faq/AnswersPortlet/answers</instance-id>
+    <portlet-application>
+      <portlet>
+        <application-ref>faq</application-ref>
+        <portlet-ref>AnswersPortlet</portlet-ref>
+      </portlet>
       <title>Answers Portlet</title>
+      <access-permissions>Everyone</access-permissions>      
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
-    </application>
+    </portlet-application>
   </page>
   <page>
-    <owner-type>portal</owner-type>
-    <owner-id>classic</owner-id>
     <name>faq</name>
+    <title>FAQ</title>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>portal#classic:/faq/FAQPortlet/faq</instance-id>
+    <portlet-application>
+      <portlet>
+        <application-ref>faq</application-ref>
+        <portlet-ref>FAQPortlet</portlet-ref>
+      </portlet>
       <title>FAQ Portlet</title>
+      <access-permissions>Everyone</access-permissions>      
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
-    </application>
+    </portlet-application>
   </page>  
   <page>
-    <owner-type>portal</owner-type>
-    <owner-id>classic</owner-id>
     <name>tour</name>
     <title>KS Tour</title>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
-    <application>
-      <instance-id>portal#classic:/web/HomePagePortlet/tour</instance-id>
+    <portlet-application>
+      <portlet>
+        <application-ref>web</application-ref>
+        <portlet-ref>HomePagePortlet</portlet-ref>
+        <preferences>
+          <preference>
+            <name>template</name>
+            <value>system:/templates/tour.gtmpl</value>
+            <read-only>false</read-only>
+          </preference>
+        </preferences>
+      </portlet>      
       <title>Tour</title>
+      <access-permissions>Everyone</access-permissions>      
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
-    </application>
+    </portlet-application>
   </page>  
 </page-set>

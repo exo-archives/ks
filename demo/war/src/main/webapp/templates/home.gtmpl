@@ -23,8 +23,8 @@
 									<div class="HomeBackground">
 										<div class="HomeImageRight">
 											<div class="HomeImageLeft">
-												<div class="Label1">Welcome to</div>
-												<div class="Label2">KS Live Demo</div>
+												<div class="Label1">eXo Knowledge Suite</div>
+												<div class="Label2">2.0 alpha 1</div>
 											</div>
 										</div>
 									</div>
@@ -42,12 +42,12 @@
 																	<div class="ForumIcon">
 																		<div class="ForumLabel">
 																			<div class="Title"><a href="$forumuri">Forum</a></div>
-																			<div class="Label">It's time to open discussion with your</div>
-																			<div class="Label">portal audience!</div>
+																			<div class="Label">Open discussion</div>
+																			<div class="Label">for your portal</div>
 																		</div>
 																	</div>
 																</div>
-																<div style="margin:0px 0px 0px 90px;">
+																<div style="margin:0px 0px 0px 0px;">
 																	<div class="CheckIcon">Unlimited categories and forums</div>
 																	<div class="CheckIcon">Thread permissions, quick reply, preview...</div>
 																	<div class="CheckIcon">Private messages, bookmarks, watch...</div>
@@ -73,12 +73,12 @@
 																	<div class="AnswersIcon">
 																		<div class="FAQLabel">
 																			<div class="Title"><a href="$answersuri">Answers</a></div>
-																			<div class="Label">Capture and manage key answers </div>
-																			<div class="Label">efficiently in Answers.</div>
+																			<div class="Label">Key questions meet</div>
+																			<div class="Label">their answers</div>
 																		</div>
 																	</div>
 																</div>
-																<div style="margin:0px 0px 0px 90px;">
+																<div style="margin:0px 0px 0px 0px;">
 																	<div class="CheckIcon">Organize in categories</div>
 																	<div class="CheckIcon">Multiple answers, comments</div>
 																	<div class="CheckIcon">Multi-language Q/A</div>
@@ -104,12 +104,12 @@
 																	<div class="FAQIcon">
 																		<div class="FAQLabel">
 																			<div class="Title"><a href="$faquri">FAQ</a></div>
-																			<div class="Label">Publish forged knowledge </div>
-																			<div class="Label">into straighforward FAQs</div>
+																			<div class="Label">Publish knowledge</div>
+																			<div class="Label">in FAQs</div>
 																		</div>
 																	</div>
 																</div>
-																<div style="margin:0px 0px 0px 90px;">
+																<div style="margin:0px 0px 0px 0px;">
 																	<div class="CheckIcon">Publish categories from Answers</div>
 																	<div class="CheckIcon">Fully customizable template</div>
 																	<div class="CheckIcon"></div>
