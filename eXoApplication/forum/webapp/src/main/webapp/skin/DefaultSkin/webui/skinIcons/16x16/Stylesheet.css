@@ -509,10 +509,10 @@
 	background: url('icons/SmallGreyStar.gif') no-repeat center;
 }
 
-.UIForumPortlet .OverVote {
-	background: url('icons/SmallYellowStar.gif') no-repeat center;
-}
-
 .UIForumPortlet .NormalVote {
 	background: url('icons/SmallGreyStar.gif') no-repeat center;
+}
+
+.UIForumPortlet .OverVote {
+	background: url('icons/SmallYellowStar.gif') no-repeat center;
 }
