@@ -18,7 +18,7 @@ package org.exoplatform.faq.webui.viewer;
 
 import javax.portlet.PortletMode;
 
-import org.exoplatform.faq.webui.popup.UIViewerSettingForm;
+import org.exoplatform.faq.webui.popup.UIFAQSettingForm;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -36,11 +36,11 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 @ComponentConfig(
    lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/faq/webui/UIFAQViewerPortlet.gtmpl"
+   template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
 )
 
-public class UIFAQViewerPortlet extends UIPortletApplication{
-	public UIFAQViewerPortlet() throws Exception {
+public class UIFAQPortlet extends UIPortletApplication{
+	public UIFAQPortlet() throws Exception {
 		addChild(UIViewer.class, null, null);
   }
 	
@@ -48,8 +48,8 @@ public class UIFAQViewerPortlet extends UIPortletApplication{
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
     	if(getChild(UIViewer.class) == null){
-    		if(getChild(UIViewerSettingForm.class) != null) {
-    			removeChild(UIViewerSettingForm.class);
+    		if(getChild(UIFAQSettingForm.class) != null) {
+    			removeChild(UIFAQSettingForm.class);
     		}
     		if(getChild(UIViewer.class) == null) {
     			addChild(UIViewer.class, null, null) ;
@@ -60,8 +60,8 @@ public class UIFAQViewerPortlet extends UIPortletApplication{
     		if(getChild(UIViewer.class) != null) {
     			removeChild(UIViewer.class);
     		}
-    		if(getChild(UIViewerSettingForm.class) == null) {
-    			addChild(UIViewerSettingForm.class, null, null) ;
+    		if(getChild(UIFAQSettingForm.class) == null) {
+    			addChild(UIFAQSettingForm.class, null, null) ;
     		}
     	} catch (Exception e) { e.printStackTrace();}
     }

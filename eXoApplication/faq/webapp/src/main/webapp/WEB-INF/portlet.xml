@@ -104,7 +104,7 @@
 		
 		<init-param>
 			<name>webui.configuration</name>
-			<value>/WEB-INF/conf/portlet/faq/FAQViewerPortlet/webui/configuration.xml</value>
+			<value>/WEB-INF/conf/portlet/faq/FAQPortlet/webui/configuration.xml</value>
 		</init-param>
 
 		<expiration-cache>0</expiration-cache>
@@ -113,7 +113,7 @@
       <portlet-mode>edit</portlet-mode>
 		</supports>
 		<supported-locale>en</supported-locale>
-		<resource-bundle>locale.portlet.faq.FAQViewerPortlet</resource-bundle>
+		<resource-bundle>locale.portlet.faq.FAQPortlet</resource-bundle>
 		<portlet-info>
 			<title>FAQ Portlet</title>
 			<short-title>FAQ Portlet</short-title>

@@ -23,7 +23,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.faq.webui.FAQResourceResolver;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.resolver.ResourceResolver;
@@ -102,13 +101,15 @@ public class UIViewer extends UIContainer {
     BBCode bbCode;
     for (String string : bbcName) {
     	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
+    	try {
+    		for (BBCode bbc : listBBCode) {
+    			if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
+    				bbcs.add(bbc);
+    				isAdd = false;
+    				break;
+    			}
     		}
-    	}
+      } catch (Exception e) {}
     	if(isAdd) {
     		bbCode = new BBCode();
     		if(string.indexOf("=") >= 0){
