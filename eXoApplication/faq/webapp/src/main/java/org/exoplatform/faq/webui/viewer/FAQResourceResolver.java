@@ -1,4 +1,4 @@
-package org.exoplatform.faq.webui;
+package org.exoplatform.faq.webui.viewer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

@@ -47,15 +47,15 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/faq/webui/popup/UIViewerSettingForm.gtmpl",
+		template = "app:/templates/faq/webui/popup/UIFAQSettingForm.gtmpl",
 		events = {
-			@EventConfig(listeners = UIViewerSettingForm.SaveActionListener.class),
-			@EventConfig(listeners = UIViewerSettingForm.SelectTabActionListener.class)
+			@EventConfig(listeners = UIFAQSettingForm.SaveActionListener.class),
+			@EventConfig(listeners = UIFAQSettingForm.SelectTabActionListener.class)
 		}
 )
 
 @SuppressWarnings({"unchecked", "unused"})
-public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
+public class UIFAQSettingForm extends UIForm implements UIPopupComponent{
 	public static final String SELECT_CATEGORY_TAB = "SelectCategoryTab"; 
 	public static final String EDIT_TEMPLATE_TAB = "EditTemplateTab";
 	public static final String PREFERENCE_TAB = "PreferenceTab";
@@ -69,7 +69,7 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 	private List<String> categoriesId = new ArrayList<String>();
 
 	private String homeCategoryName = "";
-	public UIViewerSettingForm() throws Exception {
+	public UIFAQSettingForm() throws Exception {
 		faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		UIFormInputWithActions selectCategoryTab = new UIFormInputWithActions(SELECT_CATEGORY_TAB);
 		UIFormInputWithActions editTemplateTab = new UIFormInputWithActions(EDIT_TEMPLATE_TAB);
@@ -132,9 +132,9 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	static	public class SaveActionListener extends EventListener<UIViewerSettingForm> {
-    public void execute(Event<UIViewerSettingForm> event) throws Exception {
-			UIViewerSettingForm uiform = event.getSource() ;
+	static	public class SaveActionListener extends EventListener<UIFAQSettingForm> {
+    public void execute(Event<UIFAQSettingForm> event) throws Exception {
+			UIFAQSettingForm uiform = event.getSource() ;
 			if(uiform.id_ == 1) {
 				UIFormInputWithActions withActions  = uiform.getChildById(EDIT_TEMPLATE_TAB);
 				String textAre = (String) withActions.getUIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE).getValue();
@@ -167,10 +167,10 @@ public class UIViewerSettingForm extends UIForm implements UIPopupComponent{
 		}
 	}
 
-	static	public class SelectTabActionListener extends EventListener<UIViewerSettingForm> {
-		public void execute(Event<UIViewerSettingForm> event) throws Exception {
+	static	public class SelectTabActionListener extends EventListener<UIFAQSettingForm> {
+		public void execute(Event<UIFAQSettingForm> event) throws Exception {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIViewerSettingForm uiform = event.getSource();
+			UIFAQSettingForm uiform = event.getSource();
 			uiform.id_ = Integer.parseInt(id);
 			if(uiform.id_ >= 1) {
 				uiform.categoriesId =  new ArrayList<String>();
