@@ -10,6 +10,12 @@
 	String can = _ctx.appRes("UIPostRules.label.can") ;
 	String not = _ctx.appRes("UIPostRules.label.not") ;
 	if(userProfile.getUserRole() == UserProfile.ADMIN) {
+		if(!uicomponent.isCanCreateNewThread()) {
+			canCreatThread = not;
+		}
+		if(!uicomponent.isCanAddPost()){
+			canPost = not;
+		}
 	} else if(isBan || isNotLogin) {
 		canCreatThread = not;
 		canPost = not;
