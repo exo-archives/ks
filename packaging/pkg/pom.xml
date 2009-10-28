@@ -11,7 +11,13 @@
   <name>eXo KS Packaging Assemblies</name>
 
 
-<dependencies>
+  <dependencies>
+      <dependency>
+         <groupId>org.exoplatform.tool</groupId>
+         <artifactId>exopackage</artifactId>
+         <type>zip</type>
+         <version>1.1.0-Beta05</version>
+      </dependency>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>kernel.packaging.module</artifactId>
@@ -35,23 +41,26 @@
          <artifactId>jcr.packaging.module</artifactId>
          <version>${org.exoplatform.jcr.version}</version>
          <type>js</type>
-       </dependency>
+       </dependency>        
        <dependency>
          <groupId>org.exoplatform.portal</groupId>
          <artifactId>portal.packaging.module</artifactId>
-         <version>${org.exoplatform.portal.version}T</version>
-         <type>js</type>
-       </dependency> 
-       <dependency>
-         <groupId>org.exoplatform.portal</groupId>
-         <artifactId>portal.packaging.product</artifactId>
          <version>${org.exoplatform.portal.version}</version>
          <type>js</type>
        </dependency> 
-
-
-       
-</dependencies>
+       <dependency>
+         <groupId>org.exoplatform.ks</groupId>
+         <artifactId>ks.packaging.module</artifactId>
+         <version>${org.exoplatform.ks.version}</version>
+         <type>js</type>
+       </dependency>       
+       <dependency>
+         <groupId>org.exoplatform.ks</groupId>
+         <artifactId>portal.packaging.product</artifactId>
+         <version>${org.exoplatform.ks.version}</version>
+         <type>js</type>
+       </dependency> 
+  </dependencies>
          
    <build>
       <plugins>
@@ -112,12 +121,11 @@
          </plugin>
      </plugins>
    </build>
-
    <profiles>
       <profile>
          <id>pkg-tomcat</id>
          <build>
-            <finalName>GateIn-${project.version}</finalName>
+            <finalName>eXoKS-${project.version}</finalName>
             <plugins>
                <!-- Ensure your environment is correctly setup -->
                <plugin>
@@ -215,7 +223,7 @@
       <profile>
          <id>pkg-jbossas</id>
          <build>
-            <finalName>GateIn-${project.version}</finalName>
+            <finalName>eXoKS-${project.version}</finalName>
             <plugins>
                <!-- Ensure your environment is correctly setup -->
                <plugin>
