@@ -15,5 +15,6 @@
 	<module>config</module>
 	<module>war</module>
 	<module>rest-war</module>
+	<module>ear</module>
   </modules>
 </project>
