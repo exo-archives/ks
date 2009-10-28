@@ -343,6 +343,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
+	public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 	
 	/**
 	 * Gets the posts.
@@ -360,6 +361,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
+	public JCRPageList getPostForSplitTopic(String topicPath) throws Exception; 
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;

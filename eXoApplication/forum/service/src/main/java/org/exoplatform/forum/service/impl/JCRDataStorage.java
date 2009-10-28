@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -1969,6 +1970,7 @@ public class JCRDataStorage {
 		topicNew.setLastPostDate(reader.date("exo:lastPostDate"));
 		topicNew.setIsClosed(reader.bool("exo:isClosed"));
 		topicNew.setIsApproved(reader.bool("exo:isApproved"));
+		topicNew.setIsActive(reader.bool("exo:isActive"));
 		topicNew.setIsPoll(reader.bool("exo:isPoll"));
 		return topicNew;
 	}	
@@ -2688,16 +2690,34 @@ public class JCRDataStorage {
 	  return 0;
   }
 	
+	public JCRPageList getPostForSplitTopic(String topicPath) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
+		try {
+			Node topicNode = getCategoryHome(sProvider).getNode(topicPath);
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
+			stringBuffer.append(getPathQuery(null, "", "exoUserPri").toString().replaceAll(']'+"", ""))
+									.append(" and exo:isFirstPost='false']");
+			QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			JCRPageList pagelist = new ForumPageList(iter, 10, stringBuffer.toString(), true);
+			return pagelist;
+		} catch (PathNotFoundException e) {
+		} finally { sProvider.close() ;}
+		return null;
+	}
+	
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		try {
 			Node topicNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId +"/" + topicId);
-			JCRPageList pagelist;
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
 			stringBuffer.append(getPathQuery(isApproved, isHidden, userLogin));
 			stringBuffer.append(" order by @exo:createdDate ascending");
-			pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true);
+			JCRPageList pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true);
 			return pagelist;				
 		} catch (PathNotFoundException e) {
 			return null;
@@ -3796,6 +3816,37 @@ public class JCRDataStorage {
 		}finally {sProvider.close() ;}
 	}
 
+	public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node srcTopicNode = getCategoryHome(sProvider).getNode(srcTopicPath);
+			NodeIterator iter = srcTopicNode.getNodes();
+			List<Post> posts = new ArrayList<Post>();
+			Post post;
+			while (iter.hasNext()) {
+				post = new Post();
+	      Node node = iter.nextNode();
+	      if(node.isNodeType("exo:post")){
+	      	post.setId(node.getName());
+	      	post.setPath(node.getPath());
+	      	post.setName(node.getProperty("exo:name").getString());
+	      	post.setOwner(node.getProperty("exo:owner").getString());
+	      	post.setNumberAttach(node.getProperty("exo:numberAttach").getLong());
+	      	post.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
+	      	posts.add(post);
+	      }
+      }
+			if(posts.size() > 0) {
+				Collections.sort(posts, new Utils.DatetimeComparatorPostDESC()) ;
+				movePost(posts, destTopicPath, false, mailContent, link);
+				String ids[] = srcTopicPath.split("/");
+				removeTopic(ids[0], ids[1], srcTopicNode.getName()) ;
+			}
+    } catch (Exception e) {
+    	throw e;
+		} finally { sProvider.close() ;}
+	}
+	
 	public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {

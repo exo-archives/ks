@@ -463,7 +463,7 @@
 									else classRow = "OddRow";
 									String topicId = topic.getId();
 									lastPostIdRead = uicomponent.getLastPostIdReadOfTopic(topicId);
-									long max_page = uicomponent.getSizePost(topic) ;
+									int max_page = uicomponent.getSizePost(topic) ;
 									String iconClassTopic = topic.getIcon();
 									if(ForumUtils.isEmpty(iconClassTopic)) iconClassTopic = "NormalTopicIcon";
 									String topicType = topic.getTopicType();
