@@ -1,8 +1,13 @@
 <%
-	import org.exoplatform.faq.webui.popup.UIPopupAction ;
+	import org.exoplatform.faq.webui.viewer.UIViewer;
+	import org.exoplatform.web.application.JavascriptManager;
+	
+	def rcontext = _ctx.getRequestContext();
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.faq.UIAnswersPortlet','/faq/javascript/');
 %>
-
-<div class="UIFAQPortlet" id="$uicomponent.id">
+<link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />
+<div id="$uicomponent.id" class="UIFAQPortlet">
 	<%
 		List children = uicomponent.getChildren() ;
     for(component in children) {
@@ -11,5 +16,4 @@
       }
     }
 	%>
-	<%uicomponent.renderPopupMessages();%>
 </div>

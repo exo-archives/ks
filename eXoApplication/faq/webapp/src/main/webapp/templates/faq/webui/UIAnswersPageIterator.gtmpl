@@ -1,5 +1,5 @@
 <%
-	import org.exoplatform.faq.webui.UIFAQPageIterator ;
+	import org.exoplatform.faq.webui.UIAnswersPageIterator ;
 	import org.exoplatform.faq.service.JCRPageList ;
 	 
 	List totals = uicomponent.getInfoPage() ; 
@@ -9,7 +9,7 @@
 			long pageSelected = uicomponent.getPageSelected() ;
 			String selected = "" + pageSelected ;
 	%>
-			<div class="UIFAQPageIterator" id="$uicomponent.id">
+			<div class="UIAnswersPageIterator" id="$uicomponent.id">
 				<div class="PageIteratorContainer">
 				  <div class="RightPageIteratorBlock">
 				  <% if(pageSelected == 1) {%>

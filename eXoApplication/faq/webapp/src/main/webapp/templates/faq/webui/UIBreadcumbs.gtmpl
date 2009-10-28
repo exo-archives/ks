@@ -4,7 +4,7 @@
 	import org.exoplatform.web.application.JavascriptManager;
 
 	JavascriptManager jsmanager = _ctx.getRequestContext().getJavascriptManager();
-	jsmanager.addOnLoadJavascript('eXo.faq.UIFAQPortlet.loadBreadcumbScroll');
+	jsmanager.addOnLoadJavascript('eXo.faq.UIAnswersPortlet.loadBreadcumbScroll');
 %>
 <div class="UIBreadcumbs" id="$uicomponent.id">
 	<div class="BreadcumbsInfoBar">
