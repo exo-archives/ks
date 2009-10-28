@@ -24,7 +24,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
@@ -158,7 +158,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       } else{
         UIQuestionForm questionForm = popupContainer.getChild(UIQuestionForm.class) ;
         if(questionForm == null) {
-          UIFAQPortlet portlet = attachMentForm.getAncestorOfType(UIFAQPortlet.class) ;
+          UIAnswersPortlet portlet = attachMentForm.getAncestorOfType(UIAnswersPortlet.class) ;
           UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
           questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
         }

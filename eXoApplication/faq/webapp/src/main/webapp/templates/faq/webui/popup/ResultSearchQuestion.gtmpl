@@ -15,12 +15,12 @@
  									<table class="UIGrid" cellspacing="0" border="0" cellpadding="0">
  										<thead>
  											<tr>
- 												<th style="width:18px"><%= _ctx.appRes("ResultSearchQuestion.title.icon"); %></th>
+ 												<th style="width:30px"><%= _ctx.appRes("ResultSearchQuestion.title.icon"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.author"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.email"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.question"); %></th>
  												<th><%= _ctx.appRes("ResultSearchQuestion.title.create-date"); %></th>
- 												<th style="width:20px"><%= _ctx.appRes("ResultSearchQuestion.title.action"); %></th>
+ 												<th style="width30px"><%= _ctx.appRes("ResultSearchQuestion.title.action"); %></th>
  											</tr>
  										</thead>
  										<tbody>
@@ -44,7 +44,7 @@
 											}
  										 %>
 	 											<tr class="EvenRow">
-	 												<td class="text" style="width:30px; text-align:center;">
+	 												<td class="text" style="text-align:center;">
 	 													<div class="$icon"><span></span></div>
  													</td>
 	 												<td class="text" style="text-align:left"><%= author%></td>
@@ -62,7 +62,7 @@
 													<td class="text" style="text-align:left"><a href="$view">$questionContent</a></td>
 													<%}%>
 	 												<td class="text" style="text-align:center"><%=date%></td>
-	 												<td style="width:30px; text-align:center; cursor:pointer">
+	 												<td style="text-align:center; cursor:pointer">
  														<div onclick="$link"><div class="CheckIcon" style="margin:0px auto;"></div></div>
  													</td>
 	 											</tr>

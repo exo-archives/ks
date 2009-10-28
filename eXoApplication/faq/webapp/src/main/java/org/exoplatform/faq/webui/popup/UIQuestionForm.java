@@ -30,8 +30,8 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
@@ -508,8 +508,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      questionForm.mapLanguage.remove(question_.getLanguage()) ;
 	      question_.setMultiLanguages(questionForm.mapLanguage.values().toArray(new QuestionLanguage[]{})) ;
 	      question_.setAttachMent(questionForm.listFileAttach_) ;      
-	      UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
-	      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+	      UIAnswersPortlet portlet = questionForm.getAncestorOfType(UIAnswersPortlet.class) ;
+	      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 	      //Create link by Vu Duy Tu.
 	      if(isNew){
 	      	StringBuilder qsId = new StringBuilder().append(question_.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME)
@@ -586,7 +586,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       	if(!isNew && question_.getPath().equals(questions.viewingQuestionId_)){
       		questions.updateLanguageMap() ;
       	}
-        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
     	} catch (Exception e) {
     		e.printStackTrace();
       }
@@ -630,7 +630,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource() ;
       if(!questionForm.isChildOfManager) {
-        UIFAQPortlet portlet = questionForm.getAncestorOfType(UIFAQPortlet.class) ;
+        UIAnswersPortlet portlet = questionForm.getAncestorOfType(UIAnswersPortlet.class) ;
         UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
         popupAction.deActivate() ;
         event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

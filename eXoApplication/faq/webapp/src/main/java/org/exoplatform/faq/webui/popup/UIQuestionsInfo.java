@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
@@ -30,8 +29,8 @@ import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQPageIterator;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPageIterator;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -76,8 +75,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   private static FAQService faqService_ =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ; 
   private JCRPageList pageList ;
   private JCRPageList pageListNotAnswer ;
-  private UIFAQPageIterator pageIterator ;
-  private UIFAQPageIterator pageQuesNotAnswerIterator ;
+  private UIAnswersPageIterator pageIterator ;
+  private UIAnswersPageIterator pageQuesNotAnswerIterator ;
   private List<Question> listQuestion_ = new ArrayList<Question>() ;
   private List<Question> listQuestionNotYetAnswered_ = new ArrayList<Question>() ;
   private List<SelectItemOption<String>> listCategories = new ArrayList<SelectItemOption<String>>() ;
@@ -95,8 +94,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   public UIQuestionsInfo() throws Exception {
     isEditTab_ = true ;
     isResponseTab_ = false ;
-    addChild(UIFAQPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
-    addChild(UIFAQPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
+    addChild(UIAnswersPageIterator.class, null, LIST_QUESTION_INTERATOR) ;
+    addChild(UIAnswersPageIterator.class, null, LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
     setActions(new String[]{""}) ;
   }
   
@@ -169,7 +168,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   }
   
   private long getTotalpages(String pageInteratorId) {
-    UIFAQPageIterator pageIterator = this.getChildById(pageInteratorId) ;
+    UIAnswersPageIterator pageIterator = this.getChildById(pageInteratorId) ;
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
@@ -237,7 +236,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       try {
         listQuestion_.addAll(this.pageList.getPage(pageSelect, null)) ;
         if(listQuestion_.isEmpty()){
-	        UIFAQPageIterator pageIterator = null ;
+	        UIAnswersPageIterator pageIterator = null ;
 	        while(listQuestion_.isEmpty() && pageSelect > 1) {
 	          pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
 	          listQuestion_.addAll(this.pageList.getPage(--pageSelect, null)) ;
@@ -263,7 +262,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       listQuestionNotYetAnswered_.clear() ;
       try {
         listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(pageSelectNotAnswer, null)) ;
-        UIFAQPageIterator pageIterator = null ;
+        UIAnswersPageIterator pageIterator = null ;
         while(listQuestionNotYetAnswered_.isEmpty() && pageSelectNotAnswer > 1) {
           pageIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
           listQuestionNotYetAnswered_.addAll(this.pageListNotAnswer.getPage(--pageSelectNotAnswer, null)) ;
@@ -402,7 +401,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   static public class CloseActionListener extends EventListener<UIQuestionsInfo> {
     public void execute(Event<UIQuestionsInfo> event) throws Exception {
     	UIQuestionsInfo questionManagerForm = event.getSource() ;
-  		UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
+  		UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class) ;
   		UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
   		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
@@ -447,7 +446,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   			}
   			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
   			faqService_.saveQuestion(question, false,questionsInfo.faqSetting_);
-  			UIFAQPortlet portlet = questionsInfo.getAncestorOfType(UIFAQPortlet.class) ;
+  			UIAnswersPortlet portlet = questionsInfo.getAncestorOfType(UIAnswersPortlet.class) ;
   			UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class) ;
   			questions.setDefaultLanguage();
         questions.updateCurrentQuestionList() ;

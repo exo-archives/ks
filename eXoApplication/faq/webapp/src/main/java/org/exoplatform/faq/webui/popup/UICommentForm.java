@@ -29,8 +29,8 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
@@ -172,7 +172,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	static public class CancelActionListener extends EventListener<UICommentForm> {
     public void execute(Event<UICommentForm> event) throws Exception {
     	UICommentForm commentForm = event.getSource() ;
-    	UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+    	UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
@@ -183,9 +183,9 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UICommentForm> event) throws Exception {
 			UICommentForm commentForm = event.getSource() ;
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
-			UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      UIQuestions questions = portlet.getChild(UIFAQContainer.class).getChild(UIQuestions.class) ;
+      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
       if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
 				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;

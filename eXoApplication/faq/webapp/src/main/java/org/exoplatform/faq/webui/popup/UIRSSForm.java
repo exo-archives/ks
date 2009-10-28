@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -58,7 +58,7 @@ public class UIRSSForm extends UIForm	{
 	static public class CancelActionListener extends EventListener<UIRSSForm> {
     public void execute(Event<UIRSSForm> event) throws Exception {
     	UIRSSForm commentForm = event.getSource() ;
-    	UIFAQPortlet portlet = commentForm.getAncestorOfType(UIFAQPortlet.class) ;
+    	UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

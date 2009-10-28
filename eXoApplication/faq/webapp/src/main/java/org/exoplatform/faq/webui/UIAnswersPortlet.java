@@ -40,36 +40,36 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 
 @ComponentConfig(
    lifecycle = UIApplicationLifecycle.class,
-   template = "app:/templates/faq/webui/UIFAQPortlet.gtmpl"
+   template = "app:/templates/faq/webui/UIAnswersPortlet.gtmpl"
 )
-public class UIFAQPortlet extends UIPortletApplication {
+public class UIAnswersPortlet extends UIPortletApplication {
 	private boolean isFirstTime = true;
-  public UIFAQPortlet() throws Exception {
-  	addChild(UIFAQContainer.class, null, null) ;
+  public UIAnswersPortlet() throws Exception {
+  	addChild(UIAnswersContainer.class, null, null) ;
   	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
-    uiPopup.setId("UIFAQPopupAction") ;
-    uiPopup.getChild(UIPopupWindow.class).setId("UIFAQPopupWindow");
+    uiPopup.setId("UIAnswersPopupAction") ;
+    uiPopup.getChild(UIPopupWindow.class).setId("UIAnswersPopupWindow");
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
     	isFirstTime = true;
-    	if(getChild(UIFAQContainer.class) == null){
+    	if(getChild(UIAnswersContainer.class) == null){
     		if(getChild(UISettingForm.class) != null) {
     			removeChild(UISettingForm.class);
     		}
-	    	addChild(UIFAQContainer.class, null, null) ;
+	    	addChild(UIAnswersContainer.class, null, null) ;
     	} 
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
     	try{
     		if(isFirstTime){
     			isFirstTime = false;
-		    	UIQuestions questions = getChild(UIFAQContainer.class).getChild(UIQuestions.class);
+		    	UIQuestions questions = getChild(UIAnswersContainer.class).getChild(UIQuestions.class);
 		  		FAQSetting faqSetting = questions.getFAQSetting();
 		    	if(getChild(UISettingForm.class) == null) {
 		    		if(faqSetting.isAdmin()){
-			    		removeChild(UIFAQContainer.class);
+			    		removeChild(UIAnswersContainer.class);
 				    	UISettingForm settingForm = addChild(UISettingForm.class, null, "FAQPortletSetting");
 				    	settingForm.setRendered(true);
 				    	settingForm.setIsEditPortlet(true);

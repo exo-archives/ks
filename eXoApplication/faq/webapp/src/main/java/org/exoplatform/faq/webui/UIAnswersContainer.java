@@ -31,12 +31,12 @@ import org.exoplatform.webui.core.UIContainer;
  */
 
 @ComponentConfig(
-		template = "app:/templates/faq/webui/UIFAQContainer.gtmpl"
+		template = "app:/templates/faq/webui/UIAnswersContainer.gtmpl"
 )
-public class UIFAQContainer extends UIContainer  {
+public class UIAnswersContainer extends UIContainer  {
 	private FAQSetting faqSetting_ = null;
 	private String currentUser_;
-  public UIFAQContainer() throws Exception {
+  public UIAnswersContainer() throws Exception {
   	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   	currentUser_ = FAQUtils.getCurrentUser() ;
   	faqSetting_ = new FAQSetting();

@@ -27,7 +27,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.UserHelper;
@@ -217,7 +217,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
         event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
         return ;
       }
-      UIFAQPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIFAQPortlet.class) ;
+      UIAnswersPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIAnswersPortlet.class) ;
       String toAddress = "";
       StringBuffer sb = new StringBuffer() ;
       for (User ct : checkedUser) {

@@ -149,14 +149,14 @@ public class UIQuestions extends UIContainer {
 	private boolean isGetSv = true;
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	
-	public UIFAQPageIterator pageIterator = null ;
+	public UIAnswersPageIterator pageIterator = null ;
 	public long pageSelect = 0;
 
 	public UIQuestions()throws Exception {
 		backPath_ = null ;
 		this.categoryId_ = null ;
 		currentUser_ = FAQUtils.getCurrentUser() ;
-		addChild(UIFAQPageIterator.class, null, OBJECT_ITERATOR);
+		addChild(UIAnswersPageIterator.class, null, OBJECT_ITERATOR);
 		if(faqService_ == null)faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		if(FAQUtils.isFieldEmpty(getId())) setId("UIQuestions");
 	}
@@ -530,7 +530,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -549,7 +549,7 @@ public class UIQuestions extends UIContainer {
 						return ;
 					}
 				} catch (Exception e) {
-					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIFAQContainer.class));
+					FAQUtils.findCateExist(faqService_, question.getAncestorOfType(UIAnswersContainer.class));
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
@@ -566,12 +566,12 @@ public class UIQuestions extends UIContainer {
 	static public class AddNewQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			if(!faqService_.isExisting(questions.categoryId_)){
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				UIFAQContainer fAQContainer = questions.getAncestorOfType(UIFAQContainer.class) ;				
+				UIAnswersContainer fAQContainer = questions.getAncestorOfType(UIAnswersContainer.class) ;				
 				event.getRequestContext().addUIComponentToUpdateByAjax(fAQContainer) ;
 				return ;
 			}
@@ -599,7 +599,7 @@ public class UIQuestions extends UIContainer {
 	static	public class SettingActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
-			UIFAQPortlet uiPortlet = question.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 480) ;
 			watchContainer.setIsRenderedContainer(1) ;
@@ -614,7 +614,7 @@ public class UIQuestions extends UIContainer {
 	static  public class QuestionManagamentActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 
@@ -630,7 +630,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQExportForm") ;
@@ -645,7 +645,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			String rssLink = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQRSSForm") ;
@@ -660,7 +660,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet uiPortlet = questions.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = questions.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
 			UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 			try {
@@ -680,7 +680,7 @@ public class UIQuestions extends UIContainer {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
@@ -704,7 +704,7 @@ public class UIQuestions extends UIContainer {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 
@@ -712,7 +712,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQImportForm") ;
@@ -728,7 +728,7 @@ public class UIQuestions extends UIContainer {
 			UIQuestions questions = event.getSource() ;
 			if(questions.isSortAnswerUp == null) questions.isSortAnswerUp = false;
 			else questions.isSortAnswerUp = !questions.isSortAnswerUp;
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 	// move up
@@ -736,7 +736,7 @@ public class UIQuestions extends UIContainer {
 		if(!question.isActivated() || (!question.isApproved() && faqSetting_.getDisplayMode().equals(FAQUtils.DISPLAYAPPROVED))){
 			uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.WARNING)) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(this.getAncestorOfType(UIFAQContainer.class)) ;			
+			event.getRequestContext().addUIComponentToUpdateByAjax(this.getAncestorOfType(UIAnswersContainer.class)) ;			
 			return true;
 		} else {
 			return false;
@@ -746,7 +746,7 @@ public class UIQuestions extends UIContainer {
 	static  public class ViewQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ;
-			UIFAQPortlet faqPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet answerPortlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 			uiQuestions.isSortAnswerUp = null;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
@@ -776,15 +776,15 @@ public class UIQuestions extends UIContainer {
 					uiQuestions.pageList.setObjectId(questionId);
 					uiQuestions.setCategoryId(categoryId) ;
 					//uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(questionId) ;
-					UIBreadcumbs breadcumbs = faqPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;						
+					UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;						
 					breadcumbs.setUpdataPath(categoryId);
-					UICategories categories = faqPortlet.findFirstComponentOfType(UICategories.class);
+					UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
 					categories.setPathCategory(breadcumbs.getPaths());
 					event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-pending", null, ApplicationMessage.INFO)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(faqPortlet) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
 					return ;
 				}
 				uiQuestions.viewingQuestionId_ = questionId ;		
@@ -795,7 +795,7 @@ public class UIQuestions extends UIContainer {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}	
 	
@@ -812,7 +812,7 @@ public class UIQuestions extends UIContainer {
 			uiQuestions.backPath_ = "" ;
 			uiQuestions.viewingQuestionId_ = questionId ;
 			uiQuestions.updateLanguageMap() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;			 
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;			 
 		}
 	}
 
@@ -823,7 +823,7 @@ public class UIQuestions extends UIContainer {
 			language_ = FAQUtils.getDefaultLanguage() ;
 			uiQuestions.backPath_ = "" ;			
 			uiQuestions.viewingQuestionId_ = "" ; 
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 	
@@ -836,7 +836,7 @@ public class UIQuestions extends UIContainer {
 			try{
 				question = faqService_.getQuestionById(questionId);
 				isAnswerApproved = !faqService_.isModerateAnswer(questionId);
-				UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
+				UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
@@ -854,7 +854,7 @@ public class UIQuestions extends UIContainer {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				uiForm.updateCurrentQuestionList() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIFAQContainer.class)) ;				
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIAnswersContainer.class)) ;				
 				return ;
 			} 
 		}
@@ -873,12 +873,12 @@ public class UIQuestions extends UIContainer {
 				UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 				return ;
 			} catch (Exception e) { 
 				e.printStackTrace() ;
 			} 
-			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
@@ -896,7 +896,7 @@ public class UIQuestions extends UIContainer {
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			User user = UserHelper.getUserByUserId(userId);
 			if(user != null){
-				UIFAQPortlet portlet = question.getAncestorOfType(UIFAQPortlet.class) ;
+				UIAnswersPortlet portlet = question.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIViewUserProfile viewUserProfile = popupContainer.addChild(UIViewUserProfile.class, null, null) ;
@@ -919,7 +919,7 @@ public class UIQuestions extends UIContainer {
 			UIQuestions questions = event.getSource() ;
 			//questions.isChangeLanguage = false ;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			Question question = null ;
@@ -945,7 +945,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			if (!faqService_.isExisting(questionId)){
@@ -967,11 +967,11 @@ public class UIQuestions extends UIContainer {
 	static  public class PrintAllQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			if(!faqService_.isExisting(questions.categoryId_)){
-				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIFAQContainer.class));
+				FAQUtils.findCateExist(faqService_, questions.getAncestorOfType(UIAnswersContainer.class));
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -993,7 +993,7 @@ public class UIQuestions extends UIContainer {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
 				return ;
 			}
 			String answerId = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -1011,7 +1011,7 @@ public class UIQuestions extends UIContainer {
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
 				return ;
 			} 
 			faqService_.deleteCommentQuestionLang(questions.viewingQuestionId_, commentId, language_);
@@ -1024,7 +1024,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
 			String commentId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			try{				
 				Comment comment = faqService_.getCommentById(questions.viewingQuestionId_, commentId, language_);
 				if(comment != null){
@@ -1071,7 +1071,7 @@ public class UIQuestions extends UIContainer {
 					questionId = objIds;
 					commentId =  "new";
 				}
-				UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+				UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 				if(!faqService_.isExisting(questionId)){				
 					UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
@@ -1104,7 +1104,7 @@ public class UIQuestions extends UIContainer {
 	static  public class VoteQuestionActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			String objectId = event.getRequestContext().getRequestParameter(OBJECTID);
 			if(!faqService_.isExisting(questions.viewingQuestionId_)){
 				UIApplication uiApplication = questions.getAncestorOfType(UIApplication.class) ;
@@ -1124,7 +1124,7 @@ public class UIQuestions extends UIContainer {
         	questions.questionMap_.put(question.getLanguage(), question);
         }
     	}
-      event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class)) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 
@@ -1148,7 +1148,7 @@ public class UIQuestions extends UIContainer {
         	questions.questionMap_.put(question.getLanguage(), question);
         }
     	}
-			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIFAQContainer.class));
+			event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class));
 		}
 	}
 	
@@ -1156,7 +1156,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = questions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			if(!faqService_.isExisting(questionId)){
@@ -1181,7 +1181,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIFAQPortlet portlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class) ;
 			boolean isSendLink = true;
 			if(questionId.indexOf("/true") > 0){
 				questionId = questionId.replace("/true", "");
@@ -1192,7 +1192,7 @@ public class UIQuestions extends UIContainer {
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				//uiQuestions.setIsNotChangeLanguage() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 				return ;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -1246,7 +1246,7 @@ public class UIQuestions extends UIContainer {
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}
 			//uiQuestions.setIsNotChangeLanguage();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIFAQContainer.class)) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions.getAncestorOfType(UIAnswersContainer.class)) ;
 		}
 	}
 	
@@ -1255,7 +1255,7 @@ public class UIQuestions extends UIContainer {
     public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiForm = event.getSource() ; 
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet portlet = uiForm.getAncestorOfType(UIFAQPortlet.class) ;
+			UIAnswersPortlet portlet = uiForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			FAQUtils.getPorletPreference(uiForm.faqSetting_);
 			String forumId = uiForm.faqSetting_.getIdNameCategoryForum();
 			forumId = forumId.substring(0, forumId.indexOf(";"));
@@ -1369,7 +1369,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 			
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIFAQPortlet uiPortlet = uiQuestions.getAncestorOfType(UIFAQPortlet.class);
+			UIAnswersPortlet uiPortlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
 			try {
 				Category cate = faqService_.getCategoryById(categoryId) ;
@@ -1381,7 +1381,7 @@ public class UIQuestions extends UIContainer {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
-				FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIFAQContainer.class));
+				FAQUtils.findCateExist(faqService_, uiQuestions.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}

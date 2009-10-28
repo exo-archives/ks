@@ -17,8 +17,8 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.webui.UIFAQContainer;
-import org.exoplatform.faq.webui.UIFAQPortlet;
+import org.exoplatform.faq.webui.UIAnswersContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -98,8 +98,8 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   static public class CancelActionListener extends EventListener<UIQuestionManagerForm> {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
-      UIFAQPortlet portlet = questionManagerForm.getAncestorOfType(UIFAQPortlet.class) ;
-      UIFAQContainer container = portlet.findFirstComponentOfType(UIFAQContainer.class) ;
+      UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class) ;
+      UIAnswersContainer container = portlet.findFirstComponentOfType(UIAnswersContainer.class) ;
       //uiQuestions.setIsNotChangeLanguage() ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       popupAction.deActivate() ;

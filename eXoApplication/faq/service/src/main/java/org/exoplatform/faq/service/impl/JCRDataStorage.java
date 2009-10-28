@@ -397,12 +397,10 @@ public class JCRDataStorage implements DataStorage {
     SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider) ;
-      
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
         log.debug("root category is already created");
         return false;
-      }
-      
+      }      
       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
       categoryHome.addMixin("mix:faqSubCategory") ;
       categoryHome.setProperty("exo:name", "Answers") ;
@@ -413,7 +411,7 @@ public class JCRDataStorage implements DataStorage {
     }catch (Exception e) {
       log.error("Could not initialize root category", e);
       return false;
-    }finally { sProvider.close() ;}
+    }finally {sProvider.close() ; }
 
   }
 	
@@ -2500,11 +2498,11 @@ public class JCRDataStorage implements DataStorage {
 		eventQuery.setPath(categoryHome.getPath()) ;
 		try {
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager() ;
-			System.out.println("Query ====>" + eventQuery.getQuery());
+			//System.out.println("Query ====>" + eventQuery.getQuery());
 			Query query = qm.createQuery(eventQuery.getQuery(), Query.XPATH) ;
 			QueryResult result = query.execute() ;
 			NodeIterator iter = result.getNodes() ;
-			System.out.println("size ====>" + iter.getSize());
+			//System.out.println("size ====>" + iter.getSize());
 			Node nodeObj = null;
 			if(eventQuery.getType().equals("faqCategory")){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;

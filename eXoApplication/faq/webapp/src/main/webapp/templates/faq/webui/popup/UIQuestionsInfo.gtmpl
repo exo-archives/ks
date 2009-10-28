@@ -2,7 +2,7 @@
 	import java.util.Map;
 	import java.util.HashMap;
 	import org.exoplatform.faq.service.Question;
-	import org.exoplatform.faq.webui.UIFAQPageIterator ; 
+	import org.exoplatform.faq.webui.UIAnswersPageIterator ; 
 	import org.exoplatform.webui.form.UIFormInputWithActions;
 	import org.exoplatform.faq.webui.FAQUtils;	
 %>

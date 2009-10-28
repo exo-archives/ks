@@ -47,7 +47,7 @@
 		    	println "<div style=\"margin:5px 0px 5px 0px ;\">";
 		    	println 	"<div class=\"Icon FAQCategoryViewMove\"><span></span></div>";
 		    	println		"<div id=\"FAQCate" + i + "\" style=\"float:left\">";
-		    	println 		"<a href=\"javaScript: void(0)\" onclick=\"eXo.faq.UIFAQPortlet.treeView('FAQViewChild"+i+"')\" title=\"" + title + "\" ondblclick=\"" + link + "\">";
+		    	println 		"<a href=\"javaScript: void(0)\" onclick=\"eXo.faq.UIAnswersPortlet.treeView('FAQViewChild"+i+"')\" title=\"" + title + "\" ondblclick=\"" + link + "\">";
 		    	println			"" + categoryName + "";
 		    	println			"</a>";
 		    	println 	"</div>";

@@ -51,7 +51,7 @@ if(!uicomponent.isEditPortlet_){
 											<td class="FieldLabel"><%=_ctx.appRes("UISettingForm.label.Avatar")%>:</td>
 											<td>
 													<div style="float:left; color:blue; white-space:nowrap; padding:2px 5px; text-align:center;">
-														<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" alt="" onload="eXo.faq.UIFAQPortlet.reSizeAvatar(this);" style="margin:5px;"/>
+														<img id="FAQUserAvatar" src="$uicomponent.avatarUrl" class="Img" alt="" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" style="margin:5px;"/>
 														<br/>
 														<a href="javaScript:void(0);" onclick="<%=uicomponent.event("ChangeAvatar")%>" style="color:blue; cursor:pointer;">
 															<%=_ctx.appRes("UISettingForm.action.ChangeAvatar")%>
@@ -251,10 +251,10 @@ if(!uicomponent.isEditPortlet_){
 										      if(i == 1) {%>
 											      <div class="FAQDomNode">
 															<div class="FAQCategoryTreeView" id="FAQCate$i">
-																<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+																<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 															 	 </div>
-																<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+																<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
 																	<%= cate.getCategory().getName();%>
 																</a>
 															</div>
@@ -267,10 +267,10 @@ if(!uicomponent.isEditPortlet_){
 										        	</div>
 											      <div class="FAQDomNode">
 										        	<div class="FAQCategoryTreeView">
-										        			<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+										        			<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 															 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 															 	 </div>
-																	<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+																	<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
 																		<%= cate.getCategory().getName();%>
 																	</a>
 															</div>
@@ -281,10 +281,10 @@ if(!uicomponent.isEditPortlet_){
 												      <div class="FAQDomNode">
 																<div class="FAQCategoryTreeView">
 														    	<div id="FAQCate$i" style=" overflow-x:auto;">
-														    		<div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+														    		<div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 																 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 																 	 </div>
-														    		<a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+														    		<a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
 														    			<%= cate.getCategory().getName();%>
 														    		</a>
 														    	</div>
@@ -298,10 +298,10 @@ if(!uicomponent.isEditPortlet_){
 										     		<%}%>
 											      <div class="FAQDomNode">
 														 <div class="Icon FAQCategoryTreeView">
-														 	 <div style="float:left" onclick="eXo.faq.UIFAQPortlet.checkedNode(this)">
+														 	 <div style="float:left" onclick="eXo.faq.UIAnswersPortlet.checkedNode(this)">
 														 	 		<%formInput.renderChild(cate.getCategory().getId());%>
 														 	 </div>
-															 <a href="javaScript:void(0)" onclick="eXo.faq.UIFAQPortlet.treeView('FAQViewChild$id')">
+															 <a href="javaScript:void(0)" onclick="eXo.faq.UIAnswersPortlet.treeView('FAQViewChild$id')">
 															 	<%= cate.getCategory().getName();%>
 															 </a>
 														 </div>
