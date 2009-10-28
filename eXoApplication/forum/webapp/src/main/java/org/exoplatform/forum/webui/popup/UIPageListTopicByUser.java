@@ -29,6 +29,7 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -68,6 +69,7 @@ public class UIPageListTopicByUser extends UIContainer{
 	private String strOrderBy = "";
 	private String userName = new String() ;
 	private boolean isUseAjax = true;
+	private List<Topic> topics = new ArrayList<Topic>(); 
 	public UIPageListTopicByUser() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
@@ -91,7 +93,6 @@ public class UIPageListTopicByUser extends UIContainer{
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsByUser() throws Exception {
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
-		List<Topic> topics = new ArrayList<Topic>(); 
 		try {
 			boolean isMod = false;
 			if(this.userProfile.getUserRole() == 0) isMod = true;
@@ -104,13 +105,11 @@ public class UIPageListTopicByUser extends UIContainer{
 		return topics ;
 	}
 	
-	@SuppressWarnings("unchecked")
   public Topic getTopicById(String topicId) throws Exception {
-		List<Topic> topics = pageList.getAll() ;
 		for(Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return null ;
+		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC) ;
 	}
 	
 	@SuppressWarnings("unused")

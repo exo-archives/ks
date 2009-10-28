@@ -883,11 +883,11 @@
 															<div class="MiddleRightRightClickPopupMenu">
 																<div class="UIRightPopupMenuContainer" style="width:140px; min-width:140px;">
 																	<div class="LineMenu"><span></span></div>
-																		<div title="$title1" class="MenuItem" onclick="$link2">	 
-																			<div class="ItemIcon">
-																				<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
-																			</div>
+																	<div title="$title1" class="MenuItem" onclick="$link2">	 
+																		<div class="ItemIcon">
+																			<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
 																		</div>
+																	</div>
 																	<% 
 																		if(userProfile.getUserRole() == 0) {
 																		String link = "javascript:if(confirm('" + _ctx.appRes("UITopicDetail.confirm.BanAllForum") + "')){" + uicomponent.event("BanIPAllForum", ip).replaceFirst("javascript:", "") + ";}"; 

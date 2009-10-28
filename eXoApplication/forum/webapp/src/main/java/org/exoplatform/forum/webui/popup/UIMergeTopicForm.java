@@ -114,19 +114,16 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					String forumId = temp[temp.length - 2] ;
 					ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 					String link = uiForm.getLink();
+					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+					ResourceBundle res = context.getApplicationResourceBundle() ;
+					String emailContent = res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved");
 					try {
 						for(Topic topic : uiForm.listTopic) {
 							if(topicMergeId.equals(topic.getId())) {continue ;}
 							try {
 								// set link
 								link = (ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel", "pathId")).replaceFirst("private", "public");	
-								//
-								WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-								ResourceBundle res = context.getApplicationResourceBundle() ;
-								JCRPageList pageList = forumService.getPosts(categoryId, forumId, topic.getId(), "", "", "", "") ;
-								List<Post> posts = pageList.getAll();
-								forumService.movePost(posts, destTopicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
-								forumService.removeTopic(categoryId, forumId, topic.getId()) ;
+								forumService.mergeTopic(categoryId+"/"+forumId+"/"+topic.getId(), destTopicPath, emailContent, link) ;
 		          } catch (Exception e) {
 			          isMerge = false;
 			          break;

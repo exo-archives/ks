@@ -469,6 +469,7 @@ public class ForumTransformHTML {
 	}
 
 	public static String getTitleInHTMLCode(String s) {
+		if(s == null || s.trim().length() == 0) return "";
 		if(s.length() > 500) s = s.substring(0, 500);
 		s = removeCharterStrange(s);
 		s = cleanHtmlCode(s);

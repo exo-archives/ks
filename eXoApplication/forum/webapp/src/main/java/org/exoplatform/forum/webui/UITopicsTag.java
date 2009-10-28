@@ -74,6 +74,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private String userIdAndtagId ;
 	private UserProfile userProfile = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
+	private List<Topic> topics = new ArrayList<Topic>();
 	private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
 	public UITopicsTag() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -158,7 +159,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		if(maxTopic <= 0) maxTopic = 10;
 		this.pageList.setPageSize(maxTopic) ;
 		this.maxPage = this.pageList.getAvailablePage();
-		List<Topic> topics = pageList.getPage(pageSelect) ;
+		topics = pageList.getPage(pageSelect) ;
 		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for(Topic topic : topics) {
@@ -200,13 +201,11 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 //    return tags;
 //	}
 	
-	@SuppressWarnings("unchecked")
   private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.pageList.getAll();
-		for (Topic topic : listTopic) {
+		for (Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return null ;
+		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)  ;
 	}
 	
 	private Forum getForum(String categoryId, String forumId) throws Exception {

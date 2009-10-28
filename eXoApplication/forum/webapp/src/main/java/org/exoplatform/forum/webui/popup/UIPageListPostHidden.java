@@ -55,7 +55,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIPageListPostHidden extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private ForumService forumService ;
 	private String categoryId, forumId, topicId ;
-	private List<Post> listAllPost = new ArrayList<Post>() ;
+	private List<Post> listPost = new ArrayList<Post>() ;
 	
 	public UIPageListPostHidden() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -79,11 +79,11 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		pageList	= forumService.getPosts(this.categoryId, this.forumId, this.topicId, "", "true", "", "");
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
-		List<Post> posts = pageList.getPage(pageSelect);
+		listPost = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
-		if(posts == null) posts = new ArrayList<Post>();
-		if(!posts.isEmpty()) {
-			for (Post post : posts) {
+		if(listPost == null) listPost = new ArrayList<Post>();
+		if(!listPost.isEmpty()) {
+			for (Post post : listPost) {
 				if(getUIFormCheckBoxInput(post.getId()) != null) {
 					getUIFormCheckBoxInput(post.getId()).setChecked(false) ;
 				}else {
@@ -91,15 +91,14 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 				}
 			}
 		}
-		this.listAllPost = pageList.getAll();
-		return posts ;
+		return listPost ;
 	}
 	
-	private Post getPost(String postId) {
-		for (Post post : this.listAllPost) {
+	private Post getPost(String postId) throws Exception {
+		for (Post post : this.listPost) {
 			if(post.getId().equals(postId)) return post ;
 		}
-		return null ;
+		return forumService.getPost(this.categoryId, this.forumId, this.topicId, postId) ;
 	}
 	
 	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
@@ -138,7 +137,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 					postHidden.forumService.modifyPost(posts, 2);
 				}catch (Exception e) {}
 			}
-			if(posts.size() == postHidden.listAllPost.size()) {
+			if(posts.size() == postHidden.listPost.size()) {
 				UIForumPortlet forumPortlet = postHidden.getAncestorOfType(UIForumPortlet.class);
 				forumPortlet.cancelAction();
 				UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class);

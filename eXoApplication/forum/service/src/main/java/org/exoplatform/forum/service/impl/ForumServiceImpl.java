@@ -544,6 +544,10 @@ public class ForumServiceImpl implements ForumService, Startable {
   	return storage_.getLastReadIndex(path, isApproved, isHidden, userLogin);
   }
   
+  public JCRPageList getPostForSplitTopic(String topicPath) throws Exception {
+  	return storage_.getPostForSplitTopic(topicPath);
+  }
+  
   public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
   	sProvider.close() ;
     return getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
@@ -589,6 +593,10 @@ public class ForumServiceImpl implements ForumService, Startable {
     storage_.movePost(posts, destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
+  public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
+  	storage_.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
+  }
+  
   public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
   	sProvider.close() ;
     return removePost(categoryId, forumId, topicId, postId);
