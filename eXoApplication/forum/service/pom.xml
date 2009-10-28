@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
   <packaging>jar</packaging>
-  <name>eXo Forum service</name>
+  <name>eXo KS Forum service</name>
   <url>http://www.exoplatform.org</url>
   <description>eXo Forum service</description>
   

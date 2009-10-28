@@ -7,7 +7,7 @@
     
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.extension.config</artifactId>
-  <name>KS Extension Configuration</name>
+  <name>eXo KS Extension configuration jar</name>
   <packaging>jar</packaging>
   <url>http://www.exoplatform.org</url> 
   <description>KS Extension Configuration for GateIn </description>

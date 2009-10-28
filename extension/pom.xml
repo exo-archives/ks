@@ -7,18 +7,13 @@
   </parent>
 
   <artifactId>exo.ks.extension</artifactId>
-  <name>KS Extension</name>
+  <name>eXo KS Extension</name>
   <packaging>pom</packaging>
   <description>KS Extension Root Pom</description>
 
   <modules>
 	<module>config</module>
 	<module>webapp</module>
-	<!--
-	<module>jar</module>
-
-	
-	-->
 	<module>ear</module>
   </modules>
 </project>

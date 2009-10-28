@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
   <packaging>war</packaging>
-  <name>eXo Forum application</name>
+  <name>eXo KS Forum application</name>
   <url>http://www.exoplatform.org</url>
   <description>eXo Forum application</description>
   

@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.demo.ear</artifactId>
   <packaging>ear</packaging>
-  <name>KS Demo EAR</name>
+  <name>eXo KS Demo Portal ear</name>
   <url>http://www.exoplatform.org</url>
   <description>KS Demo EAR for GateIn</description>
   <properties>

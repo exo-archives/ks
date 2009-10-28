@@ -7,9 +7,9 @@
   </parent>
 
   <artifactId>exo.ks.demo</artifactId>
-  <name>KS Demo</name>
+  <name>eXo KS Demo Portal</name>
   <packaging>pom</packaging>
-  <description>eXo KS Demo</description>
+  <description>eXo KS Demo Portal</description>
 
   <modules>
 	<module>config</module>
