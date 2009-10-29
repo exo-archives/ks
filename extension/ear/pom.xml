@@ -142,6 +142,7 @@
                <groupId>org.exoplatform.comet</groupId>
                <artifactId>exo-comet-webapp</artifactId>
                <contextRoot>cometd</contextRoot>
+               <bundleFileName>cometd.war</bundleFileName>
              </webModule>       
              <jarModule>
                <groupId>org.exoplatform.comet</groupId>
@@ -172,6 +173,7 @@
                <groupId>org.exoplatform.ks</groupId>
                <artifactId>exo.ks.extension.webapp</artifactId>
                <contextRoot>ks</contextRoot>
+                <bundleFileName>ks.war</bundleFileName>
              </webModule>
              <jarModule>
                <groupId>org.exoplatform.ks</groupId>
@@ -187,6 +189,7 @@
                <groupId>org.exoplatform.ks</groupId>
                <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
                <contextRoot>faq</contextRoot>
+                <bundleFileName>faq.war</bundleFileName>
              </webModule>             
               <jarModule>
                <groupId>org.exoplatform.ks</groupId>
@@ -197,11 +200,13 @@
                <groupId>org.exoplatform.ks</groupId>
                <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
                <contextRoot>forum</contextRoot>
+                <bundleFileName>forum.war</bundleFileName>
              </webModule>     
              <webModule>
                <groupId>org.exoplatform.ks</groupId>
                <artifactId>exo.ks.web.ksResources</artifactId>
                <contextRoot>ksResources</contextRoot>
+                <bundleFileName>ksResources.war</bundleFileName>
              </webModule>                            
               <jarModule>
                <groupId>org.exoplatform.ks</groupId>
