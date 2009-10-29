@@ -139,10 +139,35 @@
 					<div style="clear:left;"><span></span></div>
 				</div>
 			<%} %>
-				<div class="ScrollButtons" style="width:35px;">
-      		<div title="Previous">
-      			<div title="Next"><span></span></div>
-      		</div>
+				<div class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
+      					<% /*Begin Popup Menu*/ %>
+			<div style="position:relative;">
+				<div class="UIPopupCategory" style="display:none;">
+					<div class="UIRightClickPopupMenu" style="display:block;">
+						<div class="UIContextMenuContainer">
+							<div class="TopLeftRightClickPopupMenu">
+								<div class="TopRightRightClickPopupMenu">
+									<div class="TopCenterRightClickPopupMenu"><span></span></div>
+								</div>
+							</div>
+							<div class="MiddleLeftRightClickPopupMenu">
+								<div class="MiddleRightRightClickPopupMenu">
+									<div class="UIRightPopupMenuContainer">
+										
+										
+									</div>
+								</div>
+							</div>
+							<div class="BottomLeftRightClickPopupMenu">
+								<div class="BottomRightRightClickPopupMenu">
+									<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<% /*End Popup Menu*/ %>
       	</div>
 				<div style="clear:left;"><span></span></div>
 			</div>
