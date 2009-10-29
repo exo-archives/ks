@@ -382,9 +382,8 @@ public class TestForumService extends BaseForumTestCase{
 		Topic topicnew = createdTopic("root");
 		forumService_.saveTopic(categoryId, forumId, topicnew, true, false, "");
 		topicnew = forumService_.getTopic(categoryId, forumId, topicnew.getId(), "root");
-		List<Post> listPost = new ArrayList<Post>();
-		listPost.add(newPost);
-		forumService_.movePost(listPost, topicnew.getPath(), false, "test mail content", "");
+	
+		forumService_.movePost(new String [] {newPost.getPath()}, topicnew.getPath(), false, "test mail content", "");
 		assertNotNull(forumService_.getPost(categoryId, forumId, topicnew.getId(), newPost.getId()));
 		
 		//test remove Post return post

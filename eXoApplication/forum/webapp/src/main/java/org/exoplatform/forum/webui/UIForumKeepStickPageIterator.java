@@ -44,7 +44,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public int maxPage = 1;
 	@SuppressWarnings("unchecked")
   public JCRPageList pageList ;
-	public long totalCheked = 0;
+	public int totalCheked = 0;
 	private int endTabPage = 0;
 	private int beginTabPage = 0;
 	public boolean isUseAjax = true;
@@ -54,11 +54,11 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	public UIForumKeepStickPageIterator () throws Exception {
 	}
 	
-	public List<String> getListChecked(long page) {
+	public List<String> getListChecked(int page) {
 	  return pageCheckedList.get(page);
   }
 	
-	public long getTotalChecked() {
+	public int getTotalChecked() {
 	  return totalCheked;
   }
 	public void cleanCheckedList() {
@@ -81,9 +81,9 @@ public class UIForumKeepStickPageIterator extends UIForm {
 	}
 	
 	public List<String> getTotalpage() throws	Exception {
-		int max_Page = (int)pageList.getAvailablePage() ;
+		int max_Page = pageList.getAvailablePage() ;
 		if(this.pageSelect > max_Page) this.pageSelect = max_Page ;
-		long page = this.pageSelect ;
+		int page = this.pageSelect ;
 		if(page <= 3) {
 			beginTabPage = 1 ;
 			if(max_Page <= 7)
@@ -119,7 +119,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 		this.pageSelect = page;
 	}
 	
-	public long getPageSelect() {
+	public int getPageSelect() {
 		return this.pageSelect ;
 	}
 	
@@ -127,7 +127,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
   public List<String> getIdSelected() throws Exception{
 		List<UIComponent> children = this.getChildren() ;
 		List<String> ids = new ArrayList<String>() ;
-		for (long i = 0; i <= this.maxPage; i++) {
+		for (int i = 0; i <= this.maxPage; i++) {
 			if(pageCheckedList.get(i) != null)ids.addAll(pageCheckedList.get(i));
 		}
 		for(UIComponent child : children) {
@@ -190,7 +190,7 @@ public class UIForumKeepStickPageIterator extends UIForm {
 			}
 			keepStickPageIter.pageCheckedList.put(presentPage, checkedList);
 			int checked = 0;
-			for(long i = 1; i <= maxPage; i++) {
+			for(int i = 1; i <= maxPage; i++) {
 				if(keepStickPageIter.pageCheckedList.get(i) != null){
 					checked = checked + ((List<String>)keepStickPageIter.pageCheckedList.get(i)).size();
 				}

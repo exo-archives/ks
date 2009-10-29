@@ -192,12 +192,6 @@ public interface DataStorage {
 
   Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception;
 
-  void movePost(List<Post> posts,
-                String destTopicPath,
-                boolean isCreatNewTopic,
-                String mailContent,
-                String link) throws Exception;
-
   Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
 
   Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
@@ -406,6 +400,20 @@ public interface DataStorage {
   Map<String, String> getServerConfig_();
 
   KSDataLocation getDataLocation();
+
+  void setViewCountTopic(String path, String userRead) throws Exception;
+
+  JCRPageList getPostForSplitTopic(String topicPath) throws Exception;
+
+  void movePost(String[] postPaths,
+                String destTopicPath,
+                boolean isCreatNewTopic,
+                String mailContent,
+                String link) throws Exception;
+
+  void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
+
+  void updateUserProfileInfo(String name) throws Exception;
 
 
 }

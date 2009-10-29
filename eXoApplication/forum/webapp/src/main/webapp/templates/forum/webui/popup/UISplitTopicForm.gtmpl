@@ -6,7 +6,7 @@
 %>
 <%	
 	Topic topic = uicomponent.getTopic() ;
-	List postIds = uicomponent.getListPost();
+	List posts = uicomponent.getListPost();
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String url = uicomponent.url("Cancel","pathId");
@@ -52,8 +52,8 @@
 			  List checkeds = uicomponent.getListChecked(uicomponent.pageSelect);
 				if(checkeds == null) checkeds = new ArrayList<String>();
 				Date postDate = new Date();
-				for(postId in postIds) {
-				  Post post = uiform.getPostById(postId);
+				for(post in posts) {
+				 	String postId = post.getCreatedDate().getTime()+"/"+post.getId();
 					postDate.setTime(post.getCreatedDate().getTime() - setTime);
 					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 					String classIconPost = post.getIcon() ;
@@ -93,9 +93,7 @@
 						<div class="ButtonLeft">
 							<div class="ButtonRight">
 								<div class="ButtonMiddle">
-									<a href="javascript:void(0);">
-										$actionLabel
-									</a>
+									<a href="javascript:void(0);">$actionLabel</a>
 								</div>
 							</div>
 						</div>

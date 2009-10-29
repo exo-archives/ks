@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -56,7 +57,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator implements UIPopupComponent {
 	private ForumService forumService ;
 	private String categoryId, forumId ;
-	private List<Topic> allTopics ;
+	private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
@@ -78,7 +79,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 		pageList	= forumService.getPageTopic(this.categoryId, this.forumId, "@exo:isApproved='false'", "") ;
 		pageList.setPageSize(6) ;
 		maxPage = pageList.getAvailablePage();
-		List<Topic> topics = pageList.getPage(pageSelect);
+		topics = pageList.getPage(pageSelect);
 		pageSelect = pageList.getCurrentPage();
 		if(topics == null) topics = new ArrayList<Topic>(); 
 		for (Topic topic : topics) {
@@ -88,16 +89,14 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				addUIFormInput(new UIFormCheckBoxInput(topic.getId(), topic.getId(), false) );
 			}
 		}
-		this.allTopics = pageList.getAll();
 		return topics ;
 	}
 	
 	private Topic getTopic(String topicId) throws Exception {
-		List<Topic> listTopic = this.allTopics ;
-		for (Topic topic : listTopic) {
+		for (Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return null ;
+		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)  ;
 	}
 	
 	
@@ -124,7 +123,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UIPageListTopicUnApprove.sms.notCheck", args, ApplicationMessage.WARNING)) ;
 			}
-			if(listTopic.size() == topicUnApprove.allTopics.size()) {
+			if(listTopic.size() == topicUnApprove.topics.size()) {
 				UIForumPortlet forumPortlet = topicUnApprove.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
 				UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;

@@ -41,6 +41,7 @@ import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
@@ -264,6 +265,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isUseAjax = forumPortlet.isUseAjax();
 		listWatches = forumPortlet.getWatchinhByCurrentUser();
 		this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		setRenderInfoPorlet();
 	}
 	
@@ -281,6 +283,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		} else this.topic = topic;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -310,6 +313,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		} else this.topic = topic;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -605,9 +609,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					}
 					lastPostId = "";
 				}
-      } catch (Exception e) {e.printStackTrace();}
+      } catch (Exception e) {}
 			posts = pageList.getPage(pageSelect) ;
-//			pageSelect = pageList.getCurrentPage();
+			pageSelect = pageList.getCurrentPage();
 			pagePostRemember.put(topicId, pageSelect);
 			if(posts == null) posts = new ArrayList<Post>(); 
 			List<String> userNames = new ArrayList<String>() ;
@@ -664,14 +668,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		return list;	
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Post> getAllPost() throws Exception {return this.pageList.getAll() ;}
-	
 	private Post getPost(String postId) throws Exception {
-		for(Post post : getAllPost()) {
-			if(post.getId().equals(postId)) return post;
-		}
-		return null ;
+		return forumService.getPost(categoryId, forumId, topicId, postId);
 	}
 	
 	public void setPostRules(boolean isNull) throws Exception {
@@ -1348,12 +1346,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;
 			try{
-				List<Post>list = topicDetail.getAllPost() ;
-				if(list.size() > 1) {
+				JCRPageList pageList = topicDetail.forumService.getPostForSplitTopic(topicDetail.categoryId+"/"+topicDetail.forumId +"/"+topicDetail.topicId);
+				if(pageList.getAvailable() > 0) {
 					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 					UISplitTopicForm splitTopicForm = popupAction.createUIComponent(UISplitTopicForm.class, null, null) ;
-					splitTopicForm.setListPost(list) ;
+					splitTopicForm.setPageListPost(pageList) ;
 					splitTopicForm.setTopic(topicDetail.topic) ;
 					splitTopicForm.setUserProfile(topicDetail.userProfile) ;
 					popupAction.activate(splitTopicForm, 700, 400) ;
@@ -1364,6 +1362,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;

@@ -270,6 +270,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
+	public void setViewCountTopic(String path, String userRead) throws Exception;
 	
 	/**
 	 * Gets the topic by path.
@@ -335,6 +336,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception;
+	public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 	
 	/**
 	 * Gets the posts.
@@ -352,6 +354,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
+	public JCRPageList getPostForSplitTopic(String topicPath) throws Exception; 
 	public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception;
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception;
 	public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception;
@@ -429,7 +432,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
+	public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
 	    throws Exception;
 
 	/**
@@ -622,11 +625,8 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception;
-
-	 /**
-   * @deprecated use {@link #updateUserProfile(User)}
-   */
-	public void saveEmailUserProfile(String userId, String email) throws Exception;
+	public void updateUserProfile(User user) throws Exception ;
+	
 	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception;
 	/**
 	 * Gets the user profile.
@@ -885,12 +885,9 @@ public interface ForumService extends ForumServiceLegacy{
   public List<Post> getNewPosts(int number) throws Exception ;
   
   public NodeIterator search(String queryString) throws Exception ;
-  
-  
   //public void updateForumStatistic() throws Exception ;
   public void evaluateActiveUsers(String query) throws Exception ;
   public void createUserProfile (User user) throws Exception ;
-  public void updateUserProfile (User user) throws Exception ;
 
   public void updateTopicAccess (String userId, String topicId) throws Exception ;
   public void updateForumAccess (String userId, String forumId) throws Exception ;
@@ -955,6 +952,8 @@ public interface ForumService extends ForumServiceLegacy{
                                   String strOrderBy, int pageSize) throws Exception;
   
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
+  public void updateUserProfileInfo(String name) throws Exception ;
+    
 
   /**
    * <p>Add a new member to the forum. The forum profile is created and statistics updated</p>
@@ -970,5 +969,5 @@ public interface ForumService extends ForumServiceLegacy{
    * @throws Exception 
    */
   public void removeMember(User user) throws Exception;
-    
+      
 }

@@ -256,6 +256,14 @@ public class Utils {
     }
   }
 	
+	static public class DatetimeComparatorPostDESC implements Comparator<Post> {
+		public int compare(Post o1, Post o2) throws ClassCastException {
+			Date date1 = o2.getCreatedDate() ;
+			Date date2  = o1.getCreatedDate() ;
+			return date2.compareTo(date1) ;
+		}
+	}
+	
 	public static boolean isAddNewArray(String[] a, String[]b) {
 		List<String> list = new ArrayList<String>();
 		list = Arrays.asList(b);
