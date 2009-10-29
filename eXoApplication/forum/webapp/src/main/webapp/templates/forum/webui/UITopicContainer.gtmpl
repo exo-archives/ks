@@ -415,28 +415,30 @@
 							<tr>
 								<th style="width:40px;">&nbsp;</th>
 								<th style="width:40px;">&nbsp;</th>
-								<th >
-								<div class="DownArrow1Icon">
-									<a href="<%=uicomponent.event("SetOrderBy","name");%>"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
-								</div>
+								<th>
+									<div class="<%=uicomponent.getCssClassForSorting("name");%>" onclick="<%=uicomponent.event("SetOrderBy","name");%>">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIPageListTopicByUser.label.threadStarter");%></a>
+									</div>
 								</th>
 								<th style="width:40px;"><div class="AttachmentIcon" title="<%=_ctx.appRes("UITopicContainer.label.Attachments");%>"><span></span></div></th>
 								<th style="width:96px;">
-									<a href="<%=uicomponent.event("SetOrderBy","voteRating");%>"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+									<div class="<%=uicomponent.getCssClassForSorting("voteRating");%>" onclick="<%=uicomponent.event("SetOrderBy","voteRating");%>">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Rating");%></a>
+									</div>
 								</th>
 								<th style="width:130px;">
-									<div class="DownArrow1Icon">
-										<a href="<%=uicomponent.event("SetOrderBy","lastPostDate");%>"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
+									<div class="<%=uicomponent.getCssClassForSorting("lastPostDate");%>" onclick="<%=uicomponent.event("SetOrderBy","lastPostDate");%>">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.LastPosts");%></a>
 									</div>
 								</th>
 								<th style="width:60px;">
-									<div class="DownArrow1Icon">
-										<a href="<%=uicomponent.event("SetOrderBy","postCount");%>"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
+									<div class="<%=uicomponent.getCssClassForSorting("postCount");%>" onclick="<%=uicomponent.event("SetOrderBy","postCount");%>">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Replies");%></a>
 									</div>
 								</th>
 								<th style="width:60px;">
-									<div class="DownArrow1Icon">
-										<a href="<%=uicomponent.event("SetOrderBy","viewCount");%>"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
+									<div class="<%=uicomponent.getCssClassForSorting("viewCount");%>" onclick="<%=uicomponent.event("SetOrderBy","viewCount");%>">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UITopicContainer.label.Views");%></a>
 									</div>
 								</th>
 								<% if(canEdit) { %>

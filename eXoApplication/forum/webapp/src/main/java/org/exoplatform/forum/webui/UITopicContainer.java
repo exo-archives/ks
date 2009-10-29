@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, TopicType> topicTypeM = new HashMap<String, TopicType>();
 	private Map<String, Integer> pageTopicRemember = new HashMap<String, Integer>();
+	private Map<String, String> cssClassMap = new HashMap<String, String>();
 	public UITopicContainer() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
@@ -320,6 +322,28 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(this.forum != null){
 			forumContainer.findFirstComponentOfType(UIForumInfos.class).setForum(this.forum);
 		}
+	}
+
+	public String getCssClassForSorting(String path){
+		if(cssClassMap.get(path) == null){
+			return "DownArrow1Icon";
+		}
+		return cssClassMap.get(path);
+	}
+	
+	private void setCssClassForSorting(String path , String orderOption){
+			String[] properties = new String[] {"name","lastPostDate","voteRating","postCount","viewCount"};
+			for (int i = 0; i < properties.length; i++) {
+	      if(properties[i].equals(path)) {
+	      	if (orderOption.equals("ascending")) {
+	      		cssClassMap.put(properties[i], "UpArrow1Icon");
+	      	} else {
+	      		cssClassMap.put(properties[i], "DownArrow1Icon");
+	      	}
+	      } else {
+	      	cssClassMap.put(properties[i], "NonArrow1Icon");
+	      }
+      }
 	}
 	
 	private Forum getForum() throws Exception {
@@ -1199,19 +1223,29 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		public void execute(Event<UITopicContainer> event) throws Exception {
 			UITopicContainer uiContainer = event.getSource();
 			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+			String orderOption = null;
+			// In case : user have sort before
 			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
+				// If user want to reverse sort of a property
 				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
 					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
 						uiContainer.strOrderBy = path + " ascending";
+						orderOption = "ascending";
 					} else {
 						uiContainer.strOrderBy = path + " descending";
+						orderOption = "descending";
 					}
+				// User sort in another property
 				} else {
 					uiContainer.strOrderBy = path + " ascending";
+					orderOption = "ascending";
 				}
+			// In case : The first time user sorting
 			} else {
 				uiContainer.strOrderBy = path + " ascending";
+				orderOption = "ascending";
 			}
+			uiContainer.setCssClassForSorting(path, orderOption);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
