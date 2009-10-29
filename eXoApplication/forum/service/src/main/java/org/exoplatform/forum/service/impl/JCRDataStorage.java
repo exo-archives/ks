@@ -128,6 +128,8 @@ import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
+import com.mysql.jdbc.UpdatableResultSet;
+
 /**
  * Created by The eXo Platform SARL 
  * Author : Hung Nguyen Quang
@@ -148,7 +150,7 @@ public class JCRDataStorage {
 	final private static String KS_USER_AVATAR = "ksUserAvatar".intern() ;
 
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
-	Map<String, SendMessageInfo>	messagesInfoMap_	= new HashMap<String, SendMessageInfo>();
+	Map<String, Object>	infoMap_	= new HashMap<String, Object>();
 	List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
 	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
@@ -1100,6 +1102,7 @@ public class JCRDataStorage {
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node categoryNode = categoryHome.getNode(categoryId) ;
+			Map<String, Long> userPostMap = getDeletePostByUser(categoryNode) ;
 			Category category = getCategory(categoryNode);
 			try {
 				categoryNode.setProperty("exo:tempModerators", ValuesToArray(categoryNode.getProperty("exo:moderators").getValues()));
@@ -1115,7 +1118,10 @@ public class JCRDataStorage {
 				categoryNode.save();
       } catch (Exception e) {}
 			categoryNode.remove();
-			categoryHome.save() ;			
+			categoryHome.save() ;		
+			try {
+				addUpdateUserProfileJob(userPostMap);
+			}catch(Exception e){}			
 			return category;
 		} catch(Exception e) {
 			log.error("Failed to remover category " +categoryId);
@@ -1610,6 +1616,7 @@ public class JCRDataStorage {
 		try {
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
 			Node forumNode = catNode.getNode(forumId);
+			Map<String, Long> userPostMap = getDeletePostByUser(forumNode) ;
 			forum = getForum(forumNode);
 			forumNode.setProperty("exo:tempModerators", ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
 			forumNode.setProperty("exo:moderators", new String[]{" "});
@@ -1617,37 +1624,13 @@ public class JCRDataStorage {
 			forumNode.remove();
 			catNode.setProperty("exo:forumCount", catNode.getProperty("exo:forumCount").getLong() - 1);
 			catNode.save();			
-		/*	String[] moderators = forum.getModerators();
-			Node userProfileHomeNode = getUserProfileHome(sProvider);
-			Node userProfileNode;
-			forumId = forum.getForumName() + "(" + categoryId + "/" + forumId;
-			List<String> list;
-			for (String user : moderators) {
-				list = new ArrayList<String>();
-				try {
-					userProfileNode = userProfileHomeNode.getNode(user.trim());
-					list.addAll(ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues()));
-					if (list.contains(forumId)) list.remove(forumId);
-					if (list.size() == 0) {
-						if (userProfileNode.getProperty("exo:userRole").getLong() > 0) {
-							userProfileNode.setProperty("exo:userRole", 2);
-							userProfileNode.setProperty("exo:userTitle", Utils.USER);
-						}
-					}
-					userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if(userProfileHomeNode.isNew()){
-				userProfileHomeNode.getSession().save();
-			} else {
-				userProfileHomeNode.save();
-			}*/
-			return forum;
+			try {
+				addUpdateUserProfileJob(userPostMap);
+			}catch(Exception e){}			
 		} catch(Exception e) {
 			return null;
 		}finally{ sProvider.close() ;}
+		return forum;
 	}
 
 	public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
@@ -2405,27 +2388,77 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	private Map<String, Long> getDeletePostByUser(Node node) throws Exception  {
+	 	Map<String, Long> userPostMap = new HashMap<String, Long>() ;
+	 	StringBuilder strBuilder = new StringBuilder();
+		strBuilder.append("/jcr:root").append(node.getPath()).append("//element(*,exo:post)");
+		QueryManager qm = node.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();		
+		Node post = null ;
+		String owner = null ;
+		while(iter.hasNext()){
+			post = iter.nextNode() ; 
+			try{
+				owner = post.getProperty("exo:owner").getString() ;
+				userPostMap.put(owner, userPostMap.get(owner) + 1) ;
+			}catch (Exception e) {
+				userPostMap.put(owner, Long.parseLong("1")) ;
+			}
+		}		
+	 	return userPostMap ;
+	}
+	
+	public void updateUserProfileInfo(String name) throws Exception {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node userProfileHome = getUserProfileHome(sysProvider) ;
+			Node userNode = null ;
+			Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap_.get(name) ;			
+			for(String user : userPostMap.keySet()) {
+				try{
+					userNode = userProfileHome.getNode(user) ;
+					long totalPost = userNode.getProperty("exo:totalPost").getLong() ;
+					userNode.setProperty("exo:totalPost", totalPost - userPostMap.get(user)) ;
+					userNode.save() ;
+				}catch (Exception e) {}				
+			}
+			infoMap_.remove(name) ;
+		}catch(Exception e) {
+			e.printStackTrace() ;
+		}finally{ sysProvider.close() ;}
+		
+	}
+	
+	private void addUpdateUserProfileJob(Map<String, Long> userPostMap) throws Exception {
+		try {
+			Calendar cal = new GregorianCalendar();
+			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
+			String name = String.valueOf(cal.getTime().getTime());
+			Class clazz = Class.forName("org.exoplatform.forum.service.conf.UpdateUserProfileJob");
+			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
+			ExoContainer container = ExoContainerContext.getCurrentContainer();
+			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
+			infoMap_.put(name, userPostMap);
+			schedulerService.addPeriodJob(info, periodInfo);
+		} catch (Exception e) {
+		}
+	}
+	
 	public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node forumNode = getCategoryHome(sProvider).getNode(categoryId + "/" +forumId);
 			Topic topic = getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST);
 			Node topicNode = forumNode.getNode(topicId);
-			String owner = topic.getOwner();
-			Node userProfileNode = getUserProfileHome(sProvider);
-			Node newProfileNode = userProfileNode.getNode(owner);
-			newProfileNode.setProperty("exo:totalTopic", newProfileNode.getProperty("exo:totalTopic").getLong() - 1);
-			userProfileNode.save();
-			//calculate Total Post Of User
-//			calculateTotalPostOfUserWhenRemoveNode(sProvider, topicNode);
 			
-//		 TODO: Thinking for update forum and user profile by node observation?
-			// setTopicCount for Forum
-			long newTopicCount = forumNode.getProperty("exo:topicCount").getLong() - 1;
-			forumNode.setProperty("exo:topicCount", newTopicCount);
-			// setPostCount for Forum
-			long postCount = topic.getPostCount() + 1; //+1 for default post
-			long newPostCount = forumNode.getProperty("exo:postCount").getLong() - postCount;
+			Map<String, Long> userPostMap = getDeletePostByUser(topicNode) ;
+		
+			// update TopicCount for Forum
+			forumNode.setProperty("exo:topicCount", forumNode.getProperty("exo:topicCount").getLong() - 1);
+			// update PostCount for Forum
+			long newPostCount = forumNode.getProperty("exo:postCount").getLong() - (topic.getPostCount() + 1);
 			forumNode.setProperty("exo:postCount", newPostCount);
 			topicNode.remove();
 			forumNode.save();
@@ -2440,57 +2473,15 @@ public class JCRDataStorage {
 			try {
 				calculateLastRead(sProvider, null, forumId, topicId);
       } catch (Exception e) {}
+      try {
+      	addUpdateUserProfileJob(userPostMap);
+      } catch (Exception e) {}
 			return topic;
 		} catch (Exception e) {
 			return null;
 		} finally {sProvider.close() ;}
 	}
 
-//	TODO: Calculate total Post of User when remove Topic, Forum or Category. If usesing it, maybe will use Event listener
-	@SuppressWarnings("unused")
-  private void calculateTotalPostOfUserWhenRemoveNode(SessionProvider sProvider, Node node) throws Exception {
-		Node userProfileNode = getUserProfileHome(sProvider);
-		NodeIterator iter;
-		if(node.isNodeType("exo:topic")){
-			iter = node.getNodes();
-		} else {
-			StringBuilder strBuilder = new StringBuilder();
-			strBuilder.append("/jcr:root").append(node.getPath()).append("//element(*,exo:post)");
-			QueryManager qm = node.getSession().getWorkspace().getQueryManager();
-			Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			iter = result.getNodes();
-		}
-		try {
-			Map<String, Integer> mapUser = new HashMap<String, Integer>();
-			String str; int t;
-			List<String> listUser = new ArrayList<String>();
-			while (iter.hasNext()) {
-	      Node node_ = (Node) iter.nextNode();
-	      if(node_.isNodeType("exo:post")){
-	      	str = node_.getProperty("exo:owner").getString();
-	      	if(mapUser.containsKey(str)){
-			    	t = mapUser.get(str) + 1;
-			    } else {
-			    	t = 1;
-			    	listUser.add(str);
-			    }
-			    mapUser.put(str, t);
-	      }
-      }
-			Node userNode; long l;
-			for (String user : listUser) {
-		    userNode = userProfileNode.getNode(user);
-		    l = userNode.getProperty("exo:totalPost").getLong() - mapUser.get(user);
-		    if(l < 0) l = 0;
-		    userNode.setProperty("exo:totalPost", l);
-	    }
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-		userProfileNode.save();
-	}
-	
 	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
 		List<String> list = new ArrayList<String>();
 		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
@@ -6039,7 +6030,7 @@ public class JCRDataStorage {
 			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			messagesInfoMap_.put(name, new SendMessageInfo(addresses, message));
+			infoMap_.put(name, new SendMessageInfo(addresses, message));
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
 		}
@@ -6163,8 +6154,8 @@ public class JCRDataStorage {
 	}
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
-		SendMessageInfo messageInfo = messagesInfoMap_.get(name);
-		messagesInfoMap_.remove(name);
+		SendMessageInfo messageInfo = (SendMessageInfo)infoMap_.get(name);
+		infoMap_.remove(name);
 		return messageInfo;
 	}
 
