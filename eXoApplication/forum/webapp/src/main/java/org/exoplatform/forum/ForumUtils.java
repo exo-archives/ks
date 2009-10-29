@@ -37,6 +37,7 @@ import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
@@ -68,7 +69,27 @@ public class ForumUtils {
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
 	
+	private String key;
+	private String id;
+	public ForumUtils() {
+  }
 	
+	public String getKey() {
+  	return key;
+  }
+
+	public void setKey(String key) {
+  	this.key = key;
+  }
+
+	public String getId() {
+  	return id;
+  }
+
+	public void setId(String id) {
+  	this.id = id;
+  }
+
 	@SuppressWarnings("deprecation")
 	public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
@@ -425,6 +446,14 @@ public class ForumUtils {
       return date1.compareTo(date2) ;
     }
   }
+
+	static public class SortComparatorDESC implements Comparator<Object> {
+		public int compare(Object o1, Object o2) throws ClassCastException {
+			String str1 = ((TopicType) o1).getName() ;
+			String str2  = ((TopicType) o2).getName() ;
+			return str1.compareTo(str2) ;
+		}
+	}
 	
 	static public String getActionViewInfoUser(String link, String conponentId, String actionRepl, String actionWith) {
 		if(isEmpty(link)) return "";

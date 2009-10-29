@@ -1815,13 +1815,11 @@ public class JCRDataStorage {
 			return null;
 		}finally { sProvider.close() ;}
 	}
-
-	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
+	
+	public void setViewCountTopic(String path, String userRead) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			Node topicNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId+"/"+topicId);
-			Topic topicNew = new Topic();
-			topicNew = getTopicNode(topicNode);
+			Node topicNode = getCategoryHome(sProvider).getNode(path);
 			if (userRead != null &&	userRead.length() > 0 && !userRead.equals(UserProfile.USER_GUEST)) {
 				long newViewCount = topicNode.getProperty("exo:viewCount").getLong() + 1;
 				topicNode.setProperty("exo:viewCount", newViewCount);
@@ -1831,6 +1829,16 @@ public class JCRDataStorage {
 					topicNode.save();
 				}
 			}
+		} catch (Exception e) {
+		}finally { sProvider.close() ;}
+	}
+	
+	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node topicNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId+"/"+topicId);
+			Topic topicNew = new Topic();
+			topicNew = getTopicNode(topicNode);
 			return topicNew;
 		} catch (Exception e) {
 			return null;
@@ -2688,7 +2696,7 @@ public class JCRDataStorage {
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(topicNode.getPath()).append("//element(*,exo:post)");
 			stringBuffer.append(getPathQuery(null, "", "exoUserPri").toString().replaceAll(']'+"", ""))
-									.append(" and exo:isFirstPost='false']");
+									.append(" and exo:isFirstPost='false'] order by @exo:createdDate ascending");
 			QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
@@ -3651,20 +3659,19 @@ public class JCRDataStorage {
 		} finally { sProvider.close() ;}
 	}
 
-	public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
+	public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node forumHomeNode = getForumHomeNode(sProvider);
 			// Node Topic move Post
-			String srcTopicPath = posts.get(0).getPath();
+			String srcTopicPath = postPaths[0];
 			srcTopicPath = srcTopicPath.substring(0, srcTopicPath.lastIndexOf("/"));
 			Node srcTopicNode = (Node) forumHomeNode.getSession().getItem(srcTopicPath);
 			Node srcForumNode = (Node) srcTopicNode.getParent();
 			Node destTopicNode = (Node) forumHomeNode.getSession().getItem(destTopicPath);
 			Node destForumNode = (Node) destTopicNode.getParent();
 			long totalAtt = 0;
-			long totalpost = (long) posts.size();
-			int count = 0;
+			long totalpost = (long) postPaths.length;
 			Node postNode = null;
 			boolean destModeratePost = false;
 			if(destTopicNode.hasProperty("exo:isModeratePost")){
@@ -3675,16 +3682,18 @@ public class JCRDataStorage {
 				srcModeratePost = srcTopicNode.getProperty("exo:isModeratePost").getBoolean();
 			}
 			boolean unAproved = false;
-			for (Post post : posts) {
-				totalAtt = totalAtt + post.getNumberAttach();
-				String newPostPath = destTopicPath + "/" + post.getId();
-				forumHomeNode.getSession().getWorkspace().move(post.getPath(), newPostPath);
+			String path;
+			for (int i = 0; i < totalpost; ++i) {
+//				totalAtt = totalAtt + post.getNumberAttach();
+				path = postPaths[i];
+				String newPostPath = destTopicPath + path.substring(path.lastIndexOf("/"));
+				forumHomeNode.getSession().getWorkspace().move(path, newPostPath);
+				postPaths[i] = newPostPath;
 				// Node Post move
 				postNode = (Node) forumHomeNode.getSession().getItem(newPostPath);
 				postNode.setProperty("exo:path", destForumNode.getName());
 				postNode.setProperty("exo:createdDate", getGreenwichMeanTime());
-				if (isCreatNewTopic && count == 0) {
-					count++;
+				if (isCreatNewTopic && i == 0) {
 					postNode.setProperty("exo:isFirstPost", true);
 				} else {
 					postNode.setProperty("exo:isFirstPost", false);
@@ -3717,7 +3726,7 @@ public class JCRDataStorage {
 			if (temp < 0)
 				temp = 0;
 			srcTopicNode.setProperty("exo:numberAttachments", temp);
-			// update lastpost for srcTopicNode
+			// update last post for srcTopicNode
 			NodeIterator nodeIterator = srcTopicNode.getNodes();
 			long posLast = nodeIterator.getSize() - 1;
 			nodeIterator.skip(posLast);
@@ -3740,9 +3749,7 @@ public class JCRDataStorage {
 				forumHomeNode.save();
 			}
 			
-			/*
-			 * modified by Mai Van Ha
-			 */
+			
 			String topicName = destTopicNode.getProperty("exo:name").getString();
 			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty("exo:owner").getString());
 			Message message = new Message();
@@ -3769,14 +3776,15 @@ public class JCRDataStorage {
 			mailContent =  StringUtils.replace(mailContent, "$OBJECT_PARENT_TYPE", Utils.TOPIC);
 			
 			link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
-			for(Post post : posts){
+			for (int i = 0; i < totalpost; ++i) {
+				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
 				message = new Message();
 				message.setMimeType("text/html");
 				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 				message.setSubject(headerSubject + objectName);
-				message.setBody(mailContent.replace("$OBJECT_NAME", post.getName())
+				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty("exo:name").getString())
 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
-				List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, post.getOwner());
+				List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, postNode.getProperty("exo:owner").getString());
 				fullNameEmailOwnerPost.remove(0);
 				sendEmailNotification(fullNameEmailOwnerPost, message);
 			}
@@ -3818,18 +3826,19 @@ public class JCRDataStorage {
 				post = new Post();
 	      Node node = iter.nextNode();
 	      if(node.isNodeType("exo:post")){
-	      	post.setId(node.getName());
 	      	post.setPath(node.getPath());
-	      	post.setName(node.getProperty("exo:name").getString());
-	      	post.setOwner(node.getProperty("exo:owner").getString());
-	      	post.setNumberAttach(node.getProperty("exo:numberAttach").getLong());
 	      	post.setCreatedDate(node.getProperty("exo:createdDate").getDate().getTime());
 	      	posts.add(post);
 	      }
       }
 			if(posts.size() > 0) {
 				Collections.sort(posts, new Utils.DatetimeComparatorPostDESC()) ;
-				movePost(posts, destTopicPath, false, mailContent, link);
+				String []postPaths = new String[posts.size()];
+				int i = 0;
+				for (Post p : posts) {
+					postPaths[i] = p.getPath(); ++i;
+        }
+				movePost(postPaths, destTopicPath, false, mailContent, link);
 				String ids[] = srcTopicPath.split("/");
 				removeTopic(ids[0], ids[1], srcTopicNode.getName()) ;
 			}

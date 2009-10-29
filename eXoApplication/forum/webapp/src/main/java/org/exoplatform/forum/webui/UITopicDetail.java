@@ -263,6 +263,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isUseAjax = forumPortlet.isUseAjax();
 		listWatches = forumPortlet.getWatchinhByCurrentUser();
 		this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		setRenderInfoPorlet();
 	}
 	
@@ -280,6 +281,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		} else this.topic = topic;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.updateAccessTopic(topicId);
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -309,6 +311,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		if(ForumUtils.isEmpty(topic.getDescription())) {
 			this.topic = forumService.getTopic(categoryId, forumId, topic.getId(), userName) ;
 		} else this.topic = topic;
+		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 		forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((categoryId + "/" + forumId + "/" + topicId)) ;
 		this.isUseAjax = forumPortlet.isUseAjax();
@@ -606,7 +609,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				}
       } catch (Exception e) {}
 			posts = pageList.getPage(pageSelect) ;
-//			pageSelect = pageList.getCurrentPage();
+			pageSelect = pageList.getCurrentPage();
 			pagePostRemember.put(topicId, pageSelect);
 			if(posts == null) posts = new ArrayList<Post>(); 
 			List<String> userNames = new ArrayList<String>() ;
