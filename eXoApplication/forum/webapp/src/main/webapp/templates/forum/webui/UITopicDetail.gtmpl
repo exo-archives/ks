@@ -14,6 +14,8 @@
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.ks.common.user.CommonContact;
 	import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.forum.ForumSessionUtils;
+	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/') ;
