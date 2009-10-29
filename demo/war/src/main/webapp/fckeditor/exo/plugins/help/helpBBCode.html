@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+ insertPortalLink.html -------../filemanager/portal/default/browser.html.--------frmresourceslish.html
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Help BB Code</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link  href="lang/skin/Stylesheet.css" type="text/css" rel="stylesheet">
+	<style type="text/css" id="eXoPlatform_css">
+	html {
+		margin: 0px ; padding: 0px;
+	}
+
+	body {
+		margin: 0px ; padding: 0px;
+		height: 100%;
+	}
+	</style>
+
+	
+</head>
+<body id="MainBody">
+<iframe id="language" src=""></iframe>
+</body>
+
+<script type="text/javascript">
+	var oEditor = window.parent.InnerDialogLoaded();
+	var FCK = oEditor.FCK;
+	var FCKConfig = oEditor.FCKConfig;
+	var eXoPlugin = FCK.eXoPlugin;
+  window.onload = function() {
+	var iFrame = document.getElementById("language");
+	if (eXoPlugin.userLanguage) src = eXoPlugin.userLanguage;
+	else src = "en";
+	//alert(eXoPlugin.userLanguage);
+	iFrame.src = "lang/" + src + ".html";
+ }
+</script>
+</html>
