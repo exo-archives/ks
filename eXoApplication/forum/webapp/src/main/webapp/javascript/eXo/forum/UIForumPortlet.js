@@ -799,7 +799,7 @@ ScrollManager.prototype.loadItems = function(elementClass, clean) {
 };
 
 UIForumPortlet.prototype.loadTagScroll = function() {
-	var uiNav = eXo.forum.UIForumPortlet ;
+  var uiNav = eXo.forum.UIForumPortlet ;
   var container = document.getElementById("TagContainer") ;
   if(container) {
     uiNav.tagScrollMgr = eXo.portal.UIPortalControl.newScrollManager("TagContainer") ;
@@ -816,18 +816,63 @@ UIForumPortlet.prototype.loadTagScroll = function() {
 		
     uiNav.scrollManagerLoaded = true;
     uiNav.initTagScroll() ;
+	
   }
 } ;
 
 UIForumPortlet.prototype.initTagScroll = function() {
-  var uiNav = eXo.forum.UIForumPortlet ;
-  //if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
-  var elements = uiNav.tagScrollMgr.elements ;
+	var uiNav = eXo.forum.UIForumPortlet ;
+	//if(!uiNav.scrollManagerLoaded) uiNav.loadTagScroll() ;
+	var elements = uiNav.tagScrollMgr.elements ;
+	var menu = eXo.core.DOMUtil.findFirstDescendantByClass(uiNav.tagScrollMgr.arrowsContainer,"div","UIRightPopupMenuContainer") ;
+	var tmp = null;
 	uiNav.setTagContainerWidth(uiNav.tagScrollMgr.mainContainer);
-  uiNav.tagScrollMgr.init() ;
-  uiNav.tagScrollMgr.checkAvailableSpace() ;
-  uiNav.tagScrollMgr.renderElements() ;
+	uiNav.tagScrollMgr.init() ;
+	uiNav.tagScrollMgr.checkAvailableSpace() ;
+	var menuContainer = document.createElement("div");
+	menuContainer.className = "MenuTagContainer";
+	removeChildren(menu);
+	uiNav.tagScrollMgr.arrowsContainer.onmouseover = over;
+	uiNav.tagScrollMgr.arrowsContainer.onmouseout = out;
+	for (var i = 0; i < elements.length; i++) {
+		if (elements[i].isVisible) {
+			elements[i].style.display = "block";
+		}
+		else {
+			tmp = elements[i].cloneNode(true);
+			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","MenuItem");
+			tmp.style.display = "block";
+			menuContainer.appendChild(tmp)		
+			elements[i].style.display = "none";
+			uiNav.tagScrollMgr.arrowsContainer.style.display = "block";	
+		}
+	}
+	menu.appendChild(menuContainer);	
+	setPosition(menu);
+	function removeChildren(cont){
+		var firstChild = eXo.core.DOMUtil.findFirstChildByClass(cont,"div","MenuTagContainer")
+		eXo.core.DOMUtil.removeElement(firstChild);
+	};
+	
+	function setPosition(menu){
+		var uiPopupCategory = eXo.core.DOMUtil.findAncestorByClass(menu,"UIPopupCategory");
+		uiPopupCategory.style.display = "block";
+		var posX = 24*2 - uiPopupCategory.offsetWidth ;
+		uiPopupCategory.style.top = "24px";
+		uiPopupCategory.style.left = posX + "px";
+		uiPopupCategory.style.display = "none";
+	};
+	
+	function over(){
+		eXo.core.DOMUtil.addClass(this,"ScrollButtonsOver");
+	};
+	
+	function out(){
+		eXo.core.DOMUtil.replaceClass(this,"ScrollButtonsOver","");
+	};
 } ;
+
+
 
 UIForumPortlet.prototype.setTagContainerWidth = function(container){
 	var nodes = eXo.core.DOMUtil.getChildrenByTagName(container.parentNode,"div");
@@ -837,7 +882,7 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 		if((nodes[i].className == container.className) || !nodes[i].className) continue;
 		width += nodes[i].offsetWidth;
 	}
-	width = container.parentNode.offsetWidth - width;
+	width = container.parentNode.offsetWidth - width -1;
 	container.style.width = width + "px";
 };
 

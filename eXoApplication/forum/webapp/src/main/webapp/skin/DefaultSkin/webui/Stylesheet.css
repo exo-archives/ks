@@ -486,7 +486,24 @@
 .UIForumPortlet .ScrollButtons {
 	display:none;
 	float:right;
+	*float:left;
 	padding:5px 1px 5px 1px;
+}
+
+.UIForumPortlet .TagContainer .ScrollButtons {
+	display:none;
+	float:right;
+	width:24px;
+	height:24px;
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	background:url(/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueDownArrow.gif) no-repeat scroll right center;
+	*float:left;
+}
+
+
+.UIForumPortlet .TagContainer .ScrollButtonsOver {
+	background-color:#d8d8d8;
 }
 
 .UIForumPortlet  .DisableScrollLeftButton {
