@@ -1406,4 +1406,8 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void saveTopicType(TopicType topicType) throws Exception {
 	  storage_.saveTopicType(topicType);
   }
+	
+	public void updateStatisticAndUserProfileInfo(String name) throws Exception {
+		storage_.updateUserProfileInfo(name) ;
+	}
 }
