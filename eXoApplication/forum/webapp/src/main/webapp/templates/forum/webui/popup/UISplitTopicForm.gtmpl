@@ -53,7 +53,7 @@
 				if(checkeds == null) checkeds = new ArrayList<String>();
 				Date postDate = new Date();
 				for(post in posts) {
-				 	String postId = post.getId();
+				 	String postId = post.getCreatedDate().getTime()+"/"+post.getId();
 					postDate.setTime(post.getCreatedDate().getTime() - setTime);
 					String createdDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);
 					String classIconPost = post.getIcon() ;

@@ -478,6 +478,10 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage_.getTopic(categoryId, forumId, topicId, userRead);
   }
 
+  public void setViewCountTopic(String path, String userRead) throws Exception {
+  	storage_.setViewCountTopic(path, userRead);
+  }
+  
   public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception{
   	sProvider.close() ;
     return getTopicByPath(topicPath, isLastPost) ;
@@ -586,11 +590,25 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
   	sProvider.close() ;
-    movePost(posts, destTopicPath, isCreatNewTopic, mailContent, link);
+  	String []postPaths = new String[posts.size()];
+		int i = 0;
+		for (Post p : posts) {
+			postPaths[i] = p.getPath(); ++i;
+    }
+    movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
   }
   
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-    storage_.movePost(posts, destTopicPath, isCreatNewTopic, mailContent, link);
+  	String []postPaths = new String[posts.size()];
+		int i = 0;
+		for (Post p : posts) {
+			postPaths[i] = p.getPath(); ++i;
+    }
+    movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
+  }
+  
+  public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
+    storage_.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {

@@ -175,7 +175,12 @@ public class UIMovePostForm extends UIForm implements UIPopupComponent {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
 					Collections.sort(uiForm.posts, new ForumUtils.DatetimeComparatorDESC()) ;
-					uiForm.forumService.movePost(uiForm.posts, topicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
+					String []postPath = new String[uiForm.posts.size()];
+					int i = 0;
+					for (Post post : uiForm.posts) {
+						postPath[i] = post.getPath(); ++i;
+          }
+					uiForm.forumService.movePost(postPath, topicPath, false, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.cancelAction() ;
 					UIForumContainer forumContainer = forumPortlet.findFirstComponentOfType(UIForumContainer.class) ;

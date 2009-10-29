@@ -184,15 +184,20 @@ public interface ForumServiceLegacy {
 	/**
    * @deprecated use {@link ForumService#removePost(String categoryId, String forumId, String topicId, String postId)}
    */
-	public Post removePost(SessionProvider sProvider, String categoryId, String forumId,
+	/*public Post removePost(SessionProvider sProvider, String categoryId, String forumId,
 	    String topicId, String postId) throws Exception;
 
-	/**
-   * @deprecated use {@link ForumService#movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)}
+	*//**
+   * @deprecated use {@link ForumService#movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)}
    */
 	public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
 	    throws Exception;
-
+	
+	/**
+   * @deprecated use {@link ForumService#movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)}
+   */
+  public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception;
+  
 	/**
    * @deprecated use {@link ForumService#getPoll(String categoryId, String forumId, String topicId)}
    */
@@ -508,4 +513,6 @@ public interface ForumServiceLegacy {
    * @deprecated use {@link ForumService#saveUserProfile(User user)}
    */
   public void saveEmailUserProfile(String userId, String email) throws Exception;
+  
+  
 }

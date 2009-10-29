@@ -278,6 +278,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * @throws Exception the exception
 	 */
 	public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception;
+	public void setViewCountTopic(String path, String userRead) throws Exception;
 	
 	/**
 	 * Gets the topic by path.
@@ -439,7 +440,7 @@ public interface ForumService extends ForumServiceLegacy{
 	 * 
 	 * @throws Exception the exception
 	 */
-	public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
+	public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link)
 	    throws Exception;
 
 	/**
