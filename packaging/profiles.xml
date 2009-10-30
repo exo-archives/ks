@@ -10,6 +10,15 @@
              ex: On Linux '/home/user/AS'
         -->
         <exo.projects.directory.dependencies>/Users/patricelamarque/java/exo-dependencies</exo.projects.directory.dependencies>
+
+        <!-- 
+             If you want that the server is deployed always at the same place (not in packaging/pkg/target/<server> dir)
+             Uncomment and Replace with the directory you prefer
+        -->
+        <!-- 
+            <gatein.working.dir>REPLACE_WITH_SERVER_DIR</gatein.working.dir>
+        -->
+
         <!--
              Replace with the name of the directory containing Tomcat 6
         -->        

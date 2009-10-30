@@ -10,6 +10,9 @@
   <packaging>pom</packaging>
   <name>eXo KS Packaging Assemblies</name>
 
+  <properties>
+ 		<gatein.working.dir>${basedir}/target</gatein.working.dir>
+  </properties>
 
   <dependencies>
       <dependency>
@@ -175,7 +178,7 @@
                               <argument>-Dexo.current.dir=${basedir}</argument>
                               <argument>-Dexo.base.dir=${exo.projects.directory.base}</argument>
                               <argument>-Dexo.conf.dir=${basedir}/target/exopackage-conf</argument>
-                              <argument>-Dexo.working.dir=${basedir}/target</argument>
+                              <argument>-Dexo.working.dir=${gatein.working.dir}</argument>
                               <!--argument>-Dexo.src.dir=NONE</argument-->
                               <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument><!-- to get the server ref install -->
                               <argument>-Dexo.m2.repos=file:${settings.localRepository}</argument>
@@ -273,7 +276,7 @@
                               <argument>-Dexo.current.dir=${basedir}</argument>
                               <argument>-Dexo.base.dir=${exo.projects.directory.base}</argument>
                               <argument>-Dexo.conf.dir=${basedir}/target/exopackage-conf</argument>
-                              <argument>-Dexo.working.dir=${basedir}/target</argument>
+                              <argument>-Dexo.working.dir=${gatein.working.dir}</argument>
                               <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument>
                               <argument>-Dexo.m2.repos=file:${settings.localRepository},http://maven2.exoplatform.org/rest/maven2,http://repository.jboss.org/maven2</argument>
                               <argument>-Dclean.server=${exo.projects.app.jboss.version}</argument>
