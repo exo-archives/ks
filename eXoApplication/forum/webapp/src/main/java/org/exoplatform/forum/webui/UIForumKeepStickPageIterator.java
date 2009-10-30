@@ -108,10 +108,10 @@ public class UIForumKeepStickPageIterator extends UIForm {
 
 	public List<Integer> getInfoPage() throws	Exception {
 		List<Integer> temp = new ArrayList<Integer>() ;
-		temp.add(pageList.getPageSize()) ;//so item/trang
-		temp.add(pageList.getCurrentPage()) ;// trang hien tai
-		temp.add(pageList.getAvailable()) ;//tong so item
-		temp.add(maxPage) ;// so trang toi da
+		temp.add(pageList.getPageSize()) ;
+		temp.add(pageList.getCurrentPage()) ;
+		temp.add(pageList.getAvailable()) ;
+		temp.add(maxPage) ;
 		return temp ;
 	} 
 	

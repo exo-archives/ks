@@ -582,7 +582,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			if (maxPost <= 0) maxPost = 10;
 			pageList.setPageSize(maxPost);
 			maxPage = pageList.getAvailablePage();
-			if (IdPostView.equals("lastpost")) {
+			if (IdPostView.equals("lastpost") || this.pageSelect > maxPage) {
 				this.pageSelect = maxPage;
 			}
 		} catch (Exception e) {
