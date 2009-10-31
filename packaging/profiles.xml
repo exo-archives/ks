@@ -15,9 +15,9 @@
              If you want that the server is deployed always at the same place (not in packaging/pkg/target/<server> dir)
              Uncomment and Replace with the directory you prefer
         -->
-        <!-- 
-            <gatein.working.dir>REPLACE_WITH_SERVER_DIR</gatein.working.dir>
-        -->
+         
+            <gatein.working.dir>/Users/patricelamarque/java/exo-working</gatein.working.dir>
+        
 
         <!--
              Replace with the name of the directory containing Tomcat 6

@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -12,7 +11,7 @@
 
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
-  <version>2.0.0-M1-SNAPSHOT</version>
+  <version>2.0.0-Alpha01-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>eXo Knowledge Suite</name>
@@ -51,7 +50,7 @@
       <version.reflect>1.0.0-beta3</version.reflect>
 
     <org.exoplatform.comet.version>2.1.0_gtn_Alpha01</org.exoplatform.comet.version>
-    <org.exoplatform.ks.version>2.0.0-M1-SNAPSHOT</org.exoplatform.ks.version>
+    <org.exoplatform.ks.version>2.0.0-Alpha01-SNAPSHOT</org.exoplatform.ks.version>
     <org.exoplatform.portal.version>3.0.0-Beta02</org.exoplatform.portal.version>
 
 	<!-- ************** -->
@@ -231,4 +230,10 @@
     <test.classes>Test</test.classes> <test.skip>true</test.skip>
     </properties> </profile> </profiles>
   -->
+
+  <scm>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/gatein/tools/maven/parent/tags/ks-2.0.0-Alpha01</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/gatein/tools/maven/parent/tags/ks-2.0.0-Alpha01</developerConnection>
+    <url>http://fisheye.jboss.org/browse/gatein/tools/maven/parent/tags/ks-2.0.0-Alpha01</url>
+  </scm>
 </project>
