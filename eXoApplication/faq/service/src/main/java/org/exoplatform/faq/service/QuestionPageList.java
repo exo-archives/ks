@@ -28,10 +28,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 
 /**
  * All questions and their properties, methods are getted from database
@@ -81,6 +78,8 @@ public class QuestionPageList extends JCRPageList {
   
   final private static String ANSWER_HOME = "faqAnswerHome".intern();
   final private static String COMMENT_HOME = "faqCommentHome".intern();
+  
+  private JCRSessionManager sessionManager;
   
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
@@ -149,6 +148,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(NodeIterator iter, long pageSize, String value, boolean isQuery) throws Exception {
     super(pageSize) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
     iter_ = iter ;
     value_ = value ;
     isQuery_ = isQuery ;
@@ -165,6 +165,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(List<ObjectSearchResult> faqFormSearchs, long pageSize) throws Exception {
   	super(pageSize) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
   	this.listFAQFormSearchS_ = faqFormSearchs;
   	setAvailablePage(faqFormSearchs.size()) ;    
   }
@@ -179,6 +180,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(List<Watch> listWatch, double page) throws Exception {
   	super(10) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
   	this.listWatchs_ = listWatch;
   	setAvailablePage(listWatch.size()) ;    
   }
@@ -192,6 +194,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(List<Category> listCategories) throws Exception {
   	super(10) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
   	this.listCategories_ = listCategories;
   	setAvailablePage(listCategories.size()) ;    
   }
@@ -206,6 +209,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(List<Question> listQuestions, int size) throws Exception{
   	super(10) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
   	this.listQuestions_ = listQuestions;
   	setAvailablePage(size) ;    
   }
@@ -222,6 +226,7 @@ public class QuestionPageList extends JCRPageList {
    */
   public QuestionPageList(Node categoryNode, String quesQuerry, List<Object> listObject, FAQSetting setting) throws Exception{
   	super(10) ;
+    this.sessionManager = FAQServiceUtils.getSessionManager();
   	this.questionQuery_ = quesQuerry;
   	this.nodeCategory_ = categoryNode;
   	this.listObject_.addAll(listObject);
@@ -255,7 +260,7 @@ public class QuestionPageList extends JCRPageList {
         iter_ = node.getNodes() ;
       }
       if(isNotYetAnswered)	setTotalQuestion();
-      session.logout() ;
+      closeSession();
     }
     if(isNotYetAnswered){
     	setAvailablePage(listQuestions_.size()) ;
@@ -308,7 +313,7 @@ public class QuestionPageList extends JCRPageList {
   			Node node = (Node)session.getItem(value_) ;
   			iter_ = node.getNodes() ;
   		}
-  		session.logout() ;
+  		closeSession();
   		setAvailablePage(iter_.getSize()) ;
   		checkAndSetPage(page) ;
   		page = currentPage_;
@@ -348,7 +353,7 @@ public class QuestionPageList extends JCRPageList {
       Query query = qm.createQuery(value_, Query.XPATH);
       QueryResult result = query.execute();
       iter_ = result.getNodes();
-      session.logout() ;
+      closeSession();
     }
     long pageSize = getPageSize() ;
     long position = 0 ;
@@ -410,7 +415,7 @@ public class QuestionPageList extends JCRPageList {
         Query query = qm.createQuery(value_, Query.XPATH);
         QueryResult result = query.execute();
         iter_ = result.getNodes();
-	      session.logout() ;
+	      closeSession();
 	    }
     	setAvailablePage(iter_.getSize()) ;
 	    if(page == 1) position = 0;
@@ -477,6 +482,7 @@ public class QuestionPageList extends JCRPageList {
       	listObject_.add(question);
       }
       
+      closeSession(); // was missing ?
 			//================== get list catetgories ===================================================
       iter_ = null;
       iter_ = nodeCategory_.getNodes();
@@ -766,7 +772,7 @@ public class QuestionPageList extends JCRPageList {
         Node node = (Node)session.getItem(value_) ;
         iter_ = node.getNodes() ;
       }
-      session.logout() ;
+      closeSession();
     }
     
     List<Question> questions = new ArrayList<Question>();
@@ -792,7 +798,7 @@ public class QuestionPageList extends JCRPageList {
         iter_ = node.getNodes() ;
       }
       iter_ = null;
-      session.logout() ;
+      closeSession();
     }
 		Node watchNode = null;
     while (iter_.hasNext()) {
@@ -820,14 +826,11 @@ public class QuestionPageList extends JCRPageList {
    * @see             Session
    */
   private Session getJCRSession() throws Exception {
-    RepositoryService  repositoryService ;
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-  	repositoryService = (RepositoryService)container.getComponentInstance(RepositoryService.class) ;
-    
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-    String defaultWS = 
-      repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-    return sessionProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
+    return sessionManager.openSession();
   }
 
+  private void closeSession() throws Exception {
+    sessionManager.closeSession();
+  }
+  
 }

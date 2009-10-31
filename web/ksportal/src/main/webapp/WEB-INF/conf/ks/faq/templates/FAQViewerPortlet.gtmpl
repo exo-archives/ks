@@ -5,109 +5,109 @@
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.createLink('UIFAQPortlet','"+uicomponent.useAjax+"');") ;
+	jsmanager.addJavascript("eXo.faq.UIFAQPortlet.createLink('UIFAQViewerPortlet','"+uicomponent.useAjax+"');") ;
 %>
 
 <style type="text/css">
-.UIFAQPortlet {
+.UIFAQViewerPortlet {
 	padding: 6px;
 	margin: 4px;
 	border: 1px solid #d7d7d7;
 	background: white;
 }
 
-.UIFAQPortlet .FAQViewerBar {
+.UIFAQViewerPortlet .FAQViewerBar {
 	background: #6a90b6;
 	padding: 4px 0px 4px 14px;
 	color: white;
 }
 
-.UIFAQPortlet .FAQViewerBar a{
+.UIFAQViewerPortlet .FAQViewerBar a{
 	color: white;
 	cursor: pointer;
 }
 
-.UIFAQPortlet .FAQViewerBar .FAQBarLableNormal {
+.UIFAQViewerPortlet .FAQViewerBar .FAQBarLableNormal {
 	color: white;
 }
 
-.UIFAQPortlet .FAQViewerBar .FAQBarLableHiline {
+.UIFAQViewerPortlet .FAQViewerBar .FAQBarLableHiline {
 	font-weight: bold;
 	color: white;
 }
 
-.UIFAQPortlet .FAQViewerContainer {
+.UIFAQViewerPortlet .FAQViewerContainer {
 	padding:0px 4px 4px 12px;
 }
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon{
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon{
 	background: url('/faq/skin/DefaultSkin/webui/background/FAQListIcon.gif') no-repeat left 5px;
 	padding-left: 16px;
 }
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a{
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon a{
 	color: #0B51BB;
 }
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
 	font-weight: bold;
 }
 
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableLink {
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableLink {
 	color: #0B51BB;
 }
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewer {
+.UIFAQViewerPortlet .FAQViewerContainer .FAQViewer {
 	line-height: 20px;
 	color: #0b51bb;
 	text-decoration: underline;
 }
 
-.UIFAQPortlet .FAQAnswerbar {
+.UIFAQViewerPortlet .FAQAnswerbar {
 	background: #cedeee;
 	padding: 4px 0px 4px 14px;
 	font-weight: bold;
 }
 
-.UIFAQPortlet .FAQAnswerContainer {
+.UIFAQViewerPortlet .FAQAnswerContainer {
 	padding:4px 0px 4px 12px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .Answer{
+.UIFAQViewerPortlet .FAQAnswerContainer .Answer{
 	padding-left: 20px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .TextStyle{
+.UIFAQViewerPortlet .FAQAnswerContainer .TextStyle{
 	margin:1px 0px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .QuestionContent{
+.UIFAQViewerPortlet .FAQAnswerContainer .QuestionContent{
 	padding-top: 6px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer ol{
+.UIFAQViewerPortlet .FAQAnswerContainer ol{
 	margin: 4px 0px 0px 0px;
 	padding: 0px 0px 0px 12px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon{
+.UIFAQViewerPortlet .FAQAnswerContainer .FAQAnswerIcon{
 	background: url('/faq/skin/DefaultSkin/webui/background/FAQAnswerIcon.gif') no-repeat left 5px;
 	padding-left: 16px;
 	font-weight: bold;
 }
-.UIFAQPortlet .BackTopIcon {
+.UIFAQViewerPortlet .BackTopIcon {
 	background: url('/faq/skin/DefaultSkin/webui/background/BackTopIcon18x21.gif') no-repeat right;
 	width: 21px; height: 18px;
 	float: right;
 	display: block;
 }
 
-.UIFAQPortlet .FAQViewerQuestionContent {
+.UIFAQViewerPortlet .FAQViewerQuestionContent {
 	padding: 8px 0px 10px 12px;
 }
 
-.UIFAQPortlet p {
+.UIFAQViewerPortlet p {
 	margin: 3px 0px;
 }
 

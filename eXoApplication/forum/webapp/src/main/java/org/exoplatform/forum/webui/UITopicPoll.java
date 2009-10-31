@@ -24,7 +24,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumPollPortlet;
@@ -35,6 +34,7 @@ import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -87,7 +87,7 @@ public class UITopicPoll extends UIForm	{
 			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
     } catch (Exception e) {
 			try {
-				userProfile = forumService.getDefaultUserProfile(ForumSessionUtils.getCurrentUser(), "");
+				userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), "");
       } catch (Exception ex) {
       }
     }

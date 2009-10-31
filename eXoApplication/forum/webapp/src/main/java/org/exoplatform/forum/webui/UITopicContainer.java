@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
@@ -49,8 +47,8 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.services.portletcontainer.plugins.pc.portletAPIImp.PortletRequestImp;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -143,7 +141,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_T, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.GOPAGE_ID_B, null)) ;
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
-		if(!ForumSessionUtils.isAnonim()) isLogin = true;
+		if(!UserHelper.isAnonim()) isLogin = true;
 		isLink = true;
 	}
 
@@ -363,7 +361,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
 			if(!isView) {
 				strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
-				for (String string : ForumSessionUtils.getAllGroupAndMembershipOfUser(userId)) {
+				for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
 					strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
 				}
 				strQuery.append(")");
@@ -386,8 +384,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	private String getIPRemoter() throws Exception {
 		if(enableIPLogging) {
 			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-			PortletRequestImp request = context.getRequest() ;
-			return request.getRemoteAddr();
+			// TODO FIXME on GateIn
+			//PortletRequestImp request = context.getRequest() ;
+			//return request.getRemoteAddr();
 		}
 		return "";
 	}
@@ -439,7 +438,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return forumService.getTopic(categoryId, forumId, topicId, userProfile.getUserId()) ;
 	}
 	
-  private int getSizePost(Topic topic) throws Exception {
+  private long getSizePost(Topic topic) throws Exception {
 		long maxPost = userProfile.getMaxPostInPage() ;
 		if(maxPost <= 0) maxPost = 10;
 		if(topic.getPostCount() >= maxPost) {
@@ -456,7 +455,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			long value = (availablePost)/maxPost;
 			if((value*maxPost) < availablePost) value = value + 1;
-			return (int)value;
+			return value;
 		} else return 1;
 	}
 	

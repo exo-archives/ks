@@ -19,9 +19,9 @@ package org.exoplatform.ks.common.jcr;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.ks.common.ListAccess;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -34,17 +34,27 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  * @version $Revision$
  */
 public abstract class JCRListAccess<E> implements ListAccess<E>{
+  
+  protected JCRSessionManager manager;
+
+  public JCRListAccess(JCRSessionManager manager){
+    this.manager = manager;
+  }
 
   public E[] load(int index, int length) throws Exception, IllegalArgumentException {
-    Session session = acquireSession();
+    Session session = manager.openSession();
     try {
       return load(session, index, length);
     } finally {
-      session.logout();
+      manager.closeSession();
     }
   }
 
-  private Session acquireSession() throws RepositoryException, RepositoryConfigurationException {
+  /**
+   * @deprecated use {@link JCRSessionManager}
+   */
+  @SuppressWarnings("unused")
+  private Session acquireSession() throws RepositoryException, RepositoryConfigurationException {    
     SessionProvider sProvider = SessionProvider.createSystemProvider();
       ExoContainer container = ExoContainerContext.getCurrentContainer();
       RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
@@ -54,11 +64,11 @@ public abstract class JCRListAccess<E> implements ListAccess<E>{
   }
 
   public int getSize() throws Exception {
-    Session session = acquireSession();
+    Session session = manager.openSession();
     try {
       return getSize(session);
     } finally {
-      session.logout();
+      manager.closeSession();
     }
   }
 

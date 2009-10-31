@@ -19,7 +19,7 @@ package org.exoplatform.ks.common.notify;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.ks.common.Common;
@@ -64,10 +64,9 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-//	  	RootContainer rootContainer = RootContainer.getInstance() ;
-//	    MailService mailService = (MailService)RootContainer.getInstance().getPortalContainer("portal").getComponentInstanceOfType(MailService.class) ;
 	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer("portal") ;
+	    PortalContainer portalContainer = rootContainer.getPortalContainer(PortalContainer.getCurrentPortalContainerName()) ;
+	    
 	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
 	    Common common = new Common() ;

@@ -45,6 +45,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
@@ -547,8 +548,42 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 	
 	private void searchUserProfileByKey(String keyword) throws Exception {
 		try {
+			Map<String, Object> mapObject = new HashMap<String, Object>();
+			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
 			keyword = "*" + keyword + "*" ;
-			this.userPageList = this.forumService.searchUserProfile(keyword);
+			List results = new CopyOnWriteArrayList() ;
+			Query q; 
+			q = new Query() ;
+			q.setUserName(keyword) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), obj);
+			}
+			
+			q = new Query() ;
+			q.setLastName(keyword) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), obj);
+			}
+			
+			q = new Query() ;
+			q.setFirstName(keyword) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), obj);
+			}
+			
+			q = new Query() ;
+			q.setEmail(keyword) ;
+			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
+				mapObject.put(((User)obj).getUserName(), obj);
+			}
+			
+			for(Object object : this.forumService.searchUserProfile(keyword).getAll()){
+				mapObject.put(((UserProfile)object).getUserId(), object);
+			}
+			
+			results.addAll(Arrays.asList(mapObject.values().toArray()));
+			
+			this.userPageList = new ForumPageList(results);
 			this.userPageList.setPageSize(5);
 			this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;	
 			this.isViewSearchUser = true;
@@ -565,7 +600,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIViewUserProfile viewUserProfile = popupAction.activate(UIViewUserProfile.class, 670) ;
 			viewUserProfile.setUserProfile(uiForm.getUserProfile(userId)) ;
-			String userLogin = ForumSessionUtils.getCurrentUser() ;
+			String userLogin = UserHelper.getCurrentUser() ;
 			viewUserProfile.setUserProfileLogin(uiForm.getUserProfile(userLogin));
 			viewUserProfile.setContact(null) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
@@ -787,7 +822,7 @@ public class UIModeratorManagementForm extends UIForm implements UIPopupComponen
 			} catch (Exception e) {
 				e.printStackTrace() ;
 			} 
-			if(userProfile.getUserId().equals(ForumSessionUtils.getCurrentUser())) {
+			if(userProfile.getUserId().equals(UserHelper.getCurrentUser())) {
 				forumPortlet.updateUserProfileInfo() ;
 				userProfile = forumPortlet.getUserProfile();
 				forumPortlet.findFirstComponentOfType(UITopicDetail.class).setUserProfile(userProfile) ;

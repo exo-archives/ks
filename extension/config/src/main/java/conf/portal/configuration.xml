@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    Copyright (C) 2009 eXo Platform SAS.
+    
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+    
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+  <!-- knowledge workspace and load nodetypes -->
+  <import>jar:/ks-extension/jcr/jcr-configuration.xml</import> 
+
+  <!-- KS data storage tree -->
+  <import>jar:/ks-extension/jcr/storage-configuration.xml</import> 
+  
+  <!-- new apps in registry  -->
+  <import>jar:/ks-extension/portal/application-registry-configuration.xml</import>  
+  
+  <!-- import>war:/conf/ks-ext/web/web-inf-extension-configuration.xml</import-->
+  
+    <!-- main KS configuration  -->
+    <import>jar:/ks-extension/ks/ks-configuration.xml</import>
+    
+    <!-- builtin BBCodes  -->
+    <import>jar:/ks-extension/ks/forum/bbcodes-configuration.xml</import>
+    
+    <!-- Auto prune service -->
+    <import>jar:/ks-extension/ks/forum/prune-configuration.xml</import>
+ 
+    <!-- Forum statistics  -->
+    <import>jar:/ks-extension/ks/forum/statistics-configuration.xml</import>        
+        
+    <!-- roles rules -->
+    <import>jar:/ks-extension/ks/faq/roles-configuration.xml</import>
+    <import>jar:/ks-extension/ks/forum/roles-configuration.xml</import>
+    
+
+    
+    
+
+</configuration>
+

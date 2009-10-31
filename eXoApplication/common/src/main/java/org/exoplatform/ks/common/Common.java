@@ -41,7 +41,7 @@ public class Common {
   
 	public Common (){}
 	
-	@SuppressWarnings({ "unchecked", "unused" })
+	@SuppressWarnings({ "unchecked" })
 	public void sendEmailNotification(List<String> addresses, Message message, String gruopName) throws Exception {
     Calendar cal = new GregorianCalendar();
     PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);

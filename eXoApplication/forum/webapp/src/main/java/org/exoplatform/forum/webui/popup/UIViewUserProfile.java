@@ -21,8 +21,8 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -49,17 +49,17 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	
 	private UserProfile userProfile ;
 	private UserProfile userProfileLogin ;
-	private ForumContact contact = null;
+	private CommonContact contact = null;
 	private ForumService forumService ;
 	private boolean isGetContact = true;
-	public ForumContact getContact(String userId) throws Exception {
+	public CommonContact getContact(String userId) throws Exception {
 		if(contact == null || isGetContact) {
 			contact = getPersonalContact(userId) ;
 		}
 		return contact;
 	}
 
-	public void setContact(ForumContact contact) {
+	public void setContact(CommonContact contact) {
 		isGetContact = false;
 		this.contact = contact;
 	}
@@ -97,15 +97,15 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 		return this.userProfileLogin ;
 	}
 	
-	private ForumContact getPersonalContact(String userId) throws Exception {
-		ForumContact contact = ForumSessionUtils.getPersonalContact(userId) ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+	  CommonContact contact = ForumSessionUtils.getPersonalContact(userId) ;
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 		return contact ;
 	}
 	
-	private String getAvatarUrl(ForumContact contact) throws Exception {
+	private String getAvatarUrl(CommonContact contact) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		String url = ForumSessionUtils.getUserAvatarURL(getUserProfile().getUserId(), this.forumService, dservice);
 		return url;

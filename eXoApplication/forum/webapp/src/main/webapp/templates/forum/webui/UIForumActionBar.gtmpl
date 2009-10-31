@@ -1,6 +1,6 @@
 <%	
 	import org.exoplatform.forum.service.UserProfile ;
-	import org.exoplatform.forum.ForumSessionUtils;
+	import org.exoplatform.ks.common.UserHelper;
 	import org.exoplatform.web.application.JavascriptManager;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	boolean isAdmin = false ;
@@ -113,7 +113,7 @@
 								<div style="width:250px;">
 							<%
 								long numberOfNewMessage = uicomponent.getNewMessage();
-								if(!ForumSessionUtils.isAnonim() && numberOfNewMessage >= 0){
+								if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
 									String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
 									if(numberOfNewMessage > 0) {
 										newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";

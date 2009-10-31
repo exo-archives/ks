@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -35,6 +34,7 @@ import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -372,7 +372,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			postable = ForumUtils.removeSpaceInString(postable) ;
 			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
-			String userName = ForumSessionUtils.getCurrentUser() ;
+			String userName = UserHelper.getCurrentUser() ;
 			Forum newForum = new Forum();
 			newForum.setForumName(forumTitle);
 			newForum.setOwner(userName);
@@ -396,14 +396,14 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			if(forumStatus.equals("locked")) {
 				newForum.setIsLock(true) ;
 			}
-			String erroUser = ForumSessionUtils.checkValueUser(moderators) ;
+			String erroUser = UserHelper.checkValueUser(moderators) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_MODERATOR_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+			erroUser = UserHelper.checkValueUser(topicable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -411,7 +411,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				uiForm.isDoubleClickSubmit = false;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(postable) ;
+			erroUser = UserHelper.checkValueUser(postable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -419,7 +419,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				uiForm.isDoubleClickSubmit = false;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(viewer) ;
+			erroUser = UserHelper.checkValueUser(viewer) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -533,7 +533,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 			List<String> list = ForumServiceUtils.getUserPermission(moderators_);
 			boolean isFist = true;
 			for (String string : list) {
-				user = ForumSessionUtils.getUserByUserId(string) ;
+				user = UserHelper.getUserByUserId(string) ;
 				if(user != null){
 					email = user.getEmail();
 					if(isFist){

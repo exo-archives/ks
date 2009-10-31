@@ -23,7 +23,9 @@ import java.util.List;
 
 import javax.jcr.Node;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.cache.CacheService;
@@ -61,7 +63,7 @@ public class ForumServiceUtils {
 		IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
 		Identity identity = identityRegistry.getIdentity(userId);
 		if (identity == null) {
-			log.warn("Could not retrieve permissions for " + userId + ". Permissions could not be verified.");
+			if (log.isDebugEnabled()) log.debug("Could not retrieve identity for " + userId + ". Permissions not granted.");
 			return false;
 		}
 		
@@ -245,5 +247,11 @@ public class ForumServiceUtils {
 
 	public static SessionProvider getSessionProvider() {
 		return SessionProvider.createSystemProvider();
+	}
+	
+	
+	public static JCRSessionManager getSessionManager() {
+	  KSDataLocation location =  (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
+	  return location.getSessionManager();
 	}
 }

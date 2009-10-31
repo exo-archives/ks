@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;
@@ -147,7 +147,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					return ;
 				}
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
-				forumService.saveUserAvatar(ForumSessionUtils.getCurrentUser(), files.get(0));
+				forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
 			} else {
 				for (BufferAttachment file : files) {
 					postForm.addToUploadFileList(file) ;

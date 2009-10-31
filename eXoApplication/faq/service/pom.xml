@@ -2,14 +2,13 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>2.0.0-M1-SNAPSHOT</version>
   </parent> 
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
-  <name>eXo FAQ service</name>
+  <name>eXo KS FAQ service</name>
   <url>http://www.exoplatform.org</url>
   <description>eXo FAQ service</description>
   
@@ -18,38 +17,39 @@
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.security.core</artifactId>
       <version>${org.exoplatform.core.version}</version>
+      <scope>provided</scope>
     </dependency>
+    
+    
+    
     
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>
       <version>${org.exoplatform.portal.version}</version>
+      <scope>provided</scope>
     </dependency>
     
   	<dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>      
+      <version>${org.exoplatform.jcr.version}</version> 
+      <scope>provided</scope>     
     </dependency> 
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>${org.exoplatform.ks.version}</version>      
+      <version>${org.exoplatform.ks.version}</version>   
+      <scope>provided</scope>   
     </dependency>
     
 		<dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
-      <version>0.8</version>
+      <version>0.9</version>
       <scope>compile</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>org.jcrom</groupId>
-      <artifactId>jcrom</artifactId>
-      <version>1.2</version>
-      <scope>compile</scope>
-    </dependency>
+
   </dependencies>
 </project>

@@ -19,12 +19,12 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
@@ -39,11 +39,14 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.account.UIAccountSetting;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.portal.webui.workspace.UIMaskWorkspace;
 import org.exoplatform.portal.webui.workspace.UIPortalApplication;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -70,6 +73,9 @@ import org.exoplatform.webui.event.EventListener;
 )
 @SuppressWarnings("unused")
 public class UIBreadcumbs extends UIContainer {
+  
+  private static Log log = ExoLogger.getExoLogger(UIBreadcumbs.class);
+  
   private boolean useAjax = true;
 	private ForumService forumService ;
 	private List<String> breadcumbs_ = new ArrayList<String>();
@@ -376,13 +382,15 @@ public class UIBreadcumbs extends UIContainer {
 											popupAction.activate(popupContainer, 900, 500) ;
 											event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 										} catch (Exception e) {
+										  log.error(e);
 										}
 									} else {
 										uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", new String[]{}, ApplicationMessage.WARNING)) ;
 									}
 								}
-								if(!breadcums.userProfile.getUserId().equals(UserProfile.USER_GUEST)) {
-									breadcums.forumService.updateTopicAccess(breadcums.userProfile.getUserId(),  topic.getId()) ;
+								if (!UserHelper.isAnonim()) {
+								//if(!forumPortlet.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)) {
+									breadcums.forumService.updateTopicAccess(UserHelper.getCurrentUser(),  topic.getId()) ;
 									forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 								}
 							} else {

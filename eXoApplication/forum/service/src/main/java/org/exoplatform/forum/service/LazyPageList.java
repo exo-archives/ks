@@ -15,16 +15,17 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 package org.exoplatform.forum.service;
+
 import java.util.List;
 
-import org.exoplatform.ks.common.LazyList;
-import org.exoplatform.ks.common.ListAccess;
+import org.exoplatform.commons.utils.LazyList;
+import org.exoplatform.commons.utils.ListAccess;
+
 
 /**
  * A PageList implementation backed by a LazyList to load data lazily. 
  * Implementation was partially borrowed from kernel 2.1 class of same name. 
  * Extends JCRPageList for backward compatibility. 
- * @TODO : Replace it with the class of same name when upgrading kernel
  * @TODO : Change extends JCRPageList by extends PageList
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice lamarque</a>
  * @version $Revision$

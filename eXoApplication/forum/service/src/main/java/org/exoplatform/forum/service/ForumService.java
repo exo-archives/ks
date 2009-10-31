@@ -74,8 +74,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the categories.
 	 * 
-	 * @param sProvider is the SessionProvider
-	 * 
 	 * @return the list category
 	 * 
 	 * @throws Exception the exception
@@ -85,7 +83,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the category.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category.
 	 * 
 	 * @return the category
@@ -98,7 +95,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Save category. Check exists category, if not to create new else update exists category
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param category is the category
 	 * @param isNew is the true when add new category or false when update category.
 	 * 
@@ -111,7 +107,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Removes the category. Check exists of category and remove it 
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category removed
 	 * 
 	 * @return the category 
@@ -123,7 +118,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the forums in the category identify. 
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category have list forum
 	 * 
 	 * @return the list forum
@@ -135,7 +129,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Gets the forum in the category identify.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param categoryId is the id of category identify.
 	 * @param forumId is the id of forum identify.
 	 * 
@@ -148,7 +141,6 @@ public interface ForumService extends ForumServiceLegacy{
 	/**
 	 * Modify this forum identify.
 	 * 
-	 * @param sProvider is the SessionProvider
 	 * @param forum is the object forum that should  be modified
 	 * @param type is choose when modify this forum.
 	 * 
@@ -893,7 +885,7 @@ public interface ForumService extends ForumServiceLegacy{
   public List<Post> getNewPosts(int number) throws Exception ;
   
   public NodeIterator search(String queryString) throws Exception ;
-  public void updateForumStatistic() throws Exception ;
+  //public void updateForumStatistic() throws Exception ;
   public void evaluateActiveUsers(String query) throws Exception ;
   public void createUserProfile (User user) throws Exception ;
 
@@ -962,4 +954,20 @@ public interface ForumService extends ForumServiceLegacy{
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
   public void updateUserProfileInfo(String name) throws Exception ;
     
+
+  /**
+   * <p>Add a new member to the forum. The forum profile is created and statistics updated</p>
+   * @param user user that becomes a new forum member
+   * @param profileTemplate user profile template to be used for default settings
+   * @throws Exception 
+   */
+  public void addMember(User user, UserProfile profileTemplate) throws Exception;
+
+  /**
+   * <p>Removes an existing member from the forum. The forum profile is deleted and statistics updated</p>
+   * @param user user that leaves forum 
+   * @throws Exception 
+   */
+  public void removeMember(User user) throws Exception;
+      
 }

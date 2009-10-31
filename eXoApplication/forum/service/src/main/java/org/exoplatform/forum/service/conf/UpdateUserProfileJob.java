@@ -16,14 +16,11 @@
  **/
 package org.exoplatform.forum.service.conf;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.quartz.Job;
@@ -31,7 +28,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class UpdateUserProfileJob implements Job {
-	private static Log log_ = ExoLogger.getLogger("job.forum.UpdateProfileJob");
+	private static Log log_ = ExoLogger.getLogger(UpdateUserProfileJob.class);
   public UpdateUserProfileJob() throws Exception {}
 		
 	

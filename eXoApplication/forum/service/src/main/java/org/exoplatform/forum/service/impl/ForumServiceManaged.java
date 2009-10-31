@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.ks.common.conf.ManagedPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -54,7 +56,7 @@ public class ForumServiceManaged implements ManagementAware {
   @ManagedDescription("rules that define administrators")
   public List<String> getAdminRules() {
     List<String> adminRules = new ArrayList<String>();
-    List<RoleRulesPlugin>  plugins = forumService.storage_.rulesPlugins_;
+    List<RoleRulesPlugin>  plugins = forumService.storage_.getRulesPlugins();
     
     for (RoleRulesPlugin plugin : plugins) {
       Collection<List<String>> allrules = plugin.getAllRules().values();
@@ -72,18 +74,11 @@ public class ForumServiceManaged implements ManagementAware {
   public boolean hasForumAdminRole(String username) throws Exception {
     return forumService.storage_.isAdminRole(username);
   }
-  
-  
-  @Managed
-  @ManagedDescription("recalculate forum statistics")
-  public void updateStatistics() throws Exception {
-    forumService.updateForumStatistic();
-  }
 
   @Managed
   @ManagedDescription("get the configuration of the mail service used for notifications in KS")
   public Map<String,String> getMailServiceConfig() {
-    return forumService.storage_.serverConfig_;
+    return forumService.storage_.getServerConfig_();
   }
   
   @Managed
@@ -103,7 +98,8 @@ public class ForumServiceManaged implements ManagementAware {
       log.error("Failed to register contact provider for " + fqn  + ": " + e.getMessage());
       return;
     }
-    ExoContainerContext.getContainerByName("portal").registerComponentInstance(ContactProvider.class, instance);
+    String name = PortalContainer.getCurrentPortalContainerName();
+    ExoContainerContext.getContainerByName(name).registerComponentInstance(ContactProvider.class, instance);
   }
   
   
@@ -114,7 +110,7 @@ public class ForumServiceManaged implements ManagementAware {
  
   }
 
-  public void registerStorageManager(JCRDataStorage storage) {
+  public void registerStorageManager(DataStorage storage) {
     if (context != null) {
       context.register(storage);
     }

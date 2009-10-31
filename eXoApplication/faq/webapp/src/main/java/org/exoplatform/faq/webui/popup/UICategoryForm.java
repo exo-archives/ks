@@ -28,6 +28,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -258,7 +259,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       }
       
       String userPrivate = uiCategory.getUIStringInput(FIELD_USERPRIVATE_INPUT).getValue() ;
-      String erroUser = FAQUtils.checkValueUser(userPrivate) ;
+      String erroUser = UserHelper.checkValueUser(userPrivate) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
     		Object[] args = { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser };
     		uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.user-not-found", args, ApplicationMessage.WARNING)) ;
@@ -271,7 +272,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       }
       /*moderator = uiCategory.removeSpaceInString(moderator) ;
       moderator = uiCategory.filterItemInString(moderator) ;*/
-      erroUser = FAQUtils.checkValueUser(moderator) ;
+      erroUser = UserHelper.checkValueUser(moderator) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
       	Object[] args = { uiCategory.getLabel(FIELD_MODERATOR_INPUT), erroUser };
       	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.user-not-found", args, ApplicationMessage.WARNING)) ;

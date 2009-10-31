@@ -3,7 +3,7 @@ package org.exoplatform.forum.bench;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -58,8 +58,7 @@ public class ForumDataInitializer implements Startable {
 		long categoriesCount = 0;
 		
 		for (Category category : categories) {
-			SessionProvider spcat = SessionProvider.createSystemProvider();
-			forumService.saveCategory(spcat, category, true);
+			forumService.saveCategory( category, true);
 			
 			categoriesCount++;
 			String categoryId = category.getId();
@@ -69,8 +68,8 @@ public class ForumDataInitializer implements Startable {
 			forumsCount += forums.size();
 			int forumNum=0;
 			for (Forum forum : forums) {
-				SessionProvider spf = SessionProvider.createSystemProvider();
-				forumService.saveForum(spf, categoryId, forum, true);
+		
+				forumService.saveForum(categoryId, forum, true);
 
 				
 				String forumId = forum.getId();
@@ -80,8 +79,8 @@ public class ForumDataInitializer implements Startable {
 				log.info("\tForum "+ (++forumNum) + "/"+ forums.size() + " with " + topics.size()+ " topics");
 				int topicNum = 0;
 				for (Topic topic : topics) {
-					SessionProvider sptop = SessionProvider.createSystemProvider();
-					forumService.saveTopic(sptop, categoryId, forumId, topic, true, false, "");
+		
+					forumService.saveTopic(categoryId, forumId, topic, true, false, "");
 					//log.info("Created topic " + topic.getTopicName());
 					
 					String topicId = topic.getId();
@@ -91,11 +90,11 @@ public class ForumDataInitializer implements Startable {
 					long postsWeight = 0;
 					long t1 = System.currentTimeMillis();
 					for (Post post : posts) {
-						SessionProvider spp = SessionProvider.createSystemProvider();
-						forumService.savePost(spp, categoryId, forumId, topicId, post, true, "");
+		
+						forumService.savePost(categoryId, forumId, topicId, post, true, "");
 						long messageWeight = post.getMessage().length()*2; // in bytes
 						postsWeight += messageWeight;
-						spp.close();
+	
 					}
 					double elapsed = (System.currentTimeMillis() - t1);
 					double rate = ((postsWeight/1024) / (elapsed/1000));
@@ -103,18 +102,18 @@ public class ForumDataInitializer implements Startable {
 					log.info("\t\tTopic "+ (++topicNum) + "/" + topics.size() + "\t" + posts.size()+ " posts in "+ elapsed + "ms " + srate  );
 					
 					topicsWeight+=postsWeight;
-					sptop.close();
+	
 				} // end topics loop
 
 				
 				log.info("\t\t "+topics.size()+" topics " +  MessageFormat.format("({0,number,#.#} K)", (topicsWeight/1024)) + " total posts="  + postCount);
 				forumsWeight+= topicsWeight;
 				topicsCount+=topics.size();
-				spf.close();
+			
 			}
 			log.info("\t"+forums.size()+" forums " +  MessageFormat.format("({0,number,#.#} K)", (forumsWeight/1024)) + " total posts="  + postCount);
 			categoriesWeight+=forumsWeight;
-			spcat.close();
+
 		}
 
 		log.info("INITIALIZED : categories=" + categories.size() + " / forums=" + forumsCount + " / topics=" + topicsCount + " / posts=" + postCount + MessageFormat.format(" ({0,number,#.#} K)", (categoriesWeight/1024)));

@@ -23,15 +23,15 @@ import java.util.List;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.w3c.dom.Document;
@@ -51,7 +51,7 @@ import com.sun.syndication.io.SyndFeedOutput;
  * Apr 10, 2009, 10:10:14 AM
  */
 public abstract class RSSGenerate {
-	public static NodeHierarchyCreator nodeHierarchyCreator_;
+	public NodeHierarchyCreator nodeHierarchyCreator_;
 	public Node appHomeNode;
 	public final String KS_RSS = "ks.rss".intern();
 	public final String feedType = "rss_2.0".intern();
@@ -67,26 +67,22 @@ public abstract class RSSGenerate {
 	public final String KS_FORUM = "forum".intern();
 	public final String FAQ_APP = "faqApp".intern();
 	public final String FORUM_APP = "ForumService".intern();
+	private KSDataLocation dataLocator;
 	
-	public RSSGenerate(NodeHierarchyCreator nodeHierarchyCreator){
-		nodeHierarchyCreator_ = nodeHierarchyCreator;
+	public RSSGenerate(KSDataLocation dataLocator){
+		this.dataLocator = dataLocator;
 		data = new RSS();
 	}
 
 	public Node getKSServiceHome(SessionProvider sProvider, String serviceType) throws Exception {
-		if(nodeHierarchyCreator_ == null) nodeHierarchyCreator_ = (NodeHierarchyCreator)PortalContainer.getInstance().getComponent(NodeHierarchyCreator.class) ;
-		Node tmpNode = nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
-		RepositoryService rService = (RepositoryService)PortalContainer.getInstance().getComponent(RepositoryService.class) ;
-		Session session = sProvider.getSession(rService.getCurrentRepository().getConfiguration().getDefaultWorkspaceName()
-				, rService.getCurrentRepository()) ;			
-		return (Node)session.getItem(tmpNode.getPath()) ;
-		//return	nodeHierarchyCreator_.getPublicApplicationNode(sProvider).getNode(serviceType) ;
+	  String path = (FORUM_APP.equals(serviceType) ? dataLocator.getForumHomeLocation() : dataLocator.getFaqHomeLocation());
+	  return dataLocator.getSessionManager().getSession(sProvider).getRootNode().getNode(path);
 	}
 
 	public String getPageLink() throws Exception {
 //		TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So, when run JUnit-test, you must comment content in this function and return null.
 		try{
-			org.exoplatform.portal.application.PortalRequestContext portalContext = org.exoplatform.portal.webui.util.Util.getPortalRequestContext();
+			PortalRequestContext portalContext = Util.getPortalRequestContext();
 			return (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private", "public");
 		}catch(Exception e){
 			return null;

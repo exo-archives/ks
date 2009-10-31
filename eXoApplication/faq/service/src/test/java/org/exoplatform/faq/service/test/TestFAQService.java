@@ -30,6 +30,7 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.CategoryInfo;
 import org.exoplatform.faq.service.Comment;
+import org.exoplatform.faq.service.DataStorage;
 import org.exoplatform.faq.service.FAQEventQuery;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -71,7 +72,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	private static String  questionId3;
 	private static String  questionId4;
 	private static String  questionId5;
-	private JCRDataStorage datastorage;
+	private DataStorage datastorage;
 
 	public TestFAQService() throws Exception {
 		super();
@@ -80,7 +81,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	public void setUp() throws Exception {
 		super.setUp();
 		faqService_ = (FAQService) container.getComponentInstanceOfType(FAQService.class);
-		datastorage = (JCRDataStorage) container.getComponentInstanceOfType(JCRDataStorage.class);
+		datastorage = (DataStorage) container.getComponentInstanceOfType(JCRDataStorage.class);
 		SessionProviderService sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
 		sProvider_ = sessionProviderService.getSystemSessionProvider(null) ;
 		faqSetting_.setDisplayMode("both");

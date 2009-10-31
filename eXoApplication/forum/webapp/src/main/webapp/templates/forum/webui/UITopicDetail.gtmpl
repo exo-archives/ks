@@ -6,14 +6,16 @@
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.service.Topic ;
 	import org.exoplatform.forum.service.Forum ;
-	import org.exoplatform.forum.ForumSessionUtils; 
+	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
-	import org.exoplatform.forum.service.user.ForumContact;
+	import org.exoplatform.ks.common.user.CommonContact;
 	import org.exoplatform.web.application.JavascriptManager;
+	import org.exoplatform.forum.ForumSessionUtils;
+	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/') ;
@@ -52,7 +54,7 @@
 	if(topic == null) isNull = true;
 	if(!isNull) {
 		uicomponent.initPage() ;
-		isShowMenu = !ForumSessionUtils.isAnonim();
+		isShowMenu = !UserHelper.isAnonim();
 		userProfile = uicomponent.getUserProfile();	
 		userLogin = userProfile.getUserId() ;
 		setTime = (long)(userProfile.getTimeZone()*3600000) ;
@@ -673,7 +675,7 @@
 			for(post in posts) {
 			  String postId = post.getId();
 				String owner = post.getOwner() ;
-				ForumContact contact = uiform.getPersonalContact(owner) ;
+				CommonContact contact = uiform.getPersonalContact(owner) ;
 				String avatarUrl = "" ;
 				String location = "" ;
 				boolean isCity = false;
@@ -908,9 +910,10 @@
 															<div class="MiddleRightRightClickPopupMenu">
 																<div class="UIRightPopupMenuContainer" style="width:140px; min-width:140px;">
 																	<div class="LineMenu"><span></span></div>
-																	<div title="$title1" class="MenuItem" onclick="$link2">	 
-																		<div class="ItemIcon">
-																			<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+																		<div title="$title1" class="MenuItem" onclick="$link2">	 
+																			<div class="ItemIcon">
+																				<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
+																			</div>
 																		</div>
 																	</div>
 																	<% 

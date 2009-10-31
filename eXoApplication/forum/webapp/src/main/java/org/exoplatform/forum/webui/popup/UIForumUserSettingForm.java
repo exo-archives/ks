@@ -55,6 +55,7 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.forum.webui.UITopicsTag;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -152,7 +153,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings({ "unchecked" })
 	private void initForumOption() throws Exception {
 		try {
-			this.userProfile = forumService.getUserSettingProfile(ForumSessionUtils.getCurrentUser()) ;
+			this.userProfile = forumService.getUserSettingProfile(UserHelper.getCurrentUser()) ;
 		} catch (Exception e) {			
 			e.printStackTrace() ;
 		}
@@ -312,8 +313,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		inputUserWatchManger.addChild(formStringInput);
 		
 		
-		formStringInput = new UIFormStringInput(EMAIL_ADD, ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
-		formStringInput.setValue(ForumSessionUtils.getEmailUser(this.userProfile.getUserId()));
+		formStringInput = new UIFormStringInput(EMAIL_ADD, UserHelper.getEmailUser(this.userProfile.getUserId()));
+		formStringInput.setValue(UserHelper.getEmailUser(this.userProfile.getUserId()));
 		inputUserWatchManger.addChild(formStringInput);
 		
 		addUIFormInput(inputSetProfile);
@@ -389,7 +390,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		String url = defaultAvatar;
 		try {
 			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-			url = ForumSessionUtils.getUserAvatarURL(ForumSessionUtils.getCurrentUser(), this.forumService, dservice);
+			url = ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.forumService, dservice);
 		} catch (Exception e) {
 			url = defaultAvatar;
 		}

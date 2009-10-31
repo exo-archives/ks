@@ -23,21 +23,21 @@ import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 public class ForumRSSEventListener implements EventListener{
-	private NodeHierarchyCreator nodeHierarchyCreator_;
 	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
 	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
 																																						 "exo:userWatching"}));
-	
-	public ForumRSSEventListener(NodeHierarchyCreator nodeHierarchyCreator, String ws, String repo) throws Exception {
-		this.nodeHierarchyCreator_ = nodeHierarchyCreator;
+	private KSDataLocation locator;
+	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
-		workspace_ = ws ;
-		repository_ = repo ;
+	   this.locator = dataLocator;
+		workspace_ = dataLocator.getWorkspace();
+		repository_ = dataLocator.getRepository();
+
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }
@@ -48,7 +48,7 @@ public class ForumRSSEventListener implements EventListener{
 	public void onEvent(EventIterator evIter){		
 		try{
 			//ExoContainer container = ExoContainerContext.getCurrentContainer();
-			RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
+			RSSProcess process = new RSSProcess(locator);
 			String path = null;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;

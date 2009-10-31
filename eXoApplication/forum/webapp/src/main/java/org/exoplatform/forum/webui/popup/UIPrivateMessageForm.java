@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -152,7 +152,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 			String sendTo = areaInput.getValue() ;
 			sendTo = ForumUtils.removeSpaceInString(sendTo) ;
 			sendTo = ForumUtils.removeStringResemble(sendTo) ;
-			String erroUser = ForumSessionUtils.checkValueUser(sendTo) ;
+			String erroUser = UserHelper.checkValueUser(sendTo) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;

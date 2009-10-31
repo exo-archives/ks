@@ -44,6 +44,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -92,7 +93,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		try {
 			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile();
 		} catch (Exception e) {
-			String userName = ForumSessionUtils.getCurrentUser();
+			String userName = UserHelper.getCurrentUser();
 			if (userName != null) {
 				try {
 					userProfile = forumService.getQuickProfile(userName);

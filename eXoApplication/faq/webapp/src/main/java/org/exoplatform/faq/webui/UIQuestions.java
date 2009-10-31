@@ -56,6 +56,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -893,7 +894,7 @@ public class UIQuestions extends UIContainer {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			User user = FAQUtils.getUserByUserId(userId);
+			User user = UserHelper.getUserByUserId(userId);
 			if(user != null){
 				UIAnswersPortlet portlet = question.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
@@ -1276,7 +1277,7 @@ public class UIQuestions extends UIContainer {
 					HttpServletRequest request = event.getRequestContext().getRequest() ;
 					remoteAddr = request.getRemoteAddr();
         } catch (Exception e) {}
-				if(FAQUtils.getUserByUserId(userName) == null) {
+				if(UserHelper.getUserByUserId(userName) == null) {
 					String temp = userName;
 					//Category category = faqService_.getCategoryById(question.getCategoryId(), sProvider);
 					String listMode[] = faqService_.getModeratorsOf(question.getPath());

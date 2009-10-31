@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -33,6 +32,7 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -73,7 +73,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 				)
 			,
 		    @ComponentConfig(
-             id = "UICategoryUserPopupWindow",
+             id = "UIForumUserPopupWindow",
              type = UIPopupWindow.class,
              template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
              events = {
@@ -137,8 +137,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		int i = 0;
 		for(String string : strings) {
 			ad = new ActionData() ;
-			if(i==0) ad.setActionListener("AddValuesUser") ;
-      else ad.setActionListener("AddPrivate") ;
+			if(i==0) ad.setActionListener("AddUser") ;
+      else ad.setActionListener("AddValuesUser") ;
 			ad.setActionParameter(String.valueOf(i)+","+FIELD_USERPRIVATE_MULTIVALUE) ;
 			ad.setCssIconClass(string + "Icon") ;
 			ad.setActionName(string);
@@ -152,8 +152,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	    i = 0;
 	    for(String string : strings) {
 	    	ad = new ActionData() ;
-	    	if(i==0) ad.setActionListener("AddValuesUser") ;
-	      else ad.setActionListener("AddPrivate") ;
+	    	if(i==0){
+					ad.setActionListener("AddValuesUser") ;
+	      } else {
+	      	ad.setActionListener("AddPrivate") ;
+	      }
 	    	ad.setActionParameter(String.valueOf(i)+","+field) ;
 	    	ad.setCssIconClass(string + "Icon") ;
 	    	ad.setActionName(string);
@@ -249,7 +252,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String []moderators = ForumUtils.splitForForum(moderator);
 			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(!ForumUtils.isEmpty(moderator)) {
-				String erroUser = ForumSessionUtils.checkValueUser(moderator) ;
+				String erroUser = UserHelper.checkValueUser(moderator) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					Object[] args = { uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -266,7 +269,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			userPrivate = ForumUtils.removeStringResemble(userPrivate) ;
 			String []userPrivates = ForumUtils.splitForForum(userPrivate);
 			if(!ForumUtils.isEmpty(userPrivate)) {
-				String erroUser = ForumSessionUtils.checkValueUser(userPrivate) ;
+				String erroUser = UserHelper.checkValueUser(userPrivate) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
 					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
 					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -284,22 +287,22 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			postable = ForumUtils.removeSpaceInString(postable) ;
 			viewer = ForumUtils.removeSpaceInString(viewer) ;
 			
-			String erroUser = ForumSessionUtils.checkValueUser(topicable) ;
-			erroUser = ForumSessionUtils.checkValueUser(topicable) ;
+			String erroUser = UserHelper.checkValueUser(topicable) ;
+			erroUser = UserHelper.checkValueUser(topicable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(postable) ;
+			erroUser = UserHelper.checkValueUser(postable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			}
-			erroUser = ForumSessionUtils.checkValueUser(viewer) ;
+			erroUser = UserHelper.checkValueUser(viewer) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -311,7 +314,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String []setPostable = ForumUtils.splitForForum(postable);
 			String []setViewer = ForumUtils.splitForForum(viewer) ;
 			
-			String userName = ForumSessionUtils.getCurrentUser();
+			String userName = UserHelper.getCurrentUser();
 			Category cat = new Category();
 			cat.setOwner(userName) ;
 			cat.setCategoryName(categoryTitle.trim()) ;
@@ -466,8 +469,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
 			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);
-			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UICategoryUserPopupWindow");
-			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UICategoryUserPopupWindow", "UICategoryUserPopupWindow") ;
+			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIForumUserPopupWindow");
+			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIForumUserPopupWindow", "UIForumUserPopupWindow") ;
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);

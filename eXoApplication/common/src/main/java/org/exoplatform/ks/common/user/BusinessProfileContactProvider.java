@@ -16,8 +16,7 @@
  */
 package org.exoplatform.ks.common.user;
 
-import org.apache.commons.logging.Log;
-import org.exoplatform.ks.common.CommonContact;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.UserProfile;

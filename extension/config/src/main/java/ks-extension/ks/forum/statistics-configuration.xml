@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+  <external-component-plugins>
+   <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+    <component-plugin>
+      <name>RecountActiveUserJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.forum.service.conf.RecountActiveUserPeriodJob</type>
+      <description>add a RecountActiveUser job to the JobSchedulerService</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>save the monitor data  periodically</description>
+          <property name="jobName" value="RecountActiveUserJob"/>
+          <property name="groupName" value="KnowlegedSuite"/>
+          <property name="job" value="org.exoplatform.forum.service.conf.RecountActiveUserJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="7200000"/> <!-- 2 hours-->    
+          <property name="startTime" value="+0"/>
+          <property name="endTime" value=""/>               
+        </properties-param>
+        <properties-param>
+          <name>RecountActiveUser.info</name>
+          <description></description>
+          <property name="lastPost" value="15"/> <!-- users are active if have last posts in 15 day -->
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>  
+  
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.listener.ListenerService</target-component>
+    <component-plugin>
+      <name>exo.core.security.ConversationRegistry.register</name>
+      <set-method>addListener</set-method>
+      <type>org.exoplatform.forum.service.AuthenticationLoginListener</type>
+      <description>increase number of online users</description>      
+    </component-plugin>       
+    <component-plugin>
+      <name>exo.core.security.ConversationRegistry.unregister</name>
+      <set-method>addListener</set-method>
+      <type>org.exoplatform.forum.service.AuthenticationLogoutListener</type>
+      <description>decrease number of online users</description>      
+    </component-plugin>       
+  </external-component-plugins>    
+</configuration>

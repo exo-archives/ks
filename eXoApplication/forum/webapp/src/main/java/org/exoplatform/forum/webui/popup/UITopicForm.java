@@ -45,6 +45,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -380,7 +381,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			if(topicTitle.length() < 1 && topicTitle.equals("null")) {k = 0;}
 			topicTitle = ForumTransformHTML.enCodeHTML(topicTitle);
 			if(t > 0 && k != 0 && !checksms.equals("null")) {
-				String userName = ForumSessionUtils.getCurrentUser() ;
+				String userName = UserHelper.getCurrentUser() ;
 				Post postNew = new Post();
 				postNew.setOwner(userName);
 				postNew.setName(topicTitle);
@@ -517,7 +518,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						canPost = ForumUtils.removeStringResemble(canPost);
 						canView = ForumUtils.removeSpaceInString(canView);
 						canView = ForumUtils.removeStringResemble(canView);
-						String erroUser = ForumSessionUtils.checkValueUser(canPost) ;
+						String erroUser = UserHelper.checkValueUser(canPost) ;
 						if(!ForumUtils.isEmpty(erroUser)) {
 							Object[] args = { uiForm.getLabel(FIELD_CANPOST_INPUT), erroUser };
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -525,7 +526,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							uiForm.isDoubleClickSubmit = false;
 							return ;
 						}
-						erroUser = ForumSessionUtils.checkValueUser(canView) ;
+						erroUser = UserHelper.checkValueUser(canView) ;
 						if(!ForumUtils.isEmpty(erroUser)) {
 							Object[] args = { uiForm.getLabel(FIELD_CANVIEW_INPUT), erroUser };
 							uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
@@ -552,7 +553,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 							String email = userProfile.getEmail();
 							if(ForumUtils.isEmpty(email)){
 								try {
-									email = ForumSessionUtils.getUserByUserId(userName).getEmail();
+									email = UserHelper.getUserByUserId(userName).getEmail();
                 } catch (Exception e) {}
 								if(ForumUtils.isEmpty(email)){
 									email = "true";

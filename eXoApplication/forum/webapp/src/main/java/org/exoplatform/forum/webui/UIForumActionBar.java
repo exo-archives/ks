@@ -16,9 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.RootContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
@@ -33,6 +31,8 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,6 +68,9 @@ public class UIForumActionBar extends UIContainer	{
 	private boolean hasCategory = false ;
 	private UserProfile userProfile ;
 	private ForumService forumService ;
+	
+	 private static final Log log = ExoLogger.getLogger(UIForumActionBar.class);
+	
 	public UIForumActionBar() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	} 
@@ -98,10 +101,13 @@ public class UIForumActionBar extends UIContainer	{
 	}
 	
   public String getUserToken()throws Exception {
-  	ExoContainer container = RootContainer.getInstance();
-  	container = ((RootContainer)container).getPortalContainer("portal");
-  	ContinuationService continuation = (ContinuationService) container.getComponentInstanceOfType(ContinuationService.class);
+    try {
+  	ContinuationService continuation = getApplicationComponent(ContinuationService.class);;
     return continuation.getUserToken(userProfile.getUserId());
+    } catch (Exception e) {
+      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
+    }
+    return "";
   }
 	
   static public class PrivateMessageActionListener extends EventListener<UIForumActionBar> {

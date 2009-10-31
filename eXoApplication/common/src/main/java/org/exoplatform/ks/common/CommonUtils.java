@@ -23,11 +23,6 @@ package org.exoplatform.ks.common;
  */
 public class CommonUtils {
 	
-	public final static String FORUM_SERVICE = "ForumService".intern() ;
-	public final static String FORUM_SYSTEM = "ForumSystem".intern() ;
-	public final static String FORUM_DATA = "ForumData".intern() ;
-	public final static String BBCODE_HOME = "forumBBCode".intern() ;
-	public final static String BBCODE_HOME_NODE_TYPE = "exo:forumBBCodeHome".intern() ;
 	public final static String BBCODE_NODE_TYPE = "exo:forumBBCode".intern() ;
-	public final static String BBCODE = "bbcode".intern() ;
+  public final static String BBCODE_HOME_NODE_TYPE = "exo:forumBBCodeHome".intern() ;
 }

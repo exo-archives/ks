@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.ks.common.bbcode;
 
-import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
@@ -37,7 +37,7 @@ public class BBCode {
 	public BBCode() {
 		isOption = false;
 		isActive = true;
-		id =  CommonUtils.BBCODE + IdGenerator.generate();
+		id =  Locations.BBCODE + IdGenerator.generate();
   }
 	
 	public String getId() {

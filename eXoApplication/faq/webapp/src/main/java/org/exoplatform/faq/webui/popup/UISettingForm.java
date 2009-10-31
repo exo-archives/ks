@@ -36,6 +36,7 @@ import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.webui.util.Util;
@@ -137,7 +138,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
     String userName = FAQUtils.getCurrentUser();
     List<String>userPrivates = null;
     if(userName != null){
-    	userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(userName);
+    	userPrivates = UserHelper.getAllGroupAndMembershipOfUser(userName);
     }
     this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree()) ;
 

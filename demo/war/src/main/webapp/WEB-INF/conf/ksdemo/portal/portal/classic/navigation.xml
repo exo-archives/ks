@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node-navigation>
+  <owner-type>portal</owner-type>
+  <owner-id>classic</owner-id>
+  <priority>1</priority>
+  <page-nodes>
+    <!-- node>
+      <uri>home</uri>
+      <name>home</name>
+      <label>#{portal.classic.home}</label>
+      <page-reference>portal::classic::homepage</page-reference>
+    </node-->
+    <node>
+      <uri>forum</uri>
+      <name>forum</name>
+      <label>#{portal.classic.forum}</label>
+      <page-reference>portal::classic::forum</page-reference>
+    </node>
+    <node>
+      <uri>answers</uri>
+      <name>answers</name>
+      <label>#{portal.classic.answers}</label>
+      <page-reference>portal::classic::answers</page-reference>
+    </node>
+    <node>
+      <uri>faq</uri>
+      <name>faq</name>
+      <label>#{portal.classic.faq}</label>
+      <page-reference>portal::classic::faq</page-reference>
+    </node>    
+    <node>
+      <uri>tour</uri>
+      <name>tour</name>
+      <label>#{portal.classic.tour}</label>
+      <page-reference>portal::classic::tour</page-reference>
+    </node>    
+  </page-nodes>
+</node-navigation>

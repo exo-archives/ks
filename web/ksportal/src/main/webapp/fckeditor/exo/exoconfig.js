@@ -40,7 +40,7 @@ eXoPlugin.switchToolBar = function(R) {
 };
 
 var isForum = window.parent.document.getElementById('UIForumPortlet');
-var isFAQ = window.parent.document.getElementById('UIAnswersPortlet');
+var isFAQ = window.parent.document.getElementById('UIFAQPortlet');
 if(isForum) {
 	eXoPlugin.switchToolBar({oldBar: "Basic", newBar: "eXoForum"});
 }else if(isFAQ){

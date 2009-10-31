@@ -27,6 +27,7 @@ import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -91,7 +92,7 @@ public class UIQuickSearch  extends UIForm {
 				List<ObjectSearchResult> list = null ;
 				FAQEventQuery eventQuery = new FAQEventQuery();
 				eventQuery.setAdmin(uiQuickSearch.faqSetting_.isAdmin()) ;
-			  eventQuery.setUserMembers(FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+			  eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
 			  eventQuery.setUserId(FAQUtils.getCurrentUser()) ;
 				eventQuery.setText(text);
 				eventQuery.setType("categoryAndQuestion");

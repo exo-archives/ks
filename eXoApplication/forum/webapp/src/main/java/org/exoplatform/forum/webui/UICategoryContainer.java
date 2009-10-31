@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -48,7 +48,7 @@ public class UICategoryContainer extends UIContainer	{
 		getChild(UICategory.class).setRendered(!isRender) ;
 		UIForumPortlet forumPortlet = getParent();
 		if(isRender || forumPortlet.isShowForumActionBar()) {
-			forumPortlet.getChild(UIForumActionBar.class).setRendered(!ForumSessionUtils.isAnonim()) ;
+			forumPortlet.getChild(UIForumActionBar.class).setRendered(!UserHelper.isAnonim()) ;
 		} else {
 			forumPortlet.getChild(UIForumActionBar.class).setRendered(false) ;
 		}

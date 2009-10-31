@@ -32,6 +32,7 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPageIterator;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -182,7 +183,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     String user = FAQUtils.getCurrentUser() ;
     pageIterator = this.getChildById(LIST_QUESTION_INTERATOR) ;
     pageQuesNotAnswerIterator = this.getChildById(LIST_QUESTION_NOT_ANSWERED_INTERATOR) ;
-    List<String>userPrivates = FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
+    List<String>userPrivates = UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     if(faqSetting_.isAdmin()) {
     	if(this.cateId_.equals(Utils.ALL)){
     		this.pageList = faqService_.getAllQuestions() ;

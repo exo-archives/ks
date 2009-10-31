@@ -30,13 +30,16 @@ import org.exoplatform.services.security.ConversationState;
  */
 public class AuthenticationLoginListener extends Listener<ConversationRegistry, ConversationState> {
 
-	public AuthenticationLoginListener() throws Exception {
-	
+  private ExoContainerContext context;
+  
+	public AuthenticationLoginListener(ExoContainerContext context) throws Exception { 
+    this.context = context;
 	}
 
 	@Override
 	public void onEvent(Event<ConversationRegistry, ConversationState> event) throws Exception {
-		ExoContainer container = ExoContainerContext.getCurrentContainer();
+    String name = context.getPortalContainerName();
+    ExoContainer container = ExoContainerContext.getContainerByName(name);
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
   	String userId = event.getData().getIdentity().getUserId() ;
   	fservice.userLogin(userId) ;

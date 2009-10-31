@@ -45,7 +45,7 @@ public class TestForumServiceUtils extends TestCase {
 		testContainer.registerComponentInstance(CacheService.class, cacheService);
 		
 		ExoContainerContext.setCurrentContainer(testContainer);
-		PortalContainer.setInstance(new PortalContainer(testContainer, new MockServletContext("portal")));
+		//PortalContainer.setInstance(new PortalContainer(testContainer, new MockServletContext("portal")));
 	
 		
 	}

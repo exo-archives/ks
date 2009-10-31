@@ -27,6 +27,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.ks.common.jcr.JCRListAccess;
+import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.jcr.impl.core.query.lucene.QueryResultImpl;
@@ -44,7 +45,8 @@ public class TopicListAccess extends JCRListAccess<Topic> {
    * 
    * @param topicQuery the JCR xpath query that will match topic nodes
    */
-  public TopicListAccess(String topicQuery) {
+  public TopicListAccess(JCRSessionManager sessionManager, String topicQuery) {
+    super(sessionManager);
     this.topicQuery = topicQuery;
   }
 

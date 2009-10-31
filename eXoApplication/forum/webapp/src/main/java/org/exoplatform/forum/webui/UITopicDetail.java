@@ -48,7 +48,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.service.user.ForumContact;
 import org.exoplatform.forum.webui.popup.UIMovePostForm;
 import org.exoplatform.forum.webui.popup.UIMoveTopicForm;
 import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
@@ -66,7 +65,9 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -179,7 +180,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Integer> pagePostRemember = new HashMap<String, Integer>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private Map<String, ForumContact> mapContact = new HashMap<String, ForumContact>();
+	private Map<String, CommonContact> mapContact = new HashMap<String, CommonContact>();
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_ADD_TAG = "AddTag" ;
 	public UITopicDetail() throws Exception {
@@ -244,7 +245,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   }
 	
 	private boolean isNotLogin() throws Exception {
-		if(userProfile.getUserId().equals(UserProfile.USER_GUEST) && !forum.getIsLock() && !topic.getIsLock()) return true;
+	  
+		if(UserHelper.isAnonim() && !forum.getIsLock() && !topic.getIsLock()) return true;
 		return false;
 	}
 	public void setUpdateTopic(String categoryId, String forumId, String topicId) throws Exception {
@@ -543,8 +545,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		}
 	}
 
-	private ForumContact getPersonalContact(String userId) throws Exception {
-			ForumContact contact ;
+	private CommonContact getPersonalContact(String userId) throws Exception {
+	  CommonContact contact ;
 		if(mapContact.containsKey(userId) && listContactsGotten.contains(userId)){
 			contact = mapContact.get(userId) ;
 		} else {
@@ -553,12 +555,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			listContactsGotten.add(userId);
 		}
 		if(contact == null) {
-			contact = new ForumContact() ;
+			contact = new CommonContact() ;
 		}
 		return contact ;
 	}
 	
-	private String getAvatarUrl(ForumContact contact, String userId) throws Exception {
+	private String getAvatarUrl(CommonContact contact, String userId) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
 	}
@@ -759,7 +761,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			UITopicDetail topicDetail = event.getSource() ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
-				String userName = ForumSessionUtils.getCurrentUser() ;
+				String userName = UserHelper.getCurrentUser() ;
 				String[] userVoteRating = topicDetail.topic.getUserVoteRating() ;
 				boolean erro = false ;
 				for (String string : userVoteRating) {
@@ -1634,7 +1636,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 				e.printStackTrace() ;
 			}
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
-			ForumContact contact = null ;
+			CommonContact contact = null ;
 			if(topicDetail.mapContact.containsKey(userId)) {
 				contact = topicDetail.mapContact.get(userId) ;
 			}

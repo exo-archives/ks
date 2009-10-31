@@ -2,51 +2,51 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
-    <version>1.2-SNAPSHOT</version>
-  </parent> 
+    <version>2.0.0-M1-SNAPSHOT</version>
+  </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.eXoApplication.common</artifactId>
-  <version>${org.exoplatform.ks.version}</version>
   <packaging>jar</packaging>
-  <name>eXo Common</name>
+  <name>eXo KS Common components</name>
   <url>http://www.exoplatform.org</url>
   <description>eXo Common</description>
-  
-  <dependencies> 
-  	<dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>exo.core.component.security.core</artifactId>
-      <version>${org.exoplatform.core.version}</version>
-    </dependency>
-    
+
+  <dependencies>
+
     <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.webui.portal</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <version>${org.exoplatform.kernel.version}</version>
       <scope>provided</scope>
     </dependency>
-    
-  	<dependency>
+
+    <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>      
-    </dependency>    
-    
-    
-		<dependency>
+      <version>${org.exoplatform.jcr.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+<dependency>
+  <groupId>org.exoplatform.portal</groupId>
+  <artifactId>exo.portal.webui.portal</artifactId>
+  <version>${org.exoplatform.portal.version}</version>
+  <scope>provided</scope>
+</dependency>
+
+    <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
-      <version>0.8</version>
-      <scope>compile</scope>
+      <version>0.9</version>
     </dependency>
-    
-    <dependency>
-      <groupId>org.jcrom</groupId>
-      <artifactId>jcrom</artifactId>
-      <version>1.2</version>
-      <scope>compile</scope>
-    </dependency> 
-    
+
   </dependencies>
 </project>

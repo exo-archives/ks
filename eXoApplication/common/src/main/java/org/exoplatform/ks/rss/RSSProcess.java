@@ -34,10 +34,11 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
+import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -46,11 +47,19 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedOutput;
 
 public class RSSProcess extends RSSGenerate {
-	//public static String cateid = null;
+
 	protected String linkItem = "";
 	
-	public RSSProcess(InitParams params) throws Exception{
-		super(null);
+	 public RSSProcess(KSDataLocation dataLocator) throws Exception{
+	    super(dataLocator);
+	  }
+	
+	public RSSProcess(InitParams params, KSDataLocation dataLocator) throws Exception{
+		super(dataLocator);
+		
+		if (params == null) {
+		  return;
+		}
 		PropertiesParam proParams = params.getPropertiesParam("rss-limit-config");
 		if (proParams != null) {
 			String maximum = proParams.getProperty("maximum.rss");
@@ -62,15 +71,11 @@ public class RSSProcess extends RSSGenerate {
     		}
     	}
     }
-		System.out.println("\n\n-------------------------->max: " + maxSize);
-	}
-	
-	public RSSProcess(NodeHierarchyCreator nodeHierarchyCreator){
-		super(nodeHierarchyCreator);
+
 	}
 	
 	public RSSProcess(SessionProvider sProvider, String serviceType){
-		super(null);
+		super((KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class));
 		try {
 			if(serviceType.equals(KS_FAQ)) appHomeNode = getKSServiceHome(sProvider, FAQ_APP);
 			else appHomeNode = getKSServiceHome(sProvider, FORUM_APP);
@@ -337,9 +342,7 @@ public class RSSProcess extends RSSGenerate {
 				//}
 			}			
 		}catch(Exception e) {
-			//e.printStackTrace() ;
-		}finally{
-			sProvider.close() ;
+			e.printStackTrace() ;
 		}
 	}
 

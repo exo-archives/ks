@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
@@ -31,6 +30,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -196,7 +196,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			}
 			if(sizeOption >= 2 && sizeOption <= 10) {
 				String[] newUser = new String[] {};
-				String userName = ForumSessionUtils.getCurrentUser() ;
+				String userName = UserHelper.getCurrentUser() ;
 				String[] vote = new String[sizeOption]	;
 				if(uiForm.isUpdate) {
 					String[] oldVote = uiForm.poll.getVote() ;

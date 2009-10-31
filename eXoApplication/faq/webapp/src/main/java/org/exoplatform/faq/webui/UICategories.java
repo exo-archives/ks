@@ -37,6 +37,7 @@ import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.faq.webui.popup.UIQuestionForm;
 import org.exoplatform.faq.webui.popup.UIWatchManager;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -185,7 +186,7 @@ public class UICategories extends UIContainer{
 					newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, true, null);
 				}else {
 					newList = faqService_.getSubCategories(this.categoryId_, faqSetting_, false, 
-							FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+							UserHelper.getAllGroupAndMembershipOfUser(userName));
 				}
 	    	if(categoryId_.equals(Utils.CATEGORY_HOME)) {
 	    		currentCategoryName = faqService_.getCategoryById(categoryId_).getName();
@@ -208,7 +209,7 @@ public class UICategories extends UIContainer{
 					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, true, null);
 				}else {
 					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false,
-							FAQServiceUtils.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser()));
+							UserHelper.getAllGroupAndMembershipOfUser(userName));
 				}
 				viewBackIcon = false;
 			}
@@ -217,7 +218,7 @@ public class UICategories extends UIContainer{
 			this.listCate.clear();
 			listCate.addAll(newList);
 			String[] listId = breadcumbs.getPath(breadcumbs.getBreadcumbs().size() - 1).split("/");
-			setIsModerators(FAQUtils.getCurrentUser());
+			setIsModerators(userName);
 		}
 		isSwap = false;
 	}
@@ -239,7 +240,7 @@ public class UICategories extends UIContainer{
     	listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, true, null));
     }else {
     	listCate.addAll(faqService_.getSubCategories(parentCateID_, faqSetting_, false, 
-  				FAQServiceUtils.getAllGroupAndMembershipOfUser(userName)));
+    	                                             UserHelper.getAllGroupAndMembershipOfUser(userName)));
     }		
 		setIsModerators(userName);
 	}

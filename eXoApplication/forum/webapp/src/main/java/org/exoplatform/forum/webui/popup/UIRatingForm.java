@@ -19,7 +19,6 @@ package org.exoplatform.forum.webui.popup;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
@@ -28,6 +27,7 @@ import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -79,7 +79,7 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 			String vote = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			Topic topic = uiForm.topic ;
 			
-			String userName = ForumSessionUtils.getCurrentUser() ;
+			String userName = UserHelper.getCurrentUser() ;
 			String[] Vote = topic.getUserVoteRating() ;
 			int k = Vote.length ;
 			Double voteRating = topic.getVoteRating() ;

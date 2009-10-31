@@ -1,0 +1,152 @@
+<% 
+	import org.exoplatform.portal.webui.util.Util ;
+%>
+<div class="UIHomePagePortlet" id="$uicomponent.id">
+
+	<table cellspacing="0" cellpadding="0" border="0">
+		<tbody>
+			<tr>
+				<td>
+					<div class="UIHomePagePortlet">
+						<div class="PortletDecoration">
+							<div class="PortletDecorationTL">
+								<div class="PortletDecorationTR">
+									<div class="PortletDecorationTC">
+									<span></span>
+									</div>
+								</div>
+							</div>
+							<div class="PortletDecorationML">
+								<div class="PortletDecorationMR">
+									<div class="HomePortletAdBackround">
+										<div class="AdImage__">
+									<div class="HomeBackground">
+										<div class="HomeImageRight">
+											<div class="HomeImageLeft">
+												<div class="Label1">eXo Knowledge Suite</div>
+												<div class="Label2">2.0 alpha 1</div>
+											</div>
+										</div>
+									</div>
+									
+									<table style="table-layout: fixed; width: 100%; _width: auto;">
+										<tr>
+											<td>
+											<%String forumuri = Util.getPortalRequestContext().getPortalURI() + "forum" %>
+											<div class="Decorator" style="margin: 8px 4px 0px 0px">
+												
+													<div class="DecoratorML">
+														<div class="DecoratorMR">
+															<div class="DecoratorMC">
+																<div class="TryNowIcon">
+																	<div class="ForumIcon">
+																		<div class="ForumLabel">
+																			<div class="Title"><a href="$forumuri">Forum</a></div>
+																			<div class="Label">Open discussion</div>
+																			<div class="Label">for your portal</div>
+																		</div>
+																	</div>
+																</div>
+																<div style="margin:0px 0px 0px 0px;">
+																	<div class="CheckIcon">Unlimited categories and forums</div>
+																	<div class="CheckIcon">Thread permissions, quick reply, preview...</div>
+																	<div class="CheckIcon">Private messages, bookmarks, watch...</div>
+																	<div class="CheckIcon">Advanced moderation : lock, close, approve...</div>
+																	<div class="CheckIcon">Full administration : bans, auto-prune,... </div>
+																</div>
+																	<div style="clear: left;"><span></span></div>
+															</div>
+														</div>
+													</div>
+													
+												</div>
+											</td>
+											
+											<td>
+											<%String answersuri = Util.getPortalRequestContext().getPortalURI() + "answers" %>
+												<div class="Decorator" style="margin: 8px 0px 0px 4px">
+													
+													<div class="DecoratorML">
+														<div class="DecoratorMR">
+															<div class="DecoratorMC">
+																<div class="TryNowIcon">
+																	<div class="AnswersIcon">
+																		<div class="FAQLabel">
+																			<div class="Title"><a href="$answersuri">Answers</a></div>
+																			<div class="Label">Key questions meet</div>
+																			<div class="Label">their answers</div>
+																		</div>
+																	</div>
+																</div>
+																<div style="margin:0px 0px 0px 0px;">
+																	<div class="CheckIcon">Organize in categories</div>
+																	<div class="CheckIcon">Multiple answers, comments</div>
+																	<div class="CheckIcon">Multi-language Q/A</div>
+																	<div class="CheckIcon">Moderation</div>
+																	<div class="CheckIcon">RSS and email Watch</div>
+																</div>
+																<div style="clear: left;"><span></span></div>
+															</div>
+														</div>
+													</div>
+													
+												</div>
+											</td>
+											
+											<td>
+											<%String faquri = Util.getPortalRequestContext().getPortalURI() + "faq" %>
+												<div class="Decorator" style="margin: 8px 0px 0px 4px">
+													
+													<div class="DecoratorML">
+														<div class="DecoratorMR">
+															<div class="DecoratorMC">
+																<div class="TryNowIcon">
+																	<div class="FAQIcon">
+																		<div class="FAQLabel">
+																			<div class="Title"><a href="$faquri">FAQ</a></div>
+																			<div class="Label">Publish knowledge</div>
+																			<div class="Label">in FAQs</div>
+																		</div>
+																	</div>
+																</div>
+																<div style="margin:0px 0px 0px 0px;">
+																	<div class="CheckIcon">Publish categories from Answers</div>
+																	<div class="CheckIcon">Fully customizable template</div>
+																	<div class="CheckIcon"></div>
+																	<div class="CheckIcon"></div>
+																	<div class="CheckIcon"></div>
+																</div>
+																<div style="clear: left;"><span></span></div>
+															</div>
+														</div>
+													</div>
+													
+												</div>
+											</td>							
+											
+											
+										</tr>
+									</table>
+								</div>
+							</div>
+							</div>
+							</div>
+							<div class="PortletDecorationBL">
+								<div class="PortletDecorationBR">
+									<div class="PortletDecorationBC">
+									<span></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td style="width:220px;">
+<% 
+	_ctx.include("system:/templates/sidebar.gtmpl");
+%>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
