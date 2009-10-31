@@ -175,6 +175,6 @@
         </configuration>
       </plugin>
     </plugins>  
-    <finalName>ksdemo</finalName>    
+    <finalName>gatein-exo-ks-sample-${org.exoplatform.ks.version}</finalName>    
   </build>
 </project>

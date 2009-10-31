@@ -50,7 +50,7 @@
       <version.chromattic>1.0.0-beta5</version.chromattic>
       <version.reflect>1.0.0-beta3</version.reflect>
 
-    <org.exoplatform.comet.version>2.1.0-SNAPSHOT</org.exoplatform.comet.version>
+    <org.exoplatform.comet.version>2.1.0_gtn_Alpha01</org.exoplatform.comet.version>
     <org.exoplatform.ks.version>2.0.0-M1-SNAPSHOT</org.exoplatform.ks.version>
     <org.exoplatform.portal.version>3.0.0-Beta02</org.exoplatform.portal.version>
 

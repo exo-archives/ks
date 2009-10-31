@@ -217,6 +217,6 @@
         </configuration>
       </plugin>
     </plugins>  
-    <finalName>ks</finalName>    
+    <finalName>gatein-exo-ks-${org.exoplatform.ks.version}</finalName>    
   </build>
 </project>
