@@ -1,4 +1,4 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
@@ -30,21 +30,21 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>${org.exoplatform.ks.version}</version>
+      <version>2.0.0-Alpha01-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>${org.exoplatform.ks.version}</version>
+      <version>2.0.0-Alpha01-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>${org.exoplatform.ks.version}</version>
+      <version>2.0.0-Alpha01-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     
