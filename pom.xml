@@ -232,8 +232,8 @@
   -->
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatforrm.org/projects/ks/tags/2.0.0-Alpha01</connection>
-    <developerConnection>scm:svn:http://svn.exoplatforrm.org/projects/ks/tags/2.0.0-Alpha01</developerConnection>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha01</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha01</developerConnection>
     <url>http://fisheye.exoplatform.org/browse/3Modules/ks/tags/2.0.0-Alpha01</url>
   </scm>
 </project>
