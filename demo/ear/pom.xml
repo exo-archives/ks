@@ -19,45 +19,45 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.config</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>      
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
     </dependency>
      <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
       <type>war</type>
     </dependency>    
      <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
       <type>war</type>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.ksResources</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
       <type>war</type>
     </dependency>              
@@ -65,13 +65,13 @@
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.webservice</artifactId>
       <scope>provided</scope>      
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency> 
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.webapp</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>      
       <type>war</type>
     </dependency>
@@ -79,20 +79,20 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.config</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>     
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.rest-war</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>war</type>
     </dependency> 
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.webapp</artifactId>
-      <version>2.0.0-Alpha01-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>war</type>
     </dependency>     
 
@@ -175,6 +175,6 @@
         </configuration>
       </plugin>
     </plugins>  
-    <finalName>gatein-exo-ks-sample-2.0.0-Alpha01-SNAPSHOT</finalName>    
+    <finalName>gatein-exo-ks-sample-${project.version}</finalName>    
   </build>
 </project>
