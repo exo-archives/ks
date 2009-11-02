@@ -18,7 +18,14 @@
     <!--module>reports</module-->
    </modules>
 <dependencies>
-       <!--  extension -->         
+       <!--  extension -->        
+
+       <dependency>
+         <groupId>org.exoplatform.portal</groupId>
+         <artifactId>exo.portal.server.tomcat.patch</artifactId>
+         <version>${org.exoplatform.portal.version}</version>
+       </dependency>       
+        
        <dependency>
          <groupId>org.exoplatform.portal</groupId>
          <artifactId>exo.portal.starter.war</artifactId>
