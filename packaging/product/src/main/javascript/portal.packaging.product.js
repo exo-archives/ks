@@ -1,22 +1,3 @@
-/**
- * Copyright (C) 2009 eXo Platform SAS.
- * 
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- * 
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-
 eXo.require("eXo.projects.Module") ;
 eXo.require("eXo.projects.Product") ;
 
@@ -58,7 +39,7 @@ function getProduct(version) {
   // cometd (requried for KS)
   product.addDependencies(ks.comet.cometd);
    
-  // KS addon
+  // KS extension
   product.addDependencies(ks.eXoApplication.common);
   product.addDependencies(ks.eXoApplication.faq);
   product.addDependencies(ks.eXoApplication.forum);
@@ -66,6 +47,11 @@ function getProduct(version) {
   product.addDependencies(ks.web.webservice);  
   product.addDependencies(ks.extension);
 
+  // KS demo
+  product.addDependencies(ks.demo.portal);
+  product.addDependencies(ks.demo.rest);
+  
+  
 
   product.addServerPatch("tomcat", portal.server.tomcat.patch) ;
   product.addServerPatch("jboss",  portal.server.jboss.patch) ;

@@ -66,6 +66,20 @@ function getModule(params)
    module.extension.deployName = "ks";
    
    
-
+  // KS demo 
+   module.demo = {};
+   // demo portal
+   module.demo.portal = 
+	   new Project("org.exoplatform.ks", "exo.ks.demo.webapp", "war", module.version).
+	   addDependency(new Project("org.exoplatform.ks", "exo.ks.demo.config", "jar", module.version));
+	   module.demo.portal.deployName = "ksdemo";  
+	   
+   // demo rest endpoint	   
+   module.demo.rest = 
+       new Project("org.exoplatform.ks", "exo.ks.demo.rest-war", "war", module.version);
+       module.extension.deployName = "rest-ksdemo"; 
+       
+       
+   
    return module;
 }
