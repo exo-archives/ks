@@ -127,6 +127,9 @@
    <profiles>
       <profile>
          <id>pkg-tomcat</id>
+         <activation>
+           <activeByDefault>true</activeByDefault>
+         </activation>         
          <build>
             <finalName>eXoKS-${project.version}</finalName>
             <plugins>
@@ -202,6 +205,8 @@
                      </execution>
                   </executions>
                </plugin>
+               <!-- assembly is not compatible with relocation of tomcat to exo-working -->
+               <!-- 
                <plugin>
                   <artifactId>maven-assembly-plugin</artifactId>
                   <executions>
@@ -219,6 +224,7 @@
                      </execution>
                   </executions>
                </plugin>
+               -->
             </plugins>
          </build>
       </profile>
@@ -299,6 +305,8 @@
                      </execution>
                   </executions>
                </plugin>
+               <!-- assembly is not compatible with relocation of jboss to exo-working -->
+               <!-- 
                <plugin>
                   <artifactId>maven-assembly-plugin</artifactId>
                   <executions>
@@ -316,6 +324,7 @@
                      </execution>
                   </executions>
                </plugin>
+               -->
             </plugins>
          </build>
       </profile>
