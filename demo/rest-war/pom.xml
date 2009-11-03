@@ -9,8 +9,6 @@
   <artifactId>exo.ks.demo.rest-war</artifactId>
   <packaging>war</packaging>
   <name>eXo KS Demo Portal REST war</name>
-  <url>http://www.exoplatform.org</url>
-  <description>eXo KS Demo Rest Rest War</description>
   
   <build>
     <finalName>rest-ksdemo</finalName>
