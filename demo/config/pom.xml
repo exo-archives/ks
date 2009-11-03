@@ -9,6 +9,4 @@
   <artifactId>exo.ks.demo.config</artifactId>
   <name>eXo KS Demo Portal configuration jar</name>
   <packaging>jar</packaging>
-  <url>http://www.exoplatform.org</url> 
-  <description>KS demo portal configuration</description>
 </project>
