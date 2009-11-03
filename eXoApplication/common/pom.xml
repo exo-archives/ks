@@ -1,52 +1,79 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
     <version>2.0.0-Alpha02-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath> <!-- TODO : decide if we introduce an intermediary parent in-->
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
+
   <artifactId>exo.ks.eXoApplication.common</artifactId>
   <packaging>jar</packaging>
-  <name>eXo KS Common components</name>
-  <url>http://www.exoplatform.org</url>
-  <description>eXo Common</description>
-
+  
   <dependencies>
-
+    <!-- added by us -->
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+    </dependency>
+    
+    <!-- platform provided -->
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <version>${org.exoplatform.kernel.version}</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+     <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
+      <scope>provided</scope>
+    </dependency>   
+    <dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>
       <scope>provided</scope>
-    </dependency>
-
+    </dependency>   
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
-      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>  
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
+      <scope>provided</scope>
+    </dependency>      
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency> 
+     <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <scope>provided</scope>
+    </dependency> 
+     <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+      <scope>provided</scope>
+    </dependency>            
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.webui.portal</artifactId>
       <scope>provided</scope>
     </dependency>
-
-<dependency>
-  <groupId>org.exoplatform.portal</groupId>
-  <artifactId>exo.portal.webui.portal</artifactId>
-  <version>${org.exoplatform.portal.version}</version>
-  <scope>provided</scope>
-</dependency>
-
-    <dependency>
-      <groupId>rome</groupId>
-      <artifactId>rome</artifactId>
-      <version>0.9</version>
-    </dependency>
-
   </dependencies>
 </project>
