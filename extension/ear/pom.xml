@@ -1,19 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.extension</artifactId>
     <version>2.0.0-Alpha02-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+
   <artifactId>exo.ks.extension.ear</artifactId>
   <packaging>ear</packaging>
   <name>eXo KS Extension configuration ear</name>
-  <url>http://www.exoplatform.org</url>
-  <description>KS Extension EAR for GateIn</description>
-  <properties>
-      <!-- maven-enforcer-plugin -->
-    <jdk.min.version>1.5</jdk.min.version>
-  </properties>
+ 
   
   <dependencies>
     <dependency>
@@ -73,6 +72,8 @@
       <scope>provided</scope>
     </dependency>   
 -->    
+
+<!-- HACK : cometd packaging should be provided by platform -->
     <dependency>
       <groupId>org.exoplatform.comet</groupId>    
       <artifactId>exo-comet-webapp</artifactId>
@@ -80,6 +81,24 @@
       <type>war</type>      
     </dependency>
 
+
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>cometd-bayeux</artifactId>
+      <version>6.1.11</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>cometd-api</artifactId>
+      <version>0.9.20080221</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>6.1.11</version>
+    </dependency> 
 
     <dependency>        
       <groupId>org.exoplatform.comet</groupId>
@@ -109,26 +128,7 @@
       </exclusions>
     </dependency>
       
- 
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>cometd-bayeux</artifactId>
-      <version>6.1.11</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>cometd-api</artifactId>
-      <version>0.9.20080221</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty-util</artifactId>
-      <version>6.1.11</version>
-    </dependency> 
-    
-    
+
   </dependencies>  
   <build>
     <plugins>
@@ -136,7 +136,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-ear-plugin</artifactId>
         <configuration>
-           <displayName>ks-ext</displayName>        
+           <displayName>ks-extension</displayName>        
+           <defaultLibBundleDir>lib</defaultLibBundleDir>
            <modules>
              <webModule>
                <groupId>org.exoplatform.comet</groupId>
