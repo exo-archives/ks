@@ -44,12 +44,12 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  *          hung.nguyen@exoplatform.com
  * July 3, 2007  
  */
-public class TestForumService extends BaseForumTestCase{
+public class ITForumService extends ForumServiceTestCase{
 	private final String USER_ROOT = "root";
 	private final String USER_DEMO = "demo";
 	private final String USER_JOHN = "john";
 	
-	public TestForumService() throws Exception {
+	public ITForumService() throws Exception {
 	  super();
   }
 

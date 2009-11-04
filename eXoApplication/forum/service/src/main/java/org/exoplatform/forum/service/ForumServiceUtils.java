@@ -23,11 +23,9 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
@@ -35,6 +33,7 @@ import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -129,7 +128,7 @@ public class ForumServiceUtils {
 		
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || 
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
-		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
 		for(String str : userGroupMembership) {
 			str = str.trim();
 			if (isMembershipExpression(str)) {
@@ -221,7 +220,7 @@ public class ForumServiceUtils {
 		String value = "";
 		String id = "";
 		Membership membership = null;
-		OrganizationService organizationService_ = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+		OrganizationService organizationService_ = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
 		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
 			id = object.toString();
 			id = id.replace("Membership[", "").replace("]", "");

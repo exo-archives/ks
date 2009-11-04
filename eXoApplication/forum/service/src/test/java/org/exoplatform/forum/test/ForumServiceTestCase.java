@@ -26,7 +26,7 @@ import org.exoplatform.test.BasicTestCase;
  *          hung.nguyen@exoplatform.com 					
  * july 3, 2007  
  */
-public class BaseForumTestCase extends BasicTestCase {
+public abstract class ForumServiceTestCase extends BasicTestCase {
   
 	protected static Log          log = ExoLogger.getLogger("sample.services.test");  
 
@@ -48,7 +48,7 @@ public class BaseForumTestCase extends BasicTestCase {
 
 
   
-  public BaseForumTestCase() throws Exception {    
+  public ForumServiceTestCase() throws Exception {    
   }
   
   public void setUp() throws Exception {
@@ -98,7 +98,7 @@ public class BaseForumTestCase extends BasicTestCase {
   }
   private static void initContainer() {
     try {
-      String containerConf = BaseForumTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
+      String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();      
       String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
