@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<configuration>
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
 
   <component>
     <type>org.exoplatform.faq.service.impl.JCRDataStorage</type>
@@ -47,14 +51,22 @@
   </component-->
   
   <!-- REST -->
+  <!-- 
   <component>
     <type>org.exoplatform.services.jcr.ext.registry.RESTRegistryService</type>
   </component>
-  
+  -->
 	<component>
 		<type>org.exoplatform.services.jcr.ext.app.ThreadLocalSessionProviderService</type>
 	</component>
 
+  <component>
+    <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
+    <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
+  </component>  
+  
+  
+<!-- 
   <component>
     <type>org.exoplatform.services.rest.ResourceDispatcher</type>
   </component>
@@ -68,7 +80,7 @@
     	</value-param>
     </init-params>
  	</component>
-
+-->
   <component>
 	  <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
 	  <init-params>
@@ -109,7 +121,7 @@
       </component-plugins>
     </component>
 
-    
+ <!--    
   <component>
     <key>org.exoplatform.services.resources.LocaleConfigService</key>
     <type>org.exoplatform.services.resources.impl.LocaleConfigServiceImpl</type>
@@ -120,7 +132,7 @@
         </value-param>
       </init-params>
   </component>
-  
+  -->
   
     <component>
       <key>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</key>
@@ -143,6 +155,7 @@
 		<type>org.exoplatform.faq.service.impl.FAQServiceImpl</type>
 	</component>
 -->
+<!-- 
   <component>
     <key>org.exoplatform.services.database.HibernateService</key>
     <jmx-name>database:type=HibernateService</jmx-name>
@@ -166,6 +179,7 @@
       </properties-param>
     </init-params>
   </component>
+   -->
  <!-- 
  <component>
     <key>org.exoplatform.services.organization.OrganizationService</key>
