@@ -59,6 +59,7 @@
 
 .UIAnswersPortlet .UIBreadcumbs {
 	height: 25px;
+	padding: 0px;
 }
 
 .UIAnswersPortlet .UIBreadcumbs .BreadcumbsInfoBar {
