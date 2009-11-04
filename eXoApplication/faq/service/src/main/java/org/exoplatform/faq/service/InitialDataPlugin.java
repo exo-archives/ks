@@ -39,7 +39,6 @@ import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.log.ExoLogger;
 
-import com.lowagie.text.pdf.ByteBuffer;
 
 /**
  * A plugin to initialize FAQ data from xml export. By default the data will be imported to root category only if it does not already exist
@@ -202,11 +201,9 @@ public class InitialDataPlugin extends ManagedPlugin {
       Pattern pattern = Pattern.compile(patternStr);
 
       while (((len = inputStream.read(buf)) > 0) && keepReading) {
-        ByteBuffer bb = new ByteBuffer();
-        bb.append(buf);
-        sbuf.append(bb.toString("UTF-8"));
+        sbuf.append(new String(buf, "UTF-8"));
         
-        
+       
         String content = sbuf.substring(0);
         Matcher matcher = pattern.matcher(content);
         if (matcher.find()) {
