@@ -9,10 +9,89 @@
   <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
   <packaging>jar</packaging>
   <name>eXo KS Forum service</name>
-  <url>http://www.exoplatform.org</url>
-  <description>eXo Forum service</description>
   
   <dependencies>   
+
+<!-- 
+
+[WARNING]    commons-lang:commons-lang:jar:2.3:provided
+[WARNING]    org.exoplatform.kernel:exo.kernel.commons:jar:2.2.0-Beta02:provided
+[WARNING]    picocontainer:picocontainer:jar:1.1:provided
+[WARNING]    javax.servlet:servlet-api:jar:2.4:provided
+[WARNING]    org.exoplatform.kernel:exo.kernel.component.cache:jar:2.2.0-Beta02:provided
+[WARNING]    org.exoplatform.tool:exo.tool.framework.junit:jar:1.2.0:provided
+[WARNING]    javax.jcr:jcr:jar:1.0:provided
+[WARNING]    quartz:quartz:jar:1.5.0-RC2:provided
+[WARNING]    commons-io:commons-io:jar:1.3.2:provided
+[WARNING]    junit:junit:jar:3.8.2:provided
+[WARNING]    org.exoplatform.core:exo.core.component.organization.api:jar:2.3.0-Beta02:provided
+[WARNING]    xml-apis:xml-apis:jar:1.0.b2:provided
+[WARNING] Unused declared dependencies found:
+[WARNING]    org.exoplatform.portal:exo.portal.component.resources:jar:3.0.0-Beta02:provided
+
+ -->
+     <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
+      <scope>provided</scope>
+    </dependency>    
+    <dependency>
+      <groupId>picocontainer</groupId>
+      <artifactId>picocontainer</artifactId>
+      <scope>provided</scope>
+    </dependency> 
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>        
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.cache</artifactId>
+      <scope>provided</scope>
+    </dependency>  
+    <dependency>
+      <groupId>org.exoplatform.tool</groupId>
+      <artifactId>exo.tool.framework.junit</artifactId>
+      <scope>test</scope>
+    </dependency>          
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+      <scope>provided</scope>
+    </dependency>          
+     <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+      <scope>provided</scope>
+    </dependency> 
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>provided</scope>
+    </dependency> 
+     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>   
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>exo.core.component.organization.api</artifactId>
+      <scope>provided</scope>
+    </dependency>   
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
+      <scope>provided</scope>
+    </dependency>   
+  
+
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
@@ -24,42 +103,32 @@
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.security.core</artifactId>
-      <version>${org.exoplatform.core.version}</version>
       <scope>provided</scope>
     </dependency>
     
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>exo.portal.component.resources</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
-      <scope>provided</scope>
-    </dependency>
+
 
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.core</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>    
       <scope>provided</scope>  
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>     
       <scope>provided</scope> 
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
       <scope>provided</scope>
     </dependency>
     
      <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
       <scope>provided</scope>
     </dependency>  
      
@@ -68,14 +137,12 @@
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.json</artifactId>
-      <version>${org.exoplatform.ws.version}</version>
       <scope>provided</scope>
     </dependency> 
 
     <dependency>
       <groupId>org.exoplatform.comet</groupId>
       <artifactId>exo-comet-service</artifactId>
-      <version>${org.exoplatform.comet.version}</version>
       <scope>provided</scope>
     </dependency>  
 
