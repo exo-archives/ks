@@ -56,7 +56,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 
 @SuppressWarnings("unused")
-public class TestFAQService extends FAQServiceTestCase{
+public class ITFAQService extends FAQServiceTestCase{
 	private FAQService faqService_ ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private SessionProvider sProvider_ ;
@@ -74,7 +74,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	private static String  questionId5;
 	private DataStorage datastorage;
 
-	public TestFAQService() throws Exception {
+	public ITFAQService() throws Exception {
 		super();
 	}
 

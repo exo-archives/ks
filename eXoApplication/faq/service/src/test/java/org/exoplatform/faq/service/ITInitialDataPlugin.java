@@ -27,11 +27,11 @@ import org.exoplatform.faq.test.FAQServiceTestCase;
  *          exo@exoplatform.com
  * Sep 1, 2009  
  */
-public class TestInitialDataPlugin extends FAQServiceTestCase {
+public class ITInitialDataPlugin extends FAQServiceTestCase {
 
   private static final String DATAZIP_LOCATION = "jar:/conf/faqdata.zip";
 
-  public TestInitialDataPlugin() throws Exception {
+  public ITInitialDataPlugin() throws Exception {
     super();
     faq =  (FAQService)getService(FAQService.class);
     conf = (ConfigurationManager)getService(ConfigurationManager.class);
