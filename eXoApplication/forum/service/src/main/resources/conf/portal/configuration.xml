@@ -4,22 +4,7 @@
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
- <component>
-    <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
-    <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
-    <init-params>
-      <value-param>
-        <name>repository</name>
-        <description>JCR repository for KS data</description>
-        <value>repository</value>
-      </value-param>
-      <value-param>
-        <name>workspace</name>
-        <description>workspace for KS data</description>
-        <value>portal-system</value>
-      </value-param>      
-    </init-params>
-  </component>
+
 
 
   <component>
