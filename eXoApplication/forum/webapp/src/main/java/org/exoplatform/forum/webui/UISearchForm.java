@@ -73,7 +73,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 				)
 			,
 		    @ComponentConfig(
-             id = "UIForumUserPopupWindow",
+             id = "UIUserSearchPopupWindow",
              type = UIPopupWindow.class,
              template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
              events = {
@@ -509,8 +509,8 @@ public class UISearchForm extends UIForm implements UISelector {
 			UIPopupContainer uiPopupContainer = popupAction.getChild(UIPopupContainer.class);
 			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);
-			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIForumUserPopupWindow");
-			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIForumUserPopupWindow", "UIForumUserPopupWindow") ;
+			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIUserSearchPopupWindow");
+			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIUserSearchPopupWindow", "UIUserSearchPopupWindow") ;
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
