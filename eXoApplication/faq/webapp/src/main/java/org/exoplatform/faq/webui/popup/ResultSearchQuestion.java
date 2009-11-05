@@ -57,7 +57,7 @@ import org.exoplatform.webui.form.UIForm;
 )
 public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 	private List<Question> listQuestion_ = null ;
-	private static String language_ = "" ;
+	private String language_ = "" ;
 	public ResultSearchQuestion() throws Exception {
 		addChild(UIAnswersPageIterator.class, null, LIST_RESULT_SEARCH) ;
 	}
@@ -126,7 +126,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			UIPopupAction popupAction = uiResultContainer.getChild(UIPopupAction.class) ;
 			UIPopupViewQuestion viewQuestion = popupAction.activate(UIPopupViewQuestion.class, 700) ;
 			viewQuestion.setQuestion(questionId) ;
-			viewQuestion.setLanguage(language_) ;
+			viewQuestion.setLanguage(resultSearch.getLanguage()) ;
 			viewQuestion.setId("UIPopupViewQuestion") ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}

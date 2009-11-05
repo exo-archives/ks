@@ -56,7 +56,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 )
 
 public class UIAttachMentForm extends UIForm implements UIPopupComponent {
-  private static int numberUpload = 5 ;
+  private int numberUpload = 5 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
   private boolean isChangeAvatar = false;
   
@@ -174,7 +174,6 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
   }
   
   static public class CancelActionListener extends EventListener<UIAttachMentForm> {
-  	@SuppressWarnings("static-access")
     public void execute(Event<UIAttachMentForm> event) throws Exception {
       UIAttachMentForm uiAttachMent = event.getSource() ;
 //    remove temp file in upload service and server      
@@ -199,5 +198,9 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       }
     }
+  }
+
+  public int getNumberUpload() {
+    return numberUpload;
   }
 }

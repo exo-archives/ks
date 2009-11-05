@@ -95,7 +95,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
   private UIFormInputWithActions inputAttachcment = null ;
   
   private static FAQService fAQService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-  private static Question question_ = null ;
+  private Question question_ = null ;
   
   private Map<String, List<ActionData>> actionField_ ;
   
@@ -462,39 +462,41 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      	}
 	      }
 	       
+	      Question question = questionForm.getQuestion();
+	      
 	      if(questionForm.questionId_ == null || questionForm.questionId_.trim().length() < 1) { //Add new question
-	        question_ = new Question() ;
-	        question_.setCategoryId(questionForm.getCategoryId()) ;
-	        question_.setRelations(new String[]{}) ;
-	        question_.setCreatedDate(date) ;
+	        question = new Question() ;
+	        question.setCategoryId(questionForm.getCategoryId()) ;
+	        question.setRelations(new String[]{}) ;
+	        question.setCreatedDate(date) ;
 	      } else { // Edit question
 	      	isNew = false ;
 	      }
 	      	      
 	      if(questionForm.isModerate){
 	      	if(questionForm.isAddCheckBox){
-		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
-		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	  question.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
+	      	  question.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
 	      	} else if(isNew){
-	      		question_.setApproved(false) ;
+	      	  question.setApproved(false) ;
 	      	}
 	      } else {
 	      	if(questionForm.isAddCheckBox){
-		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
-		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
+	      	  question.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
+	      	  question.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
 	      	} else{
-	      		question_.setApproved(true) ;
+	      	  question.setApproved(true) ;
 	      	}
 	      }
-	      question_.setLanguage(questionForm.getDefaultLanguage()) ;
-	      question_.setAuthor(author) ;
-	      question_.setEmail(emailAddress) ;
+	      question.setLanguage(questionForm.getDefaultLanguage()) ;
+	      question.setAuthor(author) ;
+	      question.setEmail(emailAddress) ;
 	      if(language.equals(questionForm.defaultLanguage_)) {
-	      	question_.setQuestion(questionContent);
-	        question_.setDetail(questionDetail);
+	        question.setQuestion(questionContent);
+	        question.setDetail(questionDetail);
 	      }else {
-	      	question_.setQuestion(questionForm.mapLanguage.get(questionForm.getDefaultLanguage()).getQuestion());
-	        question_.setDetail(questionForm.mapLanguage.get(questionForm.getDefaultLanguage()).getDetail());
+	        question.setQuestion(questionForm.mapLanguage.get(questionForm.getDefaultLanguage()).getQuestion());
+	        question.setDetail(questionForm.mapLanguage.get(questionForm.getDefaultLanguage()).getDetail());
 	        QuestionLanguage otherLang = new QuestionLanguage() ;
 	        if(questionForm.mapLanguage.containsKey(language)) {
 	        	otherLang = questionForm.mapLanguage.get(language) ;
@@ -505,17 +507,17 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        otherLang.setLanguage(language) ;
 	        questionForm.mapLanguage.put(language, otherLang) ;
 	      }
-	      questionForm.mapLanguage.remove(question_.getLanguage()) ;
-	      question_.setMultiLanguages(questionForm.mapLanguage.values().toArray(new QuestionLanguage[]{})) ;
-	      question_.setAttachMent(questionForm.listFileAttach_) ;      
+	      questionForm.mapLanguage.remove(question.getLanguage()) ;
+	      question.setMultiLanguages(questionForm.mapLanguage.values().toArray(new QuestionLanguage[]{})) ;
+	      question.setAttachMent(questionForm.listFileAttach_) ;      
 	      UIAnswersPortlet portlet = questionForm.getAncestorOfType(UIAnswersPortlet.class) ;
 	      UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 	      //Create link by Vu Duy Tu.
 	      if(isNew){
-	      	StringBuilder qsId = new StringBuilder().append(question_.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME)
-	      		.append("/").append(question_.getId());
+	      	StringBuilder qsId = new StringBuilder().append(question.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME)
+	      		.append("/").append(question.getId());
 		      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", qsId.toString().replace("private", "public"));
-		      question_.setLink(link) ;
+		      question.setLink(link) ;
 	      }
 	      
 	      //For discuss in forum
@@ -524,7 +526,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      	FAQSetting faqSetting = new FAQSetting();
 					FAQUtils.getPorletPreference(faqSetting);
 					if(faqSetting.getIsDiscussForum()) {
-						String topicId = question_.getTopicIdDiscuss();
+						String topicId = question.getTopicIdDiscuss();
 						if(topicId != null && topicId.length() > 0) {
 							try {
 								ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
@@ -533,8 +535,8 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 									String[] ids = topic.getPath().split("/");
 									int t = ids.length;
 									topic.setModifiedBy(FAQUtils.getCurrentUser());
-									topic.setTopicName(question_.getQuestion());
-									topic.setDescription(question_.getDetail());
+									topic.setTopicName(question.getQuestion());
+									topic.setDescription(question.getDetail());
 									topic.setIsWaiting(true);
 									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
 								}
@@ -544,7 +546,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 						}
 					}
 	      	// end discuss
-					if(fAQService_.saveQuestion(question_, isNew, questionForm.faqSetting_) == null) {
+					if(fAQService_.saveQuestion(question, isNew, questionForm.faqSetting_) == null) {
 						UIApplication uiApplication = questionForm.getAncestorOfType(UIApplication.class) ;
 		        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-deleted", null, ApplicationMessage.WARNING)) ;
 		        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
@@ -574,7 +576,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	        UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
 	        if(questionManagerForm.isResponseQuestion && questionForm.getQuestionId().equals(responseForm.questionId_)) {
 	          responseForm.updateChildOfQuestionManager(true) ;
-	          responseForm.setQuestionId(question_, "", !fAQService_.isModerateAnswer(question_.getPath())) ;
+	          responseForm.setQuestionId(question, "", !fAQService_.isModerateAnswer(question.getPath())) ;
 	        }
 	        questionManagerForm.isEditQuestion = false ;
 	        UIPopupContainer popupContainer = questionManagerForm.getParent() ;
@@ -583,7 +585,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      //update question list in question container.
 	      questions.setDefaultLanguage();
         questions.updateCurrentQuestionList() ;
-      	if(!isNew && question_.getPath().equals(questions.viewingQuestionId_)){
+      	if(!isNew && question.getPath().equals(questions.viewingQuestionId_)){
       		questions.updateLanguageMap() ;
       	}
         event.getRequestContext().addUIComponentToUpdateByAjax(questions.getAncestorOfType(UIAnswersContainer.class)) ;
@@ -647,6 +649,11 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
       }
     }
   }
+
+  public Question getQuestion() {
+    return question_;
+  }
+
 }
 
 

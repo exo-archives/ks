@@ -91,11 +91,11 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   public static final String VIEW_AUTHOR_INFOR = "ViewAuthorInfor".intern();
   final private static String FIELD_MODERATE_ANSWERS_CHECKBOX = "moderateAnswers" ;
-  private static FAQService faqService_ ;
-  private static boolean isAddNew_ = true ;
+  private FAQService faqService_ ;
+  private boolean isAddNew_ = true ;
   private String oldName_ = "";
   private Category currentCategory_ ;
-  private static long maxIndex = 1;
+  private long maxIndex = 1;
 	public UICategoryForm() throws Exception {
 		faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	}
@@ -221,13 +221,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       }
       
       if(uiCategory.isAddNew_) {
-      	if(faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      	if(uiCategory.faqService_.isCategoryExist(name, uiCategory.parentId_)) {
         	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       		return ;
         }
       }else {
-      	if(!name.equals(uiCategory.oldName_) && faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      	if(!name.equals(uiCategory.oldName_) && uiCategory.faqService_.isCategoryExist(name, uiCategory.parentId_)) {
         	uiApp.addMessage(new ApplicationMessage("UICateforyForm.sms.cate-name-exist", null, ApplicationMessage.WARNING)) ;
       		event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
       		return ;
@@ -247,7 +247,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	        return ;
         }
       }
-      if(index > maxIndex) index = maxIndex;
+      if(index > uiCategory.maxIndex) index = uiCategory.maxIndex;
       String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
@@ -290,7 +290,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			//UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 			Category cat ;
-			if(isAddNew_) {
+			if(uiCategory.isAddNew_) {
 				cat = new Category();
 				cat.setCreatedDate(new Date()) ;
 			}else {
@@ -304,13 +304,13 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			cat.setViewAuthorInfor(viewAuthorInfor);
 			cat.setIndex(index);
 			cat.setModerators(users) ;
-			faqService_.saveCategory(uiCategory.parentId_, cat, isAddNew_) ;
+			uiCategory.faqService_.saveCategory(uiCategory.parentId_, cat, uiCategory.isAddNew_) ;
 			
-			if(!isAddNew_) {
+			if(!uiCategory.isAddNew_) {
 				UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class) ;
 				if(uiCategory.categoryId_.equals(categories.getCategoryPath())) {
 					UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
-					questions.viewAuthorInfor = faqService_.isViewAuthorInfo(uiCategory.categoryId_) ;
+					questions.viewAuthorInfor = uiCategory.faqService_.isViewAuthorInfo(uiCategory.categoryId_) ;
 				}
 			}
 			

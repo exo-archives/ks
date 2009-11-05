@@ -54,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 public class UIWatchManager  extends UIForm	implements UIPopupComponent{
-	private static String categoryId_ = "";
+	private String categoryId_ = "";
 	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
 	private UIAnswersPageIterator pageIterator ;
@@ -145,7 +145,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			for(Watch watch : watchManager.listWatchs_) {
 				if(watch.getUser().equals(user)) {
 					watchForm.setWatch(watch) ;
-					watchForm.setCategoryID(categoryId_) ;
+					watchForm.setCategoryID(watchManager.getCategoryID()) ;
 					break ;
 				}
 			}
@@ -178,8 +178,8 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 			UIWatchManager watchManager = event.getSource() ;
 			String user = event.getRequestContext().getRequestParameter(OBJECTID);
 			watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
-			faqService_.deleteCategoryWatch(categoryId_, user);
-			watchManager.setCategoryID(categoryId_);
+			faqService_.deleteCategoryWatch(watchManager.getCategoryID(), user);
+			watchManager.setCategoryID(watchManager.getCategoryID());
 			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;			
 		}

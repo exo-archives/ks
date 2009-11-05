@@ -130,12 +130,12 @@ public class UIQuestions extends UIContainer {
 	public String viewingQuestionId_ = "" ;
 	private String currentUser_ = "";
 	private String link_ ="";
-	private static	FAQService faqService_ = null;
+	private FAQService faqService_ = null;
 	private Map<String, QuestionLanguage> languageMap = new HashMap<String, QuestionLanguage>() ;
 	public boolean isChangeLanguage = false ;
 	public List<String> listLanguage = new ArrayList<String>() ;
 	public String backPath_ = "" ;
-	public static String language_ = FAQUtils.getDefaultLanguage() ;
+	private String language_ = FAQUtils.getDefaultLanguage() ;
 	private String discussId = "";
 	private String[] firstTollbar_ = new String[]{"AddNewQuestion", "QuestionManagament"} ;
 	private String[] menuCateManager = new String[]{"EditCategory", "AddCategory", "DeleteCategory", "Export", "Import",} ;
@@ -1388,4 +1388,7 @@ public class UIQuestions extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 		}
 	}
+  public void setLanguage(String language) {
+    this.language_ = language;
+  }
 }

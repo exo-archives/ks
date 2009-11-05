@@ -25,7 +25,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Cate;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -58,13 +57,11 @@ import org.exoplatform.webui.form.UIForm;
 
 public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 	private String categoryId_ ;
-	private String homeCategoryName;
 	private FAQSetting faqSetting_ ;
 	private boolean isCateSelect = false;
 	private List<Cate> listCate = new ArrayList<Cate>() ;
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIMoveCategoryForm() throws Exception {
-		homeCategoryName = faqService_.getCategoryNameOf(Utils.CATEGORY_HOME) ;
 	}
 
 	private String getCategoryID() { return categoryId_; }
@@ -121,7 +118,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 					UIQuestions questions = container.getChild(UIQuestions.class);
 					questions.pageSelect = 0;
 					questions.backPath_ = "" ;
-					questions.language_ = FAQUtils.getDefaultLanguage();
+					questions.setLanguage(FAQUtils.getDefaultLanguage());
 					try {
 						questions.viewAuthorInfor = faqService_.isViewAuthorInfo(tmp);
 						questions.setCategoryId(tmp) ;

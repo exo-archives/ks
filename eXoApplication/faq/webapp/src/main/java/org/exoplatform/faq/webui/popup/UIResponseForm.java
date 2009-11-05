@@ -78,7 +78,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	private static final String RESPONSE_CONTENT = "QuestionRespone" ;
 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
 	private static final String IS_APPROVED = "IsApproved" ;
-	private static Question question_ = null ;
+	private Question question_ = null ;
 	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	private String questionDetail = new String();
@@ -111,6 +111,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	public String getLink() {return link_;}
 	public void setLink(String link) { this.link_ = link;}
 	public void setFAQSetting(FAQSetting faqSetting) {this.faqSetting_= faqSetting;}
+	
 	public UIResponseForm() throws Exception {
 		isChildOfQuestionManager_ = false ;
 		inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "") ;
@@ -120,6 +121,10 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		this.setActions(new String[]{"Save", "Cancel"}) ;
 	}
 
+	public Question getQuestion() {
+	  return question_;
+	}
+	
   public void setAnswerInfor(Question question, Answer answer, String language){
   	setQuestionId(question, language, answer.getApprovedAnswers());
   	mapAnswers.clear() ;
@@ -379,7 +384,8 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 				
 				// set relateion of question:
-				question_.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
+				Question question = responseForm.getQuestion();
+				question.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
 				
 
 				//link
@@ -389,19 +395,19 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
-				link = link.replaceFirst("OBJECTID", question_.getPath());
-				question_.setLink(link) ;
+				link = link.replaceFirst("OBJECTID", question.getPath());
+				question.setLink(link) ;
 				
 				// set answer to question for discuss forum function  
-				if(responseForm.mapAnswers.containsKey(question_.getLanguage())) {
-					question_.setAnswers(new Answer[]{responseForm.mapAnswers.get(question_.getLanguage())});
+				if(responseForm.mapAnswers.containsKey(question.getLanguage())) {
+				  question.setAnswers(new Answer[]{responseForm.mapAnswers.get(question.getLanguage())});
 				}
 				try{
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
-					faqService.saveAnswer(question_.getPath(), answers) ;
-					faqService.updateQuestionRelatives(question_.getPath(), question_.getRelations()) ;
+					faqService.saveAnswer(question.getPath(), answers) ;
+					faqService.updateQuestionRelatives(question.getPath(), question.getRelations()) ;
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum);
 				} catch (PathNotFoundException e) {
@@ -428,7 +434,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					UIQuestionForm questionForm = questionManagerForm.getChild(UIQuestionForm.class) ;
 					if(questionManagerForm.isEditQuestion && responseForm.questionId_.equals(questionForm.getQuestionId())) {
 						questionForm.setIsChildOfManager(true) ;
-						questionForm.setQuestion(question_) ;
+						questionForm.setQuestion(question) ;
 						questionForm.setIsMode(true);
 					}
 					questionManagerForm.isResponseQuestion = false ;
@@ -495,15 +501,12 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		}
 
 		static public class ChangeLanguageActionListener extends EventListener<UIResponseForm> {
-			@SuppressWarnings("static-access")
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm responseForm = event.getSource() ;
 				String newLanguage = responseForm.questionLanguages_.getValue() ;
 				String responseContent = responseForm.inputResponseQuestion_.getValue() ;
 				String user = FAQUtils.getCurrentUser();
 				Answer answer;
-				//System.out.println(">>>>>>>>>>> New lang:" + newLanguage);
-				//System.out.println(">>>>>>>>>>> cur lang:" + responseForm.currentLanguage);
 				if(ValidatorDataInput.fckContentIsNotEmpty(responseContent)){
 					if(responseForm.mapAnswers.containsKey(responseForm.currentLanguage)){
 						answer = responseForm.mapAnswers.get(responseForm.currentLanguage);

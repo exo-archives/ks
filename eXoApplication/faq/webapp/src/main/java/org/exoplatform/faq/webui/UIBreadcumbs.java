@@ -72,7 +72,6 @@ public class UIBreadcumbs extends UIContainer {
 		currentPath_ = path ;
 	}
 
-	@SuppressWarnings("unused")
 	public String getPath(int index) {
 		return this.pathList_.get(index) ;
 	}
@@ -85,13 +84,11 @@ public class UIBreadcumbs extends UIContainer {
 		return breadcumbs_.size() ;
 	}
 
-	@SuppressWarnings("unused")
 	public List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
 
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-		@SuppressWarnings("static-access")
     public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String paths = event.getRequestContext().getRequestParameter(OBJECTID) ;
@@ -103,7 +100,7 @@ public class UIBreadcumbs extends UIContainer {
 				//uiQuestions.setPath(paths) ;
 				//categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
 				uiQuestions.backPath_ = "" ;
-				uiQuestions.language_ = FAQUtils.getDefaultLanguage();				
+				uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());				
 				//uiQuestions.viewAuthorInfor = FAQUtils.getFAQService().isViewAuthorInfo(paths);
 				uiBreadcums.setUpdataPath(paths);
 				categories.setPathCategory(paths);

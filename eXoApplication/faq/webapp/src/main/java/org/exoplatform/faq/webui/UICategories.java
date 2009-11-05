@@ -25,7 +25,6 @@ import java.util.Map;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
@@ -78,14 +77,12 @@ import org.exoplatform.webui.event.EventListener;
 )
 
 public class UICategories extends UIContainer{
-	private String FILTER_QUESTIONS = "allQuestions";
 	private String FILTER_OPEN_QUESTIONS = "openQuestions";
 	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
 	public String parentCateID_ = null;
 	private String categoryId_;
 	private boolean isSwap = false;
 	private String currentCategoryName = "";
-	private boolean viewBackIcon = false;
 	private List<Category> listCate = new ArrayList<Category>() ;
 	Map<String, Boolean> categoryMod = new HashMap<String, Boolean>(); 
 	
@@ -203,7 +200,6 @@ public class UICategories extends UIContainer{
 	    	}
 				e.printStackTrace();
 			}
-			viewBackIcon = true;
 			if(newList.isEmpty()) {
 				if(faqSetting_.isAdmin()) {
 					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, true, null);
@@ -211,7 +207,6 @@ public class UICategories extends UIContainer{
 					newList = faqService_.getSubCategories(this.parentCateID_, faqSetting_, false,
 							UserHelper.getAllGroupAndMembershipOfUser(userName));
 				}
-				viewBackIcon = false;
 			}
 			if(currentCategoryName == null || currentCategoryName.trim().length() < 1) currentCategoryName = FAQUtils.getResourceBundle("UIBreadcumbs.label." + Utils.CATEGORY_HOME);
 			UIBreadcumbs breadcumbs = this.getAncestorOfType(UIAnswersContainer.class).getChild(UIBreadcumbs.class);
@@ -245,14 +240,6 @@ public class UICategories extends UIContainer{
 		setIsModerators(userName);
 	}
 	
-	/*public List<Watch> getListWatch(String categoryId) throws Exception {
-		return faqService_.getListMailInWatch(categoryId).getAllWatch() ;		
-	}*/
-	
-	private boolean hasWatch(String categoryPath) {
-		return faqService_.hasWatch(categoryPath) ;
-	}
-	
 	@SuppressWarnings("unused")
 	private String[] getActionCategory(String cateId){
 		if(categoryId_ == null){
@@ -279,19 +266,16 @@ public class UICategories extends UIContainer{
 	}
 	
 	static	public class OpenCategoryActionListener extends EventListener<UICategories> {
-		@SuppressWarnings({ "static-access"})
 		public void execute(Event<UICategories> event) throws Exception {
 			UICategories uiCategories = event.getSource() ;
 			UIAnswersContainer container = uiCategories.getAncestorOfType(UIAnswersContainer.class);
 			UIQuestions questions = container.getChild(UIQuestions.class);
 			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			//if(questions.getCategoryId()!= null && questions.getCategoryId().equals(categoryId)) return;
 			questions.pageSelect = 0;
 			questions.backPath_ = "" ;
-			questions.language_ = FAQUtils.getDefaultLanguage();
+			questions.setLanguage(FAQUtils.getDefaultLanguage());
 			UIAnswersPortlet answerPortlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			try {
-				//questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(categoryId);
 				questions.setCategoryId(categoryId) ;
 				questions.updateCurrentQuestionList() ;
 				questions.viewingQuestionId_ = "" ;
@@ -444,7 +428,7 @@ public class UICategories extends UIContainer{
 					UIQuestions questions = container.getChild(UIQuestions.class);
 					questions.pageSelect = 0;
 					questions.backPath_ = "" ;
-					questions.language_ = FAQUtils.getDefaultLanguage();
+					questions.setLanguage(FAQUtils.getDefaultLanguage());
 					try {
 						questions.viewAuthorInfor = uiCategories.faqService_.isViewAuthorInfo(tmp);
 						questions.setCategoryId(tmp) ;
@@ -656,7 +640,7 @@ public class UICategories extends UIContainer{
 			}
 			questions.pageList.setPageSize(10);
 			questions.pageIterator.setSelectPage(1);
-			questions.pageIterator = questions.getChildById(questions.OBJECT_ITERATOR);
+			questions.pageIterator = questions.getChildById(UIQuestions.OBJECT_ITERATOR);
 			questions.pageIterator.updatePageList(questions.pageList);
 			event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
 		}

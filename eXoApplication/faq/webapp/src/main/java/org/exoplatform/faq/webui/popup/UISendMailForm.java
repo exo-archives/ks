@@ -81,7 +81,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	private static final String FILED_MESSAGE = "Message" ;
 	final static public String FIELD_FROM_INPUT = "fromInput" ;
 	final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
-	private static Map<String, String> serverConfig_ = new HashMap<String, String>();
+	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	
 	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
 	private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
@@ -240,7 +240,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
 			String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
 			String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
-			String fullFrom = fromName +" (" + from +	") <"+ serverConfig_.get("account")+">" ;
+			String fullFrom = fromName +" (" + from +	") <"+ sendMailForm.getServerConfig().get("account")+">" ;
 			String to = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
 			String subject = ((UIFormStringInput)sendMailForm.getChildById(FILED_SUBJECT)).getValue() ;
 			String cc = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
@@ -441,4 +441,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(sendMailForm);
 		}
 	}
+
+  public Map<String, String> getServerConfig() {
+    return serverConfig_;
+  }
 }

@@ -2963,26 +2963,39 @@ public class JCRDataStorage implements DataStorage {
 	    file = new File(categoryNode.getName() + ".xml");
 	    file.deleteOnExit();
     	file.createNewFile();
-    	Writer writer = new BufferedWriter(new FileWriter(file));
+    	Writer writer = null;
+    	try {
+    	writer = new BufferedWriter(new FileWriter(file));
 	    writer.write(bos.toString());
-    	writer.close();
     	listFiles.add(file);
+    	} finally {
+    	  if (writer != null) {
+    	     writer.close();
+    	  }
+    	}
 
     // tao file zip:
     ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-    int byteReads;
-    byte[] buffer = new byte[4096]; // Create a buffer for copying
-    FileInputStream inputStream = null;
-    ZipEntry zipEntry = null;
-    for(File f : listFiles){
-    	inputStream = new FileInputStream(f);
-    	zipEntry = new ZipEntry(f.getPath());
-    	zipOutputStream.putNextEntry(zipEntry);
-    	while((byteReads = inputStream.read(buffer)) != -1)
-    		zipOutputStream.write(buffer, 0, byteReads);
-    	inputStream.close();
+    try {
+      int byteReads;
+      byte[] buffer = new byte[4096]; // Create a buffer for copying
+      FileInputStream inputStream = null;
+      ZipEntry zipEntry = null;
+      for(File f : listFiles){
+        try {
+      	inputStream = new FileInputStream(f);
+      	zipEntry = new ZipEntry(f.getPath());
+      	zipOutputStream.putNextEntry(zipEntry);
+      	while((byteReads = inputStream.read(buffer)) != -1)
+      		zipOutputStream.write(buffer, 0, byteReads);
+        } finally {
+      	  inputStream.close();
+        }
+      }
+    } finally {
+      zipOutputStream.close();
     }
-    zipOutputStream.close();
+   
     file = new File("exportCategory.zip");
     InputStream fileInputStream = new FileInputStream(file);
     return fileInputStream;

@@ -6265,14 +6265,18 @@ public class JCRDataStorage implements DataStorage {
 		for(Category category : getCategories()){
 			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
-			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
-			file = new File(category.getId() + ".xml");
-			file.deleteOnExit();
-			file.createNewFile();
-			writer = new BufferedWriter(new FileWriter(file));
-			writer.write(outputStream.toString());
-			writer.close();
-			listFiles.add(file);
+			try {
+  			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
+  			file = new File(category.getId() + ".xml");
+  			file.deleteOnExit();
+  			file.createNewFile();
+  			writer = new BufferedWriter(new FileWriter(file));
+  			writer.write(outputStream.toString());
+  			listFiles.add(file);
+			} finally {
+			  outputStream.close();
+			  writer.close();
+			}
 		}
 		return listFiles;
 	}
@@ -6284,14 +6288,18 @@ public class JCRDataStorage implements DataStorage {
 		for(Forum forum : getForums(categoryId, null)){
 			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
 			ByteArrayOutputStream outputStream =  new ByteArrayOutputStream();
-			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
-			file = new File(forum.getId() + ".xml");
-			file.deleteOnExit();
-			file.createNewFile();
-			writer = new BufferedWriter(new FileWriter(file));
-			writer.write(outputStream.toString());
-			writer.close();
-			listFiles.add(file);
+			try {
+  			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
+  			file = new File(forum.getId() + ".xml");
+  			file.deleteOnExit();
+  			file.createNewFile();
+  			writer = new BufferedWriter(new FileWriter(file));
+  			writer.write(outputStream.toString());
+  			listFiles.add(file);
+	    } finally {
+	        outputStream.close();
+	        writer.close();
+	    }
 		}
 		return listFiles;
 	}
@@ -6302,14 +6310,18 @@ public class JCRDataStorage implements DataStorage {
 		Writer writer = null;
 		if(node != null){
 		  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		  try {
 			node.getSession().exportSystemView(node.getPath(), outputStream, false, false ) ;
 			file = new File(node.getName() + ".xml");
 			file.deleteOnExit();
 			file.createNewFile();
 			writer = new BufferedWriter(new FileWriter(file));
 			writer.write(outputStream.toString());
-			writer.close();
 			listFiles.add(file);
+      } finally {
+        outputStream.close();
+        writer.close();
+    }			
 		}
 		return listFiles;
 	}
@@ -6365,21 +6377,27 @@ public class JCRDataStorage implements DataStorage {
 		
 		// tao file zip:
 		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+		try {
 		int byteReads;
 		byte[] buffer = new byte[4096]; // Create a buffer for copying
 		FileInputStream inputStream = null;
 		ZipEntry zipEntry = null;
 		for(File f : listFiles){
 			inputStream = new FileInputStream(f);
+			try {
 			zipEntry = new ZipEntry(f.getPath());
 			zipOutputStream.putNextEntry(zipEntry);
 			while((byteReads = inputStream.read(buffer)) != -1)
 				zipOutputStream.write(buffer, 0, byteReads);
-			inputStream.close();
+			} finally {
+			  inputStream.close();
+			}
 		}
-		zipOutputStream.close();
-		File file = null;
-		file = new File("exportCategory.zip");
+		
+		} finally {
+		  zipOutputStream.close();
+		}
+		File file = new File("exportCategory.zip");
 		for(File f : listFiles) f.deleteOnExit();
 		return file;
 	}

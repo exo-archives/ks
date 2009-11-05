@@ -229,15 +229,17 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 							}
 						} else {
 							List<String> newUserVote = new ArrayList<String>() ;
-							String userInfo = "" ;
+							
+							
 							for(String uv : oldUserVote) {
-								userInfo = "" ;
+							  StringBuffer sbUserInfo = new StringBuffer();
 								for(String string : uv.split(":")) {
 									if(!voteRemoved.contains(string)) {
-										if(userInfo.length() > 0) userInfo += ":" ;
-										userInfo += string ;
+										if(sbUserInfo.length() > 0) sbUserInfo.append(":");
+										sbUserInfo.append(string) ;
 									}
 								}
+								String userInfo = sbUserInfo.toString() ;
 								if(userInfo.split(":").length >= 2)
 									newUserVote.add(userInfo) ;
 								newUser = newUserVote.toArray(new String[]{}) ;
