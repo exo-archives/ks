@@ -58,12 +58,12 @@
 /******************************************** UIBreadcumbs ****************************************/
 
 .UIAnswersPortlet .UIBreadcumbs {
+	border: 1px solid #b7b7b7;
 	height: 25px;
 	padding: 0px;
 }
 
 .UIAnswersPortlet .UIBreadcumbs .BreadcumbsInfoBar {
-	border: 1px solid #B7B7B7;
 	background: #EEF0F2;
 	padding: 0px;
 }
