@@ -17,7 +17,6 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,18 +25,12 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.Value;
 
-import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.services.jcr.impl.core.value.DateValue;
-import org.exoplatform.services.jcr.impl.core.value.StringValue;
 
 /**
  * MultiLanguages class allow question and category have multi language.
@@ -100,107 +93,6 @@ public class MultiLanguages {
    */
   public MultiLanguages()throws Exception {}  
 
-  /**
-   * Sets the property value for the node
-   * 
-   * @param propertyName the property name
-   * @param node the node
-   * @param requiredtype the requiredtype
-   * @param value the value
-   * @param isMultiple the is multiple
-   * @throws Exception the exception
-   */
-  private void setPropertyValue(String propertyName, Node node, int requiredtype, Object value, boolean isMultiple) throws Exception {
-    switch (requiredtype) {
-    case PropertyType.STRING:
-      if (value == null) {
-        node.setProperty(propertyName, "");
-      } else {
-        if(isMultiple) {
-          if (value instanceof String) node.setProperty(propertyName, new String[] { value.toString()});
-          else if(value instanceof String[]) node.setProperty(propertyName, (String[]) value);
-        } else {
-          if(value instanceof StringValue) {
-            StringValue strValue = (StringValue) value ;
-            node.setProperty(propertyName, strValue.getString());
-          } else {
-            node.setProperty(propertyName, value.toString());
-          }
-        }
-      }
-      break;
-    case PropertyType.BINARY:
-      if (value == null) node.setProperty(propertyName, "");
-      else if (value instanceof byte[]) node.setProperty(propertyName, new ByteArrayInputStream((byte[]) value));
-      else if (value instanceof String) node.setProperty(propertyName, new ByteArrayInputStream((value.toString()).getBytes()));
-      else if (value instanceof String[]) node.setProperty(propertyName, new ByteArrayInputStream((((String[]) value)).toString().getBytes()));      
-      break;
-    case PropertyType.BOOLEAN:
-      if (value == null) node.setProperty(propertyName, false);
-      else if (value instanceof String) node.setProperty(propertyName, new Boolean(value.toString()).booleanValue());
-      else if (value instanceof String[]) node.setProperty(propertyName, (String[]) value);         
-      break;
-    case PropertyType.LONG:
-      if (value == null || "".equals(value)) node.setProperty(propertyName, 0);
-      else if (value instanceof String) node.setProperty(propertyName, new Long(value.toString()).longValue());
-      else if (value instanceof String[]) node.setProperty(propertyName, (String[]) value);  
-      break;
-    case PropertyType.DOUBLE:
-      if (value == null || "".equals(value)) node.setProperty(propertyName, 0);
-      else if (value instanceof String) node.setProperty(propertyName, new Double(value.toString()).doubleValue());
-      else if (value instanceof String[]) node.setProperty(propertyName, (String[]) value);        
-      break;
-    case PropertyType.DATE:      
-      if (value == null) {        
-        node.setProperty(propertyName, new GregorianCalendar());
-      } else {
-        if(isMultiple) {
-          Session session = node.getSession() ;
-          if (value instanceof String) {
-            Value value2add = session.getValueFactory().createValue(ISO8601.parse((String) value));
-            node.setProperty(propertyName, new Value[] {value2add});
-          } else if (value instanceof String[]) {
-            String[] values = (String[]) value;
-            Value[] convertedCalendarValues = new Value[values.length];
-            int i = 0;
-            for (String stringValue : values) {
-              Value value2add = session.getValueFactory().createValue(ISO8601.parse(stringValue));
-              convertedCalendarValues[i] = value2add;
-              i++;
-            }
-            node.setProperty(propertyName, convertedCalendarValues);
-            session.logout();
-          }
-        } else {
-          if(value instanceof String) {
-            node.setProperty(propertyName, ISO8601.parse(value.toString()));
-          } else if(value instanceof GregorianCalendar) {
-            node.setProperty(propertyName, (GregorianCalendar) value);
-          } else if(value instanceof DateValue) {
-            DateValue dateValue = (DateValue) value ;
-            node.setProperty(propertyName, dateValue.getDate());
-          }
-        }
-      }
-      break ;
-    case PropertyType.REFERENCE :
-      if (value == null) throw new RepositoryException("null value for a reference " + requiredtype);
-      if(value instanceof Value[]) 
-        node.setProperty(propertyName, (Value[]) value);
-        else if (value instanceof String) {
-          Session session = node.getSession();
-          if(session.getRootNode().hasNode((String)value)) {
-            Node catNode = session.getRootNode().getNode((String)value);
-            Value value2add = session.getValueFactory().createValue(catNode);
-            node.setProperty(propertyName, new Value[] {value2add});          
-          } else {
-            node.setProperty(propertyName, (String) value);
-          }
-        }       
-      break ;
-    }
-  }
-  
   
   private static String [] ValuesToStrings(Value[] Val) throws Exception {
 		if(Val.length < 1) return new String[]{} ;
@@ -220,29 +112,7 @@ public class MultiLanguages {
   	}
   	return list;
   }
-  
- /* private long [] ValuesToLong(Value[] Val) throws Exception {
-  	if(Val.length < 1) return new long[]{0} ;
-  	long[] d = new long[Val.length] ;
-  	for(int i = 0; i < Val.length; ++i) {
-  		d[i] = Val[i].getLong() ;
-  	}
-  	return d;
-  }
-  
-  private Value[] longToValues(Node answerNode, long[] marks){
-  	if(marks == null || marks.length < 1) return null;
-  	Value[] values = new Value[marks.length];
-  	try{
-	  	for(int i = 0; i < marks.length; i ++){
-	  		values[i] = answerNode.getSession().getValueFactory().createValue(marks[i]);
-	  	}
-  	} catch (Exception e){
-  		return null;
-  	}
-  	return values;
-  }
-  */
+ 
   private static Node getLanguageNodeByLanguage(Node questionNode, String language) throws Exception{
   	if(language.equals(questionNode.getProperty("exo:language").getString())) {
   		return questionNode ;
@@ -266,7 +136,6 @@ public class MultiLanguages {
    * @param language the  language which is added in to questionNode
    * @throws Exception    throw an exception when save a new language node
    */
-  @SuppressWarnings("static-access")
   public static void addLanguage(Node questionNode, QuestionLanguage language) throws Exception{
   	if(!questionNode.isNodeType("mix:faqi18n")) {
   		questionNode.addMixin("mix:faqi18n") ;

@@ -16,15 +16,9 @@
  */
 package org.exoplatform.ks.common.jcr;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.exoplatform.commons.utils.ListAccess;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.config.RepositoryConfigurationException;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 /**
  * Basis for JCR-based list access. 
@@ -48,19 +42,6 @@ public abstract class JCRListAccess<E> implements ListAccess<E>{
     } finally {
       manager.closeSession();
     }
-  }
-
-  /**
-   * @deprecated use {@link JCRSessionManager}
-   */
-  @SuppressWarnings("unused")
-  private Session acquireSession() throws RepositoryException, RepositoryConfigurationException {    
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
-      ExoContainer container = ExoContainerContext.getCurrentContainer();
-      RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
-      String defaultWS = 
-        repositoryService.getDefaultRepository().getConfiguration().getDefaultWorkspaceName() ;
-      return sProvider.getSession(defaultWS, repositoryService.getCurrentRepository()) ;
   }
 
   public int getSize() throws Exception {

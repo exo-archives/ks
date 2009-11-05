@@ -77,13 +77,6 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	}	
 	
 
-
-
-	@SuppressWarnings("unused")
-	private String randomUser() {
-		return users.get(rand.nextInt(users.size()));
-	}
-
 	public List<Category> findCategories() {
 
 		List<Category> result = new ArrayList<Category>();

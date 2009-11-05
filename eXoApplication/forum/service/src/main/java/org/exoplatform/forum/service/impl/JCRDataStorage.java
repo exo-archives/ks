@@ -127,7 +127,6 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
-import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
 
 /**
@@ -331,12 +330,11 @@ public class JCRDataStorage implements DataStorage {
 	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
-			String []adminrules = new String[]{};
 			for(int i = 0; i < rulesPlugins_.size(); ++i) {
 				List<String> list = new ArrayList<String>();
 				list.addAll(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE));
 				if(list.contains(userName)) return true;
-				adminrules = getStringsInList(list);
+				String [] adminrules  = getStringsInList(list);
 				if(ForumServiceUtils.hasPermission(adminrules, userName))return true;
 			}
 		} catch (Exception e) {
@@ -357,11 +355,6 @@ public class JCRDataStorage implements DataStorage {
 	private Node getForumSystemHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getForumSystemLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
-	}
-	
-	private Node getForumDataHome(SessionProvider sProvider) throws Exception {
-	   String path = dataLocator.getForumDataLocation();
-	   return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
 	private Node getBanIPHome(SessionProvider sProvider) throws Exception {
@@ -1291,12 +1284,12 @@ public class JCRDataStorage implements DataStorage {
 	private void setModeratorForum(SessionProvider sProvider, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
 		Node userProfileHomeNode = getUserProfileHome(sProvider);
 		Node userProfileNode;
-		List<String> list = new ArrayList<String>();
+		
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
 		if (moderators.size() > 0) {
 			for (String string : moderators) {
 				string = string.trim();
-				list = new ArrayList<String>();
+				List<String> list = new ArrayList<String>();
 				try {
 					userProfileNode = userProfileHomeNode.getNode(string);
 					List<String> moderatorForums = ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
@@ -1343,7 +1336,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 				if (isDelete) {
 					try {
-						list = new ArrayList<String>();
+						List<String>list = new ArrayList<String>();
 						userProfileNode = userProfileHomeNode.getNode(string);
 						String[] moderatorForums = ValuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues());
 						for (String string2 : moderatorForums) {
@@ -1559,7 +1552,7 @@ public class JCRDataStorage implements DataStorage {
 
 	public Forum removeForum(String categoryId, String forumId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Forum forum = new Forum();
+		Forum forum = null;
 		try {
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
 			Node forumNode = catNode.getNode(forumId);
@@ -1784,9 +1777,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node topicNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId+"/"+topicId);
-			Topic topicNew = new Topic();
-			topicNew = getTopicNode(topicNode);
-			return topicNew;
+			return getTopicNode(topicNode);
 		} catch (Exception e) {
 			return null;
 		}finally { sProvider.close() ;}
@@ -2769,9 +2760,7 @@ public class JCRDataStorage implements DataStorage {
 			} else {
 				postNode = categoryHome.getNode(categoryId + "/" + forumId + "/" + topicId + "/" + postId);
 			}
-			Post postNew = new Post();
-			postNew = getPost(postNode);
-			return postNew;
+			return getPost(postNode);
 		} catch (PathNotFoundException e) {
 			return null;
 		} finally {sProvider.close() ;}
@@ -3546,7 +3535,7 @@ public class JCRDataStorage implements DataStorage {
 
 	public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Post post = new Post();
+		Post post;
 		try {
 			Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
 			post = getPost(categoryId, forumId, topicId, postId);
@@ -3699,7 +3688,7 @@ public class JCRDataStorage implements DataStorage {
 			
 			String topicName = destTopicNode.getProperty("exo:name").getString();
 			List<String> fullNameEmailOwnerDestForum = getFullNameAndEmail(sProvider, destForumNode.getProperty("exo:owner").getString());
-			Message message = new Message();
+	
 			String headerSubject = "";
 			String objectName = "[" + destForumNode.getParent().getProperty("exo:name").getString() + 
 													"][" + destForumNode.getProperty("exo:name").getString() + "] " + topicName;
@@ -3725,7 +3714,7 @@ public class JCRDataStorage implements DataStorage {
 			link = link.replaceFirst("pathId", destTopicNode.getProperty("exo:id").getString());
 			for (int i = 0; i < totalpost; ++i) {
 				postNode = (Node) forumHomeNode.getSession().getItem(postPaths[i]);
-				message = new Message();
+				Message message = new Message();
 				message.setMimeType("text/html");
 				message.setFrom(fullNameEmailOwnerDestForum.get(0) + "<" + fullNameEmailOwnerDestForum.get(1) + ">");
 				message.setSubject(headerSubject + objectName);
@@ -3840,7 +3829,7 @@ public class JCRDataStorage implements DataStorage {
 
 	public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Poll poll = new Poll();
+		Poll poll;
 		try {
 			Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
 			poll = getPoll(categoryId, forumId, topicId);
@@ -5167,33 +5156,6 @@ public class JCRDataStorage implements DataStorage {
     }finally {sProvider.close();}
   }
 	
-	private void addForumSubscription(SessionProvider sProvider, String userId, String objectId){
-		try {
-			Node profileNode = getUserProfileHome(sProvider).getNode(userId);
-			Node subscriptionNode;
-			String id = Utils.FORUM_SUBSCRIOTION + userId;
-			try {
-				subscriptionNode = profileNode.getNode(id);
-      } catch (PathNotFoundException e) {
-      	subscriptionNode = profileNode.addNode(id, "exo:forumSubscription");
-      }
-      if(objectId.indexOf(Utils.CATEGORY)==0) {
-      	subscriptionNode.setProperty("exo:categoryIds", getValueProperty(subscriptionNode, "exo:categoryIds", objectId));
-			}else if(objectId.indexOf(Utils.FORUM)==0) {
-				subscriptionNode.setProperty("exo:forumIds", getValueProperty(subscriptionNode, "exo:forumIds", objectId));
-			} else if(objectId.indexOf(Utils.TOPIC)==0) {
-				subscriptionNode.setProperty("exo:topicIds", getValueProperty(subscriptionNode, "exo:topicIds", objectId));
-			}
-      if(profileNode.isNew()){
-      	profileNode.getSession().save();
-      } else {
-      	profileNode.save();
-      }
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-	}
-	
 	private String[] getValueProperty(Node node, String property, String objectId) throws Exception {
 		List<String> list = new ArrayList<String>();
 		if(node.hasProperty(property)){
@@ -5293,7 +5255,7 @@ public class JCRDataStorage implements DataStorage {
 
 	public Object getObjectNameByPath(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Object object = new Object();
+		Object object;
 		try {
 			if(path.indexOf(KSDataLocation.Locations.FORUM_CATEGORIES_HOME) < 0 && (path.indexOf(Utils.CATEGORY) >= 0)) {
 				path = getCategoryHome(sProvider).getPath() + "/" + path;
@@ -5339,7 +5301,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	public Object getObjectNameById(String id, String type) throws Exception {
-		Object object = new Object();
+		Object object;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
@@ -5379,7 +5341,7 @@ public class JCRDataStorage implements DataStorage {
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			ForumLinkData linkData = new ForumLinkData();
+			ForumLinkData linkData;
 			while (iter.hasNext()) {
 				linkData = new ForumLinkData();
 				Node cateNode = iter.nextNode();
@@ -5405,26 +5367,6 @@ public class JCRDataStorage implements DataStorage {
 						if(forumNode.hasProperty("exo:isClosed"))linkData.setIsClosed(forumNode.getProperty("exo:isClosed").getBoolean());
 						forumLinks.add(linkData);
 
-            // slow and useless code removed : loops on all topics in the forum. 
-            // At the end, the forumLinks for topics are not displayed...
-						/* {
-						 
-							NodeIterator iterTopic = forumNode.getNodes();
-							while (iterTopic.hasNext()) {
-								linkData = new ForumLinkData();
-								Node topicNode = iterTopic.nextNode();
-								linkData.setId(topicNode.getName());
-								if (topicNode.hasProperty("exo:name"))
-									linkData.setName(topicNode.getProperty("exo:name").getString());
-								else
-									linkData.setName("null");
-								linkData.setType(Utils.TOPIC);
-								linkData.setPath(cateNode.getName() + "/" + forumNode.getName() + "/" + topicNode.getName());
-								if(topicNode.hasProperty("exo:isLock"))linkData.setIsLock(topicNode.getProperty("exo:isLock").getBoolean());
-								if(topicNode.hasProperty("exo:isClosed"))linkData.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean());
-								forumLinks.add(linkData);
-							} 
-						} */
 					}
 				}
 			}
@@ -5603,7 +5545,7 @@ public class JCRDataStorage implements DataStorage {
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		boolean isAdd = true;
-		List<String> list = new ArrayList<String>();
+
 		String type_ = type;
 		while (iter.hasNext()) {
 			Node nodeObj = iter.nextNode().getParent().getParent();
@@ -5630,7 +5572,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 				if(isAdd){
 					// check post private
-					list = ValuesToList(nodeObj.getProperty("exo:userPrivate").getValues());
+				   List<String> list = ValuesToList(nodeObj.getProperty("exo:userPrivate").getValues());
 					if(!list.get(0).equals("exoUserPri") && !Utils.isListContentItemList(listOfUser, list)) isAdd = false;
 					// not is admin
 					if(isAdd && !isAdmin){
@@ -5923,14 +5865,14 @@ public class JCRDataStorage implements DataStorage {
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iterator = result.getNodes();		
-			Watch watch = new Watch();
-			Node node = null;
-			List<String> users = new ArrayList<String>();
-			List<String> RSSUsers = new ArrayList<String>();
-			String emails[] = null;
-			String path = null;
+			Watch watch;
+			Node node;
+			List<String> users;
+			List<String> RSSUsers;
+			String emails[];
+			String path;
 			String pathName = "";
-			String typeNode = null;
+			String typeNode;
 			while(iterator.hasNext()){
 				users = new ArrayList<String>();
 				RSSUsers = new ArrayList<String>();
@@ -5985,25 +5927,6 @@ public class JCRDataStorage implements DataStorage {
 			infoMap_.put(name, new SendMessageInfo(addresses, message));
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
-		}
-	}
-	
-	
-	@SuppressWarnings("unused")
-  private void updateImportedData(String path) throws Exception {
-		try {
-			Calendar cal = new GregorianCalendar();
-			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
-			String name = String.valueOf(cal.getTime().getTime());
-			Class clazz = Class.forName("org.exoplatform.forum.service.conf.UpdateDataJob");
-			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
-			JobDataMap jdatamap = new JobDataMap() ;
-			jdatamap.put("path", path) ;
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			schedulerService.addPeriodJob(info, periodInfo, jdatamap);			
-		} catch (Exception e) {
-			e.printStackTrace() ;
 		}
 	}
 	
@@ -6191,7 +6114,7 @@ public class JCRDataStorage implements DataStorage {
 		int job = 0;
 		try {
 			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
-			long t = 3;
+			long t;// = 3
 			if (isAdminRole(userId)) {
 				t = 0;
 			} else {
@@ -6214,7 +6137,7 @@ public class JCRDataStorage implements DataStorage {
 		int totalJob = 0;
 		try {
 			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
-			long t = 3;
+			long t;// = 3;
 			if(isAdminRole(userId)) {
 				t = 0;
 			} else {
@@ -6336,13 +6259,12 @@ public class JCRDataStorage implements DataStorage {
 	
 	protected List<File> createCategoryFiles(List<String> objectIds, SessionProvider sessionProvider) throws Exception{
 		Node categoryHome = getCategoryHome(sessionProvider);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
 		List<File> listFiles = new ArrayList<File>();
 		File file = null;
 		Writer writer = null;
 		for(Category category : getCategories()){
 			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
-			outputStream = new ByteArrayOutputStream() ;
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
 			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
 			file = new File(category.getId() + ".xml");
 			file.deleteOnExit();
@@ -6356,13 +6278,12 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	protected List<File> createForumFiles(String categoryId, List<String> objectIds, SessionProvider sessionProvider) throws Exception{
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
 		List<File> listFiles = new ArrayList<File>();
 		File file = null;
 		Writer writer = null;
 		for(Forum forum : getForums(categoryId, null)){
 			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
-			outputStream = new ByteArrayOutputStream();
+			ByteArrayOutputStream outputStream =  new ByteArrayOutputStream();
 			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
 			file = new File(forum.getId() + ".xml");
 			file.deleteOnExit();
@@ -6377,11 +6298,10 @@ public class JCRDataStorage implements DataStorage {
 	
 	protected List<File> createFilesFromNode(Node node) throws Exception{
 		List<File> listFiles = new ArrayList<File>();
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
 		File file = null;
 		Writer writer = null;
 		if(node != null){
-			outputStream = new ByteArrayOutputStream();
+		  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			node.getSession().exportSystemView(node.getPath(), outputStream, false, false ) ;
 			file = new File(node.getName() + ".xml");
 			file.deleteOnExit();
@@ -6866,18 +6786,10 @@ public class JCRDataStorage implements DataStorage {
 	
 	public PruneSetting getPruneSetting(String forumPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		PruneSetting pruneSetting = new PruneSetting();
+		PruneSetting pruneSetting;
 		try {
 			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
 			pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
-			//NodeIterator iter = forumNode.getNodes();
-			/*while(iter.hasNext()){
-	      Node node = iter.nextNode();
-	      if(node.isNodeType("exo:pruneSetting")){
-	      	pruneSetting = getPruneSetting(node);
-	      	break;
-	      }
-      }*/
     } finally { sProvider.close() ;}
 		return pruneSetting;
 	}
@@ -7093,52 +7005,6 @@ public class JCRDataStorage implements DataStorage {
 		}
 	  return null;
   }
-
-
-//	TODO: Calculate total Post of User when remove Topic, Forum or Category. If usesing it, maybe will use Event listener
-	@SuppressWarnings("unused")
-  private void calculateTotalPostOfUserWhenRemoveNode(SessionProvider sProvider, Node node) throws Exception {
-		Node userProfileNode = getUserProfileHome(sProvider);
-		NodeIterator iter;
-		if(node.isNodeType("exo:topic")){
-			iter = node.getNodes();
-		} else {
-			StringBuilder strBuilder = new StringBuilder();
-			strBuilder.append("/jcr:root").append(node.getPath()).append("//element(*,exo:post)");
-			QueryManager qm = node.getSession().getWorkspace().getQueryManager();
-			Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			iter = result.getNodes();
-		}
-		try {
-			Map<String, Integer> mapUser = new HashMap<String, Integer>();
-			String str; int t;
-			List<String> listUser = new ArrayList<String>();
-			while (iter.hasNext()) {
-	      Node node_ = (Node) iter.nextNode();
-	      if(node_.isNodeType("exo:post")){
-	      	str = node_.getProperty("exo:owner").getString();
-	      	if(mapUser.containsKey(str)){
-			    	t = mapUser.get(str) + 1;
-			    } else {
-			    	t = 1;
-			    	listUser.add(str);
-			    }
-			    mapUser.put(str, t);
-	      }
-      }
-			Node userNode; long l;
-			for (String user : listUser) {
-		    userNode = userProfileNode.getNode(user);
-		    l = userNode.getProperty("exo:totalPost").getLong() - mapUser.get(user);
-		    if(l < 0) l = 0;
-		    userNode.setProperty("exo:totalPost", l);
-	    }
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-		userProfileNode.save();
-	}
 
 
   public void populateUserProfile(User user, boolean isNew) throws Exception {

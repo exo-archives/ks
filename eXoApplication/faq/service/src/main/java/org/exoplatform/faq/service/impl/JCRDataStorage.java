@@ -84,7 +84,6 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.jcr.impl.core.RepositoryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
@@ -117,14 +116,10 @@ public class JCRDataStorage implements DataStorage {
 	private boolean isInitRssListener_ = true ;
   private JCRSessionManager sessionManager;
   private KSDataLocation dataLocator;
-  private String repository;
-  private String workspace;	
 	
   public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
     sessionManager = dataLocator.getSessionManager();
-    repository = dataLocator.getRepository();
-    workspace = dataLocator.getWorkspace();
   }
 	
 	/* (non-Javadoc)
@@ -356,9 +351,7 @@ public class JCRDataStorage implements DataStorage {
 		try{
 			if(!isInitRssListener_)return;
 			if(rssListenerMap_.containsKey(node.getPath())) return ;
-			String wsName = node.getSession().getWorkspace().getName() ;
 			String path = node.getPath() ;
-			RepositoryImpl repo = (RepositoryImpl)node.getSession().getRepository() ;
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
 			FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
 			questionRSS.setPath(path) ;
@@ -491,11 +484,6 @@ public class JCRDataStorage implements DataStorage {
 		return false;
 	}
 
-	private boolean questionHasComment(Node questionNode) throws Exception {
-		if(questionNode.hasNode(Utils.COMMENT_HOME) && questionNode.getNode(Utils.COMMENT_HOME).hasNodes()) return true;
-		return false;
-	}
-
 	private void sendNotifyForQuestionWatcher (Question question, FAQSetting faqSetting) {
 		List<String> emailsList = new ArrayList<String>() ;
 		emailsList.add(question.getEmail()) ;
@@ -614,14 +602,6 @@ public class JCRDataStorage implements DataStorage {
     questionLanguage.setAnswers(answers);
     return questionLanguage ;
   }
-	
-	private boolean ArrayContentValue(String[] array, String value){
-		value = value.toLowerCase();
-		for(String str : array){
-			if(str.toLowerCase().indexOf(value.toLowerCase()) >= 0) return true;
-		}
-		return false;
-	}
 	
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#deleteAnswer(java.lang.String, java.lang.String)
@@ -1784,7 +1764,6 @@ public class JCRDataStorage implements DataStorage {
 			Node newCategory ;
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
-				Node home = getCategoryHome(sProvider, null);
 			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
 			  newCategory.addMixin("mix:faqSubCategory") ;
 //			  TODO: JUnit test is fall
@@ -1833,44 +1812,6 @@ public class JCRDataStorage implements DataStorage {
 		List<Cate> cateList = new ArrayList<Cate>() ;		
     cateList.addAll(listingSubTree(cateHome, i)) ;
 		return cateList  ;
-	}
-	
-	private void applyRestrictCategory(Node node, String str[], boolean isApplyChild) throws Exception {
-		Node node_;
-		String str_[];
-		if(isApplyChild) {
-			QueryManager qm = node.getSession().getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(node.getPath()).append("//element(*,exo:faqCategory)");
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();
-			while (iter.hasNext()) {
-				node_ = (Node) iter.nextNode();
-				if (node_.hasProperty("exo:userPrivate")) {
-					str_ = ValuesToArray(node_.getProperty("exo:userPrivate").getValues());
-					if (str_.length > 0 && !str_[0].equals(" ")) {
-						str_ = Utils.compareStr(str_, str);
-						node_.setProperty("exo:userPrivate", str_);
-					}
-				}
-			}
-		}
-		node_ = node.getParent();
-		while (node_.isNodeType("exo:faqCategory")) {
-			if(node_.hasProperty("exo:userPrivate")){
-				str_ = ValuesToArray(node_.getProperty("exo:userPrivate").getValues());
-				if(str_.length > 0 && !str_[0].equals(" ")) {
-					str_ = Utils.compareStr(str_, str) ;
-					node_.setProperty("exo:userPrivate", str_);
-				}
-			}
-			node_ = node_.getParent();
-		}
-		if(node_.isNew()){
-			node_.getSession().save();
-		}else {
-			node_.save();
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -2953,8 +2894,7 @@ public class JCRDataStorage implements DataStorage {
 		Calendar cal = new GregorianCalendar();
 		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
 		String name = String.valueOf(cal.getTime().getTime()) ;
-		Class clazz = Class.forName("org.exoplatform.faq.service.notify.NotifyJob");
-		JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", clazz);
+		JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", Class.forName("org.exoplatform.faq.service.notify.NotifyJob"));
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
 		JobSchedulerService schedulerService = 
 			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
@@ -3406,12 +3346,6 @@ public class JCRDataStorage implements DataStorage {
   private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getAvatarsLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
-  }
-  
-  
-  private Node getSettingHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getFaqSettingsLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path); 
   }
   
   private Node getUserSettingHome(SessionProvider sProvider) throws Exception {
