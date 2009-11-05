@@ -1033,7 +1033,7 @@ public class ForumServiceImpl implements ForumService, Startable {
     
       saveForumStatistic(stats);
 
-
+      
   }
 
   public void userLogout(String userId) throws Exception {

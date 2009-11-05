@@ -806,7 +806,7 @@ UIForumPortlet.prototype.loadTagScroll = function() {
     uiNav.tagScrollMgr.initFunction = uiNav.initTagScroll ;
     uiNav.tagScrollMgr.mainContainer = container.parentNode ;
     uiNav.tagScrollMgr.arrowsContainer = eXo.core.DOMUtil.findFirstDescendantByClass(container, "div", "ScrollButtons") ;
-    uiNav.tagScrollMgr.loadItems("TagІtem",true) ;
+    uiNav.tagScrollMgr.loadItems("MenuItem",true) ;
     
     var button = eXo.core.DOMUtil.findDescendantsByTagName(uiNav.tagScrollMgr.arrowsContainer, "div");
     if(button.length >= 2) {    
