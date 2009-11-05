@@ -23,17 +23,22 @@ package org.exoplatform.forum;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import org.apache.commons.lang.StringUtils;
 import javax.portlet.PortletPreferences;
 
-import org.apache.commons.lang.StringUtils;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 /**
@@ -65,50 +70,16 @@ public class ForumUtils {
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
 	
-	
-	@SuppressWarnings("deprecation")
 	public static String getFormatDate(String format, Date myDate) {
-		/*h,hh,H, m, mm, D, DD, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
+		/*h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
 		 * */
 		if(myDate == null) return "";
-		String strCase = "" ;
-		int day = myDate.getDay() ;
-		switch (day) {
-		case 0:
-			strCase = "Sunday" ;
-			break;
-		case 1:
-			strCase = "Monday" ;
-			break;
-		case 2:
-			strCase = "Tuesday" ;
-			break;
-		case 3:
-			strCase = "Wednesday" ;
-			break;
-		case 4:
-			strCase = "Thursday" ;
-			break;
-		case 5:
-			strCase = "Friday" ;
-			break;
-		case 6:
-			strCase = "Saturday" ;
-			break;
-		default:
-			break;
-		}
-		String form = "temp" + format ;
-		if(form.indexOf("DDDD") > 0) {
-			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDDD") + 5));
-			return strCase + ", "	+ formatter.format(myDate).replaceAll(",", ", ");
-		} else if(form.indexOf("DDD") > 0) {
-			Format formatter = new SimpleDateFormat(form.substring(form.indexOf("DDD") + 4));
-			return strCase.replaceFirst("day", "") + ", " + formatter.format(myDate).replaceAll(",", ", ");
-		} else {
-			Format formatter = new SimpleDateFormat(format);
-			return formatter.format(myDate);
-		}
+		if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
+		if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		Locale locale = new Locale(portalContext.getLocale().getLanguage(), portalContext.getLocale().getCountry());
+		Format formatter = new SimpleDateFormat(format, locale);
+		return formatter.format(myDate);
 	}
 	
 	public static Calendar getInstanceTempCalendar() { 

@@ -175,8 +175,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		UIFormSelectBox shortdateFormat = new UIFormSelectBox(FIELD_SHORTDATEFORMAT_SELECTBOX, FIELD_SHORTDATEFORMAT_SELECTBOX, list) ;
 		shortdateFormat.setValue(userProfile.getShortDateFormat());
 		list = new ArrayList<SelectItemOption<String>>() ;
-		format = new String[] {"DDD,MMMM dd,yyyy", "DDDD,MMMM dd,yyyy", "DDDD,dd MMMM,yyyy", "DDD,MMM dd,yyyy", "DDDD,MMM dd,yyyy", "DDDD,dd MMM,yyyy",
-				 								"MMMM dd,yyyy", "dd MMMM,yyyy","MMM dd,yyyy", "dd MMM,yyyy"} ;
+		format = new String[] {"DDD, MMMM dd, yyyy", "DDDD, MMMM dd, yyyy", "DDDD, dd MMMM, yyyy", "DDD, MMM dd, yyyy", "DDDD, MMM dd, yyyy", "DDDD, dd MMM, yyyy",
+				 				"MMMM dd, yyyy", "dd MMMM, yyyy","MMM dd, yyyy", "dd MMM, yyyy"} ;
 		for (String idFrm : format) {
 			list.add(new SelectItemOption<String>((idFrm.toLowerCase() +" (" + ForumUtils.getFormatDate(idFrm, date)+")"), idFrm.replaceFirst(" ", "="))) ;
 		}

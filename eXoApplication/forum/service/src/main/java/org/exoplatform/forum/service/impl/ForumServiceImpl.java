@@ -464,11 +464,11 @@ public class ForumServiceImpl implements ForumService, Startable{
   		if(array.length > 1) {
     		int ol = onlineUsers_.size() ;
     		if(ol > Integer.parseInt(array[0].trim())) {
-    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + GregorianCalendar.getInstance().getTime().toString()) ;
+    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + GregorianCalendar.getInstance().getTimeInMillis()) ;
       		statisticNode.save() ;
     		}
     	}else {
-    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + GregorianCalendar.getInstance().getTime().toString()) ;
+    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + GregorianCalendar.getInstance().getTimeInMillis()) ;
     		statisticNode.save() ;
     	}    	
     }catch(Exception e) {

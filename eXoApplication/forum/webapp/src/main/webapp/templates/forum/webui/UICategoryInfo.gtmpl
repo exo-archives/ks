@@ -1,5 +1,7 @@
 <%	
+	import java.util.Date;
 	import org.exoplatform.forum.service.ForumStatistic ;
+	import org.exoplatform.forum.ForumUtils;
 	List userOnlines = uicomponent.getUserOnline();
 	int size = userOnlines.size();
 	ForumStatistic forumStatistic = uicomponent.getForumStatistic() ;
@@ -9,6 +11,15 @@
 	String members = String.valueOf(forumStatistic.getMembersCount());
 	String newMember = forumStatistic.getNewMembers();
 	String mostUserOnline = forumStatistic.getMostUsersOnline();
+	String []array = mostUserOnline.split(",");
+	long lg = 0;
+	try {lg = Long.parseLong(array[1].replaceAll("at", "").trim()); }
+	catch (Exception e) {print(e + "");}
+	if(lg > 0) {
+		Date date = new Date();
+		date.setTime(lg);
+		mostUserOnline = array[0]+", " + _ctx.appRes("UIForumPortlet.label.at") + " " + ForumUtils.getFormatDate("EEEE, dd MMMM, yyyy, hh:mm a", date);
+	}
 %>
 <div id="$uicomponent.id" class="ForumInfos UICategoryInfo">
 	<div class="ForumToolbar">
