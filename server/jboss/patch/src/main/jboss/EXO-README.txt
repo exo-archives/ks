@@ -103,6 +103,16 @@ INFO: Server startup in 15359 ms
  CHANGELOG
 ===========
 
+Version 1.2.1.1
+
+
+o Upgraded to Portal 2.5.6.2 with:
+	- Kernel 2.0.8
+	- Core 2.1.6
+	- JCR 1.10.5.1
+	- PC 2.0.7
+	- WS 1.3.4 
+
 
 Version 1.2.1
 
