@@ -33,7 +33,6 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -46,7 +45,6 @@ import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
-import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
@@ -265,7 +263,7 @@ public class FAQUtils {
 			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
 			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
 			for (int i = 0 ; i < iAdds.length; i ++) {
-				if(!iAdds[i].getAddress().toString().matches(emailRegex)) isInvalid = false;
+				if(!iAdds[i].getAddress().matches(emailRegex)) isInvalid = false;
 			}
 		} catch(AddressException e) {
 			return false ;

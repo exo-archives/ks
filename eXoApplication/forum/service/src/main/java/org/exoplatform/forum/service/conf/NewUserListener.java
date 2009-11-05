@@ -19,8 +19,6 @@ package org.exoplatform.forum.service.conf;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumStatistic;
-import org.exoplatform.forum.service.ForumStatisticsService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

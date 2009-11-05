@@ -100,7 +100,7 @@ public class ForumUtils {
 			InternetAddress[] iAdds = InternetAddress.parse(addressList, true);
 			String emailRegex = "[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[_A-Za-z0-9-.]+\\.[A-Za-z]{2,5}" ;
 			for (int i = 0 ; i < iAdds.length; i ++) {
-				if(!iAdds[i].getAddress().toString().matches(emailRegex)) return false;
+				if(!iAdds[i].getAddress().matches(emailRegex)) return false;
 			}
 		} catch(AddressException e) {
 			return false ;

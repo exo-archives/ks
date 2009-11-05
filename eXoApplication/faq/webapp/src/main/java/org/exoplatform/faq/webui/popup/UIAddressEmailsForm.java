@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;

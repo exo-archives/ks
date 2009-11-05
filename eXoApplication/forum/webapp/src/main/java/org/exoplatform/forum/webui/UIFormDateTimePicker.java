@@ -39,7 +39,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   /**
    * The DateFormat
    */
-  private DateFormat dateFormat_ ;
+  private DateFormat dateFormat ;
   /**
    * Whether to display the full time (with hours, minutes and seconds), not only the date
    */
@@ -48,7 +48,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
   public UIFormDateTimePicker(String name, String bindField, Date date, boolean isDisplayTime, String titleShowCalendar) {
     super(name, bindField, String.class) ;
     setDisplayTime(isDisplayTime) ;
-    if(date != null) value_ = dateFormat_.format(date) ;
+    if(date != null) value_ = dateFormat.format(date) ;
     setTitleShowCalendar(titleShowCalendar);
   }
   
@@ -66,15 +66,15 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
    */
   public void setDisplayTime(boolean isDisplayTime) {
     isDisplayTime_ = isDisplayTime;
-    if(isDisplayTime_) dateFormat_ = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-    else dateFormat_ = new SimpleDateFormat("MM/dd/yyyy");
+    if(isDisplayTime_) dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+    else dateFormat = new SimpleDateFormat("MM/dd/yyyy");
   }
   
-  public void setCalendar(Calendar date) { value_ = dateFormat_.format(date.getTime()) ; }
+  public void setCalendar(Calendar date) { value_ = dateFormat.format(date.getTime()) ; }
   public Calendar getCalendar() {
     try {
       Calendar calendar = new GregorianCalendar() ;
-      calendar.setTime(dateFormat_.parse(value_ + " 0:0:0")) ;
+      calendar.setTime(dateFormat.parse(value_ + " 0:0:0")) ;
       return calendar ;
     } catch (ParseException e) {
       return null;
@@ -92,7 +92,7 @@ public class UIFormDateTimePicker extends UIFormInputBase<String> {
     w.write("name='") ;
     w.write(getName()) ; w.write('\'') ;
     if(value_ != null && value_.length() > 0) {      
-      w.write(" value='"); w.write(value_.toString()); w.write('\'');
+      w.write(" value='"); w.write(value_); w.write('\'');
     }
     w.write("/>");
     w.write("<div class='CalendarIcons' onclick='eXo.ks.UIDateTimePicker.init(this,");

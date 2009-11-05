@@ -18,8 +18,6 @@ package org.exoplatform.forum.service;
 
 import java.util.Date;
 
-import org.exoplatform.services.jcr.util.IdGenerator;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu

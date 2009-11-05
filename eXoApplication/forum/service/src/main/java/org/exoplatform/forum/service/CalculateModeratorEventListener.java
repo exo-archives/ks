@@ -22,7 +22,6 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
 public class CalculateModeratorEventListener implements EventListener{
 	private String path_ ;

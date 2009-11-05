@@ -31,10 +31,7 @@ import org.exoplatform.webui.core.model.SelectItemCategory;
  * @see org.exoplatform.webui.form.UIFormInputItemSelector
  */
 public class SelectOption extends SelectItem {
-  /**
-   * The label of the item
-   */
- // protected String label_ ;
+
   /**
    * THe value of the item
    */
@@ -62,7 +59,6 @@ public class SelectOption extends SelectItem {
   
   public SelectOption(String label, String value, String desc, String icon) {
 	super(label);
-    //label_ = label ;
     value_ = value ;
     description_ = desc ; 
     icon_ = icon ;
@@ -81,11 +77,8 @@ public class SelectOption extends SelectItem {
   }
   
   public SelectOption(String value) {
-    this(value.toString(), value, "", null);
+    this(value, value, "", null);
   }
-  
-//  public  String getLabel() {  return label_ ;}
-//  public void setLabel(String s) { label_ = s ; }
   
   public String getValue() { return value_ ; }
   public void   setValue(String s) { value_ =  s ; }
