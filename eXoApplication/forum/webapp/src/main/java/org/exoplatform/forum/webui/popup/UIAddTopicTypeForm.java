@@ -22,8 +22,10 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -103,27 +105,39 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 			UIFormInputIconSelector uiIconSelector = topicTypeForm.getChild(UIFormInputIconSelector.class);
 			String typeIcon = uiIconSelector.getSelectedIcon();
 			TopicType topicType = new TopicType();
-			if(topicTypeForm.isEdit) {
-				topicType = topicTypeForm.topicType;
-			}
 			while (typeName.indexOf("  ") >= 0) {
 				typeName = StringUtils.replace(typeName, "  ", " ");
-	    }
+			}
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
-				Object[] args = {};
-				UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameNameType", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return ;
+
+			if(topicTypeForm.isEdit) {
+				topicType = topicTypeForm.topicType;
+				if (typeName.equals(topicType.getName()) && typeIcon.equals(topicType.getIcon())){
+					Object[] args = {};
+					UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameIconType", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;	
+				}
+			} else {
+				if((typeName.equalsIgnoreCase(topicType.getName()) || topicTypeForm.checkIsSameName(forumService, typeName))) {
+					Object[] args = {};
+					UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
+					uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameNameType", args, ApplicationMessage.WARNING)) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					return ;
+				}
 			}
 			topicType.setName(typeName.trim());
 			topicType.setIcon(typeIcon);
 			forumService.saveTopicType(topicType);
 			if(topicTypeForm.isEdit) {
-				UITopicContainer topicContainer = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicContainer.class);
-				topicContainer.setTopicType(topicType.getId());
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+				UIForumContainer forumContainer = topicTypeForm.getAncestorOfType(UIForumPortlet.class).getChild(UIForumContainer.class);
+				if(forumContainer.isRendered() && !forumContainer.getChild(UITopicDetailContainer.class).isRendered()) {
+					UITopicContainer topicContainer = forumContainer.getChild(UITopicContainer.class);
+					topicContainer.setTopicType(topicType.getId());
+					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+				}
 			}
 			topicTypeForm.isEdit = false;
 			UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
@@ -141,3 +155,4 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 		}
 	}
 }
+
