@@ -75,7 +75,7 @@ import org.exoplatform.webui.event.EventListener;
 				@EventConfig(listeners = UICategories.MoveCategoryIntoActionListener.class)
 		}
 )
-
+@SuppressWarnings("unused")
 public class UICategories extends UIContainer{
 	private String FILTER_OPEN_QUESTIONS = "openQuestions";
 	private String FILTER_PENDING_QUESTIONS = "pendingQuestions";
@@ -112,7 +112,6 @@ public class UICategories extends UIContainer{
 		this.faqSetting_ = faqSetting;
 	}
 
-	@SuppressWarnings("unused")
 	private long[] getCategoryInfo() {
 		long[] result = new long[]{0, 0, 0, 0} ;
 		try {
@@ -123,7 +122,6 @@ public class UICategories extends UIContainer{
 		return result ;
 	}
 
-	@SuppressWarnings("unused")
 	private List<Category> getListCate(){
 		return this.listCate ;
 	}
@@ -148,7 +146,6 @@ public class UICategories extends UIContainer{
 		}		
 	}
 	
-	@SuppressWarnings("unused")
   private boolean isCategoryModerator(String path) throws Exception {
 		if(faqSetting_.isAdmin()) return true;
 		if(!FAQUtils.isFieldEmpty(categoryId_) && path.indexOf(categoryId_) >= 0 && isModerator) return true;
@@ -173,7 +170,10 @@ public class UICategories extends UIContainer{
 		return faqService_.isUserWatched(currentUser, cateId);		
 	}
 	
-	@SuppressWarnings("unused")
+	private boolean hasWatch(String categoryPath) {
+		return faqService_.hasWatch(categoryPath) ;
+	}
+	
 	private void setListCate() throws Exception {
 		if(!isSwap){
 			List<Category> newList = new ArrayList<Category>();
@@ -240,7 +240,6 @@ public class UICategories extends UIContainer{
 		setIsModerators(userName);
 	}
 	
-	@SuppressWarnings("unused")
 	private String[] getActionCategory(String cateId){
 		if(categoryId_ == null){
 			if(isWatched(cateId)) return firstActionCateUnWatch_;
@@ -251,7 +250,6 @@ public class UICategories extends UIContainer{
 		}
 	}
 	
-	@SuppressWarnings("unused")
 	private String[] getActionCategoryWithUser(String cateId) {
 		try {
 			if(FAQUtils.getCurrentUser() != null){
