@@ -1,7 +1,7 @@
 <%	
 	import org.exoplatform.services.organization.User ;
 	import org.exoplatform.faq.webui.FAQUtils;
-	import org.exoplatform.ks.common.CommonContact;
+	import org.exoplatform.ks.common.user.CommonContact;
 %>
 <div class="UIViewUserProfile $uicomponent.id">
 <% uiform.begin() %>
@@ -9,7 +9,7 @@
 	User user = uiform.getUser() ;
 	String userName = user.getUserName() ;
 	CommonContact contact = uiform.getContact(userName) ;
-	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMM dd yyyy - hh:mm");
+	java.text.SimpleDateFormat dateFormatter = new java.text.SimpleDateFormat("MMMM dd yyyy - hh:mm a");
 	String avatarUrl = "";
 	String birthDay = contact.getBirthday();
 	String location = contact.getCity() ;
@@ -57,9 +57,7 @@
 								<div class="Rank"><%=user.getFullName();%></div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
-									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: 
-												<%=dateFormatter.format(user.getLastLoginTime())%>
-									</div>
+									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: <%=dateFormatter.format(user.getLastLoginTime())%> </div>
 								</div>
 							</div>
 						</td>
