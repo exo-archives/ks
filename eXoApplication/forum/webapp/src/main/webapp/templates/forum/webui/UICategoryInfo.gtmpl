@@ -14,7 +14,7 @@
 	String []array = mostUserOnline.split(",");
 	long lg = 0;
 	try {lg = Long.parseLong(array[1].replaceAll("at", "").trim()); }
-	catch (Exception e) {print(e + "");}
+	catch (Exception e) {}
 	if(lg > 0) {
 		Date date = new Date();
 		date.setTime(lg);
