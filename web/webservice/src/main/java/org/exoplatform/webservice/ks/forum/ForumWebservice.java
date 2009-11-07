@@ -25,6 +25,7 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
  * @author Uoc Nguyen
  * 
  */
+@Path("ks/forum")
 public class ForumWebservice implements ResourceContainer {
 
   protected final static String JSON_CONTENT_TYPE = "application/json";
@@ -34,7 +35,7 @@ public class ForumWebservice implements ResourceContainer {
   public ForumWebservice() {}
 
   @GET
-  @Path("/ks/forum/getmessage/{maxcount}/")
+  @Path("getmessage/{maxcount}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMessage(@PathParam("maxcount") String maxcount) throws Exception {
     int counter = 0 ;
@@ -59,7 +60,7 @@ public class ForumWebservice implements ResourceContainer {
 
   
   @GET
-  @Path("/ks/forum/filter/{strIP}/")
+  @Path("filter/{strIP}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterIps(@PathParam("strIP") String str) throws Exception {
   	CacheControl cacheControl = new CacheControl();
@@ -84,7 +85,7 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   @GET
-  @Path("/ks/forum/filterIpBanforum/{strForumId}/{strIP}/")
+  @Path("filterIpBanforum/{strForumId}/{strIP}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterIpBanForum(@PathParam("strForumId") String forumId, @PathParam("strIP") String str) throws Exception {
   	CacheControl cacheControl = new CacheControl();
@@ -109,7 +110,7 @@ public class ForumWebservice implements ResourceContainer {
   }
 
   @GET
-  @Path("/ks/forum/filterTagNameForum/{userAndTopicId}/{strTagName}/")
+  @Path("filterTagNameForum/{userAndTopicId}/{strTagName}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response filterTagNameForum(@PathParam("strTagName") String str, @PathParam("userAndTopicId") String userAndTopicId) throws Exception {
   	CacheControl cacheControl = new CacheControl();
