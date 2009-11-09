@@ -1,18 +1,14 @@
 package org.exoplatform.forum.test;
 
-import java.lang.management.ManagementFactory;
-import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.jmx.ManagementContextImpl;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.forum.service.ForumServiceUtils;
+import org.exoplatform.ks.test.AbstractContainerBasedTest;
+import org.exoplatform.ks.test.AssertUtils;
+import org.exoplatform.ks.test.SimpleMockOrganizationService;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCacheConfig;
 import org.exoplatform.services.cache.impl.CacheServiceImpl;
@@ -20,15 +16,13 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
-import org.exoplatform.test.mocks.servlet.MockServletContext;
 
-public class TestForumServiceUtils extends TestCase {
+public class TestForumServiceUtils extends AbstractContainerBasedTest {
 
 	public TestForumServiceUtils() throws Exception {
 		super();
 		cacheService = initCacheService();
 		identityRegistry = initIdentityRegistry();
-		
 	}
 	
 
@@ -38,17 +32,14 @@ public class TestForumServiceUtils extends TestCase {
 	IdentityRegistry identityRegistry = null;
 
 	
-	public void setUp() {
-		ExoContainer testContainer = new ExoContainer(new ManagementContextImpl(ManagementFactory.getPlatformMBeanServer(), new HashMap<String,String>()));
-		testContainer.registerComponentInstance(OrganizationService.class, organizationService);
-		testContainer.registerComponentInstance(IdentityRegistry.class, identityRegistry);
-		testContainer.registerComponentInstance(CacheService.class, cacheService);
-		
-		ExoContainerContext.setCurrentContainer(testContainer);
-		//PortalContainer.setInstance(new PortalContainer(testContainer, new MockServletContext("portal")));
+  @Override
+  protected void registerComponents(ExoContainer testContainer) {
+    testContainer.registerComponentInstance(OrganizationService.class, organizationService);
+    testContainer.registerComponentInstance(IdentityRegistry.class, identityRegistry);
+    testContainer.registerComponentInstance(CacheService.class, cacheService);
+  }
 	
-		
-	}
+	
 
 	public void testHasPermission() throws Exception {
 		
@@ -156,6 +147,8 @@ public class TestForumServiceUtils extends TestCase {
 	private IdentityRegistry initIdentityRegistry() {
 		return new IdentityRegistry(null);
 	}
+
+
 	
 }
 

@@ -70,12 +70,18 @@
       <artifactId>commons-io</artifactId>
       <scope>test</scope>
     </dependency> 
-     <dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>   
-
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.test-utils</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>   
+    
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>

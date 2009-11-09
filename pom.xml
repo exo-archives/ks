@@ -78,6 +78,7 @@
     <module>extension</module>
     <module>demo</module>
     <module>packaging</module>
+    <module>test-utils</module>
    
   </modules>
 

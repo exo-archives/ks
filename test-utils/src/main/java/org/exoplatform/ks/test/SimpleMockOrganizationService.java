@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.exoplatform.forum.test;
+package org.exoplatform.ks.test;
 
 import java.util.Arrays;
 import java.util.Collection;
