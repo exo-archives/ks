@@ -55,11 +55,6 @@
     </dependency>              
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.web.webservice</artifactId>
-      <version>${project.version}</version>
-    </dependency> 
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
@@ -208,12 +203,7 @@
                <artifactId>exo.ks.web.ksResources</artifactId>
                <contextRoot>ksResources</contextRoot>
                 <bundleFileName>ksResources.war</bundleFileName>
-             </webModule>                            
-              <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.web.webservice</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>                                  
+             </webModule>                                                           
           </modules>
         </configuration>
       </plugin>
