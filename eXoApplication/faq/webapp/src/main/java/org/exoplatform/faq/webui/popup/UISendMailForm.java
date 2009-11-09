@@ -192,7 +192,9 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			}
 		}
 		addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
-		addChild(new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, stringBuffer.toString())) ;
+		UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, stringBuffer.toString());
+		filedMessage.setToolBarName("KSToolbar");
+		addChild(filedMessage) ;
 	}
 
 	private boolean isContainLanguageList(List<QuestionLanguage> questionlg, String language) throws Exception {

@@ -78,6 +78,8 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);
 		MailTitle.addValidator(MandatoryValidator.class);
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, "");
+		formWYSIWYGInput.addValidator(MandatoryValidator.class);
+		formWYSIWYGInput.setToolBarName("KSToolbar");
 		UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
 		sendMessageTab.addUIFormInput(SendTo);
 		sendMessageTab.addUIFormInput(MailTitle);

@@ -65,6 +65,8 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
+import org.exoplatform.webui.form.wysiwyg.FCKEditor;
+import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 
@@ -184,6 +186,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormTextAreaInput canPost = new UIFormTextAreaInput(FIELD_CANPOST_INPUT, FIELD_CANPOST_INPUT, null);
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "");
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
+		formWYSIWYGInput.setToolBarName("KSToolbar");
+//		formWYSIWYGInput.setFCKConfig()
 		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
 		uiIconSelector.setSelectedIcon("IconsView");
 		

@@ -195,10 +195,12 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		String value = administration.getNotifyEmailContent();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
 		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
+		notifyEmail.setToolBarName("KSToolbar");
 		notifyEmail.setValue(value); this.notifyEmail_ = value;
 		value = administration.getNotifyEmailMoved();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
 		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
+		notifyEmailMoved.setToolBarName("KSToolbar");
 		notifyEmailMoved.setValue(value); this.notifyMove_ = value;
 		
 		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);

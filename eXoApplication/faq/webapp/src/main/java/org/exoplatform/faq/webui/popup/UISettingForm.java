@@ -181,18 +181,26 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 			orderType.add(new SelectItemOption<String>(DESC, FAQSetting.ORDERBY_TYPE_DESC ));
 			
 			FAQUtils.getEmailSetting(faqSetting_, true, true);
-			EmailAddNewQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, EMAIL_DEFAULT_ADD_QUESTION, ""))
-																															.setValue(faqSetting_.getEmailSettingContent()));
+			UIFormWYSIWYGInput emailDefaultAdd = new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, EMAIL_DEFAULT_ADD_QUESTION, "");
+			emailDefaultAdd.setToolBarName("KSToolbar");
+			emailDefaultAdd.setValue(faqSetting_.getEmailSettingContent());
+			EmailAddNewQuestion.addUIFormInput(emailDefaultAdd);
+
 			FAQUtils.getEmailSetting(faqSetting_, false, true);
-			EmailEditQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, EMAIL_DEFAULT_EDIT_QUESTION, ""))
-																															.setValue(faqSetting_.getEmailSettingContent()));
+			UIFormWYSIWYGInput emailDefaultEdit = new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, EMAIL_DEFAULT_EDIT_QUESTION, "");
+			emailDefaultEdit.setToolBarName("KSToolbar");
+			emailDefaultEdit.setValue(faqSetting_.getEmailSettingContent());
+			EmailEditQuestion.addUIFormInput(emailDefaultEdit);
 			
 			String defEmailMove = faqSetting_.getEmailMoveQuestion();
 			if(defEmailMove == null || defEmailMove.trim().length() <= 10) {
 				defEmailMove = FAQUtils.getEmailMoveQuestion(faqSetting_);
 			}
-			EmailMoveQuestion.addUIFormInput((new UIFormWYSIWYGInput(EMAIL_MOVE_QUESTION, EMAIL_MOVE_QUESTION, ""))
-					.setValue(defEmailMove));
+			
+			UIFormWYSIWYGInput emailDefaultMove = new UIFormWYSIWYGInput(EMAIL_MOVE_QUESTION, EMAIL_MOVE_QUESTION, "");
+			emailDefaultMove.setToolBarName("KSToolbar");
+			emailDefaultMove.setValue(defEmailMove);
+			EmailMoveQuestion.addUIFormInput(emailDefaultMove);
 			
 			DisplayTab.addUIFormInput((new UIFormSelectBox(DISPLAY_MODE, DISPLAY_MODE, displayMode)).setValue(faqSetting_.getDisplayMode()));
 			DisplayTab.addUIFormInput((new UIFormSelectBox(ORDER_BY, ORDER_BY, orderBy)).setValue(String.valueOf(faqSetting_.getOrderBy())));;

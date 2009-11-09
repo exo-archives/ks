@@ -84,7 +84,9 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 		faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		currentUser_ = FAQUtils.getCurrentUser();
 		this.addChild((new UIFormStringInput(TITLE_USERNAME, TITLE_USERNAME, currentUser_)).setEditable(false));
-		this.addChild(new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, ""));
+		UIFormWYSIWYGInput commentContent = new UIFormWYSIWYGInput(COMMENT_CONTENT, COMMENT_CONTENT, "");
+		commentContent.setToolBarName("KSToolbar");
+		this.addChild(commentContent);
 	}
 	
 	public String getQuestionContent() {
