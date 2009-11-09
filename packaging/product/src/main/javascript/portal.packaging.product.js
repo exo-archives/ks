@@ -44,7 +44,6 @@ function getProduct(version) {
   product.addDependencies(ks.eXoApplication.faq);
   product.addDependencies(ks.eXoApplication.forum);
   product.addDependencies(ks.web.ksResources);  
-  product.addDependencies(ks.web.webservice);  
   product.addDependencies(ks.extension);
 
   // KS demo

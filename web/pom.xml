@@ -11,6 +11,5 @@
   <name>eXo KS Web projects</name> 
   <modules>
     <module>ksResources</module>
-    <module>webservice</module>
   </modules>
 </project>

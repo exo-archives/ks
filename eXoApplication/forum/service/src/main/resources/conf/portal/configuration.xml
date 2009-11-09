@@ -22,6 +22,10 @@
     <type>org.exoplatform.forum.service.impl.ForumStatisticsServiceImpl</type>
   </component> 
 
+  <component>
+    <type>org.exoplatform.forum.service.ws.ForumWebservice</type>
+  </component>
+
   <!--external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
 	  <component-plugin> 
@@ -37,5 +41,7 @@
 	    </init-params>
 	  </component-plugin>
 	</external-component-plugins-->
+
+
 		
 </configuration>

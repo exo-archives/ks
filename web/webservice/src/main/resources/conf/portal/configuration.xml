@@ -5,6 +5,6 @@
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
   <component>
-    <type>org.exoplatform.webservice.ks.forum.ForumWebservice</type>
+    <type>org.exoplatform.forum.service.ws.ForumWebservice</type>
   </component>
 </configuration>

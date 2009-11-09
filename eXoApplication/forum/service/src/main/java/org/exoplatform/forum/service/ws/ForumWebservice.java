@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.exoplatform.webservice.ks.forum;
+package org.exoplatform.forum.service.ws;
 import java.util.ArrayList;
 import java.util.List;
 
