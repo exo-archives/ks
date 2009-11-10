@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
@@ -15,10 +14,12 @@ import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -27,11 +28,11 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
@@ -41,7 +42,10 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIExportForm.CancelActionListener.class)
 		}
 )
-public class UIExportForm extends UIForm implements UIPopupComponent{
+public class UIExportForm extends BaseForumForm implements UIPopupComponent{
+  
+  public static final Log log = ExoLogger.getLogger(UIExportForm.class);
+  
 	private boolean isExportAll = false;
 	private final String LIST_CATEGORIES = "listCategories";
 	private final String CREATE_ZIP = "createZip";
@@ -63,19 +67,22 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
 		if(object == null || object instanceof Category){
-			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		  
+		  Category cat = (Category)object;
+		  
+
 			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 			try {
 				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
-				if(object == null){
-					for(Category category : service.getCategories()){
+				if(cat == null){
+					for(Category category : getForumService().getCategories()){
 						listObjects.add(category);
 						checkBoxInput = new UIFormCheckBoxInput<Boolean>(category.getId(), category.getId(), true);
 						checkBoxInput.setChecked(true);
 						formInputWithActions.addChild(checkBoxInput);
 					}
-				}else if(object instanceof Category){
-					for(Forum forum : service.getForums(((Category)object).getId(), null)){
+				} else {
+					for(Forum forum : getForumService().getForums(cat.getId(), null)){
 						listObjects.add(forum);
 						checkBoxInput = new UIFormCheckBoxInput<Boolean>(forum.getId(), forum.getId(), true);
 						checkBoxInput.setChecked(true);
@@ -83,11 +90,13 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 					}
 				}
 				addChild(formInputWithActions);
-			}catch(Exception e){ }
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-			ResourceBundle res = context.getApplicationResourceBundle() ;
+			} catch(Exception e){ 
+			  log.warn("failed to list forum categories", e);
+			}
+			
+
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
-			stringInput.setValue(res.getString("UIExportForm.label.DefaultFileName"));
+			stringInput.setValue(getLabel("DefaultFileName"));
 			checkBoxInput = new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false );
 			checkBoxInput.setChecked(true).setEnable(false);
 
@@ -96,9 +105,9 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			
 			if(object == null ){
 				List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>();
-				EXPORT_ALL = res.getString("UIExportForm.label.ExportAll");
-				EXPORT_CATEGORIES = res.getString("UIExportForm.label.ExportCategories");
-				EXPORT_MODE = res.getString("UIExportForm.label.ExportMode");
+				EXPORT_ALL = getLabel("ExportAll");
+				EXPORT_CATEGORIES = getLabel("ExportCategories");
+				EXPORT_MODE = getLabel("ExportMode");
 				list.add(new SelectItemOption<String>(EXPORT_ALL));
 				list.add(new SelectItemOption<String>(EXPORT_CATEGORIES));
 				UIFormRadioBoxInput exportMode = new UIFormRadioBoxInput(EXPORT_MODE, EXPORT_MODE, list);
@@ -106,10 +115,8 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 				addChild(exportMode);
 			}
 		}else{
-			WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
-			ResourceBundle res = context.getApplicationResourceBundle() ;
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
-			stringInput.setValue(res.getString("UIExportForm.label.DefaultFileName"));
+			stringInput.setValue(getLabel("DefaultFileName"));
 			addChild(stringInput);
 			addChild(new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false ));
 		}
