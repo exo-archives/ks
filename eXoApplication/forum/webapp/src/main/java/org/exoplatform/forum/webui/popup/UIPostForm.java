@@ -116,7 +116,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 		UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "") ;
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
-		formWYSIWYGInput.setToolBarName("KSToolbar");
+		formWYSIWYGInput.setToolBarName("Basic");
 		threadContent.addChild(postTitle) ;
 		threadContent.addChild(editReason) ;
 		threadContent.addChild(formWYSIWYGInput) ;

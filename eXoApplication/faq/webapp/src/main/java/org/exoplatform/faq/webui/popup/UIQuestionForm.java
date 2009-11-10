@@ -176,7 +176,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
     }
     
     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
-    inputQuestionDetail.setToolBarName("KSToolbar");
+    inputQuestionDetail.setToolBarName("Basic");
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;
       if(input!= null && input.indexOf("<p>") >=0 && input.indexOf("</p>") >= 0) {

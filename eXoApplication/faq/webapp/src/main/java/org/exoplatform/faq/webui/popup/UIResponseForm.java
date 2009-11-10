@@ -115,7 +115,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 	public UIResponseForm() throws Exception {
 		isChildOfQuestionManager_ = false ;
 		inputResponseQuestion_ = new UIFormWYSIWYGInput(RESPONSE_CONTENT, RESPONSE_CONTENT, "") ;
-		inputResponseQuestion_.setToolBarName("KSToolbar");
+		inputResponseQuestion_.setToolBarName("Basic");
 		checkShowAnswer_ = new UIFormCheckBoxInput<Boolean>(SHOW_ANSWER, SHOW_ANSWER, false) ;
 		isApproved_ = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
