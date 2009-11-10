@@ -23,7 +23,9 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.form.UIForm;
 
 /**
@@ -79,6 +81,25 @@ public class BaseForumForm extends UIForm {
       log.warn("Could not find label for "+ labelID + "in " + res + " for locale " + res.getLocale());
     }
     return labelID;
+  }
+  
+  /**
+   * Sends a warning message to ui
+   * @param messageKey resource bundle key for the message
+   */
+  protected void warning(String messageKey) {
+    warning(messageKey, (String[])null);
+  }
+  
+  /**
+   * Sends a parameterized message to ui
+   * @param messageKey
+   * @param args
+   */
+  protected void warning(String messageKey, String... args) {
+    UIApplication uiApp = this.getAncestorOfType(UIApplication.class) ;
+    uiApp.addMessage(new ApplicationMessage(messageKey, args, ApplicationMessage.WARNING)) ;
+    ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
   }
   
   
