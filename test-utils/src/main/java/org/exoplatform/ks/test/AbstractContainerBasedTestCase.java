@@ -67,6 +67,14 @@ public abstract class AbstractContainerBasedTestCase extends TestCase {
     testContainer.registerComponentInstance(IdentityRegistry.class, identityRegistry);
     testContainer.registerComponentInstance(CacheService.class, cacheService);
   }
+  
+  
+  /**
+   * Register a component to the containter
+   */
+  protected <T, I extends T>void registerComponent(Class<T> clazz, I impl) {
+    ExoContainerContext.getCurrentContainer().registerComponentImplementation(impl, clazz);
+  }
 
   /**
    * 
