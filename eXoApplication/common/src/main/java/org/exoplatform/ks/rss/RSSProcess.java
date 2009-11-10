@@ -310,8 +310,6 @@ public class RSSProcess extends RSSGenerate {
 						feed = this.createNewFedd("", new Date());
 					feed.setLink(categoryLink + questionNode.getProperty("exo:categoryId").getString());
 					feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
-				} catch (Exception e) {
-					//e.printStackTrace();
 				}
 				
 				feed.setDescription(categoreDescription);
