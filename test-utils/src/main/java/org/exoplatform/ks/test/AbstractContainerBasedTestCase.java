@@ -55,7 +55,6 @@ public abstract class AbstractContainerBasedTestCase extends TestCase {
    * Calls {@link #registerComponents(ExoContainer)}, then {@link #doSetUp()}.
    */
   public final void setUp() {
-    System.out.println(">>>>>>" + System.getProperty("maven.exoplatform.dir"));
     ExoContainer testContainer = new ExoContainer(new ManagementContextImpl(ManagementFactory.getPlatformMBeanServer(), new HashMap<String,String>()));
     registerDefaultComponents(testContainer);
     registerComponents(testContainer);

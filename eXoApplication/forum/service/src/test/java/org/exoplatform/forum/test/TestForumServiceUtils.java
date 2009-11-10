@@ -6,11 +6,8 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.ks.test.AbstractContainerBasedTestCase;
 import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.services.cache.CacheService;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityRegistry;
 
 public class TestForumServiceUtils extends AbstractContainerBasedTestCase {
 
