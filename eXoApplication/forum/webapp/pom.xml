@@ -3,9 +3,8 @@
 
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>exo.ks.eXoApplication</artifactId>
+    <artifactId>exo.ks.eXoApplication.forum</artifactId>
     <version>2.0.0-Alpha02-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath> <!-- TODO : decide if we introduce an intermediary parent in-->
   </parent> 
 
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
@@ -53,11 +52,13 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>  
+    <!-- 
      <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web</artifactId>
       <scope>provided</scope>
-    </dependency>          
+    </dependency>   
+    -->       
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
@@ -114,7 +115,16 @@
       <scope>provided</scope>
     </dependency>    
  
-
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.test-utils</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>    
 		
   </dependencies>
 

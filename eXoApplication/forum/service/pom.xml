@@ -3,9 +3,8 @@
 
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>exo.ks.eXoApplication</artifactId>
+    <artifactId>exo.ks.eXoApplication.forum</artifactId>
     <version>2.0.0-Alpha02-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath> <!-- TODO : decide if we introduce an intermediary parent in-->
   </parent>   
   
   <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
