@@ -16,43 +16,51 @@
  */
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.ks.test.AbstractWebuiTestCase;
+import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
+ * 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestBaseForumForm extends AbstractWebuiTestCase {
-  BaseForumForm sampleForm;
+public class TestBaseForumForm extends AbstractUIComponentTestCase<BaseForumForm> {
+
   
-  protected void doSetUp() {
-    sampleForm = new BaseForumForm();
-    sampleForm.setId("SampleForm");    
+  public TestBaseForumForm() throws Exception {
+    super();
   }
-  
 
   public void testI18n() {
-    assertEquals("DoesNotExist", sampleForm.i18n("DoesNotExist"));
-    assertEquals("Does.not.exist", sampleForm.i18n("Does.not.exist"));
-    getAppRes().put("key","value");
-    assertEquals("value", sampleForm.i18n("key"));
+    assertEquals("DoesNotExist", component.i18n("DoesNotExist"));
+    assertEquals("Does.not.exist", component.i18n("Does.not.exist"));
+    setResourceBundleEntry("key","value");
+    assertEquals("value", component.i18n("key"));
   }
-
-
-
 
   public void testGetLabel() {
 
-    assertEquals("NonExisting", sampleForm.getLabel("NonExisting"));
+    assertEquals("NonExisting", component.getLabel("NonExisting"));
     
-    getAppRes().put("SampleForm.label.Label","value");
-    assertEquals("value", sampleForm.getLabel("Label"));
+    setResourceBundleEntry("SampleForm.label.Label","value");
+    assertEquals("value", component.getLabel("Label"));
     
-    getAppRes().put("SampleForm.label.Key", "whatever");
-    assertEquals(sampleForm.getLabel("Key"), sampleForm.i18n("SampleForm.label.Key"));
+    setResourceBundleEntry("SampleForm.label.Key", "whatever");
+    assertEquals(component.getLabel("Key"), component.i18n("SampleForm.label.Key"));
+  }
+  
+  
+  public void testWarning() {
+    component.warning("Message");
+    assertApplicationMessage("Message");
   }
 
-  
 
-  
+  @Override
+  protected BaseForumForm createComponent() {
+    BaseForumForm sampleForm = new BaseForumForm();
+    sampleForm.setId("SampleForm");   
+    return sampleForm;
+  }
+
+
 }

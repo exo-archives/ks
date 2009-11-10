@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.webui.popup;
+package org.exoplatform.forum.webui;
 
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
@@ -22,22 +22,21 @@ import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestUIBanIPForumManagerForm extends AbstractUIComponentTestCase<UIBanIPForumManagerForm> {
+public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail> {
 
-  public TestUIBanIPForumManagerForm() throws Exception {
-    super();    
+  public TestUITopicDetail() throws Exception {
+    super();
+    
   }
-  
-  public void testCheckIpAddress() throws Exception {
-    assertNull(component.checkIpAddress(new String []{"aaa","bbb","ccc","ddd"}));
-    assertNull(component.checkIpAddress(new String []{"255","255","255","255"}));
-    assertNull(component.checkIpAddress(new String []{"192","168","0"}));
-    assertEquals("192.168.0.13", component.checkIpAddress(new String []{"192","168","0","13"}));
+
+  public void testSetUpdateTopic() {
+    //fail("Not yet implemented");
   }
 
   @Override
-  protected UIBanIPForumManagerForm createComponent() throws Exception {
-    return new UIBanIPForumManagerForm();
+  protected UITopicDetail createComponent() throws Exception {
+    return new UITopicDetail();
   }
+
 
 }
