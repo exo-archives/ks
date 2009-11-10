@@ -38,7 +38,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 @ComponentConfig(
 )
 
-public class UIForumKeepStickPageIterator extends UIForm {
+public class UIForumKeepStickPageIterator extends BaseForumForm {
 
 	public int pageSelect = 1 ;
 	public int maxPage = 1;
