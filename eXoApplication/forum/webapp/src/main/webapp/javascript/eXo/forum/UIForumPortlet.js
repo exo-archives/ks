@@ -498,48 +498,33 @@ UIForumPortlet.prototype.onClickDisableTexarea = function() {
 	}
 };
 
-UIForumPortlet.prototype.setDisableInput = function(elm, cmdElm) {
-	var objCmdElm = document.getElementById(cmdElm);
-	var objElm = document.getElementById(elm) ;
-	if(objCmdElm === null) return ;
-	var parentElm = eXo.core.DOMUtil.findAncestorByClass(objElm, "FieldComponent") ;
-	var tagA = parentElm.getElementsByTagName('a') ;
-	var imgA = parentElm.getElementsByTagName('img') ;
-	for(var i=0; i < tagA.length; ++i) {
-		tagA[i].setAttribute("tmpHref",tagA[i].href) ;
-		tagA[i].href = "javascript:void(0);" ;
-	}
-	objElm.disabled = 'disabled' ;
-	if(objCmdElm.value === '') {
-		objElm.disabled = 'disabled' ;
-		objElm.value = '' ;
-		for(var i=0; i < tagA.length; ++i) {
-			tagA[i].href = "javascript:void(0);" ;
-		}
-	} else {
-		objElm.disabled = '' ;
-		for(var i=0; i < tagA.length; ++i) {
-			tagA[i].href = tagA[i].getAttribute("tmpHref") ;
-		}
-	}
-	objCmdElm.onkeyup= function() {
-		if(this.value != '') {
-			objElm.disabled = '' ;
-			for(var i=0; i < tagA.length; ++i) {
-				tagA[i].href = tagA[i].getAttribute("tmpHref") ;
-			}
+UIForumPortlet.prototype.setDisableInfo = function(isPost, isView) {
+	var strs = new Array("CanPost","CanView");
+	for (var i = 0; i < strs.length; i++) {
+		if(isPost === 'false'){
+			var id = strs[i]+"Info";
+			document.getElementById(id).style.display = 'none';
 		} else {
-			objElm.disabled = 'disabled' ;
-			objElm.value = '' ;
-			for(var i=0; i < tagA.length; ++i) {
-				tagA[i].href = "javascript:void(0);" ;
-			}
-			if(elm === 'Postable') {
-				eXo.forum.UIForumPortlet.setDisableInput('Viewer','Postable') ;
-			}
+			var elm = document.getElementById(strs[i]) ;
+			if(elm === null) return ;
+			eXo.forum.UIForumPortlet.setShowInfo(elm);
+			elm.onkeyup= function() {
+				eXo.forum.UIForumPortlet.setShowInfo(this);
+			};
 		}
-	};
+		isPost = isView;
+  }
 };
+
+UIForumPortlet.prototype.setShowInfo = function(elm) {
+	var info = document.getElementById(elm.id+"Info");
+	if(elm.value === ''){
+		info.style.display = 'block';
+	} else {
+		info.style.display = 'none';
+	}
+};
+
 
 //UIForumPortlet.prototype.finterImage = function(elm_, isFT) {
 //	var isIE = document.all?true:false;

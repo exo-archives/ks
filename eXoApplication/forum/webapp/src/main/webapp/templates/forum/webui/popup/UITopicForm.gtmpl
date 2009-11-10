@@ -3,7 +3,7 @@
 	import org.exoplatform.web.application.JavascriptManager;	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInput('CanView','CanPost');");
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInfo('"+uicomponent.isShowPostInfo+"','"+uicomponent.isShowViewInfo+"');");
 %>
 <div class="UITopicForm" style="width:auto;">
 	<% uiform.begin() %>
@@ -106,7 +106,7 @@
 <script type="text/javascript">
 	function setZIndex() {
     var popupTopic = document.getElementById('UIForumPopupWindow');
-    var popupUser = document.getElementById('UIForumUserPopupWindow');
+    var popupUser = document.getElementById('UITopicUserPopupWindow');
     if(popupUser){
     		popupUser.style.zIndex = "8"; 
     		popupTopic.style.zIndex = "7";

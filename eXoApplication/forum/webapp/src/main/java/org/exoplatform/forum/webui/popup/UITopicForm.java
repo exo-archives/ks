@@ -28,6 +28,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
+import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -65,8 +66,6 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
-import org.exoplatform.webui.form.wysiwyg.FCKEditor;
-import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 import org.exoplatform.webui.organization.account.UIUserSelector;
 
@@ -143,6 +142,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private Forum forum ;
 	private boolean isMod = false;
 	private boolean isDetail = false;
+	private boolean isShowViewInfo = true;
+	private boolean isShowPostInfo = true;
 	private int id = 0;
 	private Topic topic = new Topic() ;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
@@ -187,7 +188,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "");
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
 		formWYSIWYGInput.setToolBarName("Basic");
-//		formWYSIWYGInput.setFCKConfig()
 		UIFormInputIconSelector uiIconSelector = new UIFormInputIconSelector(FIELD_THREADICON_TAB, FIELD_THREADICON_TAB) ;
 		uiIconSelector.setSelectedIcon("IconsView");
 		
@@ -213,6 +213,9 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		UIForumInputWithActions threadPermission = new UIForumInputWithActions(FIELD_THREADPERMISSION_TAB);
 		threadPermission.addUIFormInput(canPost);
 		threadPermission.addUIFormInput(canView);
+		threadPermission.setMapLabelInfo(FIELD_CANVIEW_INPUT, getLabel("CanViewInfo"));
+		threadPermission.setMapLabelInfo(FIELD_CANPOST_INPUT, getLabel("CanPostInfo"));
+		
 		
 		String[]fieldPermissions = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ; 
 		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
@@ -264,6 +267,37 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(false) ;
 		if(userRole == 0) {
 			addActionAddTopicType();
+		}
+		setShowInfo();
+	}
+	
+	private void setShowInfo() throws Exception {
+		isShowViewInfo = true;
+		isShowPostInfo = true;
+		String []canV = forum.getViewer();
+		Category category = null;
+		if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
+			isShowViewInfo = false;
+			isShowPostInfo = false;
+		} else {
+			category = forumService.getCategory(categoryId);
+			canV = category.getViewer();
+			if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
+				isShowViewInfo = false;
+				isShowPostInfo = false;
+			}
+		}
+		if(isShowPostInfo){
+			canV = forum.getPoster();
+			if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
+				isShowPostInfo = false;
+			} else {
+				if(category == null)category = forumService.getCategory(categoryId);
+				canV = category.getPoster();
+				if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
+					isShowPostInfo = false;
+				}
+			}
 		}
 	}
 	

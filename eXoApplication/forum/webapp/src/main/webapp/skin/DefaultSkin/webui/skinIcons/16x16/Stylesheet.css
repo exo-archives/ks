@@ -518,7 +518,13 @@
 }
 
 .UIForumPortlet .UpArrow1Icon {
-  	background: url('icons/BlueUpArrow.gif') no-repeat right;
-  	background-position: right center;
+  background: url('icons/BlueUpArrow.gif') no-repeat right;
+  background-position: right center;
 	padding-right: 16px;
+}
+
+.UIForumPortlet .InfoMessageIcon {
+  background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/Info.gif') no-repeat left center;
+	padding-left: 20px;	margin-left: 20px;
+	line-height: 18px;	height: 18px;
 }

@@ -43,10 +43,18 @@ public class UIForumInputWithActions extends UIFormInputSet {
 	private String actionAddItem;
 	private String labelActionAddItem;
 	private String actionIdAddItem = "";
+	private Map<String, String> mapLabelInfo = new HashMap<String, String>();
 	public UIForumInputWithActions(String id) {
 		super.setId(id) ;
 	}
 	
+	public Map<String, String> getMapLabelInfo() {
+  	return mapLabelInfo;
+  }
+	public void setMapLabelInfo(String itemId, String valueInfo ) {
+  	this.mapLabelInfo.put(itemId, valueInfo);
+  }
+
 	public String getActionAddItem() {
   	return actionAddItem;
   }
@@ -94,6 +102,13 @@ public class UIForumInputWithActions extends UIFormInputSet {
 			} catch(MissingResourceException ex){
 				label = inputEntry.getId() ;
 				System.err.println("\n "+uiForm.getId()+".label." + inputEntry.getId()+" not found value");
+			}
+			if(!mapLabelInfo.isEmpty() && mapLabelInfo.containsKey(inputEntry.getId())) {
+				w.write("<tr>") ;
+				w.write("	<td colspan=\"2\">") ; 
+				w.write("		<div style=\"height:18px;\"><div class=\"InfoMessageIcon\" id=\""+inputEntry.getId()+"Info\">" + mapLabelInfo.get(inputEntry.getId()) + "</div></div>"); 
+				w.write("	</td>") ;
+				w.write("</tr>") ;
 			}
 			w.write("<tr>") ;
 			w.write("<td class=\"FieldLabel\">") ; w.write(label); w.write("</td>") ;
