@@ -23,6 +23,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
@@ -55,7 +56,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 		}
 )
 
-public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
+public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupComponent{
 	public static final String SEARCH_IP_BAN = "searchIpBan";
 	public static final String NEW_IP_BAN_INPUT1 = "newIpBan1";
 	public static final String NEW_IP_BAN_INPUT2 = "newIpBan2";
@@ -63,7 +64,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
 	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator";
 	private String forumId ;
-	private ForumService forumService ;
+
 	private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIBanIPForumManagerForm() throws Exception {
@@ -76,13 +77,6 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		setActions(new String[]{"Cancel"});
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
   }
-	
-	public ForumService getForumService() {
-	  if (forumService == null) {
-	    forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	  }
-	  return forumService;
-	}
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
