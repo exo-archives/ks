@@ -33,33 +33,18 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-public class NotifyJob extends Thread implements Job, Runnable  {
-  private Thread thread ;
+public class NotifyJob implements Job {
   @SuppressWarnings("unused")
 	private NotifyInfo notify_ ;
 	public NotifyJob() throws Exception {
-		setDaemon(true) ;	
-		start() ;
 		
 	}
-	public void start() { 
-		if ( thread == null ) { 
-    	thread = new Thread(this); 
-    	thread.start(); 
-    }
-	} 
-	
-	@SuppressWarnings("deprecation") 
-  public void destroy() {
-		thread.stop() ;
-		thread = null ;
-	} 
-	
+
 	public void setMessageInfo(NotifyInfo notifyInfo) {
 		this.notify_ = notifyInfo ;
 	}
 	
-	private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
+	private static Log log_ = ExoLogger.getLogger(NotifyJob.class);
 	
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -70,7 +55,6 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
 	    Common common = new Common() ;
-	    System.out.println("\n\n===>common:" + common);
 	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
@@ -93,8 +77,8 @@ public class NotifyJob extends Thread implements Job, Runnable  {
 		  }
 		  schedulerService.removeJob(info) ;		  
 
-	  } catch (Exception e) {
-		  e.printStackTrace();			
+	  } catch (Exception e) { 
+		  log_.error("Failed to execute email notification job", e)	;	
 	  }
   }
 }
