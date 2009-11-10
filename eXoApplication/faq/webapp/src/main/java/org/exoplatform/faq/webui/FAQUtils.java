@@ -220,7 +220,7 @@ public class FAQUtils {
 			for(String id : temp) {
 				ids.add(id.trim()) ;
 			}
-			return ids.toArray(new String[]{}) ;
+			return ids.toArray(new String[ids.size()]) ;
 		} else return new String[] {} ;
 	}
 
