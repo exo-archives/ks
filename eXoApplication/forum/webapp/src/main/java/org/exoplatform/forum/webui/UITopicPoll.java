@@ -288,7 +288,7 @@ public class UITopicPoll extends UIForm	{
 					double onePercent = (double)100/size;
 					if(topicPoll.isAgainVote) {
 						char tmp = temporary[index].charAt((temporary[index].length() - 1));
-						int k = (new Integer(tmp)).intValue() - 48;
+						int k = Integer.valueOf(tmp) - 48;
 						if( k < votes.length) votes[k] = String.valueOf((Double.parseDouble(votes[k]) - onePercent)) ;
 						votes[j] = String.valueOf((Double.parseDouble(votes[j]) + onePercent)) ;
 					} else {
