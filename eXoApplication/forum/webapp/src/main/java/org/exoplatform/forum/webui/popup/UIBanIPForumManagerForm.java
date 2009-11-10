@@ -67,7 +67,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIBanIPForumManagerForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		
 		addUIFormInput(new UIFormStringInput(SEARCH_IP_BAN, null));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT1, null)).setMaxLength(3));
 		addUIFormInput((new UIFormStringInput(NEW_IP_BAN_INPUT2, null)).setMaxLength(3));
@@ -76,6 +76,14 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		setActions(new String[]{"Cancel"});
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
   }
+	
+	public ForumService getForumService() {
+	  if (forumService == null) {
+	    forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	  }
+	  return forumService;
+	}
+	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
@@ -85,7 +93,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 	
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<String> getListIpBan() throws Exception {
-		List<String> listIpBan = forumService.getForumBanList(forumId);
+		List<String> listIpBan = getForumService().getForumBanList(forumId);
 		pageList = new ForumPageList(8, listIpBan.size());
 		pageList.setPageSize(8);
 		pageIterator = this.getChild(UIForumPageIterator.class);
@@ -102,20 +110,29 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		return list;
 	}
 	
-	private String checkIpAddress(String[] ipAdd){
-		String ip = "";
+	/**
+	 * Validates an IP Address. IP elements must be 4 integers between 0 and 255.
+	 * 255.255.255.255 is not a valid IP address;
+	 * @param ipAdd elements of the address
+	 * @return null if the address is not valid
+	 */
+	protected String checkIpAddress(String[] ipAdd){
+		StringBuffer sbip = new StringBuffer();
 		try{
+		  if (ipAdd.length != 4) {
+		    return null;
+		  }
 			int[] ips = new int[4];
 			for(int t = 0; t < ipAdd.length; t ++){
-				if(t>0) ip += ".";
-				ip += ipAdd[t];
+				if(t>0) sbip.append(".");
+				sbip.append(ipAdd[t]);
 				ips[t] = Integer.parseInt(ipAdd[t]);
 			}
 			for(int i = 0; i < 4; i ++){
 				if(ips[i] < 0 || ips[i] > 255) return null;
 			}
 			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
-			return ip;
+			return sbip.toString();
 		} catch (Exception e){
 			return null;
 		}
@@ -139,7 +156,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
 			} 
-			if(!ipManagerForm.forumService.addBanIPForum(ipAdd, ipManagerForm.forumId)){
+			if(!ipManagerForm.getForumService().addBanIPForum(ipAdd, ipManagerForm.forumId)){
 				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return;
@@ -167,7 +184,7 @@ public class UIBanIPForumManagerForm extends UIForm implements UIPopupComponent{
 		public void execute(Event<UIBanIPForumManagerForm> event) throws Exception {
 			UIBanIPForumManagerForm ipManagerForm = event.getSource();
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			ipManagerForm.forumService.removeBanIPForum(ip, ipManagerForm.forumId);
+			ipManagerForm.getForumService().removeBanIPForum(ip, ipManagerForm.forumId);
 			UIForumPortlet forumPortlet = ipManagerForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 			topicContainer.setIdUpdate(true);
