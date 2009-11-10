@@ -3,40 +3,26 @@ package org.exoplatform.forum.test;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.ks.test.AbstractContainerBasedTest;
+import org.exoplatform.ks.test.AbstractContainerBasedTestCase;
 import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.SimpleMockOrganizationService;
 import org.exoplatform.services.cache.CacheService;
-import org.exoplatform.services.cache.ExoCacheConfig;
-import org.exoplatform.services.cache.impl.CacheServiceImpl;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
 
-public class TestForumServiceUtils extends AbstractContainerBasedTest {
+public class TestForumServiceUtils extends AbstractContainerBasedTestCase {
 
 	public TestForumServiceUtils() throws Exception {
 		super();
-		cacheService = initCacheService();
-		identityRegistry = initIdentityRegistry();
+
 	}
 	
-
-
-	SimpleMockOrganizationService organizationService = new SimpleMockOrganizationService();
-	CacheService cacheService = null;
-	IdentityRegistry identityRegistry = null;
-
 	
   @Override
   protected void registerComponents(ExoContainer testContainer) {
-    testContainer.registerComponentInstance(OrganizationService.class, organizationService);
-    testContainer.registerComponentInstance(IdentityRegistry.class, identityRegistry);
-    testContainer.registerComponentInstance(CacheService.class, cacheService);
+ 
   }
 	
 	
@@ -128,25 +114,7 @@ public class TestForumServiceUtils extends AbstractContainerBasedTest {
         </object>
       </object-param>
 	 */
-	private CacheService initCacheService() throws Exception {
-		InitParams cacheParams = new InitParams();
-		ObjectParameter oparam = new ObjectParameter();
-		ExoCacheConfig config = new ExoCacheConfig();
-		oparam.setName("cache.config.default");
-		config.setName("default");
-		config.setMaxSize(30);
-		config.setLiveTime(300);
-		config.setDistributed(false);
-		config.setImplementation("org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache");	
-		oparam.setObject(config);
-		cacheParams.addParameter(oparam);
-		return new CacheServiceImpl(cacheParams);
-	}
-	
-	
-	private IdentityRegistry initIdentityRegistry() {
-		return new IdentityRegistry(null);
-	}
+
 
 
 	

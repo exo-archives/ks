@@ -1,4 +1,4 @@
-package org.exoplatform.ks.test;
+package org.exoplatform.ks.test.mock;
 
 
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.SimpleMockOrganizationService;
+import org.exoplatform.ks.test.mock.SimpleMockOrganizationService;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
 import org.exoplatform.services.organization.Membership;
