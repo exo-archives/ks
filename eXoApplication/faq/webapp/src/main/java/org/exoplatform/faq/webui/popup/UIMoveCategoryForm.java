@@ -88,7 +88,6 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 				listCate.add(cat) ;
 			}				
 		}
-		temp = null ;
 	}
 
 	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
