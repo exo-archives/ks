@@ -68,7 +68,13 @@ public class MockWebuiApplication extends WebuiApplication {
   @Override
   public ResourceBundle getResourceBundle(Locale locale) throws Exception {
 
-    return null;
+    return rb;
+  }
+  
+  ResourceBundle rb;
+  
+  public void setResourceBundle(ResourceBundle rb) {
+    this.rb = rb;
   }
   
   public <T extends UIComponent> T createUIComponent(Class<T> type, String configId, String id,

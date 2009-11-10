@@ -17,11 +17,14 @@
 package org.exoplatform.ks.test;
 
 
+import java.util.HashMap;
+
+import junit.framework.TestCase;
+
+import org.exoplatform.ks.test.mock.MockResourceBundle;
 import org.exoplatform.ks.test.mock.MockWebUIRequestContext;
 import org.exoplatform.ks.test.mock.MockWebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
-
-import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -30,16 +33,43 @@ import junit.framework.TestCase;
 public abstract class AbstractWebuiTestCase extends TestCase {
 
   
+  private MockWebuiApplication mockApp;
+
+
   public final void setUp() throws Exception {
     
-    // initializes webui context
-    WebuiRequestContext.setCurrentInstance(new MockWebUIRequestContext(new MockWebuiApplication()));
+    mockApp = new MockWebuiApplication();
+    mockApp.setResourceBundle(new MockResourceBundle(new HashMap<String, Object>()));
+    MockWebUIRequestContext context = new MockWebUIRequestContext(mockApp);
+
+    context.setParentAppRequestContext(new MockParentRequestContext(null)); // a webuirequestcotnext requires a parent...
+
+    WebuiRequestContext.setCurrentInstance(context);
     
     doSetUp();
   }
   
   protected void doSetUp() {
-    
+    // to be overriden
   }
+  
+
+  
+  
+  /**
+   * Convenience method to access the app resource bundle mock
+   * @return
+   */
+  protected MockResourceBundle getAppRes() {
+    try {
+      return (MockResourceBundle) mockApp.getResourceBundle(null);
+    } catch (Exception e) {
+      fail(e.getMessage());
+    }
+    return null;
+  }
+  
+  
+
   
 }

@@ -14,72 +14,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.test.mock;
+package org.exoplatform.ks.test;
+
+import java.util.Locale;
 
 import org.exoplatform.services.resources.Orientation;
 import org.exoplatform.web.application.Application;
+import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.web.application.URLBuilder;
-import org.exoplatform.webui.application.WebuiRequestContext;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class MockWebUIRequestContext extends WebuiRequestContext {
+public class MockParentRequestContext extends RequestContext {
 
-  public MockWebUIRequestContext(Application app) {
+  public MockParentRequestContext(Application app) {
     super(app);
-  }
-
-  @Override
-  public <T> T getRequest() throws Exception {
     
-    return null;
-  }
-
-  @Override
-  public String getRequestContextPath() {
-    
-    return null;
-  }
-
-  @Override
-  public <T> T getResponse() throws Exception {
-    
-    return null;
-  }
-
-  @Override
-  public void sendRedirect(String url) throws Exception {
   }
 
   @Override
   public Orientation getOrientation() {
-    
+
     return null;
   }
 
   @Override
   public String getRequestParameter(String name) {
-    
+
     return null;
   }
 
   @Override
   public String[] getRequestParameterValues(String name) {
-    
+
     return null;
   }
 
   @Override
   public URLBuilder getURLBuilder() {
-    
+
     return null;
+  }
+  
+  public Locale getLocale()
+  {
+     return null;
   }
 
   @Override
   public boolean useAjax() {
-    
+
     return false;
   }
 
