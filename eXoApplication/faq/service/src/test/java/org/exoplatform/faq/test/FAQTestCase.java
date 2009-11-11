@@ -18,10 +18,6 @@ package org.exoplatform.faq.test;
 
 
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.test.BasicTestCase;
 
 /**
@@ -31,19 +27,5 @@ import org.exoplatform.test.BasicTestCase;
  * Sep 2, 2009  
  */
 public abstract class FAQTestCase extends BasicTestCase {
-  
-  @SuppressWarnings("unchecked")
-  protected Object getService(Class clazz) {
-    ExoContainer container = ExoContainerContext.getCurrentContainer();
-    return container.getComponentInstanceOfType(clazz);
-  }
-  
-  
-  protected void addValueParam(InitParams params, String name, String value) {
-    ValueParam param = new ValueParam();
-    param.setName(name);
-    param.setValue(value);
-    params.addParameter(param);
-   }
   
 }

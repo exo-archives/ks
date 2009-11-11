@@ -20,6 +20,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.test.FAQTestCase;
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
+import org.exoplatform.ks.test.KernelUtils;
 
 /**
  * Unit Tests for {@link InitialDataPlugin}
@@ -32,9 +33,9 @@ public class TestInitialDataPluginSimple extends FAQTestCase {
     
     // check params parsing
     InitParams params = new InitParams();
-    addValueParam(params,"location", DATAZIP_LOCATION);
-    addValueParam(params,"forceXML", "true");
-    addValueParam(params,"category", "Foo");
+    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params,"forceXML", "true");
+    KernelUtils.addValueParam(params,"category", "Foo");
     InitialDataPlugin plugin = new InitialDataPlugin(params);
     assertTrue(plugin.isForceXML());
     assertEquals(DATAZIP_LOCATION, plugin.getLocation());
@@ -42,8 +43,8 @@ public class TestInitialDataPluginSimple extends FAQTestCase {
     
     // check defaults 
     params = new InitParams();
-    addValueParam(params,"location", DATAZIP_LOCATION);
-    addValueParam(params,"forceXML", "tqsqdqsrue");
+    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params,"forceXML", "tqsqdqsrue");
     plugin = new InitialDataPlugin(params);
     assertEquals(false, plugin.isForceXML()); // check defaults to true
     
@@ -51,8 +52,8 @@ public class TestInitialDataPluginSimple extends FAQTestCase {
 
   public void testIsZip() {
     InitParams params = new InitParams();
-    addValueParam(params,"location", DATAZIP_LOCATION);
-    addValueParam(params,"forceXML", "true");
+    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params,"forceXML", "true");
     final InitialDataPlugin plugin = new InitialDataPlugin(params);
     
     assertTrue(plugin.isZip("toto.zip"));

@@ -21,6 +21,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.test.FAQServiceTestCase;
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
+import org.exoplatform.ks.test.KernelUtils;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,8 +35,8 @@ public class ITInitialDataPlugin extends FAQServiceTestCase {
 
   public ITInitialDataPlugin() throws Exception {
     super();
-    faq =  (FAQService)getService(FAQService.class);
-    conf = (ConfigurationManager)getService(ConfigurationManager.class);
+    faq =  (FAQService)KernelUtils.getService(FAQService.class);
+    conf = (ConfigurationManager)KernelUtils.getService(ConfigurationManager.class);
   }
 
   FAQService faq;
@@ -44,8 +45,8 @@ public class ITInitialDataPlugin extends FAQServiceTestCase {
 
   public void setUp() throws Exception {
     InitParams params = new InitParams();
-    addValueParam(params,"location", DATAZIP_LOCATION);
-    addValueParam(params,"forceXML", "true");
+    KernelUtils.addValueParam(params,"location", DATAZIP_LOCATION);
+    KernelUtils.addValueParam(params,"forceXML", "true");
     plugin = new InitialDataPlugin(params);
   }
   
