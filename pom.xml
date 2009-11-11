@@ -73,6 +73,7 @@
 
     <!--module>web/ksportal</module-->
     <module>test-utils</module>
+    <module>component</module>
     <module>web</module>
     <module>eXoApplication</module>
     <module>extension</module>
