@@ -141,6 +141,16 @@ public class ForumServiceImpl implements ForumService, Startable {
   	}finally{
   		systemSession.close() ;
   	}
+  	
+  //init RSS generate listener 
+  	try{
+  	  log.info("initializing RSS listeners...");
+  		storage_.addRSSEventListenner();  
+  		
+  	} catch (Exception e){
+//  		e.printStackTrace();
+  	}
+  	
   	try{
   	  log.info("initializing default data...");
   		storage_.initDefaultData() ;
@@ -155,16 +165,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   		storage_.evaluateActiveUsers("");
   	}catch (Exception e) {
   		e.printStackTrace() ;  		
-  	}
-  	
-  	//init RSS generate listener 
-  	try{
-  	  log.info("initializing RSS listeners...");
-  		storage_.addRSSEventListenner();  
-  		
-  	} catch (Exception e){
-//  		e.printStackTrace();
-  	}
+  	}  	
   	
   //init Calculate Moderators listeners
   	try{
