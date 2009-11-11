@@ -65,12 +65,11 @@ public class Topic {
 	private List<ForumAttachment> attachments ;
 	
 	public Topic(){ 
-		id = Utils.TOPIC + IdGenerator.generate();
-		canView = new String [] {" "} ;
-		canPost = new String [] {" "} ;
-		userVoteRating = new String [] {} ;
-		tagId = new String [] {} ;
-		emailNotification = new String [] {} ;
+    canView = new String[] { " " };
+    canPost = new String[] { " " };
+    userVoteRating = new String[] {};
+    tagId = new String[] {};
+    emailNotification = new String[] {};
 	}
 	
 	public String getOwner(){return owner;} 
@@ -121,7 +120,12 @@ public class Topic {
 	public boolean getIsLock() { return isLock;}
 	public void setIsLock(boolean isLock) { this.isLock = isLock;}
 	
-	public String getId() { return id; }
+  public String getId() {
+    if (id == null) {
+      id = Utils.TOPIC + IdGenerator.generate();
+    }
+    return id;
+  }
 	public void setId(String id) { this.id = id; }
 	
 	public String getIcon() { return icon;}

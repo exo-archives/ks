@@ -37,10 +37,12 @@ public class BBCode {
 	public BBCode() {
 		isOption = false;
 		isActive = true;
-		id =  Locations.BBCODE + IdGenerator.generate();
   }
 	
 	public String getId() {
+	  if (id == null) {
+	    id =  Locations.BBCODE + IdGenerator.generate();
+	  }
   	return id;
   }
 	public void setId(String id) {
@@ -82,4 +84,5 @@ public class BBCode {
 	public void setOption(boolean isOption) {
   	this.isOption = isOption;
   }
+	
 }
