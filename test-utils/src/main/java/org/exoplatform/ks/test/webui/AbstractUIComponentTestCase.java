@@ -42,7 +42,7 @@ public abstract class AbstractUIComponentTestCase<T extends UIComponent> extends
     try {
       initComponent();
     } catch (Exception e) {
-      fail("failed to initialize UIComponent");
+      fail("failed to initialize UIComponent: " + e.getMessage());
     }
   }
   
