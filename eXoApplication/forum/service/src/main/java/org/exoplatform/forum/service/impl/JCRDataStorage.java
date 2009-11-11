@@ -6408,7 +6408,7 @@ public class JCRDataStorage {
 			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
 			outputStream = new ByteArrayOutputStream() ;
 			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
-			file = new File(category.getId() + ".xml");
+			file = new File(category.getCategoryName() + ".xml");
 			file.deleteOnExit();
 			file.createNewFile();
 			writer = new BufferedWriter(new FileWriter(file));
@@ -6428,7 +6428,7 @@ public class JCRDataStorage {
 			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
 			outputStream = new ByteArrayOutputStream();
 			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
-			file = new File(forum.getId() + ".xml");
+			file = new File(forum.getForumName() + ".xml");
 			file.deleteOnExit();
 			file.createNewFile();
 			writer = new BufferedWriter(new FileWriter(file));
