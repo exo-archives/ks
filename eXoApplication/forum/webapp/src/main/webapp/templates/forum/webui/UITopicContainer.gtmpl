@@ -11,7 +11,7 @@
 	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
+	//jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('UITopicContainer') ;") ;
 	jsmanager.addJavascript("eXo.forum.CheckBox.init('UITopicContent') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.isUseAjax+"') ;") ;
@@ -539,7 +539,7 @@
 								    classSelect = "SelectedItem";
 								  }
 							%>
-								<tr class="$classRow $classSelect" oncontextmenu="return false;">
+								<tr class="$classRow $classSelect">
 									<td class="Tdbox"><div class="ThreadStatusIcon $iconTopicStatus" title="$titleTopicStatus"><span></span></div></td>
 									<td class="Tdbox" style="*text-align:left;">
 										<%if(topic.getIsPoll()){%>
@@ -557,7 +557,7 @@
 										<% if(topic.getIsSticky()) {%>
 											<span class="Text StickyIcon"><%=_ctx.appRes("UITopicContainer.label.Sticky");%>:</span>
 										<% } %>
-											<span>
+											<span oncontextmenu="return false;">
 												<% ++rCNB; %>
 												<%if(uicomponent.isUseAjax){%>
 														<a ctxMenuId="UIPopupCategory${rCNB}" actions="$link;" href="$url" title="$titlePost" class="ActionLink $title PopupMenu">$topicTitle</a>
@@ -571,7 +571,7 @@
 													</div>
 												</div>
 											</span>
-											<span>
+											<span oncontextmenu="return false;">
 												<% if(max_page > 1) { %>
 												<span>&nbsp;(</span>	
 												<%	int t = 1;

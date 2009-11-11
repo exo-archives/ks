@@ -15,7 +15,7 @@
 	UserProfile userProfile = uicomponent.getUserProfile();
 %>
 <% 
-	jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
+	//jsmanager.addJavascript("eXo.webui.UIRightClickPopupMenu.disableContextMenu('"+uicomponent.id+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.RightClickBookMark('"+uicomponent.id+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"', '"+uicomponent.useAjax+"') ;") ;
 	jsmanager.addJavascript("eXo.forum.UIForumPortlet.goLastPost('top');") ;
@@ -383,7 +383,7 @@
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
 									<td class="Tdbox"><div class="ForumStatusIcon $classIconReadForum" title="$titleNoNewPostForum"><span></span></div></td>
 									<td >
-										<span>
+										<span oncontextmenu="return false;">
 										<% ++rCNB; %>
 										<%if(uicomponent.useAjax){%>
 												<a ctxMenuId="UIPopupCategory${rCNB}" actions="$link;" href="$url" class="ActionLink ForumTitle" style="$lineHeight;font-weight:$fontWeight">$forumTitle</a><span class="ForumQuantity"></span>
@@ -426,7 +426,7 @@
 													<span></span>
 												</div>
 										<%}%>
-								 		<div style="float: left;">
+								 		<div style="float: left;" oncontextmenu="return false;">
 								 			<% ++rCNB; %>
 								 			<%if(uicomponent.useAjax){%>
 										 			<a ctxMenuId="UIPopupCategory${rCNB}" actions="$openLinkLastPost" href="$urlLastPost" title="$titleTopic" class="ActionLink LastPostTitle" style="float:none;"><%=ForumUtils.getSubString(topicNewPostTitle, 40);%></a>
