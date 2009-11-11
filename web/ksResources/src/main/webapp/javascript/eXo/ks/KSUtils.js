@@ -606,11 +606,11 @@ eXo.ks.UIContextMenu = {
 		obj.style.top =  y + "px";
 	},
 	show: function(evt){
-		eXo.core.EventManager.cancelEvent(evt);
 		var ctx = eXo.ks.UIContextMenu;
 		var menu = ctx.getMenu(evt);
 		ctx.hideElement();
 		if(!menu) return;
+		eXo.core.EventManager.cancelEvent(evt);
 		ctx.setPosition(menu,evt);
 		eXo.core.DOMUtil.listHideElements(menu);
 		return false;
