@@ -10,6 +10,12 @@
   <name>eXo KS Rendering</name>
   
   <dependencies>
+  
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <scope>provided</scope>
+    </dependency>  
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
