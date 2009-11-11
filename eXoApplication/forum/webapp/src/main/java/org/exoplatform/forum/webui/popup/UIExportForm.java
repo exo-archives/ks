@@ -8,12 +8,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
@@ -140,9 +138,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 			String fileName = ((UIFormStringInput)exportForm.getChildById(exportForm.FILE_NAME)).getValue();
 			UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(fileName == null || fileName.trim().length() < 1){
-				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIExportForm.msg.nameFileExport", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				exportForm.warning("UIExportForm.msg.nameFileExport");
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
 			}
@@ -155,7 +151,7 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 					exportForm.isExportAll = true;
 				}
 			}
-			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			
 			String nodePath = "";
 			String categoryId = null;
 			String forumId = null;
@@ -173,18 +169,20 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 			InputStreamDownloadResource dresource ;
 			ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
 			CompressData zipService = new CompressData();
-			UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
+
 			File file =  null;
 			try{
 				List<String> listId = new ArrayList<String>();
 				if(!exportForm.isExportAll){
 					if(forumId == null || forumId.trim().length() < 1) listId.addAll(exportForm.getListSelected());
 				}
-				file = (File)service.exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
+				file = (File)exportForm.getForumService().exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
 			} catch(Exception e){
-				e.printStackTrace();
+				log.error("export failed: ", e);
+	      UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				
 				return;
 			}
 			InputStream inputStream = null;
