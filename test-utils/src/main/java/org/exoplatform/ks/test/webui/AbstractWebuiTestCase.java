@@ -26,7 +26,6 @@ import org.exoplatform.ks.test.mock.MockResourceBundle;
 import org.exoplatform.ks.test.mock.MockWebUIRequestContext;
 import org.exoplatform.ks.test.mock.MockWebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
-import org.exoplatform.webui.core.UIApplication;
 
 /**
  * Abstract TestCase to test a Webui UIComponent
