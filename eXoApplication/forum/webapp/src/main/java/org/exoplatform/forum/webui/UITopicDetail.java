@@ -176,7 +176,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	private String lastPoistIdSave = "";
 	private String lastPostId = "", isApprove="", isHidden="";
 	private List<String> listContactsGotten = new ArrayList<String>();
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Integer> pagePostRemember = new HashMap<String, Integer>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
@@ -341,9 +341,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
   private void sendRuleEvent(ActionResponse actionRes) throws Exception {
     ForumParameter param = new ForumParameter() ;
     List<String> list = param.getInfoRules();
-    if(forum.getIsClosed() || forum.getIsLock())
+    if(forum.getIsClosed() || forum.getIsLock()) {
     	list.set(0, "true");
-    else list.set(0, "");
+    }
+    else {
+      list.set(0, "");
+    }
     list.set(1, String.valueOf(getCanCreateTopic()));
     list.set(2, String.valueOf(isCanPost));
     param.setInfoRules(list);
@@ -360,7 +363,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     }
     param.setRenderQuickReply(isCanPost);
     param.setModerator(isMod);
-    param.setCategoryId(categoryId) ; param.setForumId(forumId); param.setTopicId(topicId);
+    param.setCategoryId(categoryId) ; 
+    param.setForumId(forumId); 
+    param.setTopicId(topicId);
     actionRes.setEvent(new QName("QuickReplyEvent"), param) ;
   }
 
@@ -377,41 +382,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 		this.isGetSv = isGetSv;
   }
 	
-  private String getReplaceByBBCode(String s) throws Exception {
-		List<String> bbcName = new ArrayList<String>();
-		if(isGetSv) {
-			List<BBCode> bbcs = new ArrayList<BBCode>();
-			try {
-				bbcName = getForumService().getActiveBBCode();
-				isGetSv = false;
-		    boolean isAdd = true;
-		    BBCode bbCode;
-		    for (String string : bbcName) {
-		    	isAdd = true;
-		    	for (BBCode bbc : listBBCode) {
-		    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-		    			bbcs.add(bbc);
-		    			isAdd = false;
-		    			break;
-		    		}
-		    	}
-		    	if(isAdd) {
-		    		bbCode = new BBCode();
-		    		if(string.indexOf("=") >= 0){
-		    			bbCode.setOption(true);
-		    			string = string.replaceFirst("=", "");
-		    			bbCode.setId(string+"_option");
-		    		}else {
-		    			bbCode.setId(string);
-		    		}
-		    		bbCode.setTagName(string);
-		    		bbcs.add(bbCode);
-		    	}
-		    }
-		    listBBCode.clear();
-		    listBBCode.addAll(bbcs);
-			} catch (Exception e) {}
-		}
+  public String getReplaceByBBCode(String s) throws Exception {
+		syncBBCodeCache();
     if(!listBBCode.isEmpty()){
 	    try {
 	    	s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
@@ -419,6 +391,44 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
     }
     return s;
 	}
+
+  public void syncBBCodeCache() {
+    List<String> activeOnserver = new ArrayList<String>();
+    
+		if(isGetSv) {
+			List<BBCode> bbcs = new ArrayList<BBCode>();
+			try {
+				activeOnserver = getForumService().getActiveBBCode();
+				isGetSv = false;
+		    boolean isAdd = true;
+		    BBCode bbCode;
+		    for (String srvBBCode : activeOnserver) {
+		    	isAdd = true;
+		    	for (BBCode localBBCode : listBBCode) {
+		    		if(localBBCode.getTagName().equals(srvBBCode) || (localBBCode.getTagName().equals(srvBBCode.replaceFirst("=", "")) && localBBCode.isOption())){
+		    			bbcs.add(localBBCode);
+		    			isAdd = false;
+		    			break;
+		    		}
+		    	}
+		    	if(isAdd) {
+		    		bbCode = new BBCode();
+		    		if(srvBBCode.indexOf("=") >= 0){
+		    			bbCode.setOption(true);
+		    			srvBBCode = srvBBCode.replaceFirst("=", "");
+		    			bbCode.setId(srvBBCode+"_option");
+		    		}else {
+		    			bbCode.setId(srvBBCode);
+		    		}
+		    		bbCode.setTagName(srvBBCode);
+		    		bbcs.add(bbCode);
+		    	}
+		    }
+		    listBBCode.clear();
+		    listBBCode.addAll(bbcs);
+			} catch (Exception e) {}
+		}
+  }
 	
 	private boolean getCanCreateTopic() throws Exception {
 		/**
@@ -676,7 +686,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	    }
     }
 		try {
-			list = getForumService().getMyTagInTopic(listTagId.toArray(new String[]{}));
+			list = getForumService().getMyTagInTopic(listTagId.toArray(new String[listTagId.size()]));
     } catch (Exception e) {
     }
 		return list;	

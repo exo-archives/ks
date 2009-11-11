@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -58,7 +59,8 @@ public class TestBaseForumForm extends AbstractUIComponentTestCase<BaseForumForm
   @Override
   protected BaseForumForm createComponent() {
     BaseForumForm sampleForm = new BaseForumForm();
-    sampleForm.setId("SampleForm");   
+    sampleForm.setId("SampleForm");  
+    sampleForm.setForumService(new FakeForumService());
     return sampleForm;
   }
 

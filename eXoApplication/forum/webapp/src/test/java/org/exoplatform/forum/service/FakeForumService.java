@@ -18,7 +18,10 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.NodeIterator;
 
@@ -33,6 +36,8 @@ import org.exoplatform.services.organization.User;
  */
 public class FakeForumService implements ForumService {
 
+  List<String> activeBBCode;
+  
   public boolean addBanIP(String ip) throws Exception {
 
     return false;
@@ -92,9 +97,25 @@ public class FakeForumService implements ForumService {
   }
 
   public List<String> getActiveBBCode() throws Exception {
-
-    return null;
+    return activeBBCode;
   }
+  
+  public void setActiveBBCode(String... activesBBCodes) {
+    this.activeBBCode = Arrays.asList(activesBBCodes);
+  }
+  
+  public BBCode getBBcode(String id) throws Exception {
+    return bbcodes.get(id);
+  }
+  
+  public void setBBCode(String id, BBCode bbcode) {
+    if (bbcodes == null) {
+      this.bbcodes = new HashMap<String, BBCode>();
+    }
+    this.bbcodes.put(id, bbcode);
+  }
+
+  Map<String,BBCode> bbcodes;
 
   public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery,
                                              List<String> listCateIds,
@@ -143,10 +164,6 @@ public class FakeForumService implements ForumService {
     return 0;
   }
 
-  public BBCode getBBcode(String id) throws Exception {
-
-    return null;
-  }
 
   public List<String> getBanList() throws Exception {
 

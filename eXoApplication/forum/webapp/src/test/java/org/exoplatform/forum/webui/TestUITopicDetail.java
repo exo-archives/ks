@@ -16,6 +16,10 @@
  */
 package org.exoplatform.forum.webui;
 
+import java.util.List;
+
+import org.exoplatform.forum.service.FakeForumService;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -24,19 +28,58 @@ import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
  */
 public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail> {
 
+  private FakeForumService service;
+  
   public TestUITopicDetail() throws Exception {
     super();
-    
+    service = new FakeForumService();;  
   }
 
-  public void testSetUpdateTopic() {
-    //fail("Not yet implemented");
+  public void testSyncBBCodeCache() throws Exception {
+    
+    // active BBCodes are cached
+    service.setActiveBBCode("FOO");
+    component.setIsGetSv(true);
+    component.syncBBCodeCache();
+    List<BBCode> actual = component.listBBCode;
+    assertEquals("FOO", actual.get(0).getId());
+    
+    // = prefix for options
+    service.setActiveBBCode("FOO","=BAR");
+    component.setIsGetSv(true);
+    component.syncBBCodeCache();
+    BBCode alt = component.listBBCode.get(1);
+    assertTrue(alt.isOption());
+    assertEquals("BAR_option", alt.getId());
+    assertEquals("BAR", alt.getTagName());
+    
+    // is isGetSv = false, won't get from server
+    service.setActiveBBCode("FOO","BAR","ZED");
+    component.setIsGetSv(false);
+    component.syncBBCodeCache();
+    assertEquals(2, component.listBBCode.size());
+
+  }
+  
+  public void testReplaceByBBCode() throws Exception {
+    
+    service.setActiveBBCode("FOO");
+    BBCode foo = new BBCode();
+    foo.setReplacement("BAR");
+    foo.setId("FOO");
+    foo.setTagName("FOO");
+    service.setBBCode("FOO", foo);   
+    assertEquals("BAR", component.getReplaceByBBCode("[FOO]some[/FOO]"));
   }
 
   @Override
   protected UITopicDetail createComponent() throws Exception {
-    return new UITopicDetail();
+    UITopicDetail form =  new UITopicDetail();
+    form.setForumService(service);
+    return form;
   }
+
+
 
 
 }

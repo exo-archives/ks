@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -42,7 +42,7 @@ public class BaseForumForm extends UIForm {
   
   protected ForumService getForumService() {
     if (forumService == null) {
-      forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+      forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
     }
     return forumService;
   }

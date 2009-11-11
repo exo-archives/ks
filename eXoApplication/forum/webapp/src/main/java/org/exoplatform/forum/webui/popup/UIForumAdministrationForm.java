@@ -455,7 +455,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 					administrationForm.forumService.saveBBCode(bbCodes);
 	      } catch (Exception e) {
 	      }
-	      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsGetSv(true);
+	   // TODO : it's not the responsibility of this component to ask the other to refresh itself!
+	      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsGetSv(true); 
 			}
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
