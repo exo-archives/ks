@@ -17,8 +17,9 @@
 package org.exoplatform.faq.service;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.faq.test.Closure;
 import org.exoplatform.faq.test.FAQTestCase;
+import org.exoplatform.ks.test.AssertUtils;
+import org.exoplatform.ks.test.Closure;
 
 /**
  * Unit Tests for {@link InitialDataPlugin}
@@ -57,7 +58,7 @@ public class TestInitialDataPluginSimple extends FAQTestCase {
     assertTrue(plugin.isZip("toto.zip"));
     assertFalse(plugin.isZip("toto.xml"));
     
-    assertException( new Closure() {
+    AssertUtils.assertException( new Closure() {
       public void dothis() {
         plugin.isZip("toto.unsupported");
       }     

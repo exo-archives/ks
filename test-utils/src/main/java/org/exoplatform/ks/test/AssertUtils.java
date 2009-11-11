@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
 
 /**
  * A collection of assertion helper to make UT easier to read
@@ -71,5 +72,54 @@ public class AssertUtils {
 		Assert.assertNotNull(value);
 		Assert.assertEquals(0, value.size());
 	}
+
+  /**
+   * All elements of a list should be contained in the expected array of String
+   * @param message
+   * @param expected
+   * @param actual
+   */
+  public static void assertContainsAll(String message, List<String> expected, List<String> actual) {
+    Assert.assertEquals(message, expected.size(), actual.size());
+    Assert.assertTrue(message,expected.containsAll(actual));
+  }
+
+  /**
+   * Assertion method on string arrays
+   * @param message
+   * @param expected
+   * @param actual
+   */
+  public static void assertEquals(String message, String []expected, String []actual) {
+    Assert.assertEquals(message, expected.length, actual.length);
+    for (int i = 0; i < expected.length; i++) {
+      Assert.assertEquals(message, expected[i], actual[i]);
+    }
+  }
+
+  public static void assertException(Closure code) {
+    try {
+      code.dothis();
+    } catch (Exception e) {
+      return ;// Exception correctly thrown
+    }
+    throw new AssertionFailedError("An exception should have been thrown.");
+  }
+  
+  
+  /**
+   * Assert an exception of a given type is thrown by he code in closure
+   * @param exceptionType
+   * @param code
+   */
+  public static void assertException(Class<? extends Exception> exceptionType, Closure code) {
+    try {
+      code.dothis();
+    } catch (Exception e) {
+      Assert.assertEquals("Wrong exception type", exceptionType, e.getClass());
+      return ;// Exception correctly thrown
+    }
+    throw new AssertionFailedError("An exception should have been thrown.");
+  }
 
 }

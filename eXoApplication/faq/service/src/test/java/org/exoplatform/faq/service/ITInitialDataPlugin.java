@@ -18,8 +18,9 @@ package org.exoplatform.faq.service;
 
 import org.exoplatform.container.configuration.ConfigurationManager;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.faq.test.Closure;
 import org.exoplatform.faq.test.FAQServiceTestCase;
+import org.exoplatform.ks.test.AssertUtils;
+import org.exoplatform.ks.test.Closure;
 
 /**
  * Created by The eXo Platform SAS
@@ -55,10 +56,10 @@ public class ITInitialDataPlugin extends FAQServiceTestCase {
     
     // .xml format is not allowed
     plugin.setLocation("somefile.xml");
-    assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});
+    AssertUtils.assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});
     
     plugin.setLocation("someplace that does not exist");
-    assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});    
+    AssertUtils.assertException(new Closure() { public void dothis() { plugin.importData(faq,conf); }});    
     
     // import for real
     plugin.setLocation(DATAZIP_LOCATION);

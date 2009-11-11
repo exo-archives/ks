@@ -16,9 +16,7 @@
  */
 package org.exoplatform.faq.test;
 
-import java.util.List;
 
-import junit.framework.AssertionFailedError;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -33,36 +31,13 @@ import org.exoplatform.test.BasicTestCase;
  * Sep 2, 2009  
  */
 public abstract class FAQTestCase extends BasicTestCase {
-  /**
-   * All elements of a list should be contained in the expected array of String
-   * @param message
-   * @param expected
-   * @param actual
-   */
-  public static void assertContainsAll(String message, List<String> expected, List<String> actual) {
-    assertEquals(message, expected.size(), actual.size());
-    assertTrue(message,expected.containsAll(actual));
-  } 
   
-  /**
-   * Assertion method on string arrays
-   * @param message
-   * @param expected
-   * @param actual
-   */
-  public static void assertEquals(String message, String []expected, String []actual) {
-    assertEquals(message, expected.length, actual.length);
-    for (int i = 0; i < expected.length; i++) {
-      assertEquals(message, expected[i], actual[i]);
-    }
-  }
-  
-  
+  @SuppressWarnings("unchecked")
   protected Object getService(Class clazz) {
     ExoContainer container = ExoContainerContext.getCurrentContainer();
     return container.getComponentInstanceOfType(clazz);
   }
-
+  
   
   protected void addValueParam(InitParams params, String name, String value) {
     ValueParam param = new ValueParam();
@@ -70,15 +45,5 @@ public abstract class FAQTestCase extends BasicTestCase {
     param.setValue(value);
     params.addParameter(param);
    }
-
-  
-  protected void assertException(Closure code) {
-    try {
-      code.dothis();
-    } catch (Exception e) {
-      return ;// Exception correctly thrown
-    }
-    throw new AssertionFailedError("An exception should have been thrown.");
-  }
   
 }
