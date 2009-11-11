@@ -4352,7 +4352,7 @@ public class JCRDataStorage {
 			for(Category category : getCategories(sessionProvider)){
 				outputStream = new ByteArrayOutputStream() ;
 				session.exportSystemView(category.getPath(), outputStream, false, false ) ;
-				file = new File(category.getId() + ".xml");
+				file = new File(category.getCategoryName() + ".xml");
 				file.deleteOnExit();
 				file.createNewFile();
 				writer = new BufferedWriter(new FileWriter(file));
