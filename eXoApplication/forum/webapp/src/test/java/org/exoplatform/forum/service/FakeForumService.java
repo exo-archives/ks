@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -100,8 +101,14 @@ public class FakeForumService implements ForumService {
     return activeBBCode;
   }
   
-  public void setActiveBBCode(String... activesBBCodes) {
-    this.activeBBCode = Arrays.asList(activesBBCodes);
+  public void addActiveBBCodes(String... activesBBCodes) {
+    if (activeBBCode == null) {
+      activeBBCode = new ArrayList<String>(Arrays.asList(activesBBCodes));
+    }
+    else {
+      this.activeBBCode.addAll(Arrays.asList(activesBBCodes));
+    }
+    
   }
   
   public BBCode getBBcode(String id) throws Exception {

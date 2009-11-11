@@ -38,14 +38,14 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   public void testSyncBBCodeCache() throws Exception {
     
     // active BBCodes are cached
-    service.setActiveBBCode("FOO");
+    registerBBCode("FOO", "");
     component.setIsGetSv(true);
     component.syncBBCodeCache();
     List<BBCode> actual = component.listBBCode;
     assertEquals("FOO", actual.get(0).getId());
     
     // = prefix for options
-    service.setActiveBBCode("FOO","=BAR");
+    registerBBCode("=BAR", "");
     component.setIsGetSv(true);
     component.syncBBCodeCache();
     BBCode alt = component.listBBCode.get(1);
@@ -54,7 +54,8 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     assertEquals("BAR", alt.getTagName());
     
     // is isGetSv = false, won't get from server
-    service.setActiveBBCode("FOO","BAR","ZED");
+    registerBBCode("ZED", "");
+    
     component.setIsGetSv(false);
     component.syncBBCodeCache();
     assertEquals(2, component.listBBCode.size());
@@ -62,16 +63,27 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   }
   
   public void testReplaceByBBCode() throws Exception {
-    
-    service.setActiveBBCode("FOO");
-    BBCode foo = new BBCode();
-    foo.setReplacement("BAR");
-    foo.setId("FOO");
-    foo.setTagName("FOO");
-    service.setBBCode("FOO", foo);   
+    registerBBCode("FOO", "BAR");
     assertEquals("BAR", component.getReplaceByBBCode("[FOO]some[/FOO]"));
   }
+  
+  public void testProcessMarkup() throws Exception {
+    
+    registerBBCode("FOO", "BAR");
+    String markup = "[FOO]sdsd[/FOO]";
+    assertEquals("BAR", component.getReplaceByBBCode(markup));
+    assertEquals(component.processMarkup(markup), component.getReplaceByBBCode(markup));
+  }
 
+  private void registerBBCode(String tagName, String replacement) {
+    service.addActiveBBCodes(tagName);
+    BBCode foo = new BBCode();
+    foo.setReplacement(replacement);
+    foo.setId(tagName);
+    foo.setTagName(tagName);  
+    service.setBBCode(tagName, foo);
+  }
+  
   @Override
   protected UITopicDetail createComponent() throws Exception {
     UITopicDetail form =  new UITopicDetail();

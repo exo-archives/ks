@@ -35,6 +35,8 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
+import org.exoplatform.forum.rendering.MarkupRenderer;
+import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -151,7 +153,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 @SuppressWarnings("unused")
-public class UITopicDetail extends UIForumKeepStickPageIterator {
+public class UITopicDetail extends UIForumKeepStickPageIterator implements MarkupRenderer {
 
 	private String categoryId ;
 	private String forumId ; 
@@ -2107,4 +2109,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
+
+  public String processMarkup(String markup) throws RenderingException {
+    try {
+
+        return getReplaceByBBCode(markup);
+
+    } catch (Exception e) {
+      throw new RenderingException(e);
+    }
+  }
 }
