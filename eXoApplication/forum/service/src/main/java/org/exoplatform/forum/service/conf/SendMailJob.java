@@ -19,11 +19,10 @@ package org.exoplatform.forum.service.conf;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.services.log.Log;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -40,18 +39,16 @@ public class SendMailJob implements Job {
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
-	    MailService mailService = (MailService)container.getComponentInstanceOfType(MailService.class) ;
-	    ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-	    String name = context.getJobDetail().getName();
-	    
+      MailService mailService = (MailService)PortalContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
+      ForumService forumService =(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+      JobSchedulerService schedulerService = (JobSchedulerService)PortalContainer.getInstance().getComponentInstanceOfType(JobSchedulerService.class) ;
+
+      String name = context.getJobDetail().getName();
 	    SendMessageInfo messageInfo = forumService.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 	    
-		  JobSchedulerService schedulerService = (JobSchedulerService)container.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  		  
-		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
+  	  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;
 		  	int countEmail = 0;
