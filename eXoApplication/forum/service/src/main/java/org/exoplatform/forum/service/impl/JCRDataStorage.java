@@ -1285,7 +1285,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	//TODO: View again
 	private void setModeratorForum(SessionProvider sProvider, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
-		Node userProfileHomeNode = getUserProfileHome();
+		Node userProfileHomeNode = getUserProfileHome(sProvider);
 		Node userProfileNode;
 		
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
@@ -2383,8 +2383,9 @@ public class JCRDataStorage implements DataStorage {
 	}
 
 	public void updateUserProfileInfo(String name) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
     try{
-      Node userProfileHome = getUserProfileHome() ;
+      Node userProfileHome = getUserProfileHome(sProvider) ;
       Node userNode = null ;
       Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap_.get(name) ;     
       for(String user : userPostMap.keySet()) {
@@ -2398,6 +2399,8 @@ public class JCRDataStorage implements DataStorage {
       infoMap_.remove(name) ;
     }catch(Exception e) {
       e.printStackTrace() ;
+    }finally{
+    	sProvider.close();
     }
   }	 
 
@@ -2456,7 +2459,7 @@ public class JCRDataStorage implements DataStorage {
 
 	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
 		List<String> list = new ArrayList<String>();
-		Node userProfile = getUserProfileHome().getNode(userId);
+		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
 		list.add(userProfile.getProperty("exo:fullName").getString());
 		list.add(userProfile.getProperty("exo:email").getString());
 		return list;
@@ -2557,7 +2560,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 
 	private void calculateLastRead(SessionProvider sProvider, String destForumId, String srcForumId, String topicId) throws Exception {
-		Node profileHome = getUserProfileHome();
+		Node profileHome = getUserProfileHome(sProvider);
 		QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("/jcr:root").append(profileHome.getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append("*"+topicId+"*").append("'))]");
@@ -2888,7 +2891,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 	//		 TODO: Thinking for update forum and user profile by node observation?
 				
-				Node userProfileNode = getUserProfileHome();			
+				Node userProfileNode = getUserProfileHome(sProvider);			
 				Node newProfileNode;
 				try {
 					newProfileNode = userProfileNode.getNode(post.getOwner());
@@ -3106,7 +3109,7 @@ public class JCRDataStorage implements DataStorage {
 			List<String> emailListCate = new ArrayList<String>();
 			//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 			Node userProfileHome = null;
-			userProfileHome = getUserProfileHome();
+			userProfileHome = getUserProfileHome(sProvider);
 	    
 			int count = 0;
 			if(post == null) {
@@ -6449,7 +6452,7 @@ public class JCRDataStorage implements DataStorage {
 				nodeType = "exo:forumCategory";
 				nodeName = "CategoryHome";
 			}else if(typeNodeExport.equals("exo:userProfileHome")){
-				nodePath = getUserProfileHome().getPath();
+				nodePath = getUserProfileHome(sessionProvider).getPath();
 				isReset = true;
 				nodeType = "exo:forumUserProfile";
 				nodeName = "UserProfileHome";
