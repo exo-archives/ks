@@ -19,12 +19,11 @@ package org.exoplatform.faq.service.notify;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.services.log.Log;
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -40,18 +39,14 @@ public class NotifyJob implements Job{
   @SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	//RootContainer rootContainer = RootContainer.getInstance() ;
-	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+      MailService mailService = (MailService)PortalContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
+      FAQService faqService =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+      JobSchedulerService schedulerService = (JobSchedulerService)PortalContainer.getInstance().getComponentInstanceOfType(JobSchedulerService.class) ;
 	  	
-	    MailService mailService = (MailService)container.getComponentInstanceOfType(MailService.class) ;
-	    FAQService faqService = (FAQService)container.getComponentInstanceOfType(FAQService.class) ;
 	    String name = context.getJobDetail().getName();
-	    
-	    NotifyInfo messageInfo = faqService.getMessageInfo(name) ;
+      NotifyInfo messageInfo = faqService.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
-	    
-		  JobSchedulerService schedulerService = (JobSchedulerService)container.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  		  
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
