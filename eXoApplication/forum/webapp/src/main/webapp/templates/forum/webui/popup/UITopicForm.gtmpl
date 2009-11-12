@@ -3,7 +3,7 @@
 	import org.exoplatform.web.application.JavascriptManager;	
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
-	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInfo('"+uicomponent.isShowPostInfo+"','"+uicomponent.isShowViewInfo+"');");
+	jsmanager.addJavascript("eXo.forum.UIForumPortlet.setDisableInfo();");
 %>
 <div class="UITopicForm" style="width:auto;">
 	<% uiform.begin() %>

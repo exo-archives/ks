@@ -467,14 +467,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		if(isIPBaned(getIPRemoter())) return false;
 		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		List<String> listUser = new ArrayList<String>() ;
-		String [] canPost = this.topic.getCanPost();
-		if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
-			listUser.addAll(Arrays.asList(canPost));
-			canPost = this.forum.getPoster();
-			if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
-				listUser.addAll(Arrays.asList(canPost));
-			}
-		}
+		
+		listUser.add(topic.getOwner());
+		listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
+		listUser = ForumUtils.addArrayToList(listUser, forum.getPoster());
+		listUser = ForumUtils.addArrayToList(listUser, forumService.getCategory(categoryId).getPoster());
+		System.out.println("\n\n can post: " + listUser.toString());
 		if(!listUser.isEmpty()) {
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}
@@ -537,14 +535,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		}
 		if(getCanPost()) return true;
 		List<String> listUser = new ArrayList<String>() ;
-		String [] canPost = topic.getCanView();
-		if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
-			listUser.addAll(Arrays.asList(canPost));
-			canPost = this.forum.getViewer();
-			if(canPost != null && canPost.length > 0 && !canPost[0].equals(" ")){
-				listUser.addAll(Arrays.asList(canPost));
-			}
-		}
+		
+		listUser.add(topic.getOwner());
+		listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
+		listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
+		listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
 		if(listUser.size() > 0) {
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}

@@ -142,8 +142,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	private Forum forum ;
 	private boolean isMod = false;
 	private boolean isDetail = false;
-	private boolean isShowViewInfo = true;
-	private boolean isShowPostInfo = true;
 	private int id = 0;
 	private Topic topic = new Topic() ;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
@@ -213,9 +211,6 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 		UIForumInputWithActions threadPermission = new UIForumInputWithActions(FIELD_THREADPERMISSION_TAB);
 		threadPermission.addUIFormInput(canPost);
 		threadPermission.addUIFormInput(canView);
-		threadPermission.setMapLabelInfo(FIELD_CANVIEW_INPUT, getLabel("CanViewInfo"));
-		threadPermission.setMapLabelInfo(FIELD_CANPOST_INPUT, getLabel("CanPostInfo"));
-		
 		
 		String[]fieldPermissions = new String[]{FIELD_CANVIEW_INPUT, FIELD_CANPOST_INPUT} ; 
 		String[]strings = new String[] {"SelectUser", "SelectMemberShip", "SelectGroup"}; 
@@ -272,33 +267,29 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 	}
 	
 	private void setShowInfo() throws Exception {
-		isShowViewInfo = true;
-		isShowPostInfo = true;
+		String info = getLabel("CanViewInfo");
 		String []canV = forum.getViewer();
-		Category category = null;
-		if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
-			isShowViewInfo = false;
-			isShowPostInfo = false;
+		UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
+		if(!ForumUtils.isArrayEmpty(canV)){
+			info = getLabel("CanViewParentInfo");
 		} else {
-			category = forumService.getCategory(categoryId);
-			canV = category.getViewer();
-			if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
-				isShowViewInfo = false;
-				isShowPostInfo = false;
+			canV = forumService.getPermissionTopicByCategory(categoryId, "viewer");
+			if(!ForumUtils.isArrayEmpty(canV)){
+				info = getLabel("CanViewParentInfo");
 			}
 		}
-		if(isShowPostInfo){
-			canV = forum.getPoster();
-			if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
-				isShowPostInfo = false;
-			} else {
-				if(category == null)category = forumService.getCategory(categoryId);
-				canV = category.getPoster();
-				if(canV != null && (canV.length > 1 || (canV.length == 1 && canV[0].trim().length() > 0))){
-					isShowPostInfo = false;
-				}
+		threadPermission.setMapLabelInfo(FIELD_CANVIEW_INPUT, info);
+		info = getLabel("CanPostInfo");
+		canV = forum.getPoster();
+		if(!ForumUtils.isArrayEmpty(canV)){
+			info = getLabel("CanPostParentInfo");
+		} else {
+			canV = forumService.getPermissionTopicByCategory(categoryId, "poster");
+			if(!ForumUtils.isArrayEmpty(canV)){
+				info = getLabel("CanPostParentInfo");
 			}
 		}
+		threadPermission.setMapLabelInfo(FIELD_CANPOST_INPUT, info);
 	}
 	
 	private void setTopicType() throws Exception {

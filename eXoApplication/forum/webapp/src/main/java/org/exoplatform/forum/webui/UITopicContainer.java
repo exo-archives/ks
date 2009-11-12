@@ -357,20 +357,28 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		else isReload = true;
 		if(!isModerator) {
 			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false' and @exo:isActive='true'");
-			boolean isView = ForumServiceUtils.hasPermission(forum.getPoster(), userId) ;
-			if(!isView) isView = ForumServiceUtils.hasPermission(forum.getViewer(), userId) ;
-			if(!isView) {
-				strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
-				for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
-					strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
-				}
-				strQuery.append(")");
+			
+			strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
+			for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
+				strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
+			}
+			strQuery.append(")");
+			
+			if(this.forum.getIsModerateTopic()) {
+				if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
+				strQuery.append("@exo:isApproved='true'") ;
+			}
+			
+			List<String> listUser = new ArrayList<String>() ;
+			
+			listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
+			listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
+			
+			if(!listUser.isEmpty() && !ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userId)) {
+				strQuery.append(" and (@exo:owner='").append(userId).append("' or topicPermission");
 			}
 		}
-		if(!isModerator && this.forum.getIsModerateTopic()) {
-			if(!ForumUtils.isEmpty(strQuery.toString())) strQuery.append(" and ") ;
-			strQuery.append("@exo:isApproved='true'") ;
-		}
+		
 		//this.pageList = forumService.getPageTopic(categoryId, forumId, strQuery.toString(), strOrderBy);
 		
     int maxTopic = userProfile.getMaxTopicInPage().intValue() ;
@@ -408,6 +416,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	
   private List<Topic> getTopicPageList() throws Exception {
+  	if(pageList == null) return  new ArrayList<Topic>();
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
 		topicList = pageList.getPage(pageSelect);

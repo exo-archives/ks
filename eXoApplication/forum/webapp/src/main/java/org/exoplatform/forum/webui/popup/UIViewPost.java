@@ -290,19 +290,14 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 							if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0) 
 								listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
 							
-							if(forum.getViewer() != null && forum.getViewer().length > 0 )
-								listUserPermission.addAll(Arrays.asList(forum.getViewer()));
-							
-							if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
+//							if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
 							
 							// check for topic:
 							if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
 									topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-								if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-										ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-										(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-										ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-								else isRead = false;
+//								
+//								if() isRead = true;
+//								else isRead = false;
 							} else {
 								isRead = false;
 							}

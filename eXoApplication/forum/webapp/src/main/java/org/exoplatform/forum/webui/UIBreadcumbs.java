@@ -285,8 +285,13 @@ public class UIBreadcumbs extends UIContainer {
 			} else if(forum.getIsClosed()) return false;
 		}
 		if(topic != null) {
+			List<String> list = new ArrayList<String>();
+			list = ForumUtils.addArrayToList(list, topic.getCanView());
+			list = ForumUtils.addArrayToList(list, forum.getViewer());
+			list = ForumUtils.addArrayToList(list, cate.getViewer());
+			list.add(topic.getOwner());
 			if(topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
-				 topic.getIsWaiting() || (isArrayNotNull(topic.getCanView()) && !isInArray(topic.getCanView(), userId))) return false;
+				 topic.getIsWaiting() || (!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), userId))) return false;
 		}
 	  return true;
   }

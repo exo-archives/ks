@@ -210,13 +210,12 @@ public class ForumUtils {
 	
 	public static String removeZeroFirstNumber(String str) {
 		if(!isEmpty(str)){
-			while(true) {
-				if(str.length() > 1) {
-					if(str.charAt(0)=='0'){
-						str = str.replaceFirst("0", "") ;
-					}	else break;
-				}	else break;
+			str = str.trim();
+			StringBuilder s = new StringBuilder(); int i=0;
+			while((i+1) < str.length() && (str.charAt(i)=='0' || str.charAt(i)==' ')) {
+				s.append(str.charAt(i)); ++i;
 			}
+			str = str.replaceFirst(s.toString(), "") ;
 		}
 		return str;
 	}
@@ -239,6 +238,11 @@ public class ForumUtils {
 	public static boolean isEmpty(String str) {
 		if(str == null || str.trim().length() == 0) return true ;
 		else return false;
+	}
+
+	public static boolean isArrayEmpty(String[] strs) {
+		if(strs == null || strs.length == 0 || (strs.length == 1 && strs[0].trim().length() <= 0)) return true ;
+		return false;
 	}
 
 	public static String[] addStringToString(String input, String output) throws Exception {
@@ -284,6 +288,17 @@ public class ForumUtils {
 			}
 		}
 		return str ;
+	}
+	
+	public static List<String> addArrayToList(List<String> list, String[] array) throws Exception {
+		if(array == null) return list;
+		if(list.isEmpty() && !isArrayEmpty(array)) list.addAll(Arrays.asList(array));
+		else {
+			for (int i = 0; i < array.length; i++) {
+	      if(!list.contains(array[i]) && array[i].trim().length() > 0) list.add(array[i]);
+      }
+		}
+		return list;
 	}
 	
 	public static String getLabel(String label, String key) {

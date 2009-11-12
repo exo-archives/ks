@@ -1285,7 +1285,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	//TODO: View again
 	private void setModeratorForum(SessionProvider sProvider, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
-		Node userProfileHomeNode = getUserProfileHome(sProvider);
+		Node userProfileHomeNode = getUserProfileHome();
 		Node userProfileNode;
 		
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
@@ -1695,6 +1695,12 @@ public class JCRDataStorage implements DataStorage {
       Node categoryNode = getCategoryHome(sProvider).getNode(categoryId);
       Node forumNode = categoryNode.getNode(forumId);
       String forumPath = forumNode.getPath();
+      if(xpathConditions != null && xpathConditions.length() > 0 && xpathConditions.contains("topicPermission")){
+      	String str = buildXpath(sProvider, forumNode);
+      	if(str.length() > 0){
+      		xpathConditions = StringUtils.replace(xpathConditions, "topicPermission", "("+str+"))");
+      	}
+      }
       String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
@@ -1705,7 +1711,24 @@ public class JCRDataStorage implements DataStorage {
       sProvider.close();
     }
   }
-	
+	//
+  private String buildXpath(SessionProvider sProvider, Node forumNode) throws Exception {
+		QueryManager qm = getCategoryHome(sProvider).getSession().getWorkspace().getQueryManager();
+		String queryString = "/jcr:root" + forumNode.getPath() + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (@exo:canView=' ' or @exo:canView='')]";
+		Query query = qm.createQuery(queryString, Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		StringBuilder builder = new StringBuilder();
+		boolean isOr = false;
+		while (iter.hasNext()) {
+	    Node node = iter.nextNode();
+	    if(isOr) builder.append(" and ");
+	    builder.append("@exo:id!='").append(node.getName()).append("'");
+	    isOr = true;
+    }
+  	return builder.toString();
+  }
+  
   private String buildTopicQuery(String strQuery, String strOrderBy, String forumPath) throws Exception {
     SortSettings sortSettings = getTopicSortSettings();
       SortField orderBy = sortSettings.getField();
@@ -2360,25 +2383,23 @@ public class JCRDataStorage implements DataStorage {
 	}
 
 	public void updateUserProfileInfo(String name) throws Exception {
-	    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-	    try{
-	      Node userProfileHome = getUserProfileHome(sysProvider) ;
-	      Node userNode = null ;
-	      Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap_.get(name) ;     
-	      for(String user : userPostMap.keySet()) {
-	        try{
-	          userNode = userProfileHome.getNode(user) ;
-	          long totalPost = userNode.getProperty("exo:totalPost").getLong() ;
-	          userNode.setProperty("exo:totalPost", totalPost - userPostMap.get(user)) ;
-	          userNode.save() ;
-	        }catch (Exception e) {}       
-	      }
-	      infoMap_.remove(name) ;
-	    }catch(Exception e) {
-	      e.printStackTrace() ;
-	    }finally{ sysProvider.close() ;}
-	    
-	  }	 
+    try{
+      Node userProfileHome = getUserProfileHome() ;
+      Node userNode = null ;
+      Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap_.get(name) ;     
+      for(String user : userPostMap.keySet()) {
+        try{
+          userNode = userProfileHome.getNode(user) ;
+          long totalPost = userNode.getProperty("exo:totalPost").getLong() ;
+          userNode.setProperty("exo:totalPost", totalPost - userPostMap.get(user)) ;
+          userNode.save() ;
+        }catch (Exception e) {}       
+      }
+      infoMap_.remove(name) ;
+    }catch(Exception e) {
+      e.printStackTrace() ;
+    }
+  }	 
 
 
 	private void addUpdateUserProfileJob(Map<String, Long> userPostMap) throws Exception {
@@ -2435,7 +2456,7 @@ public class JCRDataStorage implements DataStorage {
 
 	private List<String> getFullNameAndEmail(SessionProvider sProvider, String userId) throws Exception {
 		List<String> list = new ArrayList<String>();
-		Node userProfile = getUserProfileHome(sProvider).getNode(userId);
+		Node userProfile = getUserProfileHome().getNode(userId);
 		list.add(userProfile.getProperty("exo:fullName").getString());
 		list.add(userProfile.getProperty("exo:email").getString());
 		return list;
@@ -2536,7 +2557,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 
 	private void calculateLastRead(SessionProvider sProvider, String destForumId, String srcForumId, String topicId) throws Exception {
-		Node profileHome = getUserProfileHome(sProvider);
+		Node profileHome = getUserProfileHome();
 		QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
 		StringBuffer stringBuffer = new StringBuffer();
 		stringBuffer.append("/jcr:root").append(profileHome.getPath()).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")").append("[(jcr:contains(@exo:lastReadPostOfForum, '").append("*"+topicId+"*").append("'))]");
@@ -2867,7 +2888,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 	//		 TODO: Thinking for update forum and user profile by node observation?
 				
-				Node userProfileNode = getUserProfileHome(sProvider);			
+				Node userProfileNode = getUserProfileHome();			
 				Node newProfileNode;
 				try {
 					newProfileNode = userProfileNode.getNode(post.getOwner());
@@ -3085,7 +3106,7 @@ public class JCRDataStorage implements DataStorage {
 			List<String> emailListCate = new ArrayList<String>();
 			//SessionProvider sProvider = ForumServiceUtils.getSessionProvider();
 			Node userProfileHome = null;
-			userProfileHome = getUserProfileHome(sProvider);
+			userProfileHome = getUserProfileHome();
 	    
 			int count = 0;
 			if(post == null) {
@@ -6428,7 +6449,7 @@ public class JCRDataStorage implements DataStorage {
 				nodeType = "exo:forumCategory";
 				nodeName = "CategoryHome";
 			}else if(typeNodeExport.equals("exo:userProfileHome")){
-				nodePath = getUserProfileHome(sessionProvider).getPath();
+				nodePath = getUserProfileHome().getPath();
 				isReset = true;
 				nodeType = "exo:forumUserProfile";
 				nodeName = "UserProfileHome";

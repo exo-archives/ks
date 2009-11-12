@@ -498,21 +498,15 @@ UIForumPortlet.prototype.onClickDisableTexarea = function() {
 	}
 };
 
-UIForumPortlet.prototype.setDisableInfo = function(isPost, isView) {
+UIForumPortlet.prototype.setDisableInfo = function() {
 	var strs = new Array("CanPost","CanView");
 	for (var i = 0; i < strs.length; i++) {
-		if(isPost === 'false'){
-			var id = strs[i]+"Info";
-			document.getElementById(id).style.display = 'none';
-		} else {
-			var elm = document.getElementById(strs[i]) ;
-			if(elm === null) return ;
-			eXo.forum.UIForumPortlet.setShowInfo(elm);
-			elm.onkeyup= function() {
-				eXo.forum.UIForumPortlet.setShowInfo(this);
-			};
-		}
-		isPost = isView;
+		var elm = document.getElementById(strs[i]) ;
+		if(elm === null) return ;
+		eXo.forum.UIForumPortlet.setShowInfo(elm);
+		elm.onkeyup= function() {
+			eXo.forum.UIForumPortlet.setShowInfo(this);
+		};
   }
 };
 
