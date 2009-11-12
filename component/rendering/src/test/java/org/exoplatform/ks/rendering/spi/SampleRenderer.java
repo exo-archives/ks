@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ks.rendering.spi;
 
-import org.exoplatform.ks.rendering.Renderer;
+import org.exoplatform.ks.rendering.api.Renderer;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -30,6 +30,10 @@ public class SampleRenderer implements Renderer {
   
   public String getSyntax() {
     return "sample";
+  }
+
+  public String render(String markup) {
+    return markup;
   }
   
 }

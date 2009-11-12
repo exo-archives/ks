@@ -17,7 +17,7 @@
 package org.exoplatform.ks.rendering.spi;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.rendering.Renderer;
+import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
 import org.exoplatform.ks.test.KernelUtils;

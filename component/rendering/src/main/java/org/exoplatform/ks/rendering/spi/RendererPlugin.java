@@ -18,7 +18,7 @@ package org.exoplatform.ks.rendering.spi;
 
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.rendering.Renderer;
+import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.annotations.ManagedName;

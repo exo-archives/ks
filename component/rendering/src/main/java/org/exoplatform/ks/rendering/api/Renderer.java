@@ -14,21 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.rendering;
+package org.exoplatform.ks.rendering.api;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UnsupportedSyntaxException extends RuntimeException {
-
-  public UnsupportedSyntaxException(String message) {
-    super(message);
-  }
+public interface Renderer {
 
   /**
-   * 
+   * Get the syntax that this renderer can render
+   * @return
    */
-  private static final long serialVersionUID = 2695749429901848573L;
+  String getSyntax();
+  
+  /**
+   * render a piece of markup
+   * @param markup
+   * @return
+   */
+  String render(String markup);
 
 }

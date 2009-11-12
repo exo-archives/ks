@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ks.rendering;
 
+import org.exoplatform.ks.rendering.api.Renderer;
+import org.exoplatform.ks.rendering.api.UnsupportedSyntaxException;
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
 
@@ -43,6 +45,11 @@ public class TestMarkupRenderingService extends TestCase {
     public String getSyntax() {
       
       return "sample";
+    }
+
+    public String render(String markup) {
+      
+      return null;
     }
     
   }

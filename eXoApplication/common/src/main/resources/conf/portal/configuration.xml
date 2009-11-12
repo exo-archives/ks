@@ -21,4 +21,589 @@
         </value-param>      
       </init-params>
     </component>
+    
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.ks.rendering.MarkupRenderingService</target-component>   
+
+    <component-plugin>
+      <name>BBCodeRenderer</name>
+      <set-method>registerRenderer</set-method>
+      <type>org.exoplatform.ks.common.bbcode.BBCodeRenderer</type>
+      <description>builtin BBCodes</description>
+      <init-params>
+        <object-param>
+          <name>bbcode.default.configuration</name>
+          <description>initial bbcode</description>
+          <object type="org.exoplatform.ks.common.bbcode.BBCodePlugin">
+            <field name="bbcodeDatas">
+                <!-- in field replacement: Use CDATA for value e.g: <![CDATA[value]]> -->
+              <collection type="java.util.ArrayList">
+                <!-- I/ B/ U/ -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>I</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<i>{param}</i>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>Set text in italic</string>
+                    </field>
+                    <field name="example">
+                      <string>[I]This text is italic[/I]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>B</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<b>{param}</b>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>Set text in bold</string>
+                    </field>
+                    <field name="example">
+                      <string>[B]This text is bold[/B]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>U</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<u>{param}</u>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>Set text in underline</string>
+                    </field>
+                    <field name="example">
+                      <string>[U]This text is underline[/U]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- COLOR/ SIZE/ FONT/ HIGHLIGHT -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>COLOR</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<font color="{option}">{param}</font>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [color=option] tag allows you to change the color of your text.</string>
+                    </field>
+                    <field name="example">
+                      <string>[COLOR=blue]This text is blue[/COLOR]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>SIZE</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<font size="{option}">{param}</font>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [size=option] tag allows you to change the size of your text.</string>
+                    </field>
+                    <field name="example">
+                      <string>[size=+2]this text is two sizes larger than normal[/size]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>FONT</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<font face="{option}">{param}</font>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [font=option] tag allows you to change the font of your text.</string>
+                    </field>
+                    <field name="example">
+                      <string>[font=courier]this text is in the courier font[/font]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>HIGHLIGHT</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<span style="font-weight: bold; color: blue;">{param}</span>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [highlight] tag allows you to make highlight of your text.</string>
+                    </field>
+                    <field name="example">
+                      <string>[highlight]this text is highlighted[/highlight]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- LEFT/ RIGHT/ CENTER/ JUSTIFY -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>LEFT</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div align="left">{param}</div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [left] tag allows aligntment text to left. </string>
+                    </field>
+                    <field name="example">
+                      <string>[LEFT]This text is left-aligned[/LEFT]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value> 
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>RIGHT</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div align="right">{param}</div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [right] tag allows aligntment text to right.</string>
+                    </field>
+                    <field name="example">
+                      <string>[U]example[/U]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>[RIGHT]this text is right-aligned[/RIGHT]</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value> 
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>CENTER</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div align="center">{param}</div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [center] allows aligntment text to center.</string>
+                    </field>
+                    <field name="example">
+                      <string>[CENTER]this text is center-aligned[/CENTER]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <value> 
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>JUSTIFY</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div align="justify">{param}</div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [justify] tag allows aligntment text to justify.</string>
+                    </field>
+                    <field name="example">
+                      <string>[JUSTIFY]this text is justify-aligned[/JUSTIFY]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- EMAIL -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>EMAIL</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<a href="mailto:{param}">{param}</a>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [email] tag allows you to link to an email address.</string>
+                    </field>
+                    <field name="example">
+                      <string>[email]demo@example.com[/email]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- EMAIL HAS OPTION-->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>EMAIL</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<a href="mailto:{option}">{param}</a>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [email=option] tag allows link to an email address and use an optional parameter to 'name' of this link.</string>
+                    </field>
+                    <field name="example">
+                      <string>[email=demo@example.com]Click Here to Email me[/email] </string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- URL -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>URL</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<a target='_blank' href="{param}">{param}</a>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [url] tag allows link to other websites and files.</string>
+                    </field>
+                    <field name="example">
+                      <string>[URL]http://www.exoplatform.com[/URL]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                  <!-- URL HAS OPTION-->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>URL</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<a target='_blank' href="{option}">{param}</a>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [url=option] tag allows link to other websites and files and usean optional parameter to 'name' of thislink.</string>
+                    </field>
+                    <field name="example">
+                      <string>[URL=http://www.exoplatform.com]Click goto exoplatform website.[/URL]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- GOTO -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>GOTO</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<a href="{option}">{param}</a>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>Allows goto directly to link instead of open a new window or a new tab. </string>
+                    </field>
+                    <field name="example">
+                      <string>[goto=http://www.exoplatform.com]Goto this link.[/goto]></string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- LIST -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>LIST</string>
+                    </field>
+                    <field name="replacement">
+                      <string>You can not define this bbcode tag. It is defined by the developer.</string>
+                    </field>
+                    <field name="description">
+                      <string>The [list] tag allows create simple, each bullet is denoted by the [*] tag.</string>
+                    </field>
+                    <field name="example">
+                      <string>[list][*]list item 1[*]list item 2[/list]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- LIST HAS OPTION -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>LIST</string>
+                    </field>
+                    <field name="replacement">
+                      <string>You can not define this bbcode tag. It is defined by the developer.</string>
+                    </field>
+                    <field name="description">
+                      <string>The [list=option] tag allows create bulleted lists specifying an option. Within the value portion, each bullet is denoted by the [*] tag.</string>
+                    </field>
+                    <field name="example">
+                      <string>[list=1][*]list item 1[*]list item 2[/list]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- IMG -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>IMG</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<img border="0" alt="" src="{param}" class="inlineimg"/>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [img] tag allows you to shows the image indicated by {url}</string>
+                    </field>
+                    <field name="example">
+                      <string>[url=http://www.google.com.vn] [img]http://groups.google.com.vn/groups/img/3nb/groups_medium_vi.gif[/img] [/url]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- QUOTE -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>QUOTE</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;">{param}</div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [quote] tag allows attribute content of post.</string>
+                    </field>
+                    <field name="example">
+                      <string>[quote]Lorem ipsum dolor sit amet[/quote]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- QUOTE HAS OPTION -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>QUOTE</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div style="background:#ededf7; border:1px solid #d8d8d8; padding:6px 6px 6px 15px; margin:2px 0px;"><div>Originally Posted by <strong>{option}</strong></div><div>{param}</div></div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [quote=option] tag allows attibute content and user name of poster.</string>
+                    </field>
+                    <field name="example">
+                      <string>[quote=John Doe]Lorem ipsum dolor sit amet[/quote]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- CODE -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>CODE</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<div style="background:#ededed; border:1px inset #7b7b7b; margin:5px; overflow:auto;"><pre style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr"><div>{param}</div></pre></div>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [code] tag allows you to view source code html.</string>
+                    </field>
+                    <field name="example">
+                      <string><![CDATA[[code]<div>some text or code html</div>[/code]]]></string>
+                    </field>
+                    <field name="isOption">
+                      <string>false</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- CSS -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>CSS</string>
+                    </field>
+                    <field name="replacement">
+                      <string><![CDATA[<span class="{option}">{param}</span>]]></string>
+                    </field>
+                    <field name="description">
+                      <string>The [css=option] tag allows you to add div tag and set class Name for this it.</string>
+                    </field>
+                    <field name="example">
+                      <string>[css=highlight]Text is highlight[/css]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                <!-- SLIDESHARE -->
+                <value>
+                  <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+                    <field name="tagName">
+                      <string>SLIDESHARE</string>
+                    </field>
+                    <field name="replacement">
+<string>
+<![CDATA[<div style="width:425px; height:355px;" align="center">
+<object style="margin:0px" width="425" height="355">
+  <param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0"/>
+  <param name="allowFullScreen" value="true"/>
+  <param name="allowScriptAccess" value="always"/>
+  <embed src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc={option}&rel=0" 
+         type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" 
+         width="425" height="355">
+  </embed>
+</object>
+<b>{param}</b></div>]]>
+</string>
+                    </field>
+                    <field name="description">
+                      <string>The [SLIDESHARE=option] tag allows you to run slide in slidesharecdn.com site.</string>
+                    </field>
+                    <field name="example">
+                      <string>[SLIDESHARE=slideId]My slide[/SLIDESHARE]</string>
+                    </field>
+                    <field name="isOption">
+                      <string>true</string>
+                    </field>
+                    <field name="isActive">
+                      <string>true</string>
+                    </field>
+                  </object>
+                </value>
+                
+              </collection>
+            </field>
+          </object>
+        </object-param>
+      </init-params>
+    </component-plugin>
+
+  </external-component-plugins>    
+
+    
 </configuration>    

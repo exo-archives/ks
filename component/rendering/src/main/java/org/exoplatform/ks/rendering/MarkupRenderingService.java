@@ -19,6 +19,9 @@ package org.exoplatform.ks.rendering;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.exoplatform.ks.rendering.api.Renderer;
+import org.exoplatform.ks.rendering.api.UnsupportedSyntaxException;
+
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
