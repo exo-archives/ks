@@ -1874,6 +1874,23 @@ public class JCRDataStorage implements DataStorage {
 
 	private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
+		Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
+		if(forumNode.hasProperty("exo:viewer")){
+			Value []value = forumNode.getProperty("exo:viewer").getValues();
+			if(value.length > 0 && !value[0].toString().equals(" ")){
+				forumNode.setProperty("exo:lastTopicPath", "");
+				forumNode.save();
+				return null;
+			}
+		}
+		if(forumNode.getParent().hasProperty("exo:viewer")){
+			Value []value = forumNode.getParent().getProperty("exo:viewer").getValues();
+			if(value.length > 0 && !value[0].toString().equals(" ")){
+				forumNode.setProperty("exo:lastTopicPath", "");
+				forumNode.save();
+				return null;
+			}
+		}
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
 		String queryString = "/jcr:root" + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (@exo:canView=' ' or @exo:canView='')] order by @exo:lastPostDate descending";
 		Query query = qm.createQuery(queryString, Query.XPATH);
@@ -1882,7 +1899,6 @@ public class JCRDataStorage implements DataStorage {
 		Node topicNode = null;
 		boolean isSavePath = false;
 		try {
-			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 			while (iter.hasNext()) {
 				topicNode = iter.nextNode();
 				if (!forumNode.hasProperty("exo:isModerateTopic") && !forumNode.getProperty("exo:isModerateTopic").getBoolean()) {

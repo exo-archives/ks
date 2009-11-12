@@ -468,12 +468,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		List<String> listUser = new ArrayList<String>() ;
 		
-		listUser.add(topic.getOwner());
 		listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
 		listUser = ForumUtils.addArrayToList(listUser, forum.getPoster());
 		listUser = ForumUtils.addArrayToList(listUser, forumService.getCategory(categoryId).getPoster());
-		System.out.println("\n\n can post: " + listUser.toString());
 		if(!listUser.isEmpty()) {
+			listUser.add(topic.getOwner());
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}
 		return true ;
@@ -536,11 +535,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		if(getCanPost()) return true;
 		List<String> listUser = new ArrayList<String>() ;
 		
-		listUser.add(topic.getOwner());
 		listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
 		listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
 		listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
 		if(listUser.size() > 0) {
+			listUser.add(topic.getOwner());
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
 		}
 		return true;
