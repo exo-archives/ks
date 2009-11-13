@@ -504,3 +504,7 @@
 	padding-left: 20px; display: block;
 	background: url('icons/PermLink.gif') no-repeat left center;
 }
+
+.UIForumPortlet .UnTagIcon {
+	background: url('icons/UnTagIcon.png') no-repeat left center;
+}

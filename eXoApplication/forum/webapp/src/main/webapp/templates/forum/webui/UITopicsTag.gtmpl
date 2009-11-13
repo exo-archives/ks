@@ -70,7 +70,7 @@
 															<div class="UIRightPopupMenuContainer">
 																<div class="RightClickCustomItem"><span></span></div>
 																<div class="MenuItem" onclick="javaScript:if(eXo.forum.UIForumPortlet.numberIsChecked('UITopicsTag', 'UIForumCheckAll', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveMoreTopic")%>', '<%=_ctx.appRes("UITopicsTag.confirm.RemoveTopicTag")%>', '<%=_ctx.appRes("UITopicDetail.msg.notCheckTopic")%>')){<%=uicomponent.event("RemoveTopic");%>}"> 
-																	<div class="ItemIcon classIconItem">
+																	<div class="ItemIcon UnTagIcon">
 																		<a href="javascript:void(0);"><%=_ctx.appRes("UITopicsTag.label.RemoveTopicsTag");%></a>
 																	</div>
 																</div>
