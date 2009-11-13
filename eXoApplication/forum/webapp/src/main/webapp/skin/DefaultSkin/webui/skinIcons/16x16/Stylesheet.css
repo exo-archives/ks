@@ -517,6 +517,10 @@
 	background: url('icons/SmallYellowStar.gif') no-repeat center;
 }
 
+.UIForumPortlet .UnTagIcon {
+	background: url('icons/UnTagIcon.png') no-repeat left center;
+}
+
 .UIForumPortlet .UpArrow1Icon {
   background: url('icons/BlueUpArrow.gif') no-repeat right;
   background-position: right center;
