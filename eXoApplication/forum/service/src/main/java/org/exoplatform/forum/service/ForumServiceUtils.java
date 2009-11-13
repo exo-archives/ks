@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -215,21 +216,20 @@ public class ForumServiceUtils {
 	}
 
 	public static List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
-		List<String> listOfUser = new ArrayList<String>();
-		listOfUser.add(userId);
-		String value = "";
-		String id = "";
-		Membership membership = null;
-		OrganizationService organizationService_ = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
-		for(Object object : organizationService_.getMembershipHandler().findMembershipsByUser(userId).toArray()){
-			id = object.toString();
-			id = id.replace("Membership[", "").replace("]", "");
-			membership = organizationService_.getMembershipHandler().findMembership(id);
-			value = membership.getGroupId();
-			listOfUser.add(value);
-			value = membership.getMembershipType() + ":" + value;
-			listOfUser.add(value);
-		}
+    List<String> listOfUser = new ArrayList<String>();
+    listOfUser.add(userId);
+    String groupId = "";
+    String type = "";
+    Membership membership = null;
+
+    OrganizationService organizationService_ = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+    for (Iterator iterator = organizationService_.getMembershipHandler().findMembershipsByUser(userId).iterator(); iterator.hasNext();) {
+      membership = (Membership)iterator.next();
+      groupId = membership.getGroupId();
+      listOfUser.add(groupId);
+      type = membership.getMembershipType() + ":" + type;
+      listOfUser.add(type);
+    }
 		return listOfUser;
 	}
 	
