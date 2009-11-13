@@ -673,7 +673,7 @@ UIAnswersPortlet.prototype.voteAnswerUpDown = function(imageId, isVote){
 };
 
 UIAnswersPortlet.prototype.openDiscussLink = function(link) {
-	link = link.replace(/&amp;/g,"&");
+	link = link.replace(/uoon/g,'&');
 	window.open(link);
 } ;
 

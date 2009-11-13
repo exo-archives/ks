@@ -339,7 +339,8 @@
 																		link = uicomponent.convertLinkToForum(link);
 																		if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																			if(topicIdDiscuss.equals(uicomponent.discussId)) {
-																				jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"')");
+																				link = link.replaceAll("&","uoon");
+																				jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"');");
 																				uicomponent.discussId = "";
 																			}
 																		}
@@ -356,7 +357,7 @@
 										</div>
 									</div>
 									<!-- finish action of this question -->
-									
+
 								</div>
 							<div style="clear:left;"><span></span></div>
 						</div>
@@ -518,7 +519,8 @@
 																						link = uicomponent.convertLinkToForum(link);
 																						if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																							if(topicIdDiscuss.equals(uicomponent.discussId)) {
-																								jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"')");
+																								link = link.replaceAll("&","uoon");
+																								jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"');");
 																								uicomponent.discussId = "";
 																							}
 																						}
