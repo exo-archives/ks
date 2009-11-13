@@ -4359,7 +4359,7 @@ public class JCRDataStorage {
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append("/jcr:root").append(userProfileHome.getPath())
 			.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")")
-			.append("[(jcr:contains(., '").append(userSearch).append("'))]");
+			.append("[(jcr:contains(., '").append(userSearch).append("'))] order by @exo:userId ascending ");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
@@ -6126,15 +6126,15 @@ public class JCRDataStorage {
 			String userId ;
 			while(it.hasNext()) {
 				userId = it.next() ;
-				if(profileHome.hasNode(userId)) {
+				try{
 					profile = profileHome.getNode(userId) ;
-				}else {
+				}catch(PathNotFoundException e) {
 					profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 					Calendar cal = getGreenwichMeanTime() ;
 					profile.setProperty("exo:userId", userId) ;
 					profile.setProperty("exo:lastLoginDate", cal) ;
 					profile.setProperty("exo:joinedDate", cal) ; 
-					profile.setProperty("exo:lastPostDate", cal) ; 
+					profile.setProperty("exo:lastPostDate", cal) ;
 				}
 				long l = profile.getProperty("exo:totalTopic").getLong() + topicMap.get(userId) ;
 				profile.setProperty("exo:totalTopic", l) ;
@@ -6142,31 +6142,29 @@ public class JCRDataStorage {
 					long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
 					profile.setProperty("exo:totalPost", t) ;
 					postMap.remove(userId) ;
-				}
-				profileHome.save() ;
+				}				
 			}
 			//update post to user profile
 			it = postMap.keySet().iterator() ;
 			while(it.hasNext()) {
 				userId = it.next() ;
-				if(profileHome.hasNode(userId)) {
+				try{
 					profile = profileHome.getNode(userId) ;
-				}else {
+				}catch(PathNotFoundException e) {
 					profile = profileHome.addNode(userId, Utils.USER_PROFILES_TYPE) ;
 					Calendar cal = getGreenwichMeanTime() ;
 					profile.setProperty("exo:userId", userId) ;
 					profile.setProperty("exo:lastLoginDate", cal) ;
 					profile.setProperty("exo:joinedDate", cal) ; 
-					profile.setProperty("exo:lastPostDate", cal) ; 
-				}
+					profile.setProperty("exo:lastPostDate", cal) ;
+				}				
 				long t = profile.getProperty("exo:totalPost").getLong() + postMap.get(userId) ;
-				profile.setProperty("exo:totalPost", t) ;
-				profileHome.save() ;				
-			}			
+				profile.setProperty("exo:totalPost", t) ;								
+			}
+			profileHome.save() ;
 		}catch(Exception e) {
 			e.printStackTrace() ;
-		}finally{ sProvider.close() ;}		
-		
+		}finally{ sProvider.close() ;}				
 	}
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
@@ -6541,7 +6539,7 @@ public class JCRDataStorage {
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
 		Document doc = docBuilder.parse(is);
-		doc.getDocumentElement ().normalize ();
+		//doc.getDocumentElement ().normalize ();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
@@ -6585,19 +6583,30 @@ public class JCRDataStorage {
 				getForumSystemHome(sessionProvider).save();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 			}
+			is = new ByteArrayInputStream(bdata) ;
+			Session session = getForumHomeNode(sessionProvider).getSession();
+			session.importXML(nodePath, is, typeImport);
+			session.save();
 		}else{
 			isReset = false;
-			if(typeNodeExport.equals("exo:forumCategory"))
-				nodePath = getCategoryHome(sessionProvider).getPath();
+			String updatePath = nodePath ;
+			if(typeNodeExport.equals("exo:forumCategory")){
+				nodePath = getCategoryHome(sessionProvider).getPath() ;
+				updatePath = nodePath + "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
+			}/*else if (typeNodeExport.equals("exo:forum")) {
+				updatePath = nodePath+ "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
+			} */
+			is = new ByteArrayInputStream(bdata) ;
+			Session session = getForumHomeNode(sessionProvider).getSession();
+			session.importXML(nodePath, is, typeImport);
+			session.save();			
+			if(typeNodeExport.equals("exo:forumCategory"))updateImportedData(updatePath) ;	
 		}
 		
-		is = new ByteArrayInputStream(bdata) ;
-		Session session = getForumHomeNode(sessionProvider).getSession();
-		session.importXML(nodePath, is, typeImport);
-		session.save();		
+				
 		
 		// Reset data in node
-		if(isReset){
+		/*if(isReset){
 			Node node = null;
 			QueryManager qm = session.getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
@@ -6642,15 +6651,13 @@ public class JCRDataStorage {
 			node.remove();
 			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
 			session.save();
-		}
-		
-		session.logout();
+		}*/
 		sessionProvider.close() ;
 	}
 	
-	public void updateDataImported() throws Exception{
+	/*public void updateDataImported() throws Exception{
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-		
+		System.out.println("HELLO ===> updateDataImported");
 		// Update forum statistic
 		ForumStatistic forumStatistic = getForumStatistic();
 		Node categoryHome = getCategoryHome(sessionProvider);
@@ -6696,7 +6703,7 @@ public class JCRDataStorage {
 		userHomeNode.save();
 		
 		sessionProvider.close();
-	}
+	}*/
 
 	public void updateTopicAccess (String userId, String topicId) throws Exception {
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;

@@ -902,7 +902,6 @@ public interface ForumService extends ForumServiceLegacy{
   public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos,  boolean isExportAll) throws Exception;
   
   public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception ;
-  public void updateDataImported() throws Exception;
   
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception ;
   public UserProfile getQuickProfile(String userName) throws Exception ;

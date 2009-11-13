@@ -514,5 +514,10 @@ public interface ForumServiceLegacy {
    */
   public void saveEmailUserProfile(String userId, String email) throws Exception;
   
+  /**
+   * @deprecated
+   */
+  public void updateDataImported() throws Exception;
+  
   
 }

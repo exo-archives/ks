@@ -1239,7 +1239,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
   
   public void updateDataImported() throws Exception{
-  	storage_.updateDataImported();
+  	//storage_.updateDataImported();
   }
   
   public void updateForum(String path) throws Exception{
