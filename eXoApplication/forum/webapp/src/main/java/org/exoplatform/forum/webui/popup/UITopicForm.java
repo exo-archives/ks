@@ -610,26 +610,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						UIFormInputIconSelector uiIconSelector = uiForm.getChild(UIFormInputIconSelector.class);
 						topicNew.setIcon(uiIconSelector.getSelectedIcon());
 						//topicNew.setAttachmentFirstPost(0) ;
-						canPost = ForumUtils.removeSpaceInString(canPost) ;
-						String temp = "" ;
-						if(!ForumUtils.isEmpty(canPost)) {
-							temp = ForumUtils.unSplitForForum(uiForm.forum.getPoster());
-							temp = temp + "," + userName;
-							String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "poster");
-							if(arr != null && arr.length > 0 && !arr[0].equals(" "))
-								temp = temp + "," + ForumUtils.unSplitForForum(arr);
-						}
-						if(ForumUtils.isEmpty(temp)) temp = canPost;
-						String[]canPosts = ForumUtils.addStringToString(canPost, temp);
-						if(!ForumUtils.isEmpty(canView)) {
-							temp = ForumUtils.unSplitForForum(uiForm.forum.getViewer());
-							canView = canView + "," + temp;
-							String []arr = uiForm.forumService.getPermissionTopicByCategory(uiForm.categoryId, "viewer");
-							if(arr != null && arr.length > 0 && !arr[0].equals(" "))
-								temp = temp + "," + ForumUtils.unSplitForForum(arr);
-						}
-						canView = ForumUtils.removeSpaceInString(canView) ;
-						String[]canViews = ForumUtils.addStringToString(canPost, canView);
+						String[]canPosts = ForumUtils.splitForForum(canPost) ;
+						String[]canViews = ForumUtils.splitForForum(canView) ;
 										
 						topicNew.setCanView(canViews);
 						topicNew.setCanPost(canPosts);
