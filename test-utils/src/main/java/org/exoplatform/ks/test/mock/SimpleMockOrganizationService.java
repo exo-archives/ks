@@ -36,9 +36,10 @@ import org.exoplatform.services.organization.UserProfileHandler;
  * @author patricelamarque
  *
  */
+@SuppressWarnings("deprecation")
 public class SimpleMockOrganizationService implements OrganizationService {
 
-	Set<SimpleMembership> storage = new HashSet<SimpleMembership>();
+	private Set<SimpleMembership> storage = new HashSet<SimpleMembership>();
 
 	/**
 	 * Insert a new membership. The user, group and membership type are added to the model if they don't exist.
@@ -51,7 +52,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 			String membershipType = "*";
 			String group = membershipExpr;
 
-			if (membershipExpr.indexOf(":") > 0) {
+			if (! (membershipExpr.indexOf(":") <= 0)) {
 				String[] parts = membershipExpr.split(":");
 				membershipType = parts[0];
 				group = parts[1];
@@ -74,7 +75,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return null;
 			}
 
-			public Collection getAllGroups() throws Exception {
+			public Collection<Group> getAllGroups() throws Exception {
 				Collection<Group> groups = new HashSet<Group>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				while (mbIt.hasNext()) {
@@ -85,7 +86,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return groups;
 			}
 
-			public Collection findGroupsOfUser(String user) throws Exception {
+			public Collection<Group> findGroupsOfUser(String user) throws Exception {
 				Collection<Group> groups = new HashSet<Group>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				while (mbIt.hasNext()) {
@@ -98,7 +99,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return groups;
 			}
 
-			public Collection findGroups(Group parent) throws Exception {
+			public Collection<Group> findGroups(Group parent) throws Exception {
 				Collection<Group> groups = new HashSet<Group>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				while (mbIt.hasNext()) {
@@ -112,7 +113,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return groups;
 			}
 
-			public Collection findGroupByMembership(String userName,
+			public Collection<Group> findGroupByMembership(String userName,
 					String membershipType) throws Exception {
 				Collection<Group> groups = new HashSet<Group>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
@@ -169,7 +170,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 		// TODO Auto-generated method stub
 		return new MembershipHandler() {
 
-			public Collection removeMembershipByUser(String username,
+			public Collection<Membership> removeMembershipByUser(String username,
 					boolean broadcast) throws Exception {
 				// TODO Auto-generated method stub
 				return null;
@@ -188,7 +189,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 
 			}
 
-			public Collection findMembershipsByUserAndGroup(String userName,
+			public Collection<Membership> findMembershipsByUserAndGroup(String userName,
 					String groupId) throws Exception {
 				Collection<Membership> memberships = new HashSet<Membership>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
@@ -203,7 +204,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return memberships;
 			}
 
-			public Collection findMembershipsByUser(String userName)
+			public Collection<Membership> findMembershipsByUser(String userName)
 					throws Exception {
 				Collection<Membership> memberships = new HashSet<Membership>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
@@ -217,7 +218,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return memberships;
 			}
 
-			public Collection findMembershipsByGroup(Group group)
+			public Collection<Membership> findMembershipsByGroup(Group group)
 					throws Exception {
 				Collection<Membership> memberships = new HashSet<Membership>();
 				Iterator<SimpleMembership> mbIt = storage.iterator();
@@ -296,7 +297,8 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return null;
 			}
 
-			public PageList getUserPageList(int pageSize) throws Exception {
+			@SuppressWarnings("unchecked")
+      public PageList<User> getUserPageList(int pageSize) throws Exception {
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				HashSet<User> userSet = new HashSet<User>();
 				while (mbIt.hasNext()) {
@@ -304,11 +306,11 @@ public class SimpleMockOrganizationService implements OrganizationService {
 							.next();
 					userSet.add(new SimpleUser(membership.getUserName()));
 				}
-				return new ObjectPageList(Arrays.asList(userSet.toArray()),
-						pageSize);
+				return new ObjectPageList(Arrays.asList(userSet.toArray()), pageSize);
 			}
 
-			public PageList findUsersByGroup(String groupId) throws Exception {
+			@SuppressWarnings("unchecked")
+      public PageList<User> findUsersByGroup(String groupId) throws Exception {
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				HashSet<User> userSet = new HashSet<User>();
 				while (mbIt.hasNext()) {
@@ -321,7 +323,8 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return new ObjectPageList(Arrays.asList(userSet.toArray()), 10);
 			}
 
-			public PageList findUsers(Query query) throws Exception {
+			@SuppressWarnings("unchecked")
+      public PageList<User> findUsers(Query query) throws Exception {
 				Iterator<SimpleMembership> mbIt = storage.iterator();
 				HashSet<User> userSet = new HashSet<User>();
 				while (mbIt.hasNext()) {
@@ -386,7 +389,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 
 	}
 
-	class SimpleUser implements User {
+	static class SimpleUser implements User {
 		String name = null;
 
 		public SimpleUser(String name) {
@@ -400,6 +403,10 @@ public class SimpleMockOrganizationService implements OrganizationService {
 				return false;
 			User other = (User) obj;
 			return (name.equals(other.getUserName()));
+		}
+		
+		public int hashCode() {
+		  return super.hashCode();
 		}
 		
 		public String toString() {
@@ -488,7 +495,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 		}
 	}
 
-	class SimpleGroup implements Group {
+	static class SimpleGroup implements Group {
 		String id = null;
 
 		public SimpleGroup(String id) {
@@ -503,6 +510,10 @@ public class SimpleMockOrganizationService implements OrganizationService {
 			Group other = (Group) obj;
 			return (id.equals(other.getId()));
 		}
+		
+    public int hashCode() {
+      return super.hashCode();
+    }
 		
 		public String toString() {
 			return getId();
@@ -545,7 +556,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 
 	}
 
-	class SimpleMembership implements Membership {
+	static class SimpleMembership implements Membership {
 		String user;
 		String group;
 		String membershipType;
@@ -566,6 +577,10 @@ public class SimpleMockOrganizationService implements OrganizationService {
 					&& group.equals(other.getGroupId()) && membershipType
 					.equals(other.getMembershipType()));
 		}
+		
+    public int hashCode() {
+      return super.hashCode();
+    }
 		
 		public String toString() {
 			return getId();

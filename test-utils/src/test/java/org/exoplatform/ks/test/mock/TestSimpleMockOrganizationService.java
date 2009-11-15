@@ -142,7 +142,7 @@ public class TestSimpleMockOrganizationService extends TestCase {
 	private Membership membership(String id) {
 		String[] parts = id.split("@");
 		String[] mparts = parts[1].split(":");
-		return a.new SimpleMembership(parts[0], mparts[1], mparts[0]);
+		return new SimpleMockOrganizationService.SimpleMembership(parts[0], mparts[1], mparts[0]);
 	}
 
 	private Object[] memberships(String... ids) {
@@ -158,7 +158,7 @@ public class TestSimpleMockOrganizationService extends TestCase {
 	
 	
 	private User user(String name) {
-		return  a.new SimpleUser(name);
+		return  new SimpleMockOrganizationService.SimpleUser(name);
 	}
 	
 	private Object [] users(String... userNames) {
@@ -167,14 +167,14 @@ public class TestSimpleMockOrganizationService extends TestCase {
 		int i = 0;
 		
 		for (String userName: userNames) {
-			result[i++] = a.new SimpleUser(userName);
+			result[i++] = new SimpleMockOrganizationService.SimpleUser(userName);
 		}
 		return result;
 	}	
 	
 	
 	private Group group(String id) {
-		return  a.new SimpleGroup(id);
+		return  new SimpleMockOrganizationService.SimpleGroup(id);
 	}
 	
 	private Object [] groups(String... groupNames) {
@@ -183,7 +183,7 @@ public class TestSimpleMockOrganizationService extends TestCase {
 		int i = 0;
 		
 		for (String groupName: groupNames) {
-			result[i++] = a.new SimpleGroup(groupName);
+			result[i++] = new SimpleMockOrganizationService.SimpleGroup(groupName);
 		}
 		return result;
 	}
