@@ -79,6 +79,7 @@ import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -199,7 +200,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		this.isLink = true;
 	}
 	
-  private boolean isShowQuickReply() {
+  public boolean isShowQuickReply() {
 		return isShowQuickReply;
 	}
 	
@@ -228,13 +229,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	  return enableIPLogging;
   }
 	
-  private boolean isIPBaned(String ip){
+  public boolean isIPBaned(String ip){
   	List<String> ipBaneds = forum.getBanIP();
 		if(ipBaneds != null && ipBaneds.size() > 0 && ipBaneds.contains(ip)) return true;
 		return false;
 	}
 	
-  private boolean isOnline(String userId) throws Exception {
+  public boolean isOnline(String userId) throws Exception {
 		return getForumService().isOnline(userId) ;
 	}
 	
@@ -246,7 +247,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
   	return 1;
   }
 	
-	private boolean isNotLogin() throws Exception {
+	public boolean isNotLogin() throws Exception {
 	  
 		if(UserHelper.isAnonim() && !forum.getIsLock() && !topic.getIsLock()) return true;
 		return false;
@@ -389,18 +390,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
     if(!listBBCode.isEmpty()){
 	    try {
 	    	s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
-	    } catch (Exception e) {}
+	    } catch (Exception e) {
+	      log.warn("Failed to process BBCode: "+ e.getMessage());
+	    }
     }
     return s;
 	}
 
   public void syncBBCodeCache() {
-    List<String> activeOnserver = new ArrayList<String>();
-    
 		if(isGetSv) {
 			List<BBCode> bbcs = new ArrayList<BBCode>();
 			try {
-				activeOnserver = getForumService().getActiveBBCode();
+			  List<String> activeOnserver = getForumService().getActiveBBCode();
 				isGetSv = false;
 		    boolean isAdd = true;
 		    BBCode bbCode;
@@ -428,7 +429,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		    }
 		    listBBCode.clear();
 		    listBBCode.addAll(bbcs);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			  log.warn("Failed to sync BBCodes cache: "+ e.getMessage());
+			}
 		}
   }
 	
@@ -473,7 +476,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		listUser = ForumUtils.addArrayToList(listUser, forumService.getCategory(categoryId).getPoster());
 		if(!listUser.isEmpty()) {
 			listUser.add(topic.getOwner());
-			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
+			return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
 		}
 		return true ;
 	}
@@ -484,16 +487,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
 				HttpServletRequest request = context.getRequest();
 				return request.getRemoteAddr();
-	    } catch (Exception e) {}
+	    } catch (Exception e) {
+	      log.warn("Failed to extract IP: "+ e.getMessage());
+	    }
 		}
 		return "";
 	}
 	
-	private Forum getForum() throws Exception {
+	public Forum getForum() throws Exception {
 		return this.forum ;
 	}
 	
-	private String getIdPostView() {
+	public String getIdPostView() {
 		if(this.IdPostView.equals("lastpost")){
 			this.IdPostView = "normal" ;
 			return this.IdLastPost ;
@@ -523,11 +528,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 			}
 			return this.topic ;
 		} catch (Exception e) {
+		  log.warn("Failed to load topic: "+ e.getMessage());
 		}
 		return null ;
 	}
 	
-	private boolean userCanView() throws Exception {
+	public boolean userCanView() throws Exception {
 		if(isMod) return true;
 		else {
 			if(forum.getIsClosed() || topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
@@ -540,7 +546,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
 		if(listUser.size() > 0) {
 			listUser.add(topic.getOwner());
-			return ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userName);
+			return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
 		}
 		return true;
 	}
@@ -554,18 +560,19 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
     return rService.getCurrentRepository().getConfiguration().getName() ;
   }
 
-  private String getFileSource(ForumAttachment attachment) throws Exception {
+  public String getFileSource(ForumAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		try {
 			InputStream input = attachment.getInputStream() ;
 			String fileName = attachment.getName() ;
 			return ForumSessionUtils.getFileSource(input, fileName, dservice);
 		} catch (PathNotFoundException e) {
+		  log.warn("Failed get file source: "+ e.getMessage());
 			return null;
 		}
 	}
 
-	private CommonContact getPersonalContact(String userId) throws Exception {
+	public CommonContact getPersonalContact(String userId) throws Exception {
 	  CommonContact contact ;
 		if(mapContact.containsKey(userId) && listContactsGotten.contains(userId)){
 			contact = mapContact.get(userId) ;
@@ -580,12 +587,13 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		return contact ;
 	}
 	
-	private String getAvatarUrl(CommonContact contact, String userId) throws Exception {
+	public String getAvatarUrl(CommonContact contact, String userId) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
 		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
 	}
 
-	private void initPage() throws Exception {
+
+  public void initPage() throws Exception {
 		objectId = topicId;
 		isDoubleClickQuickReply = false;
 		isGetSv = true;
@@ -608,13 +616,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				this.pageSelect = maxPage;
 			}
 		} catch (Exception e) {
+		  log.warn("Failed to init topic page: "+ e.getMessage());
 		}
 	}
 	
 	private boolean getIsModeratePost(){return this.isModeratePost; }
 	
 	@SuppressWarnings("unchecked")
-  private List<Post> getPostPageList() throws Exception {
+  public List<Post> getPostPageList() throws Exception {
 		List<Post> posts = new ArrayList<Post>();  
 		if(this.pageList == null) return posts ;
 		try {
@@ -629,7 +638,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					}
 					lastPostId = "";
 				}
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        log.warn("Failed to find last read index for topic: "+ e.getMessage());
+      }
 			posts = pageList.getPage(pageSelect) ;
 			pageSelect = pageList.getCurrentPage();
 			pagePostRemember.put(topicId, pageSelect);
@@ -662,15 +673,16 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 						mapUserProfile.put(profile.getUserId(), profile) ;
 					}
 				}catch(Exception e) {
-					e.printStackTrace() ;
+				  log.warn("Failed to load qui profiles: "+ e.getMessage());
 				}
 			}
 		} catch (Exception e) {
+		  log.warn("Failed to load posts page: "+ e.getMessage());
     }
 		return posts ;
 	}
 	
-	private List<Tag> getTagsByTopic() throws Exception {
+	public List<Tag> getTagsByTopic() throws Exception {
 		List<Tag> list = new ArrayList<Tag>();
 		List<String> listTagId = new ArrayList<String>();
 		String[] tagIds = topic.getTagId();
@@ -684,6 +696,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		try {
 			list = getForumService().getMyTagInTopic(listTagId.toArray(new String[listTagId.size()]));
     } catch (Exception e) {
+      log.warn("Failed to load user tags in topic: "+ e.getMessage());
     }
 		return list;	
 	}
@@ -715,12 +728,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		}
 	}
 	
-	private UserProfile getUserInfo(String userName) throws Exception {
+	public UserProfile getUserInfo(String userName) throws Exception {
 		if(!mapUserProfile.containsKey(userName)) {
 			try{
 				mapUserProfile.put(userName, getForumService().getQuickProfile(userName)) ;			
 			}catch(Exception e){
-				e.printStackTrace() ;
+			  log.warn("Failed load user info: "+ e.getMessage());
 			}
 		}
 		return mapUserProfile.get(userName) ;
@@ -746,40 +759,42 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		return "";
 	}
 
-	static public class AddPostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			try {
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+  private void refreshPortlet() throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class) ;
+    UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+    categoryContainer.updateIsRender(true) ;
+    forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
+    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
+    forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
+     ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(forumPortlet) ;      
+  }
+  
+  private <T extends UIComponent> T  openPopup(Class<T> componentType,  String popupId, int width, int height) throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class) ;   
+    return openPopup(forumPortlet, componentType, popupId, width, height);
+  }
+  
+  private <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+    return openPopup(forumPortlet, componentType, width, height);
+  }
+	
+	static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			try { 
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 460);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost("", false, false, null) ;
-				postForm.setMod(topicDetail.isMod) ;
-				
-				popupContainer.setId("UIAddPostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				postForm.setMod(topicDetail.isMod) ;				
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  warning("UIForumPortlet.msg.topicEmpty");
+			  topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class RatingTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+	static public class RatingTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			try{
 				String userName = UserHelper.getCurrentUser() ;
 				String[] userVoteRating = topicDetail.topic.getUserVoteRating() ;
@@ -787,39 +802,22 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				for (String string : userVoteRating) {
 					if(string.equalsIgnoreCase(userName)) erro = true ; 
 				}
-				if(!erro) {
-					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-					UIRatingForm ratingForm = popupAction.createUIComponent(UIRatingForm.class, null, null) ;
+				if(!erro) {				  
+					UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 300, 145);
 					ratingForm.updateRating(topicDetail.topic, topicDetail.categoryId, topicDetail.forumId) ;
-					popupAction.activate(ratingForm, 300, 145) ;
-					
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 					topicDetail.isEditTopic = true ;
 				} else {
-					Object[] args = { userName };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicDetail.sms.VotedRating", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  warning("UITopicDetail.sms.VotedRating", userName);
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 	
-	static public class AddTagTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
+	static public class AddTagTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			try {
 				UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
 				String tagIds = stringInput.getValue();
@@ -828,8 +826,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					for (int i = 0; i < special.length(); i++) {
 						char c = special.charAt(i);
 						if(tagIds.indexOf(c) >= 0) {
-							UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-							uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.failure", null, ApplicationMessage.WARNING)) ;
+						  warning("UITopicDetail.msg.failure");
 							return ;
 						}
 					}
@@ -854,57 +851,46 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					try {
 						topicDetail.getForumService().addTag(tags, topicDetail.userName, topicDetail.topic.getPath());
 	        } catch (Exception e) {
-		        e.printStackTrace();
+		        topicDetail.log.error("Failed to add tag : ", e);
 	        }
 				} else {
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicDetail.msg.empty-field", null, ApplicationMessage.WARNING)) ;
+				  warning("UITopicDetail.msg.empty-field");
 					return ;
 				}
 				stringInput.setValue("");
 				topicDetail.isEditTopic = true;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				refresh();
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class UnTagTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class UnTagTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			topicDetail.getForumService().unTag(tagId, topicDetail.userName, topicDetail.topic.getPath());
 			topicDetail.isEditTopic = true;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			refresh();
 		}
 	}
 	
-	static public class OpenTopicsTagActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class OpenTopicsTagActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption("") ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
-			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;
+			forumPortlet.getChild(UITopicsTag.class).setIdTag(tagId) ;	
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
-	static public class SearchFormActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SearchFormActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
@@ -913,8 +899,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				for (int i = 0; i < special.length(); i++) {
 					char c = special.charAt(i);
 					if(text.indexOf(c) >= 0) {
-						UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+					  warning("UIQuickSearchForm.msg.failure");
 						return ;
 					}
 				}
@@ -938,23 +923,22 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				listSearchEvent.setListSearchEvent(list) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 				formStringInput.setValue("") ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				topicDetail.refreshPortlet();
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UIQuickSearchForm.msg.checkEmpty");
 			}
 		}
 	}
 
-	static public class PrintActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-//			UITopicDetail topicDetail = event.getSource() ;
+	static public class PrintActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+//			
 		}
 	}
 
-	static public class GoNumberPageActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class GoNumberPageActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
 			UIFormStringInput stringInput1 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
 			UIFormStringInput stringInput2 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_B) ;
@@ -970,8 +954,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				try {
 					int page = Integer.parseInt(numberPage.trim()) ;
 					if(page < 0) {
-						Object[] args = { "go page" };
-						throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+					  throwWarning("NameValidator.msg.Invalid-number", "go page");
 					} else {
 						if(page == 0) {
 							page = 1;
@@ -979,101 +962,78 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 							page = topicDetail.pageList.getAvailablePage() ;
 						}
 						topicDetail.pageSelect = page ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+						refresh();
 					}
 				} catch (NumberFormatException e) {
-					Object[] args = { "go page" };
-					throw new MessageException(new ApplicationMessage("NameValidator.msg.Invalid-number", args, ApplicationMessage.WARNING)) ;
+				  throwWarning("NameValidator.msg.Invalid-number", "go page");
 				}
 			}
 		}
 	}
 
-	static public class EditActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class EditActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 460);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, false, false, post) ;
-				postForm.setMod(topicDetail.isMod) ;
-				popupContainer.setId("UIEditPostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPostForm.msg.canNotEdit", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UIPostForm.msg.canNotEdit");
 			}
 		}
 	}
 	
-	static public class DeleteActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class DeleteActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			try {
 				topicDetail.getForumService().removePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
 				topicDetail.IdPostView = "top";
 			}catch (Exception e) {
+			  topicDetail.log.warn("Failed to delete topic: " + e.getMessage(), e);
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 		}
 	}
 	
-	static public class QuoteActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class QuoteActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 500);			
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, true, false, post) ;
 				postForm.setMod(topicDetail.isMod);
-				popupContainer.setId("UIQuoteContainer") ;
-				popupAction.activate(popupContainer, 900, 500) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UIPostForm.msg.isParentDelete");
 			}
 		}
 	}
 
-	static public class PrivatePostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class PrivatePostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPostForm postForm = popupContainer.addChild(UIPostForm.class, null, null) ;
+				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 460);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
 				postForm.updatePost(postId, false, true, post) ;
 				postForm.setMod(topicDetail.isMod) ;
-				popupContainer.setId("UIPrivatePostContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UIPostForm.msg.isParentDelete");
 			}
 		}
 	}
 //--------------------------------	 Topic Menu		-------------------------------------------//
-	static public class EditTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class EditTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -1088,55 +1048,35 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				topicDetail.isEditTopic = true ;
 			} catch (Exception e) {
-				e.printStackTrace();
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  topicDetail.log.warn("Error while editing topic: "+ e.getMessage());
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class PrintPageActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-//			UITopicDetail topicDetail = event.getSource() ;
+	static public class PrintPageActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+//			
 		}
 	}
 
-	static public class AddPollActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class AddPollActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {	
 			try {
 				Topic topic = topicDetail.topic ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPollForm	pollForm = popupAction.createUIComponent(UIPollForm.class, null, null) ;
+				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455) ;
 				pollForm.setTopicPath(topic.getPath()) ;
-				popupAction.activate(pollForm, 655, 455) ;
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetOpenTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetOpenTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(topic.getIsClosed()) {
@@ -1148,27 +1088,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
-					Object[] args = { topic.getTopicName() };
-					throw new MessageException(new ApplicationMessage("UITopicContainer.sms.Open", args, ApplicationMessage.WARNING)) ;
+				  throwWarning("UITopicContainer.sms.Open", topic.getTopicName());
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetCloseTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetCloseTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(!topic.getIsClosed()) {
@@ -1180,29 +1111,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
-					Object[] args = { topic.getTopicName() };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Close", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("UITopicContainer.sms.Close", topic.getTopicName());
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetLockedTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetLockedTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(!topic.getIsLock()) {
@@ -1214,29 +1134,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
-					Object[] args = { topic.getTopicName() };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Locked", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("UITopicContainer.sms.Locked", topic.getTopicName());
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");			
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetUnLockTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetUnLockTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(topic.getIsLock()) {
@@ -1248,29 +1157,18 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topicDetail.setRenderInfoPorlet();
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail.getParent()) ;
 				} else {
-					Object[] args = { topic.getTopicName() };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.UnLock", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  warning("UITopicContainer.sms.UnLock", topic.getTopicName() );
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetMoveTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetMoveTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
@@ -1283,22 +1181,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				popupAction.activate(moveTopicForm, 400, 420) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 	
-	static public class SetStickTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetStickTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(!topic.getIsSticky()) {
@@ -1307,31 +1198,20 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topics.add(topic);
 					topicDetail.getForumService().modifyTopic(topics, 4) ;
 					topicDetail.isEditTopic = true ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					refresh();
 				} else {
-					Object[] args = { topic.getTopicName() };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.Stick", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("UITopicContainer.sms.Stick", topic.getTopicName() );
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetUnStickTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetUnStickTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.topic ;
 				if(topic.getIsSticky()) {
@@ -1340,92 +1220,57 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					topics.add(topic);
 					topicDetail.getForumService().modifyTopic(topics, 4) ;
 					topicDetail.isEditTopic = true ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					refresh();
 				} else {
-					Object[] args = { topic.getTopicName() };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.UnStick", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  warning("UITopicContainer.sms.UnStick", topic.getTopicName());
 				}
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SplitTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SplitTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(topicDetail.categoryId+"/"+topicDetail.forumId +"/"+topicDetail.topicId);
 				if(pageList.getAvailable() > 0) {
-					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-					UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-					UISplitTopicForm splitTopicForm = popupAction.createUIComponent(UISplitTopicForm.class, null, null) ;
+					UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, 700, 400);
 					splitTopicForm.setPageListPost(pageList) ;
 					splitTopicForm.setTopic(topicDetail.topic) ;
 					splitTopicForm.setUserProfile(topicDetail.userProfile) ;
-					popupAction.activate(splitTopicForm, 700, 400) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} else {
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UITopicContainer.sms.NotSplit", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  warning("UITopicContainer.sms.NotSplit");
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  topicDetail.log.warn("Failed to split topic: "+ e.getMessage());
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetApproveTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			try{
+	static public class SetApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			try {
 				Topic topic = topicDetail.topic;
 				topic.setIsApproved(true) ;
 				List<Topic>topics = new ArrayList<Topic>();
 				topics.add(topic);
 				topicDetail.getForumService().modifyTopic(topics, 3) ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				refresh();
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  warning("UIForumPortlet.msg.topicEmpty");
+			  topicDetail.refreshPortlet();
 			}
 		}
 	}
 	
-	static public class SetUnApproveTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetUnApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {	
 			try{
 				Topic topic = topicDetail.topic;
 				topic.setIsApproved(false) ;
@@ -1433,25 +1278,17 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				topics.add(topic);
 				topicDetail.getForumService().modifyTopic(topics, 3) ;
 				topicDetail.isEditTopic = true ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				refresh();
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  warning("UIForumPortlet.msg.topicEmpty");
+			  topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class SetDeleteTopicActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetDeleteTopicActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try {
 				Topic topic = topicDetail.topic ;
 				topicDetail.getForumService().removeTopic(topicDetail.categoryId, topicDetail.forumId, topic.getId()) ;
@@ -1464,74 +1301,52 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 			} catch (Exception e) {
-			  
-			  
-			  topicDetail.warning("UIForumPortlet.msg.topicEmpty");
-
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			  warning("UIForumPortlet.msg.topicEmpty");
+			  topicDetail.refreshPortlet();
 			}
 		}
 	}
 
 	//---------------------------------	Post Menu	 --------------------------------------//
-	static public class MergePostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
+	static public class MergePostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 		}
 	}
 
-	static public class DownloadAttachActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+	static public class DownloadAttachActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			refresh();
 		}
 	}
 
-	static public class MovePostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
+	static public class MovePostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
 				posts.add(topicDetail.getPost(postId));
       }
 			if(posts.size() > 0) {
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIMovePostForm movePostForm = popupAction.createUIComponent(UIMovePostForm.class, null, null) ;
+				UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, 400, 430);
 				movePostForm.setUserProfile(topicDetail.userProfile) ;
 				movePostForm.updatePost(topicDetail.topicId, posts);
-				popupAction.activate(movePostForm, 400, 430) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UITopicDetail.msg.notCheckPost");
 			}
 		}
 	}
 
-	static public class SetApprovePostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetApprovePostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
 				posts.add(topicDetail.getPost(postId));
       }
 			if(posts.isEmpty()){
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPageListPostUnApprove postUnApprove = popupContainer.addChild(UIPageListPostUnApprove.class, null, null) ;
+				UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostUnApprove", 500, 360);
 				postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-				popupContainer.setId("PageListPostUnApprove") ;
-				popupAction.activate(popupContainer, 500, 360) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				int count = 0;
 				while(count < posts.size()){
@@ -1546,25 +1361,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					try {
 						topicDetail.getForumService().modifyPost(posts, 1) ;
 					} catch (Exception e) {
+					  topicDetail.log.warn("Failed to modify: "+ e.getMessage(), e);
 					}
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					refresh();
 				}
 			}
 		}
 	}
 	
-	static public class SetHiddenPostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
-			Post post = new Post() ;
+	static public class SetHiddenPostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			if(postIds == null || postIds.isEmpty()){
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UITopicDetail.msg.notCheckPost");
 			}
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
-				post = topicDetail.getPost(postId);
+				Post post = topicDetail.getPost(postId);
 				if(post != null && !post.getIsHidden()){
 					post.setIsHidden(true) ;
 					posts.add(post) ;
@@ -1573,14 +1387,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 			try {
 				topicDetail.getForumService().modifyPost(posts, 2) ;
 			} catch (Exception e) {
+			  topicDetail.log.warn("Failed to modify post: "+ e.getMessage(), e);
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+			refresh();
 		}
 	}
 
-	static public class SetUnHiddenPostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class SetUnHiddenPostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
@@ -1589,15 +1404,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					posts.add(post);
 				}
       }
-			if(posts.isEmpty()){
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UIPageListPostHidden listPostHidden = popupContainer.addChild(UIPageListPostHidden.class, null, null) ;
-				listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
-				popupContainer.setId("PageListPostHidden") ;
-				popupAction.activate(popupContainer, 500, 360) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			if(posts.isEmpty()){			  
+			  UIPageListPostHidden listPostHidden = topicDetail.openPopup(UIPageListPostHidden.class, "PageListPostHidden", 500, 360);
+        listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
 			} else {
 				int count = 0;
 				while(count < posts.size()){
@@ -1612,21 +1421,22 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					try {
 						topicDetail.getForumService().modifyPost(posts, 2) ;
 					} catch (Exception e) {
+					  topicDetail.log.warn("Failed to modify post: "+ e.getMessage(), e);
 					}
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					refresh();
 				}
 			}
 		}
 	}
 	
-	static public class SetUnApproveAttachmentActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
+	static public class SetUnApproveAttachmentActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 		}
 	}
 	
-	static public class DeletePostActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class DeletePostActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
@@ -1636,25 +1446,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				try {
 					topicDetail.getForumService().removePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, post.getId()) ;
 				} catch(Exception e){
-					e.printStackTrace();
+				  topicDetail.log.warn("Failed to remove post: "+ e.getMessage(), e);
 				}
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				refresh();
 			}
 		}
 	}
 
-	static public class ViewPublicUserInfoActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class ViewPublicUserInfoActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIViewUserProfile viewUserProfile = popupAction.createUIComponent(UIViewUserProfile.class, null, null) ;
-			try{
+			UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, 670, 400);
+			try {
 				UserProfile selectProfile = topicDetail.getForumService().getUserInformations(topicDetail.mapUserProfile.get(userId)) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
-			}catch(Exception e) {
-				e.printStackTrace() ;
+			} catch(Exception e) {
+			  topicDetail.log.warn("Failed to get User info: "+ e.getMessage(), e);
 			}
 			viewUserProfile.setUserProfileLogin(topicDetail.userProfile) ;
 			CommonContact contact = null ;
@@ -1662,80 +1470,58 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				contact = topicDetail.mapContact.get(userId) ;
 			}
 			viewUserProfile.setContact(contact) ;
-			popupAction.activate(viewUserProfile, 670, 400, true) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
-	static public class PrivateMessageActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class PrivateMessageActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			if(topicDetail.userProfile.getIsBanned()){
-				String[] args = new String[] { } ;
-				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING)) ;
+			  throwWarning("UITopicDetail.msg.userIsBannedCanNotSendMail");
 			}
-			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;
-			messageForm.setFullMessage(false);
-			messageForm.setUserProfile(topicDetail.userProfile);
-			messageForm.setSendtoField(userId) ;
-			popupContainer.setId("PrivateMessageForm") ;
-			popupAction.activate(popupContainer, 650, 480) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;			
+			UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, "PrivateMessageForm", 650, 480);
+	    messageForm.setFullMessage(false);
+	    messageForm.setUserProfile(topicDetail.userProfile);
+	    messageForm.setSendtoField(userId) ;
 		}
 	}
 	
-	static public class ViewPostedByUserActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class ViewPostedByUserActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIViewPostedByUser viewPostedByUser = popupContainer.addChild(UIViewPostedByUser.class, null, null) ;
+			UIViewPostedByUser viewPostedByUser = topicDetail.openPopup(UIViewPostedByUser.class, "ViewPostedByUser", 760, 370);
 			viewPostedByUser.setUserProfile(userId) ;
-			popupContainer.setId("ViewPostedByUser") ;
-			popupAction.activate(popupContainer, 760, 370) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
-	static public class ViewThreadByUserActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class ViewThreadByUserActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIViewTopicCreatedByUser topicCreatedByUser = popupContainer.addChild(UIViewTopicCreatedByUser.class, null, null) ;
-			topicCreatedByUser.setUserId(userId) ;
-			popupContainer.setId("ViewTopicCreatedByUser") ;
-			popupAction.activate(popupContainer, 760, 450) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIViewTopicCreatedByUser topicCreatedByUser = topicDetail.openPopup(UIViewTopicCreatedByUser.class, "ViewTopicCreatedByUser", 760, 450);
+			topicCreatedByUser.setUserId(userId) ;			
 		}
 	}
 	
-	private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
-		try {
-			this.topic = (Topic)getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
-			if(topic.getIsClosed() || topic.getIsLock()) return false;
-			Forum forum = (Forum)getForumService().getObjectNameById(this.forumId, Utils.FORUM);
-			if(forum.getIsClosed() || forum.getIsLock()) return false;
-			if(userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
-				if(!topic.getIsActive() || !topic.getIsActiveByForum()) return false;
-				String[] canCreadPost = topic.getCanPost();
-				if(canCreadPost != null && canCreadPost.length > 0 && !canCreadPost[0].equals(" ")){
-					return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
-				}
-			}
-    } catch (Exception e) {
-    	throw e;
+  private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
+    this.topic = (Topic) getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
+    if (topic.getIsClosed() || topic.getIsLock())
+      return false;
+    Forum forum = (Forum) getForumService().getObjectNameById(this.forumId, Utils.FORUM);
+    if (forum.getIsClosed() || forum.getIsLock())
+      return false;
+    if (userProfile.getUserRole() > 1
+        || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(),
+                                                                               userProfile.getUserId()))) {
+      if (!topic.getIsActive() || !topic.getIsActiveByForum())
+        return false;
+      String[] canCreadPost = topic.getCanPost();
+      if (canCreadPost != null && canCreadPost.length > 0 && !canCreadPost[0].equals(" ")) {
+        return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
+      }
     }
     return true;
-	}
+  }
 	
 
 
@@ -1751,12 +1537,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				return stringKey.trim().split(";") ;
 			}
 		}
-		return new String[]{};
+		return new String[0];
 	}
 	
-	static public class QuickReplyActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;
+	static public class QuickReplyActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			if(topicDetail.isDoubleClickQuickReply) return;
 			topicDetail.isDoubleClickQuickReply = true;
 			try {
@@ -1764,7 +1550,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
   			String message = "";
   			try {
   				message = textAreaInput.getValue();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+          topicDetail.log.warn("Failed read quick reply: "+ e.getMessage(), e);
+        }
   			String checksms = message ;
   			if(message != null && message.trim().length() > 0) {
   				if(topicDetail.checkForumHasAddTopic(topicDetail.userProfile)){
@@ -1828,50 +1616,38 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	  						topicDetail.getForumService().addWatch(1, path, values, topicDetail.userProfile.getUserId()) ;
 	  					}
 	  				} catch (PathNotFoundException e) {
-	  					String[] args = new String[] { } ;
-	  					throw new MessageException(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-	  				} catch (Exception e) {}
+	  				  throwWarning("UIPostForm.msg.isParentDelete");
+	  				} catch (Exception e) {
+	  				  topicDetail.log.warn("Failed to save post: "+ e.getMessage(), e);
+	  				}
 	  				textAreaInput.setValue("") ;
 	  				if(isOffend || hasTopicMod) {
-	  					Object[] args = { "" };
-	  					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-	  					if(isOffend)uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isOffend", args, ApplicationMessage.WARNING)) ;
-	  					else {
-	  						args = new Object[]{ };
-	  						uiApp.addMessage(new ApplicationMessage("MessagePost.msg.isModerate", args, ApplicationMessage.WARNING)) ;
+	  					if(isOffend) { 
+	  					  warning("MessagePost.msg.isOffend", "");
+	  					} else {
+	  					  warning("MessagePost.msg.isModerate", "");
 	  					}
-	  					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 	  					topicDetail.IdPostView = "normal";
 	  				} else {
 	  					topicDetail.IdPostView = "lastpost";
-	  				}
-	  				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-	  			}else {
-	  				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-	  				uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", null, ApplicationMessage.WARNING)) ;
-	  				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-	  				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+	  				}	  				
+	  				warning("UIPostForm.msg.no-permission");	  				
+	  				refresh();
 	  			}
-  			}else {
-  				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-  				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-  				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", args, ApplicationMessage.WARNING)) ;
-  				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+  			} else {
+  				warning("MessagePost.msg.message-empty", topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA));
   				topicDetail.isDoubleClickQuickReply = false;
   			}
       } catch (Exception e) {
-      	UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-      	Object[] args = {""};
-  			uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
-  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-  			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+  			warning("UIPostForm.msg.isParentDelete", "");
+  			refresh();
       }
 		}
 	}
 	
-	static public class PreviewReplyActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource() ;	
+	static public class PreviewReplyActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+				
 			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
 			if(checksms != null && message.trim().length() > 0) {
@@ -1902,85 +1678,72 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				post.setIcon(topic.getIcon());
 				post.setIsApproved(false) ;
 				post.setCreatedDate(new Date()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true)	;
-				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
+				
+				UIViewPost viewPost = topicDetail.openPopup(UIViewPost.class, 670, 0);
+				
 				viewPost.setPostView(post) ;
 				viewPost.setViewUserInfo(false) ;
 				viewPost.setActionForm(new String[] {"Close"});
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			}else {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				String[] args = new String[] { topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA) } ;
-				uiApp.addMessage(new ApplicationMessage("MessagePost.msg.message-empty", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+
+			} else {
+			  warning("MessagePost.msg.message-empty", topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA));
 			}
 		}
 	}
 	
-	static public class WatchOptionActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource();
+	static public class WatchOptionActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		  UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			Topic topic = topicDetail.topic ;
-			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
-			watchToolsForm.setPath(topic.getPath());
-			watchToolsForm.setEmails(topic.getEmailNotification()) ;
-			watchToolsForm.setIsTopic(true);
-			popupAction.activate(watchToolsForm, 500, 365) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365);
+	    watchToolsForm.setPath(topic.getPath());
+	    watchToolsForm.setEmails(topic.getEmailNotification()) ;
+	    watchToolsForm.setIsTopic(true);
 		}
 	}	
 	
-	static	public class AdvancedSearchActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail uiForm = event.getSource() ;
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+	static	public class AdvancedSearchActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 			UISearchForm searchForm = forumPortlet.getChild(UISearchForm.class) ;
 			searchForm.setUserProfile(forumPortlet.getUserProfile()) ;
 			searchForm.setSelectType(Utils.POST) ;
-			searchForm.setPath(uiForm.topic.getPath());
+			searchForm.setPath(topicDetail.topic.getPath());
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 
-	static	public class BanIPAllForumActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
+	static	public class BanIPAllForumActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UITopicDetail uiForm = event.getSource() ;
-			if(!uiForm.getForumService().addBanIP(ip)){
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			if(!topicDetail.getForumService().addBanIP(ip)){
+				warning("UIForumAdministrationForm.sms.ipBanFalse", ip);
 				return;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			refresh();
 		}
 	}
 
-	static	public class BanIPThisForumActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
+	static	public class BanIPThisForumActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UITopicDetail topicDetail = event.getSource() ;
+			
 			List<String> listIp = topicDetail.forum.getBanIP();
 			if(listIp == null || listIp.size()  == 0) listIp = new ArrayList<String>();
 			listIp.add(ip);topicDetail.forum.setBanIP(listIp);
 			if(!topicDetail.getForumService().addBanIPForum(ip, (topicDetail.categoryId + "/" + topicDetail.forumId))){
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIBanIPForumManagerForm.sms.ipBanFalse", new Object[]{ip}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIBanIPForumManagerForm.sms.ipBanFalse", ip);
 				return;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail);
+			refresh();
 		}
 	}
 	
-	static public class AddBookMarkActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource();
+	static public class AddBookMarkActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			try{
 				Topic topic = topicDetail.getTopic();
 				StringBuffer buffer = new StringBuffer();
@@ -1990,23 +1753,15 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateUserProfileInfo() ;
 			} catch (Exception e) {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+        topicDetail.refreshPortlet();
 			}
 		}
 	}
 
-	static public class AddWatchingActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource();
+	static public class AddWatchingActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+			
 			if(topicDetail.getTopic() != null) {
 				topicDetail.isEditTopic = true;
 				StringBuffer buffer = new StringBuffer();
@@ -2018,37 +1773,23 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateWatchinh();
 					topicDetail.listWatches = forumPortlet.getWatchinhByCurrentUser();
-					Object[] args = { };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+					topicDetail.info("UIAddWatchingForm.msg.successfully");
+					
+					refresh();
 				} catch (Exception e) {
-					e.printStackTrace();
-					Object[] args = { };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  topicDetail.log.warn("Failed to add watch: "+ e.getMessage(), e);
+				  warning("UIAddWatchingForm.msg.fall");
 				}
 			} else {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+        topicDetail.refreshPortlet();
 			}
 		}
 	}
 	
 
-	static public class UnWatchActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail topicDetail = event.getSource();
+	static public class UnWatchActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			if(topicDetail.getTopic() != null) {
 				topicDetail.isEditTopic = true;
 				String path =  topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId;
@@ -2057,58 +1798,33 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateWatchinh();
 					topicDetail.listWatches = forumPortlet.getWatchinhByCurrentUser();
-					Object[] args = { };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					topicDetail.info("UIAddWatchingForm.msg.UnWatchSuccessfully");
+					
 				} catch (Exception e) {
-					e.printStackTrace();
-					Object[] args = { };
-					UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				  topicDetail.log.warn("Failed to unwatch: "+ e.getMessage(), e);
+					warning("UIAddWatchingForm.msg.UnWatchfall");
 				}
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
+				refresh();
 			} else {
-				UIApplication uiApp = topicDetail.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-				categoryContainer.updateIsRender(true) ;
-				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
-				forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				warning("UIForumPortlet.msg.topicEmpty");
+				topicDetail.refreshPortlet();
 			}
 		}
 	}
 	
 
-	static public class RSSActionListener extends EventListener<UITopicDetail> {
-		public void execute(Event<UITopicDetail> event) throws Exception {
-			UITopicDetail uiForm = event.getSource();
+	static public class RSSActionListener extends BaseEventListener<UITopicDetail> {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(!uiForm.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)){
-				uiForm.getForumService().addWatch(-1, topicId, null, uiForm.userName);
+			if(!topicDetail.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)){
+			  topicDetail.getForumService().addWatch(-1, topicId, null, topicDetail.userName);
 			}
-			/*String rssLink = uiForm.getRSSLink(topicId);
-			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			popupContainer.setId("ForumRSSForm") ;
-			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
-			popupAction.activate(popupContainer, 560, 170) ;
-			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 
   public String processMarkup(String markup) throws RenderingException {
     try {
-
         return getReplaceByBBCode(markup);
-
     } catch (Exception e) {
       throw new RenderingException(e);
     }
