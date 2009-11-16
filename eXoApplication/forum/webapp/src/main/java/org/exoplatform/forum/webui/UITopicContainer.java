@@ -295,7 +295,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 				}
 				if(!canAddNewThread || strings == null || strings.length == 0 || strings[0].equals(" ")){
-					strings = forumService.getPermissionTopicByCategory(categoryId, "createTopic");
+					strings = forumService.getPermissionTopicByCategory(categoryId, "createTopicRole");
 					if(strings != null && strings.length > 0 && !strings[0].equals(" ")){
 						canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 					}
@@ -308,7 +308,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 				}
 				if(!canAddNewThread || strings == null || strings.length == 0 || strings[0].equals(" ")){
-					strings = forumService.getPermissionTopicByCategory(categoryId, "createTopic");
+					strings = forumService.getPermissionTopicByCategory(categoryId, "createTopicRole");
 					if(strings != null && strings.length > 0 && !strings[0].equals(" ")){
 						canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
 					}
@@ -356,11 +356,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		if(isReload)setForum(false);
 		else isReload = true;
 		if(!isModerator) {
-			strQuery.append("@exo:isClosed='false' and @exo:isWaiting='false' and @exo:isActive='true'");
-			
-			strQuery.append(" and (@exo:owner='").append(userId).append("' or @exo:canView=' ' or @exo:canPost=' '") ;
+			strQuery.append("@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' '")
+							.append(" or @exo:owner='").append(userId).append("'") ;
 			for (String string : UserHelper.getAllGroupAndMembershipOfUser(userId)) {
-				strQuery.append(" or @exo:canView='"+string+"' or @exo:canPost='"+string+"'") ;
+				strQuery.append(" or @exo:canView='"+string+"'") ;
 			}
 			strQuery.append(")");
 			

@@ -672,15 +672,12 @@ public class JCRDataStorage implements DataStorage {
 	
 	public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
 		String[] canCreated = new String[]{" "};
+		type = "exo:"+type;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node cateNode = getCategoryHome(sProvider).getNode(categoryId);
-			if (type.equals("createTopic") && cateNode.hasProperty("exo:createTopicRole"))
-				canCreated = ValuesToArray(cateNode.getProperty("exo:createTopicRole").getValues());
-			if (type.equals("viewer") && cateNode.hasProperty("exo:viewer"))
-				canCreated = ValuesToArray(cateNode.getProperty("exo:viewer").getValues());
-			if (type.equals("poster") && cateNode.hasProperty("exo:poster"))
-				canCreated = ValuesToArray(cateNode.getProperty("exo:poster").getValues());
+			if (cateNode.hasProperty(type))
+				canCreated = ValuesToArray(cateNode.getProperty(type).getValues());
 		} catch (Exception e) {
 		}finally{ sProvider.close() ;} 
 		return canCreated;
@@ -1702,6 +1699,7 @@ public class JCRDataStorage implements DataStorage {
       	}
       }
       String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
+      System.out.println("\n\n new: " + topicQuery + "\n\n\n");
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
@@ -1714,7 +1712,7 @@ public class JCRDataStorage implements DataStorage {
 	//
   private String buildXpath(SessionProvider sProvider, Node forumNode) throws Exception {
 		QueryManager qm = getCategoryHome(sProvider).getSession().getWorkspace().getQueryManager();
-		String queryString = "/jcr:root" + forumNode.getPath() + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (@exo:canView=' ' or @exo:canView='')]";
+		String queryString = "/jcr:root" + forumNode.getPath() + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')]";
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -1892,7 +1890,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 		}
 		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-		String queryString = "/jcr:root" + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (@exo:canView=' ' or @exo:canView='')] order by @exo:lastPostDate descending";
+		String queryString = "/jcr:root" + forumPath + "//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')] order by @exo:lastPostDate descending";
 		Query query = qm.createQuery(queryString, Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
@@ -2004,9 +2002,10 @@ public class JCRDataStorage implements DataStorage {
 		topicNew.setIsWaiting(reader.bool("exo:isWaiting"));
 		topicNew.setIsActive(reader.bool("exo:isActive"));
 		topicNew.setIsActiveByForum(reader.bool("exo:isActiveByForum"));
-		topicNew.setCanView(reader.strings("exo:canView"));
-		topicNew.setCanPost(reader.strings("exo:canPost"));
-		
+		topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
+		topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
+		System.out.println("\n\n topicNode exo:name: " + topicNode.getProperty("exo:name").getString());
+		System.out.println("topicNode has canView: " + topicNode.hasProperty("exo:canView"));
 		topicNew.setIsPoll(reader.bool("exo:isPoll"));
 		topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
 		topicNew.setTagId(reader.strings("exo:tagId"));
@@ -2311,10 +2310,13 @@ public class JCRDataStorage implements DataStorage {
 					isGetLastTopic = true;
 				}
 			}
-			if(strs == null || strs.length == 0) strs = new String []{" "};
-			topicNode.setProperty("exo:canView", strs);
+			if(isNew && strs != null && strs.length > 0) {
+				topicNode.setProperty("exo:canView", strs);
+			} else if(!isNew && (strs == null || strs.length == 0)){
+				topicNode.setProperty("exo:canView", new String[]{" "});
+			}
 			strs = topic.getCanPost();
-			if(strs == null || strs.length == 0) strs = new String []{" "};
+			if(strs == null) strs = new String []{""};
 			topicNode.setProperty("exo:canPost", strs);
 			topicNode.setProperty("exo:userVoteRating", topic.getUserVoteRating());
 			topicNode.setProperty("exo:voteRating", topic.getVoteRating());
@@ -3008,12 +3010,12 @@ public class JCRDataStorage implements DataStorage {
 							// set InfoPost for Forum
 							if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								forumNode.setProperty("exo:postCount", forumPostCount);
-								if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" ")){
+								if(!topicNode.hasProperty("exo:canView")){
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 								}
 								sendAlertJob = false;
 							} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-								if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" ")){
+								if(!topicNode.hasProperty("exo:canView")){
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 								}
 								sendAlertJob = false;
@@ -3029,7 +3031,7 @@ public class JCRDataStorage implements DataStorage {
 							if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 									if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-										if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" "))
+										if(!topicNode.hasProperty("exo:canView"))
 											forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 										sendAlertJob = false;
 									} 
@@ -3039,7 +3041,7 @@ public class JCRDataStorage implements DataStorage {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} else if (post.getIsApproved()) {
-									if(!topicNode.hasProperty("exo:canView") || topicNode.getProperty("exo:canView").getValues()[0].getString().equals(" "))
+									if(!topicNode.hasProperty("exo:canView"))
 										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} 

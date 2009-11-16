@@ -28,7 +28,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -612,7 +611,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						//topicNew.setAttachmentFirstPost(0) ;
 						String[]canPosts = ForumUtils.splitForForum(canPost) ;
 						String[]canViews = ForumUtils.splitForForum(canView) ;
-										
+						
 						topicNew.setCanView(canViews);
 						topicNew.setCanPost(canPosts);
 						topicNew.setIsApproved(!hasForumMod) ;

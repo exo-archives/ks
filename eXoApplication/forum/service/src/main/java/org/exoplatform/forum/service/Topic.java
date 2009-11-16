@@ -65,7 +65,7 @@ public class Topic {
 	private List<ForumAttachment> attachments ;
 	
 	public Topic(){ 
-    canView = new String[] { " " };
+    canView = new String[] { "" };
     canPost = new String[] { " " };
     userVoteRating = new String[] {};
     tagId = new String[] {};
