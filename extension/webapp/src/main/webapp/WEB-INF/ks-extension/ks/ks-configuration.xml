@@ -4,11 +4,12 @@
   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-
+  <!-- 
   <component>
     <key>org.exoplatform.ks.common.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>
   </component>
+  -->
   <!--
     Use this provider to display CS contact information in forum profile
   -->
