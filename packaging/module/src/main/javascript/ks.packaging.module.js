@@ -58,10 +58,10 @@ function getModule(params)
     new Project("org.exoplatform.ks", "exo.ks.web.ksResources", "war", module.version) ;
 
    // KS extension for tomcat 
-   module.extension =
-   new Project("org.exoplatform.ks", "exo.ks.extension.webapp", "war", module.version).
+   module.extension = {};
+   module.extension.webapp = new Project("org.exoplatform.ks", "exo.ks.extension.webapp", "war", module.version).
    addDependency(new Project("org.exoplatform.ks", "exo.ks.extension.config", "jar", module.version));
-   module.extension.deployName = "ks";
+   module.extension.webapp.deployName = "ks-extension";
    
    
   // KS demo 
