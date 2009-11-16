@@ -42,7 +42,7 @@
   <!-- TODO : remove the following services when when they'll be provided by platform -->
   <component>
     <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
-    <type>org.exoplatform.services.jcr.ext.hierarchy.implNodeHierarchyCreatorImpl</type>
+    <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
   </component>  
   
   

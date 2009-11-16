@@ -2,9 +2,41 @@
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
 	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+
+  <!-- knowledge workspace and load nodetypes -->
+  <import>war:/ks-extension/jcr/jcr-configuration.xml</import> 
+
+  <!-- KS data storage tree -->
+  <import>war:/ks-extension/jcr/storage-configuration.xml</import> 
+  
+  <!-- new apps in registry  -->
+  <import>war:/ks-extension/portal/application-registry-configuration.xml</import>  
+  
+  <!-- import>war:/conf/ks-ext/web/web-inf-extension-configuration.xml</import-->
+  
+    <!-- main KS configuration  -->
+    <import>war:/ks-extension/ks/ks-configuration.xml</import>
+    
+    <!-- builtin BBCodes  -->
+    <import>war:/ks-extension/ks/forum/bbcodes-configuration.xml</import>
+    
+    <!-- Auto prune service -->
+    <import>war:/ks-extension/ks/forum/prune-configuration.xml</import>
+ 
+    <!-- Forum statistics  -->
+    <import>war:/ks-extension/ks/forum/statistics-configuration.xml</import>        
+        
+    <!-- roles rules -->
+    <import>war:/ks-extension/ks/faq/roles-configuration.xml</import>
+    <import>war:/ks-extension/ks/forum/roles-configuration.xml</import>
+
   <!-- Configure the profile contact provider -->
   <import>war:/conf/ks/profile-configuration.xml</import>
   
   <!-- Configure the FAQ templates -->
   <import>war:/conf/ks/faq/templates-configuration.xml</import>
+  
+  
+  
+  
 </configuration>
