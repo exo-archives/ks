@@ -298,7 +298,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 	}
 	
 	public void updateUserProfile (User user) throws Exception {
-	  storage_.populateUserProfile(user, true);
+	  storage_.populateUserProfile(user, false);
 	}
 	
 	/**
