@@ -1251,7 +1251,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			List<String> values = new ArrayList<String>();
 			try {
-				values.add(topicContainer.userProfile.getEmail());
+				values.add(topicContainer.forumService.getUserInformations(topicContainer.userProfile).getEmail());
 				topicContainer.forumService.addWatch(1, path, values, topicContainer.userProfile.getUserId()) ;
 				UIForumPortlet forumPortlet = topicContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
