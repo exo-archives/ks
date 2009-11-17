@@ -1042,11 +1042,11 @@
 }
 
 .UIAnswersPortlet .UISendMailForm input{
-	width: 500px ;
+	width: 400px ;
 }
 
 .UIAnswersPortlet .UISendMailForm #To{
-	width: 400px ;
+	width: 350px ;
 }
 
 .UIAnswersPortlet .UISendMailForm #FAQSelectCateList{
