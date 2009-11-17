@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ks.common.bbcode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,14 +28,18 @@ import org.exoplatform.ks.rendering.api.Renderer;
  * @version $Revision$
  */
 public class BBCodeRenderer implements Renderer {
-  List<BBCodeData> bbcodes;
-  BBCodeRenderer() {
-    
+  protected List<BBCode> bbcodes;
+  
+  public BBCodeRenderer() {
+    bbcodes = new ArrayList<BBCode>();
   }
+  
+  
   
   public BBCodeRenderer(InitParams params) {
     BBCodePlugin plugin = (BBCodePlugin)params.getObjectParam("bbcode.default.configuration").getObject();
-    bbcodes = plugin.getBbcodeDatas();
+    List<BBCodeData>bbcodeData = plugin.getBbcodeDatas();
+    bbcodes = convert(bbcodeData);
   }
   
   
@@ -46,11 +51,8 @@ public class BBCodeRenderer implements Renderer {
    * @see org.exoplatform.ks.rendering.api.Renderer#render(java.lang.String)
    */
   public String render(String s) {
-
-    int lastIndex = 0, tagIndex = 0, clsIndex = 0;
-    String start, end, bbc, str="", param, option;
-    for (BBCodeData bbcode : bbcodes) {
-      bbc = bbcode.getTagName();
+    for (BBCode bbcode : bbcodes) {
+      String bbc = bbcode.getTagName();
       if(bbc.equals("URL")){
         s = StringUtils.replace(s, "[link", "[URL");
         s = StringUtils.replace(s, "[/link]", "[/URL]");
@@ -60,7 +62,7 @@ public class BBCodeRenderer implements Renderer {
       bbc = bbc.toLowerCase();
       if(!bbc.equals("list")){
        
-        if(Boolean.valueOf(bbcode.getIsOption())){
+        if(Boolean.valueOf(bbcode.isOption())){
           s = processOptionedTag(s, bbcode);
         } else {
           s = processTag(s, bbcode);
@@ -73,7 +75,7 @@ public class BBCodeRenderer implements Renderer {
   
   }
 
-  String processTag(String s, BBCodeData bbcode) {
+  String processTag(String s, BBCode bbcode) {
     String bbc = bbcode.getTagName();
     int clsIndex;
     String start;
@@ -104,7 +106,7 @@ public class BBCodeRenderer implements Renderer {
     return s;
   }
 
-  String processOptionedTag(String markup, BBCodeData bbcode) {
+  String processOptionedTag(String markup, BBCode bbcode) {
     String bbc = bbcode.getTagName();
     int clsIndex;
     String start;
@@ -209,12 +211,34 @@ public class BBCodeRenderer implements Renderer {
     return s;
   }
 
-  public List<BBCodeData> getBbcodes() {
+  public List<BBCode> getBbcodes() {
     return bbcodes;
   }
 
   public void setBbcodes(List<BBCodeData> bbcodes) {
-    this.bbcodes = bbcodes;
+    this.bbcodes = convert(bbcodes);
+  }
+
+  public void addBBCode(BBCode bbcode) {
+    if (bbcodes == null) {
+     bbcodes = new ArrayList<BBCode>();
+    }
+    bbcodes.add(bbcode);
+  }
+
+  private List<BBCode> convert(List<BBCodeData> bbc) {
+    List<BBCode> bbcodes = new ArrayList<BBCode>();
+    for (BBCodeData bbCodeData : bbc) {
+      BBCode bbCode = new BBCode();
+      bbCode.setActive(Boolean.valueOf(bbCodeData.getIsActive()));
+      bbCode.setDescription(bbCodeData.getDescription());
+      bbCode.setExample(bbCodeData.getExample());
+      bbCode.setOption(Boolean.valueOf(bbCodeData.getIsOption()));
+      bbCode.setReplacement(bbCodeData.getReplacement());
+      bbCode.setTagName(bbCodeData.getTagName());
+      bbcodes.add(bbCode);
+    }
+    return bbcodes;
   }
 
 }
