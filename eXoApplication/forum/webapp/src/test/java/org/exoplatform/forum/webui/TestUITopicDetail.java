@@ -18,8 +18,11 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
+import org.exoplatform.forum.rendering.ExtendedBBCodeRenderer;
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.rendering.MarkupRenderingService;
+import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -29,14 +32,23 @@ import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail> {
 
   private FakeForumService service;
+  private MarkupRenderingService markupRenderingService;
   
   public TestUITopicDetail() throws Exception {
     super();
-    service = new FakeForumService();;  
+    service = new FakeForumService();  
   }
 
+  public void doSetUp() {  
+    super.doSetUp();
+    this.markupRenderingService = new MarkupRenderingService();
+    Renderer bbcodeRenderer = new ExtendedBBCodeRenderer();
+    markupRenderingService.registerRenderer(bbcodeRenderer);
+    component.setMarkupRenderingService(markupRenderingService);
+  }
+  
   public void testSyncBBCodeCache() throws Exception {
-    
+   
     // active BBCodes are cached
     registerBBCode("FOO", "");
     component.setIsGetSv(true);
@@ -59,6 +71,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     component.setIsGetSv(false);
     component.syncBBCodeCache();
     assertEquals(2, component.listBBCode.size());
+   
 
   }
   
@@ -68,11 +81,11 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   }
   
   public void testProcessMarkup() throws Exception {
-    
     registerBBCode("FOO", "BAR");
     String markup = "[FOO]sdsd[/FOO]";
-    assertEquals("BAR", component.getReplaceByBBCode(markup));
-    assertEquals(component.processMarkup(markup), component.getReplaceByBBCode(markup));
+    assertEquals("BAR", component.processMarkup(markup));
+    assertEquals(component.getReplaceByBBCode(markup), component.processMarkup(markup));
+    
   }
 
   private void registerBBCode(String tagName, String replacement) {
@@ -82,6 +95,10 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     foo.setId(tagName);
     foo.setTagName(tagName);  
     service.setBBCode(tagName, foo);
+
+    // register the BBCode in the extended bbcode renderer
+    ExtendedBBCodeRenderer renderer = (ExtendedBBCodeRenderer) markupRenderingService.getRenderer("bbcode");
+    renderer.addBBCode(foo);
   }
   
   @Override

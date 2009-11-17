@@ -30,11 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
+import org.exoplatform.forum.rendering.ExtendedBBCodeRenderer;
 import org.exoplatform.forum.rendering.MarkupRenderer;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
@@ -70,6 +72,8 @@ import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.user.CommonContact;
+import org.exoplatform.ks.rendering.MarkupRenderingService;
+import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -184,8 +188,12 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	private Map<String, Integer> pagePostRemember = new HashMap<String, Integer>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private Map<String, CommonContact> mapContact = new HashMap<String, CommonContact>();
+
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_ADD_TAG = "AddTag" ;
+	
+	private MarkupRenderingService markupRenderingService;
+	
 	public UITopicDetail() throws Exception {
 		isDoubleClickQuickReply = false;
 		
@@ -385,16 +393,28 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
   }
 	
   public String getReplaceByBBCode(String s) throws Exception {
-		syncBBCodeCache();
+    if (isGetSv) {
+      ((ExtendedBBCodeRenderer)getBbCodeRenderer()).syncBBCodeCache();
+    }
+    String result = getBbCodeRenderer().render(s);
+    return result;
+
+	}
+  
+  
+  public String _getReplaceByBBCode(String s) throws Exception {
+
+    syncBBCodeCache();
     if(!listBBCode.isEmpty()){
-	    try {
-	    	s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
-	    } catch (Exception e) {
-	      log.warn("Failed to process BBCode: "+ e.getMessage());
-	    }
+      try {
+        s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
+      } catch (Exception e) {
+        log.warn("Failed to process BBCode: "+ e.getMessage());
+      }
     }
     return s;
-	}
+  }
+
 
   public void syncBBCodeCache() {
 		if(isGetSv) {
@@ -1823,9 +1843,24 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 
   public String processMarkup(String markup) throws RenderingException {
     try {
-        return getReplaceByBBCode(markup);
+
+      return getBbCodeRenderer().render(markup);
+      //  return getReplaceByBBCode(markup);
     } catch (Exception e) {
       throw new RenderingException(e);
     }
+  }
+
+  public Renderer getBbCodeRenderer() {
+    if (this.markupRenderingService == null) {
+      MarkupRenderingService markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
+                                                                                   .getComponentInstanceOfType(MarkupRenderingService.class);
+    }
+    Renderer bbCodeRenderer = markupRenderingService.getRenderer("bbcode");
+    return bbCodeRenderer;
+  }
+  
+  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
+    this.markupRenderingService = markupRenderingService;
   }
 }
