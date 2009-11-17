@@ -31,12 +31,16 @@ import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 
 public class BBCodeOperator {
 	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	private KSDataLocation dataLocator;
 	private JCRSessionManager sessionManager;
+	
+	private static Log log = ExoLogger.getLogger(BBCodeOperator.class);
 	
   public BBCodeOperator(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
@@ -112,6 +116,7 @@ public class BBCodeOperator {
 				bbCodeHome.save();
 			}
 		}catch(Exception e) {
+		  log.error("Error saving BBCodes", e);
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -138,7 +143,9 @@ public class BBCodeOperator {
 		    try{
 		    	Node bbcNode = iter.nextNode();
 			    bbcodes.add(getBBCodeNode(bbcNode));
-		    }catch(Exception e) {}				
+		    }catch(Exception e) {
+		      log.error("Error loading BBCodes", e);
+		    }				
 	    }			
 		}finally { sProvider.close() ;}
 		return bbcodes;		
@@ -180,6 +187,7 @@ public class BBCodeOperator {
 		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
 		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
       } catch (Exception e) {
+        log.error("Error loading BBCode" + id, e);
       }
 		}finally { sProvider.close() ;}
 		return bbCode ;
@@ -192,7 +200,7 @@ public class BBCodeOperator {
 			bbCodeHome.getNode(bbcodeId).remove();
 			bbCodeHome.save();
     } catch (Exception e) {
-    	e.printStackTrace() ;
+      log.error("Error removing BBCode" + bbcodeId, e);
     }finally{
     	sProvider.close();
     }
