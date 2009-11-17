@@ -390,7 +390,16 @@
 	color: black;
 }
 
+.UITopicDetail .MenuTagContainer {
+	width: 400px;
+	height: 100px;
+	padding: 3px 10px;
+	overflow: auto;
+}
 
+.UITopicDetail .MenuTagContainer .TagItem{
+	float: left;
+}
 
 
 

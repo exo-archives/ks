@@ -819,7 +819,7 @@ UIForumPortlet.prototype.initTagScroll = function() {
 		}
 		else {
 			tmp = elements[i].cloneNode(true);
-			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","MenuItem");
+			eXo.core.DOMUtil.replaceClass(tmp,"FloatLeft","TagItem");
 			tmp.style.display = "block";
 			menuContainer.appendChild(tmp)		
 			elements[i].style.display = "none";
@@ -836,9 +836,9 @@ UIForumPortlet.prototype.initTagScroll = function() {
 	function setPosition(menu){
 		var uiPopupCategory = eXo.core.DOMUtil.findAncestorByClass(menu,"UIPopupCategory");
 		uiPopupCategory.style.display = "block";
-		var posX = 24*2 - uiPopupCategory.offsetWidth ;
+//		var posX = 24*2 - uiPopupCategory.offsetWidth ;
 		uiPopupCategory.style.top = "24px";
-		uiPopupCategory.style.left = posX + "px";
+		uiPopupCategory.style.left = "-400px";//posX + "px";
 		uiPopupCategory.style.display = "none";
 	};
 	

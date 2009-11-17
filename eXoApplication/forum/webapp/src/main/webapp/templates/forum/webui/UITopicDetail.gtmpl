@@ -136,40 +136,38 @@
 			 		String tagName = tag.getName();
 			%>
 				<div class="FloatLeft MenuItem">
-					<a class="TagIcon FloatLeft BlueTagIcon" title="$tagName" href="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
+					<a class="TagIcon FloatLeft BlueTagIcon" title="$tagName" href="javaScript:void(0);" onclick="<%=uicomponent.event("OpenTopicsTag", tag.getId());%>">$tagName</a>
 					<div class="UntagIcon FloatLeft" title="Untag this topic." onclick="<%=uicomponent.event("UnTagTopic", tag.getId());%>"><span></span></div>
 					<div style="clear:left;"><span></span></div>
 				</div>
 			<%} %>
 				<div class="ScrollButtons" onclick="eXo.webui.UIPopupSelectCategory.show(this, event);">
       					<% /*Begin Popup Menu*/ %>
-			<div style="position:relative;">
-				<div class="UIPopupCategory" style="display:none;">
-					<div class="UIRightClickPopupMenu" style="display:block;">
-						<div class="UIContextMenuContainer">
-							<div class="TopLeftRightClickPopupMenu">
-								<div class="TopRightRightClickPopupMenu">
-									<div class="TopCenterRightClickPopupMenu"><span></span></div>
-								</div>
-							</div>
-							<div class="MiddleLeftRightClickPopupMenu">
-								<div class="MiddleRightRightClickPopupMenu">
-									<div class="UIRightPopupMenuContainer">
-										
-										
+					<div style="position:relative;">
+						<div class="UIPopupCategory" style="display: none;">
+							<div class="UIRightClickPopupMenu" style="display:block;">
+								<div class="UIContextMenuContainer">
+									<div class="TopLeftRightClickPopupMenu">
+										<div class="TopRightRightClickPopupMenu">
+											<div class="TopCenterRightClickPopupMenu"><span></span></div>
+										</div>
 									</div>
-								</div>
-							</div>
-							<div class="BottomLeftRightClickPopupMenu">
-								<div class="BottomRightRightClickPopupMenu">
-									<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+									<div class="MiddleLeftRightClickPopupMenu">
+										<div class="MiddleRightRightClickPopupMenu">
+											<div class="UIRightPopupMenuContainer">
+											</div>
+										</div>
+									</div>
+									<div class="BottomLeftRightClickPopupMenu">
+										<div class="BottomRightRightClickPopupMenu">
+											<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<% /*End Popup Menu*/ %>
+					<% /*End Popup Menu*/ %>
       	</div>
 				<div style="clear:left;"><span></span></div>
 			</div>

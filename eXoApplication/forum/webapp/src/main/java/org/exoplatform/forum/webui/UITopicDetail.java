@@ -195,7 +195,6 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		addUIFormInput( new UIFormStringInput(FIELD_ADD_TAG, null)) ;
 		addUIFormInput( new UIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA, FIELD_MESSAGE_TEXTAREA,null)) ;
 		addChild(UIPostRules.class, null, null);
-		this.setSubmitAction("GoNumberPage") ;
 		this.setActions(new String[]{"PreviewReply","QuickReply"} );
 		this.isLink = true;
 	}
