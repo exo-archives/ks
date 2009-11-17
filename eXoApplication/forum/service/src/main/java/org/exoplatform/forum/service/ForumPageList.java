@@ -278,8 +278,8 @@ public class ForumPageList extends JCRPageList {
 		topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
 		topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
 		topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
-		topicNew.setCanView(ValuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
-		topicNew.setCanPost(ValuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
+		if(topicNode.hasProperty("exo:canView"))topicNew.setCanView(ValuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
+		if(topicNode.hasProperty("exo:canPost"))topicNew.setCanPost(ValuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll"))topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
 		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToArray(topicNode.getProperty("exo:userVoteRating").getValues())) ;
 		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToArray(topicNode.getProperty("exo:tagId").getValues())) ;

@@ -111,6 +111,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setCreatedDate(reader.date("exo:createdDate"));
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
+    topicNew.setTagId(reader.strings("exo:tagId"));
     return topicNew;
   }
   

@@ -1699,10 +1699,11 @@ public class JCRDataStorage implements DataStorage {
       	}
       }
       String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
-      System.out.println("\n\n new: " + topicQuery + "\n\n\n");
+//      System.out.println("\n\n topicQuery: " + topicQuery);
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
+    	e.printStackTrace();
       log.error("Failed to retrieve topic list for forum " + forumId);
       return null;
     } finally {
@@ -1717,7 +1718,7 @@ public class JCRDataStorage implements DataStorage {
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		StringBuilder builder = new StringBuilder();
-		boolean isOr = false;
+		boolean isOr = false; 
 		while (iter.hasNext()) {
 	    Node node = iter.nextNode();
 	    if(isOr) builder.append(" and ");
@@ -2004,8 +2005,7 @@ public class JCRDataStorage implements DataStorage {
 		topicNew.setIsActiveByForum(reader.bool("exo:isActiveByForum"));
 		topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
 		topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
-		System.out.println("\n\n topicNode exo:name: " + topicNode.getProperty("exo:name").getString());
-		System.out.println("topicNode has canView: " + topicNode.hasProperty("exo:canView"));
+
 		topicNew.setIsPoll(reader.bool("exo:isPoll"));
 		topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
 		topicNew.setTagId(reader.strings("exo:tagId"));
@@ -4284,23 +4284,29 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			Node tagHome = getTagHome(sProvider);
 			Node newTagNode;
+			boolean isNew = false;
 			try {
 				newTagNode = tagHome.getNode(newTag.getId());
-				List<String> userTags = ValuesToList(newTagNode.getProperty("exo:userTag").getValues());
-				if(!userTags.contains(newTag.getUserTag()[0])) {
-					userTags.add(newTag.getUserTag()[0]);
-					newTagNode.setProperty("exo:userTag", userTags.toArray(new String[userTags.size()]));
-				}
-				long count = newTagNode.getProperty("exo:useCount").getLong();
-				newTagNode.setProperty("exo:useCount", count + 1);
-      } catch (Exception e) {
+      } catch (PathNotFoundException e) {
+      	isNew = true;
       	String id = Utils.TAG + newTag.getName();
       	newTagNode = tagHome.addNode(id, "exo:forumTag");
       	newTagNode.setProperty("exo:id", id);
-      	newTagNode.setProperty("exo:userTag", newTag.getUserTag());
-      	newTagNode.setProperty("exo:name", newTag.getName());
-      	newTagNode.setProperty("exo:useCount", 1);
       }
+      if(isNew){
+	    	newTagNode.setProperty("exo:userTag", newTag.getUserTag());
+	    	newTagNode.setProperty("exo:name", newTag.getName());
+	    	newTagNode.setProperty("exo:useCount", 1);
+      } else {
+      	List<String> userTags = ValuesToList(newTagNode.getProperty("exo:userTag").getValues());
+      	if(!userTags.contains(newTag.getUserTag()[0])) {
+      		userTags.add(newTag.getUserTag()[0]);
+      		newTagNode.setProperty("exo:userTag", userTags.toArray(new String[userTags.size()]));
+      	}
+      	long count = newTagNode.getProperty("exo:useCount").getLong();
+      	newTagNode.setProperty("exo:useCount", count + 1);
+      }
+      
 			if(tagHome.isNew()) {
 				tagHome.getSession().save();
 			} else {

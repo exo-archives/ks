@@ -318,7 +318,7 @@ public class Utils {
 		if(!list.isEmpty()) {
 			int t = 0;
 			for (String string : list) {
-	      if(t == 0) builder.append("(").append(property).append("='").append(string).append("'");
+	      if(t == 0) builder.append("(not(").append(property).append(") or ").append(property).append("='").append(string).append("'");
 	      else builder.append(" or ").append(property).append("='").append(string).append("'");
 	      t = 1;
       }

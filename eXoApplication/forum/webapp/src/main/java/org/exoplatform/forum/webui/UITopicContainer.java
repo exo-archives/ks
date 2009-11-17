@@ -373,7 +373,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
 			listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
 			
-			if(!listUser.isEmpty() && !ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), userId)) {
+			if(!listUser.isEmpty() && !ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userId)) {
 				strQuery.append(" and (@exo:owner='").append(userId).append("' or topicPermission");
 			}
 		}
