@@ -32,7 +32,9 @@ function getModule(params)
 
   // KS apps
   module.eXoApplication = {};
-  module.eXoApplication.common = new Project("org.exoplatform.ks", "exo.ks.eXoApplication.common","jar", module.version) ; 
+  module.eXoApplication.common = new Project("org.exoplatform.ks", "exo.ks.eXoApplication.common","jar", module.version).
+  addDependency(new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version));
+
   
   // FAQ
   module.eXoApplication.faq = 
