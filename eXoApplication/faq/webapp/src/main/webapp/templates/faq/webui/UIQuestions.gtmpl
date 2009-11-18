@@ -339,7 +339,7 @@
 																		link = uicomponent.convertLinkToForum(link);
 																		if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																			if(topicIdDiscuss.equals(uicomponent.discussId)) {
-																				jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"')");
+																				jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"');");
 																				uicomponent.discussId = "";
 																			}
 																		}
@@ -517,7 +517,7 @@
 																						link = uicomponent.convertLinkToForum(link);
 																						if(uicomponent.discussId != null && uicomponent.discussId.length() > 0){
 																							if(topicIdDiscuss.equals(uicomponent.discussId)) {
-																								jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"')");
+																								jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.openDiscussLink('"+link+"');");
 																								uicomponent.discussId = "";
 																							}
 																						}
