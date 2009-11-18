@@ -494,7 +494,7 @@ public class UICategories extends UIContainer	{
 			List<String> values = new ArrayList<String>();
 			String userName = uiContainer.userProfile.getUserId();
 			try {
-				values.add(uiContainer.userProfile.getEmail());
+		        values.add(uiContainer.forumService.getUserInformations(uiContainer.userProfile).getEmail());
 				uiContainer.forumService.addWatch(1, path, values, userName) ;
 				UIForumPortlet forumPortlet = uiContainer.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
