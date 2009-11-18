@@ -269,6 +269,27 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UISettingEditModeForm> event) throws Exception {
 			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UISettingEditModeForm editModeForm = event.getSource();
+			if(editModeForm.tabId == 0){
+				String listCategoryId = "";
+				String listForumId = "";
+				List<UIComponent> children = editModeForm.getChildren() ;
+				for(UIComponent child : children) {
+					if(child instanceof UIFormCheckBoxInput) {
+						if(((UIFormCheckBoxInput)child).isChecked()) {
+							if(child.getId().indexOf(Utils.CATEGORY) >=0){
+								if(ForumUtils.isEmpty(listCategoryId)) listCategoryId = child.getId();
+								else listCategoryId = listCategoryId + "," + child.getId();
+							} else {
+								if(ForumUtils.isEmpty(listForumId)) listForumId = child.getId();
+								else listForumId = listForumId + "," + child.getId();
+							}
+						}
+					}
+				}
+				listCategoryinv = editModeForm.getListInValus(listCategoryId);
+				listforuminv = editModeForm.getListInValus(listForumId);
+				editModeForm.isSave = true;
+			}
 			editModeForm.tabId = Integer.parseInt(id);
 			event.getRequestContext().addUIComponentToUpdateByAjax(editModeForm.getParent()) ;
 		}
