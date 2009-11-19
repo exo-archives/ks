@@ -420,9 +420,9 @@ public class FAQUtils {
 	}
 
 	public static void savePortletPreference(FAQSetting setting, String emailAddNewQuestion, String emailEditResponseQuestion){
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-		PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		try {
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+			PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 			portletPref.setValue("display", setting.getDisplayMode());
 			portletPref.setValue("orderBy", setting.getOrderBy());
 			portletPref.setValue("orderType", setting.getOrderType());
