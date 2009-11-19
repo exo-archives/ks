@@ -1844,8 +1844,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
   public String processMarkup(String markup) throws RenderingException {
     try {
 
-      return getBbCodeRenderer().render(markup);
-      //  return getReplaceByBBCode(markup);
+      //return getBbCodeRenderer().render(markup);
+      return getReplaceByBBCode(markup);
     } catch (Exception e) {
       throw new RenderingException(e);
     }
