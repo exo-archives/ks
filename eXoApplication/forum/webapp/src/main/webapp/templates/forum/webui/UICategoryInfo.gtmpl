@@ -133,10 +133,10 @@
 					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalThreads");%>: $topics,</span> 
 					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalPosts");%>: $posts, </span>
 					 			<span><%=_ctx.appRes("UICategoryInfo.label.TotalMembers");%>: $members, </span>
-					 			<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>:$activeUsers</span>
+					 			<span><%=_ctx.appRes("UICategoryInfo.label.ActiveMembers");%>: $activeUsers</span>
 					 		</div>
 							<div class="text" style="padding-bottom:5px;">
-								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>:</span>
+								<span><%=_ctx.appRes("UICategoryInfo.label.WellCome");%>: </span>
 								<a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">$viewNewMember</a>
 								<% linkURL = uicomponent.event("CreatedLink", newMember) ; %>
 								<div class="fixPupupMenu">
