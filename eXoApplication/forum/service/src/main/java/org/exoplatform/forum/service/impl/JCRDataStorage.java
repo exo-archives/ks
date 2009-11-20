@@ -3241,7 +3241,8 @@ public class JCRDataStorage implements DataStorage {
 					if(post.getIsApproved() && post.getIsActiveByTopic() && !post.getIsHidden()) {
 						isSend = true;
 						List<String> listCanViewInTopic = new ArrayList<String>(); 
-						listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
+						if(node.hasProperty("exo:canView"))
+							listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
 						if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
 							listUser.addAll(Arrays.asList(post.getUserPrivate()));
 						}

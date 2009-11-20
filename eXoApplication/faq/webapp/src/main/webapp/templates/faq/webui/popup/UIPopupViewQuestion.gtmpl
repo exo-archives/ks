@@ -80,7 +80,7 @@
 							    	String linkImage = uicomponent.getFileSource(fileAttachment) ;
 							    	String typeFileIcon = fileAttachment.getMimeType().substring((fileAttachment.getMimeType().indexOf("/")+1));
 								    if(validate.isImage(fileName)) {
-								      String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath() ;
+								      String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +fileAttachment.getPath() +"/" ;
 							    %>
 							    	<div  style="float:left; margin-left:5px;" id="divId${fileName}">
 								    	<div class="Image">
