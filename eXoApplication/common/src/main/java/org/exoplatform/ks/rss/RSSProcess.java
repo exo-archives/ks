@@ -113,9 +113,12 @@ public class RSSProcess extends RSSGenerate {
 		Node node = null;
 		linkItem += "?portal:componentId=forum&portal:type=action&portal:isSecure=false&uicomponent=UIBreadcumbs&" +
 								"op=ChangePath&objectId=";
+		
 		if(typeEvent != Event.NODE_REMOVED){
 			node = (Node)appHomeNode.getSession().getItem(path);
 			if(node.isNodeType("exo:post")){
+				linkItem = node.getProperty("exo:link").getString();
+				linkItem = linkItem.substring(0, linkItem.indexOf("objectId=")+9);
 				generatePostRSS(path, typeEvent);
 			}
 		}else{
@@ -153,13 +156,15 @@ public class RSSProcess extends RSSGenerate {
 			if((postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean() &&
 					(topicNode.hasProperty("exo:isApproved") && !topicNode.getProperty("exo:isApproved").getBoolean())) ||
 					(postNode.hasProperty("exo:userPrivate") && 
-							!postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"))
-					)
-				return;
+							!postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri")) ||
+					(topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)
+				) return;
 			
 			Node forumNode = topicNode.getParent();
 			Node categoryNode = forumNode.getParent();
-			
+			if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
+					(forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)) return;
+				
 			if((postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
 					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())||
 					(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean())
