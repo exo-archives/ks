@@ -184,6 +184,10 @@ public abstract class RSSGenerate {
     SyndFeed feed = input.build(doc);
     List<SyndEntry> entries = feed.getEntries();
     if(removeItemId != null && removeItemId.trim().length() > 0){
+      if (removeItemId.contains("topic") || removeItemId.contains("forum")){
+        removeItemId = "post" + removeItemId.substring(5);
+      }
+
 	    for(SyndEntry syndEntry : entries){
 	    	if(syndEntry.getUri().equals(removeItemId)){
 	    		entries.remove(syndEntry);
