@@ -482,6 +482,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return list;	
 	}*/
 	
+	private boolean isModerator() {
+		return isModerator;
+	}
+	
 	public void setListWatches(List<Watch> listWatches) {
 	  this.listWatches = listWatches;
   }

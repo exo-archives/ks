@@ -529,7 +529,11 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	public void setIsEditTopic( boolean isEditTopic) {
 		this.isEditTopic = isEditTopic ;
 	}
-
+	
+	private boolean isModerator() {
+		return isMod;
+	}
+	
 	private Topic getTopic() throws Exception {
 		try {
 			if(this.isEditTopic || this.topic == null) {
@@ -1641,9 +1645,10 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	  				} else {
 	  					topicDetail.IdPostView = "lastpost";
 	  				}	  				
+	  			} else {
 	  				warning("UIPostForm.msg.no-permission");	  				
-	  				refresh();
 	  			}
+  				refresh();
   			} else {
   				warning("MessagePost.msg.message-empty", topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA));
   				topicDetail.isDoubleClickQuickReply = false;

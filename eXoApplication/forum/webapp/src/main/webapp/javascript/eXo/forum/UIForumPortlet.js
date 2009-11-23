@@ -873,15 +873,25 @@ UIForumPortlet.prototype.executeLink = function(evt) {
 } ;
 
 UIForumPortlet.prototype.createLink = function(cpId,isAjax) {
-	if(!isAjax || isAjax === 'false') return ;
-  var comp = document.getElementById(cpId);
-	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a","ActionLink");
+	if(!isAjax || isAjax === 'false') {
+		var isM = document.getElementById("SetMode"); 
+		if(isM && isM.innerHTML === 'true'){
+			eXo.forum.UIForumPortlet.addLink(cpId, "ActionIsMod");
+		}
+		return ;
+	}
+	eXo.forum.UIForumPortlet.addLink(cpId, "ActionLink");
+} ;
+
+UIForumPortlet.prototype.addLink = function(cpId, clazzAction) {
+	var comp = document.getElementById(cpId);
+	var uiCategoryTitle = eXo.core.DOMUtil.findDescendantsByClass(comp,"a", clazzAction);
 	var i = uiCategoryTitle.length;
 	if(!i || (i <=0)) return ;
 	while(i--){
 		uiCategoryTitle[i].onclick = this.executeLink ;
 	}
-} ;
+};
 
 UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
 	var grid = document.getElementById(idChild);
