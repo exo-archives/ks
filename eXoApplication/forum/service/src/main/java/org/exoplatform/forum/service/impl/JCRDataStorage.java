@@ -172,7 +172,7 @@ public class JCRDataStorage implements DataStorage {
   public void start() {
     try {
       // TODO : Why needed ?
-      saveForumStatistic(new ForumStatistic());
+//      saveForumStatistic(new ForumStatistic());
     } catch (Exception e) {
       ;
     }
@@ -5231,7 +5231,7 @@ public class JCRDataStorage implements DataStorage {
 			forumStatistic.setMembersCount(reader.l("exo:membersCount"));
 			forumStatistic.setActiveUsers(reader.l("exo:activeUsers"));
 			forumStatistic.setNewMembers(reader.string("exo:newMembers"));
-			forumStatistic.setMostUsersOnline(reader.string("exo:mostUsersOnline"));
+			forumStatistic.setMostUsersOnline(reader.string("exo:mostUsersOnline",""));
 		} catch (Exception e) {
 			log.error("Failed to load forum statistics", e);
 		}finally { sProvider.close() ;}
@@ -5254,6 +5254,8 @@ public class JCRDataStorage implements DataStorage {
 			}else {
 				forumStatisticNode.save() ;
 			}
+		}catch (Exception e) {
+			log.error("Failed to save forum statistics", e);
 		}finally { sProvider.close() ;}				
 	}
 

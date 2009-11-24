@@ -1002,38 +1002,37 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   public void userLogin(String userId) throws Exception {
-    
-    // TODO: login and onlineUserlist shoudl be anaged by forumStatisticsService.memberIn();
-    
-    
-    lastLogin_ = userId ;
-    if(!onlineUserList_.contains(userId)) {
-      onlineUserList_.add(userId);
-    }
 
-      storage_.updateLastLoginDate(userId);
-      
-      // update most online users
-      
+		// TODO: login and onlineUserlist shoudl be anaged by
+		// forumStatisticsService.memberIn();
 
-      
-      ForumStatistic stats = getForumStatistic();
-      String mostUsersOnline = stats.getMostUsersOnline();
-      String[] array = mostUsersOnline.split(",") ; // OMG responsible of this should loose a finger!
-       int mostOnline = 0;
-       try {mostOnline = Integer.parseInt(array[0].trim()); }
-       catch (Exception e) {;}
+		lastLogin_ = userId;
+		if (!onlineUserList_.contains(userId)) {
+			onlineUserList_.add(userId);
+		}
 
-      int ol = onlineUserList_.size() ;
-      if(ol > mostOnline) {
-        stats.setMostUsersOnline(ol+ ", at " + storage_.getGreenwichMeanTime().getTimeInMillis());
-      } else {
-        stats.setMostUsersOnline("1, at " + storage_.getGreenwichMeanTime().getTimeInMillis());
-      }
-    
-      saveForumStatistic(stats);
+		storage_.updateLastLoginDate(userId);
 
-      
+		// update most online users
+
+		ForumStatistic stats = storage_.getForumStatistic();
+		int mostOnline = 0;
+		String mostUsersOnline = stats.getMostUsersOnline();
+		if (mostUsersOnline != null && mostUsersOnline.length() > 0) {
+			String[] array = mostUsersOnline.split(","); // OMG responsible of this should loose a finger!
+			try {
+				mostOnline = Integer.parseInt(array[0].trim());
+			} catch (Exception e) {}
+		}
+		int ol = onlineUserList_.size();
+		if (ol > mostOnline) {
+			stats.setMostUsersOnline(ol + ", at " + storage_.getGreenwichMeanTime().getTimeInMillis());
+		} else {
+			stats.setMostUsersOnline("1, at " + storage_.getGreenwichMeanTime().getTimeInMillis());
+		}
+
+		storage_.saveForumStatistic(stats);
+
   }
 
   public void userLogout(String userId) throws Exception {
