@@ -3004,21 +3004,26 @@ public class JCRDataStorage implements DataStorage {
 						sendAlertJob = false;
 						isSetLastPost = topicNode.getProperty("exo:isActive").getBoolean();
 					}
+					boolean canView = true;
+					Node categoryNode = forumNode.getParent();
+					if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
+						 (forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
+						 (topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)
+						) canView = false;
+					
 					if (isSetLastPost) {
 						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 							isFistPost = true;
 							// set InfoPost for Forum
 							if (!forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								forumNode.setProperty("exo:postCount", forumPostCount);
-								if(!topicNode.hasProperty("exo:canView")){
+								if(canView){
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 								}
 								sendAlertJob = false;
-							} else if (topicNode.getProperty("exo:isApproved").getBoolean()) {
-								if(!topicNode.hasProperty("exo:canView")){
+							} else if (canView && topicNode.getProperty("exo:isApproved").getBoolean()) {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
-								}
-								sendAlertJob = false;
+									sendAlertJob = false;
 							}
 							// set InfoPost for Topic
 							if (!post.getIsHidden()) {
@@ -3027,12 +3032,11 @@ public class JCRDataStorage implements DataStorage {
 								topicNode.setProperty("exo:lastPostDate", calendar);
 								topicNode.setProperty("exo:lastPostBy", post.getOwner());
 							}
-						} else {
+						} else if(canView) {
 							if (forumNode.getProperty("exo:isModerateTopic").getBoolean()) {
 								if (topicNode.getProperty("exo:isApproved").getBoolean()) {
 									if (!topicNode.getProperty("exo:isModeratePost").getBoolean()) {
-										if(!topicNode.hasProperty("exo:canView"))
-											forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 										sendAlertJob = false;
 									} 
 								} 
@@ -3041,8 +3045,7 @@ public class JCRDataStorage implements DataStorage {
 									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} else if (post.getIsApproved()) {
-									if(!topicNode.hasProperty("exo:canView"))
-										forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
+									forumNode.setProperty("exo:lastTopicPath", topicNode.getName());
 									sendAlertJob = false;
 								} 
 							}
