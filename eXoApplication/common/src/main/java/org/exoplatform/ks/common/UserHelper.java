@@ -127,7 +127,7 @@ public class UserHelper {
    * @deprecated this method is danngerous and may not work with all OrganizationService impl
    */
   public static List<User> getAllUser() throws Exception {
-  	PageList pageList = getUserHandler().getUserPageList(0) ;
+  	PageList pageList = getUserHandler().getUserPageList(10) ;
   	List<User>list = pageList.getAll() ;
   	return list;
   }

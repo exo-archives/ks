@@ -88,7 +88,11 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
     addUIFormInput(uiSelect) ;
     uiPageList_ = new UIPageIterator() ;
     //this.addChild(uiPageList_);
-    setUserList(UserHelper.getAllUser()) ;
+    try {
+    	setUserList(UserHelper.getAllUser()) ;
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
   }
   
   public List<SelectItem> getOptions() throws Exception {
