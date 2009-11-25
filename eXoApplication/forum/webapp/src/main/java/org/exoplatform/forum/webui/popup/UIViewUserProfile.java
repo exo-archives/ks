@@ -127,8 +127,15 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 				UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.cancelAction() ;
 			} else {
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				if(popupAction.findFirstComponentOfType(UIViewUserProfile.class) != null){
+					popupAction.deActivate();
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				} else {
+					UIPopupAction popup = popupContainer.getAncestorOfType(UIPopupAction.class);
+					popup.deActivate();
+					event.getRequestContext().addUIComponentToUpdateByAjax(popup) ;
+				}
 			}
 		}
 	}

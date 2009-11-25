@@ -1471,7 +1471,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 			
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, 670, 400);
+			UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, "ViewUserProfile", 670, 400);
 			try {
 				UserProfile selectProfile = topicDetail.getForumService().getUserInformations(topicDetail.mapUserProfile.get(userId)) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
