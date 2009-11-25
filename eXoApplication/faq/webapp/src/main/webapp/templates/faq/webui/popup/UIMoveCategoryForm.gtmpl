@@ -16,11 +16,7 @@
   <div class="ViewCategoryToSelect" style="margin:5px 0px 5px 0px ; padding-top:10px;">
 		<div style="padding-left:20px;">
 			<a href="javaScript: void(0)" ondblclick="$linkRoot">
-			<%
-				String homeCateName = uicomponent.homeCategoryName ; 
-				if( homeCateName == null) homeCateName = _ctx.appRes("UIAddRelationForm.title.RootCategory");				
-			%>
-				<img src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif" alt="$homeCateName"/>
+				<img src="/faq/skin/DefaultSkin/webui/background/HomeIcon.gif"/>
 			</a>
 		</div>
 		<div style="margin-left:30px;">
