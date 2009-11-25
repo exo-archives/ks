@@ -1079,7 +1079,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {	
 			try {
 				Topic topic = topicDetail.topic ;
-				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455) ;
+				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class,"PollForm", 655, 455) ;
 				pollForm.setTopicPath(topic.getPath()) ;
 			} catch (Exception e) {
 				warning("UIForumPortlet.msg.topicEmpty");

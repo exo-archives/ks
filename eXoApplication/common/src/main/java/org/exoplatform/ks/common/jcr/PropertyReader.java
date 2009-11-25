@@ -33,7 +33,7 @@ public class PropertyReader {
 		try {
 			return node.getProperty(name).getLong();
 		}
-		catch (Exception e) {e.printStackTrace();
+		catch (Exception e) {
 			return 0;
 		}
 	}

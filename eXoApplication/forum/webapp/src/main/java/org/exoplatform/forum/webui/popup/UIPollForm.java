@@ -84,6 +84,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 		addUIFormInput(timeOut) ;
 		addUIFormInput(VoteAgain);
 		addUIFormInput(MultiVote);
+		setDefaulFall();
 	}
 
 	private void initMultiValuesField(List<String> list) throws Exception {
@@ -124,8 +125,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 		}
 	}
 	
-	
-	public void activate() throws Exception {
+	private void setDefaulFall() throws Exception {
 		List<String> list = new ArrayList<String>() ;
 		if(isUpdate) {
 			for(String string : this.poll.getOption()) {
@@ -136,6 +136,9 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			list.add("");
 		}
 		this.initMultiValuesField(list);
+	}
+	
+	public void activate() throws Exception {
 	}
 	
 	public void deActivate() throws Exception {
