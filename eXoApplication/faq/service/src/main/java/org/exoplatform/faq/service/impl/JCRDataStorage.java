@@ -1558,6 +1558,7 @@ public class JCRDataStorage implements DataStorage {
       }
 			for(String id : questions) {
 				try{
+					Node destCateNode =  faqHome.getNode(id).getParent();
 					faqHome.getSession().move(homePath+ "/" + id, destQuestionHome.getPath() + id.substring(id.lastIndexOf("/"))) ;
 					faqHome.getSession().save() ;
 					Node questionNode = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
@@ -1576,7 +1577,7 @@ public class JCRDataStorage implements DataStorage {
 					questionNode.save() ;
 //				send email notify to author question. by Duy Tu	
 					try {
-						sendNotifyMoveQuestion(questionNode, catId, questionLink, faqSetting);
+						sendNotifyMoveQuestion(destCateNode, questionNode, catId, questionLink, faqSetting);
           } catch (Exception e) {e.printStackTrace();}
 					
 
@@ -1590,7 +1591,7 @@ public class JCRDataStorage implements DataStorage {
 		
 	} 
 	
-	private void sendNotifyMoveQuestion(Node questionNode,String cateId, String link, FAQSetting faqSetting) throws Exception {
+	private void sendNotifyMoveQuestion(Node destCateNode, Node questionNode,String cateId, String link, FAQSetting faqSetting) throws Exception {
 		String contentMail = faqSetting.getEmailMoveQuestion();
 		String categoryName = null;
 		try {
@@ -1611,7 +1612,22 @@ public class JCRDataStorage implements DataStorage {
 															replace("&categoryName_", categoryName).
 															replace("&questionLink_", link);
 		message.setBody(contentMail);
-		sendEmailNotification(Arrays.asList(new String[]{questionNode.getProperty("exo:email").getString()}), message) ;
+		List<String>emails = new ArrayList<String>();
+		emails.addAll(calculateMoveEmail(destCateNode));
+		emails.addAll(calculateMoveEmail(questionNode.getParent()));
+		emails.add(questionNode.getProperty("exo:email").getString());
+		sendEmailNotification(Utils.compareList(emails), message) ;
+	}
+	
+	private List<String> calculateMoveEmail(Node node) throws Exception {
+		List<String>emails = new ArrayList<String>();
+		while(!node.getName().equals(Utils.CATEGORY_HOME)) {
+	    if(node.isNodeType("exo:faqWatching")){
+	    	emails.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+	    }
+			node = node.getParent();
+    }
+		return emails;
 	}
 	
 	private void updateComments(Node question, String catId) throws Exception {

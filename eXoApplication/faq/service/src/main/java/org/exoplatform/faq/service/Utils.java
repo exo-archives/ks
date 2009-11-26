@@ -163,6 +163,14 @@ public class Utils {
 		return list.toArray(new String[]{});
 	}
 	
+	public static List<String> compareList(List<String> list) throws Exception {
+		List<String> list2 = new ArrayList<String>();
+		for (String string : list) {
+			if(!list2.contains(string)) list2.add(string);
+    }
+		return list2;
+	}
+	
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		s = getReplacementByBBcode(s, bbcodes, faqService);
