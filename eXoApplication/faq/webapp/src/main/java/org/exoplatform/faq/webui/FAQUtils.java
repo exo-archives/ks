@@ -218,9 +218,12 @@ public class FAQUtils {
   @SuppressWarnings("unchecked")
   public static List<User> getAllUser() throws Exception {
   	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-  	List<User>list = pageList.getAll() ;
-  	return list;
+  	PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
+  	List<User> userList = new ArrayList<User>() ;  	
+  	for(int i = 1; i <= pageList.getAvailablePage(); i ++) {
+  		userList.addAll(pageList.getPage(i)) ;  		
+  	}
+  	return userList;
   }
   
   @SuppressWarnings("unchecked")
@@ -265,33 +268,38 @@ public class FAQUtils {
 
 	public static String checkValueUser(String values) throws Exception {
 		String erroUser = null;
-		if(values != null && values.trim().length() > 0) {
-			OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-			String[] userIds = values.split(",");
-			boolean isUser = false ;
-			List<User> users = FAQUtils.getAllUser() ;
-			for (String str : userIds) {
-				str = str.trim() ;
-				if(str.indexOf("/") >= 0) {
-					if(!hasGroupIdAndMembershipId(str, organizationService)){
-						if(erroUser == null) erroUser = str ;
-						else erroUser = erroUser + ", " + str;
-					}
-				} else {//user
-					isUser = false ;
-					for (User user : users) {
-						if(user.getUserName().equals(str)) {
-							isUser = true ;
-							break;
+		try {			
+			if(values != null && values.trim().length() > 0) {
+				OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+				String[] userIds = values.split(",");
+				boolean isUser = false ;
+				List<User> users = FAQUtils.getAllUser() ;
+				for (String str : userIds) {
+					str = str.trim() ;
+					if(str.indexOf("/") >= 0) {
+						if(!hasGroupIdAndMembershipId(str, organizationService)){
+							if(erroUser == null) erroUser = str ;
+							else erroUser = erroUser + ", " + str;
 						}
-					}
-					if(!isUser) {
-						if(erroUser == null) erroUser = str ;
-						else erroUser = erroUser + ", " + str;
+					} else {//user
+						isUser = false ;
+						for (User user : users) {
+							if(user.getUserName().equals(str)) {
+								isUser = true ;
+								break;
+							}
+						}
+						if(!isUser) {
+							if(erroUser == null) erroUser = str ;
+							else erroUser = erroUser + ", " + str;
+						}
 					}
 				}
 			}
+		}catch(Exception e) {
+			e.printStackTrace() ;
 		}
+		
 		return erroUser;
 	}
 

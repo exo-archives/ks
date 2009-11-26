@@ -27,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -138,6 +139,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing user profiles...");
   		initUserProfile(systemSession);  		
   	}catch (Exception e) {
+  		e.printStackTrace() ;
   	}finally{
   		systemSession.close() ;
   	}
@@ -243,18 +245,24 @@ public class ForumServiceImpl implements ForumService, Startable {
   public void updateForumStatistic() throws Exception{
 		SessionProvider systemSession = SessionProvider.createSystemProvider() ;
 		try{
-			ForumStatistic forumStatistic = getForumStatistic(systemSession) ;
-			if(forumStatistic.getActiveUsers() == 0 ) {
-				ExoContainer container = ExoContainerContext.getCurrentContainer();
-				OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-		  	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-		  	List<User> userList = pageList.getAll() ;
-		  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
-		  	forumStatistic.setMembersCount(userList.size()) ;
-		  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
-		  	saveForumStatistic(systemSession, forumStatistic) ;
-			}
+			ForumStatistic forumStatistic = getForumStatistic(SessionProvider.createSystemProvider()) ;
+			Node profileHome = storage_.getUserProfileHome(systemSession) ;
+			QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
+			StringBuilder pathQuery = new StringBuilder();
+			pathQuery.append("/jcr:root").append(profileHome.getPath())
+			.append("//element(*,exo:forumUserProfile)[ @exo:lastLoginDate ] order by @exo:joinedDate descending");
+			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			
+	  	forumStatistic.setMembersCount(iter.getSize()) ;
+	  	Node node = iter.nextNode() ;
+	  	String id = node.getProperty("exo:userId").getString() ;
+	  	forumStatistic.setNewMembers(id) ;
+	  	saveForumStatistic(systemSession, forumStatistic) ;
+			
 		}catch(Exception e){
+			e.printStackTrace() ;
 		}finally {
 			systemSession.close() ;
 		}		 	
@@ -263,13 +271,16 @@ public class ForumServiceImpl implements ForumService, Startable {
 	@SuppressWarnings("unchecked")
   private void initUserProfile (SessionProvider sysSession) throws Exception  {
 		Node profileHome = storage_.getUserProfileHome(sysSession) ;
-		if(profileHome.getNodes().getSize() == 0) {
+		if(profileHome.getNodes().getSize() == 0) { // ONLY run when there is no user profile 
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-    	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-    	List<User> userList = pageList.getAll() ;
-    	for(User user : userList) {
-    		createUserProfile(sysSession, user) ;
+    	PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
+    	List<User> userList = new ArrayList<User>() ;
+    	for(int i = 0 ; i < pageList.getAvailablePage(); i ++) {
+    		userList = pageList.getPage(i) ;
+    		for(int j = 0; j < pageList.getPageSize(); j ++) {
+    			createUserProfile(sysSession, userList.get(j)) ;    			
+    		}
     	}
   	}
 	}
@@ -1030,7 +1041,18 @@ public class ForumServiceImpl implements ForumService, Startable {
   public int getJobWattingForModeratorByUser(String userId) throws Exception {
     return storage_.getJobWattingForModeratorByUser(userId);
   }
-
+  
+  public void removeProfile(String userId) throws Exception {
+  	SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+    try {
+    	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
+    	userProfileHome.getNode(userId).getProperty("exo:lastLoginDate").setValue((Value)null) ;
+    	userProfileHome.save() ;    	    	
+    }catch(Exception e) {
+    	e.printStackTrace() ;
+    }finally{sysProvider.close() ;}
+  }
+  
   public void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
     if(!onlineUserList_.contains(userId)) {

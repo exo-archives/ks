@@ -960,5 +960,5 @@ public interface ForumService extends ForumServiceLegacy{
   
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception;
   public void updateUserProfileInfo(String name) throws Exception ;
-    
+  public void removeProfile(String userId) throws Exception ;
 }

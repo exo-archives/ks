@@ -125,15 +125,18 @@ public class ForumSessionUtils {
 	
 	public static PageList getPageListUser() throws Exception {
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		return organizationService.getUserHandler().getUserPageList(0);
+		return organizationService.getUserHandler().getUserPageList(10);
 	}
 
 	@SuppressWarnings("unchecked")
 	public static List<User> getAllUser() throws Exception {
 		OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
-		PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-		List<User>list = pageList.getAll() ;
-		return list;
+		PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
+  	List<User> userList = new ArrayList<User>() ;
+  	for(int i = 1 ; i <= pageList.getAvailablePage(); i ++) {
+  		userList.addAll(pageList.getPage(i)) ;  		
+  	}  	
+		return userList;
 	}
 	
 	public static User getUserByUserId(String userId) throws Exception {

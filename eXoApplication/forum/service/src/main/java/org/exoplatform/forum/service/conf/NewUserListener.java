@@ -61,6 +61,7 @@ public class NewUserListener extends UserEventListener {
   public void postDelete(User user) throws Exception {
     ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
     try{
+    	fservice.removeProfile(user.getUserName()) ;
     	ForumStatistic statistic = fservice.getForumStatistic() ;
       if(user.getUserName().equals(statistic.getNewMembers())) {
       	fservice.updateForumStatistic() ;
