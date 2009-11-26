@@ -817,7 +817,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 					if(string.equalsIgnoreCase(userName)) erro = true ; 
 				}
 				if(!erro) {				  
-					UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 300, 145);
+					UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, "RatingForm", 300, 145);
 					ratingForm.updateRating(topicDetail.topic, topicDetail.categoryId, topicDetail.forumId) ;
 					topicDetail.isEditTopic = true ;
 				} else {
