@@ -107,8 +107,6 @@ public class UIForumListSearch extends UIContainer {
 		//check category is private:
 		if(listUsers.length > 0 && listUsers[0].trim().length() > 0 && !ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId())) 
 			return false;
-		else
-			canView = true;
 		
 		// check forum
 		if(forum != null){
@@ -122,13 +120,13 @@ public class UIForumListSearch extends UIContainer {
 			
 			// ckeck Topic:
 			if(topic != null){
-				if(isModerator) canView = true;
-				else if(!topic.getIsClosed() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && 
-								!topic.getIsWaiting() &&((topic.getCanView().length == 1 && topic.getCanView()[0].trim().length() < 1) ||
-								ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()) ||
-								ForumServiceUtils.hasPermission(forum.getViewer(), userProfile.getUserId()) ||
-								ForumServiceUtils.hasPermission(forum.getPoster(), userProfile.getUserId()) )) canView = true;
-				else canView = false;
+				if(!isModerator && !topic.getIsClosed() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsWaiting()){
+					List<String> list = new ArrayList<String>();
+					list = ForumUtils.addArrayToList(list, topic.getCanView());
+					list = ForumUtils.addArrayToList(list, forum.getViewer());
+					list = ForumUtils.addArrayToList(list, category.getViewer());
+					if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), userProfile.getUserId()))canView = false;
+				}	else canView = false;
 			}
 		}
 		
