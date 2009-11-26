@@ -1592,7 +1592,12 @@ public class JCRDataStorage implements DataStorage {
 	
 	private void sendNotifyMoveQuestion(Node questionNode,String cateId, String link, FAQSetting faqSetting) throws Exception {
 		String contentMail = faqSetting.getEmailMoveQuestion();
-		String categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
+		String categoryName = null;
+		try {
+		  categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
+		} catch (Exception e){
+		  categoryName = "Root";
+		}
 		Message message = new Message();
 		message.setMimeType(MIMETYPE_TEXTHTML) ;
 		message.setFrom(questionNode.getProperty("exo:author").getString() + "<email@gmail.com>");
