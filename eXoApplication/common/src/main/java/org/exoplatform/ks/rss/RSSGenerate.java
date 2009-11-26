@@ -17,10 +17,12 @@
 package org.exoplatform.ks.rss;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
@@ -184,22 +186,84 @@ public abstract class RSSGenerate {
     SyndFeed feed = input.build(doc);
     List<SyndEntry> entries = feed.getEntries();
     if(removeItemId != null && removeItemId.trim().length() > 0){
-      if (removeItemId.contains("topic") || removeItemId.contains("forum")){
-        removeItemId = "post" + removeItemId.substring(5);
-      }
-
 	    for(SyndEntry syndEntry : entries){
 	    	if(syndEntry.getUri().equals(removeItemId)){
 	    		entries.remove(syndEntry);
 	    		break;
 	    	}
 	    }
-    }
+	  }
 		if(newEntry != null)entries.add(0, newEntry);
 		feed.setEntries(entries);
 		return feed;
 	}
-	
+	 @SuppressWarnings("unchecked")
+	  public SyndFeed updateRSSFeed(RSS data, String removeItemId, SyndEntry newEntry ,SessionProvider sProvider) throws Exception{
+	    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+	    Document doc = docBuilder.parse(data.getContent());
+	    doc.getDocumentElement().normalize();
+	    
+	    SyndFeedInput input = new SyndFeedInput();
+	    SyndFeed feed = input.build(doc);
+	    List<SyndEntry> entries = feed.getEntries();
+      List<Node> listRemovePosts = new ArrayList<Node>();
+	    Node removeNode = getNodeById(removeItemId, sProvider); 
+
+	    if (removeNode.isNodeType("exo:topic")){
+	      listRemovePosts = getListRemove(removeNode,"exo:post");
+	      removeItem(entries ,listRemovePosts);
+	    } else if (removeNode.isNodeType("exo:forum")){
+	      List<Node> listRemoveForum = new ArrayList<Node>();
+	      listRemoveForum = getListRemove(removeNode,"exo:topic");
+
+	      for (Node node : listRemoveForum) {
+	        listRemovePosts = getListRemove(node,"exo:post");
+	        removeItem(entries ,listRemovePosts);
+        }
+        removeItem(entries ,listRemoveForum);
+	    }
+	    
+
+	    if(newEntry != null)entries.add(0, newEntry);
+	    feed.setEntries(entries);
+	    return feed;
+	  }
+	 
+	private void removeItem(List<SyndEntry> entries,List<Node> listRemove) throws RepositoryException{
+    List<SyndEntry> entries1 = new ArrayList<SyndEntry>();
+
+    boolean flag  = true;
+    for(SyndEntry syndEntry : entries){
+      flag  = true;
+        for(Node post : listRemove){
+          if(syndEntry.getUri().equals(post.getName())){
+            flag = false;
+            break;
+          }
+        }
+        if(flag){
+          entries1.add(syndEntry);
+        }
+    }
+    entries.clear();
+    entries.addAll(entries1);
+	}
+	 
+	private List<Node> getListRemove(Node removeNode, String childNodeType) throws RepositoryException{
+    List<Node> listRemove = new ArrayList<Node>();
+	  NodeIterator nodeIterator = removeNode.getNodes();
+    Node nodePost = null;
+
+    while(nodeIterator.hasNext()){
+      nodePost = nodeIterator.nextNode();
+      if(nodePost.isNodeType(childNodeType)){
+        listRemove.add(nodePost);
+      }  
+    }
+ 
+    return listRemove;
+	}
 	/**
 	 * Remove one item from RSS feed based on id of object which is changed 
 	 * @param objectid				id of object
@@ -230,6 +294,28 @@ public abstract class RSSGenerate {
 		addNodeRSS(node, RSSNode, data, false);
 	}
 	
+	 public void removeRSSItem(String objectid, Node node, String feedDescription ,SessionProvider sProvider ) throws Exception{
+	    RSS data = new RSS();
+	    Node RSSNode = null;
+	    try{
+	      RSSNode = node.getNode(KS_RSS);
+	    }catch(PathNotFoundException pn){
+	      return;
+	    }
+	    getRSSData(RSSNode, data);
+	    
+	    SyndFeed feed = updateRSSFeed(data, objectid, null ,sProvider);
+	    try{
+	      feed.setTitle(node.getProperty("exo:name").getString());
+	    }catch(PathNotFoundException pn){
+	      feed.setTitle("Root");
+	    }
+	    feed.setDescription(feedDescription);
+	    
+	    SyndFeedOutput output = new SyndFeedOutput();
+	    data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
+	    addNodeRSS(node, RSSNode, data, false);
+	  }
 	/**
 	 * Create a new feed with some default content: link is the link to eXo web site
 	 * and feed type is <code>rss_2.0</code>

@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
 import javax.jcr.query.Query;
@@ -120,7 +121,11 @@ public class RSSProcess extends RSSGenerate {
 				linkItem = node.getProperty("exo:link").getString();
 				linkItem = linkItem.substring(0, linkItem.indexOf("objectId=")+9);
 				generatePostRSS(path, typeEvent);
-			}
+			} else if (node.isNodeType("exo:topic")) {
+			  generateTopicRSS(path, typeEvent);
+			} else if (node.isNodeType("exo:forum")) {
+        generateForumRSS(path, typeEvent);
+      }
 		}else{
 			String objectId = null;
 			objectId = path.substring(path.lastIndexOf("/") + 1);
@@ -140,12 +145,46 @@ public class RSSProcess extends RSSGenerate {
 					description = node.getProperty("exo:description").getString();
 				else
 					description= " ";
-				removeRSSItem(objectId, node, description);
-				
+				if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")){
+          removeRSSItem(objectId, node, description , sProvider);
+				} else {
+          removeRSSItem(objectId, node, description);
+        }
 				node = node.getParent();
 			}
 		}
 	}
+	protected void generateTopicRSS(String path, int typeEvent){
+	  try {
+      Node topicNode = (Node)appHomeNode.getSession().getItem(path);
+      NodeIterator nodeIterator = topicNode.getNodes();
+      Node postNode = null;
+      while(nodeIterator.hasNext()){
+        postNode = nodeIterator.nextNode();
+        if(postNode.isNodeType("exo:post")){
+          generatePostRSS(postNode.getPath(),  typeEvent);
+        }
+      }
+    } catch (PathNotFoundException e) {
+    } catch (RepositoryException e) {
+    }
+  }
+	 protected void generateForumRSS(String path, int typeEvent){
+	    try {
+	      Node forumNode = (Node)appHomeNode.getSession().getItem(path);
+	      NodeIterator nodeIterator = forumNode.getNodes();
+	      Node topicNode = null;
+	      while(nodeIterator.hasNext()){
+	        topicNode = nodeIterator.nextNode();
+	        if(topicNode.isNodeType("exo:topic")){
+	          generateTopicRSS(topicNode.getPath(),  typeEvent);
+	        }
+	      }
+	    } catch (PathNotFoundException e) {
+	    } catch (RepositoryException e) {
+	    }
+	  }
+  
 	
 	protected void generatePostRSS(String path, int typeEvent){
 		boolean isNew = false;

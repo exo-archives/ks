@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ks.rss;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -29,8 +26,8 @@ public class ForumRSSEventListener implements EventListener{
 	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
-	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
-																																						 "exo:userWatching"}));
+//	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
+//																																						 "exo:userWatching"}));
 	private KSDataLocation locator;
 	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
@@ -69,7 +66,7 @@ public class ForumRSSEventListener implements EventListener{
 				break ;								
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			//e.printStackTrace() ;
 		}		
 	}  
 }
