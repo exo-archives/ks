@@ -3007,10 +3007,9 @@ public class JCRDataStorage implements DataStorage {
 					boolean canView = true;
 					Node categoryNode = forumNode.getParent();
 					if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-						 (forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-						 (topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)
+						 (forumNode.hasProperty("exo:viewer") && forumNode.getProperty("exo:viewer").getValues()[0].getString().trim().length() > 0) ||
+						 (topicNode.hasProperty("exo:viewer") && topicNode.getProperty("exo:viewer").getValues()[0].getString().trim().length() > 0)
 						) canView = false;
-					
 					if (isSetLastPost) {
 						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 							isFistPost = true;

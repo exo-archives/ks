@@ -201,8 +201,8 @@ public class RSSProcess extends RSSGenerate {
 			
 			Node forumNode = topicNode.getParent();
 			Node categoryNode = forumNode.getParent();
-			if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-					(forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)) return;
+			if((categoryNode.hasProperty("exo:viewer") && categoryNode.getProperty("exo:viewer").getValues()[0].getString().trim().length() > 0) ||
+					(forumNode.hasProperty("exo:viewer") && forumNode.getProperty("exo:viewer").getValues()[0].getString().trim().length() > 0)) return;
 				
 			if((postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
 					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())||
