@@ -18,9 +18,11 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import org.exoplatform.forum.rendering.ExtendedBBCodeRenderer;
+import org.exoplatform.forum.rendering.ExtendedBBCodeProvider;
+import org.exoplatform.forum.service.FakeBBCodeService;
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
@@ -33,6 +35,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
 
   private FakeForumService service;
   private MarkupRenderingService markupRenderingService;
+  private FakeBBCodeService bbcodeService;
   
   public TestUITopicDetail() throws Exception {
     super();
@@ -42,7 +45,9 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   public void doSetUp() {  
     super.doSetUp();
     this.markupRenderingService = new MarkupRenderingService();
-    Renderer bbcodeRenderer = new ExtendedBBCodeRenderer();
+    Renderer bbcodeRenderer = new BBCodeRenderer();
+    ExtendedBBCodeProvider provider = new ExtendedBBCodeProvider();
+    provider.setBBCodeService(bbcodeService);
     markupRenderingService.registerRenderer(bbcodeRenderer);
     component.setMarkupRenderingService(markupRenderingService);
   }
@@ -89,16 +94,13 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   }
 
   private void registerBBCode(String tagName, String replacement) {
-    service.addActiveBBCodes(tagName);
     BBCode foo = new BBCode();
     foo.setReplacement(replacement);
     foo.setId(tagName);
     foo.setTagName(tagName);  
-    service.setBBCode(tagName, foo);
-
-    // register the BBCode in the extended bbcode renderer
-    ExtendedBBCodeRenderer renderer = (ExtendedBBCodeRenderer) markupRenderingService.getRenderer("bbcode");
-    renderer.addBBCode(foo);
+    foo.setActive(true);
+    foo.setOption(tagName.startsWith("="));
+    bbcodeService.addBBCode(foo);
   }
   
   @Override

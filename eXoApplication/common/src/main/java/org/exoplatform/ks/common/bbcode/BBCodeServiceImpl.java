@@ -26,48 +26,71 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.ks.common.CommonUtils;
+import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.management.ManagementContext;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.picocontainer.Startable;
 
 
-public class BBCodeOperator {
-	private List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
+/**
+ * Managed service implementation for {@link BBCodeService}. 
+ * Stores BBCodes in JCR at {@link KSDataLocation#getBBCodesLocation()} 
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+ * @version $Revision$
+ */
+@Managed
+@NameTemplate(@Property(key="service", value="bbcode"))
+@ManagedDescription("BBCodes management")
+public class BBCodeServiceImpl implements Startable, BBCodeService {
+  
+  
+	private List<BBCodePlugin> defaultBBCodePlugins_;
 	private KSDataLocation dataLocator;
 	private JCRSessionManager sessionManager;
 	
-	private static Log log = ExoLogger.getLogger(BBCodeOperator.class);
+  private ManagementContext context;
 	
-  public BBCodeOperator(KSDataLocation dataLocator) throws Exception {
+	private static Log log = ExoLogger.getLogger(BBCodeServiceImpl.class);
+	
+  public BBCodeServiceImpl(KSDataLocation dataLocator) throws Exception {
     this.dataLocator = dataLocator;
     this.sessionManager = dataLocator.getSessionManager();
+    defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;
   }
   
-
   public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getBBCodesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
 	}
 	
-	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-		if(plugin instanceof InitBBCodePlugin) {
-			defaultBBCodePlugins_.add((InitBBCodePlugin)plugin) ;
-		}
+  /**
+   * {@inheritDoc}
+   */
+	public void registerBBCodePlugin(BBCodePlugin plugin) throws Exception {
+		defaultBBCodePlugins_.add(plugin) ;
 	}
 	
-	public void initDefaultBBCode() throws Exception{
+  /**
+   * {@inheritDoc}
+   */
+	public void initDefaultBBCodes() throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node bbCodeHome = getBBcodeHome(sProvider);
 			NodeIterator iter = bbCodeHome.getNodes();
 			if(iter.getSize() <= 0){ 
 				List<BBCode> bbCodes = new ArrayList<BBCode>();
-		    for (InitBBCodePlugin pln : defaultBBCodePlugins_) {
-		    	List<BBCodeData> codeDatas = pln.getBBCodePlugin().getBbcodeDatas();
+		    for (BBCodePlugin pln : defaultBBCodePlugins_) {
+		    	List<BBCodeData> codeDatas = pln.getBbcodeDatas();
 		    	for (BBCodeData codeData : codeDatas) {
 		        BBCode bbCode = new BBCode();
 		        bbCode.setTagName(codeData.getTagName());
@@ -77,16 +100,44 @@ public class BBCodeOperator {
 		        bbCode.setOption(Boolean.parseBoolean(codeData.getIsOption()));
 		        bbCode.setActive(Boolean.parseBoolean(codeData.getIsActive()));
 		        bbCodes.add(bbCode);
+		        if (log.isDebugEnabled()) {
+		          log.debug("Registered " + bbCode);
+		        }
 	        }
+		    	
+	        managePlugin(pln);
+		    	
 	      }
 		    if(!bbCodes.isEmpty()){
-		    	this.saveBBCode(bbCodes);
+		    	this.save(bbCodes);
 		    }
+		    
+
+		    
 			}
     }finally { sProvider.close() ;}	  
   }
+
+	/**
+	 * 
+	 * @param pln
+	 */
+  private void managePlugin(BBCodePlugin pln) {
+    try {
+      if (context!= null) {
+        context.register(pln);
+      } else {
+        log.warn("No Management context is available for " + getClass());
+      }
+    } catch (Exception e) {
+      log.error("Failed to register BBCode plugin " + pln.getName(), e);
+    }
+  }
 	
-	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
+  /**
+   * {@inheritDoc}
+   */
+	public void save(List<BBCode> bbcodes) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node bbCodeHome = getBBcodeHome(sProvider);
@@ -120,6 +171,9 @@ public class BBCodeOperator {
 		}finally { sProvider.close() ;}		
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	private BBCode getBBCodeNode(Node bbcNode) throws Exception{
 		BBCode bbCode = new BBCode();
 		bbCode.setId(bbcNode.getName());
@@ -133,7 +187,10 @@ public class BBCodeOperator {
 		return bbCode;
 	}
 	
-	public List<BBCode> getAllBBCode() throws Exception {
+  /**
+   * {@inheritDoc}
+   */
+	public List<BBCode> getAll() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<BBCode> bbcodes = new ArrayList<BBCode>();
 		try {
@@ -151,7 +208,10 @@ public class BBCodeOperator {
 		return bbcodes;		
 	}
 	
-	public List<String> getActiveBBCode() throws Exception {
+  /**
+   * {@inheritDoc}
+   */
+	public List<String> getActive() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> bbcodes = new ArrayList<String>();
 		try{
@@ -174,7 +234,10 @@ public class BBCodeOperator {
 		return bbcodes;
 	}
 	
-	public BBCode getBBcode(String id) throws Exception {
+  /**
+   * {@inheritDoc}
+   */
+	public BBCode findById(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		BBCode bbCode = new BBCode();
 		Node bbcNode;
@@ -193,7 +256,10 @@ public class BBCodeOperator {
 		return bbCode ;
 	}
 	
-	public void removeBBCode(String bbcodeId) throws Exception {
+  /**
+   * {@inheritDoc}
+   */
+	public void delete(String bbcodeId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node bbCodeHome = getBBcodeHome(sProvider);
 		try {
@@ -205,4 +271,21 @@ public class BBCodeOperator {
     	sProvider.close();
     }
 	}
+
+
+  public void start() {
+    try {
+      initDefaultBBCodes();
+    } catch (Exception e) {
+      log.error("Default BBCodes failed to initialize", e);
+    }
+  }
+
+
+  public void stop() {
+  }
+  
+  public void setContext(ManagementContext context) {
+    this.context = context;
+  }
 }

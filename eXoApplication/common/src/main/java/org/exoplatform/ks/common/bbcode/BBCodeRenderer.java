@@ -17,10 +17,12 @@
 package org.exoplatform.ks.common.bbcode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ks.common.bbcode.core.BuiltinBBCodeProvider;
+import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
 import org.exoplatform.ks.rendering.api.Renderer;
 
 /**
@@ -28,30 +30,24 @@ import org.exoplatform.ks.rendering.api.Renderer;
  * @version $Revision$
  */
 public class BBCodeRenderer implements Renderer {
-  protected List<BBCode> bbcodes;
+  public static final String BBCODE_SYNTAX_ID = "bbcode";
+  protected BBCodeProvider bbCodeProvider;
   
   public BBCodeRenderer() {
-    bbcodes = new ArrayList<BBCode>();
+    bbCodeProvider = new BuiltinBBCodeProvider();
   }
   
-  
-  
-  public BBCodeRenderer(InitParams params) {
-    BBCodePlugin plugin = (BBCodePlugin)params.getObjectParam("bbcode.default.configuration").getObject();
-    List<BBCodeData>bbcodeData = plugin.getBbcodeDatas();
-    bbcodes = convert(bbcodeData);
-  }
   
   
   public String getSyntax() {
-    return "bbcode";
+    return BBCODE_SYNTAX_ID;
   }
 
   /* (non-Javadoc)
    * @see org.exoplatform.ks.rendering.api.Renderer#render(java.lang.String)
    */
   public String render(String s) {
-    for (BBCode bbcode : bbcodes) {
+    for (BBCode bbcode : getBbcodes()) {
       String bbc = bbcode.getTagName();
       if(bbc.equals("URL")){
         s = StringUtils.replace(s, "[link", "[URL");
@@ -61,7 +57,6 @@ public class BBCodeRenderer implements Renderer {
       }
       bbc = bbc.toLowerCase();
       if(!bbc.equals("list")){
-       
         if(Boolean.valueOf(bbcode.isOption())){
           s = processOptionedTag(s, bbcode);
         } else {
@@ -114,6 +109,7 @@ public class BBCodeRenderer implements Renderer {
     String str;
     String param;
     String option;
+    //System.out.println(bbcode + " > " + bbcode.isOption());
     int lastIndex = 0, tagIndex = 0;
     start = "[" + bbc + "=";
     end = "[/" + bbc + "]";
@@ -212,19 +208,14 @@ public class BBCodeRenderer implements Renderer {
   }
 
   public List<BBCode> getBbcodes() {
-    return bbcodes;
-  }
-
-  public void setBbcodes(List<BBCodeData> bbcodes) {
-    this.bbcodes = convert(bbcodes);
-  }
-
-  public void addBBCode(BBCode bbcode) {
-    if (bbcodes == null) {
-     bbcodes = new ArrayList<BBCode>();
+    List<BBCode> result = new ArrayList<BBCode>();
+    Collection<String> supported = getBbCodeProvider().getSupportedBBCodes();
+    for (String tag : supported) {
+      result.add(getBbCodeProvider().getBBCode(tag));
     }
-    bbcodes.add(bbcode);
+    return result;
   }
+
 
   private List<BBCode> convert(List<BBCodeData> bbc) {
     List<BBCode> bbcodes = new ArrayList<BBCode>();
@@ -240,5 +231,18 @@ public class BBCodeRenderer implements Renderer {
     }
     return bbcodes;
   }
+
+
+  public BBCodeProvider getBbCodeProvider() {
+    return bbCodeProvider;
+  }
+
+
+
+  public void setBbCodeProvider(BBCodeProvider bbCodeProvider) {
+    this.bbCodeProvider = bbCodeProvider;
+  }
+
+
 
 }

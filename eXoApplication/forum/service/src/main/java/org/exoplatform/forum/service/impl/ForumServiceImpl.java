@@ -53,8 +53,8 @@ import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
-import org.exoplatform.ks.common.bbcode.BBCodeOperator;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
+import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -78,10 +78,15 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   
   DataStorage storage_ ;
-  BBCodeOperator bbcodeObject_;
+  
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
-  //String containerName;
+
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
+  
+  /**
+   * BBCode service
+   */
+  private BBCodeService bbcodeService;
   
   private String lastLogin_ = "";
   private ForumStatisticsService forumStatisticsService;
@@ -90,7 +95,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     try {
       //this.containerName = context.getPortalContainerName();
       this.storage_ = dataStorage;
-      this.bbcodeObject_ = new BBCodeOperator(storage_.getDataLocation()) ;
       this.forumStatisticsService = forumStatisticsService;
     } catch (Exception e) {
       log.error("Could not start ForumService. Storage is not ready", e);
@@ -115,30 +119,21 @@ public class ForumServiceImpl implements ForumService, Startable {
   	storage_.addInitialDataPlugin(plugin) ;
   }
 
-  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-  	bbcodeObject_.addInitBBCodePlugin(plugin) ;
-  }
-  
+
   public void start() {
     
     // initialize the data storage
     storage_.start();
+    
+    bbcodeService = (BBCodeService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class);
 
-  	try{
+  	try {
   	  log.info("initializing category listeners...");
   		storage_.initCategoryListener() ;		
   	}catch (Exception e) {
   	  log.error("Error while updating category listeners "+ e.getMessage());
   	}
-  	
-  	/*
-    try{
-      log.info("updating forum stats...");
-      updateForumStatistic();     
-    }catch (Exception e) {
-      log.error("Error while updating forum statistics "+ e.getMessage());
-    }
-  	*/
+
     SessionProvider systemSession = SessionProvider.createSystemProvider() ;
   	try{
   	  log.info("initializing user profiles...");
@@ -152,7 +147,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.info("initializing default data...");
   		storage_.initDefaultData() ;
   		log.info("initializing default BBCodes...");
-  		bbcodeObject_.initDefaultBBCode();
+
   	}catch(Exception e) {
   	  log.error("Error while initializing default data: "+ e.getMessage());
   	}  	
@@ -235,48 +230,11 @@ public class ForumServiceImpl implements ForumService, Startable {
       managed.registerPlugin(plugin2);
     }
  
-    List<InitBBCodePlugin> defaultBBCodePlugins = storage_.getDefaultBBCodePlugins();
-    for (InitBBCodePlugin plugin2 : defaultBBCodePlugins) {
-      managed.registerPlugin(plugin2);
-    }
+
   }
 
 	public void stop() {}
-	/*
-	@SuppressWarnings("unchecked")
-  public void updateForumStatistic() throws Exception{
-			ForumStatistic forumStatistic = getForumStatistic() ;
-			if(forumStatistic.getActiveUsers() == 0 ) {
-				ExoContainer container = ExoContainerContext.getCurrentContainer();
-				OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-		  	PageList pageList = organizationService.getUserHandler().getUserPageList(1) ;
-		  	List<User> userList = pageList.getAll() ;
-		  	Collections.sort(userList, new Utils.DatetimeComparatorDESC()) ;
-		  	forumStatistic.setMembersCount(userList.size()) ;
-		  	forumStatistic.setNewMembers(userList.get(0).getUserName()) ;
-		  	saveForumStatistic(forumStatistic) ;
-		  	log.info("Statistics updated");
-			} else {
-			  log.info("Statistics update skipped");
-			}	
-			
-	}
-	
-	@SuppressWarnings("unchecked")
-  private void initUserProfile (SessionProvider sysSession) throws Exception  {
-		Node profileHome = storage_.getUserProfileHome(sysSession) ;
-		if(profileHome.getNodes().getSize() == 0) {
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-    	PageList pageList = organizationService.getUserHandler().getUserPageList(0) ;
-    	List<User> userList = pageList.getAll() ;
-    	for(User user : userList) {
-    		createUserProfile(sysSession, user) ;
-    	}
-  	}
-	}
-	*/
-	
+
 
 	/**
 	 * @TODO : profileTemplate is currently ignored
@@ -1307,26 +1265,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception{
 		storage_.updateEmailWatch(listNodeId, newEmailAdd, userId);
 	}
-	
-	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-		bbcodeObject_.saveBBCode(bbcodes);
-	}
-	
-	public List<BBCode> getAllBBCode() throws Exception {
-		return bbcodeObject_.getAllBBCode();
-	}
 
-	public List<String> getActiveBBCode() throws Exception {
-		return bbcodeObject_.getActiveBBCode();
-	}
-	
-	public BBCode getBBcode(String id) throws Exception{
-		return bbcodeObject_.getBBcode(id);
-	}
-	
-	public void removeBBCode(String bbcodeId) throws Exception {
-		bbcodeObject_.removeBBCode(bbcodeId);
-	}
 
 	public List<PruneSetting> getAllPruneSetting() throws Exception {
 	  return storage_.getAllPruneSetting();
@@ -1390,4 +1329,50 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void updateUserProfileInfo(String name) throws Exception {
 		storage_.updateUserProfileInfo(name) ;
 	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
+    if (plugin instanceof InitBBCodePlugin) {
+      bbcodeService.registerBBCodePlugin(((InitBBCodePlugin) plugin).getBBCodePlugin());
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void saveBBCode(List<BBCode> bbcodes) throws Exception{
+    bbcodeService.save(bbcodes);
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public List<BBCode> getAllBBCode() throws Exception {
+    return bbcodeService.getAll();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public List<String> getActiveBBCode() throws Exception {
+    return bbcodeService.getActive();
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public BBCode getBBcode(String id) throws Exception{
+    return bbcodeService.findById(id);
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public void removeBBCode(String bbcodeId) throws Exception {
+    bbcodeService.delete(bbcodeId);
+  }
+	
 }

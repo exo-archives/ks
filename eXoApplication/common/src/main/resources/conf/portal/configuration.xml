@@ -21,7 +21,10 @@
         </value-param>      
       </init-params>
     </component>
-    
+    <component>
+      <key>org.exoplatform.ks.common.bbcode.api.BBCodeService</key>
+      <type>org.exoplatform.ks.common.bbcode.BBCodeServiceImpl</type>
+    </component>    
 
   <external-component-plugins>
     <target-component>org.exoplatform.ks.rendering.MarkupRenderingService</target-component>   

@@ -388,8 +388,6 @@ public interface DataStorage {
 
   List<InitializeForumPlugin> getDefaultPlugins();
 
-  List<InitBBCodePlugin> getDefaultBBCodePlugins();
-
   void initAutoPruneSchedules() throws Exception;
 
   void updateLastLoginDate(String userId) throws Exception;

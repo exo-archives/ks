@@ -19,13 +19,19 @@ package org.exoplatform.ks.common.bbcode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.xml.ComponentPlugin;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.jmx.annotations.NameTemplate;
+import org.exoplatform.management.jmx.annotations.Property;
+
 /**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * May 6, 2009 - 4:27:49 AM  
+ * Managed plugin that holds registered BBCodes
  */
-public class BBCodePlugin {
+@Managed
+@NameTemplate({@Property(key="service", value="ks"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
+@ManagedDescription("Plugin that defines the initial BBCodes available")
+public class BBCodePlugin extends ComponentPlugin  {
 	private List<BBCodeData> bbcodeDatas = new ArrayList<BBCodeData>();
 	public BBCodePlugin() {
   }
@@ -36,6 +42,15 @@ public class BBCodePlugin {
   	this.bbcodeDatas = bbcodeDatas;
   }
 	
-
+  @Managed
+  @ManagedDescription("Get the list of BBCodes defined in this plugin")
+  public List<String> getBBCodes() {
+    List<String> result = new ArrayList<String>();
+   List<BBCodeData> data = getBbcodeDatas(); 
+   for (BBCodeData bbCodeData : data) {
+     result.add(bbCodeData.getTagName());
+   }
+   return result;
+  }
 	
 }

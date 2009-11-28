@@ -36,7 +36,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
-import org.exoplatform.forum.rendering.ExtendedBBCodeRenderer;
+import org.exoplatform.forum.rendering.ExtendedBBCodeProvider;
 import org.exoplatform.forum.rendering.MarkupRenderer;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
@@ -71,6 +71,7 @@ import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
@@ -392,8 +393,14 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		this.isGetSv = isGetSv;
   }
 	
-  
+	
   public String getReplaceByBBCode(String s) throws Exception {
+    BBCodeRenderer renderer = new BBCodeRenderer();
+    renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
+    return renderer.render(s);
+  }
+  
+  public String _getReplaceByBBCode(String s) throws Exception {
 
     syncBBCodeCache();
     if(!listBBCode.isEmpty()){

@@ -85,4 +85,12 @@ public class BBCode {
   	this.isOption = isOption;
   }
 	
+	public String toString() {
+	  return getTagName() + (isOption?"(option)" :"");
+	}
+	
+	public int hashCode() {
+	  return super.hashCode();
+	}
+	
 }

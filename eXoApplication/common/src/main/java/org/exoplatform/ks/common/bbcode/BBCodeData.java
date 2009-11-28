@@ -32,6 +32,13 @@ public class BBCodeData {
 	public BBCodeData() {
   }
 	
+	public BBCodeData(String tag, String replacement, boolean option, boolean active) {
+	  this.tagName = tag;
+	  this.replacement = replacement;
+	  this.isActive = String.valueOf(active);
+	  this.isOption = String.valueOf(option);
+	}
+	
 	public String getTagName() {
   	return tagName;
   }

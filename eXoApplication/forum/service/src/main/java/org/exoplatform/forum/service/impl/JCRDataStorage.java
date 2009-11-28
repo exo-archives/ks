@@ -101,8 +101,7 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.common.bbcode.BBCodeOperator;
-import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
+import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
@@ -129,14 +128,14 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
 
-/**
- * Created by The eXo Platform SARL 
- * Author : Hung Nguyen Quang
- * hung.nguyen@exoplatform.com Jul 10, 2007 
- * Edited by Vu Duy Tu
- * tu.duy@exoplatform.com July 16, 2007
- */
 
+
+/**
+ * JCR implementation of Forum Data Storage
+ * @author hung.nguyen@exoplatform.com
+ * @author tu.duy@exoplatform.com
+ * @version $Revision$
+ */
 @Managed
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="storage")})
 @ManagedDescription("Data Storage for this forum")
@@ -145,13 +144,13 @@ public class JCRDataStorage implements DataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
-	BBCodeOperator bbcodeObject_;
+	BBCodeService bbcodeObject_;
 
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
 	Map<String, Object>	infoMap_	= new HashMap<String, Object>();
 	List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
-	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
+
 	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
 	private boolean isInitRssListener_ = true ;
 	private JCRSessionManager sessionManager;
@@ -166,7 +165,7 @@ public class JCRDataStorage implements DataStorage {
     sessionManager = dataLocator.getSessionManager();
     repository = dataLocator.getRepository();
     workspace = dataLocator.getWorkspace();
-    bbcodeObject_ = new BBCodeOperator(dataLocator);
+    bbcodeObject_ = (BBCodeService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class);
 	}
 
   public void start() {
@@ -411,6 +410,12 @@ public class JCRDataStorage implements DataStorage {
     String path = dataLocator.getForumBanIPLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
+	
+	 private Node getBBCodesHome(SessionProvider sProvider) throws Exception {
+	    String path = dataLocator.getBBCodesLocation();
+	    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	  }
+	
 	
 	/**
 	 * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
@@ -3208,7 +3213,7 @@ public class JCRDataStorage implements DataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject_.getActive()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3373,7 +3378,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3412,7 +3417,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3454,7 +3459,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActiveBBCode()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -6398,7 +6403,7 @@ public class JCRDataStorage implements DataStorage {
 		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider)));
 		
 		// Create BBCode file
-		listFiles.addAll(createFilesFromNode(bbcodeObject_.getBBcodeHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getBBCodesHome(sessionProvider)));
 		
 		// Create BanIP file
 		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider)));
@@ -6491,7 +6496,7 @@ public class JCRDataStorage implements DataStorage {
 				nodeType = "exo:forumTag";
 				nodeName = "TagHome";
 			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
-				nodePath = bbcodeObject_.getBBcodeHome(sessionProvider).getPath();
+				nodePath = dataLocator.getBBCodesLocation();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 				isReset = true;
 				nodeType = "exo:forumBBCode";
@@ -7125,12 +7130,6 @@ public class JCRDataStorage implements DataStorage {
     } finally {
       sessionManager.closeSession(true);
     }
-  }
-
-
-  public List<InitBBCodePlugin> getDefaultBBCodePlugins() {
-    
-    return defaultBBCodePlugins_;
   }
 
 

@@ -27,10 +27,7 @@ import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 
 /**
- * Created by The eXo Platform SAS
- * Author : Vu Duy Tu
- *          tu.duy@exoplatform.com
- * 23-10-2008 - 07:57:47  
+ * @deprecated use {@link BBCodePlugin}
  */
 @Managed
 @NameTemplate({@Property(key="service", value="ks"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})

@@ -25,6 +25,7 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.services.organization.User;
 
 // TODO: Auto-generated Javadoc
@@ -59,15 +60,6 @@ public interface ForumService extends ForumServiceLegacy{
 	* @throws Exception the exception
 	*/
 	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception;
-
-	/**
-	 * Adds the plugin.
-	 * 
-	 * @param plugin the plugin
-	 * 
-	 * @throws Exception the exception
-	 */
-	public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception;
 	
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception ;
 	
@@ -926,13 +918,7 @@ public interface ForumService extends ForumServiceLegacy{
   public List<Watch> getWatchByUser(String userId) throws Exception;
   
   public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception;
-  
-  public void saveBBCode(List<BBCode> bbcodes) throws Exception ;
-  public List<BBCode> getAllBBCode() throws Exception ;
-  public List<String> getActiveBBCode() throws Exception;
-  public BBCode getBBcode(String id) throws Exception;
-  public void removeBBCode(String bbcodeId) throws Exception ;
-  
+
   public List<PruneSetting> getAllPruneSetting() throws Exception;
   public PruneSetting getPruneSetting(String forumPath) throws Exception;
   public void savePruneSetting(PruneSetting pruneSetting) throws Exception;
@@ -969,5 +955,38 @@ public interface ForumService extends ForumServiceLegacy{
    * @throws Exception 
    */
   public void removeMember(User user) throws Exception;
+  
+  
+  /**
+   * @deprecated use {@link BBCodeService#registerBBCodePlugin(org.exoplatform.ks.common.bbcode.BBCodePlugin)}
+   */
+  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception;
+  
+/**
+ * @deprecated use {@link BBCodeService#save(List)}
+ */
+  public void saveBBCode(List<BBCode> bbcodes) throws Exception ;
+  
+  /**
+   * @deprecated use {@link BBCodeService#getAll()}
+   */
+  public List<BBCode> getAllBBCode() throws Exception ;
+  
+  /**
+   * 
+   * @deprecated use {@link BBCodeService#getActive()}
+   */
+  public List<String> getActiveBBCode() throws Exception;
+  
+  /**
+   * @deprecated use {@link BBCodeService#findById(String)}
+   * @throws Exception
+   */
+  public BBCode getBBcode(String id) throws Exception;
+  
+  /**
+   * @deprecated use {@link BBCodeService#delete(String)}
+   */
+  public void removeBBCode(String bbcodeId) throws Exception ;
       
 }

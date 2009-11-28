@@ -17,6 +17,10 @@
 package org.exoplatform.ks.common.bbcode;
 
 import java.util.Arrays;
+import java.util.Collection;
+
+import org.exoplatform.ks.common.bbcode.core.BuiltinBBCodeProvider;
+import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
 
 import junit.framework.TestCase;
 
@@ -37,13 +41,28 @@ public class TestBBCodeRenderer extends TestCase {
     */
   }
   
-  public void testRender() {
-    BBCodeData bbcode = new BBCodeData();
-    bbcode.setTagName("URL");
-    bbcode.setReplacement("<a href='{option}'>{param}</a>");
-    bbcode.setIsOption("true");
+  
+  public void testRenderLinkAlias() {
+
     BBCodeRenderer renderer = new BBCodeRenderer();
-    renderer.setBbcodes(Arrays.asList(new BBCodeData[]{bbcode}));
+    
+    renderer.setBbCodeProvider(new BBCodeProvider() {
+      
+      public Collection<String> getSupportedBBCodes() {
+        
+        return Arrays.asList("URL");
+      }
+      
+      public BBCode getBBCode(String tagName) {
+        BBCode bbcode = new BBCode();
+        bbcode.setTagName("URL");
+        bbcode.setReplacement("<a href='{option}'>{param}</a>");
+        bbcode.setOption(true);
+        return bbcode;
+      }
+    });
+    
+
     String actual = renderer.render("[link=http://www.example.org]example[/link]");
     assertEquals("<a href='http://www.example.org'>example</a>", actual);
   }
@@ -67,6 +86,32 @@ public class TestBBCodeRenderer extends TestCase {
     String actual=renderer.processList("[list][*]list item 1[*]list item 2[/list]");
     assertEquals("<ul><li>list item 1</li><li>list item 2</li></ul>", actual); 
   }
+  
+  public void testBuiltinBBCodes() {
+    BBCodeRenderer renderer = new BBCodeRenderer();
+    renderer.setBbCodeProvider(new BuiltinBBCodeProvider());
+    assertEquals("<b>param</b>", renderer.render("[B]param[/B]"));
+    assertEquals("<i>param</i>", renderer.render("[I]param[/I]"));
+    assertEquals("<u>param</u>", renderer.render("[U]param[/U]"));
+    assertEquals("<font color=\"blue\">param</font>", renderer.render("[COLOR=blue]param[/COLOR]"));
+    assertEquals("<font face=\"courier\">param</font>", renderer.render("[FONT=courier]param[/FONT]"));
+    assertEquals("<span class=\"highlighted\">param</span>", renderer.render("[HIGHLIGHT]param[/HIGHLIGHT]"));
+    assertEquals("<div align=\"left\">param</div>", renderer.render("[LEFT]param[/LEFT]"));
+    assertEquals("<div align=\"right\">param</div>", renderer.render("[RIGHT]param[/RIGHT]"));    
+    assertEquals("<div align=\"center\">param</div>", renderer.render("[CENTER]param[/CENTER]"));
+    assertEquals("<div align=\"justify\">param</div>", renderer.render("[JUSTIFY]param[/JUSTIFY]"));
+    assertEquals("<a href=\"mailto:param\">param</a>", renderer.render("[EMAIL]param[/EMAIL]"));
+    assertEquals("<a href=\"mailto:option\">param</a>", renderer.render("[EMAIL=option]param[/EMAIL]"));
+    assertEquals("<a target=\"_blank\" href=\"http://www.exoplatform.org\">http://www.exoplatform.org</a>", renderer.render("[URL]http://www.exoplatform.org[/URL]"));
+    assertEquals("<a target=\"_blank\" href=\"http://www.exoplatform.org\">eXo</a>", renderer.render("[URL=http://www.exoplatform.org]eXo[/URL]"));
+    assertEquals("<a href=\"http://www.exoplatform.org\">eXo</a>", renderer.render("[GOTO=http://www.exoplatform.org]eXo[/GOTO]"));
+    assertEquals("<img border=\"0\" alt=\"\" src=\"param\" class=\"inlineimg\"/>", renderer.render("[IMG]param[/IMG]"));
+    assertEquals("<blockquote>param</blockquote>", renderer.render("[QUOTE]param[/QUOTE]"));
+    assertEquals("<blockquote cite=\"author\">param</blockquote>", renderer.render("[QUOTE=author]param[/QUOTE]"));
+    assertEquals("<span class=\"option\">param</span>", renderer.render("[CSS=option]param[/CSS]"));
+    assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=2]param[/SIZE]"));
+  }
+  
   
 
 }

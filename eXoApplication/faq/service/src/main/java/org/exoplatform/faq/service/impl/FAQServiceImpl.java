@@ -47,7 +47,7 @@ import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
-import org.exoplatform.ks.common.bbcode.BBCodeOperator;
+import org.exoplatform.ks.common.bbcode.BBCodeServiceImpl;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -70,7 +70,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 	public static final int SEND_EMAIL = 1 ;
 	private JCRDataStorage jcrData_ ;
 	private MultiLanguages multiLanguages_ ;
-	private BBCodeOperator bbcodeObject_ ;
+	private BBCodeServiceImpl bbcodeObject_ ;
 	private TemplatePlugin template_ ;
 	private ConfigurationManager configManager_ ;
 	//private EmailNotifyPlugin emailPlugin_ ;
@@ -87,7 +87,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 		initDataPlugins = new ArrayList<InitialDataPlugin>();
 		this.locator = locator;
     jcrData_ = new JCRDataStorage(locator) ;
-		bbcodeObject_ = new BBCodeOperator(locator) ;
+		bbcodeObject_ = new BBCodeServiceImpl(locator) ;
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
@@ -1307,23 +1307,23 @@ public class FAQServiceImpl implements FAQService, Startable {
   }
   
 	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-		bbcodeObject_.saveBBCode(bbcodes);
+		bbcodeObject_.save(bbcodes);
 	}
 	
 	public List<BBCode> getAllBBCode() throws Exception {
-		return bbcodeObject_.getAllBBCode();
+		return bbcodeObject_.getAll();
 	}
 
 	public List<String> getActiveBBCode() throws Exception {
-		return bbcodeObject_.getActiveBBCode();
+		return bbcodeObject_.getActive();
 	}
 	
 	public BBCode getBBcode(String id) throws Exception{
-		return bbcodeObject_.getBBcode(id);
+		return bbcodeObject_.findById(id);
 	}
 	
 	public void removeBBCode(String bbcodeId) throws Exception {
-		bbcodeObject_.removeBBCode(bbcodeId);
+		bbcodeObject_.delete(bbcodeId);
 	}
 
 }
