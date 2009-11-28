@@ -393,14 +393,8 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		this.isGetSv = isGetSv;
   }
 	
-	
-  public String getReplaceByBBCode(String s) throws Exception {
-    BBCodeRenderer renderer = new BBCodeRenderer();
-    renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
-    return renderer.render(s);
-  }
   
-  public String _getReplaceByBBCode(String s) throws Exception {
+  public String getReplaceByBBCode(String s) throws Exception {
 
     syncBBCodeCache();
     if(!listBBCode.isEmpty()){

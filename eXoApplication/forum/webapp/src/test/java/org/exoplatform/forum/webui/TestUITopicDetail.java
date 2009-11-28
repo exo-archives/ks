@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.FakeBBCodeService;
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
+import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
@@ -44,10 +45,18 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
 
   public void doSetUp() {  
     super.doSetUp();
-    this.markupRenderingService = new MarkupRenderingService();
-    Renderer bbcodeRenderer = new BBCodeRenderer();
+
+    // init BBCodeRenderer with
     ExtendedBBCodeProvider provider = new ExtendedBBCodeProvider();
+    bbcodeService = new FakeBBCodeService();
     provider.setBBCodeService(bbcodeService);
+    BBCodeRenderer bbcodeRenderer = new BBCodeRenderer();
+    bbcodeRenderer.setBbCodeProvider(provider);
+    
+    //     
+    // register renderign service
+    
+    this.markupRenderingService = new MarkupRenderingService();
     markupRenderingService.registerRenderer(bbcodeRenderer);
     component.setMarkupRenderingService(markupRenderingService);
   }
@@ -94,13 +103,16 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   }
 
   private void registerBBCode(String tagName, String replacement) {
+    service.addActiveBBCodes(tagName);
     BBCode foo = new BBCode();
     foo.setReplacement(replacement);
     foo.setId(tagName);
     foo.setTagName(tagName);  
-    foo.setActive(true);
-    foo.setOption(tagName.startsWith("="));
+    service.setBBCode(tagName, foo);
+
     bbcodeService.addBBCode(foo);
+    
+    
   }
   
   @Override
