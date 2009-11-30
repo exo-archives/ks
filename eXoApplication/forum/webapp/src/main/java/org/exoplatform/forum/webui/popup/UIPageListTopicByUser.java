@@ -163,6 +163,7 @@ public class UIPageListTopicByUser extends UIContainer{
 					return ;
 				}
 			}
+
 			Forum forum = new Forum();
 			if(isRead) {
 				try {
@@ -178,14 +179,14 @@ public class UIPageListTopicByUser extends UIContainer{
 					else isRead = false;
 					
 					if(!isRead && !forum.getIsClosed()){
-						
-					// check for topic:
-						if(!isRead && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-							if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-									ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-									(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-									ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-							else isRead = false;
+						// check for topic:
+						if(topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
+							List<String> list = new ArrayList<String>();
+							list = ForumUtils.addArrayToList(list, topic.getCanView());
+							list = ForumUtils.addArrayToList(list, forum.getViewer());
+							list = ForumUtils.addArrayToList(list, category.getViewer());
+							if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId()))isRead = false;
+							else isRead = true;
 						} else {
 							isRead = false;
 						}
@@ -193,8 +194,7 @@ public class UIPageListTopicByUser extends UIContainer{
 				}
 			}
 			if(!isRead){
-				String[] s = new String[]{};
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", new String[]{}, ApplicationMessage.WARNING)) ;
 				return;
 			}
 			
