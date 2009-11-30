@@ -179,13 +179,13 @@ public class UIPageListTopicByUser extends UIContainer{
 					
 					if(!isRead && !forum.getIsClosed()){
 						
-						// check for topic:
+					// check for topic:
 						if(!isRead && topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-							List<String> list = new ArrayList<String>();
-							list = ForumUtils.addArrayToList(list, topic.getCanView());
-							list = ForumUtils.addArrayToList(list, forum.getViewer());
-							list = ForumUtils.addArrayToList(list, category.getViewer());
-							if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId()))isRead = false;
+							if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
+									ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
+									(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
+									ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
+							else isRead = false;
 						} else {
 							isRead = false;
 						}
