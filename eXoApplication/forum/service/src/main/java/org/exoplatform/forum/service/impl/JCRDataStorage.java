@@ -3011,10 +3011,8 @@ public class JCRDataStorage implements DataStorage {
 					}
 					boolean canView = true;
 					Node categoryNode = forumNode.getParent();
-					if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-						 (forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-						 (topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:viewer").getValues()[0].getString().trim().length() > 0)
-						) canView = false;
+					if((hasProperty(categoryNode, "exo:viewer")) ||(hasProperty(forumNode, "exo:viewer")) || (hasProperty(topicNode, "exo:canView"))
+					) canView = false;
 					if (isSetLastPost) {
 						if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 							isFistPost = true;
@@ -3104,6 +3102,12 @@ public class JCRDataStorage implements DataStorage {
     }
 	}
 
+	private boolean hasProperty(Node node, String property) throws Exception {
+		if(node.hasProperty(property) && node.getProperty(property).getValues().length > 0 && node.getProperty(property).getValues()[0].getString().trim().length() > 0)
+			return true;
+		else return false;
+	}
+	
 	private void sendNotification(Node node, Topic topic, Post post, String defaultEmailContent, boolean isApprovePost) throws Exception {
 		Node forumAdminNode = null;
 		String headerSubject="",catName="",forumName="",topicName="";

@@ -201,8 +201,7 @@ public class RSSProcess extends RSSGenerate {
 			
 			Node forumNode = topicNode.getParent();
 			Node categoryNode = forumNode.getParent();
-			if((categoryNode.hasProperty("exo:canView") && categoryNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0) ||
-					(forumNode.hasProperty("exo:canView") && forumNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0)) return;
+			if((hasProperty(categoryNode, "exo:viewer"))||(hasProperty(forumNode, "exo:viewer"))) return;
 				
 			if((postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean())||
 					(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean())||
@@ -269,6 +268,12 @@ public class RSSProcess extends RSSGenerate {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean hasProperty(Node node, String property) throws Exception {
+		if(node.hasProperty(property) && node.getProperty(property).getValues().length > 0 && node.getProperty(property).getValues()[0].getString().trim().length() > 0)
+			return true;
+		else return false;
 	}
 	
 	/**
