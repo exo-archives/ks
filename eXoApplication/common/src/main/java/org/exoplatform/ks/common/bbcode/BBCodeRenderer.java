@@ -24,6 +24,9 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.ks.common.bbcode.core.BuiltinBBCodeProvider;
 import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
 import org.exoplatform.ks.rendering.api.Renderer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 
 /**
  * Renderer for BBCode markup. 
@@ -36,6 +39,8 @@ public class BBCodeRenderer implements Renderer {
   public static final String BBCODE_SYNTAX_ID = "bbcode";
   
   protected BBCodeProvider bbCodeProvider;
+  
+  private static final Log log = ExoLogger.getLogger(BBCodeRenderer.class);
   
   public BBCodeRenderer() {
     bbCodeProvider = new BuiltinBBCodeProvider();
@@ -212,6 +217,10 @@ public class BBCodeRenderer implements Renderer {
   public List<BBCode> getBbcodes() {
     List<BBCode> result = new ArrayList<BBCode>();
     Collection<String> supported = getBbCodeProvider().getSupportedBBCodes();
+    if (supported == null) {
+      log.warn("No BBCode supported by this renderer");
+      return result;
+    }
     for (String tag : supported) {
       result.add(getBbCodeProvider().getBBCode(tag));
     }

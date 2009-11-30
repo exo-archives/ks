@@ -20,16 +20,24 @@ package org.exoplatform.ks.common.bbcode;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.jcr.version.VersionException;
 
 import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.management.ManagementAware;
 import org.exoplatform.management.ManagementContext;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -50,7 +58,7 @@ import org.picocontainer.Startable;
 @Managed
 @NameTemplate(@Property(key="service", value="bbcode"))
 @ManagedDescription("BBCodes management")
-public class BBCodeServiceImpl implements Startable, BBCodeService {
+public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAware {
   
   
 	private List<BBCodePlugin> defaultBBCodePlugins_;
@@ -115,7 +123,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 
 		    
 			}
-    }finally { sProvider.close() ;}	  
+    } finally { sProvider.close() ;}	  
   }
 
 	/**
@@ -143,17 +151,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 			Node bbCodeHome = getBBcodeHome(sProvider);
 			Node bbcNode;
 			for (BBCode bbcode : bbcodes) {
-				String id = bbcode.getTagName();
-				if(bbcode.isOption()) id = id + "_option";
-				try {
-					bbcNode = bbCodeHome.getNode(bbcode.getId());
-					if(!id.equals(bbcode.getId())) {
-						bbcNode.remove();
-						bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
-					}
-	      } catch (Exception e) {
-	      	bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
-	      }
+				bbcNode = createNode(bbCodeHome, bbcode);
 				bbcNode.setProperty("exo:tagName", bbcode.getTagName());
 				bbcNode.setProperty("exo:replacement", bbcode.getReplacement());
 				bbcNode.setProperty("exo:example", bbcode.getExample());
@@ -170,11 +168,28 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 		  log.error("Error saving BBCodes", e);
 		}finally { sProvider.close() ;}		
 	}
+
+  private Node createNode(Node bbCodeHome, BBCode bbcode) throws Exception {
+    Node bbcNode;
+    String id = bbcode.getTagName() + ((bbcode.isOption()) ? "=":"");
+    //if(bbcode.isOption()) id = id + "=";
+    //if(bbcode.isOption()) id = id + "_option";
+    try {
+    	bbcNode = bbCodeHome.getNode(bbcode.getId());
+    	if(!id.equals(bbcode.getId())) {
+    		bbcNode.remove();
+    		bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
+    	}
+    } catch (Exception e) {
+    	bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
+    }
+    return bbcNode;
+  }
 	
   /**
    * {@inheritDoc}
    */
-	private BBCode getBBCodeNode(Node bbcNode) throws Exception{
+	private BBCode nodeToBBCode(Node bbcNode) throws Exception{
 		BBCode bbCode = new BBCode();
 		bbCode.setId(bbcNode.getName());
     bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
@@ -199,7 +214,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 			while (iter.hasNext()) {
 		    try{
 		    	Node bbcNode = iter.nextNode();
-			    bbcodes.add(getBBCodeNode(bbcNode));
+			    bbcodes.add(nodeToBBCode(bbcNode));
 		    }catch(Exception e) {
 		      log.error("Error loading BBCodes", e);
 		    }				
@@ -226,8 +241,9 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 			String tagName = "";
 			while (iter.hasNext()) {
 		    Node bbcNode = iter.nextNode();
-		    tagName = bbcNode.getProperty("exo:tagName").getString();
-		    if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
+		    tagName = bbcNode.getName();
+		    //tagName = bbcNode.getProperty("exo:tagName").getString();
+		    //if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
 		    bbcodes.add(tagName);
 	    }
 		}finally { sProvider.close() ;}
@@ -245,10 +261,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 			Node bbCodeHome = getBBcodeHome(sProvider);
 			try {
 				bbcNode = bbCodeHome.getNode(id);
-				bbCode.setId(bbcNode.getName());
-		    bbCode.setTagName(bbcNode.getProperty("exo:tagName").getString());
-		    bbCode.setReplacement(bbcNode.getProperty("exo:replacement").getString());
-		    bbCode.setOption(bbcNode.getProperty("exo:isOption").getBoolean());
+				bbCode = nodeToBBCode(bbcNode);
       } catch (Exception e) {
         log.error("Error loading BBCode" + id, e);
       }

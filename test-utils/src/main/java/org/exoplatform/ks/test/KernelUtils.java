@@ -19,6 +19,7 @@ package org.exoplatform.ks.test;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.container.xml.ValueParam;
 
 /**
@@ -37,6 +38,13 @@ public class KernelUtils {
     ValueParam param = new ValueParam();
     param.setName(name);
     param.setValue(value);
+    params.addParameter(param);
+   }
+  
+  public static void addObjectParam(InitParams params, String name, Object value) {
+    ObjectParameter param = new ObjectParameter();
+    param.setName(name);
+    param.setObject(value);
     params.addParameter(param);
    }
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service;
+package org.exoplatform.ks.common.bbcode.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,14 +27,15 @@ import org.exoplatform.ks.common.bbcode.BBCodePlugin;
 import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 
 /**
+ * Implementation of BBCodeService that manages BBCodes in memory
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class FakeBBCodeService implements BBCodeService {
+public class MemoryBBCodeService implements BBCodeService {
   
   private Map<String,BBCode> bbcodes;
   
-  public FakeBBCodeService() {
+  public MemoryBBCodeService() {
    bbcodes = new HashMap<String,BBCode>(); 
   }
   
@@ -63,7 +64,7 @@ public class FakeBBCodeService implements BBCodeService {
   }
 
   public void registerBBCodePlugin(BBCodePlugin plugin) throws Exception {
-    
+    throw new UnsupportedOperationException("registering a BBCode plugin is not supported by " + getClass());
   }
 
   public void save(List<BBCode> bbcodes) throws Exception {
@@ -73,9 +74,8 @@ public class FakeBBCodeService implements BBCodeService {
   }
   
   public void addBBCode(BBCode code) {
-    if (code.getId() != null) {
-      this.bbcodes.put(code.getId(), code);
-    }
+    code.setId(code.getTagName() + ((code.isOption()) ? "=":""));
+    this.bbcodes.put(code.getId(), code);
   }
 
 }

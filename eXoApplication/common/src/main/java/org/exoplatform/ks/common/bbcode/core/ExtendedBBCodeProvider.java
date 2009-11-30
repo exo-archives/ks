@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.rendering;
+package org.exoplatform.ks.common.bbcode.core;
 
 import java.util.Collection;
 
@@ -59,7 +59,7 @@ public class ExtendedBBCodeProvider implements BBCodeProvider {
 
   public Collection<String> getSupportedBBCodes() {
     try {
-      return bbCodeService.getActive();
+      return getBBCodeService().getActive();
     } catch (Exception e) {
       log.error(e);
     }

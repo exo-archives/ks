@@ -18,6 +18,7 @@ package org.exoplatform.ks.rendering;
 
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.api.UnsupportedSyntaxException;
+import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
 
@@ -40,16 +41,37 @@ public class TestMarkupRenderingService extends TestCase {
     AssertUtils.assertException(UnsupportedSyntaxException.class, new Closure() { public void dothis() {service.getRenderer("");}});
   }
   
+  
+  public void testDelegateRendering() {
+    final MarkupRenderingService service = new MarkupRenderingService();
+    Renderer renderer = new SampleRenderer();
+    service.registerRenderer(renderer);
+    SampleRenderingDelegate delegate = new SampleRenderingDelegate();
+    String actual = service.delegateRendering(delegate, "foo");
+    assertEquals("foo//processed", actual);
+    
+  }
+  
+  class SampleRenderingDelegate implements MarkupRenderDelegate<String>  {
+
+    public String getMarkup(String target) {   
+      return target;
+    }
+
+    public String getSyntax(String target) {
+      return "sample"; // made to use SampleRenderer
+    }
+    
+  }
+  
   class SampleRenderer implements Renderer {
 
     public String getSyntax() {
-      
       return "sample";
     }
 
     public String render(String markup) {
-      
-      return null;
+      return markup + "//processed";
     }
     
   }

@@ -36,8 +36,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
-import org.exoplatform.forum.rendering.ExtendedBBCodeProvider;
-import org.exoplatform.forum.rendering.MarkupRenderer;
+import org.exoplatform.forum.rendering.RenderHelper;
 import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
@@ -72,6 +71,7 @@ import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
+import org.exoplatform.ks.common.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
@@ -93,12 +93,6 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
 
-/**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *					hung.nguyen@exoplatform.com
- * Aus 01, 2007 2:48:18 PM 
- */
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
@@ -159,7 +153,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 		}
 )
 @SuppressWarnings("unused")
-public class UITopicDetail extends UIForumKeepStickPageIterator implements MarkupRenderer {
+public class UITopicDetail extends  UIForumKeepStickPageIterator {
 
 	private String categoryId ;
 	private String forumId ; 
@@ -193,7 +187,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 	public static final String FIELD_MESSAGE_TEXTAREA = "Message" ;
 	public static final String FIELD_ADD_TAG = "AddTag" ;
 	
-	private MarkupRenderingService markupRenderingService;
+	RenderHelper renderHelper = new RenderHelper();
 	
 	public UITopicDetail() throws Exception {
 		isDoubleClickQuickReply = false;
@@ -1838,26 +1832,9 @@ public class UITopicDetail extends UIForumKeepStickPageIterator implements Marku
 		}
 	}
 
-  public String processMarkup(String markup) throws RenderingException {
-    try {
-
-      //return getBbCodeRenderer().render(markup);
-      return getReplaceByBBCode(markup);
-    } catch (Exception e) {
-      throw new RenderingException(e);
-    }
+  public String renderPost(Post post) throws RenderingException {
+    return renderHelper.renderPost(post);
   }
 
-  public Renderer getBbCodeRenderer() {
-    if (this.markupRenderingService == null) {
-      MarkupRenderingService markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
-                                                                                   .getComponentInstanceOfType(MarkupRenderingService.class);
-    }
-    Renderer bbCodeRenderer = markupRenderingService.getRenderer("bbcode");
-    return bbCodeRenderer;
-  }
-  
-  public void setMarkupRenderingService(MarkupRenderingService markupRenderingService) {
-    this.markupRenderingService = markupRenderingService;
-  }
+
 }

@@ -50,11 +50,15 @@ public class Post {
 	private List<ForumAttachment> attachments = null ;
 	
 	public Post() {
-		id = Utils.POST + IdGenerator.generate() ;
 		userPrivate = new String[]{"exoUserPri"};
 	}
 	
-	public String getId() { return id; }
+	public String getId() { 
+	  if (id == null) {
+	    id = Utils.POST + IdGenerator.generate() ;
+	  }
+	  return id; 
+	}
 	public void setId(String id) { this.id = id; }
 	/**
 	 * This method should calculate the id of the topic base on the id of the post

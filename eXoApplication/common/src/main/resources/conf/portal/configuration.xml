@@ -28,5 +28,26 @@
     <type>org.exoplatform.ks.common.bbcode.BBCodeServiceImpl</type>
     <description>Manages CRUD operations on BBCodes</description>
   </component>    
- 
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.ks.rendering.MarkupRenderingService</target-component>
+    <component-plugin>
+     <name>BBCodeRenderer</name>
+     <set-method>registerRenderer</set-method>
+     <type>org.exoplatform.ks.rendering.spi.RendererPlugin</type>
+     <description>BBCode renderer</description>
+     <init-params>
+       <object-param>
+        <name>renderer</name>
+        <description>Extended BBCodeRenderer</description>
+        <object type="org.exoplatform.ks.common.bbcode.BBCodeRenderer">
+          <field name="bbCodeProvider">
+            <object type="org.exoplatform.ks.common.bbcode.core.ExtendedBBCodeProvider"/>
+          </field>
+        </object>
+       </object-param>
+     </init-params>
+    </component-plugin>
+  </external-component-plugins>
+
 </configuration>    

@@ -16,24 +16,38 @@
  */
 package org.exoplatform.forum.rendering;
 
+import org.exoplatform.forum.service.Post;
+import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
+import org.exoplatform.ks.rendering.MarkupRenderingService;
+
+import junit.framework.TestCase;
+
 /**
- * A MarkupRenderer is capable of rendering markup in special syntax such as bbcode wiki or others.
- * 
- * 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public interface MarkupRenderer {
+public class TestRenderHelper extends TestCase {
 
-  /**
-   * Process some input markup. Note that this tells nothing on the syntax of the markup.
-   * This is left to the implementation to decide which syntax to use.
-   * @param markup
-   * @return processed markup
-   * @throws RenderingException if the markup processing failed for any reason.
-   */
-  public String processMarkup(String markup) throws RenderingException;
-  
-  
+  protected void setUp() throws Exception {
+    super.setUp();
+  }
+
+  public void testRenderPost() {
+    MarkupRenderingService service = new MarkupRenderingService();
+    service.registerRenderer(new BBCodeRenderer());
+    
+    
+    RenderHelper helper = new RenderHelper();
+    helper.setMarkupRenderingService(service);
+    
+    String message = "this is [b]bold[/bold]";
+    Post post = new Post();
+    post.setMessage(message);
+    
+    String actual = helper.renderPost(post);
+    String expected = service.getRenderer("bbcode").render(message);
+    assertEquals(expected, actual);
+    
+  }
   
 }

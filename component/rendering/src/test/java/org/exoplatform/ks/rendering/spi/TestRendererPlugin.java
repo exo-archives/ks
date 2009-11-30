@@ -58,20 +58,20 @@ public class TestRendererPlugin extends TestCase {
     });  
     
     RendererPlugin plugin = createSampleRendererPlugin();
-    assertEquals(SampleRenderer.class, plugin.getRendererType());
+    assertEquals(SampleRenderer.class, plugin.getRenderer().getClass());
     
   }
 
   public void testCreateRenderer() throws Exception {
     RendererPlugin plugin = createSampleRendererPlugin();
-    Renderer actual = plugin.createRenderer();
+    Renderer actual = plugin.getRenderer();
     assertTrue("renderer should be an instance of Renderer", (actual instanceof Renderer));
   }
   
   
   private RendererPlugin createSampleRendererPlugin() {
     final InitParams params = new InitParams();
-    KernelUtils.addValueParam(params, "class", SampleRenderer.class.getName());
+    KernelUtils.addObjectParam(params, "renderer", new SampleRenderer());
     RendererPlugin plugin = new RendererPlugin(params);
     return plugin;
   }

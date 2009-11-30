@@ -37,43 +37,17 @@ public class RendererPlugin extends BaseComponentPlugin {
   
   @SuppressWarnings("unused")
   private static Log log = ExoLogger.getLogger(RendererPlugin.class);
-  
-  @SuppressWarnings("unchecked")
-  public RendererPlugin(InitParams params) {
-    String type;
-    try {
-      type = params.getValueParam("class").getValue();
-    } catch (Exception e) {
-      throw new RuntimeException("value-param class is required", e);
-    }
-    try {
-      rendererType = (Class<? extends Renderer>) Class.forName(type);
-    } catch (Exception e) {
-      throw new RuntimeException(type + " is not a valid type", e);
-    }
-  }
 
-  /**
-   * Instantiates a new Renderer
-   * @return
-   * @throws InstantiationException
-   * @throws IllegalAccessException
-   */
-  public Renderer createRenderer()  {
-    try {
-      //Constructor<? extends Renderer> constr = rendererType.getConstructor(); 
-      //return constr.newInstance();
-      return rendererType.newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
+  private Renderer renderer;
   
-  public Class<? extends Renderer> getRendererType() {
-    return rendererType;
-  }
-  public void setRendererType(Class<? extends Renderer> rendererType) {
-    this.rendererType = rendererType;
+  public RendererPlugin(InitParams params) {
+
+    try {
+      renderer = (Renderer) params.getObjectParam("renderer").getObject();
+    } catch (Exception e) {
+      throw new RuntimeException("object-param renderer of type " + Renderer.class +" is required for plugin " + getClassName() , e);
+    }
+
   }
   
   @Managed
@@ -101,7 +75,11 @@ public class RendererPlugin extends BaseComponentPlugin {
   @ManagedName("Syntax")
   @ManagedDescription("The syntax managed by this renderer")
   public String getSyntax() {
-    return createRenderer().getSyntax();
+    return renderer.getSyntax();
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
   
   

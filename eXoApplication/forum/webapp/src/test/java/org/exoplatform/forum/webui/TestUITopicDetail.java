@@ -18,14 +18,13 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import org.exoplatform.forum.rendering.ExtendedBBCodeProvider;
-import org.exoplatform.forum.service.FakeBBCodeService;
 import org.exoplatform.forum.service.FakeForumService;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
-import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
+import org.exoplatform.ks.common.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.bbcode.core.MemoryBBCodeService;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
-import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -34,21 +33,21 @@ import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
  */
 public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail> {
 
-  private FakeForumService service;
+  private FakeForumService  service;
   private MarkupRenderingService markupRenderingService;
-  private FakeBBCodeService bbcodeService;
+  private MemoryBBCodeService bbcodeService;
   
   public TestUITopicDetail() throws Exception {
     super();
-    service = new FakeForumService();  
+    service = new  FakeForumService();  
   }
 
   public void doSetUp() {  
     super.doSetUp();
 
-    // init BBCodeRenderer with
+    // init BBCodeRenderer with extended BBCode
     ExtendedBBCodeProvider provider = new ExtendedBBCodeProvider();
-    bbcodeService = new FakeBBCodeService();
+    bbcodeService = new MemoryBBCodeService();
     provider.setBBCodeService(bbcodeService);
     BBCodeRenderer bbcodeRenderer = new BBCodeRenderer();
     bbcodeRenderer.setBbCodeProvider(provider);
@@ -58,7 +57,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     
     this.markupRenderingService = new MarkupRenderingService();
     markupRenderingService.registerRenderer(bbcodeRenderer);
-    component.setMarkupRenderingService(markupRenderingService);
+
   }
   
   public void testSyncBBCodeCache() throws Exception {
@@ -97,8 +96,12 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
   public void testProcessMarkup() throws Exception {
     registerBBCode("FOO", "BAR");
     String markup = "[FOO]sdsd[/FOO]";
-    assertEquals("BAR", component.processMarkup(markup));
-    assertEquals(component.getReplaceByBBCode(markup), component.processMarkup(markup));
+    Post post = new Post();
+    post.setMessage(markup);
+    component.renderHelper.setMarkupRenderingService(this.markupRenderingService);
+    
+    assertEquals("BAR", component.renderPost(post));
+    assertEquals(component.getReplaceByBBCode(markup), component.renderPost(post));
     
   }
 

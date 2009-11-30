@@ -37,7 +37,7 @@ import org.exoplatform.services.organization.User;
  */
 public class FakeForumService implements ForumService {
  
-  List<String> activeBBCode;
+  List<String> activeBBCode; 
   
   public boolean addBanIP(String ip) throws Exception {
 
