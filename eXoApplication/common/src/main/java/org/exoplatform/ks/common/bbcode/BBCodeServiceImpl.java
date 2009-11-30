@@ -90,7 +90,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService {
 			if(iter.getSize() <= 0){ 
 				List<BBCode> bbCodes = new ArrayList<BBCode>();
 		    for (BBCodePlugin pln : defaultBBCodePlugins_) {
-		    	List<BBCodeData> codeDatas = pln.getBbcodeDatas();
+		    	List<BBCodeData> codeDatas = pln.getBBCodeData();
 		    	for (BBCodeData codeData : codeDatas) {
 		        BBCode bbCode = new BBCode();
 		        bbCode.setTagName(codeData.getTagName());

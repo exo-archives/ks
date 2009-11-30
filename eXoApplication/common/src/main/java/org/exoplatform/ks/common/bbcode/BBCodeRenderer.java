@@ -26,18 +26,20 @@ import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
 import org.exoplatform.ks.rendering.api.Renderer;
 
 /**
+ * Renderer for BBCode markup. 
+ * BBCode lookup is delegated to {@link BBCodeProvider}. By default, this implementation will use a {@link BuiltinBBCodeProvider}
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class BBCodeRenderer implements Renderer {
+  
   public static final String BBCODE_SYNTAX_ID = "bbcode";
+  
   protected BBCodeProvider bbCodeProvider;
   
   public BBCodeRenderer() {
     bbCodeProvider = new BuiltinBBCodeProvider();
   }
-  
-  
   
   public String getSyntax() {
     return BBCODE_SYNTAX_ID;

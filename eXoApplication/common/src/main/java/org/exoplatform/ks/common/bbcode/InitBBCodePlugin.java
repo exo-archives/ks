@@ -46,7 +46,7 @@ public class InitBBCodePlugin extends ManagedPlugin {
   @ManagedDescription("Get the list of BBCodes defined in this plugin")
   public List<String> getBBCodes() {
     List<String> result = new ArrayList<String>();
-   List<BBCodeData> data = initialData.getBbcodeDatas(); 
+   List<BBCodeData> data = initialData.getBBCodeData(); 
    for (BBCodeData bbCodeData : data) {
      result.add(bbCodeData.getTagName());
    }

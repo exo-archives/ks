@@ -19,7 +19,8 @@ package org.exoplatform.ks.common.bbcode;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.xml.ComponentPlugin;
+import org.exoplatform.container.component.BaseComponentPlugin;
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -31,26 +32,33 @@ import org.exoplatform.management.jmx.annotations.Property;
 @Managed
 @NameTemplate({@Property(key="service", value="ks"), @Property(key="view", value="plugins"), @Property(key="name", value="{Name}")})
 @ManagedDescription("Plugin that defines the initial BBCodes available")
-public class BBCodePlugin extends ComponentPlugin  {
-	private List<BBCodeData> bbcodeDatas = new ArrayList<BBCodeData>();
+public class BBCodePlugin extends BaseComponentPlugin  {
+	
+  private List<BBCodeData> bbcodeData = new ArrayList<BBCodeData>();
+	
+	
 	public BBCodePlugin() {
+	}
+	
+	public BBCodePlugin(InitParams params) {
+	  bbcodeData = params.getObjectParamValues(BBCodeData.class);
   }
-	public List<BBCodeData> getBbcodeDatas() {
-  	return bbcodeDatas;
+	public List<BBCodeData> getBBCodeData() {
+  	return bbcodeData;
   }
-	public void setBbcodeDatas(List<BBCodeData> bbcodeDatas) {
-  	this.bbcodeDatas = bbcodeDatas;
+	public void setBbcodeData(List<BBCodeData> bbcodeDatas) {
+  	this.bbcodeData = bbcodeDatas;
   }
 	
   @Managed
   @ManagedDescription("Get the list of BBCodes defined in this plugin")
   public List<String> getBBCodes() {
     List<String> result = new ArrayList<String>();
-   List<BBCodeData> data = getBbcodeDatas(); 
+   List<BBCodeData> data = getBBCodeData(); 
    for (BBCodeData bbCodeData : data) {
      result.add(bbCodeData.getTagName());
    }
    return result;
   }
-	
+  
 }
