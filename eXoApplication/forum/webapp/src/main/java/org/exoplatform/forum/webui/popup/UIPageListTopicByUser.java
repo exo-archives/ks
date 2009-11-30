@@ -185,6 +185,7 @@ public class UIPageListTopicByUser extends UIContainer{
 							list = ForumUtils.addArrayToList(list, topic.getCanView());
 							list = ForumUtils.addArrayToList(list, forum.getViewer());
 							list = ForumUtils.addArrayToList(list, category.getViewer());
+							if(!list.isEmpty()) list.add(topic.getOwner());
 							if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId()))isRead = false;
 							else isRead = true;
 						} else {

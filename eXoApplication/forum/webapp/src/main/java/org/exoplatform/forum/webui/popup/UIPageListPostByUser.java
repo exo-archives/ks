@@ -165,23 +165,16 @@ public class UIPageListPostByUser extends UIContainer {
 						else isRead = false;
 						
 						if(!isRead && !forum.getIsClosed()){
-							List<String> listUserPermission = new ArrayList<String>();
-							if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0) 
-								listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
-							
-							if(forum.getViewer() != null && forum.getViewer().length > 0 )
-								listUserPermission.addAll(Arrays.asList(forum.getViewer()));
-							
-							if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
 							
 							// check for topic:
-							if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
-									topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-								if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-										ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-										(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-										ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-								else isRead = false;
+							if(topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
+								List<String> list = new ArrayList<String>();
+								list = ForumUtils.addArrayToList(list, topic.getCanView());
+								list = ForumUtils.addArrayToList(list, forum.getViewer());
+								list = ForumUtils.addArrayToList(list, category.getViewer());
+								if(!list.isEmpty()) list.add(topic.getOwner());
+								if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId()))isRead = false;
+								else isRead = true;
 							} else {
 								isRead = false;
 							}
@@ -255,23 +248,14 @@ public class UIPageListPostByUser extends UIContainer {
 						else isRead = false;
 						
 						if(!isRead && !forum.getIsClosed()){
-							List<String> listUserPermission = new ArrayList<String>();
-							if (forum.getCreateTopicRole() != null && forum.getCreateTopicRole().length > 0) 
-								listUserPermission.addAll(Arrays.asList(forum.getCreateTopicRole()));
-							
-							if(forum.getViewer() != null && forum.getViewer().length > 0 )
-								listUserPermission.addAll(Arrays.asList(forum.getViewer()));
-							
-							if(ForumServiceUtils.hasPermission(listUserPermission.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
-							
-							// check for topic:
-							if(!isRead && post.getIsActiveByTopic() && post.getIsApproved() && !post.getIsHidden() && topic.getIsActive() &&
-									topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
-								if((topic.getCanPost().length == 1 && topic.getCanPost()[0].equals(" ")) || 
-										ForumServiceUtils.hasPermission(topic.getCanPost(),uiForm.userProfile.getUserId()) ||
-										(topic.getCanView().length == 1 && topic.getCanView()[0].equals(" ")) ||
-										ForumServiceUtils.hasPermission(topic.getCanView(),uiForm.userProfile.getUserId())) isRead = true;
-								else isRead = false;
+							if(topic.getIsActiveByForum() && topic.getIsApproved() && !topic.getIsClosed() && !topic.getIsWaiting()){
+								List<String> list = new ArrayList<String>();
+								list = ForumUtils.addArrayToList(list, topic.getCanView());
+								list = ForumUtils.addArrayToList(list, forum.getViewer());
+								list = ForumUtils.addArrayToList(list, category.getViewer());
+								if(!list.isEmpty()) list.add(topic.getOwner());
+								if(!list.isEmpty() && !ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId()))isRead = false;
+								else isRead = true;
 							} else {
 								isRead = false;
 							}

@@ -294,7 +294,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 								list = ForumUtils.addArrayToList(list, forum.getViewer());
 								list = ForumUtils.addArrayToList(list, uiForm.forumService.getPermissionTopicByCategory(id[l-4], "viewer"));
 								if(!list.isEmpty())list.add(topic.getOwner());
-								if(ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
+								if(!list.isEmpty() && ForumServiceUtils.hasPermission(list.toArray(new String[]{}), uiForm.userProfile.getUserId())) isRead = true;
 								else isRead = false;
 							} else {
 								isRead = false;
