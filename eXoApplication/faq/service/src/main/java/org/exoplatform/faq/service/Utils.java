@@ -26,7 +26,7 @@ import javax.jcr.Value;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 /**

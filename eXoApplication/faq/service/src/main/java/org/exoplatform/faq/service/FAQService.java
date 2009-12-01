@@ -23,8 +23,8 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.NotifyInfo;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.mail.Message;
 
 /**

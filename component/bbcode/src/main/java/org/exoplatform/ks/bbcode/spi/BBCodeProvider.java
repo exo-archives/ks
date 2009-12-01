@@ -18,7 +18,7 @@ package org.exoplatform.ks.bbcode.spi;
 
 import java.util.Collection;
 
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 
 /**
  * Responsible to provide a list of BBCode definitions 

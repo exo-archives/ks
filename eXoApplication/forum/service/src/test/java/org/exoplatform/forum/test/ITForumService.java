@@ -33,7 +33,7 @@ import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.util.IdGenerator;
 

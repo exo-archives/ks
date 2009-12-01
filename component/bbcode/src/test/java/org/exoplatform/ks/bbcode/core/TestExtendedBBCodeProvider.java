@@ -20,7 +20,7 @@ import static org.exoplatform.ks.test.AssertUtils.assertContains;
 import static org.exoplatform.ks.test.AssertUtils.assertEmpty;
 import junit.framework.TestCase;
 
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

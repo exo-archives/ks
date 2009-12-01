@@ -29,7 +29,7 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;

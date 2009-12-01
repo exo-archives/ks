@@ -32,7 +32,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

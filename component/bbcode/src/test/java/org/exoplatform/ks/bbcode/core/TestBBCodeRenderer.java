@@ -19,11 +19,11 @@ package org.exoplatform.ks.bbcode.core;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.bbcode.core.BuiltinBBCodeProvider;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
-import org.exoplatform.ks.common.bbcode.BBCode;
 
 import junit.framework.TestCase;
 

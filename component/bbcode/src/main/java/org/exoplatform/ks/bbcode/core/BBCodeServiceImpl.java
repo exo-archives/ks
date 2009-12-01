@@ -26,10 +26,10 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.ManagementAware;

@@ -20,10 +20,10 @@ import java.util.List;
 
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.bbcode.core.MemoryBBCodeService;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 

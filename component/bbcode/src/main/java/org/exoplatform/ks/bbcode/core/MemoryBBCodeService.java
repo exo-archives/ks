@@ -22,9 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
-import org.exoplatform.ks.common.bbcode.BBCode;
 
 /**
  * Implementation of BBCodeService that manages BBCodes in memory

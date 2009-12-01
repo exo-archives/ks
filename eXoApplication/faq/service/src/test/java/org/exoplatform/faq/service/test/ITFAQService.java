@@ -43,7 +43,7 @@ import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.faq.test.FAQServiceTestCase;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 

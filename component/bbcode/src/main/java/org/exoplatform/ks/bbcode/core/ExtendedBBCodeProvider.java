@@ -19,9 +19,9 @@ package org.exoplatform.ks.bbcode.core;
 import java.util.Collection;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

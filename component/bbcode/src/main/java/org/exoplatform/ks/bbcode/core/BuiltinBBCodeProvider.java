@@ -19,8 +19,8 @@ package org.exoplatform.ks.bbcode.core;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
-import org.exoplatform.ks.common.bbcode.BBCode;
 
 /**
  * Builtin BBCode provider. Porvides definitions for the following standard BBCodes : 

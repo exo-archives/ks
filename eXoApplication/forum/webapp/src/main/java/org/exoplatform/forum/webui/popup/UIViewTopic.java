@@ -36,7 +36,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.common.bbcode.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

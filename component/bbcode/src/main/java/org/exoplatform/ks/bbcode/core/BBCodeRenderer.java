@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
-import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

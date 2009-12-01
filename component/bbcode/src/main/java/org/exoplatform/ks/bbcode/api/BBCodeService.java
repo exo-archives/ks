@@ -19,7 +19,6 @@ package org.exoplatform.ks.bbcode.api;
 import java.util.List;
 
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
-import org.exoplatform.ks.common.bbcode.BBCode;
 
 
 /**
