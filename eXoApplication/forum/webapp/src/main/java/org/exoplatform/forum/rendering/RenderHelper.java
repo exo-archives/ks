@@ -18,7 +18,7 @@ package org.exoplatform.forum.rendering;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
+import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
 
