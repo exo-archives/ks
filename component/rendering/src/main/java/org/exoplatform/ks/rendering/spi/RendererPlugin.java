@@ -18,6 +18,7 @@ package org.exoplatform.ks.rendering.spi;
 
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ks.common.conf.RequiredParamException;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
@@ -45,7 +46,7 @@ public class RendererPlugin extends BaseComponentPlugin {
     try {
       renderer = (Renderer) params.getObjectParam("renderer").getObject();
     } catch (Exception e) {
-      throw new RuntimeException("object-param renderer of type " + Renderer.class +" is required for plugin " + getClassName() , e);
+      throw new RequiredParamException(params, RendererPlugin.class, "renderer", Renderer.class);
     }
 
   }

@@ -27,6 +27,11 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.common</artifactId>
+      <version>${project.version}</version>
+    </dependency>        
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.test-utils</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

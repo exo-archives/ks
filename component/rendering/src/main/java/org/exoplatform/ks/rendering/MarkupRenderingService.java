@@ -31,7 +31,7 @@ import org.exoplatform.ks.rendering.spi.RendererPlugin;
  */
 public class MarkupRenderingService {
 
-    Map<String,Renderer> rendererRegistry;
+    protected Map<String,Renderer> rendererRegistry;
 
     public MarkupRenderingService() {
       rendererRegistry = new HashMap<String, Renderer>();
@@ -45,7 +45,7 @@ public class MarkupRenderingService {
       rendererRegistry.put(renderer.getSyntax(), renderer);
     }
     
-    public Renderer getRenderer(String syntax) throws UnsupportedSyntaxException {
+    public Renderer getRenderer(String syntax) {
       Renderer r = rendererRegistry.get(syntax);
       if (r == null) {
         throw new UnsupportedSyntaxException("No renderer has been registered for syntax " + syntax);

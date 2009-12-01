@@ -18,7 +18,7 @@ package org.exoplatform.ks.rendering.spi;
 
 
 /**
- * 
+ * A MarkupDelgate is reponsible for exposing an object for markup rendering
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
@@ -29,12 +29,12 @@ public interface MarkupRenderDelegate<T> {
    * markup syntax used to select the appropriate renderer
    * @return
    */
-  public String getSyntax(T target);
+  String getSyntax(T target);
   
   /**
    * Actual markup
    * @return
    */
-  public String getMarkup(T target) ;
+  String getMarkup(T target) ;
   
 }

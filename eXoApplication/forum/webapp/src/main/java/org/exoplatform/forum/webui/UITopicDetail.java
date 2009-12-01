@@ -388,6 +388,9 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
   }
 	
   
+	/**
+	 * @deprecated use {@link #renderPost(Post)}
+	 */
   public String getReplaceByBBCode(String s) throws Exception {
 
     syncBBCodeCache();
@@ -401,7 +404,9 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
     return s;
   }
 
-
+  /**
+   * @deprecated deprecated by {@link #renderPost(Post)}
+   */
   public void syncBBCodeCache() {
 		if(isGetSv) {
 			List<BBCode> bbcs = new ArrayList<BBCode>();

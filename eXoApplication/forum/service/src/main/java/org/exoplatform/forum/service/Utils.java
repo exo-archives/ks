@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.bbcode.api.BBCode;
+import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -72,12 +73,18 @@ public class Utils {
 			"has been added new $ADD_TYPE with content below: <div>_______________<br/>$POST_CONTENT<br/>_______________</div><div>At $TIME on $DATE, <b>$POSTER</b> posted</div> " +
 			"For more detail, you can view at link : $LINK".intern();
 	
+	 /**
+   * @deprecated Use {@link MarkupRenderingService#delegateRendering(org.exoplatform.ks.rendering.spi.MarkupRenderDelegate, Object)}
+   */
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
 		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		s = getReplacementByBBcode(s, bbcodes, forumService);
 		return s;
 	}
 	
+	/**
+	 * @deprecated Use {@link MarkupRenderingService#delegateRendering(org.exoplatform.ks.rendering.spi.MarkupRenderDelegate, Object)}
+	 */
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes, ForumService forumService) throws Exception {
 		int lastIndex = 0, tagIndex = 0, clsIndex = 0;
 		String start, end, bbc, str="", param, option;

@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.rendering.MarkupRenderingService;
 
 /**
  * Created by The eXo Platform SARL
@@ -163,12 +164,18 @@ public class Utils {
 		return list.toArray(new String[]{});
 	}
 	
+	/**
+   * @deprecated Use {@link MarkupRenderingService#delegateRendering(org.exoplatform.ks.rendering.spi.MarkupRenderDelegate, Object)}
+   */
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes) throws Exception {
 		FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 		s = getReplacementByBBcode(s, bbcodes, faqService);
 		return s;
 	}
 	
+  /**
+   * @deprecated Use {@link MarkupRenderingService#delegateRendering(org.exoplatform.ks.rendering.spi.MarkupRenderDelegate, Object)}
+   */	
 	public static String getReplacementByBBcode(String s, List<BBCode> bbcodes, FAQService faqService) throws Exception {
 		int lastIndex = 0, tagIndex = 0, clsIndex = 0;
 		String start, end, bbc, str="", param, option;
