@@ -143,7 +143,7 @@ public class UserHelper {
   }
 
   public static PageList getPageListUser() throws Exception {
-  	return getUserHandler().getUserPageList(0);
+  	return getUserHandler().getUserPageList(10);
   }
 
   public static boolean isAnonim() throws Exception {
