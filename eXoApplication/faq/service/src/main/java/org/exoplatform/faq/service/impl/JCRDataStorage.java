@@ -31,8 +31,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -1612,22 +1614,22 @@ public class JCRDataStorage implements DataStorage {
 															replace("&categoryName_", categoryName).
 															replace("&questionLink_", link);
 		message.setBody(contentMail);
-		List<String>emails = new ArrayList<String>();
+		Set<String>emails = new HashSet<String>();
 		emails.addAll(calculateMoveEmail(destCateNode));
 		emails.addAll(calculateMoveEmail(questionNode.getParent()));
 		emails.add(questionNode.getProperty("exo:email").getString());
-		sendEmailNotification(Utils.compareList(emails), message) ;
+		sendEmailNotification(new ArrayList<String>(emails), message) ;
 	}
 	
-	private List<String> calculateMoveEmail(Node node) throws Exception {
-		List<String>emails = new ArrayList<String>();
+	private Set<String> calculateMoveEmail(Node node) throws Exception {
+		Set<String> set = new HashSet<String>();
 		while(!node.getName().equals(Utils.CATEGORY_HOME)) {
 	    if(node.isNodeType("exo:faqWatching")){
-	    	emails.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+	    	set.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
 	    }
 			node = node.getParent();
     }
-		return emails;
+		return set;
 	}
 	
 	private void updateComments(Node question, String catId) throws Exception {

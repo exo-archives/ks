@@ -29,13 +29,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -2560,12 +2563,17 @@ public class JCRDataStorage implements DataStorage {
 				srcForumNode.setProperty("exo:postCount", tmp);
 				destForumNode.setProperty("exo:postCount", destForumNode.getProperty("exo:postCount").getLong() + topicPostCount);
 				
-				// send mail to author topic after move topic:
+				// send email after move topic:
 				message.setSubject(headerSubject + objectName + topic.getTopicName());
 				message.setBody(mailContent.replace("$OBJECT_NAME", topic.getTopicName()).replace("$OBJECT_PARENT_NAME", forumName).replace("$VIEWPOST_LINK", link.replaceFirst("pathId", topic.getId())));
-				List<String> fullNameEmailOwnerTopic = getFullNameAndEmail(sProvider, topic.getOwner());
-				fullNameEmailOwnerTopic.remove(0);
-				sendEmailNotification(fullNameEmailOwnerTopic, message);
+				Set<String> set = new HashSet<String>();
+				// set email author this topic
+				set.add(getFullNameAndEmail(sProvider, topic.getOwner()).get(1));
+				// set email watch this topic, forum, category parent of this topic
+				set.addAll(calculateMoveEmail(topicNode));
+				// set email watch old category, forum parent of this topic
+				set.addAll(calculateMoveEmail(srcForumNode));
+				sendEmailNotification(new ArrayList<String>(set), message);
 				try {
 					calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
 	      } catch (Exception e) {
@@ -2582,6 +2590,17 @@ public class JCRDataStorage implements DataStorage {
 		} finally { sProvider.close() ;}		
 	}
 
+	private Set<String> calculateMoveEmail(Node node) throws Exception {
+		Set<String> set = new HashSet<String>();
+		while(!node.getName().equals(KSDataLocation.Locations.FORUM_CATEGORIES_HOME)) {
+	    if(node.isNodeType("exo:forumWatching")){
+	    	set.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+	    }
+			node = node.getParent();
+    }
+		return set;
+	}
+	
 	private void calculateLastRead(SessionProvider sProvider, String destForumId, String srcForumId, String topicId) throws Exception {
 		Node profileHome = getUserProfileHome(sProvider);
 		QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
@@ -3777,9 +3796,14 @@ public class JCRDataStorage implements DataStorage {
 				message.setSubject(headerSubject + objectName);
 				message.setBody(mailContent.replace("$OBJECT_NAME", postNode.getProperty("exo:name").getString())
 								.replace("$OBJECT_PARENT_NAME", topicName).replace("$VIEWPOST_LINK", link));
-				List<String> fullNameEmailOwnerPost = getFullNameAndEmail(sProvider, postNode.getProperty("exo:owner").getString());
-				fullNameEmailOwnerPost.remove(0);
-				sendEmailNotification(fullNameEmailOwnerPost, message);
+				Set<String> set = new HashSet<String>();
+				// set email author this topic
+				set.add(getFullNameAndEmail(sProvider, postNode.getProperty("exo:owner").getString()).get(1));
+				// set email watch this topic, forum, category parent of this post
+				set.addAll(calculateMoveEmail(destTopicNode));
+				// set email watch old category, forum, topic parent of this post
+				set.addAll(calculateMoveEmail(srcTopicNode));
+				sendEmailNotification(new ArrayList<String>(set), message);
 			}
 			
 			List<String>userIdsp = new ArrayList<String>();
