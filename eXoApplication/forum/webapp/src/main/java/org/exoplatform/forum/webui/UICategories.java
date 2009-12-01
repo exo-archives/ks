@@ -397,6 +397,7 @@ public class UICategories extends UIContainer	{
 				UIApplication uiApp = categories.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.topicEmpty", args, ApplicationMessage.WARNING)) ;
 				context.addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				forumPortlet.updateUserProfileInfo();
 			} else {
 				path = topic.getPath();
 				Forum forum;
