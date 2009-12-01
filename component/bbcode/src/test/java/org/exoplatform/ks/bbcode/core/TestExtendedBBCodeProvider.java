@@ -16,10 +16,11 @@
  */
 package org.exoplatform.ks.bbcode.core;
 
+import static org.exoplatform.ks.test.AssertUtils.assertContains;
+import static org.exoplatform.ks.test.AssertUtils.assertEmpty;
 import junit.framework.TestCase;
 
 import org.exoplatform.ks.common.bbcode.BBCode;
-import org.exoplatform.ks.test.AssertUtils;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -57,7 +58,7 @@ public class TestExtendedBBCodeProvider extends TestCase {
     }
     
     public void testGetSupportedBBCodes() {
-      AssertUtils.assertEmpty(provider.getSupportedBBCodes()); 
+      assertEmpty(provider.getSupportedBBCodes()); 
       
       
       
@@ -65,7 +66,7 @@ public class TestExtendedBBCodeProvider extends TestCase {
       registerOptBBCode("FOO", "FOO-OPT");
       registerBBCode("BAR", "BAR");
       
-      AssertUtils.assertContains(provider.getSupportedBBCodes(), "FOO", "BAR");
+      assertContains(provider.getSupportedBBCodes(), "FOO", "BAR");
       
       BBCode code = provider.getBBCode("FOO=");
       assertNotNull(code.getTagName());

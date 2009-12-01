@@ -17,7 +17,7 @@
 package org.exoplatform.forum.rendering;
 
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.ks.common.bbcode.BBCodeRenderer;
+import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 
 import junit.framework.TestCase;
