@@ -6,8 +6,8 @@
 
 
   <component>
-    <key>org.exoplatform.ks.common.bbcode.api.BBCodeService</key>
-    <type>org.exoplatform.ks.common.bbcode.BBCodeServiceImpl</type>
+    <key>org.exoplatform.ks.bbcode.api.BBCodeService</key>
+    <type>org.exoplatform.ks.bbcode.core.BBCodeServiceImpl</type>
     <description>Manages CRUD operations on BBCodes</description>
   </component>    
   
@@ -23,9 +23,9 @@
        <object-param>
         <name>renderer</name>
         <description>Extended BBCodeRenderer</description>
-        <object type="org.exoplatform.ks.common.bbcode.BBCodeRenderer">
+        <object type="org.exoplatform.ks.bbcode.core.BBCodeRenderer">
           <field name="bbCodeProvider">
-            <object type="org.exoplatform.ks.common.bbcode.core.ExtendedBBCodeProvider"/>
+            <object type="org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider"/>
           </field>
         </object>
        </object-param>
