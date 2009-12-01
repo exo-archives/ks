@@ -1309,6 +1309,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiForumContainer) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
+				forumPortlet.updateUserProfileInfo();
 			} catch (Exception e) {
 			  warning("UIForumPortlet.msg.topicEmpty");
 			  topicDetail.refreshPortlet();

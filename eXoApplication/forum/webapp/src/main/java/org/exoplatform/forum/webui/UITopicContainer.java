@@ -1199,6 +1199,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				Object[] args = { };
 				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING)) ;
 			}
+			forumPortlet.updateUserProfileInfo();
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}	
