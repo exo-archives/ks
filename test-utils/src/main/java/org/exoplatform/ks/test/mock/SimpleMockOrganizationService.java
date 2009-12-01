@@ -52,7 +52,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 			String membershipType = "*";
 			String group = membershipExpr;
 
-			if (! (membershipExpr.indexOf(":") <= 0)) {
+			if (membershipExpr.indexOf(':') > 0) {
 				String[] parts = membershipExpr.split(":");
 				membershipType = parts[0];
 				group = parts[1];
@@ -64,329 +64,342 @@ public class SimpleMockOrganizationService implements OrganizationService {
 	}
 
 	public GroupHandler getGroupHandler() {
-		return new GroupHandler() {
-
-			public void saveGroup(Group group, boolean broadcast)
-					throws Exception {
-			}
-
-			public Group removeGroup(Group group, boolean broadcast)
-					throws Exception {
-				return null;
-			}
-
-			public Collection<Group> getAllGroups() throws Exception {
-				Collection<Group> groups = new HashSet<Group>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					groups.add(new SimpleGroup(membership.getGroupId()));
-				}
-				return groups;
-			}
-
-			public Collection<Group> findGroupsOfUser(String user) throws Exception {
-				Collection<Group> groups = new HashSet<Group>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(user)) {
-						groups.add(new SimpleGroup(membership.getGroupId()));
-					}
-				}
-				return groups;
-			}
-
-			public Collection<Group> findGroups(Group parent) throws Exception {
-				Collection<Group> groups = new HashSet<Group>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					Group group = new SimpleGroup(membership.getGroupId());
-					if (group.getParentId().equals(parent.getId())) {
-						groups.add(group);
-					}
-				}
-				return groups;
-			}
-
-			public Collection<Group> findGroupByMembership(String userName,
-					String membershipType) throws Exception {
-				Collection<Group> groups = new HashSet<Group>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(userName)
-							&& membership.getMembershipType().equals(
-									membershipType)) {
-						groups.add(new SimpleGroup(membership.getGroupId()));
-					}
-				}
-				return groups;
-			}
-
-			public Group findGroupById(String groupId) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					Group group = new SimpleGroup(membership.getGroupId());
-					if (group.getId().equals(groupId)) {
-						return group;
-					}
-				}
-				return null;
-			}
-
-			public Group createGroupInstance() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void createGroup(Group group, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void addGroupEventListener(GroupEventListener listener) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void addChild(Group parent, Group child, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-
-			}
-		};
+		return new MockGroupHandler();
 	}
 
 	public MembershipHandler getMembershipHandler() {
-		// TODO Auto-generated method stub
-		return new MembershipHandler() {
-
-			public Collection<Membership> removeMembershipByUser(String username,
-					boolean broadcast) throws Exception {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Membership removeMembership(String id, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void linkMembership(User user, Group group,
-					MembershipType m, boolean broadcast) throws Exception {
-				addMemberships(user.getUserName(), m.getName() + ":"
-						+ group.getId());
-
-			}
-
-			public Collection<Membership> findMembershipsByUserAndGroup(String userName,
-					String groupId) throws Exception {
-				Collection<Membership> memberships = new HashSet<Membership>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(userName)
-							&& membership.getGroupId().equals(groupId)) {
-						memberships.add(membership);
-					}
-				}
-				return memberships;
-			}
-
-			public Collection<Membership> findMembershipsByUser(String userName)
-					throws Exception {
-				Collection<Membership> memberships = new HashSet<Membership>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(userName)) {
-						memberships.add(membership);
-					}
-				}
-				return memberships;
-			}
-
-			public Collection<Membership> findMembershipsByGroup(Group group)
-					throws Exception {
-				Collection<Membership> memberships = new HashSet<Membership>();
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getGroupId().equals(group.getId())) {
-						memberships.add(membership);
-					}
-				}
-				return memberships;
-			}
-
-			public Membership findMembershipByUserGroupAndType(String userName,
-					String groupId, String type) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(userName)
-							&& membership.getGroupId().equals(groupId)
-							&& membership.getMembershipType().equals(type)) {
-						return membership;
-					}
-				}
-				return null;
-			}
-
-			public Membership findMembership(String id) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getId().equals(id)) {
-						return membership;
-					}
-				}
-				return null;
-			}
-
-			public Membership createMembershipInstance() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void createMembership(Membership m, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void addMembershipEventListener(
-					MembershipEventListener listener) {
-				// TODO Auto-generated method stub
-
-			}
-		};
+		return new MockMembershipHandler();
 	}
 
 	public MembershipTypeHandler getMembershipTypeHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public UserHandler getUserHandler() {
-		return new UserHandler() {
-
-			public void saveUser(User user, boolean broadcast) throws Exception {
-				// TODO Auto-generated method stub
-
-			}
-
-			public User removeUser(String userName, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@SuppressWarnings("unchecked")
-      public PageList<User> getUserPageList(int pageSize) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				HashSet<User> userSet = new HashSet<User>();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					userSet.add(new SimpleUser(membership.getUserName()));
-				}
-				return new ObjectPageList(Arrays.asList(userSet.toArray()), pageSize);
-			}
-
-			@SuppressWarnings("unchecked")
-      public PageList<User> findUsersByGroup(String groupId) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				HashSet<User> userSet = new HashSet<User>();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getGroupId().equals(groupId)) {
-						userSet.add(new SimpleUser(membership.getUserName()));
-					}
-				}
-				return new ObjectPageList(Arrays.asList(userSet.toArray()), 10);
-			}
-
-			@SuppressWarnings("unchecked")
-      public PageList<User> findUsers(Query query) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				HashSet<User> userSet = new HashSet<User>();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					String userName = membership.getUserName();
-					if (query.getUserName().equals(userName)) {
-						userSet.add(new SimpleUser(membership.getUserName()));
-					}
-				}
-				return new ObjectPageList(Arrays.asList(userSet.toArray()), 10);
-			}
-
-			public User findUserByName(String userName) throws Exception {
-				Iterator<SimpleMembership> mbIt = storage.iterator();
-				while (mbIt.hasNext()) {
-					SimpleMembership membership = (SimpleMembership) mbIt
-							.next();
-					if (membership.getUserName().equals(userName)) {
-						return new SimpleUser(userName);
-					}
-				}
-				return null;
-			}
-
-			public User createUserInstance(String username) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public User createUserInstance() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void createUser(User user, boolean broadcast)
-					throws Exception {
-				// TODO Auto-generated method stub
-
-			}
-
-			public boolean authenticate(String username, String password)
-					throws Exception {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public void addUserEventListener(UserEventListener listener) {
-				// TODO Auto-generated method stub
-
-			}
-		};
+		return new MockUserHandler();
 	}
 
 	public UserProfileHandler getUserProfileHandler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void addListenerPlugin(ComponentPlugin listener) throws Exception {
 		// TODO Auto-generated method stub
 
+	}
+	
+	
+	class MockGroupHandler implements GroupHandler {
+
+
+    public void saveGroup(Group group, boolean broadcast)
+        throws Exception {
+    }
+
+    public Group removeGroup(Group group, boolean broadcast)
+        throws Exception {
+      return null;
+    }
+
+    public Collection<Group> getAllGroups() throws Exception {
+      Collection<Group> groups = new HashSet<Group>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        groups.add(new SimpleGroup(membership.getGroupId()));
+      }
+      return groups;
+    }
+
+    public Collection<Group> findGroupsOfUser(String user) throws Exception {
+      Collection<Group> groups = new HashSet<Group>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(user)) {
+          groups.add(new SimpleGroup(membership.getGroupId()));
+        }
+      }
+      return groups;
+    }
+
+    public Collection<Group> findGroups(Group parent) throws Exception {
+      Collection<Group> groups = new HashSet<Group>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        Group group = new SimpleGroup(membership.getGroupId());
+        if (group.getParentId().equals(parent.getId())) {
+          groups.add(group);
+        }
+      }
+      return groups;
+    }
+
+    public Collection<Group> findGroupByMembership(String userName,
+        String membershipType) throws Exception {
+      Collection<Group> groups = new HashSet<Group>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(userName)
+            && membership.getMembershipType().equals(
+                membershipType)) {
+          groups.add(new SimpleGroup(membership.getGroupId()));
+        }
+      }
+      return groups;
+    }
+
+    public Group findGroupById(String groupId) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        Group group = new SimpleGroup(membership.getGroupId());
+        if (group.getId().equals(groupId)) {
+          return group;
+        }
+      }
+      return null;
+    }
+
+    public Group createGroupInstance() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public void createGroup(Group group, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+
+    }
+
+    public void addGroupEventListener(GroupEventListener listener) {
+      // TODO Auto-generated method stub
+
+    }
+
+    public void addChild(Group parent, Group child, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+
+    }
+  	  
+	  
+	}
+	
+	class MockMembershipHandler implements MembershipHandler {
+	  
+	  public MockMembershipHandler() {}
+
+    public Collection<Membership> removeMembershipByUser(String username,
+        boolean broadcast) throws Exception {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public Membership removeMembership(String id, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public void linkMembership(User user, Group group,
+        MembershipType m, boolean broadcast) throws Exception {
+      addMemberships(user.getUserName(), m.getName() + ":"
+          + group.getId());
+
+    }
+
+    public Collection<Membership> findMembershipsByUserAndGroup(String userName,
+        String groupId) throws Exception {
+      Collection<Membership> memberships = new HashSet<Membership>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(userName)
+            && membership.getGroupId().equals(groupId)) {
+          memberships.add(membership);
+        }
+      }
+      return memberships;
+    }
+
+    public Collection<Membership> findMembershipsByUser(String userName)
+        throws Exception {
+      Collection<Membership> memberships = new HashSet<Membership>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(userName)) {
+          memberships.add(membership);
+        }
+      }
+      return memberships;
+    }
+
+    public Collection<Membership> findMembershipsByGroup(Group group)
+        throws Exception {
+      Collection<Membership> memberships = new HashSet<Membership>();
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getGroupId().equals(group.getId())) {
+          memberships.add(membership);
+        }
+      }
+      return memberships;
+    }
+
+    public Membership findMembershipByUserGroupAndType(String userName,
+        String groupId, String type) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(userName)
+            && membership.getGroupId().equals(groupId)
+            && membership.getMembershipType().equals(type)) {
+          return membership;
+        }
+      }
+      return null;
+    }
+
+    public Membership findMembership(String id) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getId().equals(id)) {
+          return membership;
+        }
+      }
+      return null;
+    }
+
+    public Membership createMembershipInstance() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public void createMembership(Membership m, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+
+    }
+
+    public void addMembershipEventListener(
+        MembershipEventListener listener) {
+      // TODO Auto-generated method stub
+
+    }
+  	  
+	}
+	
+	class MockUserHandler implements UserHandler{
+
+
+    public void saveUser(User user, boolean broadcast) throws Exception {
+      // TODO Auto-generated method stub
+
+    }
+
+    public User removeUser(String userName, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public PageList<User> getUserPageList(int pageSize) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      HashSet<User> userSet = new HashSet<User>();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        userSet.add(new SimpleUser(membership.getUserName()));
+      }
+      return new ObjectPageList(Arrays.asList(userSet.toArray()), pageSize);
+    }
+
+    @SuppressWarnings("unchecked")
+    public PageList<User> findUsersByGroup(String groupId) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      HashSet<User> userSet = new HashSet<User>();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getGroupId().equals(groupId)) {
+          userSet.add(new SimpleUser(membership.getUserName()));
+        }
+      }
+      return new ObjectPageList(Arrays.asList(userSet.toArray()), 10);
+    }
+
+    @SuppressWarnings("unchecked")
+    public PageList<User> findUsers(Query query) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      HashSet<User> userSet = new HashSet<User>();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        String userName = membership.getUserName();
+        if (query.getUserName().equals(userName)) {
+          userSet.add(new SimpleUser(membership.getUserName()));
+        }
+      }
+      return new ObjectPageList(Arrays.asList(userSet.toArray()), 10);
+    }
+
+    public User findUserByName(String userName) throws Exception {
+      Iterator<SimpleMembership> mbIt = storage.iterator();
+      while (mbIt.hasNext()) {
+        SimpleMembership membership = (SimpleMembership) mbIt
+            .next();
+        if (membership.getUserName().equals(userName)) {
+          return new SimpleUser(userName);
+        }
+      }
+      return null;
+    }
+
+    public User createUserInstance(String username) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public User createUserInstance() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public void createUser(User user, boolean broadcast)
+        throws Exception {
+      // TODO Auto-generated method stub
+
+    }
+
+    public boolean authenticate(String username, String password)
+        throws Exception {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    public void addUserEventListener(UserEventListener listener) {
+      // TODO Auto-generated method stub
+
+    }
+  
+	  
 	}
 
 	static class SimpleUser implements User {
@@ -524,7 +537,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 		}
 
 		public String getGroupName() {
-			return id.substring(id.lastIndexOf("/")+1);
+			return id.substring(id.lastIndexOf('/')+1);
 		}
 
 		public String getId() {
@@ -536,7 +549,7 @@ public class SimpleMockOrganizationService implements OrganizationService {
 		}
 
 		public String getParentId() {
-			return id.substring(0, id.lastIndexOf("/"));
+			return id.substring(0, id.lastIndexOf('/'));
 		}
 
 		public void setDescription(String desc) {

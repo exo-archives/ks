@@ -67,8 +67,7 @@ public class MockWebUIRequestContext extends WebuiRequestContext {
 
   @Override
   public String[] getRequestParameterValues(String name) {
-    
-    return null;
+    return new String[0];
   }
 
   @Override

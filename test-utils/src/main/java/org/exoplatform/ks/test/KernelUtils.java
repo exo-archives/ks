@@ -27,6 +27,10 @@ import org.exoplatform.container.xml.ValueParam;
  * @version $Revision$
  */
 public class KernelUtils {
+  
+  private KernelUtils() {
+    // hidden
+  }
 
   @SuppressWarnings("unchecked")
   public static <T>T getService(Class<? extends T> clazz) {

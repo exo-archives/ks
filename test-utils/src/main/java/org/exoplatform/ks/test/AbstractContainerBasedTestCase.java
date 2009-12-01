@@ -45,16 +45,17 @@ public abstract class AbstractContainerBasedTestCase extends TestCase {
   
   
   public AbstractContainerBasedTestCase() throws Exception {
-    cacheService = initCacheService();
-    identityRegistry = initIdentityRegistry();
-    organizationService =  new SimpleMockOrganizationService();
+
   }
   
   /**
    * Initializes a new ExoContainer bound to the platform MBseanServer. 
    * Calls {@link #registerComponents(ExoContainer)}, then {@link #doSetUp()}.
    */
-  public final void setUp() {
+  public final void setUp() throws Exception {
+    cacheService = initCacheService();
+    identityRegistry = initIdentityRegistry();
+    organizationService =  new SimpleMockOrganizationService();
     ExoContainer testContainer = new ExoContainer(new ManagementContextImpl(ManagementFactory.getPlatformMBeanServer(), new HashMap<String,String>()));
     registerDefaultComponents(testContainer);
     registerComponents(testContainer);

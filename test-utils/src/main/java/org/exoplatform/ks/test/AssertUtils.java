@@ -14,6 +14,11 @@ import junit.framework.AssertionFailedError;
  */
 public class AssertUtils {
 	
+  
+  private AssertUtils() {
+    // hidden
+  }
+  
 	/**
 	 * Assert a set of expected items to be all contained in a collection
 	 * @param actual containment
@@ -29,7 +34,9 @@ public class AssertUtils {
 		for (Object item : expected) {
 			boolean found = false;
 			for (Object obj : actual) {
-				if (obj.equals(item)) found = true;
+				if (obj.equals(item)) {
+				  found = true;
+				}
 			}
 			Assert.assertTrue("expected item was not found " + item + "@"+ item.hashCode(), found); 
 		}

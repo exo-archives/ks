@@ -39,7 +39,7 @@ public class MockResourceBundle extends ResourceBundle {
   {
      if (key == null)
      {
-        throw new NullPointerException();
+        throw new IllegalArgumentException("null hey is not allowed");
      }
      return content.get(key);
   }
