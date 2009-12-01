@@ -67,7 +67,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="AnswersContainer"  style="height:290px; margin-bottom:5px; overflow:auto;_width:187px;">
+		<div class="AnswersContainer"  id="AnswersContainer" style="min-height:339px; margin-bottom:5px; overflow:auto;_width:187px;">
 			<div class="UICategories">
 				<%
 		     if(!uicomponent.parentCateID_.equals(Utils.CATEGORY_HOME) || !uicomponent.parentCateID_.equals(uicomponent.categoryId_)){%>

@@ -1276,3 +1276,10 @@
 	
 <%/* End View category*/ %>
 </div>
+<script type="text/javascript">
+	var ansCt = document.getElementById('AnswersContainer');
+	var ansVCt = document.getElementById('AnswersViewContent');
+	if(ansVCt && ansCt){
+		ansCt.style.height = (ansVCt.offsetHeight-61) + "px";
+	}
+</script>
