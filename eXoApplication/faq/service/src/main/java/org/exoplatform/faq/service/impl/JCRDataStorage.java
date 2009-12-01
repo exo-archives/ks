@@ -79,7 +79,6 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
@@ -111,7 +110,6 @@ public class JCRDataStorage implements DataStorage {
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
 	private Map<String, FAQRSSEventListener> rssListenerMap_ = new HashMap<String, FAQRSSEventListener> () ;
-	List<InitBBCodePlugin> defaultBBCodePlugins_ = new ArrayList<InitBBCodePlugin>() ;
 	private final String ADMIN_="ADMIN".intern();
 	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;

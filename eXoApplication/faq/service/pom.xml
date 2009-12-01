@@ -83,6 +83,12 @@
       <version>${project.version}</version>   
       <scope>provided</scope>   
     </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.bbcode</artifactId>
+      <version>${project.version}</version>   
+      <scope>provided</scope>   
+    </dependency>    
      <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.test-utils</artifactId>

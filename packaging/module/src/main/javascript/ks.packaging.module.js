@@ -29,11 +29,16 @@ function getModule(params)
 	module.comet.cometd.deployName = "cometd";
   // KS
 
-
+  // KS components
+  module.component = {};
+  module.component.common = new Project("org.exoplatform.ks", "exo.ks.component.common","jar", module.version);
+  module.component.rendering =  new Project("org.exoplatform.ks", "exo.ks.component.rendering","jar", module.version);
+  module.component.bbcode =  new Project("org.exoplatform.ks", "exo.ks.component.bbcode","jar", module.version);
+  
+	
   // KS apps
   module.eXoApplication = {};
-  module.eXoApplication.common = new Project("org.exoplatform.ks", "exo.ks.eXoApplication.common","jar", module.version).
-  addDependency(new Project("org.exoplatform.ks", "exo.ks.component.rendering", "jar", module.version));
+  module.eXoApplication.common = new Project("org.exoplatform.ks", "exo.ks.eXoApplication.common","jar", module.version);
 
   
   // FAQ

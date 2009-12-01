@@ -40,6 +40,9 @@ function getProduct(version) {
   product.addDependencies(ks.comet.cometd);
    
   // KS extension
+  product.addDependencies(ks.component.common);
+  product.addDependencies(ks.component.rendering);
+  product.addDependencies(ks.component.bbcode);
   product.addDependencies(ks.eXoApplication.common);
   product.addDependencies(ks.eXoApplication.faq);
   product.addDependencies(ks.eXoApplication.forum);

@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.ks.common.bbcode;
 
-import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.services.jcr.util.IdGenerator;
 
 /**
  * Created by The eXo Platform SAS
@@ -26,6 +24,9 @@ import org.exoplatform.services.jcr.util.IdGenerator;
  * Oct 7, 2009 - 6:57:52 AM  
  */
 public class BBCode {
+  
+  public static final String BBCODE = "bbcode";
+  
 	private String id;
 	private String tagName;
 	private String replacement;
@@ -40,9 +41,6 @@ public class BBCode {
   }
 	
 	public String getId() {
-	  if (id == null) {
-	    id =  Locations.BBCODE + IdGenerator.generate();
-	  }
   	return id;
   }
 	public void setId(String id) {

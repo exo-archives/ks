@@ -53,7 +53,6 @@ import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.ks.common.bbcode.BBCode;
-import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
@@ -1329,16 +1328,6 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void updateUserProfileInfo(String name) throws Exception {
 		storage_.updateUserProfileInfo(name) ;
 	}
-	
-
-	/**
-	 * {@inheritDoc}
-	 */
-  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception {
-    if (plugin instanceof InitBBCodePlugin) {
-      bbcodeService.registerBBCodePlugin(((InitBBCodePlugin) plugin).getBBCodePlugin());
-    }
-  }
 
   /**
    * {@inheritDoc}

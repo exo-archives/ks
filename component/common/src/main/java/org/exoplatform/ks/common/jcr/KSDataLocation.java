@@ -354,7 +354,7 @@ public class KSDataLocation {
     public static final String FORUM_CATEGORIES_HOME = "CategoryHome";
     
     public static final String KS_USER_AVATAR = "ksUserAvatar";
-    public static final String BBCODE = "bbcode";
+
     public static final String BBCODE_HOME = "forumBBCode";
     public static final String FORUM_DATA = "ForumData";
     public static final String FORUM_SYSTEM = "ForumSystem";

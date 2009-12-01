@@ -4,50 +4,9 @@
    xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
    xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+  
 
-  <component>
-    <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
-    <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
-    <description>Holds JCR storage location for KS data</description>
-    <init-params>
-      <value-param>
-        <name>repository</name>
-        <description>JCR repository for KS data</description>
-        <value>repository</value>
-      </value-param>
-      <value-param>
-        <name>workspace</name>
-        <description>workspace for KS data</description>
-        <value>system</value>
-      </value-param>      
-    </init-params>
-  </component>
   
-  <component>
-    <key>org.exoplatform.ks.common.bbcode.api.BBCodeService</key>
-    <type>org.exoplatform.ks.common.bbcode.BBCodeServiceImpl</type>
-    <description>Manages CRUD operations on BBCodes</description>
-  </component>    
-  
-  <external-component-plugins>
-    <target-component>org.exoplatform.ks.rendering.MarkupRenderingService</target-component>
-    <component-plugin>
-     <name>BBCodeRenderer</name>
-     <set-method>registerRenderer</set-method>
-     <type>org.exoplatform.ks.rendering.spi.RendererPlugin</type>
-     <description>BBCode renderer</description>
-     <init-params>
-       <object-param>
-        <name>renderer</name>
-        <description>Extended BBCodeRenderer</description>
-        <object type="org.exoplatform.ks.common.bbcode.BBCodeRenderer">
-          <field name="bbCodeProvider">
-            <object type="org.exoplatform.ks.common.bbcode.core.ExtendedBBCodeProvider"/>
-          </field>
-        </object>
-       </object-param>
-     </init-params>
-    </component-plugin>
-  </external-component-plugins>
+
 
 </configuration>    

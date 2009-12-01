@@ -27,7 +27,6 @@ import javax.jcr.NodeIterator;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.annotations.Managed;

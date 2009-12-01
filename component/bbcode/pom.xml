@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.component</artifactId>
+    <version>2.0.0-Alpha02-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>exo.ks.component.bbcode</artifactId>
+  <name>eXo KS BBCode processing</name>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <scope>provided</scope>
+    </dependency>  
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
+      <scope>provided</scope>
+    </dependency>    
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <scope>provided</scope>
+    </dependency>  
+    <dependency>
+      <groupId>picocontainer</groupId>
+      <artifactId>picocontainer</artifactId>
+      <scope>provided</scope>
+    </dependency>           
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>exo.jcr.component.ext</artifactId>
+      <scope>provided</scope>
+    </dependency>      
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.rendering</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>      
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.common</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>        
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.test-utils</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>    
+  </dependencies>
+</project>

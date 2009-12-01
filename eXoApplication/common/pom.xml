@@ -26,6 +26,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.component.common</artifactId>
+      <version>${project.version}</version>
+    </dependency>     
+    <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <scope>provided</scope>

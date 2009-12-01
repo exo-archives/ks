@@ -17,6 +17,9 @@
 package org.exoplatform.ks.common.conf;
 
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.management.annotations.Managed;
+import org.exoplatform.management.annotations.ManagedDescription;
+import org.exoplatform.management.annotations.ManagedName;
 
 public class DataLocationPlugin extends ManagedPlugin {
   
@@ -29,10 +32,16 @@ public class DataLocationPlugin extends ManagedPlugin {
     this.workspace = params.getValueParam("workspace").getValue();
   }
 
+  @Managed
+  @ManagedName("repository")
+  @ManagedDescription("Repository where data is located")
   public String getRepository() {
     return repository;
   }
 
+  @Managed
+  @ManagedName("workspace")
+  @ManagedDescription("workspace in repository where data is located")
   public String getWorkspace() {
     return workspace;
   }

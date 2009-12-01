@@ -93,10 +93,11 @@ public class PropertyReader {
 	
 	public List<String> list(String name, List<String>defaultValue) {
 		try {
-			return valuesToList(node.getProperty(name).getValues());
+		  Value [] values = node.getProperty(name).getValues();
+			return valuesToList(values);
 		}
 		catch (Exception e) {
-			return null;
+			return defaultValue;
 		}
 	}
 	

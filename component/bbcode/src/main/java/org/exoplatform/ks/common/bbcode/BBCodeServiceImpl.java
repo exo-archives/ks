@@ -33,7 +33,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionException;
 
-import org.exoplatform.ks.common.CommonUtils;
 import org.exoplatform.ks.common.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -60,6 +59,8 @@ import org.picocontainer.Startable;
 @ManagedDescription("BBCodes management")
 public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAware {
   
+  public final static String BBCODE_NODE_TYPE = "exo:forumBBCode".intern() ;
+  public final static String BBCODE_HOME_NODE_TYPE = "exo:forumBBCodeHome".intern() ;  
   
 	private List<BBCodePlugin> defaultBBCodePlugins_;
 	private KSDataLocation dataLocator;
@@ -178,10 +179,10 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
     	bbcNode = bbCodeHome.getNode(bbcode.getId());
     	if(!id.equals(bbcode.getId())) {
     		bbcNode.remove();
-    		bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
+    		bbcNode = bbCodeHome.addNode(id, BBCODE_NODE_TYPE);
     	}
     } catch (Exception e) {
-    	bbcNode = bbCodeHome.addNode(id, CommonUtils.BBCODE_NODE_TYPE);
+    	bbcNode = bbCodeHome.addNode(id, BBCODE_NODE_TYPE);
     }
     return bbcNode;
   }
@@ -234,7 +235,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 			if (bbCodeHome == null) return bbcodes ;
 			QueryManager qm = bbCodeHome.getSession().getWorkspace().getQueryManager();
 			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(bbCodeHome.getPath()).append("/element(*,").append(CommonUtils.BBCODE_NODE_TYPE).append(")[@exo:isActive='true']");
+			pathQuery.append("/jcr:root").append(bbCodeHome.getPath()).append("/element(*,").append(BBCODE_NODE_TYPE).append(")[@exo:isActive='true']");
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();

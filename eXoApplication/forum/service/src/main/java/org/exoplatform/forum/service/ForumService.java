@@ -956,12 +956,6 @@ public interface ForumService extends ForumServiceLegacy{
    */
   public void removeMember(User user) throws Exception;
   
-  
-  /**
-   * @deprecated use {@link BBCodeService#registerBBCodePlugin(org.exoplatform.ks.common.bbcode.BBCodePlugin)}
-   */
-  public void addInitBBCodePlugin(ComponentPlugin plugin) throws Exception;
-  
 /**
  * @deprecated use {@link BBCodeService#save(List)}
  */

@@ -54,6 +54,17 @@ public class AssertUtils {
 		Assert.assertTrue(actual.containsAll(Arrays.asList(expected)));
 	}
 	
+	
+	 /**
+   * Assert a set of expected string items to be all contained in a string array
+   * @param actual containment
+   * @param expected items expected to be contained
+   */
+	 public static void assertContains(String [] actual, String... expected) {
+	    Assert.assertTrue(Arrays.asList(actual).containsAll(Arrays.asList(expected)));
+	  }
+	  
+	
 	/**
 	 * Assert a set of expected string items NOT to be all contained in a collection
 	 * @param actual containment
