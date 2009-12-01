@@ -111,7 +111,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		categoryTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput categoryOrder = new UIFormStringInput(FIELD_CATEGORYORDER_INPUT, FIELD_CATEGORYORDER_INPUT, "0");
 		categoryOrder.addValidator(PositiveNumberFormatValidator.class);
-		UIFormStringInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null);
+		UIFormTextAreaInput description = new UIFormTextAreaInput(FIELD_DESCRIPTION_INPUT, FIELD_DESCRIPTION_INPUT, null);
 
 		UIFormTextAreaInput userPrivate = new UIFormTextAreaInput(FIELD_USERPRIVATE_MULTIVALUE, FIELD_USERPRIVATE_MULTIVALUE, null);
 		
