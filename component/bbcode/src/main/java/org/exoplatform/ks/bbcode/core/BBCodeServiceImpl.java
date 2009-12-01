@@ -15,25 +15,21 @@
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
 
-package org.exoplatform.ks.common.bbcode;
+package org.exoplatform.ks.bbcode.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.lock.LockException;
-import javax.jcr.nodetype.ConstraintViolationException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.VersionException;
 
-import org.exoplatform.ks.common.bbcode.api.BBCodeService;
+import org.exoplatform.ks.bbcode.api.BBCodeService;
+import org.exoplatform.ks.bbcode.spi.BBCodeData;
+import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.management.ManagementAware;

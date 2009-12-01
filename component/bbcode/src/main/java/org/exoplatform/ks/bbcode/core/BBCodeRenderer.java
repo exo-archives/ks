@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.common.bbcode;
+package org.exoplatform.ks.bbcode.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.ks.common.bbcode.core.BuiltinBBCodeProvider;
-import org.exoplatform.ks.common.bbcode.spi.BBCodeProvider;
+import org.exoplatform.ks.bbcode.spi.BBCodeData;
+import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
+import org.exoplatform.ks.common.bbcode.BBCode;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
