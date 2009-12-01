@@ -241,8 +241,8 @@
 						<th style="width:30px;">&nbsp;</th>
 						<th><%=_ctx.appRes("UICategory.label.Forums");%></th>
 						<th style="width:30%;"><%=_ctx.appRes("UICategory.label.lastpost");%></th>
-						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
-						<th style="width:50px;"><%=_ctx.appRes("UICategory.label.post");%></th>
+						<th style="width:65px;"><%=_ctx.appRes("UICategory.label.thread");%></th>
+						<th style="width:55px;"><%=_ctx.appRes("UICategory.label.post");%></th>
 						<% if(isShowMenu){ %>
 						<th style="width:30px;"><input id="UIFORUMCheckAllForum" type="checkbox" class="checkbox" title="Check all" value="4" onClick="eXo.forum.UIForumPortlet.checkAll(this);"/></th>
 						<% } %>
