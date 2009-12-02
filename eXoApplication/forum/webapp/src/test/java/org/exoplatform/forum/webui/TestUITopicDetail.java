@@ -60,38 +60,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
 
   }
   
-  public void testSyncBBCodeCache() throws Exception {
-   
-    // active BBCodes are cached
-    registerBBCode("FOO", "");
-    component.setIsGetSv(true);
-    component.syncBBCodeCache();
-    List<BBCode> actual = component.listBBCode;
-    assertEquals("FOO", actual.get(0).getId());
-    
-    // = prefix for options
-    registerBBCode("=BAR", "");
-    component.setIsGetSv(true);
-    component.syncBBCodeCache();
-    BBCode alt = component.listBBCode.get(1);
-    assertTrue(alt.isOption());
-    assertEquals("BAR_option", alt.getId());
-    assertEquals("BAR", alt.getTagName());
-    
-    // is isGetSv = false, won't get from server
-    registerBBCode("ZED", "");
-    
-    component.setIsGetSv(false);
-    component.syncBBCodeCache();
-    assertEquals(2, component.listBBCode.size());
-   
 
-  }
-  
-  public void testReplaceByBBCode() throws Exception {
-    registerBBCode("FOO", "BAR");
-    assertEquals("BAR", component.getReplaceByBBCode("[FOO]some[/FOO]"));
-  }
   
   public void testProcessMarkup() throws Exception {
     registerBBCode("FOO", "BAR");
@@ -99,10 +68,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     Post post = new Post();
     post.setMessage(markup);
     component.renderHelper.setMarkupRenderingService(this.markupRenderingService);
-    
-    assertEquals("BAR", component.renderPost(post));
-    assertEquals(component.getReplaceByBBCode(markup), component.renderPost(post));
-    
+        
   }
 
   private void registerBBCode(String tagName, String replacement) {
