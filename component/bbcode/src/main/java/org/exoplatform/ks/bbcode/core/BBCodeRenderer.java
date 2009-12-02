@@ -260,7 +260,6 @@ public class BBCodeRenderer implements Renderer {
 
   public String renderExample(String s, BBCode bbco){
   	for (BBCode bbcode : getBbcodes()) {
-  		System.out.println("\n\n " +bbco.getId() + "  " + bbcode.getId());
   		if(bbcode.getId().equals(bbco.getId())){
   			s = processReplace(s, bbco);
   		} else {

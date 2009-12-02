@@ -95,12 +95,6 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 	
 	public void setEditBBcode(BBCode bbcode) throws Exception {
 		this.bbcode.setId(bbcode.getId());
-//		this.bbcode.setTagName(bbcode.getTagName());
-//		this.bbcode.setReplacement(bbcode.getReplacement());
-//		this.bbcode.setDescription(bbcode.getDescription());
-//		this.bbcode.setExample(bbcode.getExample());
-//		this.bbcode.setOption(bbcode.isOption());
-//		this.bbcode.setOption(bbcode.isActive());
 		this.isEdit = true;
 		this.getUIStringInput(FIELD_TAGNAME_INPUT).setValue(bbcode.getTagName());
 		UIFormTextAreaInput replacement = this.getUIFormTextAreaInput(FIELD_REPLACEMENT_TEXTARE);
@@ -179,20 +173,6 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				uiForm.bbcode.setDescription(description);
 				uiForm.bbcode.setExample(example);
 				uiForm.bbcode.setOption(isOption);
-//				uiForm.listBBCode = new ArrayList<BBCode>();
-				/*try {
-					uiForm.listBBCode.addAll(uiForm.bbCodeService.getAll());
-		    } catch (Exception e) {
-		    }*/
-		 /*   if(uiForm.isEdit){
-		    	int i = 0;
-		    	for (BBCode bbc : uiForm.listBBCode) {
-	          if(bbc.getId().equals(uiForm.bbcode.getId())) uiForm.listBBCode.set(i, uiForm.bbcode);
-	          ++i;
-          }
-		    } else {
-		    	uiForm.listBBCode.add(uiForm.bbcode);
-		    }*/
 				uiForm.example = example;
 			} else {
 				uiForm.isPriview = false;
