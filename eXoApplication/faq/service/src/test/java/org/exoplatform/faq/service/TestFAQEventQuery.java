@@ -100,21 +100,14 @@ public class TestFAQEventQuery extends TestCase {
     queryObject.setUserMembers(Arrays.asList("jack", "jerry"));
     predicate += " and (not(@exo:userPrivate)  or @exo:userPrivate='jack' or @exo:moderators='jack' or @exo:userPrivate='jerry' or @exo:moderators='jerry')";
     assertEquals(selector + predicate + "]", queryObject.getQuery());    
+  }
+  
+  public void testBuildQuestionQuery() throws Exception {
+    final FAQEventQuery queryObject = new FAQEventQuery() ;
+    queryObject.setPath("/foo");
+    queryObject.setType(FAQEventQuery.FAQ_QUESTION);
     
-/**
-
-   
     
-    if(!isAdmin) {
-      queryString.append(" and (not(@exo:userPrivate) ");
-      if(userMembers != null && !userMembers.isEmpty()) {
-        for (String str : userMembers) {
-          queryString.append(" or @exo:userPrivate='").append(str).append("' or @exo:moderators='").append(str).append("'");
-        }
-      } 
-      queryString.append(")");
-    }
- */
     
     // throws a NPE
     //assertException(new Closure() {public void dothis() {eventQuery.getQuery();}});
