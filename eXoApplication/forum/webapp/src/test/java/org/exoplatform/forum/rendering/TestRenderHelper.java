@@ -16,11 +16,11 @@
  */
 package org.exoplatform.forum.rendering;
 
+import junit.framework.TestCase;
+
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
-
-import junit.framework.TestCase;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

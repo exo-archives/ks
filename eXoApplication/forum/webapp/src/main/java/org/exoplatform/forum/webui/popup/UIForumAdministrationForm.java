@@ -36,6 +36,7 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.ks.bbcode.api.BBCode;
+import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -272,7 +273,8 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public void setListBBcode() throws Exception {
 		listBBCode = new ArrayList<BBCode>();
 		try {
-			listBBCode.addAll(forumService.getAllBBCode());
+			BBCodeService bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
+			listBBCode.addAll(bbCodeService.getAll());
     } catch (Exception e) {
 	    e.printStackTrace();
     }

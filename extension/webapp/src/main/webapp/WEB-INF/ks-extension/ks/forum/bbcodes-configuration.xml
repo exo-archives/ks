@@ -4,17 +4,17 @@
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
   
   <external-component-plugins>
-    <target-component>org.exoplatform.ks.common.bbcode.api.BBCodeService</target-component>   
+    <target-component>org.exoplatform.ks.bbcode.api.BBCodeService</target-component>   
     <component-plugin>
       <name>forum.default.bbcodes</name>
       <set-method>registerBBCodePlugin</set-method>
-      <type>org.exoplatform.ks.common.bbcode.BBCodePlugin</type>
+      <type>org.exoplatform.ks.bbcode.spi.BBCodePlugin</type>
       <description>default supported BBCodes</description>
       <init-params>
         <object-param>
           <name>I</name>
           <description>set text in italic</description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>I</string>
             </field>
@@ -39,7 +39,7 @@
         <object-param>
           <name>B</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>B</string>
             </field>
@@ -65,7 +65,7 @@
           <name>U</name>
           <description></description>
                 
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>U</string>
             </field>
@@ -90,7 +90,7 @@
         <object-param>
           <name>COLOR</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>COLOR</string>
             </field>
@@ -115,7 +115,7 @@
         <object-param>
           <name>SIZE</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>SIZE</string>
             </field>
@@ -140,7 +140,7 @@
         <object-param>
           <name>FONT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>FONT</string>
             </field>
@@ -165,7 +165,7 @@
         <object-param>
           <name>HIGHLIGHT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>HIGHLIGHT</string>
             </field>
@@ -190,7 +190,7 @@
         <object-param>
           <name>LEFT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>LEFT</string>
             </field>
@@ -215,7 +215,7 @@
         <object-param>
           <name>RIGHT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>RIGHT</string>
             </field>
@@ -226,7 +226,7 @@
               <string>The [right] tag allows aligntment text to right.</string>
             </field>
             <field name="example">
-              <string>[U]example[/U]</string>
+              <string>[RIGHT]example[/RIGHT]</string>
             </field>
             <field name="isOption">
               <string>[RIGHT]this text is right-aligned[/RIGHT]</string>
@@ -240,7 +240,7 @@
         <object-param>
           <name>CENTER</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>CENTER</string>
             </field>
@@ -265,7 +265,7 @@
         <object-param>
           <name>JUSTIFY</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>JUSTIFY</string>
             </field>
@@ -290,7 +290,7 @@
         <object-param>
           <name>EMAIL</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>EMAIL</string>
             </field>
@@ -315,7 +315,7 @@
         <object-param>
           <name>EMAIL-OPT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>EMAIL</string>
             </field>
@@ -340,7 +340,7 @@
         <object-param>
           <name>URL</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>URL</string>
             </field>
@@ -365,7 +365,7 @@
         <object-param>
           <name>URL-OPT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>URL</string>
             </field>
@@ -390,7 +390,7 @@
         <object-param>
           <name>GOTO</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>GOTO</string>
             </field>
@@ -415,7 +415,7 @@
         <object-param>
           <name>LIST</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>LIST</string>
             </field>
@@ -440,7 +440,7 @@
         <object-param>
           <name>LIST-OPT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>LIST</string>
             </field>
@@ -465,7 +465,7 @@
         <object-param>
           <name>IMG</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>IMG</string>
             </field>
@@ -490,7 +490,7 @@
         <object-param>
           <name>QUOTE</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>QUOTE</string>
             </field>
@@ -515,7 +515,7 @@
         <object-param>
           <name>QUOTE-OPT</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>QUOTE</string>
             </field>
@@ -540,7 +540,7 @@
         <object-param>
           <name>CODE</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>CODE</string>
             </field>
@@ -565,7 +565,7 @@
         <object-param>
           <name>CSS</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>CSS</string>
             </field>
@@ -590,7 +590,7 @@
         <object-param>
           <name>SLIDESHARE</name>
           <description></description>
-          <object type="org.exoplatform.ks.common.bbcode.BBCodeData">
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
             <field name="tagName">
               <string>SLIDESHARE</string>
             </field>

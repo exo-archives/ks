@@ -18,7 +18,6 @@ package org.exoplatform.forum.webui.popup;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -28,6 +27,8 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
+import org.exoplatform.forum.rendering.RenderHelper;
+import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAttachment;
@@ -36,7 +37,6 @@ import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -44,7 +44,6 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
-import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -79,7 +78,8 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	private boolean isViewUserInfo = true ;
 	private ForumService forumService;
 	private UserProfile userProfile;
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+//	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	RenderHelper renderHelper = new RenderHelper();
 	public UIViewPost() {
 		forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 	}
@@ -104,13 +104,18 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 		return userProfile;
 	}
 	
+	public String renderPost(Post post) throws RenderingException {
+    return renderHelper.renderPost(post);
+  }
+	
+	/*
 	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
 		try {
 			s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
     } catch (Exception e) {}
     return s;
-	}
+	}*/
 	
 	public String getPortalName() {
     PortalContainer pcontainer =  PortalContainer.getInstance() ;
@@ -134,6 +139,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
+		/*
 		List<String> bbcName = new ArrayList<String>();
 		List<BBCode> bbcs = new ArrayList<BBCode>();
 		try {
@@ -165,7 +171,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     	}
     }
     listBBCode.clear();
-    listBBCode.addAll(bbcs);
+    listBBCode.addAll(bbcs);*/
 	}
 	
 	@SuppressWarnings("unused")

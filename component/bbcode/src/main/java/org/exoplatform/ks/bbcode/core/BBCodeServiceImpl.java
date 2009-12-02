@@ -113,6 +113,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 	        managePlugin(pln);
 		    	
 	      }
+		    
 		    if(!bbCodes.isEmpty()){
 		    	this.save(bbCodes);
 		    }

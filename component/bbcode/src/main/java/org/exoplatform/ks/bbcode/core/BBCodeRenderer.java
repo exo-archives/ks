@@ -56,28 +56,31 @@ public class BBCodeRenderer implements Renderer {
    */
   public String render(String s) {
     for (BBCode bbcode : getBbcodes()) {
-      String bbc = bbcode.getTagName();
-      if(bbc.equals("URL")){
-        s = StringUtils.replace(s, "[link", "[URL");
-        s = StringUtils.replace(s, "[/link]", "[/URL]");
-        s = StringUtils.replace(s, "[LINK", "[URL");
-        s = StringUtils.replace(s, "[/LINK]", "[/URL]");
-      }
-      bbc = bbc.toLowerCase();
-      if(!bbc.equals("list")){
-        if(Boolean.valueOf(bbcode.isOption())){
-          s = processOptionedTag(s, bbcode);
-        } else {
-          s = processTag(s, bbcode);
-        }
-      } else {
-        s = processList(s);
-      }
+    	s = processReplace(s, bbcode);
     }
     return s;
-  
   }
 
+  public String processReplace(String s, BBCode bbcode) {
+		String bbc = bbcode.getTagName();
+    if(bbc.equals("URL")){
+      s = StringUtils.replace(s, "[link", "[URL");
+      s = StringUtils.replace(s, "[/link]", "[/URL]");
+      s = StringUtils.replace(s, "[LINK", "[URL");
+      s = StringUtils.replace(s, "[/LINK]", "[/URL]");
+    }
+    if(!bbc.equals("LIST")){
+      if(Boolean.valueOf(bbcode.isOption())){
+        s = processOptionedTag(s, bbcode);
+      } else {
+        s = processTag(s, bbcode);
+      }
+    } else {
+      s = processList(s);
+    }
+		return s;
+	}
+  
   String processTag(String s, BBCode bbcode) {
     String bbc = bbcode.getTagName();
     int clsIndex;
@@ -88,8 +91,8 @@ public class BBCodeRenderer implements Renderer {
     int lastIndex = 0, tagIndex = 0;
     start = "[" + bbc + "]";
     end = "[/" + bbc + "]";
-    s = StringUtils.replace(s, start.toUpperCase(), start);
-    s = StringUtils.replace(s, end.toUpperCase(), end);
+    s = StringUtils.replace(s, start.toLowerCase(), start);
+    s = StringUtils.replace(s, end.toLowerCase(), end);
     while ((tagIndex = s.indexOf(start, lastIndex)) != -1) {
       lastIndex = tagIndex + 1;
       try {
@@ -121,8 +124,8 @@ public class BBCodeRenderer implements Renderer {
     int lastIndex = 0, tagIndex = 0;
     start = "[" + bbc + "=";
     end = "[/" + bbc + "]";
-    markup = StringUtils.replace(markup, start.toUpperCase(), start);
-    markup = StringUtils.replace(markup, end.toUpperCase(), end);
+    markup = StringUtils.replace(markup, start.toLowerCase(), start);
+    markup = StringUtils.replace(markup, end.toLowerCase(), end);
     while ((tagIndex = markup.indexOf(start, lastIndex)) != -1) {
       lastIndex = tagIndex + 1;
       try {
@@ -255,6 +258,16 @@ public class BBCodeRenderer implements Renderer {
     this.bbCodeProvider = bbCodeProvider;
   }
 
-
-
+  public String renderExample(String s, BBCode bbco){
+  	for (BBCode bbcode : getBbcodes()) {
+  		System.out.println("\n\n " +bbco.getId() + "  " + bbcode.getId());
+  		if(bbcode.getId().equals(bbco.getId())){
+  			s = processReplace(s, bbco);
+  		} else {
+  			s = processReplace(s, bbcode);
+  		}
+    }
+  	return s;
+  }
+  
 }

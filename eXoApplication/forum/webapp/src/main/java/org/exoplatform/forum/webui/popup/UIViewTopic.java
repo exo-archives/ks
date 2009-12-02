@@ -27,16 +27,16 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.forum.rendering.RenderHelper;
+import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -69,7 +69,8 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private long pageSelect ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+//	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	RenderHelper renderHelper = new RenderHelper();
 	public UIViewTopic() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
@@ -80,6 +81,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public Topic getTopic() { return topic;}
 	public void setTopic(Topic topic) {
 		this.topic = topic;
+		/*
 		List<String> bbcName = new ArrayList<String>();
 		List<BBCode> bbcs = new ArrayList<BBCode>();
 		try {
@@ -111,7 +113,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
     	}
     }
     listBBCode.clear();
-    listBBCode.addAll(bbcs);
+    listBBCode.addAll(bbcs);*/
 	}
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
@@ -122,13 +124,17 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	  this.setActions(actions);
   }
 	
-	@SuppressWarnings("unused")
+	public String renderPost(Post post) throws RenderingException {
+    return renderHelper.renderPost(post);
+  }
+	
+/*	@SuppressWarnings("unused")
   private String getReplaceByBBCode(String s) throws Exception {
 		try {
 			s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
     } catch (Exception e) {}
     return s;
-	}
+	}*/
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {

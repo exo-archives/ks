@@ -19,9 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPageIterator;
@@ -35,7 +33,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 /**

@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -42,7 +41,6 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumSearch;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Post;
@@ -69,26 +67,18 @@ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.bbcode.api.BBCode;
-import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
-import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
-import org.exoplatform.ks.rendering.MarkupRenderingService;
-import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -386,11 +376,10 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	public void setIsGetSv(boolean isGetSv) {
 		this.isGetSv = isGetSv;
   }
-	
+
+	/*
   
-	/**
-	 * @deprecated use {@link #renderPost(Post)}
-	 */
+
   public String getReplaceByBBCode(String s) throws Exception {
 
     syncBBCodeCache();
@@ -403,10 +392,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
     }
     return s;
   }
-
-  /**
-   * @deprecated deprecated by {@link #renderPost(Post)}
-   */
+   
   public void syncBBCodeCache() {
 		if(isGetSv) {
 			List<BBCode> bbcs = new ArrayList<BBCode>();
@@ -444,7 +430,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			}
 		}
   }
-	
+	*/
 	private boolean getCanCreateTopic() throws Exception {
 		/**
 		 * set permission for create new thread

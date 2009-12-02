@@ -1025,7 +1025,8 @@
 							</div>
 							<% } %>
 							<%if(userInfo.getIsDisplaySignature() && userInfo.getSignature() != null && userInfo.getSignature().length() > 0) {
-									String signature = ForumTransformHTML.convertCodeHTML(userInfo.getSignature());
+									post.setMessage(userInfo.getSignature());
+									String signature = uicomponent.renderPost(post);
 							%>
 									<div class="Signature">__________________<br/>$signature</div>
 							<%} %>

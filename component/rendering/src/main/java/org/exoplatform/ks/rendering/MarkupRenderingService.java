@@ -62,6 +62,7 @@ public class MarkupRenderingService {
      */
     public <T>String delegateRendering(MarkupRenderDelegate<T> delegate, T target) {
       String message = delegate.getMarkup(target);
+      System.out.println("\n\n message: " + message);
       if (message != null) {
         Renderer renderer = getRenderer(delegate.getSyntax(target));
         return renderer.render(message);

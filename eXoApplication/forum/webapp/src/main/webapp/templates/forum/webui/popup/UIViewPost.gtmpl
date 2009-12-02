@@ -2,7 +2,6 @@
   import org.exoplatform.web.application.JavascriptManager;
 	import org.exoplatform.forum.service.Post ;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 
 	def rcontext = _ctx.getRequestContext() ;
@@ -12,7 +11,8 @@
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewPost');
 	Post post = uicomponent.getPostView(); 
 	String title = post.getName();	
-	String messager = uicomponent.getReplaceByBBCode(post.getMessage());
+	//String message = uicomponent.getReplaceByBBCode(post.getMessage());
+	String message = uicomponent.renderPost(post);
 	String classIcon = post.getIcon() ;
 	UserProfile userProfile = uicomponent.getUserProfile();
 	long timeZone = (long)(userProfile.getTimeZone()*3600000) ;
@@ -32,7 +32,7 @@
 			
 			<div class="PostContentContainer">
 				<div class="PostContent">
-					<br/><div>$messager</div><br/>
+					<br/><div>$message</div><br/>
 				</div>
 			<% if(attachments != null && attachments.size() > 0) {
 					if(uicomponent.getIsViewUserInfo()) {

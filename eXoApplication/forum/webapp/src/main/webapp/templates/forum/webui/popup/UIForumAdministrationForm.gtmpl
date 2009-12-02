@@ -1,5 +1,5 @@
 <%	
-	import org.exoplatform.ks.common.bbcode.BBCode;
+	import org.exoplatform.ks.bbcode.api.BBCode;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.webui.popup.UIListTopicOld;
 	import org.exoplatform.forum.webui.popup.UIPageListPostByUser;
