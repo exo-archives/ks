@@ -4,6 +4,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.UIForumPortlet', '/forum/javascript/');
+	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/');
 	jsmanager.addOnResizeJavascript('function(){eXo.forum.UIForumPortlet.setMaskLayer("'+uicomponent.id+'");}');
 %>
 

@@ -591,17 +591,17 @@ eXo.ks.UIContextMenu = {
 	},
 	setPosition : function(obj,evt){		
 		var Browser = eXo.core.Browser ;
-		var x  = Browser.getBrowserWidth() - Browser.findMouseXInPage(evt) - obj.offsetWidth;
+		var x  = Browser.findMouseXInPage(evt);
 		var y = Browser.findMouseYInPage(evt);
 		obj.style.position = "absolute";
 		obj.style.display = "block";
+		if(obj.offsetParent) x -= Browser.findPosX(obj.offsetParent);
 		if(Browser.isDesktop()){
 			x = Browser.findMouseXInPage(evt) - Browser.findPosX(obj.offsetParent);
-			y -= Browser.findPosY(obj.offsetParent);
-			if(document.getElementById("UIControlWorkspace") && Browser.isIE7()) x += document.getElementById("UIControlWorkspace").offsetWidth ; 
+			y -= Browser.findPosY(obj.offsetParent); 
 			obj.style.left = x + "px";
 		} else{
-			obj.style.right = x + "px";
+			obj.style.left = x + "px";
 		}
 		obj.style.top =  y + "px";
 	},
