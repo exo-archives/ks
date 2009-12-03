@@ -168,7 +168,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	private String lastPoistIdSave = "";
 	private String lastPostId = "", isApprove="", isHidden="";
 	private List<String> listContactsGotten = new ArrayList<String>();
-	List<BBCode> listBBCode = new ArrayList<BBCode>();
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Integer> pagePostRemember = new HashMap<String, Integer>();
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();

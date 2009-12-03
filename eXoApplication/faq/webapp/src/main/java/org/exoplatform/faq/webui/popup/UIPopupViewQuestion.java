@@ -24,6 +24,8 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.faq.rendering.RenderHelper;
+import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
@@ -58,7 +60,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   private String language_ = "" ;
   private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   private String[] sizes = new String[]{"bytes", "KB", "MB"};
-  private List<BBCode> listBBCode = new ArrayList<BBCode>();
+  private RenderHelper renderHelper = new RenderHelper();
   public UIPopupViewQuestion() throws Exception {this.setActions(new String[]{"Close"}) ;}
   public String getQuestion(){
     return this.questionId_ ;
@@ -66,53 +68,16 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   
   public void setQuestion(String questionId) {
     this.questionId_ = questionId ;
-    
-    List<String> bbcName = new ArrayList<String>();
-		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = faqService_.getActiveBBCode();
-    } catch (Exception e) {
-    }
-    boolean isAdd = true;
-    BBCode bbCode;
-    for (String string : bbcName) {
-    	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
-    		}
-    	}
-    	if(isAdd) {
-    		bbCode = new BBCode();
-    		if(string.indexOf("=") >= 0){
-    			bbCode.setOption(true);
-    			string = string.replaceFirst("=", "");
-    			bbCode.setId(string+"_option");
-    		}else {
-    			bbCode.setId(string);
-    		}
-    		bbCode.setTagName(string);
-    		bbcs.add(bbCode);
-    	}
-    }
-    listBBCode.clear();
-    listBBCode.addAll(bbcs);
   }
-  
-  @SuppressWarnings("unused")
-  private String getReplaceByBBCode(String s) throws Exception {
-		try {
-			s = Utils.getReplacementByBBcode(s, listBBCode, faqService_);
-    } catch (Exception e) {}
-    return s;
-	}
   
 	public void setLanguage(String language) {
     this.language_ = language ;
   }
   
+	public String renderAnswer(Answer answer) {
+		return renderHelper.renderAnswer(answer);
+  }
+	
   public Question getViewQuestion() {
   	Question question = null;
   	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();

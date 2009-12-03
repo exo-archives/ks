@@ -38,11 +38,7 @@
 							</td>
 							<td style="white-space:nowrap;">
 								<div class="QuestionDetail">
-								<%
-									String questionDetail = uicomponent.questionDetail ;
-									questionDetail = uicomponent.getReplaceByBBCode(questionDetail);
-								%>
-									<span>$questionDetail</span>
+									<span><%=uicomponent.getQuestionDetail();%></span>
 								</div>
 							</td>
 						</tr>

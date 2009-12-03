@@ -16,7 +16,6 @@
  */
 package org.exoplatform.forum.webui;
 
-import java.util.List;
 
 import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.forum.service.Post;
@@ -59,8 +58,10 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     markupRenderingService.registerRenderer(bbcodeRenderer);
 
   }
-  
 
+  public void testReplaceByBBCode() throws Exception {
+    registerBBCode("FOO", "BAR");
+  }
   
   public void testProcessMarkup() throws Exception {
     registerBBCode("FOO", "BAR");
@@ -68,7 +69,7 @@ public class TestUITopicDetail extends AbstractUIComponentTestCase<UITopicDetail
     Post post = new Post();
     post.setMessage(markup);
     component.renderHelper.setMarkupRenderingService(this.markupRenderingService);
-        
+    assertEquals("BAR", component.renderPost(post));
   }
 
   private void registerBBCode(String tagName, String replacement) {

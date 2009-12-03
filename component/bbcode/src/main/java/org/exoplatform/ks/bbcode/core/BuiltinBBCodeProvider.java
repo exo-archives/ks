@@ -69,7 +69,7 @@ public class BuiltinBBCodeProvider extends HashMap<String, BBCode> implements BB
   private void addBBCode(String tag, String replacement, boolean option) {
     replacement = replacement.replaceAll("'", "\"");
     BBCode bbCode = new BBCode();
-    String id = option?("="+tag):tag;
+    String id = option?(tag+"="):tag;
     bbCode.setTagName(tag);
     bbCode.setId(id);
     bbCode.setReplacement(replacement);

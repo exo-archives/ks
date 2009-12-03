@@ -128,12 +128,7 @@
 																		
 																		<!-- ===================================== view Detail =============================== -->
 																		<div class="UIDetailContainer">
-																			<%
-																				if(question.getDetail() != null && question.getDetail().trim().length() > 0){\
-																				String detailQuestion = uicomponent.getReplaceByBBCode(question.getDetail());
-																			%>
-																					$detailQuestion
-																			<%}%>
+																			<%=uicomponent.render(question);%>
 																		</div>
 																		<span class="QuestionDateTime">&nbsp;<%=dateFormatter.format(question.getCreatedDate())%>&nbsp;</span>
 																		
@@ -288,8 +283,7 @@
 												String actionAnswer = "";
 												int i = 0;
 												for(Answer answer in answers) {
-													res = answer.getResponses();
-													res = uicomponent.getReplaceByBBCode(res);
+													res = uicomponent.render(answer);
 													if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
 														continue;
 													}
@@ -406,8 +400,7 @@
 																		</div>
 																		<div class="ResponseItemContainerRight">
 																			<%
-																				String commentDetail =comment.getComments() ;
-																				commentDetail = uicomponent.getReplaceByBBCode(commentDetail);
+																				String commentDetail = uicomponent.answer(comment);
 																			%>
 																			<span>$commentDetail</span>
 																			<div style="color:#721d95"><%=dateFormatter.format(comment.getDateComment());%></div>

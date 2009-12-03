@@ -52,6 +52,8 @@ import org.exoplatform.faq.webui.popup.UIResponseForm;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.faq.webui.popup.UIViewUserProfile;
+import org.exoplatform.faq.rendering.RenderHelper;
+import org.exoplatform.faq.rendering.RenderingException;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -146,8 +148,8 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	public boolean viewAuthorInfor = false;
-	private boolean isGetSv = true;
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+
+	private RenderHelper renderHelper = new RenderHelper();
 	
 	public UIAnswersPageIterator pageIterator = null ;
 	public long pageSelect = 0;
@@ -326,8 +328,10 @@ public class UIQuestions extends UIContainer {
 		return "" ;
 	}
 	
-	private String getQuestionDetail() {		
-		return languageMap.get(language_).getDetail() ;
+	private Question getQuestionDetail() {
+		Question question = new Question();
+		question.setDetail(languageMap.get(language_).getDetail());
+		return  question;
 	}
 	
 	private void setIsModerators() throws Exception{
@@ -468,54 +472,15 @@ public class UIQuestions extends UIContainer {
 
 	private void setLink(String link) { this.link_ = link;}
 	
-	public void setIsGetSv(boolean isGetSv) {
-	  this.isGetSv = isGetSv;
+  public String render(Object obj) throws RenderingException {
+  	if(obj instanceof Question)
+    	return renderHelper.renderQuestion((Question)obj);
+  	else if(obj instanceof Answer)
+	  	return renderHelper.renderAnswer((Answer)obj);
+  	else if(obj instanceof Comment)
+	  	return renderHelper.renderComment((Comment)obj);
+		return "";
   }
-	
-	private String getReplaceByBBCode(String s) throws Exception {
-		List<String> bbcName = new ArrayList<String>();
-		if(isGetSv) {
-			List<BBCode> bbcs = new ArrayList<BBCode>();
-			try {
-				bbcName = faqService_.getActiveBBCode();
-				isGetSv = false;
-				boolean isAdd = true;
-				BBCode bbCode;
-				for (String string : bbcName) {
-					isAdd = true;
-					for (BBCode bbc : listBBCode) {
-						if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-							bbcs.add(bbc);
-							isAdd = false;
-							break;
-						}
-					}
-					if(isAdd) {
-						bbCode = new BBCode();
-						if(string.indexOf("=") >= 0){
-							bbCode.setOption(true);
-							string = string.replaceFirst("=", "");
-							bbCode.setId(string+"_option");
-						}else {
-							bbCode.setId(string);
-						}
-						bbCode.setTagName(string);
-						bbcs.add(bbCode);
-					}
-				}
-				listBBCode.clear();
-				listBBCode.addAll(bbcs);
-			} catch (Exception e) {}
-		}
-		if(!listBBCode.isEmpty()){
-			try {
-				s = Utils.getReplacementByBBcode(s, listBBCode, faqService_);
-			} catch (Exception e) {}
-		}
-		return s;
-	}
-	
-	
 	
 	static public class DownloadAttachActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {

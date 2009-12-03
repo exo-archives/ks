@@ -24,6 +24,8 @@ import java.util.List;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
+import org.exoplatform.faq.rendering.RenderHelper;
+import org.exoplatform.faq.rendering.RenderingException;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
@@ -63,7 +65,7 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	private FAQService faqService_ = null;
 	private FAQSetting faqSetting_ = null;
 	private boolean viewAuthorInfor = true;
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	private RenderHelper renderHelper = new RenderHelper();
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
 	public UIPrintAllQuestions(){
@@ -158,48 +160,17 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		this.faqSetting_ = setting;
 		canEditQuestion = this.faqSetting_.isAdmin();
 		if(!canEditQuestion) canEditQuestion = canEdit;
-		
-    List<String> bbcName = new ArrayList<String>();
-		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = faqService_.getActiveBBCode();
-    } catch (Exception e) {
-    }
-    boolean isAdd = true;
-    BBCode bbCode;
-    for (String string : bbcName) {
-    	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
-    		}
-    	}
-    	if(isAdd) {
-    		bbCode = new BBCode();
-    		if(string.indexOf("=") >= 0){
-    			bbCode.setOption(true);
-    			string = string.replaceFirst("=", "");
-    			bbCode.setId(string+"_option");
-    		}else {
-    			bbCode.setId(string);
-    		}
-    		bbCode.setTagName(string);
-    		bbcs.add(bbCode);
-    	}
-    }
-    listBBCode.clear();
-    listBBCode.addAll(bbcs);
 	}
 	
-	@SuppressWarnings("unused")
-  private String getReplaceByBBCode(String s) throws Exception {
-		try {
-			s = Utils.getReplacementByBBcode(s, listBBCode, faqService_);
-    } catch (Exception e) {}
-    return s;
-	}
+  public String render(Object obj) throws RenderingException {
+  	if(obj instanceof Question)
+    	return renderHelper.renderQuestion((Question)obj);
+  	else if(obj instanceof Answer)
+	  	return renderHelper.renderAnswer((Answer)obj);
+  	else if(obj instanceof Comment)
+	  	return renderHelper.renderComment((Comment)obj);
+		return "";
+  }
 	
 	public List<Question> getListQuestion(){
 		try{

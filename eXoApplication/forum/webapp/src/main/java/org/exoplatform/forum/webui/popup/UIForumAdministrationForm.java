@@ -88,6 +88,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 )
 public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
 	private ForumService forumService ;
+	private BBCodeService bbCodeService;
 	private ForumAdministration administration ;
 	private int id = 0 ;
 	private boolean isRenderListTopic = false ;
@@ -130,6 +131,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private String notifyEmail_ = "";
 	private String notifyMove_ = "";
 	public UIForumAdministrationForm() throws Exception {
+		bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIListTopicOld.class, null, null) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
@@ -273,7 +275,6 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public void setListBBcode() throws Exception {
 		listBBCode = new ArrayList<BBCode>();
 		try {
-			BBCodeService bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
 			listBBCode.addAll(bbCodeService.getAll());
     } catch (Exception e) {
 	    e.printStackTrace();
@@ -454,11 +455,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			}
 			if(!bbCodes.isEmpty()){
 				try {
-					administrationForm.forumService.saveBBCode(bbCodes);
+					administrationForm.bbCodeService.save(bbCodes);
 	      } catch (Exception e) {
 	      }
-	   // TODO : it's not the responsibility of this component to ask the other to refresh itself!
-	      forumPortlet.findFirstComponentOfType(UITopicDetail.class).setIsGetSv(true); 
 			}
 			forumPortlet.cancelAction() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
@@ -558,7 +557,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
-			uiForm.forumService.removeBBCode(bbcId);
+			uiForm.bbCodeService.delete(bbcId);
 			uiForm.setListBBcode();
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}

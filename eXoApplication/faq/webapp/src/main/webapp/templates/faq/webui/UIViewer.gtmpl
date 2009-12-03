@@ -12,7 +12,6 @@
 .UIFAQPortlet {
 	padding: 6px;
 	margin: 4px;
-	border: 1px solid #d7d7d7;
 	background: white;
 }
 
@@ -169,7 +168,7 @@
 	<%for(questionCate in questionCates) { 
 			String question_ =	questionCate.getQuestion();
 			question_ = question_.replaceAll("<br/>", " ");
-			question_ = uicomponent.getReplaceByBBCode(question_);
+			question_ = uicomponent.render(question_);
 			String id_ = questionCate.getId();
 	%>
 		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
@@ -209,7 +208,7 @@
 			<ol>
 				<%for(questionInfo in questionInfos) { 
 						String question =	questionInfo.getQuestion();
-						question = uicomponent.getReplaceByBBCode(question);
+						question = uicomponent.render(question);
 						String id = questionInfo.getId();
 				%>
 				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
@@ -221,7 +220,7 @@
 	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
 	<%for(questionCate in questionCates) { 
 			String question_ =	questionCate.getQuestion();
-			question_ = uicomponent.getReplaceByBBCode(question_);
+			question_ = uicomponent.render(question_);
 			String id_ = questionCate.getId();
 			List answers_ = questionCate.getAnswers();
 	%>
@@ -229,7 +228,7 @@
 		<div class="Answer" style="margin:3px 0px;">
 			<ol>
 			<%for(answer in answers_){ 
-					answer = uicomponent.getReplaceByBBCode(answer);
+					answer = uicomponent.render(answer);
 			%>
 				<li><span class="TextStyle">${answer}</span></li>
 			<%} %>
@@ -253,7 +252,7 @@
 	<div class="FAQAnswerContainer">
 		<%for(questionInfo in questionInfos) {
 				String question = questionInfo.getQuestion();
-				question = uicomponent.getReplaceByBBCode(question);
+				question = uicomponent.render(question);
 				List answers = questionInfo.getAnswers();
 				String qsId = questionInfo.getId();
 		%>
@@ -262,7 +261,7 @@
 			<div class="Answer">
 				<ol>
 				<%for(answer in answers){ 
-						answer = uicomponent.getReplaceByBBCode(answer);
+						answer = uicomponent.render(answer);
 				%>
 					<li><span class="TextStyle">${answer}</span></li>
 				<%} %>
@@ -277,6 +276,6 @@
 	</div>
 	<% } %>
 <% } else { %>
-	FAQPortlet is empty !
+
 <% } %>
 </div>

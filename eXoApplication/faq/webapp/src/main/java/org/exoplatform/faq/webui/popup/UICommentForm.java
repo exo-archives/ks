@@ -22,6 +22,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
@@ -78,7 +79,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	private FAQSetting faqSetting_ ;
 	private FAQService faqService ;
 	private String link_ = "";
-	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	private RenderHelper renderHelper = new RenderHelper();
 	
 	public UICommentForm() throws Exception{
 		faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -92,9 +93,13 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 	public String getQuestionContent() {
   	return questionContent;
   }
-	public String getQuestionDetail() {
-  	return questionDetail;
-  }
+	
+	@SuppressWarnings("unused")
+  private String getQuestionDetail() {
+		Question question = new Question();
+		question.setDetail(questionDetail);
+		return renderHelper.renderQuestion(question) ;
+	}
 	
 	public void activate() throws Exception { }
 	public void deActivate() throws Exception { }
@@ -124,47 +129,6 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
-		
-		List<String> bbcName = new ArrayList<String>();
-		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = faqService.getActiveBBCode();
-    } catch (Exception e) {
-    }
-    boolean isAdd = true;
-    BBCode bbCode;
-    for (String string : bbcName) {
-    	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
-    		}
-    	}
-    	if(isAdd) {
-    		bbCode = new BBCode();
-    		if(string.indexOf("=") >= 0){
-    			bbCode.setOption(true);
-    			string = string.replaceFirst("=", "");
-    			bbCode.setId(string+"_option");
-    		}else {
-    			bbCode.setId(string);
-    		}
-    		bbCode.setTagName(string);
-    		bbcs.add(bbCode);
-    	}
-    }
-    listBBCode.clear();
-    listBBCode.addAll(bbcs);
-	}
-	
-	@SuppressWarnings("unused")
-  private String getReplaceByBBCode(String s) throws Exception {
-		try {
-			s = Utils.getReplacementByBBcode(s, listBBCode, faqService);
-    } catch (Exception e) {}
-    return s;
 	}
 	
 	public void setLink(String link) { this.link_ = link;}
