@@ -91,6 +91,11 @@ public class AssertUtils {
 		Assert.assertEquals(0, value.size());
 	}
 
+	 public static <T> void assertEmpty(T[] value) {
+	    Assert.assertNotNull(value);
+	    Assert.assertEquals(0, value.length);
+	  }
+	
   /**
    * All elements of a list should be contained in the expected array of String
    * @param message

@@ -2,7 +2,9 @@ package org.exoplatform.ks.common.jcr;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.Value;
@@ -101,6 +103,22 @@ public class PropertyReader {
 		}
 	}
 	
+	
+	 public Set<String> set(String name) {
+	    return set(name, null);
+	  }
+	
+	  public Set<String> set(String name, Set<String>defaultValue) {
+	    try {
+	      Value [] values = node.getProperty(name).getValues();
+	      Set<String> result = new HashSet<String>();
+	      result.addAll(valuesToList(values));
+	      return result;
+	    }
+	    catch (Exception e) {
+	      return defaultValue;
+	    }
+	  }	 
 	
 	 String[] valuesToArray(Value[] Val) throws Exception {
 	    if (Val.length < 1)

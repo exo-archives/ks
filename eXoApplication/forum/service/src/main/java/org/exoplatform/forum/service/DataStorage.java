@@ -41,6 +41,9 @@ import org.exoplatform.services.organization.User;
  */
 public interface DataStorage {
 
+  public static final int CLOSE_FORUM = 1;
+  public static final int LOCK_FORUM = 2;
+
   @Managed
   @ManagedDescription("repository for forum storage")
   String getRepository() throws Exception;

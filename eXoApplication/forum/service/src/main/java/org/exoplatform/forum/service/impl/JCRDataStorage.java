@@ -236,7 +236,7 @@ public class JCRDataStorage implements  DataStorage {
 			observation.addEventListener(addNodeListener, Event.NODE_ADDED ,categoryHome.getPath(), true, null, null, false) ;
 			ForumRSSEventListener removeNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;*/
-		}catch(Exception e){ e.printStackTrace() ;} 
+		}catch(Exception e){ log.error(e);} 
 		finally{ sProvider.close() ;}
 	}
 	
@@ -259,7 +259,7 @@ public class JCRDataStorage implements  DataStorage {
           }
 	      }
       }
-		}catch(Exception e){ e.printStackTrace() ;} 
+		}catch(Exception e){ log.error(e);} 
 		finally{ sProvider.close() ;}
 	}
 	
@@ -272,7 +272,7 @@ public class JCRDataStorage implements  DataStorage {
 			observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED + Event.PROPERTY_CHANGED + Event.PROPERTY_REMOVED,
 					                         path, false, null, null, false) ;		
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}
 	}
 	
@@ -302,7 +302,7 @@ public class JCRDataStorage implements  DataStorage {
 			}
 			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{
 			sProvider.close() ;	
 		}
@@ -436,7 +436,7 @@ public class JCRDataStorage implements  DataStorage {
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {sProvider.close() ; }		
 	}
 
@@ -466,7 +466,7 @@ public class JCRDataStorage implements  DataStorage {
 						return attachments.get(0);
 					} catch (Exception e) {
 						attachment.setSize(0) ;
-						e.printStackTrace() ;
+						log.error(e);
 					}
 				}
 				return null;
@@ -493,7 +493,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(avatarNode.isNew()) ksAvatarHomnode.getSession().save();
 			else ksAvatarHomnode.save();
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sysSession.close() ;}		
 	}
 
@@ -522,7 +522,7 @@ public class JCRDataStorage implements  DataStorage {
 				forumAdminNode.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {sProvider.close() ;}		
 	}
 
@@ -1142,12 +1142,12 @@ public class JCRDataStorage implements  DataStorage {
 			String forumPath = forum.getPath();
 			Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 			switch (type) {
-			case 1: {
+			case CLOSE_FORUM: {
 				forumNode.setProperty("exo:isClosed", forum.getIsClosed());
 				setActiveTopicByForum(sProvider, forumNode, forum.getIsClosed());
 				break;
 			}
-			case 2: {
+			case LOCK_FORUM: {
 				forumNode.setProperty("exo:isLock", forum.getIsLock());
 				break;
 			}
@@ -1164,21 +1164,21 @@ public class JCRDataStorage implements  DataStorage {
 		}finally{ sProvider.close() ;}
 	}
 
-  private String[] updateModeratorInForum(Node catNode, String[] mods) throws Exception {
-    List<String> list = new ArrayList<String>();
-    try {
-      list.addAll(ValuesToList(catNode.getProperty("exo:moderators").getValues()));
-    } catch (Exception e) {
+	/**
+	 * Update the exo:moderators of a Node. Avoids duplicate.
+	 * @param node Forum node
+	 * @param mods list of values to add
+	 * @return The merged list of moderators without duplicates
+	 * @throws Exception
+	 */
+  String[] updateModeratorInForum(Node node, String[] mods) throws Exception {    
+    PropertyReader reader = new PropertyReader(node);
+    Set<String> set = reader.set("exo:moderators");
+    if (set == null || set.contains(" ")) {
+      return mods;
     }
-    if (!list.isEmpty() && !list.get(0).equals(" ")) {
-      for (int i = 0; i < mods.length; i++) {
-        if (!list.contains(mods[i])) {
-          list.add(mods[i]);
-        }
-      }
-      return list.toArray(new String[list.size()]);
-    }
-    return mods;
+    set.addAll(Arrays.asList(mods));
+    return set.toArray(new String[set.size()]);
   }
 	
 	public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
@@ -1279,7 +1279,7 @@ public class JCRDataStorage implements  DataStorage {
 				pruneSetting.save() ;
 			}
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ;}
 	}
 	//TODO: View again
@@ -1621,7 +1621,7 @@ public class JCRDataStorage implements  DataStorage {
 				forumHomeNode.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ;}
 	}
 
@@ -2376,7 +2376,7 @@ public class JCRDataStorage implements  DataStorage {
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally { sProvider.close() ;}		
 	}
 	
@@ -2418,7 +2418,7 @@ public class JCRDataStorage implements  DataStorage {
       }
       infoMap.remove(name) ;
     }catch(Exception e) {
-      e.printStackTrace() ;
+      log.error(e);
     }finally{
     	sProvider.close();
     }
@@ -3969,7 +3969,7 @@ public class JCRDataStorage implements  DataStorage {
 				topicNode.save();
 			}
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally {sProvider.close() ;}
 	}
 
@@ -3992,7 +3992,7 @@ public class JCRDataStorage implements  DataStorage {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally { sProvider.close() ;}
 	}
 
@@ -4029,7 +4029,7 @@ public class JCRDataStorage implements  DataStorage {
 			}
 			
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {sProvider.close() ;}
 		
 	}
@@ -4081,7 +4081,7 @@ public class JCRDataStorage implements  DataStorage {
 				tagNode.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally { sProvider.close() ;}
 	}
 
@@ -4343,7 +4343,7 @@ public class JCRDataStorage implements  DataStorage {
 				tagHome.save();
 			}
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally { sProvider.close() ;}
 		
 	}
@@ -4549,7 +4549,7 @@ public class JCRDataStorage implements  DataStorage {
 			profileNode.setProperty("exo:isAutoWatchTopicIPost", userProfile.getIsAutoWatchTopicIPost());
 			profileNode.save();
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ;}
 	}
 	
@@ -5930,7 +5930,7 @@ public class JCRDataStorage implements  DataStorage {
 				watchingNode.save();
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally { sProvider.close() ;}
 		
 	}
@@ -6106,7 +6106,7 @@ public class JCRDataStorage implements  DataStorage {
 				profileHome.save() ;				
 			}			
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ;}		
 		
 	}
@@ -6308,7 +6308,7 @@ public class JCRDataStorage implements  DataStorage {
 			QueryResult result = query.execute();
 			return result.getNodes();
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		} finally {sProvider.close() ;}
 		return null ;
 	}
@@ -6787,7 +6787,7 @@ public class JCRDataStorage implements  DataStorage {
 			Node banNode = getForumBanNode(sProvider) ;
 			if(banNode.hasProperty("exo:ips")) return ValuesToList(banNode.getProperty("exo:ips").getValues()) ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ; }
 		return new ArrayList<String>() ;
 	}
@@ -6807,7 +6807,7 @@ public class JCRDataStorage implements  DataStorage {
 			}			
 			return true ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close() ;}
 		return false ;
 	}
@@ -6822,7 +6822,7 @@ public class JCRDataStorage implements  DataStorage {
 				banNode.setProperty("exo:ips", getStringsInList(ips)) ;
 				banNode.save() ;			
 			}catch(Exception e) {
-				e.printStackTrace() ;
+				log.error(e);
 			}finally{ sProvider.close() ; }
 		}
 	}
@@ -6836,7 +6836,7 @@ public class JCRDataStorage implements  DataStorage {
 			if (forumNode.hasProperty("exo:banIPs"))
 				list.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {
 			sProvider.close() ;
 		}
@@ -6860,7 +6860,7 @@ public class JCRDataStorage implements  DataStorage {
 			}			
 			return true ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {
 			sProvider.close() ;
 		}
@@ -6884,7 +6884,7 @@ public class JCRDataStorage implements  DataStorage {
 				}			
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {
 			sProvider.close() ;
 		}
@@ -6923,7 +6923,7 @@ public class JCRDataStorage implements  DataStorage {
 			}
 			forumStatisticNode.save() ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally { sysProvider.close() ; }	
 	}
 
@@ -6997,7 +6997,7 @@ public class JCRDataStorage implements  DataStorage {
       	addOrRemoveSchedule(pruneSetting) ;
       } catch (Exception e) {}
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally { sProvider.close() ;}
 	}
 	
@@ -7046,7 +7046,7 @@ public class JCRDataStorage implements  DataStorage {
 			setting.setProperty("exo:lastRunDate", getGreenwichMeanTime()) ;
 			forumNode.save() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally {sProvider.close() ;}
 	}
 	
@@ -7064,7 +7064,7 @@ public class JCRDataStorage implements  DataStorage {
 			QueryResult result = query.execute();
 			return result.getNodes().getSize() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error(e);
 		}finally{ sProvider.close();}
 		return 0 ;
 	}
@@ -7159,6 +7159,7 @@ public class JCRDataStorage implements  DataStorage {
 			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 			return pagelist;
 		}catch (Exception e) {
+		  log.error(e);
 		}
 	  return null;
   }
