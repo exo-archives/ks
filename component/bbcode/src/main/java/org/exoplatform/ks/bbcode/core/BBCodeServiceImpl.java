@@ -26,6 +26,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
@@ -61,15 +62,14 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 	private List<BBCodePlugin> defaultBBCodePlugins_;
 	private KSDataLocation dataLocator;
 	private JCRSessionManager sessionManager;
+	private List<String> activeBBCodesCache;
 	
   private ManagementContext context;
 	
 	private static Log log = ExoLogger.getLogger(BBCodeServiceImpl.class);
 	
-  public BBCodeServiceImpl(KSDataLocation dataLocator) throws Exception {
-    this.dataLocator = dataLocator;
-    this.sessionManager = dataLocator.getSessionManager();
-    defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;
+  public BBCodeServiceImpl()  {
+    activeBBCodesCache = new ArrayList<String>();
   }
   
   public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
@@ -143,7 +143,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   /**
    * {@inheritDoc}
    */
-	public void save(List<BBCode> bbcodes) throws Exception{
+	public void save(List<BBCode> bbcodes) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node bbCodeHome = getBBcodeHome(sProvider);
@@ -157,21 +157,24 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 				bbcNode.setProperty("exo:isActive", bbcode.isActive());
 				bbcNode.setProperty("exo:isOption", bbcode.isOption());
 	    }
-			if(bbCodeHome.isNew()){
+			if (bbCodeHome.isNew()){
 				bbCodeHome.getSession().save();
 			} else {
 				bbCodeHome.save();
 			}
-		}catch(Exception e) {
+			
+			synchronized (activeBBCodesCache) {
+			  activeBBCodesCache.clear();
+      }
+			
+		} catch (Exception e) {
 		  log.error("Error saving BBCodes", e);
-		}finally { sProvider.close() ;}		
+		} finally { sProvider.close() ;}		
 	}
 
   private Node createNode(Node bbCodeHome, BBCode bbcode) throws Exception {
     Node bbcNode;
     String id = bbcode.getTagName() + ((bbcode.isOption()) ? "=":"");
-    //if(bbcode.isOption()) id = id + "=";
-    //if(bbcode.isOption()) id = id + "_option";
     try {
     	bbcNode = bbCodeHome.getNode(bbcode.getId());
     	if(!id.equals(bbcode.getId())) {
@@ -224,29 +227,41 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   /**
    * {@inheritDoc}
    */
-	public List<String> getActive() throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		List<String> bbcodes = new ArrayList<String>();
-		try{
-			Node bbCodeHome = getBBcodeHome(sProvider);
-			if (bbCodeHome == null) return bbcodes ;
-			QueryManager qm = bbCodeHome.getSession().getWorkspace().getQueryManager();
-			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(bbCodeHome.getPath()).append("/element(*,").append(BBCODE_NODE_TYPE).append(")[@exo:isActive='true']");
-			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();
-			String tagName = "";
-			while (iter.hasNext()) {
-		    Node bbcNode = iter.nextNode();
-		    tagName = bbcNode.getName();
-		    //tagName = bbcNode.getProperty("exo:tagName").getString();
-		    //if(bbcNode.getProperty("exo:isOption").getBoolean()) tagName = tagName + "=";
-		    bbcodes.add(tagName);
-	    }
-		}finally { sProvider.close() ;}
-		return bbcodes;
-	}
+  public List<String> getActive() throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    if (activeBBCodesCache.isEmpty()) {
+      try {
+        Node bbCodeHome = getBBcodeHome(sProvider);
+        if (bbCodeHome == null) {
+          return activeBBCodesCache;
+        }
+        QueryManager qm = bbCodeHome.getSession().getWorkspace().getQueryManager();
+        StringBuilder pathQuery = new StringBuilder();
+        //new Query().path(bbCodeHome.getPath()).type(BBCODE_NODE_TYPE).predicate("@exo:isActive='true'").toString();
+        pathQuery.append("/jcr:root")
+                 .append(bbCodeHome.getPath())
+                 .append("/element(*,")
+                 .append(BBCODE_NODE_TYPE)
+                 .append(")[@exo:isActive='true']");
+        Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+        QueryResult result = query.execute();
+        NodeIterator iter = result.getNodes();
+        String tagName = "";
+
+        synchronized (activeBBCodesCache) {
+          while (iter.hasNext()) {
+            Node bbcNode = iter.nextNode();
+            tagName = bbcNode.getName();
+            activeBBCodesCache.add(tagName);
+          }
+        }
+
+      } finally {
+        sProvider.close();
+      }
+    }
+    return activeBBCodesCache;
+  }
 	
   /**
    * {@inheritDoc}
@@ -276,6 +291,9 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 		try {
 			bbCodeHome.getNode(bbcodeId).remove();
 			bbCodeHome.save();
+	     synchronized (activeBBCodesCache) {
+	        activeBBCodesCache.clear();
+	      }
     } catch (Exception e) {
       log.error("Error removing BBCode" + bbcodeId, e);
     }finally{
@@ -286,6 +304,9 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 
   public void start() {
     try {
+      this.dataLocator = getComponent(KSDataLocation.class);
+      this.sessionManager = dataLocator.getSessionManager();
+      defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;
       initDefaultBBCodes();
     } catch (Exception e) {
       log.error("Default BBCodes failed to initialize", e);
@@ -293,7 +314,12 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   }
 
 
+  private <T>T getComponent(Class<T> type) {
+    return type.cast(ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(type));
+  }
+
   public void stop() {
+
   }
   
   public void setContext(ManagementContext context) {

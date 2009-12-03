@@ -129,7 +129,7 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
-
+import static org.exoplatform.ks.common.Utils.getComponent;
 
 
 /**
@@ -142,40 +142,38 @@ import org.w3c.dom.Document;
 @NameTemplate({@Property(key="service", value="forum"), @Property(key="view", value="storage")})
 @ManagedDescription("Data Storage for this forum")
 @SuppressWarnings("unchecked")
-public class JCRDataStorage implements DataStorage {
+public class JCRDataStorage implements  DataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
-	Map<String, String> serverConfig_ = new HashMap<String, String>();
-	Map<String, Object>	infoMap_	= new HashMap<String, Object>();
-	List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
-	List<InitializeForumPlugin> defaultPlugins_ = new ArrayList<InitializeForumPlugin>() ;
-
-	Map<String, EventListener> listeners_ = new HashMap<String, EventListener>();
-	private boolean isInitRssListener_ = true ;
+	private Map<String, String> serverConfig = new HashMap<String, String>();
+	private Map<String, Object>	infoMap	= new HashMap<String, Object>();
+	private List<RoleRulesPlugin> rulesPlugins = new ArrayList<RoleRulesPlugin>() ;
+	private List<InitializeForumPlugin> defaultPlugins = new ArrayList<InitializeForumPlugin>() ;
+	private Map<String, EventListener> listeners = new HashMap<String, EventListener>();
+	private boolean isInitRssListener = true ;
 	private JCRSessionManager sessionManager;
 	private KSDataLocation dataLocator;
-
-
   private String repository;
 	private String workspace;
 	
-	public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
-		this.dataLocator = dataLocator;
-    sessionManager = dataLocator.getSessionManager();
-    repository = dataLocator.getRepository();
-    workspace = dataLocator.getWorkspace();
+	public JCRDataStorage() throws Exception {
 	}
 
   public void start() {
-    try {
-      // TODO : Why needed ?
-//      saveForumStatistic(new ForumStatistic());
+    try { 
+      setDataLocator(getComponent(KSDataLocation.class));
+      log.info("initialized forum storage on " + dataLocator);
     } catch (Exception e) {
-      ;
+      throw new RuntimeException("Failed to initialize forum storage on " + dataLocator);
     }
+    
+    
+    // TODO : Why needed ?
+    //    saveForumStatistic(new ForumStatistic());
+    
   }
-	
+
   @Managed
   @ManagedDescription("repository for forum storage")
   public String getRepository() throws Exception {
@@ -199,33 +197,33 @@ public class JCRDataStorage implements DataStorage {
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try {
 			if(plugin instanceof EmailNotifyPlugin) {
-				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
+				serverConfig = ((EmailNotifyPlugin) plugin).getServerConfiguration();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof RoleRulesPlugin){
-			rulesPlugins_.add((RoleRulesPlugin)plugin) ;
+			rulesPlugins.add((RoleRulesPlugin)plugin) ;
 		}
 	}
 
 	public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof InitializeForumPlugin) {
-			defaultPlugins_.add((InitializeForumPlugin)plugin) ;
+			defaultPlugins.add((InitializeForumPlugin)plugin) ;
 		}		
 	}
 
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
 		if(plugin instanceof InitialRSSListener) {
-			isInitRssListener_  = ((InitialRSSListener)plugin).isInitRssListener() ;
+			isInitRssListener  = ((InitialRSSListener)plugin).isInitRssListener() ;
 		}		
 	}
 	
 	public void addRSSEventListenner() throws Exception{
-		if(!isInitRssListener_) return ;
+		if(!isInitRssListener) return ;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Node categoryHome = getCategoryHome(sProvider) ;
 		try{
@@ -280,25 +278,25 @@ public class JCRDataStorage implements DataStorage {
 	
 	public void initCategoryListener() {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		listeners_.clear() ;
+		listeners.clear() ;
 		try{
 			Node categoryHome = getCategoryHome(sProvider) ;
 			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
 			String wsName = categoryHome.getSession().getWorkspace().getName() ;
 			String repoName = ((RepositoryImpl)categoryHome.getSession().getRepository()).getName() ;
-			if(!listeners_.containsKey(categoryHome.getPath())) {
+			if(!listeners.containsKey(categoryHome.getPath())) {
 				CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName) ;
 				observation.addEventListener(categoryListener, Event.NODE_ADDED + Event.NODE_REMOVED ,categoryHome.getPath(), false, null, null, false) ;
-				listeners_.put(categoryHome.getPath(), categoryListener) ;
+				listeners.put(categoryHome.getPath(), categoryListener) ;
 			}
 			NodeIterator iter = categoryHome.getNodes();
 			while(iter.hasNext()) {
 				Node catNode = iter.nextNode() ;
 				//if(catNode.isNodeType("exo:forumCategory")) {
-					if (!listeners_.containsKey(catNode.getPath())) {
+					if (!listeners.containsKey(catNode.getPath())) {
 						StatisticEventListener sListener = new StatisticEventListener(wsName, repoName) ;
 						observation.addEventListener(sListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
-						listeners_.put(catNode.getPath(), sListener) ;						
+						listeners.put(catNode.getPath(), sListener) ;						
 					}
 				//}
 			}
@@ -328,15 +326,15 @@ public class JCRDataStorage implements DataStorage {
 	
 	public boolean isAdminRole(String userName) throws Exception {
 		try {
-			for(int i = 0; i < rulesPlugins_.size(); ++i) {
+			for(int i = 0; i < rulesPlugins.size(); ++i) {
 				List<String> list = new ArrayList<String>();
-				list.addAll(rulesPlugins_.get(i).getRules(Utils.ADMIN_ROLE));
+				list.addAll(rulesPlugins.get(i).getRules(Utils.ADMIN_ROLE));
 				if(list.contains(userName)) return true;
 				String [] adminrules  = getStringsInList(list);
 				if(ForumServiceUtils.hasPermission(adminrules, userName))return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return false ;
 	}
@@ -418,7 +416,7 @@ public class JCRDataStorage implements DataStorage {
 	
 	/**
 	 * Get a Node by path using the current session of {@link JCRSessionManager}.<br/>
-	 * Note that a session must have been iniitalized by {@link JCRSessionManager#openSession() before calling this method
+	 * Note that a session must have been initalized by {@link JCRSessionManager#openSession() before calling this method
 	 * @param relPath path relative to root node of the workspace
 	 * @return JCR node located at relPath relative path from root node of the current workspace
 	 */
@@ -586,7 +584,7 @@ public class JCRDataStorage implements DataStorage {
 			Node categoryHome = getCategoryHome(sProvider);
 			if(categoryHome.hasNodes()) return ;
 			List<CategoryData> categories; 
-			for(InitializeForumPlugin pln : defaultPlugins_) {
+			for(InitializeForumPlugin pln : defaultPlugins) {
 				categories = pln.getForumInitialData().getCategories();
 				for(CategoryData categoryData : categories) {
 					String categoryId = "";
@@ -972,7 +970,7 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			userProfileHomeNode.save();
     } catch (Exception e) {
-    	e.printStackTrace();
+    	log.error(e);
     	userProfileHomeNode.getSession().save();
     }
 	}
@@ -1010,13 +1008,13 @@ public class JCRDataStorage implements DataStorage {
 			Node categoryHome = getCategoryHome(sProvider);
 			String id = path.substring(path.lastIndexOf("/") + 1) ;
 			Node catNode = categoryHome.getNode(id);
-			if(!listeners_.containsKey(catNode.getPath())) {
+			if(!listeners.containsKey(catNode.getPath())) {
 				String wsName = catNode.getSession().getWorkspace().getName() ;
 				RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
 				ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
 				StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName()) ;
 				observation.addEventListener(statisticEventListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
-				listeners_.put(catNode.getPath(), statisticEventListener); 
+				listeners.put(catNode.getPath(), statisticEventListener); 
 			}
 		}catch(Exception e) {
 			log.error("Failed to register listener for category " +path, e);
@@ -1026,10 +1024,10 @@ public class JCRDataStorage implements DataStorage {
 	public void unRegisterListenerForCategory(String path) throws Exception{
  		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
  		try {
- 			if(listeners_.containsKey(path)) {
+ 			if(listeners.containsKey(path)) {
  				ObservationManager obserManager = getForumHomeNode(sProvider).getSession().getWorkspace().getObservationManager();
- 				obserManager.removeEventListener((StatisticEventListener)listeners_.get(path)) ;
- 				listeners_.remove(path) ;
+ 				obserManager.removeEventListener((StatisticEventListener)listeners.get(path)) ;
+ 				listeners.remove(path) ;
  			} 	 					
 		}catch(Exception e){
 			log.error("Failed to unregister listener for category " +path, e);
@@ -1428,7 +1426,7 @@ public class JCRDataStorage implements DataStorage {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 		if(categoryHomeNode.isNew()){
@@ -1707,7 +1705,7 @@ public class JCRDataStorage implements DataStorage {
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
-    	e.printStackTrace();
+    	log.error(e);
       log.error("Failed to retrieve topic list for forum " + forumId);
       return null;
     } finally {
@@ -1925,7 +1923,7 @@ public class JCRDataStorage implements DataStorage {
 				forumNode.save();
 			}
 		} catch (PathNotFoundException e) {
-			e.printStackTrace();
+			log.error(e);
 			return null;
 		}
 		return topicNode;
@@ -2409,7 +2407,7 @@ public class JCRDataStorage implements DataStorage {
     try{
       Node userProfileHome = getUserProfileHome(sProvider) ;
       Node userNode = null ;
-      Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap_.get(name) ;     
+      Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap.get(name) ;     
       for(String user : userPostMap.keySet()) {
         try{
           userNode = userProfileHome.getNode(user) ;
@@ -2418,7 +2416,7 @@ public class JCRDataStorage implements DataStorage {
           userNode.save() ;
         }catch (Exception e) {}       
       }
-      infoMap_.remove(name) ;
+      infoMap.remove(name) ;
     }catch(Exception e) {
       e.printStackTrace() ;
     }finally{
@@ -2436,7 +2434,7 @@ public class JCRDataStorage implements DataStorage {
 			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			infoMap_.put(name, userPostMap);
+			infoMap.put(name, userPostMap);
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
 		}
@@ -2573,7 +2571,7 @@ public class JCRDataStorage implements DataStorage {
 				try {
 					calculateLastRead(sProvider, destForumId, srcForumId, topic.getId());
 	      } catch (Exception e) {
-		      e.printStackTrace();
+		      log.error(e);
 	      }
 			}
 			if(forumHomeNode.isNew()) {
@@ -2646,7 +2644,7 @@ public class JCRDataStorage implements DataStorage {
 	              }
               }
 	      		}
-          } catch (Exception e) { e.printStackTrace(); }
+          } catch (Exception e) { log.error(e); }
       	}
       	if(string.indexOf(srcForumId) >=0 ){// remove last read src forum if last read this forum is this topic.
       		list2.remove(string);
@@ -3111,7 +3109,7 @@ public class JCRDataStorage implements DataStorage {
 				getTotalJobWatting(userIdsp);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
     }finally {
     	sProvider.close() ;
     }
@@ -3232,7 +3230,7 @@ public class JCRDataStorage implements DataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(topic.getDescription()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3397,7 +3395,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3436,7 +3434,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3478,7 +3476,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", org.exoplatform.ks.common.Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3498,7 +3496,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		} finally {
 			sProvider.close() ;
 		}
@@ -3581,7 +3579,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 				getTotalJobWatting(userIdsp) ;
 			} catch (PathNotFoundException e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 		}
 		sProvider.close() ;
@@ -4599,7 +4597,7 @@ public class JCRDataStorage implements DataStorage {
 			profileNode.setProperty("exo:lastReadPostOfTopic", lastReadPostOfTopic);
 			profileHome.save();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}finally{ sProvider.close() ;}
 	}
 	
@@ -5045,7 +5043,7 @@ public class JCRDataStorage implements DataStorage {
 					messageNode.setProperty("exo:isUnread", false);
 				}
 			} catch (PathNotFoundException e) {
-				e.printStackTrace();
+				log.error(e);
 			}
 			if (type.equals(Utils.RECEIVE_MESSAGE) && isNew) {
 				if (profileNode.hasProperty("exo:newMessage")) {
@@ -5195,7 +5193,7 @@ public class JCRDataStorage implements DataStorage {
 			messageNode.remove();
 			profileNode.save();			
 		} catch (PathNotFoundException e) {
-			e.printStackTrace();
+			log.error(e);
 		}finally { sProvider.close() ;}
 	}
 
@@ -5235,7 +5233,7 @@ public class JCRDataStorage implements DataStorage {
       	profileNode.save();
       }
     } catch (Exception e) {
-    	e.printStackTrace();
+    	log.error(e);
     }finally {sProvider.close();}
   }
 	
@@ -5836,7 +5834,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 //			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}finally {sProvider.close() ;}
 	}
 
@@ -5887,7 +5885,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		} finally{ sProvider.close() ;}
 	}
 	
@@ -6009,7 +6007,7 @@ public class JCRDataStorage implements DataStorage {
 			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			infoMap_.put(name, new SendMessageInfo(addresses, message));
+			infoMap.put(name, new SendMessageInfo(addresses, message));
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
 		}
@@ -6114,8 +6112,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
-		SendMessageInfo messageInfo = (SendMessageInfo)infoMap_.get(name);
-		infoMap_.remove(name);
+		SendMessageInfo messageInfo = (SendMessageInfo)infoMap.get(name);
+		infoMap.remove(name);
 		return messageInfo;
 	}
 
@@ -6267,7 +6265,7 @@ public class JCRDataStorage implements DataStorage {
 				newProfileNode.save();
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return totalJob;
 	}
@@ -6290,7 +6288,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}finally {
 			sProvider.close();
 		}
@@ -6600,7 +6598,7 @@ public class JCRDataStorage implements DataStorage {
 //				try{
 //					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
 //				}catch(Exception e){
-//					e.printStackTrace();
+//					log.error(e);
 //				}
 //			}
 //			node.remove();
@@ -7215,13 +7213,13 @@ public class JCRDataStorage implements DataStorage {
 
   public List<InitializeForumPlugin> getDefaultPlugins() {
     
-    return defaultPlugins_;
+    return defaultPlugins;
   }
 
 
   public List<RoleRulesPlugin> getRulesPlugins() {
     
-    return rulesPlugins_;
+    return rulesPlugins;
   }
 
 
@@ -7256,8 +7254,8 @@ public class JCRDataStorage implements DataStorage {
   }
 
 
-  public Map<String, String> getServerConfig_() {
-    return serverConfig_;
+  public Map<String, String> getServerConfig() {
+    return serverConfig;
   }
 
 
@@ -7266,7 +7264,12 @@ public class JCRDataStorage implements DataStorage {
     return dataLocator;
   }
 
-
+  private void setDataLocator(KSDataLocation dataLocator) {
+    this.dataLocator = dataLocator;
+    sessionManager = dataLocator.getSessionManager();
+    repository = dataLocator.getRepository();
+    workspace = dataLocator.getWorkspace();
+  }
 	
 	
 	

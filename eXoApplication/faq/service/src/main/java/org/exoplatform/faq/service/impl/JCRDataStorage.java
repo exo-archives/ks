@@ -490,7 +490,7 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			Node cate = getCategoryNodeById(question.getCategoryId()) ;
 			if(cate.isNodeType("exo:faqWatching")){
-				for(String email: Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
+				for(String email: org.exoplatform.ks.common.Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
 					emailsList.add(email) ;
 				}
 			}			
@@ -518,7 +518,7 @@ public class JCRDataStorage implements DataStorage {
 		try {
 			Node cate = getCategoryNodeById(question.getCategoryId()) ;
 			if(cate.isNodeType("exo:faqWatching")){
-				emails = Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
+				emails = org.exoplatform.ks.common.Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues()) ;
 				for(String email: emails) {
 					emailsList.add(email) ;
 				}

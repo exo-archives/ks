@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.jcr.Value;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 /**
@@ -159,5 +160,7 @@ public class Utils {
     }
 		return list.toArray(new String[]{});
 	}
+	
+
 
 }

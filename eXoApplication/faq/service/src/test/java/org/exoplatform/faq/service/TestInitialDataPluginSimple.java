@@ -18,7 +18,7 @@ package org.exoplatform.faq.service;
 
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.test.FAQTestCase;
-import org.exoplatform.ks.test.AssertUtils;
+import org.exoplatform.ks.test.AssertUtils; 
 import org.exoplatform.ks.test.Closure;
 import org.exoplatform.ks.test.KernelUtils;
 

@@ -78,7 +78,7 @@ public class ForumServiceManaged implements ManagementAware {
   @Managed
   @ManagedDescription("get the configuration of the mail service used for notifications in KS")
   public Map<String,String> getMailServiceConfig() {
-    return forumService.storage_.getServerConfig_();
+    return forumService.storage_.getServerConfig();
   }
   
   @Managed

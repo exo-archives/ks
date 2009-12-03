@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ks.common.jcr;
 
+import java.util.concurrent.Callable;
+
 import javax.jcr.Session;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -167,6 +169,50 @@ public class JCRSessionManager {
         }
         return true;
      }
+  }
+  
+  public <V>V callInSession(Callable<V> callable) {
+    try {
+      openSession();
+      return callable.call();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeSession();
+    }
+  }
+  
+  public <V>V callAndSave(Callable<V> callable) {
+    try {
+      openSession();
+      return callable.call();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeSession(true);
+    }
+  }
+  
+  public void runInSession(Runnable runnable) {
+    try {
+      openSession();
+      runnable.run();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeSession();
+    }
+  }
+  
+  public void runAndSave(Runnable runnable) {
+    try {
+      openSession();
+      runnable.run();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeSession(true);
+    }
   }
   
 }

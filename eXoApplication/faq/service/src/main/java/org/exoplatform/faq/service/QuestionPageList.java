@@ -28,6 +28,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 
 /**

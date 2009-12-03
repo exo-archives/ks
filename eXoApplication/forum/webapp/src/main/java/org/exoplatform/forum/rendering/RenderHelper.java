@@ -18,8 +18,8 @@ package org.exoplatform.forum.rendering;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.Post;
-import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
+import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.ks.rendering.spi.MarkupRenderDelegate;
 
 /**
@@ -61,7 +61,7 @@ public class RenderHelper {
      * resolving logic here
      */
     public String getSyntax(Post target) {
-      return BBCodeRenderer.BBCODE_SYNTAX_ID;
+      return SupportedSyntaxes.bbcode.name();
     }
 
   }
@@ -71,15 +71,7 @@ public class RenderHelper {
     if (this.markupRenderingService == null) {
       this.markupRenderingService = (MarkupRenderingService) ExoContainerContext.getCurrentContainer()
                                                                                    .getComponentInstanceOfType(MarkupRenderingService.class);
-      /*
-      
-      BBCodeRenderer renderer = (BBCodeRenderer) markupRenderingService.getRenderer(BBCodeRenderer.BBCODE_SYNTAX_ID);
-      renderer.setBbCodeProvider(new ExtendedBBCodeProvider());
-      */
-      
-   }
-    
-
+    }
     return this.markupRenderingService;
   }
   

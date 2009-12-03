@@ -43,7 +43,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
-import org.exoplatform.faq.service.TemplatePlugin;
+import org.exoplatform.faq.service.TemplatePlugin; 
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.bbcode.core.BBCodeServiceImpl;
 import org.exoplatform.ks.common.NotifyInfo;
@@ -86,7 +86,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 		initDataPlugins = new ArrayList<InitialDataPlugin>();
 		this.locator = locator;
     jcrData_ = new JCRDataStorage(locator) ;
-		bbcodeObject_ = new BBCodeServiceImpl(locator) ;
+		bbcodeObject_ = new BBCodeServiceImpl() ;
 	}
 	
 	public void addPlugin(ComponentPlugin plugin) throws Exception {

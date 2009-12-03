@@ -393,7 +393,7 @@ public interface DataStorage {
 
   List<Post> getNewPosts(int number) throws Exception;
 
-  Map<String, String> getServerConfig_();
+  Map<String, String> getServerConfig();
 
   KSDataLocation getDataLocation();
 

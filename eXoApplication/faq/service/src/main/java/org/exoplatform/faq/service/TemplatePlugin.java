@@ -24,7 +24,7 @@ import org.exoplatform.container.xml.InitParams;
  * Jul 2, 2009, 4:25:54 PM
  */
 public class TemplatePlugin extends BaseComponentPlugin {
-	private String path_ ;
+	private String path_ ; 
 
   @SuppressWarnings("unchecked")
   public TemplatePlugin(InitParams params) throws Exception {

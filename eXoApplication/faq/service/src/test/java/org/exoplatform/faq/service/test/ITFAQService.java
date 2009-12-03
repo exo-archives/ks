@@ -72,7 +72,7 @@ public class ITFAQService extends FAQServiceTestCase{
 	private static String  questionId3;
 	private static String  questionId4;
 	private static String  questionId5;
-	private DataStorage datastorage;
+	private DataStorage datastorage; 
 
 	public ITFAQService() throws Exception {
 		super();

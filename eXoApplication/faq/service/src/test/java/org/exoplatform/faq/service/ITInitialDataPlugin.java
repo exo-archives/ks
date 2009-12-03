@@ -38,7 +38,7 @@ public class ITInitialDataPlugin extends FAQServiceTestCase {
     faq =  (FAQService)KernelUtils.getService(FAQService.class);
     conf = (ConfigurationManager)KernelUtils.getService(ConfigurationManager.class);
   }
-
+ 
   FAQService faq;
   ConfigurationManager conf;
   InitialDataPlugin plugin;

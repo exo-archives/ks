@@ -25,6 +25,7 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodeProvider;
 import org.exoplatform.ks.rendering.api.Renderer;
+import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -48,7 +49,7 @@ public class BBCodeRenderer implements Renderer {
   }
   
   public String getSyntax() {
-    return BBCODE_SYNTAX_ID;
+    return SupportedSyntaxes.bbcode.name();
   }
 
   /* (non-Javadoc)

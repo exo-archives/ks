@@ -331,6 +331,11 @@ public class KSDataLocation {
     return forumStatisticsLocation;
   }
   
+  
+  public String toString() {
+    return  repository + "/" + workspace;
+  }
+  
   /**
    * Location names for KS data storage
    * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
