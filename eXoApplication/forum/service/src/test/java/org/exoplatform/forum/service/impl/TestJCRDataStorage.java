@@ -18,20 +18,13 @@ package org.exoplatform.forum.service.impl;
 
 
 import static org.exoplatform.ks.test.AssertUtils.assertContains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
+import static org.exoplatform.ks.test.JCRMockUtils.mockNode;
+import static org.exoplatform.ks.test.JCRMockUtils.stubNullProperty;
+import static org.exoplatform.ks.test.JCRMockUtils.stubProperty;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.Value;
 
 import junit.framework.TestCase;
-
-import org.exoplatform.forum.service.impl.JCRDataStorage;
-import org.exoplatform.ks.test.AssertUtils;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -44,58 +37,24 @@ public class TestJCRDataStorage extends TestCase {
   }
 
   public void testUpdateModeratorInForum() throws Exception {
-    Node node  = mock(Node.class);
-    String moderators = "exo:moderators";
+    String moderatorsPropName = "exo:moderators";
+    String [] moderators = new String [] {"foo", "zed"};
     JCRDataStorage storage = new JCRDataStorage();
-    
-    stubProperty(node, moderators, "foo", "bar");
-    String[] actual = storage.updateModeratorInForum(node, new String [] {"foo", "zed"});
+
+    Node node  = mockNode();
+    stubProperty(node, moderatorsPropName, "foo", "bar");
+    String[] actual = storage.updateModeratorInForum(node, moderators);
     assertContains(actual, "foo", "bar", "zed");
     
-    Node node2  = mock(Node.class);
-    stubNullProperty(node2, moderators);
-    String[] actual2 = storage.updateModeratorInForum(node2, new String [] {"foo", "zed"});
+    Node node2  = mockNode();
+    stubNullProperty(node2, moderatorsPropName);
+    String[] actual2 = storage.updateModeratorInForum(node2, moderators);
     assertContains(actual2,"foo", "zed");
     
-    Node node3  = mock(Node.class);
-    stubProperty(node, moderators, " ", "bar");
-    String[] actual3 = storage.updateModeratorInForum(node3, new String [] {"foo", "zed"});
+    Node node3  = mockNode();
+    stubProperty(node3, moderatorsPropName, " ", "bar");
+    String[] actual3 = storage.updateModeratorInForum(node3, moderators);
     assertContains(actual3,"foo", "zed");
-  }
-  
-  /**
-   * Stubs a node with a null property. A PathNotFoundException is throow by getProperty() on propName
-   * @param node
-   * @param propName
-   * @throws Exception atually only a PathNodeFoundException
-   */
-  private void stubNullProperty(Node node, String propName) throws Exception {
-    Property prop = mock(Property.class); 
-    when(node.getProperty(propName)).thenReturn(prop);
-    when(prop.getValues()).thenThrow(new PathNotFoundException());
-  }
-  
-  /**
-   * Stub a multi value Strng property
-   * @param node 
-   * @param propName name of the property
-   * @param svalues values to
-   * @throws Exception
-   */
-  private void stubProperty(Node node, String propName, String... svalues) throws Exception{
-    Property prop = mock(Property.class); 
-    when(node.getProperty(propName)).thenReturn(prop);
-    Value[] values = new Value[svalues.length];
-     for (int i = 0; i < svalues.length; i++) {
-      values[i] = value(svalues[i]);
-    }
-    when(prop.getValues()).thenReturn(values);
-  }
-
-  private Value value(String sValue) throws Exception {
-    Value v = mock(Value.class);
-    when(v.getString()).thenReturn(sValue);
-    return v;
   }
   
 }
