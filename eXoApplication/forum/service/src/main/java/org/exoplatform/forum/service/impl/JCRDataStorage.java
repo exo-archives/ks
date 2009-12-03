@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.Writer;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -6506,29 +6507,29 @@ public class JCRDataStorage implements DataStorage {
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+    is = new ByteArrayInputStream(bdata) ;
 		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
 			// All nodes when import need reset childnode
 			if(typeNodeExport.equals("exo:categoryHome")){
-				nodePath = getCategoryHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumCategory";
-				nodeName = "CategoryHome";
+        nodePath = getCategoryHome(sessionProvider).getPath();
+        Node categoryHome = getCategoryHome(sessionProvider);
+        nodeName = "CategoryHome";
+        addDataFromXML(categoryHome,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:userProfileHome")){
-				nodePath = getUserProfileHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumUserProfile";
-				nodeName = "UserProfileHome";
+        Node userProfile = getUserProfileHome(sessionProvider);
+        nodeName = "UserProfileHome";
+        nodePath = getUserProfileHome(sessionProvider).getPath();
+        addDataFromXML(userProfile,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:tagHome")){
-				nodePath = getTagHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumTag";
-				nodeName = "TagHome";
+        Node tagHome = getTagHome(sessionProvider);
+        nodePath = getTagHome(sessionProvider).getPath();
+        nodeName = "TagHome";
+        addDataFromXML(tagHome,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
 				nodePath = dataLocator.getBBCodesLocation();
-				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
-				isReset = true;
-				nodeType = "exo:forumBBCode";
-				nodeName = "forumBBCode";
+				Node bbcodeNode = getBBCodesHome(sessionProvider);
+        nodeName = "forumBBCode";
+        addDataFromXML(bbcodeNode,nodePath,sessionProvider,is,nodeName);
 			}
 			// Node import but don't need reset childnodes
 			else if(typeNodeExport.equals("exo:administrationHome")){
@@ -6537,12 +6538,18 @@ public class JCRDataStorage implements DataStorage {
 				node.remove();
 				getForumSystemHome(sessionProvider).save();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+	      Session session = getForumHomeNode(sessionProvider).getSession();
+	      session.importXML(nodePath, is, typeImport);
+	      session.save(); 
 			}else if(typeNodeExport.equals("exo:banIPHome")){
 				nodePath = getForumSystemHome(sessionProvider).getPath();
 				Node node = getBanIPHome(sessionProvider);
 				node.remove();
 				getForumSystemHome(sessionProvider).save();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+	      Session session = getForumHomeNode(sessionProvider).getSession();
+	      session.importXML(nodePath, is, typeImport);
+	      session.save(); 
 			}
 		}else{
 			isReset = false;
@@ -6552,64 +6559,114 @@ public class JCRDataStorage implements DataStorage {
 					throw new ConstraintViolationException();
 				}
 				nodePath = getCategoryHome(sessionProvider).getPath();
+	    Session session = getForumHomeNode(sessionProvider).getSession();
+	    session.importXML(nodePath, is, typeImport);
+	    session.save();   
 		}
-		
-		is = new ByteArrayInputStream(bdata) ;
-		Session session = getForumHomeNode(sessionProvider).getSession();
-		session.importXML(nodePath, is, typeImport);
-		session.save();		
-		
-		// Reset data in node
-		if(isReset){
-			Node node = null;
-			QueryManager qm = session.getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
-			
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iterator = result.getNodes();
-			
-			// Delete node if already exist
-			if(iterator.getSize() > 0){
-				queryString = new StringBuffer("/jcr:root").append(nodePath).append("/").append(nodeName).
-																								append("/element(*,").append(nodeType).append(")[") ;
-				int i = 0;
-				while(iterator.hasNext()){
-					if(i > 0) queryString.append(" or ");
-					queryString.append("(fn:name() = '").append(iterator.nextNode().getName()).append("')");
-					i ++;
-				}
-				queryString.append("]");
-				
-				query = qm.createQuery(queryString.toString(), Query.XPATH);
-				result = query.execute();
-				iterator = result.getNodes();
-				while(iterator.hasNext()){
-					node = iterator.nextNode();
-					node.remove();
-				}
-				session.save();
-			}
-			
-			// Move node
-			node = (Node)session.getItem(nodePath + "/" + nodeName);
-			iterator = node.getNodes();
-			while(iterator.hasNext()){
-				Node childNode = iterator.nextNode();
-				try{
-					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			node.remove();
-			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
-			session.save();
-		}
-		
-		session.logout();
+
+//		
+//		// Reset data in node
+//		if(isReset){
+//			Node node = null;
+//			QueryManager qm = session.getWorkspace().getQueryManager();
+//			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
+//			
+//			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+//			QueryResult result = query.execute();
+//			NodeIterator iterator = result.getNodes();
+//			
+//			// Delete node if already exist
+//			if(iterator.getSize() > 0){
+//				queryString = new StringBuffer("/jcr:root").append(nodePath).append("/").append(nodeName).
+//																								append("/element(*,").append(nodeType).append(")[") ;
+//				int i = 0;
+//				while(iterator.hasNext()){
+//					if(i > 0) queryString.append(" or ");
+//					queryString.append("(fn:name() = '").append(iterator.nextNode().getName()).append("')");
+//					i ++;
+//				}
+//				queryString.append("]");
+//				
+//				query = qm.createQuery(queryString.toString(), Query.XPATH);
+//				result = query.execute();
+//				iterator = result.getNodes();
+//				while(iterator.hasNext()){
+//					node = iterator.nextNode();
+//					node.remove();
+//				}
+//				session.save();
+//			}
+//			
+//			// Move node
+//			node = (Node)session.getItem(nodePath + "/" + nodeName);
+//			iterator = node.getNodes();
+//			while(iterator.hasNext()){
+//				Node childNode = iterator.nextNode();
+//				try{
+//					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
+//				}catch(Exception e){
+//					e.printStackTrace();
+//				}
+//			}
+//			node.remove();
+//			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
+//			session.save();
+//		}
+//		
+//		session.logout();
 		sessionProvider.close() ;
 	}
+	
+   private void addDataFromXML(Node sourceNode,String nodePath ,SessionProvider sessionProvider ,
+                               InputStream is ,String nodeName) throws Exception{
+     Node forumHomeNode = getForumHomeNode(sessionProvider);
+     Session session = forumHomeNode.getSession();
+     Node tempNode = forumHomeNode.getParent().addNode("DataTemp");
+     
+     // Add child node of DataTemp
+     session.importXML(tempNode.getPath(), is, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+     session.save();
+     
+     // Node store data from XML file.
+     Node importNode = tempNode.getNode(nodeName);
+  
+     try{
+       copyFullNodes(sourceNode,importNode,session);
+     } finally {
+       tempNode.remove();
+       forumHomeNode.getParent().save();
+     }
+   }
+	 
+  private void copyFullNodes(Node sourceNode , Node importNode, Session session) throws RepositoryException{
+    // Check if importNode have different child than sourceNode then add it.
+    NodeIterator sourceIter = sourceNode.getNodes();
+    NodeIterator importIter = importNode.getNodes();
+    Node srcTemp = null;
+    Node importTemp  = null;
+    boolean flag = false;
+
+    while (importIter.hasNext()) {
+      flag = true;
+      importTemp = importIter.nextNode();
+      while(sourceIter.hasNext()){
+        srcTemp = sourceIter.nextNode();
+        if (importTemp.getName().equals(srcTemp.getName())) {
+          copyFullNodes(srcTemp,importTemp,session);
+          flag = false;
+          break;
+        }
+      }
+      
+      if(flag) {
+        String path = sourceNode.getPath() + "/" + importTemp.getName();
+        try{
+          session.getWorkspace().copy(importTemp.getPath(),path );
+        }catch (Exception e) {
+        }
+      }
+    }
+  }
 	
 	public void updateDataImported() throws Exception{
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
