@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import org.exoplatform.services.log.Log;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -14,6 +13,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.services.idgenerator.IDGeneratorService;
 import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 
 public class RandomForumDataProvider implements ForumDataProvider {

@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -105,7 +104,6 @@ import org.exoplatform.forum.service.conf.PostData;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.forum.service.conf.StatisticEventListener;
 import org.exoplatform.forum.service.conf.TopicData;
-import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
@@ -148,8 +146,6 @@ public class JCRDataStorage implements DataStorage {
 
 	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
-	BBCodeService bbcodeObject_;
-
 	Map<String, String> serverConfig_ = new HashMap<String, String>();
 	Map<String, Object>	infoMap_	= new HashMap<String, Object>();
 	List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
@@ -169,7 +165,6 @@ public class JCRDataStorage implements DataStorage {
     sessionManager = dataLocator.getSessionManager();
     repository = dataLocator.getRepository();
     workspace = dataLocator.getWorkspace();
-    bbcodeObject_ = (BBCodeService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class);
 	}
 
   public void start() {
@@ -3237,7 +3232,7 @@ public class JCRDataStorage implements DataStorage {
 						}
 						String postFistId = topic.getId().replaceFirst(Utils.TOPIC, Utils.POST);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Topic");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription(), bbcodeObject_.getActive()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(topic.getDescription()));
 						Date createdDate = topic.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3402,7 +3397,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", "Category");
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3441,7 +3436,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty("exo:name").getString());
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.FORUM);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");
@@ -3483,7 +3478,7 @@ public class JCRDataStorage implements DataStorage {
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
 						content_ = StringUtils.replace(content_, "$OBJECT_WATCH_TYPE", Utils.TOPIC);
 						content_ = StringUtils.replace(content_, "$ADD_TYPE", "Post");
-						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage(), bbcodeObject_.getActive()));
+						content_ = StringUtils.replace(content_, "$POST_CONTENT", Utils.convertCodeHTML(post.getMessage()));
 						Date createdDate = post.getCreatedDate();
 						Format formatter = new SimpleDateFormat("HH:mm");
 						content_ = StringUtils.replace(content_, "$TIME", formatter.format(createdDate)+" GMT+0");

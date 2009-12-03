@@ -45,7 +45,6 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Watch;
-import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.core.BBCodeServiceImpl;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -1306,26 +1305,6 @@ public class FAQServiceImpl implements FAQService, Startable {
   	jcrData_.updateQuestionRelatives(questionPath, relatives) ;
   }
   
-	public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-		bbcodeObject_.save(bbcodes);
-	}
-	
-	public List<BBCode> getAllBBCode() throws Exception {
-		return bbcodeObject_.getAll();
-	}
-
-	public List<String> getActiveBBCode() throws Exception {
-		return bbcodeObject_.getActive();
-	}
-	
-	public BBCode getBBcode(String id) throws Exception{
-		return bbcodeObject_.findById(id);
-	}
-	
-	public void removeBBCode(String bbcodeId) throws Exception {
-		bbcodeObject_.delete(bbcodeId);
-	}
-
 }
 
 
