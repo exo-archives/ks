@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
@@ -408,7 +409,7 @@ public interface ForumServiceLegacy {
   /**
    * @deprecated use {@link ForumService#importXML(String nodePath, ByteArrayInputStream bis,int typeImport)}
    */
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sessionProvider) throws Exception ;
+  public void importXML(String nodePath,InputStream is,String mimeType, SessionProvider sessionProvider) throws Exception ;
   
   /**
    * @deprecated use {@link ForumService#getQuickProfiles(List<String> userList)}

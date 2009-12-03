@@ -18,6 +18,7 @@ package org.exoplatform.forum.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -1251,13 +1252,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
   
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sProvider) throws Exception {
+  public void importXML(String nodePath, InputStream is,String mimeType, SessionProvider sProvider) throws Exception {
   	sProvider.close() ;
-	  importXML(nodePath, bis, typeImport);
+  	storage_.importXML(nodePath, is, mimeType);
   }
   
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception {
-	  storage_.importXML(nodePath, bis, typeImport);
+  public void importXML(String nodePath, InputStream is,String mimeType) throws Exception {
+	  storage_.importXML(nodePath, is, mimeType);
   }
   
   public void updateDataImported() throws Exception{

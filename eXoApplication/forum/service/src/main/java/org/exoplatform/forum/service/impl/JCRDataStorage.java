@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.Writer;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -37,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
@@ -48,7 +50,6 @@ import javax.jcr.Session;
 import javax.jcr.Value;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
@@ -127,8 +128,6 @@ import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.quartz.JobDataMap;
 import org.w3c.dom.Document;
-
-import com.mysql.jdbc.UpdatableResultSet;
 
 /**
  * Created by The eXo Platform SARL 
@@ -6527,47 +6526,125 @@ public class JCRDataStorage {
 		for(File f : listFiles) f.deleteOnExit();
 		return file;
 	}
+	
+	public void importXML(String nodePath, InputStream is, String mimeType) throws Exception {
+		if("text/xml".equals(mimeType)){
+			importXMLFile(is, nodePath, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+		} else if ("application/zip".equals(mimeType)) {
+			importZipFile(is, nodePath);
+		}
+	}
 
-	public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception {
-		boolean isReset = false;
-		String nodeType = "";
-		String nodeName = "";
-		byte[] bdata	= new byte[bis.available()];
-		bis.read(bdata) ;
+	private void importZipFile(InputStream is ,String nodePath) throws Exception{
+		ZipInputStream zipStream = new ZipInputStream(is);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] data  = new byte[5120];   
+		ZipEntry entry = zipStream.getNextEntry();
+		ByteArrayInputStream inputStream = null;
+		while(entry != null) {
+			out= new ByteArrayOutputStream();
+			int available = -1;
+			while ((available = zipStream.read(data, 0, 1024)) > -1) {
+				out.write(data, 0, available); 
+			}                         
+			zipStream.closeEntry();
+			out.close();
+			
+			inputStream = new ByteArrayInputStream(out.toByteArray());
+			importXMLFile(inputStream ,nodePath,ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+			entry = zipStream.getNextEntry();
+		}
+		zipStream.close();
+	}
+	
+	private void addDataFromXML(Node sourceNode,String nodePath ,SessionProvider sessionProvider ,
+			InputStream is ,String nodeName) throws Exception{
+		Node forumHomeNode = getForumHomeNode(sessionProvider);
+		Session session = forumHomeNode.getSession();
+		Node tempNode = forumHomeNode.getParent().addNode("DataTemp");
 		
+		// Add child node of DataTemp
+		session.importXML(tempNode.getPath(), is, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+		session.save();
+		
+		// Node store data from XML file.
+		Node importNode = tempNode.getNode(nodeName);
+
+		try{
+			copyFullNodes(sourceNode,importNode,session);
+		} finally {
+			tempNode.remove();
+			forumHomeNode.getParent().save();
+		}
+	}
+
+	private void copyFullNodes(Node sourceNode , Node importNode, Session session) throws RepositoryException{
+		// Check if importNode have different child than sourceNode then add it.
+		NodeIterator sourceIter = sourceNode.getNodes();
+		NodeIterator importIter = importNode.getNodes();
+		Node srcTemp = null;
+		Node importTemp  = null;
+		boolean flag = false;
+
+		while (importIter.hasNext()) {
+			flag = true;
+			importTemp = importIter.nextNode();
+			while(sourceIter.hasNext()){
+				srcTemp = sourceIter.nextNode();
+				if (importTemp.getName().equals(srcTemp.getName())) {
+					copyFullNodes(srcTemp,importTemp,session);
+					flag = false;
+					break;
+				}
+			}
+			
+			if(flag) {
+				String path = sourceNode.getPath() + "/" + importTemp.getName();
+				try{
+					session.getWorkspace().copy(importTemp.getPath(),path );
+				}catch (Exception e) {
+				}
+			}
+		}
+	}
+	
+	private void importXMLFile(InputStream is ,String nodePath , int typeImport) throws Exception{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
+		byte[] bdata = new byte[is.available()];
+		is.read(bdata);
+		is = new ByteArrayInputStream(bdata) ;
 		Document doc = docBuilder.parse(is);
-		//doc.getDocumentElement ().normalize ();
+		doc.getDocumentElement ().normalize ();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
-		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		is = new ByteArrayInputStream(bdata);
+		
+		String nodeName = "";
 		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
 			// All nodes when import need reset childnode
 			if(typeNodeExport.equals("exo:categoryHome")){
 				nodePath = getCategoryHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumCategory";
+				Node categoryHome = getCategoryHome(sessionProvider);
 				nodeName = "CategoryHome";
+				addDataFromXML(categoryHome,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:userProfileHome")){
-				nodePath = getUserProfileHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumUserProfile";
+				Node userProfile = getUserProfileHome(sessionProvider);
 				nodeName = "UserProfileHome";
+				nodePath = getUserProfileHome(sessionProvider).getPath();
+				addDataFromXML(userProfile,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:tagHome")){
+				Node tagHome = getTagHome(sessionProvider);
 				nodePath = getTagHome(sessionProvider).getPath();
-				isReset = true;
-				nodeType = "exo:forumTag";
 				nodeName = "TagHome";
+				addDataFromXML(tagHome,nodePath,sessionProvider,is,nodeName);
 			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
 				BBCodeOperator bbcodeObject  = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
 				nodePath = bbcodeObject.getBBcodeHome(sessionProvider).getPath();
-				bbcodeObject = null ;
-				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
-				isReset = true;
-				nodeType = "exo:forumBBCode";
+				Node bbcodeNode = bbcodeObject.getBBcodeHome(sessionProvider);
 				nodeName = "forumBBCode";
+				addDataFromXML(bbcodeNode,nodePath,sessionProvider,is,nodeName);
+				bbcodeObject = null ;
 			}
 			// Node import but don't need reset childnodes
 			else if(typeNodeExport.equals("exo:administrationHome")){
@@ -6583,12 +6660,7 @@ public class JCRDataStorage {
 				getForumSystemHome(sessionProvider).save();
 				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 			}
-			is = new ByteArrayInputStream(bdata) ;
-			Session session = getForumHomeNode(sessionProvider).getSession();
-			session.importXML(nodePath, is, typeImport);
-			session.save();
 		}else{
-			isReset = false;
 			String updatePath = nodePath ;
 			if(typeNodeExport.equals("exo:forumCategory")){
 				nodePath = getCategoryHome(sessionProvider).getPath() ;
@@ -6596,114 +6668,13 @@ public class JCRDataStorage {
 			}/*else if (typeNodeExport.equals("exo:forum")) {
 				updatePath = nodePath+ "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
 			} */
-			is = new ByteArrayInputStream(bdata) ;
+			//is = new ByteArrayInputStream(bdata) ;
 			Session session = getForumHomeNode(sessionProvider).getSession();
 			session.importXML(nodePath, is, typeImport);
 			session.save();			
 			if(typeNodeExport.equals("exo:forumCategory"))updateImportedData(updatePath) ;	
 		}
-		
-				
-		
-		// Reset data in node
-		/*if(isReset){
-			Node node = null;
-			QueryManager qm = session.getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
-			
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iterator = result.getNodes();
-			
-			// Delete node if already exist
-			if(iterator.getSize() > 0){
-				queryString = new StringBuffer("/jcr:root").append(nodePath).append("/").append(nodeName).
-																								append("/element(*,").append(nodeType).append(")[") ;
-				int i = 0;
-				while(iterator.hasNext()){
-					if(i > 0) queryString.append(" or ");
-					queryString.append("(fn:name() = '").append(iterator.nextNode().getName()).append("')");
-					i ++;
-				}
-				queryString.append("]");
-				
-				query = qm.createQuery(queryString.toString(), Query.XPATH);
-				result = query.execute();
-				iterator = result.getNodes();
-				while(iterator.hasNext()){
-					node = iterator.nextNode();
-					node.remove();
-				}
-				session.save();
-			}
-			
-			// Move node
-			node = (Node)session.getItem(nodePath + "/" + nodeName);
-			iterator = node.getNodes();
-			while(iterator.hasNext()){
-				Node childNode = iterator.nextNode();
-				try{
-					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			node.remove();
-			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
-			session.save();
-		}*/
-		sessionProvider.close() ;
 	}
-	
-	/*public void updateDataImported() throws Exception{
-		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-		System.out.println("HELLO ===> updateDataImported");
-		// Update forum statistic
-		ForumStatistic forumStatistic = getForumStatistic();
-		Node categoryHome = getCategoryHome(sessionProvider);
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-																		append("//element(*,exo:post)") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iterator = result.getNodes();
-		forumStatistic.setPostCount(iterator.getSize());
-		
-		queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-												append("//element(*,exo:topic)") ;
-		query = qm.createQuery(queryString.toString(), Query.XPATH);
-		result = query.execute();
-		iterator = result.getNodes();
-		forumStatistic.setTopicCount(iterator.getSize());
-		
-		saveForumStatistic(forumStatistic);
-		
-		// Update user infor: total post, total topic:
-		Node userHomeNode = getUserProfileHome(sessionProvider);
-		iterator = userHomeNode.getNodes();
-		Node userNode = null;
-		while(iterator.hasNext()){
-			userNode = iterator.nextNode();
-			// Update total post for user
-			queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-													append("//element(*,exo:post)") ;
-			query = qm.createQuery(queryString.toString(), Query.XPATH);
-			result = query.execute();
-			userNode.setProperty("exo:totalPost", result.getNodes().getSize());
-			
-			// Update total topic for user
-			queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).
-													append("//element(*,exo:topic)") ;
-			query = qm.createQuery(queryString.toString(), Query.XPATH);
-			result = query.execute();
-			userNode.setProperty("exo:totalTopic", result.getNodes().getSize());
-			
-			userNode.save();
-		}
-		userHomeNode.save();
-		
-		sessionProvider.close();
-	}*/
 
 	public void updateTopicAccess (String userId, String topicId) throws Exception {
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;

@@ -494,7 +494,7 @@ public class TestForumService extends BaseForumTestCase{
 			byte currentXMLBytes[] = content.getBytes();
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
 			//	Import forum into category
-			forumService_.importXML(pathNode, byteArrayInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW) ;
+			forumService_.importXML(pathNode, byteArrayInputStream, "text/xml") ;
 			assertEquals("Can't import forum into category", forumService_.getForums(cat.getId(), "").size(), 1);
 		} catch (IOException e) {
 			e.printStackTrace();
