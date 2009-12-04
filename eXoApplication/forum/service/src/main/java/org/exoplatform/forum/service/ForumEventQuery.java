@@ -272,7 +272,7 @@ public class ForumEventQuery {
 			List<String>tempL = new ArrayList<String>();
 			tempL.addAll(listOfUser);
 			tempL.add(" ");
-			String s = Utils.getQueryInList(tempL, "@exo:canView");
+			String s = Utils.propertyMatchAny("@exo:canView", tempL);
 			if(s != null && s.length() > 0) {
 				if (isAnd) stringBuffer.append(" and ");
 				stringBuffer.append(s);

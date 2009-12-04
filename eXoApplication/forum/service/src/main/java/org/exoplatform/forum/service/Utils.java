@@ -24,11 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.ks.rendering.MarkupRenderingService;
-import org.exoplatform.ks.rendering.api.Renderer;
+import javax.jcr.Value;
+
 import org.exoplatform.services.organization.User;
 
 /**
@@ -76,6 +73,11 @@ public class Utils {
 	
 	
 
+	/**
+	 * Clear characters that have a codepoint < 31 (non printable) from a string
+	 * @param s string input
+	 * @return the string with all character whose codepoint<31 removed
+	 */
   public static String removeCharterStrange(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
@@ -106,7 +108,13 @@ public class Utils {
 		}
 	}
 	
-	public static boolean isAddNewArray(String[] a, String[]b) {
+	/**
+	 * Compare two arrays and to verify there is a difference in content between two string arrays. The elements may not appear in the same order in both arrays.
+	 * @param a first string array to compare
+	 * @param b second string array to compare
+	 * @return true if there is a difference in content or size between the two arrays, false otherwise.
+	 */
+	public static boolean arraysHaveDifferentContent(String[] a, String[]b) {
 		List<String> list = new ArrayList<String>();
 		list = Arrays.asList(b);
 		if(a.length == b.length) {
@@ -121,7 +129,14 @@ public class Utils {
 	  return false;
   }
 
-	public static boolean isAddNewList(List<String> a, List<String> b) {
+	/**
+   * Compare two lists and to verify there is a difference in content between two string lists. The elements may not appear in the same order in both lists.
+   * @param a first string list to compare
+   * @param b second string list to compare
+   * @return true if there is a difference in content or size between the two lists, false otherwise.
+   * @see #arraysHaveDifferentContent(String[], String[])
+	 */
+	public static boolean listsHaveDifferentContent(List<String> a, List<String> b) {
 		if(a.size() == b.size()) {
 			for (String s : b) {
 				if(!a.contains(s)) {
@@ -135,6 +150,12 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Converts a map to a string array representation. Each map entry is converted into a string item. String items will be of the form "key,value".
+	 * This is the reverse operation of {@link #arrayToMap(String[])}
+	 * @param map map to convert
+	 * @return converted list of string
+	 */
 	public static String[] mapToArray(Map<String, String> map) {
 		if (map.isEmpty()) return new String[]{" "};
 		String[] strs = new String[map.size()];
@@ -144,6 +165,12 @@ public class Utils {
 	  return strs;
   }
 	
+	/**
+	 * Convert a String array to a map. key and values must be comma separated. For example : "color,blue" will create an entry "blue" with key "color" in the map.
+	 * A string not conforming to the pattern "key,value" is ignored
+	 * @param strs List of string to scan
+	 * @return map representation
+	 */
 	public static Map<String, String> arrayToMap(String[] strs) {
 		Map<String, String> map = new HashMap<String, String>();
 		String[] arr;
@@ -155,7 +182,14 @@ public class Utils {
 		return map;
   }
 	
-	public static String getQueryInList(List<String> list, String property) {
+	/**
+	 * Create a JCR xpath condition that match a property against a list of values with an or condition. 
+	 * Note that if the property does not exist, the condition is matched too (means : values are combined with not(property))
+	 * @param property property to match
+	 * @param list list of possible values
+	 * @return the JCR xpath predicate condition to match the property against values.
+	 */
+	public static String propertyMatchAny(String property, List<String> list) {
 		StringBuilder builder = new StringBuilder();
 		if(!list.isEmpty()) {
 			int t = 0;
@@ -169,12 +203,91 @@ public class Utils {
 	  return builder.toString();
   }
 	
+	/**
+	 * Note that
+	 * @param list
+	 * @param list1
+	 * @return
+	 */
 	public static boolean isListContentItemList(List<String> list, List<String> list1) {
 		if(list1.size() == 1 && list1.get(0).equals(" ")) return false;
 		for (String string : list1) {
 	    if(list.contains(string)) return true;
     }
 	  return false;
+  }
+
+	/**
+	 * Transforms a List of strings into a string array and clear any  blank entry. 
+	 * A blank entry is the 'space' value (aka " ").
+	 * @param list List of Strings to transform
+	 * @return String array cleared of blanks
+	 * @throws Exception
+	 */
+  public static String[] getStringsInList(List<String> list) throws Exception {
+    if (list.size() > 1) {
+      while (list.contains(" ")) {
+        list.remove(" ");
+      }
+    }
+    return list.toArray(new String[list.size()]);
+  }
+
+  /**
+   * Extract the items two lists have in common.
+   * @param pList first list
+   * @param cList second list
+   * @return a new list containing only the common elements between the two lists in input
+   * @throws Exception
+   */
+  public static List<String> extractSameItems(List<String>pList, List<String> cList) throws Exception {
+  	List<String>list = new ArrayList<String>();
+  	for (String string : pList) {
+  		if(cList.contains(string)) list.add(string);
+  	}
+  	return list;
+  }
+
+  /**
+   * Transforms a jcr Value array into a string array . 
+   * Calls {@link Value#getString()} on each item.
+   * @see javax.jcr.Value
+   * @param values array of values to transform
+   * @return string array for the Value array
+   * @throws Exception
+   */
+  public static String[] valuesToArray(Value[] values) throws Exception {
+  	if (values.length < 1)
+  		return new String[] {};
+  	if (values.length == 1)
+  		return new String[] { values[0].getString() };
+  	String[] result = new String[values.length];
+  	for (int i = 0; i < values.length; ++i) {
+  		result[i] = values[i].getString();
+  	}
+  	return result;
+  }
+
+  /**
+   * Transforms a jcr Value array into a string list . 
+   * Calls {@link Value#getString()} on each item.
+   * @see javax.jcr.Value
+   * @param values array of values to transform
+   * @return string list for the Value array
+   * @throws Exception
+   */
+  public static List<String> valuesToList(Value[] values) throws Exception {
+  	List<String> list = new ArrayList<String>();
+  	if (values.length < 1)
+  		return list;
+  	if (values.length == 1) {
+  		list.add(values[0].getString());
+  		return list;
+  	}
+  	for (int i = 0; i < values.length; ++i) {
+  		list.add(values[i].getString());
+  	}
+  	return list;
   }
 
 }

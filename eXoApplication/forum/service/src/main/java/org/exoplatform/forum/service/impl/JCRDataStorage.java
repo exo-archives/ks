@@ -16,6 +16,8 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
+import static org.exoplatform.ks.common.Utils.getComponent;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -129,7 +131,6 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
-import static org.exoplatform.ks.common.Utils.getComponent;
 
 
 /**
@@ -231,11 +232,6 @@ public class JCRDataStorage implements  DataStorage {
 			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(dataLocator) ;
 			observation.addEventListener(forumRSSListener, Event.NODE_ADDED + 
 					Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
-			
-			/*ForumRSSEventListener addNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
-			observation.addEventListener(addNodeListener, Event.NODE_ADDED ,categoryHome.getPath(), true, null, null, false) ;
-			ForumRSSEventListener removeNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
-			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;*/
 		}catch(Exception e){ log.error(e);} 
 		finally{ sProvider.close() ;}
 	}
@@ -330,7 +326,7 @@ public class JCRDataStorage implements  DataStorage {
 				List<String> list = new ArrayList<String>();
 				list.addAll(rulesPlugins.get(i).getRules(Utils.ADMIN_ROLE));
 				if(list.contains(userName)) return true;
-				String [] adminrules  = getStringsInList(list);
+				String [] adminrules  = Utils.getStringsInList(list);
 				if(ForumServiceUtils.hasPermission(adminrules, userName))return true;
 			}
 		} catch (Exception e) {
@@ -679,7 +675,7 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			Node cateNode = getCategoryHome(sProvider).getNode(categoryId);
 			if (cateNode.hasProperty(type))
-				canCreated = ValuesToArray(cateNode.getProperty(type).getValues());
+				canCreated = Utils.valuesToArray(cateNode.getProperty(type).getValues());
 		} catch (Exception e) {
 		}finally{ sProvider.close() ;} 
 		return canCreated;
@@ -725,10 +721,10 @@ public class JCRDataStorage implements  DataStorage {
 			} else {
 				catNode = categoryHome.getNode(category.getId());
 				String[] oldcategoryMod = new String[]{""} ;
-				try{ oldcategoryMod = ValuesToArray(catNode.getProperty("exo:moderators").getValues()); }catch(Exception e) {}
+				try{ oldcategoryMod = Utils.valuesToArray(catNode.getProperty("exo:moderators").getValues()); }catch(Exception e) {}
 				catNode.setProperty("exo:tempModerators", oldcategoryMod);
-				try {presentPoster = ValuesToList(catNode.getProperty("exo:poster").getValues());} catch(Exception e) {}
-				try {presentViewer = ValuesToList(catNode.getProperty("exo:viewer").getValues());} catch (Exception e) {}
+				try {presentPoster = Utils.valuesToList(catNode.getProperty("exo:poster").getValues());} catch(Exception e) {}
+				try {presentViewer = Utils.valuesToList(catNode.getProperty("exo:viewer").getValues());} catch (Exception e) {}
 			}
 			catNode.setProperty("exo:name", category.getCategoryName());
 			catNode.setProperty("exo:categoryOrder", category.getCategoryOrder());
@@ -744,7 +740,7 @@ public class JCRDataStorage implements  DataStorage {
 			
 			List<String> listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getPoster()));
-			if(!isNew && Utils.isAddNewList(presentPoster, listV)){
+			if(!isNew && Utils.listsHaveDifferentContent(presentPoster, listV)){
 				List<String> list = new ArrayList<String>();
 				for (String string : presentPoster) {
 	        if(listV.contains(string)) listV.remove(string);
@@ -754,7 +750,7 @@ public class JCRDataStorage implements  DataStorage {
 			}
 			listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getViewer()));
-			if(!isNew && Utils.isAddNewList(presentViewer, listV)){
+			if(!isNew && Utils.listsHaveDifferentContent(presentViewer, listV)){
 				List<String> list = new ArrayList<String>();
 				for (String string : presentPoster) {
 					if(listV.contains(string)) listV.remove(string);
@@ -782,7 +778,7 @@ public class JCRDataStorage implements  DataStorage {
 	      isAddNew = true;
 	      try {
 	        cateNode = cateHome.getNode(cateId) ;
-	        listTemp = ValuesToList(cateNode.getProperty("exo:moderators").getValues());
+	        listTemp = Utils.valuesToList(cateNode.getProperty("exo:moderators").getValues());
 	        list = new ArrayList<String>();
 	        list.addAll(listTemp);
 	        if(isAdd) {
@@ -795,16 +791,16 @@ public class JCRDataStorage implements  DataStorage {
 		        	isAddNew = false;
 		        }
 		        if(isAddNew) {
-		        	cateNode.setProperty("exo:tempModerators", getStringsInList(listTemp));
-		        	cateNode.setProperty("exo:moderators", getStringsInList(list));
+		        	cateNode.setProperty("exo:tempModerators", Utils.getStringsInList(listTemp));
+		        	cateNode.setProperty("exo:moderators", Utils.getStringsInList(list));
 		        }
 	        } else {
 	        	if(!list.isEmpty()) {
 	        		if(list.contains(userId)) {
 	        			list.remove(userId) ;
 	        			if(list.isEmpty()) list.add(" ");
-			        	cateNode.setProperty("exo:moderators", getStringsInList(list));//
-			        	cateNode.setProperty("exo:tempModerators", getStringsInList(listTemp));
+			        	cateNode.setProperty("exo:moderators", Utils.getStringsInList(list));//
+			        	cateNode.setProperty("exo:tempModerators", Utils.getStringsInList(listTemp));
 	        		}
 	        	}
 	        }
@@ -823,13 +819,13 @@ public class JCRDataStorage implements  DataStorage {
 	    Node node = (Node)getCategoryHome(sProvider).getSession().getItem(nodePath);
 	    String[] modTemp =  new String[]{};
 	    if(node.hasProperty("exo:tempModerators")) {
-	    	modTemp = ValuesToArray(node.getProperty("exo:tempModerators").getValues());
+	    	modTemp = Utils.valuesToArray(node.getProperty("exo:tempModerators").getValues());
 	    }
 	    if(node.isNodeType("exo:forumCategory")){
 		    Category category = new Category(node.getName());
 		    category.setCategoryName(node.getProperty("exo:name").getString());
-		    category.setModerators(ValuesToArray(node.getProperty("exo:moderators").getValues()));
-		    if(isNew || Utils.isAddNewArray(modTemp, category.getModerators())){
+		    category.setModerators(Utils.valuesToArray(node.getProperty("exo:moderators").getValues()));
+		    if(isNew || Utils.arraysHaveDifferentContent(modTemp, category.getModerators())){
 			    updateModeratorInForums(sProvider, node, category.getModerators());
 			    updateUserProfileModInCategory(sProvider, node, modTemp, category, isNew);
 		    }
@@ -837,8 +833,8 @@ public class JCRDataStorage implements  DataStorage {
 	    	Forum forum = new Forum();
 	    	forum.setId(node.getName());
 	    	forum.setForumName(node.getProperty("exo:name").getString());
-	    	forum.setModerators(ValuesToArray(node.getProperty("exo:moderators").getValues()));
-	    	if(isNew || Utils.isAddNewArray(modTemp, forum.getModerators())){
+	    	forum.setModerators(Utils.valuesToArray(node.getProperty("exo:moderators").getValues()));
+	    	if(isNew || Utils.arraysHaveDifferentContent(modTemp, forum.getModerators())){
 		    	String categoryId = nodePath.substring(nodePath.indexOf(Utils.CATEGORY), nodePath.lastIndexOf("/"));
 		    	setModeratorForum(sProvider, forum.getModerators(), modTemp, forum, categoryId, isNew);
 	    	}
@@ -863,7 +859,7 @@ public class JCRDataStorage implements  DataStorage {
 				Node node = iter.nextNode();
 				if(node.isNodeType("exo:forum")) {
 					try{
-						oldModeratoForums = ValuesToArray(node.getProperty("exo:moderators").getValues());
+						oldModeratoForums = Utils.valuesToArray(node.getProperty("exo:moderators").getValues());
 					}catch(Exception e) {
 						oldModeratoForums = new String[]{};
 					}
@@ -874,7 +870,7 @@ public class JCRDataStorage implements  DataStorage {
 	          	list.add(moderatorCat[i]);
 	          }
           }
-					strModerators = getStringsInList(list);
+					strModerators = Utils.getStringsInList(list);
 					node.setProperty("exo:moderators", strModerators);
 					node.setProperty("exo:tempModerators", oldModeratoForums);
 				}
@@ -895,7 +891,7 @@ public class JCRDataStorage implements  DataStorage {
 					userProfileNode = userProfileHomeNode.getNode(string);
 					List<String> moderateCategory = new ArrayList<String>() ;
 					try{
-						moderateCategory = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
+						moderateCategory = Utils.valuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());
 					}catch(Exception e){}
 					for (String string2 : moderateCategory) {
 	          if(string2.indexOf(categoryId) > 0) {
@@ -905,29 +901,29 @@ public class JCRDataStorage implements  DataStorage {
           }
 					if(isAdd) {
 						moderateCategory.add(cateName + "(" + categoryId);
-						userProfileNode.setProperty("exo:moderateCategory", getStringsInList(moderateCategory));
+						userProfileNode.setProperty("exo:moderateCategory", Utils.getStringsInList(moderateCategory));
 					}
         } catch (Exception e) {
         }
       }
 		}
 		if(!isNew && oldcategoryMod != null && oldcategoryMod.length > 0 && !oldcategoryMod[0].equals(" ")){
-			if(Utils.isAddNewArray(oldcategoryMod, category.getModerators())) {
+			if(Utils.arraysHaveDifferentContent(oldcategoryMod, category.getModerators())) {
 				List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldcategoryMod);
 				for(String oldUserId : oldmoderators) {
 	        if(moderators.contains(oldUserId)) continue ;
 	        //edit profile of old user.
 	        userProfileNode = userProfileHomeNode.getNode(oldUserId);
 	        List<String> moderateList = new ArrayList<String>() ;
-	        try{moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());}catch(Exception e){}
+	        try{moderateList = Utils.valuesToList(userProfileNode.getProperty("exo:moderateCategory").getValues());}catch(Exception e){}
 					for (String string2 : moderateList) {
 	          if(string2.indexOf(categoryId) > 0) {
 	          	moderateList.remove(string2);
-	          	userProfileNode.setProperty("exo:moderateCategory", getStringsInList(moderateList));
+	          	userProfileNode.setProperty("exo:moderateCategory", Utils.getStringsInList(moderateList));
 	          	break;
 	          }
           }
-					moderateList = ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
+					moderateList = Utils.valuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
 					NodeIterator iter = catNode.getNodes();
 					while (iter.hasNext()) {
 			      Node node = iter.nextNode();
@@ -938,7 +934,7 @@ public class JCRDataStorage implements  DataStorage {
 		            	break;
 		            }
 	            }
-			      	List<String>forumMode = ValuesToList(node.getProperty("exo:moderators").getValues());
+			      	List<String>forumMode = Utils.valuesToList(node.getProperty("exo:moderators").getValues());
 			      	List<String>forumModeTemp = new ArrayList<String>();
 			      	forumModeTemp.addAll(forumMode);
 			      	for (int i = 0; i < oldcategoryMod.length; i++) {
@@ -946,8 +942,8 @@ public class JCRDataStorage implements  DataStorage {
 	              	forumMode.remove(oldcategoryMod[i]);
 	              }
               }
-			      	node.setProperty("exo:moderators", getStringsInList(forumMode));
-			      	node.setProperty("exo:tempModerators", getStringsInList(forumModeTemp));
+			      	node.setProperty("exo:moderators", Utils.getStringsInList(forumMode));
+			      	node.setProperty("exo:tempModerators", Utils.getStringsInList(forumModeTemp));
 			      }
 		      }
 					catNode.save();
@@ -963,7 +959,7 @@ public class JCRDataStorage implements  DataStorage {
 							userProfileNode.setProperty("exo:userTitle", Utils.USER);
 						}
 					}
-					userProfileNode.setProperty("exo:moderateForums", getStringsInList(moderateList));
+					userProfileNode.setProperty("exo:moderateForums", Utils.getStringsInList(moderateList));
         }
 			}
 		}
@@ -985,10 +981,10 @@ public class JCRDataStorage implements  DataStorage {
 		List<String> list;
 		while (iter.hasNext()) {
 	    Node topicNode = iter.nextNode();
-	    list = ValuesToList(topicNode.getProperty(property).getValues());
+	    list = Utils.valuesToList(topicNode.getProperty(property).getValues());
 	    list = removeAndAddNewInList(remov, addNew, list);
 	    if(list.isEmpty()) list.add(" ");
-	    topicNode.setProperty(property, getStringsInList(list));
+	    topicNode.setProperty(property, Utils.getStringsInList(list));
     }
 	}
 	
@@ -1044,13 +1040,13 @@ public class JCRDataStorage implements  DataStorage {
 			Map<String, Long> userPostMap = getDeletePostByUser(categoryNode) ;
 			Category category = getCategory(categoryNode);
 			try {
-				categoryNode.setProperty("exo:tempModerators", ValuesToArray(categoryNode.getProperty("exo:moderators").getValues()));
+				categoryNode.setProperty("exo:tempModerators", Utils.valuesToArray(categoryNode.getProperty("exo:moderators").getValues()));
 				categoryNode.setProperty("exo:moderators", new String[]{" "});
 				NodeIterator iter = categoryNode.getNodes();
 				while (iter.hasNext()) {
 		      Node node = iter.nextNode();
 		      if(node.isNodeType("exo:forum")){
-			      node.setProperty("exo:tempModerators", ValuesToArray(node.getProperty("exo:moderators").getValues()));
+			      node.setProperty("exo:tempModerators", Utils.valuesToArray(node.getProperty("exo:moderators").getValues()));
 			      node.setProperty("exo:moderators", new String[]{" "});
 		      }
 	      }
@@ -1209,7 +1205,7 @@ public class JCRDataStorage implements  DataStorage {
 				addModeratorCalculateListener(forumNode);
 			} else {
 				forumNode = catNode.getNode(forum.getId());
-				oldMod = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
+				oldMod = Utils.valuesToArray(forumNode.getProperty("exo:moderators").getValues());
 				forumNode.setProperty("exo:tempModerators", oldMod);
 				
 				if (forumNode.hasProperty("exo:isModerateTopic"))
@@ -1236,7 +1232,7 @@ public class JCRDataStorage implements  DataStorage {
 			// set from category
 			strModerators = updateModeratorInForum(catNode, strModerators);
 			boolean isEditMod = isNew;
-			if(!isNew && Utils.isAddNewArray(oldMod, strModerators)){
+			if(!isNew && Utils.arraysHaveDifferentContent(oldMod, strModerators)){
 				isEditMod = true;
 			}
 			forumNode.setProperty("exo:moderators", strModerators);
@@ -1245,7 +1241,7 @@ public class JCRDataStorage implements  DataStorage {
 				if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
 					if (catNode.hasProperty("exo:userPrivate")) {
 						List<String> listPrivate = new ArrayList<String>();
-						listPrivate.addAll(ValuesToList(catNode.getProperty("exo:userPrivate").getValues()));
+						listPrivate.addAll(Utils.valuesToList(catNode.getProperty("exo:userPrivate").getValues()));
 						if (listPrivate.size() > 0 && !listPrivate.get(0).equals(" ")) {
 							for (int i = 0; i < strModerators.length; i++) {
 								if (!listPrivate.contains(strModerators[i])) {
@@ -1294,7 +1290,7 @@ public class JCRDataStorage implements  DataStorage {
 				List<String> list = new ArrayList<String>();
 				try {
 					userProfileNode = userProfileHomeNode.getNode(string);
-					List<String> moderatorForums = ValuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
+					List<String> moderatorForums = Utils.valuesToList(userProfileNode.getProperty("exo:moderateForums").getValues());
 					boolean hasMod = false;
 					for (String string2 : moderatorForums) {
 						if (string2.indexOf(forum.getId()) > 0) {
@@ -1306,7 +1302,7 @@ public class JCRDataStorage implements  DataStorage {
 					}
 					if (!hasMod) {
 						list.add(forum.getForumName() + "(" + categoryId + "/" + forum.getId());
-						userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
+						userProfileNode.setProperty("exo:moderateForums", Utils.getStringsInList(list));
 						if(userProfileNode.getProperty("exo:userRole").getLong() >= 2) {
 							userProfileNode.setProperty("exo:userRole", 1);
 							userProfileNode.setProperty("exo:userTitle", Utils.MODERATOR);
@@ -1340,13 +1336,13 @@ public class JCRDataStorage implements  DataStorage {
 					try {
 						List<String>list = new ArrayList<String>();
 						userProfileNode = userProfileHomeNode.getNode(string);
-						String[] moderatorForums = ValuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues());
+						String[] moderatorForums = Utils.valuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues());
 						for (String string2 : moderatorForums) {
 							if (string2.indexOf(forum.getId()) < 0) {
 								list.add(string2);
 							}
 						}
-						userProfileNode.setProperty("exo:moderateForums", getStringsInList(list));
+						userProfileNode.setProperty("exo:moderateForums", Utils.getStringsInList(list));
 						if (list.size() <= 0) {
 							if (userProfileNode.hasProperty("exo:userRole")) {
 								long role = userProfileNode.getProperty("exo:userRole").getLong();
@@ -1381,26 +1377,26 @@ public class JCRDataStorage implements  DataStorage {
 				forumNode = (Node) categoryHomeNode.getSession().getItem(forumPath);
 				Node cateNode = forumNode.getParent();
 				if (isDelete) {
-					String[] cateMods = ValuesToArray(cateNode.getProperty("exo:moderators").getValues());
+					String[] cateMods = Utils.valuesToArray(cateNode.getProperty("exo:moderators").getValues());
 					if(cateMods != null && cateMods.length > 0 && !cateMods[0].equals(" ")) {
 						List<String> moderators = ForumServiceUtils.getUserPermission(cateMods);
 						if(moderators.contains(userName)) continue;
 					}
 					if (forumNode.hasProperty("exo:moderators")) {
-						String[] oldUserNamesModerate = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
+						String[] oldUserNamesModerate = Utils.valuesToArray(forumNode.getProperty("exo:moderators").getValues());
 						List<String> list = new ArrayList<String>();
 						for (String string : oldUserNamesModerate) {
 							if (!string.equals(userName)) {
 								list.add(string);
 							}
 						}
-						forumNode.setProperty("exo:moderators", getStringsInList(list));
+						forumNode.setProperty("exo:moderators", Utils.getStringsInList(list));
 						forumNode.setProperty("exo:tempModerators", oldUserNamesModerate);
 					}
 				} else {
 					String[] oldUserNamesModerate = new String[] {};
 					if (forumNode.hasProperty("exo:moderators")) {
-						oldUserNamesModerate = ValuesToArray(forumNode.getProperty("exo:moderators").getValues());
+						oldUserNamesModerate = Utils.valuesToArray(forumNode.getProperty("exo:moderators").getValues());
 					}
 					List<String> list = new ArrayList<String>();
 					for (String string : oldUserNamesModerate) {
@@ -1409,10 +1405,10 @@ public class JCRDataStorage implements  DataStorage {
 						}
 					}
 					list.add(userName);
-					forumNode.setProperty("exo:moderators", getStringsInList(list));
+					forumNode.setProperty("exo:moderators", Utils.getStringsInList(list));
 					forumNode.setProperty("exo:tempModerators", oldUserNamesModerate);
 					if (cateNode.hasProperty("exo:userPrivate")) {
-						list = ValuesToList(cateNode.getProperty("exo:userPrivate").getValues());
+						list = Utils.valuesToList(cateNode.getProperty("exo:userPrivate").getValues());
 						if (!list.get(0).equals(" ") && !list.contains(userName)) {
 							String[] strings = new String[list.size() + 1];
 							int i = 0;
@@ -1560,7 +1556,7 @@ public class JCRDataStorage implements  DataStorage {
 			Node forumNode = catNode.getNode(forumId);
 			Map<String, Long> userPostMap = getDeletePostByUser(forumNode) ;
 			forum = getForum(forumNode);
-			forumNode.setProperty("exo:tempModerators", ValuesToArray(forumNode.getProperty("exo:moderators").getValues()));
+			forumNode.setProperty("exo:tempModerators", Utils.valuesToArray(forumNode.getProperty("exo:moderators").getValues()));
 			forumNode.setProperty("exo:moderators", new String[]{" "});
 			forumNode.save();
 			forumNode.remove();
@@ -1598,7 +1594,7 @@ public class JCRDataStorage implements  DataStorage {
 				if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
 					if (newCatNode.hasProperty("exo:userPrivate")) {
 						List<String> listPrivate = new ArrayList<String>();
-						listPrivate.addAll(ValuesToList(newCatNode.getProperty("exo:userPrivate").getValues()));
+						listPrivate.addAll(Utils.valuesToList(newCatNode.getProperty("exo:userPrivate").getValues()));
 						if (!listPrivate.get(0).equals(" ")) {
 							for (int i = 0; i < strModerators.length; i++) {
 								if (!listPrivate.contains(strModerators[i])) {
@@ -2151,7 +2147,7 @@ public class JCRDataStorage implements  DataStorage {
 			topicCount = forumNode.getProperty("exo:topicCount").getLong();
 			postCount = forumNode.getProperty("exo:postCount").getLong();
 			if(forumNode.hasProperty("exo:moderators")) {
-				userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+				userIdsp.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 			}
 			userIdsp.addAll(getAllAdministrator(sProvider));
 		} catch (PathNotFoundException e) {
@@ -2304,8 +2300,8 @@ public class JCRDataStorage implements  DataStorage {
 			boolean isGetLastTopic = false;
 			if(!isNew) {
 				if(topicNode.hasProperty("exo:canView") && strs != null && strs.length > 0){
-					List<String> list = ValuesToList(topicNode.getProperty("exo:canView").getValues());
-					if(Utils.isAddNewList(list, Arrays.asList(strs))){
+					List<String> list = Utils.valuesToList(topicNode.getProperty("exo:canView").getValues());
+					if(Utils.listsHaveDifferentContent(list, Arrays.asList(strs))){
 						isGetLastTopic = true;
 					}
 				} else {
@@ -2332,7 +2328,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(topic.getIsWaiting() || !topic.getIsApproved()) {
 				List<String>userIdsp = new ArrayList<String>();
 				if(forumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(userIdsp);
@@ -2459,7 +2455,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(!topic.getIsActive()|| !topic.getIsApproved() || topic.getIsWaiting()) {
 				List<String>userIdsp = new ArrayList<String>();
 				if(forumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(userIdsp);
@@ -2588,7 +2584,7 @@ public class JCRDataStorage implements  DataStorage {
 		Set<String> set = new HashSet<String>();
 		while(!node.getName().equals(KSDataLocation.Locations.FORUM_CATEGORIES_HOME)) {
 	    if(node.isNodeType("exo:forumWatching")){
-	    	set.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+	    	set.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
 	    }
 			node = node.getParent();
     }
@@ -2609,7 +2605,7 @@ public class JCRDataStorage implements  DataStorage {
 			list = new ArrayList<String>();
 			list2 = new ArrayList<String>();
       Node profileNode = iter.nextNode();
-      list.addAll(ValuesToList(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+      list.addAll(Utils.valuesToList(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
       list2.addAll(list);
       boolean isRead = false;
       for (String string : list) {
@@ -2620,7 +2616,7 @@ public class JCRDataStorage implements  DataStorage {
       			long lastAccessForumTime = 0;
 	      		if(profileNode.hasProperty("exo:lastReadPostOfTopic")){// check last read of src topic
 	      			List<String> listAccess = new ArrayList<String>();
-	      			listAccess.addAll(ValuesToList(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+	      			listAccess.addAll(Utils.valuesToList(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
 	      			for (String string2 : listAccess) {// for only run one.
 	              if(string2.indexOf(topicId) >= 0){
 	              	lastAccessTopicTime = Long.parseLong(string2.split(",")[2]) ;
@@ -3103,7 +3099,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(sendAlertJob) {
 				List<String>userIdsp = new ArrayList<String>();
 				if(forumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(userIdsp);
@@ -3172,13 +3168,13 @@ public class JCRDataStorage implements  DataStorage {
 							categoryNode = node.getParent() ;
 						}
 						if(categoryNode.hasProperty("exo:userPrivate"))
-							listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+							listUser.addAll(Utils.valuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
 		
 						if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
 							if(node.hasProperty("exo:emailWatching")){
-								List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+								List<String> emails = Utils.valuesToList(node.getProperty("exo:emailWatching").getValues());
 								int i = 0;
-								for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+								for (String user : Utils.valuesToList(node.getProperty("exo:userWatching").getValues())) {
 									if(ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
 										emailList.add(emails.get(i));
 									}
@@ -3187,11 +3183,11 @@ public class JCRDataStorage implements  DataStorage {
 							}
 						} else {
 							if(node.hasProperty("exo:emailWatching"))
-								emailList.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+								emailList.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
 						}
 					}
 					if (node.hasProperty("exo:notifyWhenAddTopic")) {
-						List<String> notyfys = ValuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues());
+						List<String> notyfys = Utils.valuesToList(node.getProperty("exo:notifyWhenAddTopic").getValues());
 						if(!notyfys.isEmpty()) {
 							emailList.addAll(notyfys);
 						}
@@ -3266,21 +3262,21 @@ public class JCRDataStorage implements  DataStorage {
 						isSend = true;
 						List<String> listCanViewInTopic = new ArrayList<String>(); 
 						if(node.hasProperty("exo:canView"))
-							listCanViewInTopic.addAll(ValuesToList(node.getProperty("exo:canView").getValues()));
+							listCanViewInTopic.addAll(Utils.valuesToList(node.getProperty("exo:canView").getValues()));
 						if(post.getUserPrivate() != null && post.getUserPrivate().length > 1){
 							listUser.addAll(Arrays.asList(post.getUserPrivate()));
 						}
 						if((listUser.isEmpty() || listUser.size() == 1)){
 							if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")) {
-								listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:poster").getValues()));
-								listCanViewInTopic.addAll(ValuesToList(forumNode.getProperty("exo:viewer").getValues()));
+								listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty("exo:poster").getValues()));
+								listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty("exo:viewer").getValues()));
 							}
 							// set Category Private
 							if(categoryNode.hasProperty("exo:userPrivate"))
-								listUser.addAll(ValuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
+								listUser.addAll(Utils.valuesToList(categoryNode.getProperty("exo:userPrivate").getValues()));
 							if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
 								if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
-									listUser = combineListToList(listUser, listCanViewInTopic);
+									listUser = Utils.extractSameItems(listUser, listCanViewInTopic);
 									if(listUser.isEmpty() || listUser.get(0).equals(" ")) isSend = false;
 								}
 							} else listUser = listCanViewInTopic;
@@ -3288,16 +3284,16 @@ public class JCRDataStorage implements  DataStorage {
 					}
 					if (node.isNodeType("exo:forumWatching") && node.hasProperty("exo:emailWatching") && isSend) {
 						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-							List<String> emails = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+							List<String> emails = Utils.valuesToList(node.getProperty("exo:emailWatching").getValues());
 							int i = 0;
-							for (String user : ValuesToList(node.getProperty("exo:userWatching").getValues())) {
+							for (String user : Utils.valuesToList(node.getProperty("exo:userWatching").getValues())) {
 								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
 									emailList.add(emails.get(i));
 								} 
 								i++;
 							}
 						} else {
-							emailList = ValuesToList(node.getProperty("exo:emailWatching").getValues());
+							emailList = Utils.valuesToList(node.getProperty("exo:emailWatching").getValues());
 						}
 					}
 					List<String>emailListForum = new ArrayList<String>();
@@ -3320,14 +3316,14 @@ public class JCRDataStorage implements  DataStorage {
 							}
 							owner = forumNode.getProperty("exo:owner").getString();
 							if (forumNode.hasProperty("exo:notifyWhenAddPost") && (users[0].equals(owner) || users[1].equals(owner))) { 
-								emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+								emailListForum.addAll(Utils.valuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 							}
 						} else {
 							if (ownerTopicEmail.trim().length() > 0) { 
 								emailList.add(ownerTopicEmail);
 							}
 							if (forumNode.hasProperty("exo:notifyWhenAddPost")) {
-								emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
+								emailListForum.addAll(Utils.valuesToList(forumNode.getProperty("exo:notifyWhenAddPost").getValues()));
 							}
 						}
 					}
@@ -3336,32 +3332,32 @@ public class JCRDataStorage implements  DataStorage {
 					 */
 					if (forumNode.isNodeType("exo:forumWatching") && forumNode.hasProperty("exo:emailWatching") && isSend) {
 						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-							List<String> emails = ValuesToList(forumNode.getProperty("exo:emailWatching").getValues());
+							List<String> emails = Utils.valuesToList(forumNode.getProperty("exo:emailWatching").getValues());
 							int i = 0;
-							for (String user : ValuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
+							for (String user : Utils.valuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
 								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
 									emailListForum.add(emails.get(i));
 								} 
 								i++;
 							}
 						} else {
-							emailListForum.addAll(ValuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
+							emailListForum.addAll(Utils.valuesToList(forumNode.getProperty("exo:emailWatching").getValues()));
 						}
 					}
 					
 					List<String>emailListCategory = new ArrayList<String>();
 					if (categoryNode.isNodeType("exo:forumWatching") && categoryNode.hasProperty("exo:emailWatching") && isSend) {
 						if (!listUser.isEmpty() && !listUser.get(0).equals("exoUserPri") && !listUser.get(0).equals(" ")) {
-							List<String> emails = ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
+							List<String> emails = Utils.valuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
 							int i = 0;
-							for (String user : ValuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
+							for (String user : Utils.valuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
 								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
 									emailListCategory.add(emails.get(i));
 								} 
 								i++;
 							}
 						} else {
-							emailListCategory.addAll(ValuesToList(categoryNode.getProperty("exo:emailWatching").getValues()));
+							emailListCategory.addAll(Utils.valuesToList(categoryNode.getProperty("exo:emailWatching").getValues()));
 						}
 					}
 					
@@ -3522,7 +3518,7 @@ public class JCRDataStorage implements  DataStorage {
 				List<String>userIdsp = new ArrayList<String>();
 				try {
 					if(forumNode.hasProperty("exo:moderators")) {
-						userIdsp.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+						userIdsp.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 					}
 					userIdsp.addAll(getAllAdministrator(sProvider));
 				} catch (Exception e) {
@@ -3654,7 +3650,7 @@ public class JCRDataStorage implements  DataStorage {
 			}else if(post.getUserPrivate() == null || post.getUserPrivate().length == 1){
 				List<String> list = new ArrayList<String>();
 				if (forumNode.hasProperty("exo:moderators")){
-					list.addAll(ValuesToList(forumNode.getProperty("exo:moderators").getValues()));
+					list.addAll(Utils.valuesToList(forumNode.getProperty("exo:moderators").getValues()));
 				}
 				list.addAll(getAllAdministrator(sProvider));
 				getTotalJobWatting(list);
@@ -3803,19 +3799,19 @@ public class JCRDataStorage implements  DataStorage {
 			List<String>userIdsp = new ArrayList<String>();
 			if(destModeratePost && srcModeratePost) {
 				if(srcForumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
 				}
 				if(unAproved && destForumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(destForumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty("exo:moderators").getValues()));
 				}
 			}else if(srcModeratePost && !destModeratePost){
 				if(srcForumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(srcForumNode.getProperty("exo:moderators").getValues()));
 				}
 				userIdsp.addAll(getAllAdministrator(sProvider));
 			}else if(!srcModeratePost && destModeratePost){
 				if(unAproved && destForumNode.hasProperty("exo:moderators")) {
-					userIdsp.addAll(ValuesToList(destForumNode.getProperty("exo:moderators").getValues()));
+					userIdsp.addAll(Utils.valuesToList(destForumNode.getProperty("exo:moderators").getValues()));
 				}
 			}
 			if(!userIdsp.isEmpty()) {
@@ -3884,12 +3880,12 @@ public class JCRDataStorage implements  DataStorage {
 				pollNew.setQuestion(pollNode.getProperty("exo:question").getString());
 
 			if (pollNode.hasProperty("exo:option"))
-				pollNew.setOption(ValuesToArray(pollNode.getProperty("exo:option").getValues()));
+				pollNew.setOption(Utils.valuesToArray(pollNode.getProperty("exo:option").getValues()));
 			if (pollNode.hasProperty("exo:vote"))
-				pollNew.setVote(ValuesToArray(pollNode.getProperty("exo:vote").getValues()));
+				pollNew.setVote(Utils.valuesToArray(pollNode.getProperty("exo:vote").getValues()));
 
 			if (pollNode.hasProperty("exo:userVote"))
-				pollNew.setUserVote(ValuesToArray(pollNode.getProperty("exo:userVote").getValues()));
+				pollNew.setUserVote(Utils.valuesToArray(pollNode.getProperty("exo:userVote").getValues()));
 			if (pollNode.hasProperty("exo:isMultiCheck"))
 				pollNew.setIsMultiCheck(pollNode.getProperty("exo:isMultiCheck").getBoolean());
 			if (pollNode.hasProperty("exo:isAgainVote"))
@@ -4004,7 +4000,7 @@ public class JCRDataStorage implements  DataStorage {
 			List<String> listId = new ArrayList<String>();
 			List<String> list = new ArrayList<String>();
 			if (topicNode.hasProperty("exo:tagId")) {
-				listId = ValuesToList(topicNode.getProperty("exo:tagId").getValues());
+				listId = Utils.valuesToList(topicNode.getProperty("exo:tagId").getValues());
 			}
 			list.addAll(listId);
 			String userIdAndTagId;
@@ -4021,7 +4017,7 @@ public class JCRDataStorage implements  DataStorage {
 					saveTag(tag);
 				}
       }
-			topicNode.setProperty("exo:tagId", getStringsInList(list));
+			topicNode.setProperty("exo:tagId", Utils.getStringsInList(list));
 			if(topicNode.isNew()) {
 				topicNode.getSession().save();
 			} else {
@@ -4039,7 +4035,7 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			Node topicNode = (Node) categoryHome.getSession().getItem(topicPath);
-			List<String> oldTagsId = ValuesToList(topicNode.getProperty("exo:tagId").getValues());
+			List<String> oldTagsId = Utils.valuesToList(topicNode.getProperty("exo:tagId").getValues());
 			// remove in topic.
 			String userIdTagId = userName + ":" + tagId;
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -4117,7 +4113,7 @@ public class JCRDataStorage implements  DataStorage {
 				if(node.hasProperty("exo:tagId")){
 					boolean b = true;t = 0;
 					List<String> list = new ArrayList<String>(); 
-					for (String string : ValuesToList(node.getProperty("exo:tagId").getValues())) {
+					for (String string : Utils.valuesToList(node.getProperty("exo:tagId").getValues())) {
 						String[]temp = string.split(":");
 				    if(temp.length == 2) {
 				    	if(temp[0].equals(userId)) {
@@ -4195,7 +4191,7 @@ public class JCRDataStorage implements  DataStorage {
 				Node node = (Node)iter.nextNode();
 				if(node.hasProperty("exo:tagId")){
 					t = 0;
-					for (String string : ValuesToList(node.getProperty("exo:tagId").getValues())) {
+					for (String string : Utils.valuesToList(node.getProperty("exo:tagId").getValues())) {
 						String[]temp = string.split(":");
 				    if(temp.length == 2 && temp[0].equals(userId)) {
 				    	if(t == 0)builder.append("@exo:id != '").append(temp[1]).append("'");
@@ -4255,7 +4251,7 @@ public class JCRDataStorage implements  DataStorage {
 	private Tag getTagNode(Node tagNode) throws Exception {
 		Tag newTag = new Tag();
 			newTag.setId(tagNode.getName());
-			newTag.setUserTag(ValuesToArray(tagNode.getProperty("exo:userTag").getValues()));
+			newTag.setUserTag(Utils.valuesToArray(tagNode.getProperty("exo:userTag").getValues()));
 			newTag.setName(tagNode.getProperty("exo:name").getString());
 			newTag.setUseCount(tagNode.getProperty("exo:useCount").getLong());
 		return newTag;
@@ -4328,7 +4324,7 @@ public class JCRDataStorage implements  DataStorage {
 	    	newTagNode.setProperty("exo:name", newTag.getName());
 	    	newTagNode.setProperty("exo:useCount", 1);
       } else {
-      	List<String> userTags = ValuesToList(newTagNode.getProperty("exo:userTag").getValues());
+      	List<String> userTags = Utils.valuesToList(newTagNode.getProperty("exo:userTag").getValues());
       	if(!userTags.contains(newTag.getUserTag()[0])) {
       		userTags.add(newTag.getUserTag()[0]);
       		newTagNode.setProperty("exo:userTag", userTags.toArray(new String[userTags.size()]));
@@ -4390,9 +4386,9 @@ public class JCRDataStorage implements  DataStorage {
 			if(isAdminRole(userName)) {
 				userProfile.setUserRole((long)0);
 			} else userProfile.setUserRole(profileNode.getProperty("exo:userRole").getLong());
-			userProfile.setModerateForums(ValuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
+			userProfile.setModerateForums(Utils.valuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
 			try{
-				userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+				userProfile.setModerateCategory(Utils.valuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
 			}catch(Exception e){
 				userProfile.setModerateCategory(new String[]{});
 			}
@@ -4408,20 +4404,20 @@ public class JCRDataStorage implements  DataStorage {
 			userProfile.setIsAutoWatchMyTopics(profileNode.getProperty("exo:isAutoWatchMyTopics").getBoolean());
 			userProfile.setIsAutoWatchTopicIPost(profileNode.getProperty("exo:isAutoWatchTopicIPost").getBoolean());
 			try{
-				userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+				userProfile.setLastReadPostOfForum(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
 			}catch(Exception e) {
 				userProfile.setLastReadPostOfForum(new String[]{});
 			}
 			
 			try{
-				userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+				userProfile.setLastReadPostOfTopic(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
 			}catch(Exception e) {
 				userProfile.setLastReadPostOfTopic(new String[]{});
 			}			
 
 			userProfile.setIsBanned(profileNode.getProperty("exo:isBanned").getBoolean()) ;
 			if(profileNode.hasProperty("exo:collapCategories"))
-				userProfile.setCollapCategories(ValuesToArray(profileNode.getProperty("exo:collapCategories").getValues()));
+				userProfile.setCollapCategories(Utils.valuesToArray(profileNode.getProperty("exo:collapCategories").getValues()));
 			
 			userProfile.setEmail(profileNode.getProperty("exo:email").getString());
 			Value[] values = profileNode.getProperty("exo:readTopic").getValues() ;
@@ -4559,26 +4555,26 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			if(isOfForum.equals("true")) {
 				try{
-					userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+					userProfile.setLastReadPostOfForum(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
 				}catch(Exception e) {
 					userProfile.setLastReadPostOfForum(new String[]{});
 				}
 				
 			} else if(isOfForum.equals("false")){
 				try{
-					userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+					userProfile.setLastReadPostOfTopic(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
 				}catch(Exception e) {
 					userProfile.setLastReadPostOfTopic(new String[]{});
 				}
 				
 			} else {
 				try{
-					userProfile.setLastReadPostOfForum(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
+					userProfile.setLastReadPostOfForum(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfForum").getValues()));
 				}catch(Exception e) {
 					userProfile.setLastReadPostOfForum(new String[]{});
 				}
 				try{
-					userProfile.setLastReadPostOfTopic(ValuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
+					userProfile.setLastReadPostOfTopic(Utils.valuesToArray(profileNode.getProperty("exo:lastReadPostOfTopic").getValues()));
 				}catch(Exception e) {
 					userProfile.setLastReadPostOfTopic(new String[]{});
 				}
@@ -4608,9 +4604,9 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			Node profileNode = userProfileNode.getNode(userName);
 			if(isModeCate)
-				try{list.addAll(ValuesToList(profileNode.getProperty("exo:moderateCategory").getValues()));}catch(Exception e){}
+				try{list.addAll(Utils.valuesToList(profileNode.getProperty("exo:moderateCategory").getValues()));}catch(Exception e){}
 			else
-				list.addAll(ValuesToList(profileNode.getProperty("exo:moderateForums").getValues()));
+				list.addAll(Utils.valuesToList(profileNode.getProperty("exo:moderateForums").getValues()));
     } catch (Exception e) {
     }finally{ sProvider.close() ;}
 	  return list;
@@ -4622,9 +4618,9 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			Node profileNode = userProfileNode.getNode(userName);
 			if(isModeCate)
-				profileNode.setProperty("exo:moderateCategory", getStringsInList(ids));
+				profileNode.setProperty("exo:moderateCategory", Utils.getStringsInList(ids));
 			else
-				profileNode.setProperty("exo:moderateForums", getStringsInList(ids));
+				profileNode.setProperty("exo:moderateForums", Utils.getStringsInList(ids));
 			profileNode.save();
 		} catch (Exception e) {
 		}finally{ sProvider.close() ;}
@@ -4878,9 +4874,9 @@ public class JCRDataStorage implements  DataStorage {
 		userProfile.setSignature(userProfileNode.getProperty("exo:signature").getString());
 		userProfile.setTotalPost(userProfileNode.getProperty("exo:totalPost").getLong());
 		userProfile.setTotalTopic(userProfileNode.getProperty("exo:totalTopic").getLong());
-		userProfile.setModerateForums(ValuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues()));
+		userProfile.setModerateForums(Utils.valuesToArray(userProfileNode.getProperty("exo:moderateForums").getValues()));
 		try{
-			userProfile.setModerateCategory(ValuesToArray(userProfileNode.getProperty("exo:moderateCategory").getValues()));
+			userProfile.setModerateCategory(Utils.valuesToArray(userProfileNode.getProperty("exo:moderateCategory").getValues()));
 		}catch(Exception e) {
 			userProfile.setModerateCategory(new String[]{});
 		}
@@ -4912,7 +4908,7 @@ public class JCRDataStorage implements  DataStorage {
 		}
 		if(userProfileNode.hasProperty("exo:banReason"))userProfile.setBanReason(userProfileNode.getProperty("exo:banReason").getString());
 		if(userProfileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(userProfileNode.getProperty("exo:banCounter").getString()));
-		if(userProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToArray(userProfileNode.getProperty("exo:banReasonSummary").getValues()));
+		if(userProfileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(Utils.valuesToArray(userProfileNode.getProperty("exo:banReasonSummary").getValues()));
 		if(userProfileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(userProfileNode.getProperty("exo:createdDateBan").getDate().getTime());
 		return userProfile;
 	}
@@ -4924,7 +4920,7 @@ public class JCRDataStorage implements  DataStorage {
 		try {			
 			newProfileNode = userProfileNode.getNode(userName);
 			if (newProfileNode.hasProperty("exo:bookmark")) {
-				List<String> listOld = ValuesToList(newProfileNode.getProperty("exo:bookmark").getValues());
+				List<String> listOld = Utils.valuesToList(newProfileNode.getProperty("exo:bookmark").getValues());
 				List<String> listNew = new ArrayList<String>();
 				String pathNew = bookMark.substring(bookMark.lastIndexOf("//") + 1);
 				String pathOld = "";
@@ -4982,7 +4978,7 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			newProfileNode = userProfileHome.getNode(userName);
 			if (newProfileNode.hasProperty("exo:collapCategories")) {
-				List<String> listCategoryId = ValuesToList(newProfileNode.getProperty("exo:collapCategories").getValues());
+				List<String> listCategoryId = Utils.valuesToList(newProfileNode.getProperty("exo:collapCategories").getValues());
 				if(listCategoryId.contains(categoryId)) {
 					if(!isAdd) {
 						listCategoryId.remove(categoryId);
@@ -5203,11 +5199,11 @@ public class JCRDataStorage implements  DataStorage {
 		try {
 			Node subscriptionNode = getUserProfileHome(sProvider).getNode(userId+"/"+Utils.FORUM_SUBSCRIOTION+userId);
 			if(subscriptionNode.hasProperty("exo:categoryIds"))
-				forumSubscription.setCategoryIds(ValuesToArray(subscriptionNode.getProperty("exo:categoryIds").getValues()));
+				forumSubscription.setCategoryIds(Utils.valuesToArray(subscriptionNode.getProperty("exo:categoryIds").getValues()));
 			if(subscriptionNode.hasProperty("exo:forumIds"))
-      	forumSubscription.setForumIds(ValuesToArray(subscriptionNode.getProperty("exo:forumIds").getValues()));
+      	forumSubscription.setForumIds(Utils.valuesToArray(subscriptionNode.getProperty("exo:forumIds").getValues()));
 			if(subscriptionNode.hasProperty("exo:topicIds"))
-      	forumSubscription.setTopicIds(ValuesToArray(subscriptionNode.getProperty("exo:topicIds").getValues()));
+      	forumSubscription.setTopicIds(Utils.valuesToArray(subscriptionNode.getProperty("exo:topicIds").getValues()));
     } catch (Exception e) {
     }finally {sProvider.close();}
 		return forumSubscription;
@@ -5240,7 +5236,7 @@ public class JCRDataStorage implements  DataStorage {
 	private String[] getValueProperty(Node node, String property, String objectId) throws Exception {
 		List<String> list = new ArrayList<String>();
 		if(node.hasProperty(property)){
-			list.addAll(ValuesToList(node.getProperty(property).getValues()));
+			list.addAll(Utils.valuesToList(node.getProperty(property).getValues()));
 			if(!list.contains(objectId))list.add(objectId);
 		} else {
 			list.add(objectId);
@@ -5286,46 +5282,6 @@ public class JCRDataStorage implements  DataStorage {
 		}catch (Exception e) {
 			log.error("Failed to save forum statistics", e);
 		}finally { sProvider.close() ;}				
-	}
-
-	String[] ValuesToArray(Value[] Val) throws Exception {
-		if (Val.length < 1)
-			return new String[] {};
-		if (Val.length == 1)
-			return new String[] { Val[0].getString() };
-		String[] Str = new String[Val.length];
-		for (int i = 0; i < Val.length; ++i) {
-			Str[i] = Val[i].getString();
-		}
-		return Str;
-	}
-
-	List<String> ValuesToList(Value[] values) throws Exception {
-		List<String> list = new ArrayList<String>();
-		if (values.length < 1)
-			return list;
-		if (values.length == 1) {
-			list.add(values[0].getString());
-			return list;
-		}
-		for (int i = 0; i < values.length; ++i) {
-			list.add(values[i].getString());
-		}
-		return list;
-	}
-	
-
-	private static String[] getStringsInList(List<String> list) throws Exception {
-		if(list.size() > 1)while(list.contains(" "))list.remove(" ");
-		return list.toArray(new String[list.size()]);
-	}
-
-	private static List<String> combineListToList(List<String>pList, List<String> cList) throws Exception {
-		List<String>list = new ArrayList<String>();
-		for (String string : pList) {
-			if(cList.contains(string)) list.add(string);
-		}
-		return list;
 	}
 
 	public Calendar getGreenwichMeanTime() {
@@ -5532,7 +5488,7 @@ public class JCRDataStorage implements  DataStorage {
 							}
 							queryString.append(")");
 							listOfUser.add(" ");
-							String s = Utils.getQueryInList(listOfUser, "@exo:canView");
+							String s = Utils.propertyMatchAny("@exo:canView", listOfUser);
 							if(s != null && s.length() > 0) {
 								if (isAnd) queryString.append(" and ");
 								queryString.append(s);
@@ -5655,15 +5611,15 @@ public class JCRDataStorage implements  DataStorage {
 				}
 				if(isAdd){
 					// check post private
-				   List<String> list = ValuesToList(nodeObj.getProperty("exo:userPrivate").getValues());
+				   List<String> list = Utils.valuesToList(nodeObj.getProperty("exo:userPrivate").getValues());
 					if(!list.get(0).equals("exoUserPri") && !Utils.isListContentItemList(listOfUser, list)) isAdd = false;
 					// not is admin
 					if(isAdd && !isAdmin){
 						// not is moderator
-						list = ValuesToList(nodeObj.getParent().getParent().getProperty("exo:moderators").getValues());
+						list = Utils.valuesToList(nodeObj.getParent().getParent().getProperty("exo:moderators").getValues());
 						if(!Utils.isListContentItemList(listOfUser, list)){
 							// can view by topic
-							list = ValuesToList(nodeObj.getParent().getProperty("exo:canView").getValues());
+							list = Utils.valuesToList(nodeObj.getParent().getProperty("exo:canView").getValues());
 							if(!list.get(0).equals(" ")){
 								if(!Utils.isListContentItemList(listOfUser, list)) isAdd = false;
 							}
@@ -5800,17 +5756,17 @@ public class JCRDataStorage implements  DataStorage {
 				if (watchType == 1) {// send email when had changed on category
 					List<String> listEmail = new ArrayList<String>();
 					if(watchingNode.hasProperty("exo:emailWatching"))
-						listEmail.addAll(ValuesToList(watchingNode.getProperty("exo:emailWatching").getValues()));
+						listEmail.addAll(Utils.valuesToList(watchingNode.getProperty("exo:emailWatching").getValues()));
 					if(watchingNode.hasProperty("exo:userWatching"))
-						listUsers.addAll(ValuesToList(watchingNode.getProperty("exo:userWatching").getValues()));
+						listUsers.addAll(Utils.valuesToList(watchingNode.getProperty("exo:userWatching").getValues()));
 					for (String str : values) {
 						if (listEmail.contains(str))
 							continue;
 						listEmail.add(0, str);
 						listUsers.add(0, currentUser);
 					}
-					watchingNode.setProperty("exo:emailWatching", getStringsInList(listEmail));
-					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
+					watchingNode.setProperty("exo:emailWatching", Utils.getStringsInList(listEmail));
+					watchingNode.setProperty("exo:userWatching", Utils.getStringsInList(listUsers));
 				} else if(watchType == -1){
 						watchingNode.setProperty("exo:rssWatching", getValueProperty(watchingNode, "exo:rssWatching", currentUser));
 				}
@@ -5820,11 +5776,11 @@ public class JCRDataStorage implements  DataStorage {
 					for (int i = 0; i < values.size(); i++) {
 						listUsers.add(currentUser);
 					}
-					watchingNode.setProperty("exo:emailWatching", getStringsInList(values));
-					watchingNode.setProperty("exo:userWatching", getStringsInList(listUsers));
+					watchingNode.setProperty("exo:emailWatching", Utils.getStringsInList(values));
+					watchingNode.setProperty("exo:userWatching", Utils.getStringsInList(listUsers));
 				} else if(watchType == -1){	// add RSS watching
 					listUsers.add(currentUser);
-					watchingNode.setProperty("exo:rssWatching", getStringsInList(listUsers));
+					watchingNode.setProperty("exo:rssWatching", Utils.getStringsInList(listUsers));
 				}
 			}
 			if(watchingNode.isNew()) {
@@ -5859,11 +5815,11 @@ public class JCRDataStorage implements  DataStorage {
 					String[] listRss = new String[]{};
 					
 					if(watchingNode.hasProperty("exo:emailWatching"))
-						emails = ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues());
+						emails = Utils.valuesToArray(watchingNode.getProperty("exo:emailWatching").getValues());
 					if(watchingNode.hasProperty("exo:userWatching"))
-						listOldUsers = ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues());
+						listOldUsers = Utils.valuesToArray(watchingNode.getProperty("exo:userWatching").getValues());
 					if(watchingNode.hasProperty("exo:rssWatching"))
-						listRss = ValuesToArray(watchingNode.getProperty("exo:rssWatching").getValues());
+						listRss = Utils.valuesToArray(watchingNode.getProperty("exo:rssWatching").getValues());
 					
 					int n = (listRss.length > listOldUsers.length)?listRss.length:listOldUsers.length;
 					
@@ -5874,9 +5830,9 @@ public class JCRDataStorage implements  DataStorage {
 						}
 						if(listRss.length > i && !values.contains(listRss[i] + "/")) userRSS.add(listRss[i]);
 					}
-					watchingNode.setProperty("exo:emailWatching", getStringsInList(newValues));
-					watchingNode.setProperty("exo:userWatching", getStringsInList(listNewUsers));
-					watchingNode.setProperty("exo:rssWatching", getStringsInList(userRSS));
+					watchingNode.setProperty("exo:emailWatching", Utils.getStringsInList(newValues));
+					watchingNode.setProperty("exo:userWatching", Utils.getStringsInList(listNewUsers));
+					watchingNode.setProperty("exo:rssWatching", Utils.getStringsInList(userRSS));
 					if(watchingNode.isNew()) {
 						watchingNode.getSession().save();
 					} else {
@@ -5912,9 +5868,9 @@ public class JCRDataStorage implements  DataStorage {
 				listEmail = new ArrayList<String>();
 				listUsers = new ArrayList<String>();
 				if(watchingNode.hasProperty("exo:emailWatching"))
-					listEmail.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
+					listEmail.addAll(Arrays.asList(Utils.valuesToArray(watchingNode.getProperty("exo:emailWatching").getValues())));
 				if(watchingNode.hasProperty("exo:userWatching"))
-					listUsers.addAll(Arrays.asList(ValuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
+					listUsers.addAll(Arrays.asList(Utils.valuesToArray(watchingNode.getProperty("exo:userWatching").getValues())));
 				if(listUsers.contains(userId)){
 					for(int i = 0; i < listUsers.size(); i ++){
 						if(listUsers.get(i).equals(userId)){
@@ -5963,9 +5919,9 @@ public class JCRDataStorage implements  DataStorage {
 				rootPath = categoryHome.getPath();
 				pathName = "";
 				node = iterator.nextNode();
-				if(node.hasProperty("exo:userWatching"))users.addAll(ValuesToList(node.getProperty("exo:userWatching").getValues()));
-				if(node.hasProperty("exo:emailWatching"))emails = ValuesToArray(node.getProperty("exo:emailWatching").getValues());			
-				if(node.hasProperty("exo:rssWatching"))RSSUsers.addAll(ValuesToList(node.getProperty("exo:rssWatching").getValues()));			
+				if(node.hasProperty("exo:userWatching"))users.addAll(Utils.valuesToList(node.getProperty("exo:userWatching").getValues()));
+				if(node.hasProperty("exo:emailWatching"))emails = Utils.valuesToArray(node.getProperty("exo:emailWatching").getValues());			
+				if(node.hasProperty("exo:rssWatching"))RSSUsers.addAll(Utils.valuesToList(node.getProperty("exo:rssWatching").getValues()));			
 				path = node.getPath();
 				if(node.isNodeType(Utils.TYPE_CATEGORY)) typeNode = Utils.TYPE_CATEGORY;
 				else if(node.isNodeType(Utils.TYPE_FORUM)) typeNode = Utils.TYPE_FORUM;
@@ -6010,6 +5966,7 @@ public class JCRDataStorage implements  DataStorage {
 			infoMap.put(name, new SendMessageInfo(addresses, message));
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
+		  log.error("Failed to send notification ", e);
 		}
 	}
 	
@@ -6235,7 +6192,7 @@ public class JCRDataStorage implements  DataStorage {
 				stringBuffer.append("/jcr:root").append(string).append("//element(*,exo:topic)");
 				StringBuffer buffer = new StringBuffer();
 				if (t > 0) {
-					String[] paths = ValuesToArray(newProfileNode.getProperty("exo:moderateForums").getValues());
+					String[] paths = Utils.valuesToArray(newProfileNode.getProperty("exo:moderateForums").getValues());
 					int l = paths.length;
 					if (l > 0) {
 						buffer.append(" and (");
@@ -6500,6 +6457,7 @@ public class JCRDataStorage implements  DataStorage {
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		try {
     is = new ByteArrayInputStream(bdata) ;
 		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
 			// All nodes when import need reset childnode
@@ -6508,17 +6466,20 @@ public class JCRDataStorage implements  DataStorage {
         Node categoryHome = getCategoryHome(sessionProvider);
         nodeName = "CategoryHome";
         addDataFromXML(categoryHome,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:userProfileHome")){
+			}
+			else if(typeNodeExport.equals("exo:userProfileHome")){
         Node userProfile = getUserProfileHome(sessionProvider);
         nodeName = "UserProfileHome";
         nodePath = getUserProfileHome(sessionProvider).getPath();
         addDataFromXML(userProfile,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:tagHome")){
+			}
+			else if(typeNodeExport.equals("exo:tagHome")){
         Node tagHome = getTagHome(sessionProvider);
         nodePath = getTagHome(sessionProvider).getPath();
         nodeName = "TagHome";
         addDataFromXML(tagHome,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
+			} 
+			else if(typeNodeExport.equals("exo:forumBBCodeHome")){
 				nodePath = dataLocator.getBBCodesLocation();
 				Node bbcodeNode = getBBCodesHome(sessionProvider);
         nodeName = "forumBBCode";
@@ -6534,7 +6495,8 @@ public class JCRDataStorage implements  DataStorage {
 	      Session session = getForumHomeNode(sessionProvider).getSession();
 	      session.importXML(nodePath, is, typeImport);
 	      session.save(); 
-			}else if(typeNodeExport.equals("exo:banIPHome")){
+			} 
+			else if(typeNodeExport.equals("exo:banIPHome")){
 				nodePath = getForumSystemHome(sessionProvider).getPath();
 				Node node = getBanIPHome(sessionProvider);
 				node.remove();
@@ -6544,7 +6506,7 @@ public class JCRDataStorage implements  DataStorage {
 	      session.importXML(nodePath, is, typeImport);
 	      session.save(); 
 			}
-		}else{
+		} else{
 			isReset = false;
 			if(typeNodeExport.equals("exo:forumCategory"))
 				// Check if import forum but the data import have structure of a category --> Error
@@ -6556,58 +6518,9 @@ public class JCRDataStorage implements  DataStorage {
 	    session.importXML(nodePath, is, typeImport);
 	    session.save();   
 		}
-
-//		
-//		// Reset data in node
-//		if(isReset){
-//			Node node = null;
-//			QueryManager qm = session.getWorkspace().getQueryManager();
-//			StringBuffer queryString = new StringBuffer("/jcr:root").append(nodePath).append("/element(*,").append(nodeType).append(")") ;
-//			
-//			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-//			QueryResult result = query.execute();
-//			NodeIterator iterator = result.getNodes();
-//			
-//			// Delete node if already exist
-//			if(iterator.getSize() > 0){
-//				queryString = new StringBuffer("/jcr:root").append(nodePath).append("/").append(nodeName).
-//																								append("/element(*,").append(nodeType).append(")[") ;
-//				int i = 0;
-//				while(iterator.hasNext()){
-//					if(i > 0) queryString.append(" or ");
-//					queryString.append("(fn:name() = '").append(iterator.nextNode().getName()).append("')");
-//					i ++;
-//				}
-//				queryString.append("]");
-//				
-//				query = qm.createQuery(queryString.toString(), Query.XPATH);
-//				result = query.execute();
-//				iterator = result.getNodes();
-//				while(iterator.hasNext()){
-//					node = iterator.nextNode();
-//					node.remove();
-//				}
-//				session.save();
-//			}
-//			
-//			// Move node
-//			node = (Node)session.getItem(nodePath + "/" + nodeName);
-//			iterator = node.getNodes();
-//			while(iterator.hasNext()){
-//				Node childNode = iterator.nextNode();
-//				try{
-//					session.move(childNode.getPath(), nodePath + "/" + childNode.getName());
-//				}catch(Exception e){
-//					log.error(e);
-//				}
-//			}
-//			node.remove();
-//			if(session == null)session = getForumHomeNode(sessionProvider).getSession();
-//			session.save();
-//		}
-//		
-//		session.logout();
-		sessionProvider.close() ;
+		} finally {
+		  sessionProvider.close() ;
+		}
 	}
 	
    private void addDataFromXML(Node sourceNode,String nodePath ,SessionProvider sessionProvider ,
@@ -6717,7 +6630,7 @@ public class JCRDataStorage implements  DataStorage {
 			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
 			List<String> values = new ArrayList<String>() ;
 			if(profile.hasProperty("exo:readTopic")) {
-				values = ValuesToList(profile.getProperty("exo:readTopic").getValues()) ;
+				values = Utils.valuesToList(profile.getProperty("exo:readTopic").getValues()) ;
 			}
 			int i = 0 ;
 			boolean isUpdated = false ;
@@ -6747,7 +6660,7 @@ public class JCRDataStorage implements  DataStorage {
 			Node profile = getUserProfileHome(sysSession).getNode(userId) ;
 			List<String> values = new ArrayList<String>() ;
 			if(profile.hasProperty("exo:readForum")) {
-				values = ValuesToList(profile.getProperty("exo:readForum").getValues()) ;
+				values = Utils.valuesToList(profile.getProperty("exo:readForum").getValues()) ;
 			}
 			int i = 0 ;
 			boolean isUpdated = false ;
@@ -6776,7 +6689,7 @@ public class JCRDataStorage implements  DataStorage {
 		Node profile = getUserProfileHome(sProvider).getNode(userName) ;
 		sProvider.close() ;
 		if(profile.hasProperty("exo:bookmark")) {
-			return ValuesToList(profile.getProperty("exo:bookmark").getValues()) ;
+			return Utils.valuesToList(profile.getProperty("exo:bookmark").getValues()) ;
 		}
 		return new ArrayList<String>() ;
 	}
@@ -6785,7 +6698,7 @@ public class JCRDataStorage implements  DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node banNode = getForumBanNode(sProvider) ;
-			if(banNode.hasProperty("exo:ips")) return ValuesToList(banNode.getProperty("exo:ips").getValues()) ;
+			if(banNode.hasProperty("exo:ips")) return Utils.valuesToList(banNode.getProperty("exo:ips").getValues()) ;
 		}catch(Exception e) {
 			log.error(e);
 		}finally{ sProvider.close() ; }
@@ -6819,7 +6732,7 @@ public class JCRDataStorage implements  DataStorage {
 			SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 			try{
 				Node banNode = getForumBanNode(sProvider) ;
-				banNode.setProperty("exo:ips", getStringsInList(ips)) ;
+				banNode.setProperty("exo:ips", Utils.getStringsInList(ips)) ;
 				banNode.save() ;			
 			}catch(Exception e) {
 				log.error(e);
@@ -6834,7 +6747,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(forumId.indexOf(".") > 0) forumId = StringUtils.replace(forumId, ".", "/");
 			Node forumNode = getCategoryHome(sProvider).getNode(forumId);
 			if (forumNode.hasProperty("exo:banIPs"))
-				list.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+				list.addAll(Utils.valuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 		}catch(Exception e) {
 			log.error(e);
 		}finally {
@@ -6849,10 +6762,10 @@ public class JCRDataStorage implements  DataStorage {
 		try{
 			Node forumNode = getCategoryHome(sProvider).getNode(forumId);
 			if (forumNode.hasProperty("exo:banIPs"))
-				ips.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+				ips.addAll(Utils.valuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 			if (ips.contains(ip)) return false ;
 			ips.add(ip);
-			forumNode.setProperty("exo:banIPs", getStringsInList(ips));
+			forumNode.setProperty("exo:banIPs", Utils.getStringsInList(ips));
 			if(forumNode.isNew()) {
 				forumNode.getSession().save() ;
 			}else {
@@ -6873,10 +6786,10 @@ public class JCRDataStorage implements  DataStorage {
 		try{
 			Node forumNode = getCategoryHome(sProvider).getNode(forumId);
 			if (forumNode.hasProperty("exo:banIPs"))
-				ips.addAll(ValuesToList(forumNode.getProperty("exo:banIPs").getValues()));
+				ips.addAll(Utils.valuesToList(forumNode.getProperty("exo:banIPs").getValues()));
 			if (ips.contains(ip)){
 				ips.remove(ip);
-				forumNode.setProperty("exo:banIPs", getStringsInList(ips));
+				forumNode.setProperty("exo:banIPs", Utils.getStringsInList(ips));
 				if(forumNode.isNew()) {
 					forumNode.getSession().save() ;
 				}else {
