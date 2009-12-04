@@ -52,8 +52,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.ks.bbcode.api.BBCode;
-import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -81,11 +79,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
 
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
-  
-  /**
-   * BBCode service
-   */
-  private BBCodeService bbcodeService;
   
   private String lastLogin_ = "";
   private ForumStatisticsService forumStatisticsService;
@@ -124,7 +117,6 @@ public class ForumServiceImpl implements ForumService, Startable {
     // initialize the data storage
     storage_.start();
     
-    bbcodeService = (BBCodeService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class);
 
   	try {
   	  log.info("initializing category listeners...");
@@ -145,7 +137,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   	try{
   	  log.info("initializing default data...");
   		storage_.initDefaultData() ;
-  		log.info("initializing default BBCodes...");
 
   	}catch(Exception e) {
   	  log.error("Error while initializing default data: "+ e.getMessage());
@@ -1328,40 +1319,5 @@ public class ForumServiceImpl implements ForumService, Startable {
 	public void updateUserProfileInfo(String name) throws Exception {
 		storage_.updateUserProfileInfo(name) ;
 	}
-
-  /**
-   * {@inheritDoc}
-   */
-  public void saveBBCode(List<BBCode> bbcodes) throws Exception{
-    bbcodeService.save(bbcodes);
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  public List<BBCode> getAllBBCode() throws Exception {
-    return bbcodeService.getAll();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public List<String> getActiveBBCode() throws Exception {
-    return bbcodeService.getActive();
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  public BBCode getBBcode(String id) throws Exception{
-    return bbcodeService.findById(id);
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  public void removeBBCode(String bbcodeId) throws Exception {
-    bbcodeService.delete(bbcodeId);
-  }
 	
 }

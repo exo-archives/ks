@@ -610,24 +610,7 @@ public class ITForumService extends ForumServiceTestCase{
 	  assertEquals("Ip is removed in listBans, size is not 0 ", listBans.size(), 0);
   }
   
-  public void testBBCode() throws Exception {
-	  List<BBCode> listBBc = new ArrayList<BBCode>();
-	  listBBc.add(createBBCode("I", "<i>{param}</i>", true));
-	  listBBc.add(createBBCode("B", "<b>{param}</b>", true));
-	  listBBc.add(createBBCode("U", "<u>{param}</u>", true));
-	  listBBc.add(createBBCode("URL", "<a target='_blank' href=\"{param}\">{param}</a>", false));
-	  forumService_.saveBBCode(listBBc);
-	  // get Active BBcodes
-	  List<String>bbcodes = new ArrayList<String>();
-	  bbcodes.addAll(forumService_.getActiveBBCode());
-	  assertEquals("Get active bbcodes, get size of list tag name BBcode active is not 3", bbcodes.size(), 3);
-	  // get All BBcodes
-	  listBBc = new ArrayList<BBCode>();
-	  listBBc.addAll(forumService_.getAllBBCode());
-	  assertEquals("Get all bbcode, get size of list BBcode is not 4", listBBc.size(), 4);
-  }
-  
-  private UserProfile createdUserProfile(String userName) {
+	private UserProfile createdUserProfile(String userName) {
   	UserProfile userProfile = new UserProfile();
   	userProfile.setUserId(userName);
   	userProfile.setUserRole((long)0);

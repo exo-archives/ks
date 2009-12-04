@@ -24,8 +24,6 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
-import org.exoplatform.ks.bbcode.api.BBCode;
-import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -963,31 +961,4 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   void removeMember(User user) throws Exception;
-
-  /**
-   * @deprecated use {@link BBCodeService#save(List)}
-   */
-  void saveBBCode(List<BBCode> bbcodes) throws Exception;
-
-  /**
-   * @deprecated use {@link BBCodeService#getAll()}
-   */
-  List<BBCode> getAllBBCode() throws Exception;
-
-  /**
-   * @deprecated use {@link BBCodeService#getActive()}
-   */
-  List<String> getActiveBBCode() throws Exception;
-
-  /**
-   * @deprecated use {@link BBCodeService#findById(String)}
-   * @throws Exception
-   */
-  BBCode getBBcode(String id) throws Exception;
-
-  /**
-   * @deprecated use {@link BBCodeService#delete(String)}
-   */
-  void removeBBCode(String bbcodeId) throws Exception;
-
 }
