@@ -18,9 +18,9 @@ package org.exoplatform.forum.service.impl;
 
 
 import static org.exoplatform.ks.test.AssertUtils.assertContains;
-import static org.exoplatform.ks.test.JCRMockUtils.mockNode;
-import static org.exoplatform.ks.test.JCRMockUtils.stubNullProperty;
-import static org.exoplatform.ks.test.JCRMockUtils.stubProperty;
+import static org.exoplatform.ks.test.mock.JCRMockUtils.mockNode;
+import static org.exoplatform.ks.test.mock.JCRMockUtils.stubNullProperty;
+import static org.exoplatform.ks.test.mock.JCRMockUtils.stubProperty;
 
 import javax.jcr.Node;
 

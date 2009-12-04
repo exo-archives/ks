@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.test;
+package org.exoplatform.ks.test.mock;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,7 +24,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.Value;
 
-import org.exoplatform.forum.service.impl.TestJCRDataStorage;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -64,7 +63,7 @@ public class JCRMockUtils {
     when(node.getProperty(propName)).thenReturn(prop);
     Value[] values = new Value[svalues.length];
      for (int i = 0; i < svalues.length; i++) {
-      values[i] = TestJCRDataStorage.stubValue(svalues[i]);
+      values[i] = stubValue(svalues[i]);
     }
     when(prop.getValues()).thenReturn(values);
   }

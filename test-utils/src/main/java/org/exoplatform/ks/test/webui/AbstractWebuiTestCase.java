@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.ks.test.MockParentRequestContext;
+import org.exoplatform.ks.test.mock.MockParentRequestContext;
 import org.exoplatform.ks.test.mock.MockResourceBundle;
 import org.exoplatform.ks.test.mock.MockWebUIRequestContext;
 import org.exoplatform.ks.test.mock.MockWebuiApplication;
