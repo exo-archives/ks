@@ -60,4 +60,8 @@ abstract public class ForumAttachment {
 
 	//TODO: should not have	Session in the api
 	public abstract InputStream getInputStream() throws Exception ;
+	
+	public String toString() {
+	  return id + "[" + mimeType + "," + size + "]";
+	}
 }

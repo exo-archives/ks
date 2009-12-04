@@ -109,6 +109,7 @@ import org.exoplatform.forum.service.conf.TopicData;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
+import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
@@ -394,9 +395,8 @@ public class JCRDataStorage implements  DataStorage {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
 	}
 	
-	private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception{
-    String path = dataLocator.getAvatarsLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	private Node getKSUserAvatarHomeNode() throws Exception{
+	  return getNodeAt(dataLocator.getAvatarsLocation());
 	}
 	
 	private Node getForumBanNode(SessionProvider sProvider) throws Exception {
@@ -416,14 +416,19 @@ public class JCRDataStorage implements  DataStorage {
 	 * @param relPath path relative to root node of the workspace
 	 * @return JCR node located at relPath relative path from root node of the current workspace
 	 */
-	private Node getNodeAt(String relPath) throws Exception {
+	static Node getNodeAt(String relPath) throws Exception {
     return JCRSessionManager.getCurrentSession().getRootNode().getNode(relPath);	  
 	}
 
 	public void setDefaultAvatar(String userName)throws Exception{
+	  Boolean wasReset = sessionManager.executeAndSave(new ResetAvatarTask(userName));
+	  if (log.isDebugEnabled()) {
+	    log.debug("Avatar for user " + userName + " was "+ (wasReset?"":"not")+" reset");
+	  }
+	  /*
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode(sProvider);
+			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
 			if(ksAvatarHomnode.hasNode(userName)){
 				Node node = ksAvatarHomnode.getNode(userName);
 				if(node.isNodeType("nt:file")) {
@@ -434,12 +439,48 @@ public class JCRDataStorage implements  DataStorage {
 		}catch(Exception e) {
 			log.error(e);
 		}finally {sProvider.close() ; }		
+		*/
+	}
+	
+	/**
+	 * Task that reset the user avatar
+	 * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+	 * @version $Revision$
+	 */
+	class ResetAvatarTask implements JCRTask<Boolean> {
+	  String username;
+	  public ResetAvatarTask(String username) {
+	    this.username = username;
+	  }
+	  
+	  /**
+	   * Remove the nt:file unode used as avatar for the given username
+	   * username is used as the name of the avatar node
+	   */
+    public Boolean execute(Session session) throws Exception {
+      Boolean wasReset = false;
+      Node ksAvatarHomnode = getKSUserAvatarHomeNode();
+      if(ksAvatarHomnode.hasNode(username)){
+        Node node = ksAvatarHomnode.getNode(username);
+        if(node.isNodeType("nt:file")) {
+          node.remove();
+          ksAvatarHomnode.save();
+          wasReset = true;
+        }
+      }
+      return wasReset;
+    }
+	  
 	}
 
 	public ForumAttachment getUserAvatar(String userName) throws Exception{
+	  
+	  ForumAttachment avatar = sessionManager.execute(new LoadAvatarTask(userName));
+	  return avatar;
+	  /*
 		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try{
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode(sysSession);
+			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
 			List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
 			if(ksAvatarHomnode.hasNode(userName)){
 				Node node = ksAvatarHomnode.getNode(userName);
@@ -470,12 +511,70 @@ public class JCRDataStorage implements  DataStorage {
 				return null;
 			}
 		}finally{ sysSession.close() ;}		
+		*/
+	}
+	
+	/**
+	 * Loads an avatar for a given user
+	 * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+	 * @version $Revision$
+	 */
+	class LoadAvatarTask implements JCRTask<ForumAttachment>  {
+	  String username;
+	  public LoadAvatarTask(String username) {
+	    this.username = username;
+	  }
+
+	  /**
+	   * Load the avatar file from JCR.
+	   * The username is the name of a nt:file node looked inside the avatar home
+	   * @see JCRDataStorage#getKSUserAvatarHomeNode()
+	   */
+    public ForumAttachment execute(Session session) throws Exception {
+      Node ksAvatarHomnode = getKSUserAvatarHomeNode();
+      List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
+      if(ksAvatarHomnode.hasNode(username)){
+        Node node = ksAvatarHomnode.getNode(username);
+        Node nodeFile = null;
+        String workspace = "";
+        if(node.isNodeType("nt:file")) {
+          JCRForumAttachment attachment = new JCRForumAttachment();
+          nodeFile = node.getNode("jcr:content") ;
+          attachment.setId(node.getName());
+          attachment.setPathNode(node.getPath());
+          attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
+          attachment.setName("avatar." + attachment.getMimeType());
+          workspace = node.getSession().getWorkspace().getName() ;
+          attachment.setWorkspace(workspace) ;
+          attachment.setPath("/" + workspace + node.getPath()) ;
+          try{
+            if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
+            else attachment.setSize(0) ;
+            attachments.add(attachment);
+            return attachments.get(0);
+          } catch (Exception e) {
+            attachment.setSize(0) ;
+            log.error(e);
+          }
+        }
+        return null;
+      } else {
+        return null;
+      }
+    }
+	  
 	}
 	
 	public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception{
-		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
+	  Boolean wasNew = sessionManager.executeAndSave(new SaveAvatarTask(userId, fileAttachment));
+	  if (log.isDebugEnabled()) {
+	    log.error("avatar was " + ((wasNew) ? "added":"updated") +" for user "+ userId + ": " + fileAttachment);
+	  }
+	  
+	  /*
+	  SessionProvider sysSession = SessionProvider.createSystemProvider() ;
 		try {
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode(sysSession);
+			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
 			Node avatarNode = null;
 			if(ksAvatarHomnode.hasNode(userId)) avatarNode = ksAvatarHomnode.getNode(userId);
 			else avatarNode = ksAvatarHomnode.addNode(userId, "nt:file");
@@ -491,8 +590,60 @@ public class JCRDataStorage implements  DataStorage {
 		}catch(Exception e) {
 			log.error(e);
 		}finally{ sysSession.close() ;}		
+		*/
 	}
 
+  /**
+   * Unit of work for saving an Avatar
+   * 
+   * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
+   *         Lamarque</a>
+   * @version $Revision$
+   */
+  class SaveAvatarTask implements JCRTask<Boolean> {
+    String          userId;
+
+    ForumAttachment fileAttachment;
+
+    /**
+     * @param userId owner of the avatar
+     * @param fileAttachment file for the avatar picture to save
+     */
+    public SaveAvatarTask(String userId, ForumAttachment fileAttachment) {
+      this.userId = userId;
+      this.fileAttachment = fileAttachment;
+    }
+
+    /**
+     * Create or update an nt:file node represented by the ForumAttachement. All
+     * permissions are granted to any on that file (!)
+     * 
+     * @param session unused
+     */
+    public Boolean execute(Session session) throws Exception {
+      Node ksAvatarHomnode = getKSUserAvatarHomeNode();
+      Node avatarNode = null;
+      Boolean wasNew = false;
+      if (ksAvatarHomnode.hasNode(userId)) {
+        avatarNode = ksAvatarHomnode.getNode(userId);
+      } else {
+        avatarNode = ksAvatarHomnode.addNode(userId, "nt:file");
+        wasNew = true;
+      }
+      ForumServiceUtils.reparePermissions(avatarNode, "any");
+      Node nodeContent = null;
+      if (avatarNode.hasNode("jcr:content")) {
+        nodeContent = avatarNode.getNode("jcr:content");
+      } else {
+        nodeContent = avatarNode.addNode("jcr:content", "nt:resource");
+      }
+      nodeContent.setProperty("jcr:mimeType", fileAttachment.getMimeType());
+      nodeContent.setProperty("jcr:data", fileAttachment.getInputStream());
+      nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
+      return wasNew;
+    }
+  }
+	
 	public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {

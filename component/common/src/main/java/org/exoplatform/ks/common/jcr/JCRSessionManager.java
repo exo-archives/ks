@@ -204,10 +204,34 @@ public class JCRSessionManager {
     }
   }
   
-  public void runAndSave(Runnable runnable) {
+
+  /**
+   * Execute an jcr task and persists the changes. A {@link Session#save()} is called on the current at the end.
+   * @param <T>
+   * @param jcrTask
+   * @return
+   */
+  public <T>T executeAndSave(JCRTask<T> jcrTask) {
     try {
       openSession();
-      runnable.run();
+      return jcrTask.execute(getCurrentSession());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      closeSession(true);
+    }
+  }
+  
+  /**
+   * Execute a readonly jcr task. No {@link Session#save()}is called on the current session after the call.
+   * @param <T>
+   * @param jcrTask
+   * @return
+   */
+  public <T>T execute(JCRTask<T> jcrTask) {
+    try {
+      openSession();
+      return jcrTask.execute(getCurrentSession());
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
