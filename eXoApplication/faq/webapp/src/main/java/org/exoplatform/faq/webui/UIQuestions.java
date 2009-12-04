@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hssf.record.formula.functions.Vlookup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Category;
@@ -61,6 +62,19 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.config.DataStorage;
+import org.exoplatform.portal.config.model.Application;
+import org.exoplatform.portal.config.model.ModelObject;
+import org.exoplatform.portal.config.model.Page;
+import org.exoplatform.portal.config.model.PageBody;
+import org.exoplatform.portal.config.model.PageNavigation;
+import org.exoplatform.portal.config.model.PageNode;
+import org.exoplatform.portal.config.model.PageNodeContainer;
+import org.exoplatform.portal.config.model.portlet.PortletApplication;
+import org.exoplatform.portal.config.model.portlet.PortletId;
+import org.exoplatform.portal.webui.portal.UIPortal;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -167,13 +181,48 @@ public class UIQuestions extends UIContainer {
 		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
 	
-	private String getLinkDiscuss(String topicId) {
-		// for discuss question
-		FAQSetting faqSetting = new FAQSetting();
-		FAQUtils.getPorletPreference(faqSetting);
-		String link = getLink().replaceAll("answers", "forum"); 
-    link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
+	private String getLinkDiscuss(String topicId) throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String link = "";
+		try {
+			String nodePath = portalContext.getNodePath();
+			List<String> values = calculateUrlDisscuss();
+			link = getLink().replaceAll(nodePath.substring(nodePath.indexOf("/")+1), values.get(0)); 
+			String key = link.substring(link.indexOf("=")+1, link.indexOf("&amp;"));
+			link = link.replaceFirst(key, values.get(1));
+			link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
+    } catch (Exception e) {
+    	e.printStackTrace();
+	    link = portalContext.getRequest().getRequestURL().toString();
+    }
 		return link;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+  private List<String> calculateUrlDisscuss() throws Exception {
+		List<String> values = new ArrayList<String>();
+		List<PageNavigation> navigations = new ArrayList<PageNavigation>();
+		navigations = Util.getUIPortal().getNavigations();
+		DataStorage dataStorage = (DataStorage)PortalContainer.getInstance().getComponentInstanceOfType(DataStorage.class) ;
+		for(PageNavigation nav : navigations) {
+			for(PageNode pageNode : nav.getNodes()) {
+				if(pageNode.getPageReference() != null) {
+					Page page = dataStorage.getPage(pageNode.getPageReference());
+					ArrayList<ModelObject> children2 = page.getChildren();
+					for(ModelObject modelObject : children2) {
+						if(modelObject instanceof Application) {
+							if(((PortletId)((Application) modelObject).getRef()).getPortletName().equals("ForumPortlet")){
+								values.add(pageNode.getName());// PageNode Name
+								values.add(((Application) modelObject).getStorageName());// componentId
+								return values;
+							}
+						}
+					}
+				}
+			}	
+		}
+		return values;
 	}
 	
 	private String convertLinkToForum(String s){
@@ -198,7 +247,7 @@ public class UIQuestions extends UIContainer {
 		return rService.getCurrentRepository().getConfiguration().getName() ;
 	}
 
-	public void setListObject(){
+	public void setListObject() throws Exception{
 		//this.isChangeLanguage = false;
 		try {
 			if(currentUser_ != null && currentUser_.trim().length() > 0){
@@ -470,7 +519,7 @@ public class UIQuestions extends UIContainer {
 	
 	public void setPath(String s) { } //wilbe remove
 
-	private void setLink(String link) { this.link_ = link;}
+	private void setLink(String link) { this.link_ = link; }
 	
   public String render(Object obj) throws RenderingException {
   	if(obj instanceof Question)
