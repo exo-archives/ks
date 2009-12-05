@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ks.common.jcr;
 
-import java.util.concurrent.Callable;
-
 import javax.jcr.Session;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -32,7 +30,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
  *          exo@exoplatform.com
  * Oct 16, 2009  
  */
-public class JCRSessionManager {
+public class JCRSessionManager implements SessionManager {
 
   /** . */
   private static final ThreadLocal<Session> currentSession = new ThreadLocal<Session>();
@@ -68,13 +66,20 @@ public class JCRSessionManager {
    * <p>Returns the session currently associated with the current thread of execution.<br/>
    * The current session is set with {@link #openSession()} </p>
    *
-   * @return the current session if exists, null otherwhise
+   * @return the current session if exists, null otherwise
    */
-  public static Session getCurrentSession()
+  public Session getCurrentSession()
   {
      return currentSession.get();
   }
   
+  public static Session currentSession() {
+    return currentSession.get();
+  }
+  
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#getSession(org.exoplatform.services.jcr.ext.common.SessionProvider)
+   */
   public Session getSession(SessionProvider sessionProvider) {
     Session session = null;
     try {
@@ -110,7 +115,10 @@ public class JCRSessionManager {
      return session;
   }
 
-  private Session createSession() {
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#createSession()
+   */
+  public Session createSession() {
     Session session = null;
     try {
 
@@ -123,23 +131,16 @@ public class JCRSessionManager {
     return session;
   }
 
-  /**
-   * <p>Closes the current session and discard the changes done during the session.</p>
-   *
-   * @return a boolean indicating if the session was closed
-   * @see #closeSession(boolean)
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#closeSession()
    */
   public boolean closeSession()
   {
      return closeSession(false);
   }
 
-  /**
-   * <p>Closes the current session and optionally saves its content. If no session is associated
-   * then this method has no effects and returns false.</p>
-   *
-   * @param save if the session must be saved
-   * @return a boolean indicating if the session was closed
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#closeSession(boolean)
    */
   public boolean closeSession(boolean save)
   {
@@ -171,45 +172,9 @@ public class JCRSessionManager {
      }
   }
   
-  public <V>V callInSession(Callable<V> callable) {
-    try {
-      openSession();
-      return callable.call();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } finally {
-      closeSession();
-    }
-  }
-  
-  public <V>V callAndSave(Callable<V> callable) {
-    try {
-      openSession();
-      return callable.call();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } finally {
-      closeSession(true);
-    }
-  }
-  
-  public void runInSession(Runnable runnable) {
-    try {
-      openSession();
-      runnable.run();
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } finally {
-      closeSession();
-    }
-  }
-  
 
-  /**
-   * Execute an jcr task and persists the changes. A {@link Session#save()} is called on the current at the end.
-   * @param <T>
-   * @param jcrTask
-   * @return
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#executeAndSave(org.exoplatform.ks.common.jcr.JCRTask)
    */
   public <T>T executeAndSave(JCRTask<T> jcrTask) {
     try {
@@ -222,11 +187,8 @@ public class JCRSessionManager {
     }
   }
   
-  /**
-   * Execute a readonly jcr task. No {@link Session#save()}is called on the current session after the call.
-   * @param <T>
-   * @param jcrTask
-   * @return
+  /* (non-Javadoc)
+   * @see org.exoplatform.ks.common.jcr.SessionManager#execute(org.exoplatform.ks.common.jcr.JCRTask)
    */
   public <T>T execute(JCRTask<T> jcrTask) {
     try {

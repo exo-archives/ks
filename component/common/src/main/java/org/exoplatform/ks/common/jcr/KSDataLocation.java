@@ -78,7 +78,7 @@ public class KSDataLocation {
   private NodeHierarchyCreator creator;
   private String repository;
   private String workspace;
-  private JCRSessionManager sessionManager;
+  private SessionManager sessionManager;
 
   
   /**
@@ -173,8 +173,12 @@ public class KSDataLocation {
     return workspace;
   }
 
-  public JCRSessionManager getSessionManager() {
+  public SessionManager getSessionManager() {
     return sessionManager;
+  }
+  
+  public void setSessionManager(SessionManager manager) {
+    this.sessionManager = manager;
   }
 
   /**

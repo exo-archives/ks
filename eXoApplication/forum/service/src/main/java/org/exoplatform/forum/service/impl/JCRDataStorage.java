@@ -112,6 +112,7 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
+import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.management.annotations.Managed;
@@ -154,7 +155,7 @@ public class JCRDataStorage implements  DataStorage {
 	private List<InitializeForumPlugin> defaultPlugins = new ArrayList<InitializeForumPlugin>() ;
 	private Map<String, EventListener> listeners = new HashMap<String, EventListener>();
 	private boolean isInitRssListener = true ;
-	private JCRSessionManager sessionManager;
+	private SessionManager sessionManager;
 	private KSDataLocation dataLocator;
   private String repository;
 	private String workspace;
@@ -416,8 +417,8 @@ public class JCRDataStorage implements  DataStorage {
 	 * @param relPath path relative to root node of the workspace
 	 * @return JCR node located at relPath relative path from root node of the current workspace
 	 */
-	static Node getNodeAt(String relPath) throws Exception {
-    return JCRSessionManager.getCurrentSession().getRootNode().getNode(relPath);	  
+	private Node getNodeAt(String relPath) throws Exception {
+    return sessionManager.getCurrentSession().getRootNode().getNode(relPath);	  
 	}
 
 	public void setDefaultAvatar(String userName)throws Exception{
@@ -447,7 +448,7 @@ public class JCRDataStorage implements  DataStorage {
 	 * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
 	 * @version $Revision$
 	 */
-	class ResetAvatarTask implements JCRTask<Boolean> {
+	public class ResetAvatarTask implements JCRTask<Boolean> {
 	  String username;
 	  public ResetAvatarTask(String username) {
 	    this.username = username;
@@ -7329,7 +7330,7 @@ public class JCRDataStorage implements  DataStorage {
     return dataLocator;
   }
 
-  private void setDataLocator(KSDataLocation dataLocator) {
+  public void setDataLocator(KSDataLocation dataLocator) {
     this.dataLocator = dataLocator;
     sessionManager = dataLocator.getSessionManager();
     repository = dataLocator.getRepository();

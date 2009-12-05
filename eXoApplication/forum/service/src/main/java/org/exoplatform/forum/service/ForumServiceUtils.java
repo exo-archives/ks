@@ -27,6 +27,7 @@ import javax.jcr.Node;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.services.cache.CacheService;
 import org.exoplatform.services.cache.ExoCache;
 import org.exoplatform.services.jcr.access.AccessControlEntry;
@@ -249,7 +250,7 @@ public class ForumServiceUtils {
 	}
 	
 	
-	public static JCRSessionManager getSessionManager() {
+	public static SessionManager getSessionManager() {
 	  KSDataLocation location =  (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
 	  return location.getSessionManager();
 	}

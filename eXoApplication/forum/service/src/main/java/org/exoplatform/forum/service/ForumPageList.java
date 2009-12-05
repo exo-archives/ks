@@ -29,6 +29,7 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
+import org.exoplatform.ks.common.jcr.SessionManager;
 
 /**
  * @author Hung Nguyen (hung.nguyen@exoplatform.com)
@@ -37,7 +38,7 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 public class ForumPageList extends JCRPageList {
 	private boolean isQuery_ = false ;
 	private String value_ ;
-	private JCRSessionManager sessionManager;
+	private SessionManager sessionManager;
 	private NodeIterator iter_ = null;
 	private List listValue_ = null;
 	
@@ -185,7 +186,7 @@ public class ForumPageList extends JCRPageList {
 	
 	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
-		Session session = JCRSessionManager.getCurrentSession();
+		Session session = JCRSessionManager.currentSession();
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);

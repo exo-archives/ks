@@ -33,6 +33,7 @@ import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.management.ManagementAware;
 import org.exoplatform.management.ManagementContext;
 import org.exoplatform.management.annotations.Managed;
@@ -61,7 +62,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   
 	private List<BBCodePlugin> defaultBBCodePlugins_;
 	private KSDataLocation dataLocator;
-	private JCRSessionManager sessionManager;
+	private SessionManager sessionManager;
 	private List<String> activeBBCodesCache;
 	
   private ManagementContext context;

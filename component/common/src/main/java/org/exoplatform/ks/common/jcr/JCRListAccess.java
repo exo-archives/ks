@@ -29,9 +29,9 @@ import org.exoplatform.commons.utils.ListAccess;
  */
 public abstract class JCRListAccess<E> implements ListAccess<E>{
   
-  protected JCRSessionManager manager;
+  protected SessionManager manager;
 
-  public JCRListAccess(JCRSessionManager manager){
+  public JCRListAccess(SessionManager manager){
     this.manager = manager;
   }
 

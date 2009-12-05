@@ -83,6 +83,7 @@ import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
@@ -114,7 +115,7 @@ public class JCRDataStorage implements DataStorage {
 	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
 	private boolean isInitRssListener_ = true ;
-  private JCRSessionManager sessionManager;
+  private SessionManager sessionManager;
   private KSDataLocation dataLocator;
 	
   public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
