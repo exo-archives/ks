@@ -121,13 +121,18 @@ public class UserProfile {
 	public long getJobWattingForModerator() {return jobWattingForModerator;}
 	public void setJobWattingForModerator(long jobWattingForModerator) {this.jobWattingForModerator = jobWattingForModerator;}
 
-	public void setModerateForums(String[] moderateForums) { this.moderateForums = moderateForums ;	}
+  public void setModerateForums(String[] moderateForums) {
+    this.moderateForums = Utils.arrayCopy(moderateForums);
+  }
 	public String[] getModerateForums() { return moderateForums ;	}
 	
 	public String[] getModerateCategory() { return moderateCategory; }
-	public void setModerateCategory(String[] moderateCategory) { this.moderateCategory = moderateCategory;}
 
-	public String[] getReadTopic(){return readTopic;}
+  public void setModerateCategory(String[] moderateCategory) {
+    this.moderateCategory = Utils.arrayCopy(moderateCategory);
+  }
+  
+  public String[] getReadTopic(){return readTopic;}
 	public void setReadTopic(String[] readTopic){this.readTopic = readTopic;}
 
 	public String[] getReadForum(){return readForum;}
@@ -176,7 +181,10 @@ public class UserProfile {
 	public void setIsAutoWatchTopicIPost(boolean isAutoWatchTopicIPost) {this.isAutoWatchTopicIPost = isAutoWatchTopicIPost;}
 
   public String[] getCollapCategories() {return collapCategories;}
-	public void setCollapCategories(String[] collapCategories) {this.collapCategories = collapCategories;}
+
+  public void setCollapCategories(String[] collapCategories) {
+    this.collapCategories = Utils.arrayCopy(collapCategories);
+  }
 	//Ban
 	public void setIsBanned(boolean isBanned) {this.isBanned = isBanned; }
 	public boolean getIsBanned() {return isBanned; }
@@ -190,14 +198,19 @@ public class UserProfile {
 	public void setBanCounter(int banCounter) {this.banCounter = banCounter; }
 	public int getBanCounter() {return banCounter; }
 
-	public void setBanReasonSummary(String[] banReasonSummary) {this.banReasonSummary = banReasonSummary; }
+  public void setBanReasonSummary(String[] banReasonSummary) {
+    this.banReasonSummary = Utils.arrayCopy(banReasonSummary);
+  }
 	public String[] getBanReasonSummary() {return banReasonSummary; }
 
 	public void setCreatedDateBan(Date createdDate) {this.createdDateBan = createdDate; }
 	public Date getCreatedDateBan() {return createdDateBan; }
 
   public String[] getBookmark() {return bookmark;}
-	public void setBookmark(String[] bookmark) {this.bookmark = bookmark;}
+
+  public void setBookmark(String[] bookmark) {
+    this.bookmark = Utils.arrayCopy(bookmark);
+  }
 
 	public String[] getLastReadPostOfTopic() { return lastReadPostOfTopic;}
 	public void setLastReadPostOfTopic(String[] lastReadPostOfTopic) { 
@@ -261,15 +274,22 @@ public class UserProfile {
 	public void setLastTimeAccessTopic(String topicId, long lastTime)throws Exception {
 		lastAccessTopics.put(topicId, lastTime) ;
 	}
-	public long getLastTimeAccessTopic(String topicId) throws Exception {
-		if(lastAccessTopics.get(topicId) != null) return lastAccessTopics.get(topicId);
-		return 0 ; 
-	}
+
+  public long getLastTimeAccessTopic(String topicId) throws Exception {
+    if (lastAccessTopics.get(topicId) != null) {
+      return lastAccessTopics.get(topicId);
+    }
+    return 0;
+  }
+  
 	public void setLastTimeAccessForum(String forumId, long lastTime)throws Exception {
 		lastAccessForums.put(forumId, lastTime) ;
 	}
-	public long getLastTimeAccessForum(String forumId) throws Exception {
-		if(lastAccessForums.get(forumId) != null) return lastAccessForums.get(forumId);
-		return 0 ; 
-	}
+
+  public long getLastTimeAccessForum(String forumId) throws Exception {
+    if (lastAccessForums.get(forumId) != null) {
+      return lastAccessForums.get(forumId);
+    }
+    return 0;
+  }
 }

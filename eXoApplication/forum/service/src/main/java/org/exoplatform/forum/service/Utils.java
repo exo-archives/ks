@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -288,6 +289,29 @@ public class Utils {
   		list.add(values[i].getString());
   	}
   	return list;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T>T[] arrayCopy(final T[] source) {
+    // null in, null out
+    if (source == null) {
+      return null;
+    }
+    // empty in, empty out
+    if (source.length == 0) {
+      
+      try {
+        return (T[]) Array.newInstance(source.getClass().getComponentType(), 0);
+      } catch (Exception e) {
+        return null;
+        // should never occur;
+      }
+    }
+    
+    // instanciate a new array based on first item
+    T[] dest = (T[]) Array.newInstance(source[0].getClass(), source.length);
+    System.arraycopy(source, 0, dest, 0, source.length);
+    return dest;
   }
 
 }

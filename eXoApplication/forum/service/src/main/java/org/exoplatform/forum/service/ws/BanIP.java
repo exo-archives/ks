@@ -5,14 +5,12 @@
 package org.exoplatform.forum.service.ws;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Hung Nguyen
- *          hung.nguyen@exoplatform.com
- * Dec 17, 2008  
+ * Represents a banned IP address.
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+ * @version $Revision$
  */
 public class BanIP {
   private String ip ;
-  
 
   public BanIP() {}
 

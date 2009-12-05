@@ -238,5 +238,25 @@ public class TestUtils extends TestCase {
     assertContains(actual, "foo", "bar", "zed");
     assertEquals(3, actual.size());
   }
+  
+  public void testArrayCopy() {
+    
+    // null in, null out
+    String [] source = null;
+    String [] actual = Utils.arrayCopy(source);
+    assertNull(actual);
+
+    // empty array
+    source = new String[0];
+    actual = Utils.arrayCopy(source);
+    assertNotNull(actual);
+    assertEquals(0, actual.length);
+    
+    source = new String [] {"foo", "bar", "zed"};
+    actual = Utils.arrayCopy(source);
+    assertEquals("copied arrays should have same size", source.length, actual.length);
+    assertNotSame("a new array should have been created", source, actual);
+    assertContains(actual, "foo", "bar", "zed"); // should contain all elements
+  }
 
 }
