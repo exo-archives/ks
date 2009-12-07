@@ -10,7 +10,8 @@
   <import>war:/ks-extension/jcr/storage-configuration.xml</import> 
   
   <!-- new apps in registry  -->
-  <import>war:/ks-extension/portal/application-registry-configuration.xml</import>  
+  <!-- FIXME : needs to be upgraded for Gatein beta3 -->
+  <!-- import>war:/ks-extension/portal/application-registry-configuration.xml</import-->  
   
   <!-- main KS configuration  -->
   <import>war:/ks-extension/ks/ks-configuration.xml</import>
@@ -29,7 +30,7 @@
   <import>war:/ks-extension/ks/forum/roles-configuration.xml</import>
 
   <!-- Configure the profile contact provider -->
-  <import>war:/ks-extension/profile-configuration.xml</import>
+  <import>war:/ks-extension/ks/profile-configuration.xml</import>
   
   <!-- Configure the FAQ templates -->
   <import>war:/ks-extension/ks/faq/templates-configuration.xml</import>
