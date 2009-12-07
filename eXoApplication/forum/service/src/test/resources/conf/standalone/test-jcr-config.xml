@@ -1,7 +1,7 @@
 <repository-service default-repository="db1">
   <repositories>
     <repository name="db1" system-workspace="ws" default-workspace="ws">
-      <security-domain>exo-domain</security-domain>
+      <security-domain>gatein-domain</security-domain>
       <!-- access-control>optional</access-control -->
       <!-- access-control>disable</access-control -->
       <session-max-age>3600000</session-max-age><!-- 60min -->
@@ -166,7 +166,7 @@
       </workspaces>
     </repository>
     <repository name="db1tck" system-workspace="ws" default-workspace="ws">
-      <security-domain>exo-domain</security-domain>
+      <security-domain>gatein-domain</security-domain>
       <!-- access-control>optional</access-control -->
       <!-- access-control>disable</access-control -->
       <session-max-age>3600000</session-max-age><!-- 60min -->
