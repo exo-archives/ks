@@ -93,6 +93,18 @@ public class KSDataLocation {
     this.sessionManager = new JCRSessionManager(repository, workspace);
     initPathes();
   }
+  
+  /**
+   * Mainly used for tests
+   * @param repository
+   * @param workspace
+   */
+  public KSDataLocation(String repository, String workspace) {
+    this.repository = repository;
+    this.workspace = workspace;
+    this.sessionManager = new JCRSessionManager(repository, workspace);
+    initPathes();
+  }
 
   /**
    * Initializes all pathes with {@link #getPath(String)}

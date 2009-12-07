@@ -29,19 +29,17 @@ import static org.mockito.Mockito.when;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import junit.framework.TestCase;
-
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-import org.mockito.ArgumentCaptor;
+import org.exoplatform.ks.test.jcr.AbstractJCRBaseTestCase;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestJCRDataStorage extends TestCase {
+public class TestJCRDataStorage extends AbstractJCRBaseTestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
@@ -69,9 +67,55 @@ public class TestJCRDataStorage extends TestCase {
   }
   
   
-  public void testSetTestDefaultAvatar() throws Exception {
+  public void _testSetDefaultAvatar() throws Exception {
+    
+
     JCRDataStorage storage = new JCRDataStorage();
-    KSDataLocation locator = new KSDataLocation(null, null);
+    KSDataLocation locator = new KSDataLocation(getRepositoryName(), getWorkspaceName());
+    storage.setDataLocator(locator);
+    
+    
+    startJCR();
+    
+    String path = locator.getAvatarsLocation();
+    addNode(path);
+    
+    storage.setDefaultAvatar("foo");
+    
+    assertNodeExists(path + "/foo");
+    
+
+    
+  }
+  
+  private void assertNodeExists(String path) {
+    try {
+      Session session = getRepository().login();
+      boolean exists = session.getRootNode().hasNode(path);
+      if (!exists) {
+        fail("no node exists at " + path);
+      }
+      }
+      catch (Exception e) {
+        throw new RuntimeException("failed to assert node exists", e);
+      }
+    
+  }
+
+  protected void addNode(String path) {
+    try {
+    Session session = getRepository().login();
+    session.getRootNode().addNode(path);
+    session.save();
+    }
+    catch (Exception e) {
+      throw new RuntimeException("failed to add node", e);
+    }
+  }
+  
+  public void _testDefaultAvatarWithMocks() throws Exception {
+    JCRDataStorage storage = new JCRDataStorage();
+    KSDataLocation locator = new KSDataLocation((String)null, (String)null);
     JCRSessionManager sessionManager = stubJCRSessionManager();
     locator.setSessionManager(sessionManager);
     storage.setDataLocator(locator);
