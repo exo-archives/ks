@@ -20,17 +20,19 @@
 
   <properties>
 
-      <org.exoplatform.kernel.version>2.2.0-Beta02</org.exoplatform.kernel.version>
-      <org.exoplatform.core.version>2.3.0-Beta02</org.exoplatform.core.version>
-      <org.exoplatform.ws.version>2.1.0-Beta02</org.exoplatform.ws.version>
-      <org.exoplatform.jcr.version>1.12.0-Beta02</org.exoplatform.jcr.version>
+      <org.exoplatform.kernel.version>2.2.0-Beta04</org.exoplatform.kernel.version>
+      <org.exoplatform.core.version>2.3.0-Beta04</org.exoplatform.core.version>
+      <org.exoplatform.ws.version>2.1.0-Beta04</org.exoplatform.ws.version>
+      <org.exoplatform.jcr.version>1.12.0-Beta04</org.exoplatform.jcr.version>
+      
+      
       <org.exoplatform.comet.version>2.1.0_gtn_Alpha01</org.exoplatform.comet.version>
-      <org.exoplatform.portal.version>3.0.0-Beta02</org.exoplatform.portal.version>
+      <org.exoplatform.portal.version>3.0.0-Beta03</org.exoplatform.portal.version>
       <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
        
       <!-- 3rd parties -->
       <commons-lang.version>2.3</commons-lang.version>
-      <javax.servlet.servlet-api.version>2.4</javax.servlet.servlet-api.version>
+      <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
       <javax.portlet.portlet-api.version>2.0</javax.portlet.portlet-api.version>
       <javax.mail.mail.version>1.4</javax.mail.mail.version>
       <javax.xml.bind.jaxb-api.version>2.1</javax.xml.bind.jaxb-api.version>
