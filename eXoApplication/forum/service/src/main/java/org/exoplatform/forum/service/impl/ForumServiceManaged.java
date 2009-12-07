@@ -33,7 +33,7 @@ public class ForumServiceManaged implements ManagementAware {
 
   public ForumServiceManaged(ForumServiceImpl forumService) {
     this.forumService = forumService;
-    this.forumService.managed = this;
+    this.forumService.setManagementView(this);
   }
 
   public void setContext(ManagementContext context) {
@@ -56,7 +56,7 @@ public class ForumServiceManaged implements ManagementAware {
   @ManagedDescription("rules that define administrators")
   public List<String> getAdminRules() {
     List<String> adminRules = new ArrayList<String>();
-    List<RoleRulesPlugin>  plugins = forumService.storage_.getRulesPlugins();
+    List<RoleRulesPlugin>  plugins = forumService.getStorage().getRulesPlugins();
     
     for (RoleRulesPlugin plugin : plugins) {
       Collection<List<String>> allrules = plugin.getAllRules().values();
@@ -72,13 +72,13 @@ public class ForumServiceManaged implements ManagementAware {
   @Managed
   @ManagedDescription("evaluate is a user has administrator role")
   public boolean hasForumAdminRole(String username) throws Exception {
-    return forumService.storage_.isAdminRole(username);
+    return forumService.getStorage().isAdminRole(username);
   }
 
   @Managed
   @ManagedDescription("get the configuration of the mail service used for notifications in KS")
   public Map<String,String> getMailServiceConfig() {
-    return forumService.storage_.getServerConfig();
+    return forumService.getStorage().getServerConfig();
   }
   
   @Managed
