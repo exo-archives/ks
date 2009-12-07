@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>exo.parent</artifactId>
-    <version>4</version>
+    <version>5</version>
   </parent>
   
 
@@ -267,35 +267,4 @@
   </dependencies>     
 </dependencyManagement>     
   
-  <profiles>
-    <profile>
-      <id>run-its</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>failsafe-maven-plugin</artifactId>
-            <version>2.4.3-alpha-1</version>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <phase>integration-test</phase>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>verify</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    
-    </profile>
-  </profiles>
 </project>
