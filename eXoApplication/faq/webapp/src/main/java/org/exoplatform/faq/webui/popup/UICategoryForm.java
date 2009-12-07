@@ -248,7 +248,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         }
       }
       if(index > uiCategory.maxIndex) index = uiCategory.maxIndex;
-      String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
+      String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       if (moderator == null || moderator.trim().length() <= 0) {
@@ -258,7 +258,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         return ; 
       }
       
-      String userPrivate = uiCategory.getUIStringInput(FIELD_USERPRIVATE_INPUT).getValue() ;
+      String userPrivate = uiCategory.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).getValue() ;
       String erroUser = UserHelper.checkValueUser(userPrivate) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
     		Object[] args = { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser };

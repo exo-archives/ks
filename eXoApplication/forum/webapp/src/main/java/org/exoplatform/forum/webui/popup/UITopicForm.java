@@ -540,8 +540,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 						Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 						UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
-						String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
-						String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
+						String canPost = threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).getValue();
+						String canView = threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).getValue();
 						canPost = ForumUtils.removeSpaceInString(canPost);
 						canPost = ForumUtils.removeStringResemble(canPost);
 						canView = ForumUtils.removeSpaceInString(canView);
