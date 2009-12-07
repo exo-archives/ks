@@ -18,5 +18,13 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
   </portlet-skin>
 
+
+  <javascript>
+    <param>
+      <js-module>eXo.faq.UIAnswersPortlet</js-module>
+      <js-path>/javascript/eXo/faq/UIAnswersPortlet.js</js-path>
+    </param>
+  </javascript>
+
 </gatein-resources>
 
