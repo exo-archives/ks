@@ -35,7 +35,7 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
   
   protected final static String REPO_NAME = "repository".intern();
   protected final static String SYSTEM_WS = "system".intern();
-  protected final static String COLLABORATION_WS = "collaboration".intern();
+  protected final static String KNOWLEDGE_WS = "knowledge".intern();
   protected static Node root_ = null;
   protected SessionProvider sProvider;
   private static SessionProviderService sessionProviderService = null;
@@ -101,7 +101,7 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
       String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();      
-      String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
+      String loginConf = Thread.currentThread().getContextClassLoader().getResource("conf/portal/login.conf").toString();
       
       if (System.getProperty("java.security.auth.login.config") == null)
         System.setProperty("java.security.auth.login.config", loginConf);
@@ -117,7 +117,7 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
     repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
     
     // Initialize datas
-    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
+    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(KNOWLEDGE_WS);
     root_ = session.getRootNode();   
     sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
     }

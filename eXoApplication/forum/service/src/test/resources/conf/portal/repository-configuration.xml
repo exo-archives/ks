@@ -1,7 +1,7 @@
 <repository-service default-repository="repository">
    <repositories>
 
-    <repository name="repository" system-workspace="system" default-workspace="collaboration">
+    <repository name="repository" system-workspace="system" default-workspace="knowledge">
      <security-domain>gatein-domain</security-domain>
      <access-control>optional</access-control>
      <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
@@ -50,7 +50,7 @@
 			     </persister>
 			   </lock-manager>
        </workspace>
-       <workspace name="collaboration" auto-init-root-nodetype="nt:unstructured" 
+       <workspace name="knowledge" auto-init-root-nodetype="nt:unstructured" 
                   auto-init-permissions="any read;*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove" >
           <!-- for system storage -->
           <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
@@ -61,12 +61,12 @@
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="../temp/swap/collaboration"/>
+              <property name="swap-directory" value="../temp/swap/knowledge"/>
             </properties>
             <value-storages>
-              <value-storage id="collaboration" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+              <value-storage id="knowledge" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="../temp/values/collaboration"/>
+                  <property name="path" value="../temp/values/knowledge"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -82,14 +82,14 @@
          </cache>
          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
           <properties>
-            <property name="indexDir" value="../temp/jcrlucenedb/index/collaboration"/>
+            <property name="indexDir" value="../temp/jcrlucenedb/index/knowledge"/>
           </properties>
          </query-handler>
          <lock-manager>
 			    <time-out>900000</time-out><!-- 15min -->
 			     <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
 			       <properties>
-			         <property name="path" value="../temp/lock/collaboration"/>
+			         <property name="path" value="../temp/lock/knowledge"/>
 			       </properties>
 			     </persister>
 			   </lock-manager>

@@ -261,7 +261,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question5, true,faqSetting_) ;
 	}
 	
-	public void testCategory() throws Exception {
+	public void _testCategory() throws Exception {
 	// remove Data before testing category.
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 //		add category Id	
@@ -355,7 +355,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 // FAQPortlet
-	public void testCategoryInfo() throws Exception {
+	public void _testCategoryInfo() throws Exception {
 //	Add new data default
 		defaultData();
 //	Get categoryInfo
@@ -370,7 +370,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
   }
 	
-	public void testQuestion() throws Exception {
+	public void _testQuestion() throws Exception {
 //		Add new data default
 		defaultData();
 //		get question 1
@@ -431,7 +431,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testSearch() throws Exception {
+	public void _testSearch() throws Exception {
 //		set Data default
 		defaultData();
 		
@@ -476,7 +476,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testAnswer() throws Exception{
+	public void _testAnswer() throws Exception{
 //	set data default
 		defaultData() ;
 		// create Answer
@@ -513,7 +513,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 	
-	public void testComment() throws Exception{
+	public void _testComment() throws Exception{
 //	set default data
 		defaultData();
 		Comment comment1 = createComment(USER_ROOT, "Root comment 1 for question");
@@ -542,7 +542,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testImportData() throws Exception{
+	public void _testImportData() throws Exception{
 		faqService_.getAllCategories();
 //		Before import data, number question is 0
 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
@@ -561,7 +561,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testWatchCategory() throws Exception {
+	public void _testWatchCategory() throws Exception {
 //	add default data
 		defaultData();
 		List<Watch> listWatchs = new ArrayList<Watch>();
@@ -587,7 +587,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-  public void testQuestionMultilanguage() throws Exception{
+  public void _testQuestionMultilanguage() throws Exception{
 //		set data default
 		defaultData();
 //		Add question language for question
@@ -629,7 +629,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertNull("Comment in question language is not deleted.", faqService_.getCommentById(questionId, commentId, "VietNam"));
 	}
 	
-	public void testUserSetting() throws Exception {
+	public void _testUserSetting() throws Exception {
 //		save userSetting information into user node
 		faqSetting_.setDisplayMode("both");
 		faqSetting_.setOrderBy("created");
@@ -678,7 +678,7 @@ public class ITFAQService extends FAQServiceTestCase{
     }*/
 	}
 	
-	public void testUserAvatar()throws Exception{
+	public void _testUserAvatar()throws Exception{
 		//	Add new avatar for user:
 		faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"));
 		

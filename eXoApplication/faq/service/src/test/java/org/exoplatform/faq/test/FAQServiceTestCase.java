@@ -43,7 +43,7 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
   
   protected final static String REPO_NAME = "repository".intern();
   protected final static String SYSTEM_WS = "system".intern();
-  protected final static String COLLABORATION_WS = "collaboration".intern();
+  protected final static String KNOWLEDGE_WS = "knowledge".intern();
   protected static Node root_ = null;
   protected SessionProvider sessionProvider;
   private static SessionProviderService sessionProviderService = null;
@@ -87,10 +87,8 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
       String containerConf = FAQServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();      
-      String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
-      
-      if (System.getProperty("java.security.auth.login.config") == null)
-        System.setProperty("java.security.auth.login.config", loginConf);
+      String loginConf = Thread.currentThread().getContextClassLoader().getResource("conf/portal/login.conf").toString();
+      System.setProperty("java.security.auth.login.config", loginConf);
     }
     catch (Exception e) {
     	e.printStackTrace();
@@ -103,7 +101,7 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
     repositoryService = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
     
     // Initialize datas
-    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
+    Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(KNOWLEDGE_WS);
     root_ = session.getRootNode();   
     sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
     }
