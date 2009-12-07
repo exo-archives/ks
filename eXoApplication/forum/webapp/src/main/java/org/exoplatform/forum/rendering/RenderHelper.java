@@ -50,7 +50,7 @@ public class RenderHelper {
 
   
   
-  class PostDelegate implements MarkupRenderDelegate<Post> {
+  static class PostDelegate implements MarkupRenderDelegate<Post> {
     
     public String getMarkup(Post post) {
       return post.getMessage();
