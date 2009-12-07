@@ -143,20 +143,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 
   }
 	
-	private List<PageNavigation> getTreeNode(){
-		List<PageNavigation> list = new ArrayList<PageNavigation>();
-		list = Util.getUIPortal().getNavigations();
-		List<PageNode> list2 ;
-		for (PageNavigation pageNavigation : list) {
-			list2 = pageNavigation.getNodes();
-			for (PageNode pageNode : list2) {
-	    //  System.out.println("\n\n Node Name: " + pageNode.getName());
-      }
-    }
-		return list;
-	}
-
-	public void init() throws Exception {getTreeNode();
+	public void init() throws Exception {
 		if(isEditPortlet_){
 			setListCate();
 			
