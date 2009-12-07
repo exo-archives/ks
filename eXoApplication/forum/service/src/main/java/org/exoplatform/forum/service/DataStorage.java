@@ -72,8 +72,6 @@ public interface DataStorage {
 
   boolean isAdminRole(String userName) throws Exception;
 
-  void start();
-
   void setDefaultAvatar(String userName) throws Exception;
 
   ForumAttachment getUserAvatar(String userName) throws Exception;

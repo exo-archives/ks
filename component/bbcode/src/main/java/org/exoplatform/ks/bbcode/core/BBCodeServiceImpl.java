@@ -31,7 +31,6 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.management.ManagementAware;
@@ -71,7 +70,16 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 	
   public BBCodeServiceImpl()  {
     activeBBCodesCache = new ArrayList<String>();
+    defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;    
   }
+	
+  public BBCodeServiceImpl(KSDataLocation dataLocator)  {
+    this();
+    this.dataLocator = dataLocator;
+    this.sessionManager = dataLocator.getSessionManager();
+  }
+  
+
   
   public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getBBCodesLocation();
@@ -305,9 +313,6 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 
   public void start() {
     try {
-      this.dataLocator = getComponent(KSDataLocation.class);
-      this.sessionManager = dataLocator.getSessionManager();
-      defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;
       initDefaultBBCodes();
     } catch (Exception e) {
       log.error("Default BBCodes failed to initialize", e);

@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import static org.exoplatform.ks.common.Utils.getComponent;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -160,9 +158,14 @@ public class JCRDataStorage implements  DataStorage {
   private String repository;
 	private String workspace;
 	
-	public JCRDataStorage() throws Exception {
+  public JCRDataStorage()  {
+  }
+	
+	public JCRDataStorage(KSDataLocation dataLocator) {
+	  setDataLocator(dataLocator);
 	}
 
+/*
   public void start() {
     try { 
       setDataLocator(getComponent(KSDataLocation.class));
@@ -176,7 +179,7 @@ public class JCRDataStorage implements  DataStorage {
     //    saveForumStatistic(new ForumStatistic());
     
   }
-
+*/
   @Managed
   @ManagedDescription("repository for forum storage")
   public String getRepository() throws Exception {
@@ -7335,10 +7338,9 @@ public class JCRDataStorage implements  DataStorage {
     sessionManager = dataLocator.getSessionManager();
     repository = dataLocator.getRepository();
     workspace = dataLocator.getWorkspace();
+    log.info("JCR Data Storage for forum initialized to " + dataLocator);
   }
-	
-	
-	
+
 	
 	
 	

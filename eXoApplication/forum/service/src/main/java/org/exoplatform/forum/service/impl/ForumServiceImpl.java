@@ -113,10 +113,6 @@ public class ForumServiceImpl implements ForumService, Startable {
 
 
   public void start() {
-    
-    // initialize the data storage
-    storage_.start();
-    
 
   	try {
   	  log.info("initializing category listeners...");
