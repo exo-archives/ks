@@ -71,8 +71,6 @@ import org.exoplatform.portal.config.model.PageBody;
 import org.exoplatform.portal.config.model.PageNavigation;
 import org.exoplatform.portal.config.model.PageNode;
 import org.exoplatform.portal.config.model.PageNodeContainer;
-import org.exoplatform.portal.config.model.portlet.PortletApplication;
-import org.exoplatform.portal.config.model.portlet.PortletId;
 import org.exoplatform.portal.webui.portal.UIPortal;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
@@ -212,11 +210,14 @@ public class UIQuestions extends UIContainer {
 					ArrayList<ModelObject> children2 = page.getChildren();
 					for(ModelObject modelObject : children2) {
 						if(modelObject instanceof Application) {
+						  // FIXME : was broken when upgrading to beta3
+						  /*
 							if(((PortletId)((Application) modelObject).getRef()).getPortletName().equals("ForumPortlet")){
 								values.add(pageNode.getName());// PageNode Name
 								values.add(((Application) modelObject).getStorageName());// componentId
 								return values;
 							}
+							*/
 						}
 					}
 				}

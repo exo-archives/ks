@@ -150,4 +150,10 @@ public class MockServletContext implements ServletContext {
   public void setAttribute(String name, Object object) {
   }
 
+
+  public String getContextPath() {
+    
+    return null;
+  }
+
 }
