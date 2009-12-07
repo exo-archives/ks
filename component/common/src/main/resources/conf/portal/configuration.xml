@@ -18,7 +18,7 @@
       <value-param>
         <name>workspace</name>
         <description>workspace for KS data</description>
-        <value>system</value>
+        <value>knowledge</value>
       </value-param>      
     </init-params>
   </component>
