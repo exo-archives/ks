@@ -68,7 +68,7 @@ public class RenderHelper {
 
   
   
-  class AnswerDelegate implements MarkupRenderDelegate<Answer> {
+  static class AnswerDelegate implements MarkupRenderDelegate<Answer> {
     
     public String getMarkup(Answer answer) {
       return answer.getResponses();
@@ -80,7 +80,7 @@ public class RenderHelper {
 
   }
 
-  class CommentDelegate implements MarkupRenderDelegate<Comment> {
+  static class CommentDelegate implements MarkupRenderDelegate<Comment> {
   	
   	public String getMarkup(Comment answer) {
   		return answer.getComments();
@@ -92,7 +92,7 @@ public class RenderHelper {
   	
   }
   
-  class QuestionDelegate implements MarkupRenderDelegate<Question> {
+  static class QuestionDelegate implements MarkupRenderDelegate<Question> {
   	
   	public String getMarkup(Question question) {
   		return question.getDetail();
