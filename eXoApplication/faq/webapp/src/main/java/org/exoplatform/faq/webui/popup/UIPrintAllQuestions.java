@@ -180,6 +180,10 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 		}
 	}
 	
+	public String answer(Comment comment){
+	  return comment.getComments();
+	}
+	
 	public List<Answer> getListAnswers(String questionId){
 		try{
 			return faqService_.getPageListAnswer(questionId, false).getPageItem(0);
