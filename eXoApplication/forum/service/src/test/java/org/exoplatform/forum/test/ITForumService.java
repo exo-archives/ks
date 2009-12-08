@@ -71,7 +71,7 @@ public class ITForumService extends ForumServiceTestCase{
     assertNotNull(forumService_);
   }
 	
-	public void _testUserProfile() throws Exception {
+	public void testUserProfile() throws Exception {
   	String userName = "tu.duy";
 	  UserProfile userProfile = createdUserProfile(userName);
 	  
@@ -103,7 +103,7 @@ public class ITForumService extends ForumServiceTestCase{
 	  //
   }
   
-	public void _testUserLogin() throws Exception{
+	public void testUserLogin() throws Exception{
   	String []userIds = new String[]{USER_ROOT, USER_JOHN, USER_DEMO};
   	for (int i = 0; i < userIds.length; i++) {
   		try {
@@ -129,7 +129,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertEquals("Demo is online", forumService_.isOnline(USER_DEMO), false);
   }
 	
-	public void _testForumAdministration() throws Exception{
+	public void testForumAdministration() throws Exception{
   	ForumAdministration administration = createForumAdministration();
   	forumService_.saveForumAdministration(administration);
   	administration = forumService_.getForumAdministration();
@@ -137,7 +137,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertEquals(administration.getForumSortBy(), "forumName");
   }
 
-  public void _testCategory() throws Exception {  
+  public void testCategory() throws Exception {  
   	Category cat = createCategory() ;
   	String catId = cat.getId();
   	
@@ -163,7 +163,7 @@ public class ITForumService extends ForumServiceTestCase{
     assertNull("Category is not null", cat);
   }
 
-  public void _testForum() throws Exception {
+  public void testForum() throws Exception {
   	Category cat = createCategory();
   	// create new category
   	forumService_.saveCategory(cat, true);
@@ -244,7 +244,7 @@ public class ITForumService extends ForumServiceTestCase{
   
 //  TODO: can not send alert job waiting for moderator
   @SuppressWarnings("unchecked")
-  public void _testTopic() throws Exception {
+  public void testTopic() throws Exception {
     Category cat = createCategory();
 		forumService_.saveCategory(cat, true);
 		Forum forum = createdForum();
@@ -320,7 +320,7 @@ public class ITForumService extends ForumServiceTestCase{
   }
   
   
-  public void _testTopicType() throws Exception {
+  public void testTopicType() throws Exception {
 //	  set Data
   	setData();
   	TopicType topicType = createTopicType("Musics");
@@ -349,7 +349,7 @@ public class ITForumService extends ForumServiceTestCase{
 		this.topicId = topic.getId();
   }
   
-  public void _testPost() throws Exception {
+  public void testPost() throws Exception {
 		//set Data
 		setData();
 		
@@ -393,7 +393,7 @@ public class ITForumService extends ForumServiceTestCase{
 		//getViewPost
   }
   // BookMark
-  public void _testBookMark()throws Exception {
+  public void testBookMark()throws Exception {
   	//  set Data
 		setData();
 		
@@ -410,7 +410,7 @@ public class ITForumService extends ForumServiceTestCase{
   }
   
   // Private Message
-  public void _testPrivateMessage () throws Exception {
+  public void testPrivateMessage () throws Exception {
   	ForumPrivateMessage privateMessage = new ForumPrivateMessage();
   	privateMessage.setFrom("demo");
   	privateMessage.setIsUnread(false);
@@ -448,7 +448,7 @@ public class ITForumService extends ForumServiceTestCase{
   	//
   }
   
-  public void _testPoll() throws Exception{
+  public void testPoll() throws Exception{
 		//set Data
 		setData();
   	Poll poll = createPoll("question to this poll1", new String[]{"option 1", "option 2", "option 3"});
@@ -468,7 +468,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertNull(forumService_.getPoll(categoryId, forumId, topicId));
   }
   
-  public void _testGetObject() throws Exception {
+  public void testGetObject() throws Exception {
   	//  set Data
 		setData();
 		
@@ -481,7 +481,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertNotNull(forumService_.getObjectNameById(forumId, Utils.FORUM));
   }
   
-  public void  _testImportXML() throws Exception{
+  public void  testImportXML() throws Exception{
   	Category cat = createCategory();
 		forumService_.saveCategory(cat, true);
 		cat = forumService_.getCategory(cat.getId());
@@ -500,7 +500,7 @@ public class ITForumService extends ForumServiceTestCase{
 		}
 	}
   
-  public void _testExportXML() throws Exception{
+  public void testExportXML() throws Exception{
   	Category cat = createCategory();
 		forumService_.saveCategory(cat, true);
 		cat = forumService_.getCategory(cat.getId());
@@ -512,7 +512,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertEquals("can't export Forum into XML file", bos.size() > 0, true);
   }
   
-  public void _testTag() throws Exception{
+  public void testTag() throws Exception{
   	//  set Data
 		setData();
 		Tag tag = createTag("Tag1");
@@ -539,7 +539,7 @@ public class ITForumService extends ForumServiceTestCase{
 		
   }
   
-  public void _testSearch() throws Exception {
+  public void testSearch() throws Exception {
   	//set Data
   	setData();
 	  //getQuickSearch
@@ -569,7 +569,7 @@ public class ITForumService extends ForumServiceTestCase{
 		assertEquals(forumSearchs.isEmpty(), false);
   }
   
-  public void _testWatch() throws Exception {
+  public void testWatch() throws Exception {
   	//  set Data
   	setData();
   	//addWatch
@@ -585,7 +585,7 @@ public class ITForumService extends ForumServiceTestCase{
   	assertEquals(watchs.size(), 0);
   }
   
-  public void _testIpBan()throws Exception {
+  public void testIpBan()throws Exception {
   	// set Data
   	setData();
   	// set Ip ban
