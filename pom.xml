@@ -11,7 +11,7 @@
 
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
-  <version>2.0.0-Alpha02</version>
+  <version>2.0.0-Alpha03-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>eXo Knowledge Suite</name>
@@ -67,9 +67,9 @@
     <url>http://builder.exoplatform.org/hudson/job/ks/</url>
   </ciManagement>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha02</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha02</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/3Modules/ks/tags/2.0.0-Alpha02</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/3Modules/ks/trunk</url>
   </scm>
 
   <modules>
