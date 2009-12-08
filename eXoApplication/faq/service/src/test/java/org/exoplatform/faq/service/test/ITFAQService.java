@@ -397,7 +397,6 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.moveQuestions(listId, cate2.getPath(), "", faqSetting_);
 		assertEquals("Category 2 have more than one question after move question 2", 
 								faqService_.getQuestionsByCatetory(cate2.getPath(), faqSetting_).getAll().size(), 1);
-		
 //	Get question by list category
 		listId = new ArrayList<String>() ;
 		String catId= Utils.CATEGORY_HOME;

@@ -1579,7 +1579,7 @@ public class JCRDataStorage implements DataStorage {
 //				send email notify to author question. by Duy Tu	
 					try {
 						sendNotifyMoveQuestion(destCateNode, questionNode, catId, questionLink, faqSetting);
-          } catch (Exception e) {e.printStackTrace();}
+          } catch (Exception e) {}
 					
 
 				}catch(ItemNotFoundException ex){
@@ -2921,9 +2921,7 @@ public class JCRDataStorage implements DataStorage {
 		JobSchedulerService schedulerService = 
 			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 		messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
-		try {
-			schedulerService.addPeriodJob(info, periodInfo);
-    } catch (Exception e) {}
+		schedulerService.addPeriodJob(info, periodInfo);
 	}
 
 	/* (non-Javadoc)
