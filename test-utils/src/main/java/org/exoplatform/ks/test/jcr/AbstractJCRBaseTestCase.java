@@ -18,67 +18,67 @@ package org.exoplatform.ks.test.jcr;
 
 import junit.framework.TestCase;
 
-import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+ * An abstract test that takes care of running the unit tests with the semantic described by the
+ * {#link GateInTestClassLoader}.
+ *
+ * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public abstract class AbstractJCRBaseTestCase extends TestCase {
+public abstract class AbstractJCRBaseTestCase extends TestCase
+{
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-  
-  /** . */
-  private ManageableRepository repository;
-  protected String rootConfigPath;
-  protected String portalConfigPath;
-  
+   protected AbstractJCRBaseTestCase()
+   {
+   }
 
-  public void startJCR() throws Exception {
+   protected AbstractJCRBaseTestCase(String name)
+   {
+      super(name);
+   }
 
-    // JCR configuration
-    String containerConf = Thread.currentThread().getContextClassLoader().getResource("conf/portal/configuration.xml").toString();
-    StandaloneContainer.addConfigurationURL(containerConf);
+   @Override
+   public void runBare() throws Throwable
+   {
+      ClassLoader realClassLoader = Thread.currentThread().getContextClassLoader();
 
-    //
-    String loginConf = Thread.currentThread().getContextClassLoader().getResource("login.conf").toString();
-    System.setProperty("java.security.auth.login.config", loginConf);
+      //
+      Set<String> rootConfigPaths = new HashSet<String>();
+      rootConfigPaths.add("conf/root-configuration.xml");
 
-    //
-    StandaloneContainer container = StandaloneContainer.getInstance();
-    RepositoryService repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+      //
+      Set<String> portalConfigPaths = new HashSet<String>();
+      portalConfigPaths.add("conf/portal-configuration.xml");
 
-    repository = repositoryService.getDefaultRepository();
-  }
+      //
+      EnumMap<ContainerScope, Set<String>> configs = new EnumMap<ContainerScope, Set<String>>(ContainerScope.class);
+      configs.put(ContainerScope.ROOT, rootConfigPaths);
+      configs.put(ContainerScope.PORTAL, portalConfigPaths);
 
-  public ManageableRepository getRepository() {
-    return repository;
-  }
+      //
+      ConfiguredBy cfBy = getClass().getAnnotation(ConfiguredBy.class);
+      if (cfBy != null)
+      {
+         for (ConfigurationUnit src : cfBy.value())
+         {
+            configs.get(src.scope()).add(src.path());
+         }
+      }
 
-  public String getRepositoryName() {
-    return "db1";
-  }
-
-  public String getWorkspaceName() {
-    return "ws";
-  }
-  
-  public void runBare() throws Throwable {
-    ClassLoader realClassLoader = Thread.currentThread().getContextClassLoader();
-    try {
-      ClassLoader testClassLoader = new TestClassLoader(realClassLoader, rootConfigPath, "conf/jcr/configuration.xml");
-      Thread.currentThread().setContextClassLoader(testClassLoader);
-      super.runBare();
-      
-    } finally {
-      Thread.currentThread().setContextClassLoader(realClassLoader);
-    }
-  }
-  
-
-
+      //
+      try
+      {
+         ClassLoader testClassLoader = new TestClassLoader(realClassLoader, rootConfigPaths, portalConfigPaths);
+         Thread.currentThread().setContextClassLoader(testClassLoader);
+         super.runBare();
+      }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(realClassLoader);
+      }
+   }
 }
