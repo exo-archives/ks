@@ -1846,7 +1846,7 @@ public class JCRDataStorage implements DataStorage {
 			faqHome.getNode(categoryId).remove() ;
 			faqHome.save() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+			log.error("Can not remove category has id: " + categoryId);
 		} finally { sProvider.close() ;}		
 	}
 	
@@ -2921,7 +2921,9 @@ public class JCRDataStorage implements DataStorage {
 		JobSchedulerService schedulerService = 
 			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 		messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
-		schedulerService.addPeriodJob(info, periodInfo);
+		try {
+			schedulerService.addPeriodJob(info, periodInfo);
+    } catch (Exception e) {}
 	}
 
 	/* (non-Javadoc)

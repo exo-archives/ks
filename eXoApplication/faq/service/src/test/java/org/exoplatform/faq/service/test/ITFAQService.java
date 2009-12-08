@@ -177,22 +177,12 @@ public class ITFAQService extends FAQServiceTestCase{
 		watch.setEmails(mail);
 		return watch;
 	}
-	
-	private BBCode createBBCode(String tag, String replacement, boolean isActive) {
-  	BBCode bbCode = new BBCode();
-  	bbCode.setTagName(tag);
-  	bbCode.setActive(isActive);
-  	bbCode.setDescription("Description!");
-  	bbCode.setExample("["+tag+"] text example [/"+tag+"]");
-  	bbCode.setOption(false);
-  	bbCode.setReplacement(replacement);
-  	return bbCode;
-  }
+
 	
 	private FileAttachment createUserAvatar(String fileName) throws Exception{
 		FileAttachment attachment = new FileAttachment();
 		try {
-			File file =  new File("../service/src/test/java/conf/portal/defaultAvatar.jpg");
+			File file =  new File("../service/src/test/resources/conf/portal/defaultAvatar.jpg");
 			attachment.setName(fileName);
 			InputStream is = new FileInputStream(file);
 			attachment.setInputStream(is);
@@ -203,11 +193,18 @@ public class ITFAQService extends FAQServiceTestCase{
 		return attachment;
 	}
 
+	private void revoveDate() throws Exception {
+		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("true");
+		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
+		for (Category category : categories) {
+	    faqService_.removeCategory(category.getPath());
+    }
+	}
 
 	private void defaultData() throws Exception {
-	//Create category Home.
-		faqService_.getAllCategories();
-		//Create some category default
+	// remove old data. 
+		revoveDate();
+	//Create some category default
 		Category cate = createCategory("Category to test question") ;
 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
 		Category cate2 = createCategory("Category 2 to test question") ;
@@ -261,9 +258,9 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question5, true,faqSetting_) ;
 	}
 	
-	public void _testCategory() throws Exception {
+	public void testCategory() throws Exception {
 	// remove Data before testing category.
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		revoveDate();
 //		add category Id	
 		faqService_.getAllCategories();
 		Category cate1 = createCategory("Cate 1") ;
@@ -352,10 +349,10 @@ public class ITFAQService extends FAQServiceTestCase{
 		List<String> listCateByModerator = faqService_.getListCateIdByModerator(USER_ROOT);
 		assertEquals("User Root is't moderator of category Home and cate1", listCateByModerator.size(), 2);
 		// remove Data when tested category
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		//faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 // FAQPortlet
-	public void _testCategoryInfo() throws Exception {
+	public void testCategoryInfo() throws Exception {
 //	Add new data default
 		defaultData();
 //	Get categoryInfo
@@ -367,10 +364,10 @@ public class ITFAQService extends FAQServiceTestCase{
 		categoryInfo = faqService_.getCategoryInfo(categoryId1, categoryIdScoped);
 		assertEquals("Can not questionInfo  of category.", categoryInfo.getQuestionInfos().size(), 5);
 //	 remove Data when tested category
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		//faqService_.removeCategory(Utils.CATEGORY_HOME);
   }
 	
-	public void _testQuestion() throws Exception {
+	public void testQuestion() throws Exception {
 //		Add new data default
 		defaultData();
 //		get question 1
@@ -387,7 +384,6 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertNotNull(question1) ;
 		assertEquals("Detail of question 1 have not been changed",
 									"Nguyen van truong test question 11111111 ?", question1.getDetail());
-
 //  update Question Relatives
 		faqService_.updateQuestionRelatives(questionId, new String[]{qsId2});
 		question1 = faqService_.getQuestionById(questionId);
@@ -404,10 +400,14 @@ public class ITFAQService extends FAQServiceTestCase{
 		
 //	Get question by list category
 		listId = new ArrayList<String>() ;
-		listId.add(categoryId1.replace(Utils.CATEGORY_HOME, ""));
+		String catId= Utils.CATEGORY_HOME;
+		if(!categoryId1.equals(Utils.CATEGORY_HOME)) {
+			catId = categoryId1.substring(categoryId1.lastIndexOf("/") + 1) ;
+		}
+		listId.add(catId);
 		JCRPageList pageList = faqService_.getQuestionsByListCatetory(listId, false);
 		pageList.setPageSize(10);
-//		assertEquals("Can't move question 2 to category 2", pageList.getPage(1, "root").size(), 4);
+		assertEquals("Can't move question 2 to category 2", pageList.getPage(1, "root").size(), 4);
 //		get list all question
 		List<Question> listAllQuestion = faqService_.getAllQuestions().getAll();
 		assertEquals("the number of categories in FAQ is not 5", listAllQuestion.size(), 5) ;
@@ -427,11 +427,9 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.removeQuestion(categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId5);
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions().getAll();
 		assertEquals("Question 5 have not been removed, in system have 5 questions", listAllQuestionAfterRemove.size(), 4) ;
-	// remove Data when tested question
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void _testSearch() throws Exception {
+	public void testSearch() throws Exception {
 //		set Data default
 		defaultData();
 		
@@ -473,10 +471,10 @@ public class ITFAQService extends FAQServiceTestCase{
 									//listSearchAdvanceQuestion.size(), 2) ;
 		
 	// remove Data when tested search
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		//faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void _testAnswer() throws Exception{
+	public void testAnswer() throws Exception{
 //	set data default
 		defaultData() ;
 		// create Answer
@@ -510,10 +508,10 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertEquals("Answer 1 have not been removed, question only have one answer", pageList.getPageItem(0).size(), 1);
 
 		// remove Data when tested answer
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		//faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 	
-	public void _testComment() throws Exception{
+	public void testComment() throws Exception{
 //	set default data
 		defaultData();
 		Comment comment1 = createComment(USER_ROOT, "Root comment 1 for question");
@@ -539,15 +537,16 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertEquals("Comment 1 is not removed", pageList.getPageItem(0).size(), 1);
 		
 	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+	//	faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void _testImportData() throws Exception{
-		faqService_.getAllCategories();
+	public void testImportData() throws Exception{
+//		remove old data;
+		revoveDate();
 //		Before import data, number question is 0
 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
 		try {
-			File file = new File("../service/src/test/java/conf/portal/Data.xml");
+			File file = new File("../service/src/test/resources/conf/portal/Data.xml");
 		  String content = FileUtils.readFileToString(file, "UTF-8");
 			byte currentXMLBytes[] = content.getBytes();
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
@@ -558,10 +557,10 @@ public class ITFAQService extends FAQServiceTestCase{
 //		After imported data, number questions is 5
 		assertEquals("Before import data, number question is not 5", faqService_.getAllQuestions().getAvailable(), 5);
 	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+	//	faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void _testWatchCategory() throws Exception {
+	public void testWatchCategory() throws Exception {
 //	add default data
 		defaultData();
 		List<Watch> listWatchs = new ArrayList<Watch>();
@@ -584,10 +583,10 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.unWatchCategory(categoryId1, USER_ROOT);		
 		assertEquals("User root has watching this category", faqService_.isUserWatched(USER_ROOT, categoryId1), false);
 	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
+		//faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-  public void _testQuestionMultilanguage() throws Exception{
+  public void testQuestionMultilanguage() throws Exception{
 //		set data default
 		defaultData();
 //		Add question language for question
@@ -629,7 +628,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertNull("Comment in question language is not deleted.", faqService_.getCommentById(questionId, commentId, "VietNam"));
 	}
 	
-	public void _testUserSetting() throws Exception {
+	public void testUserSetting() throws Exception {
 //		save userSetting information into user node
 		faqSetting_.setDisplayMode("both");
 		faqSetting_.setOrderBy("created");
@@ -678,7 +677,7 @@ public class ITFAQService extends FAQServiceTestCase{
     }*/
 	}
 	
-	public void _testUserAvatar()throws Exception{
+	public void testUserAvatar()throws Exception{
 		//	Add new avatar for user:
 		faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"));
 		

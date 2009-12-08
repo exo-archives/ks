@@ -1,6 +1,5 @@
 <repository-service default-repository="repository">
    <repositories>
-
     <repository name="repository" system-workspace="system" default-workspace="collaboration">
      <security-domain>gatein-domain</security-domain>
      <access-control>optional</access-control>
