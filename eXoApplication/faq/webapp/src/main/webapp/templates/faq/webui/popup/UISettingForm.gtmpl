@@ -94,10 +94,10 @@ if(!uicomponent.isEditPortlet_){
 					</td>
 				</tr>
 	 		</table> 
-		</div>
-			
+		</div>			
 	<%uiform.end()%>
-</div><%
+</div>
+<%
 } else {
 %>
 <div class="UISettingForm $uicomponent.id" style="padding:4px;">
