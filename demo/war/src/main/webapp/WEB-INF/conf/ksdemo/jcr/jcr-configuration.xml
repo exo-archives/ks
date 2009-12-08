@@ -3,6 +3,16 @@
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
 	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
+  <component>
+    <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+    <init-params>
+      <properties-param>
+        <name>locations</name>
+        <property name="repository" value="portal-system"/>
+      </properties-param>
+    </init-params>
+  </component>
+
 	<external-component-plugins>
 		<!-- The full qualified name of the RepositoryServiceConfiguration -->
 		<target-component>org.exoplatform.services.jcr.config.RepositoryServiceConfiguration</target-component>
@@ -22,4 +32,6 @@
 			</init-params>
 		</component-plugin>
 	</external-component-plugins>
+  
+  
 </configuration>
