@@ -165,37 +165,22 @@ public class JCRDataStorage implements  DataStorage {
 	  setDataLocator(dataLocator);
 	}
 
-/*
-  public void start() {
-    try { 
-      setDataLocator(getComponent(KSDataLocation.class));
-      log.info("initialized forum storage on " + dataLocator);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to initialize forum storage on " + dataLocator);
-    }
-    
-    
-    // TODO : Why needed ?
-    //    saveForumStatistic(new ForumStatistic());
-    
-  }
-*/
   @Managed
   @ManagedDescription("repository for forum storage")
-  public String getRepository() throws Exception {
+  public String getRepository() {
      return repository;
   }
 	
 	
 	@Managed
 	@ManagedDescription("workspace for the forum storage")
-	public String getWorkspace() throws Exception {
+	public String getWorkspace() {
 	   return workspace;
 	}
 	
 	 @Managed
 	  @ManagedDescription("data path for forum storage")
-	  public String getPath() throws Exception {	    
+	  public String getPath()  {	    
 	    return dataLocator.getForumHomeLocation();
 	  }
 	

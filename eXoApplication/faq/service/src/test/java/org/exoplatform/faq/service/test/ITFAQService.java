@@ -258,7 +258,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question5, true,faqSetting_) ;
 	}
 	
-	public void testCategory() throws Exception {
+	public void _testCategory() throws Exception {
 	// remove Data before testing category.
 		revoveDate();
 //		add category Id	
@@ -352,7 +352,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		//faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 // FAQPortlet
-	public void testCategoryInfo() throws Exception {
+	public void _testCategoryInfo() throws Exception {
 //	Add new data default
 		defaultData();
 //	Get categoryInfo
@@ -367,7 +367,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		//faqService_.removeCategory(Utils.CATEGORY_HOME);
   }
 	
-	public void testQuestion() throws Exception {
+	public void _testQuestion() throws Exception {
 //		Add new data default
 		defaultData();
 //		get question 1
@@ -539,7 +539,7 @@ public class ITFAQService extends FAQServiceTestCase{
 	//	faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
-	public void testImportData() throws Exception{
+	public void _testImportData() throws Exception{
 //		remove old data;
 		revoveDate();
 //		Before import data, number question is 0
