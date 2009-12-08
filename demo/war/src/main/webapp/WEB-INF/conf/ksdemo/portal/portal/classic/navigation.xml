@@ -13,25 +13,25 @@
     <node>
       <uri>forum</uri>
       <name>forum</name>
-      <label>#{portal.classic.forum}</label>
+      <label>Forum</label>
       <page-reference>portal::classic::forum</page-reference>
     </node>
     <node>
       <uri>answers</uri>
       <name>answers</name>
-      <label>#{portal.classic.answers}</label>
+      <label>Answers</label>
       <page-reference>portal::classic::answers</page-reference>
     </node>
     <node>
       <uri>faq</uri>
       <name>faq</name>
-      <label>#{portal.classic.faq}</label>
+      <label>FAQ</label>
       <page-reference>portal::classic::faq</page-reference>
     </node>    
     <node>
       <uri>tour</uri>
       <name>tour</name>
-      <label>#{portal.classic.tour}</label>
+      <label>Take a tour</label>
       <page-reference>portal::classic::tour</page-reference>
     </node>    
   </page-nodes>
