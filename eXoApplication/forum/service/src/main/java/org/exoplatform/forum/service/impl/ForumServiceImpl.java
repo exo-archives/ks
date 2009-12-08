@@ -217,8 +217,10 @@ public class ForumServiceImpl implements ForumService, Startable {
 	 * @TODO : profileTemplate is currently ignored
 	 */
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
-    storage.populateUserProfile(user, true); 
-    forumStatisticsService.addMember(user.getUserName());
+    boolean added = storage.populateUserProfile(user, true); 
+    if (added) {
+      forumStatisticsService.addMember(user.getUserName());
+    }
   }
 
 

@@ -7232,47 +7232,57 @@ public class JCRDataStorage implements  DataStorage {
 	  return null;
   }
 
-
-  public void populateUserProfile(User user, boolean isNew) throws Exception {
+	/**
+	 * {@inheritDoc}
+	 */
+  public boolean populateUserProfile(User user, boolean isNew) throws Exception {
+    boolean added = false;
     sessionManager.openSession();
     try {
-
       Node profile = null;
       Node profileHome = getUserProfileHome();
-      if (isNew) {
-        profile = profileHome.addNode(user.getUserName(), Utils.USER_PROFILES_TYPE);
+      final String userName = user.getUserName();
+      if (profileHome.hasNode(userName)) {
+        if (isNew) {
+          log.warn("Request to add user " + userName + " was ignroed because it already exists.");
+        }
+        profile = profileHome.getNode(userName);
+       added = false;
       } else {
-        profile = profileHome.getNode(user.getUserName());
+        profile = profileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+        added = true;
       }
 
       Calendar cal = getGreenwichMeanTime();
-      profile.setProperty("exo:userId", user.getUserName());
+      profile.setProperty("exo:userId", userName);
       profile.setProperty("exo:lastLoginDate", cal);
       profile.setProperty("exo:email", user.getEmail());
       profile.setProperty("exo:fullName", user.getFullName());
       cal.setTime(user.getCreatedDate());
       profile.setProperty("exo:joinedDate", cal);
-      if (isAdminRole(user.getUserName())) {
+      if (isAdminRole(userName)) {
         profile.setProperty("exo:userTitle", "Administrator");
-        profile.setProperty("exo:userRole", 0);
+        profile.setProperty("exo:userRole", UserProfile.ADMIN); // 
       }
-
+      return added ;
     } catch (Exception e) {
-      log.error("Errow while populating user profile: " + e.getMessage());
+      log.error("Error while populating user profile: " + e.getMessage());
       throw e;
     } finally {
       sessionManager.closeSession(true);
     }
   }
 
-
+  /**
+   * {@inheritDoc}
+   */
   public void deleteUserProfile(User user) throws Exception {
     sessionManager.openSession();
     try {
       Node profile = getUserProfileHome().getNode(user.getUserName());
       profile.remove();
     } catch (Exception e) {
-      log.error("Errow while removing user profile: " + e.getMessage());
+      log.error("Error while removing user profile: " + e.getMessage());
       throw e;
     } finally {
       sessionManager.closeSession(true);

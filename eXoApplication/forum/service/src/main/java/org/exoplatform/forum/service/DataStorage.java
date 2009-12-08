@@ -378,8 +378,9 @@ public interface DataStorage {
    * Create or update a forum user profile
    * @param user user whose profile must be created
    * @param isNew
+   * @return true if the user profile was added
    */
-  public void populateUserProfile(User user, boolean isNew) throws Exception;;
+  public boolean populateUserProfile(User user, boolean isNew) throws Exception;;
   public void deleteUserProfile(User user) throws Exception;
 
   void initDefaultData() throws Exception;
