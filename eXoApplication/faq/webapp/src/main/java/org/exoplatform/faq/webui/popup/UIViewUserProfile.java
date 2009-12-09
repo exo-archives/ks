@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
@@ -76,21 +77,14 @@ public class UIViewUserProfile extends UIForm implements UIPopupComponent {
 	}
 
 	@SuppressWarnings("unused")
-	private String getAvatarUrl(CommonContact contact) throws Exception {
-//	DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-//	try {
-//		ContactAttachment attachment = contact.getAttachment() ; 
-//		InputStream input = attachment.getInputStream() ;
-//		String fileName = attachment.getFileName() ;
-//		return ForumSessionUtils.getFileSource(input, fileName, dservice);
-//	} catch (NullPointerException e) {
-//		return "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
-//	}
-		if (contact.getAvatarUrl() == null || contact.getAvatarUrl().trim().length() < 1) {
-			return "/faq/skin/DefaultSkin/webui/background/Avatar1.gif";
-		} else {
-			return contact.getAvatarUrl();
+	private String getAvatarUrl(String userId) throws Exception {
+		try{
+			String url = FAQUtils.getFileSource(faqService_.getUserAvatar(userId), null);
+			if(FAQUtils.isFieldEmpty(url)) url = Utils.DEFAULT_AVATAR_URL;
+			return url;
+		} catch (Exception e){
 		}
+		return Utils.DEFAULT_AVATAR_URL;
 	}
 	
 	public void setUser(User userName, FAQService faqService) {
