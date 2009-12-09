@@ -1847,7 +1847,7 @@ public class UITopicDetail extends UIForumKeepStickPageIterator {
 	static public class PreviewReplyActionListener extends EventListener<UITopicDetail> {
 		public void execute(Event<UITopicDetail> event) throws Exception {
 			UITopicDetail topicDetail = event.getSource() ;	
-			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
+			String message = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
 			if(checksms != null && message.trim().length() > 0) {
 				StringBuffer buffer = new StringBuffer();
