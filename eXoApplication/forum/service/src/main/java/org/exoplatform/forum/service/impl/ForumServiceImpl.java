@@ -255,13 +255,13 @@ public class ForumServiceImpl implements ForumService, Startable {
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			
-	  	forumStatistic.setMembersCount(iter.getSize()) ;
-	  	Node node = iter.nextNode() ;
-	  	String id = node.getProperty("exo:userId").getString() ;
-	  	forumStatistic.setNewMembers(id) ;
-	  	saveForumStatistic(systemSession, forumStatistic) ;
-			
+			if (iter.getSize() > 0) {
+				forumStatistic.setMembersCount(iter.getSize()) ;
+		  	Node node = iter.nextNode() ;
+		  	String id = node.getProperty("exo:userId").getString() ;
+		  	forumStatistic.setNewMembers(id) ;
+		  	saveForumStatistic(systemSession, forumStatistic) ;
+			}
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally {
@@ -277,10 +277,10 @@ public class ForumServiceImpl implements ForumService, Startable {
 			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
     	PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
     	List<User> userList = new ArrayList<User>() ;
-    	for(int i = 0 ; i < pageList.getAvailablePage(); i ++) {
+    	for(int i = 1 ; i <= pageList.getAvailablePage(); i ++) {
     		userList = pageList.getPage(i) ;
-    		for(int j = 0; j < pageList.getPageSize(); j ++) {
-    			createUserProfile(sysSession, userList.get(j)) ;    			
+    		for(User user: userList) {
+    			createUserProfile(sysSession, user) ;    			
     		}
     	}
   	}
