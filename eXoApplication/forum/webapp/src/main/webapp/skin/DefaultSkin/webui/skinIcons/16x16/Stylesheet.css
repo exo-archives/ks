@@ -508,3 +508,16 @@
 .UIForumPortlet .UnTagIcon {
 	background: url('icons/UnTagIcon.png') no-repeat left center;
 }
+
+.UIForumPortlet .NormalVote {
+	background: url('icons/SmallGreyStar.gif') no-repeat center;
+}
+
+.UIForumPortlet .OverVote {
+	background: url('icons/SmallYellowStar.gif') no-repeat center;
+}
+
+.UIForumPortlet .RatedVote {
+	background: url('icons/SmallGreyStar.gif') no-repeat center;
+}
+
