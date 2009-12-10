@@ -432,11 +432,9 @@ public class RSSProcess extends RSSGenerate {
 			inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
 			data.setContent(inputStream);
 			addNodeRSS(parentNode, RSSNode, data, false);
-			
-			return inputStream;
+			return parentNode.getNode(KS_RSS).getProperty("exo:content").getStream();
 		} else {
-			RSSNode = parentNode.getNode(KS_RSS);
-			return RSSNode.getProperty("exo:content").getStream();
+			return parentNode.getNode(KS_RSS).getProperty("exo:content").getStream();
 		}
 	}
 	
