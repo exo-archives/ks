@@ -26,6 +26,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
+import java.util.Calendar;
+
 import javax.jcr.Node;
 import javax.jcr.Session;
 
@@ -34,7 +37,7 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.ks.test.jcr.AbstractJCRBaseTestCase;
+import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.exoplatform.ks.test.jcr.ConfigurationUnit;
 import org.exoplatform.ks.test.jcr.ConfiguredBy;
 import org.exoplatform.ks.test.jcr.ContainerScope;
@@ -46,28 +49,20 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
  * @version $Revision$
  */
 @ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
-public class TestJCRDataStorage extends AbstractJCRBaseTestCase {
+public class TestJCRDataStorage extends AbstractJCRTestCase {
+
+  private JCRDataStorage storage;
 
   protected void setUp() throws Exception {
     super.setUp();
+    storage = new JCRDataStorage();
+    KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
+    storage.setDataLocator(locator);
   }
-  
-  public void testWorkspace() throws Exception
-  {
-     PortalContainer container = PortalContainer.getInstance();
-     RepositoryService repos = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-     assertNotNull(repos);
-     ManageableRepository repo = repos.getDefaultRepository();
-     assertNotNull(repo);
-     Session session = repo.getSystemSession("portal-test");
-     assertNotNull(session);
-     session.logout();
-  }
-
   
   public void testConstructor() {
     KSDataLocation location = new KSDataLocation("foo", "bar");
-    JCRDataStorage storage= new JCRDataStorage(location);
+    JCRDataStorage storage = new JCRDataStorage(location);
     assertEquals(storage.getRepository(), "foo");
     assertEquals(storage.getWorkspace(), "bar");
     assertEquals(storage.getPath(), location.getForumHomeLocation());
@@ -101,53 +96,19 @@ public class TestJCRDataStorage extends AbstractJCRBaseTestCase {
   }
   
   
-  public void _testSetDefaultAvatar() throws Exception {
-    
-
-    JCRDataStorage storage = new JCRDataStorage();
-
-  //  addNode(path);
-    
-    storage.setDefaultAvatar("foo");
-    
-    //assertNodeExists(path + "/foo");
-    
-
-    
+  public void testSetDefaultAvatar() throws Exception {
+    String avatarLocation = storage.getDataLocation().getAvatarsLocation()  + "/username";
+    assertNodeNotExists(avatarLocation); 
+    addFile(avatarLocation);
+    assertNodeExists(avatarLocation);
+    storage.setDefaultAvatar("username");
+    assertNodeNotExists(avatarLocation); 
   }
+
+
+
+
   
-  private void assertNodeExists(String path) {
-    try {
-      Session session = getSession();
-      boolean exists = session.getRootNode().hasNode(path);
-      if (!exists) {
-        fail("no node exists at " + path);
-      }
-      }
-      catch (Exception e) {
-        throw new RuntimeException("failed to assert node exists", e);
-      }
-    
-  }
-
-  private Session getSession() throws Exception {
-    PortalContainer container = PortalContainer.getInstance();
-    RepositoryService repos = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-    ManageableRepository repo = repos.getDefaultRepository();
-    Session session = repo.getSystemSession("portal-test");
-    return session;
-  }
-
-  protected void addNode(String path) {
-    try {
-    Session session = getSession();
-    session.getRootNode().addNode(path);
-    session.save();
-    }
-    catch (Exception e) {
-      throw new RuntimeException("failed to add node", e);
-    }
-  }
   
   public void _testDefaultAvatarWithMocks() throws Exception {
     JCRDataStorage storage = new JCRDataStorage();
