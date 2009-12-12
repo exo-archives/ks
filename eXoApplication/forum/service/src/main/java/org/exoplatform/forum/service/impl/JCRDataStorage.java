@@ -443,7 +443,7 @@ public class JCRDataStorage implements  DataStorage {
 	  }
 	  
 	  /**
-	   * Remove the nt:file unode used as avatar for the given username
+	   * Remove the nt:file node used as avatar for the given username
 	   * username is used as the name of the avatar node
 	   */
     public Boolean execute(Session session) throws Exception {
