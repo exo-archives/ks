@@ -38,14 +38,14 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public abstract class AbstractJCRBaseTestCase extends TestCase
+public abstract class AbstractJCRTestCase extends TestCase
 {
 
-   protected AbstractJCRBaseTestCase()
+   protected AbstractJCRTestCase()
    {
    }
 
-   protected AbstractJCRBaseTestCase(String name)
+   protected AbstractJCRTestCase(String name)
    {
       super(name);
    }
@@ -95,7 +95,7 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
     * 
     * @return The ManageableRepository for this test
     */
-   private ManageableRepository getRepo() {
+   ManageableRepository getRepo() {
      try {
        PortalContainer container = PortalContainer.getInstance();
        RepositoryService repos = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
@@ -127,14 +127,20 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
     * @param path path relative to root of test workspace
     */
    protected void assertNodeExists(String path) {
+     Session session = null;
      try {
-       Session session = getSession();
+       session = getSession();
        boolean exists = session.getRootNode().hasNode(path);
        if (!exists) {
          fail("no node exists at " + path);
        }
      } catch (Exception e) {
        throw new RuntimeException("failed to assert node exists", e);
+     }
+     finally {
+       if (session != null) {
+         session.logout();
+       }
      }
    }
    
@@ -143,14 +149,20 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
     * @param path relative path to root of test workspace
     */
    protected void assertNodeNotExists(String path) {
+     Session session = null;
      try {
-       Session session = getSession();
+       session = getSession();
        boolean exists = session.getRootNode().hasNode(path);
        if (exists) {
          fail("node exists at " + path);
        }
      } catch (Exception e) {
        throw new RuntimeException("failed to assert node exists", e);
+     }
+     finally {
+       if (session != null) {
+         session.logout();
+       }
      }
    }
 
@@ -168,6 +180,15 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
      }     
 
    }
+   
+   /**
+    * Add a new node to a given path. intermediary are created if needed.
+    * @param path relative path to root
+    * @return the newly added node
+    */
+   protected Node addNode(String path) {
+     return addNode(path, null);
+   }
 
    /**
     * Add a new node to a given path. intermediary are created if needed.
@@ -176,8 +197,9 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
     * @return the newly added node
     */
    protected Node addNode(String path, String nodetype) {
+     Session session = null;
      try {
-       Session session = getSession();
+       session = getSession();
        Node parent = session.getRootNode();
        String[] sections = path.split("/");
        for (String section : sections) {
@@ -196,6 +218,11 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
      catch (Exception e) {
        throw new RuntimeException("failed to add node" + path, e);
      }
+     finally {
+       if (session != null) {
+         session.logout();
+       }
+     }
    }
    
    /**
@@ -204,8 +231,9 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
     * @return the node for the newly added file
     */
    protected Node addFile(String path) {
+     Session session = null;
      try {
-       Session session = getSession();
+       session = getSession();
        Node parent = session.getRootNode();
        String[] sections = path.split("/");
        for (String section : sections) {
