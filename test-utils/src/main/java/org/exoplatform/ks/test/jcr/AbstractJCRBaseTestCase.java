@@ -18,9 +18,18 @@ package org.exoplatform.ks.test.jcr;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
+import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.Session;
+
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 
 /**
  * An abstract test that takes care of running the unit tests with the semantic described by the
@@ -81,4 +90,144 @@ public abstract class AbstractJCRBaseTestCase extends TestCase
          Thread.currentThread().setContextClassLoader(realClassLoader);
       }
    }
+   
+   /**
+    * 
+    * @return The ManageableRepository for this test
+    */
+   private ManageableRepository getRepo() {
+     try {
+       PortalContainer container = PortalContainer.getInstance();
+       RepositoryService repos = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+       ManageableRepository repo = repos.getDefaultRepository();
+       return repo;
+     } catch (Exception e) {
+       throw new RuntimeException(e);
+     }
+   }
+
+   /**
+    * Get the workspace available for test data
+    * @return workspace name
+    */
+   protected String getWorkspace() {
+     return getRepo().getConfiguration().getDefaultWorkspaceName();
+   }
+
+   /**
+    * Get the repository for the current test
+    * @return repository name
+    */
+   protected String getRepository() {
+     return getRepo().getConfiguration().getName();
+   }
+
+   /**
+    * Asserts a node exists at the given path
+    * @param path path relative to root of test workspace
+    */
+   protected void assertNodeExists(String path) {
+     try {
+       Session session = getSession();
+       boolean exists = session.getRootNode().hasNode(path);
+       if (!exists) {
+         fail("no node exists at " + path);
+       }
+     } catch (Exception e) {
+       throw new RuntimeException("failed to assert node exists", e);
+     }
+   }
+   
+   /**
+    * Asserts a node does not exists at the given path
+    * @param path relative path to root of test workspace
+    */
+   protected void assertNodeNotExists(String path) {
+     try {
+       Session session = getSession();
+       boolean exists = session.getRootNode().hasNode(path);
+       if (exists) {
+         fail("node exists at " + path);
+       }
+     } catch (Exception e) {
+       throw new RuntimeException("failed to assert node exists", e);
+     }
+   }
+
+   /**
+    * Get a session on the test workspace
+    * @return a new system session
+    * @throws Exception
+    */
+   protected Session getSession() throws Exception {
+     try {
+       Session session = getRepo().getSystemSession(getWorkspace());
+       return session;
+     } catch (Exception e) {
+       throw new RuntimeException("failed to initiate JCR session on " + getWorkspace(), e);
+     }     
+
+   }
+
+   /**
+    * Add a new node to a given path. intermediary are created if needed.
+    * @param path relative path to root
+    * @param nodetype nodetype for the last node to create 
+    * @return the newly added node
+    */
+   protected Node addNode(String path, String nodetype) {
+     try {
+       Session session = getSession();
+       Node parent = session.getRootNode();
+       String[] sections = path.split("/");
+       for (String section : sections) {
+        if (section.length() > 0 && !parent.hasNode(section)) {
+          if (nodetype != null && path.endsWith(section)) {
+            parent.addNode(section, nodetype); // add child 
+          } else {
+            parent.addNode(section);
+          }
+        }
+        parent = parent.getNode(section); // jump into
+       }
+     session.save();
+     return parent;
+     }
+     catch (Exception e) {
+       throw new RuntimeException("failed to add node" + path, e);
+     }
+   }
+   
+   /**
+    * Add a file at a given path. An nt:file is added at 'path' with a sample text/plain jcr:content for the string "stuff"
+    * @param path relative path to root
+    * @return the node for the newly added file
+    */
+   protected Node addFile(String path) {
+     try {
+       Session session = getSession();
+       Node parent = session.getRootNode();
+       String[] sections = path.split("/");
+       for (String section : sections) {
+        if (section.length() > 0 && !parent.hasNode(section)) {
+          if (path.endsWith(section)) {
+            Node ntfile = parent.addNode(section, "nt:file");
+            Node nodeContent = ntfile.addNode("jcr:content", "nt:resource");
+            nodeContent.setProperty("jcr:mimeType", "text/plain");
+            nodeContent.setProperty("jcr:data", new ByteArrayInputStream("stuff".getBytes()));
+            nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());           
+          } else {
+            parent.addNode(section);
+          }
+        }
+        parent = parent.getNode(section); // jump into
+       }
+     session.save();
+     return parent;
+     }
+     catch (Exception e) {
+       throw new RuntimeException("failed to add node" + path, e);
+     }   
+   }   
+   
 }
