@@ -409,26 +409,14 @@ public class JCRDataStorage implements  DataStorage {
     return sessionManager.getCurrentSession().getRootNode().getNode(relPath);	  
 	}
 
+  /**
+   * {@inheritDoc}
+   */
 	public void setDefaultAvatar(String userName)throws Exception{
 	  Boolean wasReset = sessionManager.executeAndSave(new ResetAvatarTask(userName));
 	  if (log.isDebugEnabled()) {
 	    log.debug("Avatar for user " + userName + " was "+ (wasReset?"":"not")+" reset");
 	  }
-	  /*
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		try{
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
-			if(ksAvatarHomnode.hasNode(userName)){
-				Node node = ksAvatarHomnode.getNode(userName);
-				if(node.isNodeType("nt:file")) {
-					node.remove();
-					ksAvatarHomnode.save();
-				}
-			}
-		}catch(Exception e) {
-			log.error(e);
-		}finally {sProvider.close() ; }		
-		*/
 	}
 	
 	/**
@@ -462,45 +450,12 @@ public class JCRDataStorage implements  DataStorage {
 	  
 	}
 
+	 /**
+   * {@inheritDoc}
+   */
 	public ForumAttachment getUserAvatar(String userName) throws Exception{
-	  
 	  ForumAttachment avatar = sessionManager.execute(new LoadAvatarTask(userName));
 	  return avatar;
-	  /*
-		SessionProvider sysSession = SessionProvider.createSystemProvider() ;
-		try{
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
-			List<ForumAttachment> attachments = new ArrayList<ForumAttachment>();
-			if(ksAvatarHomnode.hasNode(userName)){
-				Node node = ksAvatarHomnode.getNode(userName);
-				Node nodeFile = null;
-				String workspace = "";
-				if(node.isNodeType("nt:file")) {
-					JCRForumAttachment attachment = new JCRForumAttachment();
-					nodeFile = node.getNode("jcr:content") ;
-					attachment.setId(node.getName());
-					attachment.setPathNode(node.getPath());
-					attachment.setMimeType(nodeFile.getProperty("jcr:mimeType").getString());
-					attachment.setName("avatar." + attachment.getMimeType());
-					workspace = node.getSession().getWorkspace().getName() ;
-					attachment.setWorkspace(workspace) ;
-					attachment.setPath("/" + workspace + node.getPath()) ;
-					try{
-						if(nodeFile.hasProperty("jcr:data")) attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
-						else attachment.setSize(0) ;
-						attachments.add(attachment);
-						return attachments.get(0);
-					} catch (Exception e) {
-						attachment.setSize(0) ;
-						log.error(e);
-					}
-				}
-				return null;
-			} else {
-				return null;
-			}
-		}finally{ sysSession.close() ;}		
-		*/
 	}
 	
 	/**
@@ -554,32 +509,14 @@ public class JCRDataStorage implements  DataStorage {
 	  
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception{
 	  Boolean wasNew = sessionManager.executeAndSave(new SaveAvatarTask(userId, fileAttachment));
 	  if (log.isDebugEnabled()) {
 	    log.error("avatar was " + ((wasNew) ? "added":"updated") +" for user "+ userId + ": " + fileAttachment);
 	  }
-	  
-	  /*
-	  SessionProvider sysSession = SessionProvider.createSystemProvider() ;
-		try {
-			Node ksAvatarHomnode = getKSUserAvatarHomeNode();
-			Node avatarNode = null;
-			if(ksAvatarHomnode.hasNode(userId)) avatarNode = ksAvatarHomnode.getNode(userId);
-			else avatarNode = ksAvatarHomnode.addNode(userId, "nt:file");
-			ForumServiceUtils.reparePermissions(avatarNode, "any");
-			Node nodeContent = null;
-			if (avatarNode.hasNode("jcr:content")) nodeContent = avatarNode.getNode("jcr:content");
-			else	nodeContent = avatarNode.addNode("jcr:content", "nt:resource") ;
-			nodeContent.setProperty("jcr:mimeType", fileAttachment.getMimeType());
-			nodeContent.setProperty("jcr:data", fileAttachment.getInputStream());
-			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
-			if(avatarNode.isNew()) ksAvatarHomnode.getSession().save();
-			else ksAvatarHomnode.save();
-		}catch(Exception e) {
-			log.error(e);
-		}finally{ sysSession.close() ;}		
-		*/
 	}
 
   /**

@@ -26,13 +26,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.util.Calendar;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -41,8 +43,6 @@ import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.exoplatform.ks.test.jcr.ConfigurationUnit;
 import org.exoplatform.ks.test.jcr.ConfiguredBy;
 import org.exoplatform.ks.test.jcr.ContainerScope;
-import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.services.jcr.core.ManageableRepository;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -97,8 +97,14 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
   
   
   public void testSetDefaultAvatar() throws Exception {
+
+    addNode(storage.getDataLocation().getAvatarsLocation());
+    
     String avatarLocation = storage.getDataLocation().getAvatarsLocation()  + "/username";
     assertNodeNotExists(avatarLocation); 
+    storage.setDefaultAvatar("username");
+    assertNodeNotExists(avatarLocation); 
+    
     addFile(avatarLocation);
     assertNodeExists(avatarLocation);
     storage.setDefaultAvatar("username");
@@ -106,10 +112,55 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
   }
 
 
+  public void testGetAvatar() throws Exception {
+    String avatarLocation = storage.getDataLocation().getAvatarsLocation()  + "/username2";
+    assertNull(storage.getUserAvatar("username2"));   
+    
+    addFile(avatarLocation);
+    ForumAttachment attachment = storage.getUserAvatar("username2");
+    assertNotNull(attachment); 
+    assertEquals("avatar.text/plain", attachment.getName());
+    assertEquals("text/plain", attachment.getMimeType());
+    assertEquals("/" + getWorkspace() + "/" + avatarLocation, attachment.getPath()); // /portal-test/ksUserAvatar/username
+    assertEquals("stuff", stringOf(attachment.getInputStream()));
+  }
 
+  public void testSaveAvatar() throws Exception {
+    String avatarLocation = storage.getDataLocation().getAvatarsLocation() + "/username3";
+    assertNull(storage.getUserAvatar("username3"));
+    addFile(avatarLocation);
+
+    storage.saveUserAvatar("username3", new TextForumAttachment("updated content"));
+
+    Node node = getNode(avatarLocation);
+    assertEquals("updated content",  stringOf(node.getNode("jcr:content").getProperty("jcr:data").getStream()));
+
+  }
 
   
-  
+  class TextForumAttachment extends ForumAttachment {
+    private String text;
+
+    public TextForumAttachment(String content) {
+      this.text = content;
+      setMimeType("text/plain");
+      super.setSize(content.getBytes().length);
+    }
+
+    @Override
+    public InputStream getInputStream() throws Exception {
+      return new ByteArrayInputStream(text.getBytes("UTF-8"));
+    }
+  }
+
+  private String stringOf(InputStream inputStream) {
+    try {
+      return new BufferedReader(new InputStreamReader(inputStream, "UTF-8")).readLine();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   public void _testDefaultAvatarWithMocks() throws Exception {
     JCRDataStorage storage = new JCRDataStorage();
     KSDataLocation locator = new KSDataLocation((String)null, (String)null);

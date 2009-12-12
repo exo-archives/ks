@@ -165,6 +165,27 @@ public abstract class AbstractJCRTestCase extends TestCase
        }
      }
    }
+   
+   /**
+    * Load a node from path
+    * @param path
+    * @return
+    */
+   protected Node getNode(String path) {
+     Session session = null;
+     try {
+       session = getSession();
+       return session.getRootNode().getNode(path);
+     } catch (Exception e) {
+       throw new RuntimeException("failed to load node exists", e);
+     }
+     finally {
+       if (session != null) {
+         session.logout();
+       }
+     }
+   }
+
 
    /**
     * Get a session on the test workspace
