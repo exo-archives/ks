@@ -1,32 +1,53 @@
-<project>
-	<description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
-	<url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"> 
 
   <parent>
     <groupId>org.exoplatform</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.1.1</version>
+    <artifactId>exo.parent</artifactId>
+    <version>6</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
-  <artifactId>config</artifactId>
-  <name>eXo Knowledge Suite</name>
+  <artifactId>ks-parent</artifactId>
   <version>1.2.2-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <name>eXo KS Parent</name>
+  <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
+  <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   
   <properties>
-     <exo.product.name>exo-ks</exo.product.name>
-     <exo.product.specification>1.2</exo.product.specification>
+    <!-- Informations for the Manifests -->
+    <exo.product.name>exo-ks</exo.product.name>
+    <exo.product.specification>1.2</exo.product.specification>
+    
+    <!-- Dependencies -->
+    <org.exoplatform.kernel.version>2.0.8</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.1.6</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>1.3.4</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.10.5.1</org.exoplatform.jcr.version>
+    <org.exoplatform.pc.version>2.0.7</org.exoplatform.pc.version>
+    <org.exoplatform.portal.version>2.5.7-SNAPSHOT</org.exoplatform.portal.version>
+
+    
+    <maven.test.skip>true</maven.test.skip>
+    <!-- ignore test failures -->
+    <maven.test.failure.ignore>true</maven.test.failure.ignore>
   </properties>
+  
   <issueManagement>
   	<system>jira</system>
   	<url>http://jira.exoplatform.org/browse/KS</url>
   </issueManagement>
+  
   <ciManagement>
   	<system>hudson</system>
   	<url>http://builder.exoplatform.org/hudson/job/ks/</url>
   </ciManagement>
+
+  <organization>
+  	<name>eXo Platform SAS</name>
+  	<url>http://www.exoplatform.com</url>
+  </organization>
 
   <scm>
     <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
@@ -35,25 +56,11 @@
   </scm> 
   
   <modules>
-    <module>web/ksportal</module>
-	<module>web/ksResources</module>
-    <module>web/webservice</module>
-	
-	<module>eXoApplication/common</module>
-	
-    <module>eXoApplication/faq/webapp</module>
-    <module>eXoApplication/faq/service</module>
-    
-    <module>eXoApplication/forum/webapp</module>
-    <module>eXoApplication/forum/service</module>
-<!-- module>migration1.2</module -->   
-    <module>server/tomcat/patch</module>
-		<module>server/jboss/patch</module>
+    <module>web</module>
+    <module>eXoApplication</module>
+    <module>server</module>
+    <!--module>migration1.2</module-->   
   </modules>
-  <organization>
-  	<name>eXo Platform SAS</name>
-  	<url>http://www.exoplatform.com</url>
-  </organization>
 
   <build>
     <resources>
@@ -74,17 +81,12 @@
         </includes>
       </testResource>
     </testResources>
+
     <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration> <source>1.5</source><target>1.5</target><optimize>true</optimize></configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.0.2</version>
           <configuration>
             <archiveClasses>false</archiveClasses>
             <warSourceExcludes>WEB-INF/lib/*.jar</warSourceExcludes>
@@ -94,13 +96,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <skip>${test.skip}</skip>
-            <useFile>false</useFile>
             <forkMode>pertest</forkMode><!--once , pertest -->
-            <testFailureIgnore>false</testFailureIgnore>
-            <includes>
-              <include implementation="java.lang.String">**/${test.classes}*.java</include>
-            </includes>
             <systemProperties>
               <property>
                 <name>mock.portal.dir</name>
@@ -111,7 +107,8 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
+  
+  <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
@@ -137,38 +134,5 @@
         </plugin>    
     </plugins>
   </build>
-  <!--
-<reporting>
-<plugins>
-  <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-     <artifactId>maven-javadoc-plugin</artifactId>
-      <configuration>
-       <aggregate>true</aggregate>
-        <reportOutputDirectory>/Users/patricelamarque/java/exodocs/ks/1.1</reportOutputDirectory>
-      </configuration>
-  </plugin>
-</plugins>
-</reporting>
--->
-  <profiles>
-    <profile>
-      <id>default</id>  
-      <activation>
-        <property><name>default</name></property>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <org.exoplatform.kernel.version>2.0.8</org.exoplatform.kernel.version>
-        <org.exoplatform.core.version>2.1.6</org.exoplatform.core.version>
-        <org.exoplatform.ws.version>1.3.4</org.exoplatform.ws.version>
-        <org.exoplatform.jcr.version>1.10.5.1</org.exoplatform.jcr.version>
-        <org.exoplatform.pc.version>2.0.7</org.exoplatform.pc.version>
-        <org.exoplatform.portal.version>2.5.7-SNAPSHOT</org.exoplatform.portal.version>
-        <org.exoplatform.ks.version>1.2.2-SNAPSHOT</org.exoplatform.ks.version>
-        <test.classes>Test</test.classes>
-        <test.skip>true</test.skip>
-      </properties>
-    </profile>
-  </profiles>
-</project>
+
+  </project>
