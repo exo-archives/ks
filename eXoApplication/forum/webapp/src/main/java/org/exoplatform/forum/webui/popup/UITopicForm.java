@@ -352,8 +352,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 			
 			UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
-			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
-			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
+			threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
+			threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
 			Post post = forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
@@ -511,8 +511,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						Boolean whenNewPost = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_NOTIFYWHENADDPOST_CHECKBOX).getValue();
 						Boolean sticky = (Boolean)threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).getValue();
 						UIForumInputWithActions threadPermission = uiForm.getChildById(FIELD_THREADPERMISSION_TAB);
-						String canPost = threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).getValue() ;
-						String canView = threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).getValue() ;
+						String canPost = threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).getValue() ;
+						String canView = threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).getValue() ;
 						canPost = ForumUtils.removeSpaceInString(canPost);
 						canPost = ForumUtils.removeStringResemble(canPost);
 						canView = ForumUtils.removeSpaceInString(canView);

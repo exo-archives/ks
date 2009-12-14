@@ -154,7 +154,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void setParentId(String s) { parentId_ = s ; }
 
 	public void updateSelect(String selectField, String value) throws Exception {
-		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
 		String oldValue = fieldInput.getValue() ;
 		if(oldValue != null && oldValue.trim().length() > 0) {
 			oldValue =  oldValue + "," +  value ;
@@ -247,7 +247,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         }
       }
       if(index > maxIndex) index = maxIndex;
-      String description = uiCategory.getUIStringInput(FIELD_DESCRIPTION_INPUT).getValue() ;
+      String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
       String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
       if (moderator == null || moderator.trim().length() <= 0) {
@@ -257,7 +257,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
         return ; 
       }
       
-      String userPrivate = uiCategory.getUIStringInput(FIELD_USERPRIVATE_INPUT).getValue() ;
+      String userPrivate = uiCategory.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT).getValue() ;
       String erroUser = FAQUtils.checkValueUser(userPrivate) ;
       if(!FAQUtils.isFieldEmpty(erroUser)) {
     		Object[] args = { uiCategory.getLabel(FIELD_USERPRIVATE_INPUT), erroUser };

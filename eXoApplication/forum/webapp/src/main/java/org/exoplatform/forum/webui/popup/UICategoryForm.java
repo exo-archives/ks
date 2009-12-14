@@ -198,7 +198,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	}
 
 	public void updateSelect(String selectField, String value) throws Exception {
-		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
 		String values = fieldInput.getValue() ;
 		if(!ForumUtils.isEmpty(values)) {
 			values = ForumUtils.removeSpaceInString(values);

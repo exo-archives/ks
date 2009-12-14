@@ -201,7 +201,7 @@ public class UIQuickReplyForm extends UIForm {
 	static public class PreviewReplyActionListener extends EventListener<UIQuickReplyForm> {
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
 			UIQuickReplyForm quickReply = event.getSource() ;	
-			String message = quickReply.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
+			String message = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
 			if(checksms != null && checksms.trim().length() > 3) {
 				StringBuffer buffer = new StringBuffer();
