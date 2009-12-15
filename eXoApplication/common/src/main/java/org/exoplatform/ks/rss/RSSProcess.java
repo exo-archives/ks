@@ -128,29 +128,49 @@ public class RSSProcess extends RSSGenerate {
       }
 		}else{
 			String objectId = null;
+      String description = null;
 			objectId = path.substring(path.lastIndexOf("/") + 1);
-			path = path.substring(0, path.lastIndexOf("/"));
-			while(node == null){
-				try{
-					node = (Node)appHomeNode.getSession().getItem(path);
-				}catch(PathNotFoundException pn){
-					objectId = path.substring(path.lastIndexOf("/") + 1);
-					path = path.substring(0, path.lastIndexOf("/"));
-					node = null;
-				}
-			}
-			while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
-				String description = null;
-				if(node.hasProperty("exo:description"))
-					description = node.getProperty("exo:description").getString();
-				else
-					description= " ";
-				if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")){
-          removeRSSItem(objectId, node, description , sProvider);
-				} else {
-          removeRSSItem(objectId, node, description);
-        }
-				node = node.getParent();
+			if(objectId.contains("post")){
+		     while(node == null){
+		        try{
+		          node = (Node)appHomeNode.getSession().getItem(path);
+		        }catch(PathNotFoundException pn){
+		          path = path.substring(0, path.lastIndexOf("/"));
+		          node = null;
+		        }
+		      }
+		     
+		     while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
+		        if(node.hasProperty("exo:description"))
+		          description = node.getProperty("exo:description").getString();
+		        else
+		          description= " ";
+		          removeRSSItem(objectId, node, description);
+		          node = node.getParent();
+		      }
+			} else {
+  			path = path.substring(0, path.lastIndexOf("/"));
+  			while(node == null){
+  				try{
+  					node = (Node)appHomeNode.getSession().getItem(path);
+  				}catch(PathNotFoundException pn){
+  					objectId = path.substring(path.lastIndexOf("/") + 1);
+  					path = path.substring(0, path.lastIndexOf("/"));
+  					node = null;
+  				}
+  			}
+  			while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
+  				if(node.hasProperty("exo:description"))
+  					description = node.getProperty("exo:description").getString();
+  				else
+  					description= " ";
+  				if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")){
+            removeRSSItem(objectId, node, description , sProvider);
+  				} else {
+            removeRSSItem(objectId, node, description);
+          }
+  				node = node.getParent();
+  			}
 			}
 		}
 	}
