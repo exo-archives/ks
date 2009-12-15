@@ -393,7 +393,8 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      			return ;
 	      		}
 	      		// set link
-	      		String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "PreviewPost", uiForm.topicId).replaceFirst("private", "public");	
+//	      		String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "PreviewPost", uiForm.topicId).replaceFirst("private", "public");	
+	      		String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, uiForm.topicId).replaceFirst("private", "public");	
 	      		//
 	      		if(uiForm.isQuote || uiForm.isMP) post = new Post();
 	      		post.setName(postTitle) ;

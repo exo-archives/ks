@@ -532,8 +532,9 @@
 									}
 									actionBookmark += ";" + uicomponent.getRSSLink(topicId)+ "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
-									String url = uicomponent.url("OpenTopic", (topicId));
-									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
+									//String url = uicomponent.url("OpenTopic", (topicId));
+									//url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
+									String url = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicId);
 								  String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";

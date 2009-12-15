@@ -187,8 +187,9 @@
 									actionBookmark += ";" + uicomponent.getRSSLink(topicId) + "," + uicomponent.event("RSS", topicId).replace("javascript:","");
 									String link = uicomponent.event("OpenTopic", (topicId+","+number + ",false"));
 									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
-									String url = uicomponent.url("OpenTopic", path);
-									url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
+									//String url = uicomponent.url("OpenTopic", path);
+									//url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
+									String url = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicId);
 									String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";

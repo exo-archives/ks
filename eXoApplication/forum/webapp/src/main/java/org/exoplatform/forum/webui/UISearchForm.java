@@ -117,15 +117,15 @@ public class UISearchForm extends UIForm implements UISelector {
 	private ForumService forumService;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	public UISearchForm() throws Exception {
-		setId("UISearchForm");
+		if(this.getId() == null)setId("UISearchForm");
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
-		list.add(new SelectItemOption<String>(ForumUtils.CATEGORY, Utils.CATEGORY)) ;
-		list.add(new SelectItemOption<String>(ForumUtils.FORUM, Utils.FORUM)) ;
-		list.add(new SelectItemOption<String>(ForumUtils.THREAD, Utils.TOPIC)) ;
-		list.add(new SelectItemOption<String>(ForumUtils.POST, Utils.POST)) ;
+		list.add(new SelectItemOption<String>(getLabel("Category"), Utils.CATEGORY)) ;
+		list.add(new SelectItemOption<String>(getLabel("Forum"), Utils.FORUM)) ;
+		list.add(new SelectItemOption<String>(getLabel("Topic"), Utils.TOPIC)) ;
+		list.add(new SelectItemOption<String>(getLabel("Post"), Utils.POST)) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHTYPE_SELECTBOX, FIELD_SEARCHTYPE_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		

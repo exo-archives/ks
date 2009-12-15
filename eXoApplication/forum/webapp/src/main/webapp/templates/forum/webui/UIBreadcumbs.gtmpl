@@ -20,7 +20,7 @@
 					  oncl = "";
 					  id = uicomponent.getPath(t);
 					  id = id.substring(id.lastIndexOf("/")+1);
-						link = uicomponent.url("ChangePath", id) ;
+						link = ForumUtils.creadForumLink(uicomponent.getType(id),id) ;
 						if(link.indexOf(portalName) > 0) {
 							if(link.indexOf(portalName + "/" + selectedNode) < 0){
 								link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;

@@ -162,7 +162,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
 					// set link
-					String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");
+//					String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");
+					String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
+					
 					//
 					uiForm.forumService.moveTopic(uiForm.topics , forumPath, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

@@ -70,6 +70,7 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -323,13 +324,15 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 
     isMod = (userProfile.getUserRole() == UserProfile.ADMIN)
         || (ForumServiceUtils.hasPermission(forum.getModerators(), userName));
-
-    PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
-    ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
-
-    sendForumPollEvent(actionRes);
-    sendQuickReplyEvent(actionRes);
-    sendRuleEvent(actionRes);
+    try {
+    	PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
+    	ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
+    	sendForumPollEvent(actionRes);
+    	sendQuickReplyEvent(actionRes);
+    	sendRuleEvent(actionRes);
+    } catch (Exception e) {
+    	log.error("Can not cast class PortletResponse to ActionResponse");
+    }
   }
 
   private void sendRuleEvent(ActionResponse actionRes) throws Exception {
@@ -1587,7 +1590,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	  				} 
 	  				
 	  				// set link
-	  				String link = ForumSessionUtils.getBreadcumbUrl(topicDetail.getLink(), topicDetail.getId(), "ViewThreadByUser", topicDetail.topicId).replaceFirst("private", "public");				
+//	  				String link = ForumSessionUtils.getBreadcumbUrl(topicDetail.getLink(), topicDetail.getId(), "ViewThreadByUser", topicDetail.topicId).replaceFirst("private", "public");				
+	  				String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicDetail.topicId).replaceFirst("private", "public");				
 	  				//
 	  				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 	  				String userName = topicDetail.userProfile.getUserId() ;

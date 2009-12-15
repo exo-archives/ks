@@ -39,6 +39,7 @@ import javax.portlet.PortletPreferences;
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -60,17 +61,36 @@ public class ForumUtils {
 	public static final String GOPAGE_ID_B = "goPageBottom".intern() ;
 	
 	public static final String CATEGORIES = "Categories".intern() ;
-	public static final String CATEGORY = "Category".intern() ;
-	public static final String FORUM = "Forum".intern() ;
-	public static final String THREAD = "Topic".intern() ;
+	public static final String CATEGORY = "category".intern() ;
+	public static final String FORUM = "forum".intern() ;
+	public static final String TOPIC = "topic".intern() ;
+	public static final String POST = "post".intern() ;
 	public static final String TAG = "Tag".intern() ;
-	public static final String POST = "Post".intern() ;
 	public static final String POLL = "Poll".intern() ;
 
 	
 	public static final int MAXSIGNATURE = 300;
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
+	
+	public static String creadForumLink(String type, String id) throws Exception {
+		String url = ((PortalRequestContext)Util.getPortalRequestContext()).getRequest().getRequestURL().toString();
+		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+		String portalName = "/" + Util.getUIPortal().getName() ;
+		if(url.indexOf(portalName) > 0) {
+			if(url.indexOf(portalName + "/" + selectedNode) < 0){
+				url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+			}									
+		}
+		url = url.substring(0, url.indexOf(selectedNode)+selectedNode.length());
+		StringBuilder link = new StringBuilder().append(url);
+		if(!isEmpty(type) && !isEmpty(id)){
+			if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);
+			else link.append("/").append(type);
+			if(!id.equals(Utils.FORUM_SERVICE))link.append("/").append(id);
+		}
+	  return link.toString();
+  }
 	
 	public static String getFormatDate(String format, Date myDate) {
 		/*h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy

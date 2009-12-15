@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.JCRPageList;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.event.Event;
@@ -73,9 +75,12 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
   	this.isUseAjax = isUseAjax;
   }
 
-	public String getURLGopage(String componentId, String link) throws Exception {
-		link = link.replaceFirst(componentId, "UIBreadcumbs").replaceFirst("GoPage", "ChangePath")
-					 		 .replaceFirst("objectId=", "objectId="+objectId+"/");
+	public String getURLGopage(String number) throws Exception {
+		String type = (objectId.indexOf(Utils.FORUM_SERVICE) >= 0)? Utils.FORUM_SERVICE:(
+					 				(objectId.indexOf(Utils.CATEGORY) >= 0)? ForumUtils.CATEGORY :( 
+					 				(objectId.indexOf(Utils.FORUM) >= 0)? ForumUtils.FORUM :(
+									(objectId.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
+		String link = ForumUtils.creadForumLink(type, objectId+"/"+ number);
 		return link;
 	}
 	

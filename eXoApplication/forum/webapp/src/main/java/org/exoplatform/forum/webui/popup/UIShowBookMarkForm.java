@@ -109,6 +109,14 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 		return "";
 	}
 	
+	@SuppressWarnings("unused")
+  private String getType(String id) {
+		return (id.indexOf(Utils.FORUM_SERVICE) >= 0)? Utils.FORUM_SERVICE:(
+					 (id.indexOf(Utils.CATEGORY) >= 0)? ForumUtils.CATEGORY :( 
+					 (id.indexOf(Utils.FORUM) >= 0)? ForumUtils.FORUM :(
+					 (id.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
+	}
+	
 	static	public class OpenLinkActionListener extends EventListener<UIShowBookMarkForm> {
 		public void execute(Event<UIShowBookMarkForm> event) throws Exception {
 			UIShowBookMarkForm bookmarkForm = event.getSource() ;

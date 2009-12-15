@@ -288,7 +288,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 	private String [] getChildIds() {return new String[] {FIELD_MODERATOR_MULTIVALUE,FIELD_TOPICABLE_MULTIVALUE,FIELD_POSTABLE_MULTIVALUE,FIELD_VIEWER_MULTIVALUE} ;}
 	
 	public void updateSelect(String selectField, String value) throws Exception {
-		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
 		if(selectField.indexOf("Notify") >= 0) {
 			fieldInput.setValue(value) ;
 		} else {

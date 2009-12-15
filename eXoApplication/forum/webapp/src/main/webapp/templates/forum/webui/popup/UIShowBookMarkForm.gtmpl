@@ -2,6 +2,7 @@
 	import org.exoplatform.portal.webui.util.Util;
 	import org.exoplatform.forum.ForumSessionUtils;
   import org.exoplatform.web.application.JavascriptManager;
+  import org.exoplatform.forum.ForumUtils;
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
   jsmanager.addCustomizedOnLoadScript("eXo.forum.UIForumPortlet.createLink('"+uicomponent.id+"','true');") ;
@@ -37,9 +38,9 @@
 								linkName = links.substring(index+2,lastIndex);
 								linkPath = links.substring(lastIndex + 2);
 								links = "topicIcon//topicName//"+linkPath;
-								linkBm = uiform.url("OpenLink",linkPath);		
-								linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink", "");					
-								//window.location.href=this.href;						
+								//linkBm = uiform.url("OpenLink",linkPath);		
+								//linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink", "");
+								linkBm = ForumUtils.creadForumLink(uiform.getType(linkPath), linkPath);					
 					%>
 					<tr>
 						<td><div class="$icon" style="width:24px;height:24px;"><span></span></div></td>
