@@ -155,7 +155,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	public void setParentId(String s) { parentId_ = s ; }
 
 	public void updateSelect(String selectField, String value) throws Exception {
-		UIFormStringInput fieldInput = getUIStringInput(selectField) ;
+		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField) ;
 		String oldValue = fieldInput.getValue() ;
 		if(oldValue != null && oldValue.trim().length() > 0) {
 			oldValue =  oldValue + "," +  value ;
