@@ -121,7 +121,7 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 							try {
 								// set link
 //								link = (ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel", "pathId")).replaceFirst("private", "public");
-								link = ForumUtils.creadForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
+								link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
 								forumService.mergeTopic(categoryId+"/"+forumId+"/"+topic.getId(), destTopicPath, emailContent, link) ;
 		          } catch (Exception e) {
 			          isMerge = false;

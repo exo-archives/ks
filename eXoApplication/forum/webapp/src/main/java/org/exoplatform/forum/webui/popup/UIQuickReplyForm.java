@@ -147,7 +147,7 @@ public class UIQuickReplyForm extends UIForm {
 				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
 				// set link
 //				String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");				
-				String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, quickReply.topicId).replaceFirst("private", "public");				
+				String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, quickReply.topicId).replaceFirst("private", "public");				
 				//
 				Topic topic = quickReply.topic ;
 				Post post = new Post() ;

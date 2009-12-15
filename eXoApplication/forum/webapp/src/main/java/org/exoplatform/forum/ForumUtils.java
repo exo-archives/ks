@@ -73,7 +73,7 @@ public class ForumUtils {
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
 	
-	public static String creadForumLink(String type, String id) throws Exception {
+	public static String createdForumLink(String type, String id) throws Exception {
 		String url = ((PortalRequestContext)Util.getPortalRequestContext()).getRequest().getRequestURL().toString();
 		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 		String portalName = "/" + Util.getUIPortal().getName() ;

@@ -83,7 +83,7 @@
 		isNotLogin = uicomponent.isNotLogin() ;
 		if(isNotLogin){
 			//linkGest = ForumSessionUtils.getBreadcumbUrl(urlTopic, uicomponent.id, "ViewThreadByUser", topic.getId()+"/false").replaceFirst("/public/", "/private/");
-			linkGest = ForumUtils.creadForumLink(ForumUtils.TOPIC, topic.getId()+"/false").replaceFirst("/public/", "/private/");
+			linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false").replaceFirst("/public/", "/private/");
 		}	
 	}
 %>

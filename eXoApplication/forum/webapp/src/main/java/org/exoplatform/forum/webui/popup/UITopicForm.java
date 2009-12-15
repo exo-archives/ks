@@ -565,7 +565,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 						// set link
 						Topic topicNew = uiForm.topic;
 //						String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "PreviewThread", topicNew.getId()).replaceFirst("private", "public");	
-						String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicNew.getId()).replaceFirst("private", "public");	
+						String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNew.getId()).replaceFirst("private", "public");	
 						//
 						String userName = userProfile.getUserId() ;
 						topicNew.setOwner(userName);

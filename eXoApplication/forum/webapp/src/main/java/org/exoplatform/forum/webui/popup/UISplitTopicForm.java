@@ -159,7 +159,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					try {
 						// set link
 //						String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");	
-						String link = ForumUtils.creadForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
+						String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
 						//
 						WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 						ResourceBundle res = context.getApplicationResourceBundle() ;

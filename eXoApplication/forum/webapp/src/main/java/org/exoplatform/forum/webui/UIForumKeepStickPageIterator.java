@@ -80,7 +80,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 					 				(objectId.indexOf(Utils.CATEGORY) >= 0)? ForumUtils.CATEGORY :( 
 					 				(objectId.indexOf(Utils.FORUM) >= 0)? ForumUtils.FORUM :(
 									(objectId.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
-		String link = ForumUtils.creadForumLink(type, objectId+"/"+ number);
+		String link = ForumUtils.createdForumLink(type, objectId+"/"+ number);
 		return link;
 	}
 	

@@ -189,7 +189,7 @@
 									path = path.substring(path.indexOf(org.exoplatform.forum.service.Utils.CATEGORY));
 									//String url = uicomponent.url("OpenTopic", path);
 									//url = ForumSessionUtils.getBreadcumbUrl(url, uiformId, "OpenTopic", "");
-									String url = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicId);
+									String url = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicId);
 									String classSelect = "";
 								  if(checkeds.contains(topicId)){
 								    classSelect = "SelectedItem";

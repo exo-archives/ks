@@ -40,7 +40,7 @@
 								links = "topicIcon//topicName//"+linkPath;
 								//linkBm = uiform.url("OpenLink",linkPath);		
 								//linkBm = ForumSessionUtils.getBreadcumbUrl(linkBm, uiform.id, "OpenLink", "");
-								linkBm = ForumUtils.creadForumLink(uiform.getType(linkPath), linkPath);					
+								linkBm = ForumUtils.createdForumLink(uiform.getType(linkPath), linkPath);					
 					%>
 					<tr>
 						<td><div class="$icon" style="width:24px;height:24px;"><span></span></div></td>

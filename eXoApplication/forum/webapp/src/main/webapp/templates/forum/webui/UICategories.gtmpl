@@ -52,7 +52,7 @@
 						actionBookmark += ";" + uicomponent.getRSSLink(categoryId) + "," + uicomponent.event("RSS", categoryId).replace("javascript:","") ;
 						//url = uicomponent.url("OpenCategory", categoryId);
 						//url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenCategory", "");
-						url = ForumUtils.creadForumLink(ForumUtils.CATEGORY, categoryId);
+						url = ForumUtils.createdForumLink(ForumUtils.CATEGORY, categoryId);
 						String titleCollap = _ctx.appRes("UIForumPortlet.label.Collapse");
 						String classCssCollap = "CollapseButton";
 						String actionCollap = uicomponent.event("CollapCategory", categoryId+",true");
@@ -184,7 +184,7 @@
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 													//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
 													//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
-													urlLastPost = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 												} else {
 													titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
 												}
@@ -194,7 +194,7 @@
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 														//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
 														//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
-														urlLastPost = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+														urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 													} else {
 														titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 													}
@@ -202,7 +202,7 @@
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
 													//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
 													//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
-													urlLastPost = ForumUtils.creadForumLink(ForumUtils.TOPIC, topicNewPost.getId());
+													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 												}
 											}
 											titleTopic = titleTopic.replaceAll("'","&#39;").replaceAll('"',"&#34;").replaceAll(" ","&#32;") ;
@@ -232,7 +232,7 @@
 										}
 										//url = uicomponent.url("OpenForumLink", forumId);
 										//url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenForumLink", "");
-										url = ForumUtils.creadForumLink(ForumUtils.FORUM, forumId);
+										url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId);
 								%>
 										<tr class="$classRow" oncontextmenu="return false;">
 											<td class="Tdbox"><div class="ForumStatusIcon $classIconForum" title="$titleIconForum"><span></span></div></td>
