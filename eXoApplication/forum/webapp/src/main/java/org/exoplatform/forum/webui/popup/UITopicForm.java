@@ -381,8 +381,8 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			threadOption.getUIFormCheckBoxInput(FIELD_STICKY_CHECKBOX).setChecked(this.topic.getIsSticky());
 			
 			UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
-			threadPermission.getUIStringInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
-			threadPermission.getUIStringInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
+			threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
+			threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
 			Post post = forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
