@@ -7,35 +7,35 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>exo.ks.datamigration</artifactId>
-  <name>eXo KS Migrationg 1.1 to 1.2</name>
+  <name>eXo KS Migration 1.1 to 1.2</name>
   
   <dependencies> 
     
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.ext</artifactId>
-      <version>1.10.1</version>      
+      <version>${org.exoplatform.jcr.version}</version>      
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-      <version>1.2.2-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>1.2.2-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>1.2.2-SNAPSHOT</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>    
   </dependencies>  

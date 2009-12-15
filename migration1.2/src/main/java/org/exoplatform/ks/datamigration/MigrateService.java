@@ -24,6 +24,8 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.service.FAQServiceUtils;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.ks.common.CommonUtils;
+//import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.nodetype.ExtendedNodeTypeManager;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -676,7 +678,7 @@ public class MigrateService implements Startable{
 			NodeIterator iter = forumHome.getNodes() ;
 			while(iter.hasNext()) {
 				Node data = iter.nextNode() ;
-				if(!data.getName().equals(Utils.FORUM_SYSTEM) && !data.getName().equals(Utils.FORUM_DATA)) {
+				if(!data.getName().equals(CommonUtils.FORUM_SYSTEM) && !data.getName().equals(CommonUtils.FORUM_DATA)) {
 					log.info(" Removed ==> " + data.getPath());
 					data.remove() ;					
 				}				
@@ -745,22 +747,22 @@ public class MigrateService implements Startable{
 	private Node getForumSystem(SessionProvider sProvider) throws Exception {
 		Node forumHome = getForumHome(sProvider)	;
 		try {
-			return	forumHome.getNode(Utils.FORUM_SYSTEM) ;
+			return	forumHome.getNode(CommonUtils.FORUM_SYSTEM) ;
 		} catch (PathNotFoundException ex) {
-			forumHome.addNode(Utils.FORUM_SYSTEM, "exo:forumSystem") ;
+			forumHome.addNode(CommonUtils.FORUM_SYSTEM, "exo:forumSystem") ;
 			forumHome.getSession().save() ;
-			return forumHome.getNode(Utils.FORUM_SYSTEM) ;
+			return forumHome.getNode(CommonUtils.FORUM_SYSTEM) ;
 		}		
 	}
 	
 	private Node getForumData(SessionProvider sProvider) throws Exception {
 		Node forumHome = getForumHome(sProvider)	;
 		try {
-			return	forumHome.getNode(Utils.FORUM_DATA) ;
+			return	forumHome.getNode(CommonUtils.FORUM_DATA) ;
 		} catch (PathNotFoundException ex) {
-			forumHome.addNode(Utils.FORUM_DATA, "exo:forumData") ;
+			forumHome.addNode(CommonUtils.FORUM_DATA, "exo:forumData") ;
 			forumHome.getSession().save() ;
-			return forumHome.getNode(Utils.FORUM_DATA) ;
+			return forumHome.getNode(CommonUtils.FORUM_DATA) ;
 		}		
 	}
 	

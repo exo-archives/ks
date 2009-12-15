@@ -59,7 +59,7 @@
     <module>web</module>
     <module>eXoApplication</module>
     <module>server</module>
-    <!--module>migration1.2</module-->   
+    <module>migration1.2</module>   
   </modules>
 
   <build>
