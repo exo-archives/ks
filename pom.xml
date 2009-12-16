@@ -21,14 +21,13 @@
     <exo.product.specification>1.2</exo.product.specification>
     
     <!-- Dependencies -->
-    <org.exoplatform.kernel.version>2.0.8</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.1.6</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>1.3.4</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.10.5.1</org.exoplatform.jcr.version>
-    <org.exoplatform.pc.version>2.0.7</org.exoplatform.pc.version>
+    <org.exoplatform.kernel.version>2.0.9-SNAPSHOT</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.1.7-SNAPSHOT</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>1.3.5-SNAPSHOT</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.10.6-SNAPSHOT</org.exoplatform.jcr.version>
+    <org.exoplatform.pc.version>2.0.8-SNAPSHOT</org.exoplatform.pc.version>
     <org.exoplatform.portal.version>2.5.7-SNAPSHOT</org.exoplatform.portal.version>
 
-    
     <maven.test.skip>true</maven.test.skip>
     <!-- ignore test failures -->
     <maven.test.failure.ignore>true</maven.test.failure.ignore>
