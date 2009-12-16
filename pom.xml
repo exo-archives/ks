@@ -59,6 +59,7 @@
     <module>eXoApplication</module>
     <module>server</module>
     <module>migration1.2</module>   
+    <module>packaging</module>
   </modules>
 
   <build>
