@@ -6588,7 +6588,6 @@ public class JCRDataStorage implements  DataStorage {
 			}
 		} else{
 			isReset = false;
-			System.out.println("\n\n TYPE NODE EXPORT " + typeNodeExport);
 			if(typeNodeExport.equals("exo:forumCategory")){
 				// Check if import forum but the data import have structure of a category --> Error
 				if (nodePath.split("/").length == 6) {
@@ -6597,7 +6596,6 @@ public class JCRDataStorage implements  DataStorage {
 			
 	      nodePath = getCategoryHome(sessionProvider).getPath();
 			}
-			System.out.println("\n\n NODE PATH " + nodePath);
 	    Session session = getForumHomeNode(sessionProvider).getSession();
 	    session.importXML(nodePath, is, typeImport);
 	    session.save();   
