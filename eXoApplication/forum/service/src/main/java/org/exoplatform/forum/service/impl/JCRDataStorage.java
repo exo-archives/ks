@@ -6583,14 +6583,21 @@ public class JCRDataStorage implements  DataStorage {
 	      session.importXML(nodePath, is, typeImport);
 	      session.save(); 
 			}
+			else {
+			  throw new Exception();
+			}
 		} else{
 			isReset = false;
-			if(typeNodeExport.equals("exo:forumCategory"))
+			System.out.println("\n\n TYPE NODE EXPORT " + typeNodeExport);
+			if(typeNodeExport.equals("exo:forumCategory")){
 				// Check if import forum but the data import have structure of a category --> Error
 				if (nodePath.split("/").length == 6) {
 					throw new ConstraintViolationException();
 				}
-				nodePath = getCategoryHome(sessionProvider).getPath();
+			
+	      nodePath = getCategoryHome(sessionProvider).getPath();
+			}
+			System.out.println("\n\n NODE PATH " + nodePath);
 	    Session session = getForumHomeNode(sessionProvider).getSession();
 	    session.importXML(nodePath, is, typeImport);
 	    session.save();   
@@ -6621,7 +6628,7 @@ public class JCRDataStorage implements  DataStorage {
      }
    }
 	 
-  private void copyFullNodes(Node sourceNode , Node importNode, Session session) throws RepositoryException{
+  private void copyFullNodes(Node sourceNode , Node importNode, Session session) throws Exception{
     // Check if importNode have different child than sourceNode then add it.
     NodeIterator sourceIter = sourceNode.getNodes();
     NodeIterator importIter = importNode.getNodes();
@@ -6646,6 +6653,7 @@ public class JCRDataStorage implements  DataStorage {
         try{
           session.getWorkspace().copy(importTemp.getPath(),path );
         }catch (Exception e) {
+          //e.printStackTrace();
         }
       }
     }
