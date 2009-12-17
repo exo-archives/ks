@@ -10,5 +10,7 @@
   <name>eXo KS Packaging</name>
   <modules>
     <module>module</module>
+    <module>product</module>
+    <module>pkg</module>
   </modules>
 </project>

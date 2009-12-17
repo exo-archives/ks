@@ -1,0 +1,117 @@
+<!--
+
+    Copyright (C) 2009 eXo Platform SAS.
+    
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+    
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.packaging</artifactId>
+      <version>1.2.2-SNAPSHOT</version>
+   </parent>
+
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>exo.ks.packaging.assembly</artifactId>
+   <packaging>pom</packaging>
+   <name>eXo KS Assemblies</name>
+   
+   <properties>
+      <product>ks</product>
+      <deploy>tomcat</deploy>
+   </properties>
+
+   <dependencies>
+
+      <dependency>
+         <groupId>org.exoplatform.tool</groupId>
+         <artifactId>exopackage</artifactId>
+         <type>zip</type>
+         <version>${org.exoplatform.exopackage.version}</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.kernel</groupId>
+         <artifactId>kernel.packaging.module</artifactId>
+         <version>${org.exoplatform.kernel.version}</version>
+         <type>js</type>
+       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.core</groupId>
+         <artifactId>core.packaging.module</artifactId>
+         <version>${org.exoplatform.core.version}</version>
+         <type>js</type>
+       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>ws.packaging.module</artifactId>
+         <version>${org.exoplatform.ws.version}</version>
+         <type>js</type>
+       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.jcr</groupId>
+         <artifactId>jcr.packaging.module</artifactId>
+         <version>${org.exoplatform.jcr.version}</version>
+         <type>js</type>
+       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.portletcontainer</groupId>
+         <artifactId>portletcontainer.packaging.module</artifactId>
+         <version>${org.exoplatform.portletcontainer.version}</version>
+         <type>js</type>
+       </dependency>
+       <dependency>
+         <groupId>org.exoplatform.portal</groupId>
+         <artifactId>portal.packaging.module</artifactId>
+         <version>2.5.7-SNAPSHOT</version>
+         <type>js</type>
+       </dependency> 
+       <dependency>
+         <groupId>org.exoplatform.ks</groupId>
+         <artifactId>ks.packaging.module</artifactId>
+         <version>1.2.2-SNAPSHOT</version>
+         <type>js</type>
+       </dependency> 
+       <dependency>
+         <groupId>org.exoplatform.ks</groupId>
+         <artifactId>ks.packaging.product</artifactId>
+         <version>1.2.2-SNAPSHOT</version>
+         <type>js</type>
+       </dependency> 
+   </dependencies>
+
+   <profiles>
+      <profile>
+         <id>pkg</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.exoplatform.maven.plugins</groupId>
+                    <artifactId>maven-exobuild-plugin</artifactId>
+                    <version>${org.exoplatform.mvnexobuild.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>install</phase><goals><goal>exobuild</goal></goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+      </profile>
+   </profiles>
+</project>
