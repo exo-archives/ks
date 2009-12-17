@@ -43,12 +43,14 @@
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.cometd.service</artifactId>
       <version>${org.exoplatform.ws.version}</version>
+      <scope>provided</scope>
     </dependency>
     
     <dependency>
       <groupId>org.exoplatform.ws</groupId>
       <artifactId>exo.ws.frameworks.json</artifactId>
       <version>${org.exoplatform.ws.version}</version>
+      <scope>provided</scope>
     </dependency> 
 		
   </dependencies>
