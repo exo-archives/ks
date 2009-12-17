@@ -807,6 +807,16 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String[]array = objctId.split("/") ;
 			String childId = array[0] ;
 			if(!ForumUtils.isEmpty(childId)) {
+				UIForumPortlet forumPortlet = uiTopicForm.getAncestorOfType(UIForumPortlet.class);
+				UIPopupAction popupAction1 = forumPortlet.getChild(UIPopupAction.class);
+				org.exoplatform.webui.core.UIPopupContainer popupContainer1 = popupAction1.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
+				if(popupContainer1 != null){
+					UIPopupWindow popupWindow = popupContainer1.findFirstComponentOfType(UIPopupWindow.class);
+					popupWindow.setShow(false);
+					popupWindow.setUIComponent(null);
+					popupAction1.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
+					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
+				}
 				UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;

@@ -388,6 +388,16 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String[] objects = ((String)event.getRequestContext().getRequestParameter(OBJECTID)).split(",");	;
 			String type = objects[0];
 			String param = objects[1];
+			UIForumPortlet forumPortlet = categoryForm.getAncestorOfType(UIForumPortlet.class);
+			UIPopupAction popupAction1 = forumPortlet.getChild(UIPopupAction.class);
+			org.exoplatform.webui.core.UIPopupContainer popupContainer1 = popupAction1.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
+			if(popupContainer1 != null){
+				UIPopupWindow popupWindow = popupContainer1.findFirstComponentOfType(UIPopupWindow.class);
+				popupWindow.setShow(false);
+				popupWindow.setUIComponent(null);
+				popupAction1.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
+			}
 			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
 			UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;
@@ -466,6 +476,14 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			UICategoryForm categoryForm = event.getSource() ;
 			String id = "PopupContainer"+event.getRequestContext().getRequestParameter(OBJECTID).replace("0,", "")	;
 			UIForumPortlet forumPortlet = categoryForm.getAncestorOfType(UIForumPortlet.class) ;
+			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIGroupSelector uiGroupSelector = popupContainer.findFirstComponentOfType(UIGroupSelector.class) ;
+			if(uiGroupSelector != null){
+				UIPopupWindow popupWindow = popupContainer.findFirstComponentOfType(UIPopupWindow.class);
+				popupWindow.setUIComponent(null);
+				popupWindow.setShow(false);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+			}
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
 			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
 			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
