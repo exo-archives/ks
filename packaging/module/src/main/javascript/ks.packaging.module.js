@@ -31,7 +31,7 @@ function getModule(params) {
 
   module.eXoApplication.forum = 
     new Project("org.exoplatform.ks", "exo.ks.eXoApplication.forum.webapp", "war", module.version).       
-			addDependency(new Project("org.exoplatform.ws", "exo.ws.frameworks.json", "jar", "1.3.4")).
+			addDependency(ws.frameworks.json).
 	    addDependency(ws.frameworks.cometd).
       addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.forum.service", "jar",  module.version));
   module.eXoApplication.forum.deployName = "forum";
