@@ -7,6 +7,7 @@ function getProduct(version) {
   product.name = "eXoKS" ;
   product.codeRepo = "ks" ;
   product.portalwar = "portal.war" ;
+  product.version = "${project.version}" ;
   product.serverPluginVersion = "${org.exoplatform.portal.version}" ;
     
   var kernel = Module.GetModule("kernel") ;
