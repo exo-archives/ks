@@ -1653,7 +1653,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	static public class PreviewReplyActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 				
-			String message = topicDetail.getUIStringInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
+			String message = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
 			if(checksms != null && message.trim().length() > 0) {
 				StringBuffer buffer = new StringBuffer();
@@ -1684,7 +1684,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				post.setIsApproved(false) ;
 				post.setCreatedDate(new Date()) ;
 				
-				UIViewPost viewPost = topicDetail.openPopup(UIViewPost.class, 670, 0);
+				UIViewPost viewPost = topicDetail.openPopup(UIViewPost.class,"ViewPost", 670, 0);
 				
 				viewPost.setPostView(post) ;
 				viewPost.setViewUserInfo(false) ;
