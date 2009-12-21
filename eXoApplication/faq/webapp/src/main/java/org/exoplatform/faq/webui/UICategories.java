@@ -119,9 +119,7 @@ public class UICategories extends UIContainer{
 		long[] result = new long[]{0, 0, 0, 0} ;
 		try {
 			result = faqService_.getCategoryInfo(categoryId_, faqSetting_) ;
-		} catch (Exception e) {
-			e.printStackTrace() ;
-		}
+		} catch (Exception e) {}
 		return result ;
 	}
 

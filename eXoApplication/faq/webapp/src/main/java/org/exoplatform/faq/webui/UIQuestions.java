@@ -1374,7 +1374,16 @@ public class UIQuestions extends UIContainer {
 				Category cate = faqService_.getCategoryById(categoryId) ;
 				if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 					faqService_.removeCategory(categoryId) ;
-					uiQuestions.updateCurrentQuestionList();		
+					
+					UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
+					String currentPath = breadcumbs.getPaths().substring(0, breadcumbs.getPaths().lastIndexOf("/")) ;
+					breadcumbs.setUpdataPath(currentPath) ;
+					
+					UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class) ;
+					categories.setPathCategory(currentPath) ;
+					
+					uiQuestions.setCategoryId(currentPath) ;
+					uiQuestions.updateCurrentQuestionList();
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
