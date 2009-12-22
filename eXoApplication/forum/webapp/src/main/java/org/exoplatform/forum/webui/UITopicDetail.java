@@ -66,11 +66,9 @@ import org.exoplatform.forum.webui.popup.UIViewPostedByUser;
 import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
-import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -1330,7 +1328,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				posts.add(topicDetail.getPost(postId));
       }
 			if(posts.size() > 0) {
-				UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, 400, 430);
+				UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, "MovePostForm",400, 430);
 				movePostForm.setUserProfile(topicDetail.userProfile) ;
 				movePostForm.updatePost(topicDetail.topicId, posts);
 			} else {
