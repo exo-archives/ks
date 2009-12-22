@@ -30,7 +30,7 @@
   <import>war:/ks-extension/ks/forum/roles-configuration.xml</import>
 
   <!-- Configure the profile contact provider -->
-  <import>war:/ks-extension/ks/profile-configuration.xml</import>
+  <import>war:/ks-extension/ks/faq/profile-configuration.xml</import>
   
   <!-- Configure the FAQ templates -->
   <import>war:/ks-extension/ks/faq/templates-configuration.xml</import>
