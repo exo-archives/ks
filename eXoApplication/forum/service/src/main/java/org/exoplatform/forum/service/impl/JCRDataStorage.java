@@ -5720,10 +5720,17 @@ public class JCRDataStorage implements  DataStorage {
 			eventQuery.setPath(path);
 			String type = eventQuery.getType();
 			String queryString = null;
+	    List<String> categoryCanView = new ArrayList<String>();
+	    List<String> forumCanView = new ArrayList<String>();
 			if(eventQuery.getUserPermission() > 0){
-				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, eventQuery.getListOfUser(), listCateIds, listForumIds,"@exo:userPrivate");
+			  List<String> listOfUser = eventQuery.getListOfUser();
+				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:userPrivate");
 				listCateIds = mapList.get(Utils.CATEGORY);
 				listForumIds = mapList.get(Utils.FORUM);
+        Map<String, List<String>> mapList1 = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:viewer");
+        categoryCanView = mapList1.get(Utils.CATEGORY);
+        forumCanView = mapList1.get(Utils.FORUM);
+        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
 			}
 			if (type.equals(Utils.CATEGORY)){
 				queryString = eventQuery.getPathQuery(listCateIds);
@@ -5743,6 +5750,9 @@ public class JCRDataStorage implements  DataStorage {
 				if(eventQuery.getUserPermission() == 0) isAdmin = true;
 				listSearchEvent.addAll(getSearchByAttachment(categoryHome, eventQuery.getPath(), eventQuery.getKeyValue(), listForumIds, eventQuery.getListOfUser(), isAdmin, type));
 			}
+      if(eventQuery.getUserPermission()>0) {
+        listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
+      }
     } catch (Exception e) {
     }finally {
     	sProvider.close() ;
