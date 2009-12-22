@@ -23,8 +23,10 @@
 	
 	fullName = uiform.getScreenName(userName);
 	if(fullName == null || fullName.length() == 0 || fullName.equals(userName)) {
-		if(contact.getFirstName() != null) fullName = contact.getFirstName() ;
-		if(contact.getLastName() != null) fullName = fullName + " " + contact.getLastName() ;
+		String str = contact.getFirstName();
+		if(str != null && str.length() > 0) fullName = str;
+		str = contact.getLastName(); 
+		if(str != null && str.length() > 0) fullName = fullName + " " + str ;
 	}
 	Date dateView = new Date();
 	long setTime = (long)(userProfileLogin.getTimeZone()*3600000) ;

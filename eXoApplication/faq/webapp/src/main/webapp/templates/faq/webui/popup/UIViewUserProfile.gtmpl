@@ -37,6 +37,7 @@
 		createdDate = dateFormatter.format(user.getCreatedDate());
 		fullName = user.getFullName();
 	}
+	if(fullName == null || fullName.length() <=0) fullName = userName;
 %>
 	<div class="ViewUserProfileContainer">
 		<div class="TitleBar">
@@ -54,7 +55,7 @@
 									avatarUrl = uiform.getAvatarUrl(userName) ;
 								%>
 								<img id="ImgAvatar" src="$avatarUrl" class="Img" onload="eXo.faq.UIAnswersPortlet.reSizeAvatar(this);" alt=""/>
-								<div class="Rank"><%=user.getFullName();%></div>
+								<div class="Rank">$fullName</div>
 								<div class="InfoUser">
 									<div><%=_ctx.appRes("UIViewUserProfile.label.JoinDate");%>: $createdDate</div>
 									<div><%=_ctx.appRes("UIViewUserProfile.label.LastLoginTime");%>: <%=dateFormatter.format(user.getLastLoginTime())%> </div>
