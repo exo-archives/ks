@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks-parent</artifactId>
-  <version>1.2.2-SNAPSHOT</version>
+  <version>1.2.2</version>
   <packaging>pom</packaging>
   <name>eXo KS Parent</name>
   <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
@@ -51,9 +51,9 @@
   </organization>
 
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2.2</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2.2</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/tags/1.2.2</url>
   </scm> 
   
   <modules>
@@ -122,9 +122,9 @@
                 <tasks>
                   <copy failonerror="false" todir="${basedir}/target/${project.build.finalName}/WEB-INF/classes">
                     <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes">
-                      <include name="**/*_en.properties"/>
+                      <include name="**/*_en.properties" />
                     </fileset>
-                    <globmapper from="*_en.properties" to="*.properties"/>
+                    <globmapper from="*_en.properties" to="*.properties" />
                   </copy>
                 </tasks>
               </configuration>
