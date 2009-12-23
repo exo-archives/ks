@@ -21,14 +21,14 @@
     <exo.product.specification>1.2</exo.product.specification>
     
     <!-- Dependencies -->
-    <org.exoplatform.kernel.version>2.0.9-SNAPSHOT</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.1.7-SNAPSHOT</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>1.3.5-SNAPSHOT</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.10.6-SNAPSHOT</org.exoplatform.jcr.version>
-    <org.exoplatform.portletcontainer.version>2.0.8-SNAPSHOT</org.exoplatform.portletcontainer.version>
-    <org.exoplatform.portal.version>2.5.7-SNAPSHOT</org.exoplatform.portal.version>
-    <org.exoplatform.exopackage.version>1.2.0-SNAPSHOT</org.exoplatform.exopackage.version>
-    <org.exoplatform.mvnexobuild.version>1.2.0-SNAPSHOT</org.exoplatform.mvnexobuild.version>
+    <org.exoplatform.kernel.version>2.0.9</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.1.7</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>1.3.5</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.10.6</org.exoplatform.jcr.version>
+    <org.exoplatform.portletcontainer.version>2.0.8</org.exoplatform.portletcontainer.version>
+    <org.exoplatform.portal.version>2.5.7</org.exoplatform.portal.version>
+    <org.exoplatform.exopackage.version>1.2.0</org.exoplatform.exopackage.version>
+    <org.exoplatform.mvnexobuild.version>1.2.0</org.exoplatform.mvnexobuild.version>
 
     <maven.test.skip>true</maven.test.skip>
     <!-- ignore test failures -->
