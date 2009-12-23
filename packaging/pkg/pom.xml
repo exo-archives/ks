@@ -23,7 +23,7 @@
    <parent>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.packaging</artifactId>
-      <version>1.2.2</version>
+      <version>1.2.3-SNAPSHOT</version>
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
@@ -84,13 +84,13 @@
        <dependency>
          <groupId>org.exoplatform.ks</groupId>
          <artifactId>ks.packaging.module</artifactId>
-         <version>1.2.2</version>
+         <version>1.2.3-SNAPSHOT</version>
          <type>js</type>
        </dependency> 
        <dependency>
          <groupId>org.exoplatform.ks</groupId>
          <artifactId>ks.packaging.product</artifactId>
-         <version>1.2.2</version>
+         <version>1.2.3-SNAPSHOT</version>
          <type>js</type>
        </dependency> 
    </dependencies>

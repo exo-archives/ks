@@ -23,7 +23,7 @@
    <parent>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.packaging</artifactId>
-      <version>1.2.2</version>
+      <version>1.2.3-SNAPSHOT</version>
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
@@ -59,16 +59,16 @@
     <dependency><groupId>org.exoplatform.kernel</groupId><artifactId>exo.kernel.component.common</artifactId><version>${org.exoplatform.kernel.version}</version><type>jar</type></dependency><!-- 2.0.9-SNAPSHOT-->
     <dependency><groupId>org.exoplatform.kernel</groupId><artifactId>exo.kernel.component.remote</artifactId><version>${org.exoplatform.kernel.version}</version><type>jar</type></dependency><!-- 2.0.9-SNAPSHOT-->
     <dependency><groupId>org.exoplatform.kernel</groupId><artifactId>exo.kernel.container</artifactId><version>${org.exoplatform.kernel.version}</version><type>jar</type></dependency><!-- 2.0.9-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.common</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.faq.service</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.faq.webapp</artifactId><version>1.2.2</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.forum.service</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.forum.webapp</artifactId><version>1.2.2</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.server.tomcat.patch</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.server.jboss.patch</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.ksResources</artifactId><version>1.2.2</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.portal</artifactId><version>1.2.2</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
-    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.webservice</artifactId><version>1.2.2</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.common</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.faq.service</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.faq.webapp</artifactId><version>1.2.3-SNAPSHOT</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.forum.service</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.eXoApplication.forum.webapp</artifactId><version>1.2.3-SNAPSHOT</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.server.tomcat.patch</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.server.jboss.patch</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.ksResources</artifactId><version>1.2.3-SNAPSHOT</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.portal</artifactId><version>1.2.3-SNAPSHOT</version><type>war</type></dependency><!-- 1.2.2-SNAPSHOT-->
+    <dependency><groupId>org.exoplatform.ks</groupId><artifactId>exo.ks.web.webservice</artifactId><version>1.2.3-SNAPSHOT</version><type>jar</type></dependency><!-- 1.2.2-SNAPSHOT-->
     <dependency><groupId>org.exoplatform.portal</groupId><artifactId>exo.portal.component.application-registry</artifactId><version>${org.exoplatform.portal.version}</version><type>jar</type></dependency><!-- 2.5.7-SNAPSHOT-->
     <dependency><groupId>org.exoplatform.portal</groupId><artifactId>exo.portal.component.dashboard</artifactId><version>${org.exoplatform.portal.version}</version><type>jar</type></dependency><!-- 2.5.7-SNAPSHOT-->
     <dependency><groupId>org.exoplatform.portal</groupId><artifactId>exo.portal.component.portal</artifactId><version>${org.exoplatform.portal.version}</version><type>jar</type></dependency><!-- 2.5.7-SNAPSHOT-->
