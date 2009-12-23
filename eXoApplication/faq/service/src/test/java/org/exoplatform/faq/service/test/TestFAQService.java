@@ -56,7 +56,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 
 
 @SuppressWarnings("unused")
-public class ITFAQService extends FAQServiceTestCase{
+public class TestFAQService extends FAQServiceTestCase{
 	private FAQService faqService_ ;
 	private FAQSetting faqSetting_ = new FAQSetting();
 	private SessionProvider sProvider_ ;
@@ -74,7 +74,7 @@ public class ITFAQService extends FAQServiceTestCase{
 	private static String  questionId5;
 	private DataStorage datastorage; 
 
-	public ITFAQService() throws Exception {
+	public TestFAQService() throws Exception {
 		super();
 	}
 
@@ -107,6 +107,9 @@ public class ITFAQService extends FAQServiceTestCase{
 		category.setViewAuthorInfor(true);
 		category.setModerators(new String[]{"root"}) ;
 		category.setCreatedDate(date) ;
+		category.setUserPrivate(new String[]{""});
+		category.setIndex(0);
+		category.setView(true);
 		return category ;
 	}
 
@@ -194,7 +197,7 @@ public class ITFAQService extends FAQServiceTestCase{
 	}
 
 	private void revoveDate() throws Exception {
-		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("true");
+		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("TRUE");
 		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
 		for (Category category : categories) {
 	    faqService_.removeCategory(category.getPath());
@@ -258,7 +261,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		faqService_.saveQuestion(question5, true,faqSetting_) ;
 	}
 	
-	public void _testCategory() throws Exception {
+	public void testCategory() throws Exception {
 	// remove Data before testing category.
 		revoveDate();
 //		add category Id	
@@ -285,7 +288,6 @@ public class ITFAQService extends FAQServiceTestCase{
 //		Get category by id
 		cate1 = faqService_.getCategoryById(Utils.CATEGORY_HOME+"/"+cate1.getId());
 		assertNotNull("Category have not been added", cate1) ;
-		
 //		Check category is already exist
 		assertEquals("This category is't already exist", faqService_.isExisting(cate1.getPath()), true);
 		
@@ -350,9 +352,11 @@ public class ITFAQService extends FAQServiceTestCase{
 		assertEquals("User Root is't moderator of category Home and cate1", listCateByModerator.size(), 2);
 		// remove Data when tested category
 		//faqService_.removeCategory(Utils.CATEGORY_HOME);
+	
+	
 	}
 // FAQPortlet
-	public void _testCategoryInfo() throws Exception {
+	public void testCategoryInfo() throws Exception {
 //	Add new data default
 		defaultData();
 //	Get categoryInfo
@@ -367,7 +371,7 @@ public class ITFAQService extends FAQServiceTestCase{
 		//faqService_.removeCategory(Utils.CATEGORY_HOME);
   }
 	
-	public void _testQuestion() throws Exception {
+	public void testQuestion() throws Exception {
 //		Add new data default
 		defaultData();
 //		get question 1
@@ -432,45 +436,25 @@ public class ITFAQService extends FAQServiceTestCase{
 //		set Data default
 		defaultData();
 		
-		FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
+		FAQEventQuery eventQuery = new FAQEventQuery() ;
 
-//		quick search with text = "test"
-		eventQueryCategory.setText("test");
-		eventQueryCategory.setType("categoryAndQuestion");
-		eventQueryCategory.setAdmin(true);
-		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQueryCategory) ;
-		assertEquals("Can't get all questions have \"test\" charaters in content", listQuickSearch.size(), 4) ;// 1 category and 4 question
-
-//		advance search all category in database - removed
-		//FAQEventQuery eventQueryCategory = new FAQEventQuery() ;
-		//eventQueryCategory.setType("faqCategory");
-		//List<Category> listAllCategroy = faqService_.getAdvancedSearchCategory(sProvider_, eventQueryCategory) ;
-		//assertEquals("In System don't have 4 categories", listAllCategroy.size(), 4) ;
-
-//		advance search with category name = "Sub" - removed
-		FAQEventQuery eventQuerySub = new FAQEventQuery() ;
-		eventQuerySub.setType("faqCategory");
-		eventQuerySub.setName("Sub") ;
-		//List<Category> listAllSub = faqService_.getAdvancedSearchCategory(sProvider_, eventQuerySub) ;
-		//assertEquals("don't Have any cateogry which have \"Sub\" charater in name", listAllSub.size(), 1) ;
-
-//		advance search all question in database - removed
-		FAQEventQuery eventQueryQuestion = new FAQEventQuery() ;
-		eventQueryQuestion.setType("faqQuestion");
-		//List<Question> listAllQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryQuestion) ;
-		//assertEquals(listAllQuestion.size(), 0) ;
-
-
-//		advance search with category name = "Sub" - removed
-		FAQEventQuery eventQueryAdvanceQuestion = new FAQEventQuery() ;
-		eventQueryAdvanceQuestion.setType("faqQuestion");
-		eventQueryAdvanceQuestion.setQuestion("nguyenvantruong") ;
-		//List<Question> listSearchAdvanceQuestion = faqService_.getAdvancedSearchQuestion(sProvider_, eventQueryAdvanceQuestion) ;
-		//assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
-									//listSearchAdvanceQuestion.size(), 2) ;
-		
-	// remove Data when tested search
-		//faqService_.removeCategory(Utils.CATEGORY_HOME);
+//		quick search with text = "test" 
+		eventQuery.setText("test");
+		eventQuery.setAdmin(true);
+		eventQuery.setUserId(USER_ROOT);
+		// for all questions and categories
+		eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
+		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't get all questions and categories have \"test\" charaters in content", listQuickSearch.size(), 6) ;// 2 category and 4 question
+		// for all category
+		eventQuery.setType(FAQEventQuery.FAQ_CATEGORY);
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't get all categories have \"test\" charaters in content", listQuickSearch.size(), 2) ;// 2 category
+		// for all questions 
+		eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
+		eventQuery.setLanguage("English");
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't get all categories have \"test\" charaters in content", listQuickSearch.size(), 4) ;// 4 question
 	}
 
 	public void testAnswer() throws Exception{

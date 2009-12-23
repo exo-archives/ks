@@ -2467,7 +2467,7 @@ public class JCRDataStorage implements DataStorage {
 			NodeIterator iter = result.getNodes() ;
 			//System.out.println("size ====>" + iter.getSize());
 			Node nodeObj = null;
-			if(eventQuery.getType().equals("faqCategory")){ // Category search
+			if(eventQuery.getType().equals(FAQEventQuery.FAQ_CATEGORY)){ // Category search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
 				while (iter.hasNext()) {
 					if(eventQuery.isAdmin()) {
@@ -2490,7 +2490,7 @@ public class JCRDataStorage implements DataStorage {
 					
 				}
 				return results ;
-			} else if(eventQuery.getType().equals("faqQuestion")){ // Question search
+			} else if(eventQuery.getType().equals(FAQEventQuery.FAQ_QUESTION)){ // Question search
 				List<ObjectSearchResult> results = new ArrayList<ObjectSearchResult> () ;
 				Map<String, Node> mergeQuestion = new HashMap<String, Node>();
 				Map<String, Node> mergeQuestion2 = new HashMap<String, Node>();
@@ -2731,7 +2731,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 				return results ;
 				
-			} else if(eventQuery.getType().equals("categoryAndQuestion")){ // Quick search
+			} else if(eventQuery.getType().equals(FAQEventQuery.CATEGORY_AND_QUESTION)){ // Quick search
 				String nodePath = "";
 				Session session = categoryHome.getSession();
 				Map<String, ObjectSearchResult> searchMap = new HashMap<String, ObjectSearchResult>();
