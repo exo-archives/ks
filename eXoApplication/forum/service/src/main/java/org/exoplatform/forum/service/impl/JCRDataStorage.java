@@ -5681,8 +5681,8 @@ public class JCRDataStorage implements  DataStorage {
     int i = 0;
     // where exo:viewer =  'user' -- who belong to the list
     for (String user : listOfUser) {
-      if(i==0) queryString.append("[(@exo:viewer=' ') or (@exo:viewer='").append(user).append("')");
-      else queryString.append(" or (@exo:viewer='").append(user).append("')");
+      if(i==0) queryString.append("[(@exo:viewer=' ') or (@exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
+      else queryString.append(" or (@exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
       i = 1;
     }
     
@@ -5881,8 +5881,8 @@ public class JCRDataStorage implements  DataStorage {
 		int i=0;
 
     for (String string : listOfUser) {
-      if(i==0) queryString.append("[(").append(property).append("=' ') or (").append(property).append("='").append(string).append("')");
-      else queryString.append(" or (").append(property).append("='").append(string).append("')");
+      if(i==0) queryString.append("[(").append(property).append("=' ') or (").append(property).append("='").append(string).append("')").append(" or (@exo:moderators='").append(string).append("')");
+      else queryString.append(" or (").append(property).append("='").append(string).append("')").append(" or (@exo:moderators='").append(string).append("')");
       i = 1;
     }
 		if(i==1) queryString.append("]");
