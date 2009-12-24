@@ -212,8 +212,11 @@ public class TestFAQService extends FAQServiceTestCase{
 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
 		Category cate2 = createCategory("Category 2 to test question") ;
 		categoryId2 =  Utils.CATEGORY_HOME + "/" + cate2.getId();
+		Category cate3 = createCategory("Category 3 has not question") ;
+		cate3.setModerators(new String[]{"demo"});
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate, true) ;
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate2, true) ;
+		faqService_.saveCategory(Utils.CATEGORY_HOME, cate3, true) ;
 
 		Question question1 = createQuestion(categoryId1) ;
 		questionId1 = question1.getId();
@@ -362,7 +365,7 @@ public class TestFAQService extends FAQServiceTestCase{
 //	Get categoryInfo
 		List<String> categoryIdScoped = new ArrayList<String>();
 		CategoryInfo categoryInfo = faqService_.getCategoryInfo(Utils.CATEGORY_HOME, categoryIdScoped);
-		assertEquals("Can not get info of category by categoryInfo.", categoryInfo.getSubCateInfos().size(), 2);
+		assertEquals("Can not get info of category by categoryInfo.", categoryInfo.getSubCateInfos().size(), 3);
 //		get QuestionInfo
 		categoryIdScoped = new ArrayList<String>();
 		categoryInfo = faqService_.getCategoryInfo(categoryId1, categoryIdScoped);
@@ -438,11 +441,11 @@ public class TestFAQService extends FAQServiceTestCase{
 		
 		FAQEventQuery eventQuery = new FAQEventQuery() ;
 
-//		quick search with text = "test" 
+//		search with text = "test" 
 		eventQuery.setText("test");
 		eventQuery.setAdmin(true);
 		eventQuery.setUserId(USER_ROOT);
-		// for all questions and categories
+		//quick search (for all questions and categories)
 		eventQuery.setType(FAQEventQuery.CATEGORY_AND_QUESTION);
 		List<ObjectSearchResult> listQuickSearch = faqService_.getSearchResults(eventQuery) ;
 		assertEquals("Can't get all questions and categories have \"test\" charaters in content", listQuickSearch.size(), 6) ;// 2 category and 4 question
@@ -450,11 +453,47 @@ public class TestFAQService extends FAQServiceTestCase{
 		eventQuery.setType(FAQEventQuery.FAQ_CATEGORY);
 		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
 		assertEquals("Can't get all categories have \"test\" charaters in content", listQuickSearch.size(), 2) ;// 2 category
+		
+		// search categories by moderator.
+		eventQuery.setText("");
+		eventQuery.setModerator("demo");
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't get all categories have moderator is 'demo'", listQuickSearch.size(), 1) ;
+		
 		// for all questions 
+		eventQuery.setText("test");
 		eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
 		eventQuery.setLanguage("English");
 		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
-		assertEquals("Can't get all categories have \"test\" charaters in content", listQuickSearch.size(), 4) ;// 4 question
+		assertEquals("Can't get all questions have \"test\" charaters in content", listQuickSearch.size(), 4) ;// 4 question
+	
+		//  Search with Disapprove question by demo.
+		Question question = faqService_.getQuestionById(categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId2);
+		assertNotNull("Get question is null! ",question);
+		question.setApproved(false);
+		faqService_.saveQuestion(question, false, faqSetting_);
+		
+		eventQuery.setAdmin(false);
+		eventQuery.setUserId(USER_DEMO);
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't search by demo for all question approved have \"test\" charaters in content", listQuickSearch.size(), 3) ;
+
+		//  Search with UnActivate question by demo.
+		question = faqService_.getQuestionById(categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId3);
+		assertNotNull("Get question is null! ",question);
+		question.setActivated(false);
+		faqService_.saveQuestion(question, false, faqSetting_);
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+//		System.out.println("\n\n ====> " + listQuickSearch.size());
+		assertEquals("Can't search by demo for all question activate have \"test\" charaters in content", listQuickSearch.size(), 2) ;
+		
+		// search by author
+		eventQuery.setAuthor("Ly Dinh Quang");
+		eventQuery.setText("");
+		listQuickSearch = faqService_.getSearchResults(eventQuery) ;
+		assertEquals("Can't search for all questions have auther is 'Phung Hai Nam'.", listQuickSearch.size(), 1) ;
+		
+		// search by 
 	}
 
 	public void testAnswer() throws Exception{
