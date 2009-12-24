@@ -20,7 +20,7 @@ KS is made up of three applications:
 exo Knowledge Suite 1.2 features several noteworthy changes:
 
     * General
-          o Upgraded to Portal 2.5.3
+          o Upgraded to Portal 2.5
           o The FAQ portlet has been renamed eXo Answers. FAQ is now the name of a new portlet that allows to publish Q/A produced in Answers
           o Screen name : user can now choose the name he is identified by
           o Search in attachments
@@ -60,17 +60,28 @@ Requirements
     * the exo server will run on portal 8080, make sure this port is not currently in use
 
 Launch instructions :
+    	- With Tomcat server:
+	    * Using command line, go to $TOMCAT_HOME/bin and start the server :
+	          o Windows :
 
-    * Using command line, go to $TOMCAT_HOME/bin and start the server :
-          o Windows :
+	            eXo.bat
 
-            eXo.bat run
+	          o Linux / Mac OS :
 
-          o Linux / Mac OS :
+	            chmod+x *.sh ; eXo.sh run
 
-            chmod+x *.sh ; eXo.sh run
+	    * Wait for the server to start. You should see something like this on the console :
+	- With Jboss server:
+	    * Using command line, go to $JBOSS_HOME/bin and start the server :
+	          o Windows :
 
-    * Wait for the server to start. You should see something like this on the console :
+	            run.bat
+
+	          o Linux / Mac OS :
+
+	            chmod+x *.sh ; run.sh run
+
+	    * Wait for the server to start. You should see something like this on the console :
 
 INFO: Server startup in 15359 ms
 
@@ -92,8 +103,182 @@ INFO: Server startup in 15359 ms
  CHANGELOG
 ===========
 
+Version 1.2.2
 
- Version 1.2 Final
+o Upgraded to Portal 2.5.7 with:
+	- Kernel 2.0.9
+	- Core 2.1.7
+	- JCR 1.10.6
+	- PC 2.0.8
+	- WS 1.3.5
+
+** Bug
+	 * [KS-1946] - Can't save an FAQ question while focus is in FCK Editor 
+	 * [KS-1980] - Wrong number of pages(zero) when using ldap-configuration 
+	 * [KS-1986] - Starts in Rate box are hidden. See file attach 
+	 * [KS-1994] - Change label in Add category form 
+	 * [KS-2011] - RSS feed: Don't get content of category/forum/topic which is default data. 
+	 * [KS-2016] - The name of days are not translated 
+	 * [KS-2024] - IE7: Show error message when discuss question to forum. See file attach 
+	 * [KS-2031] - Redirection to classic portal is hardcoded 
+	 * [KS-2034] - Signature could not be saved in Settings 
+	 * [KS-2035] - Add watch function is not updated with new email address of root 
+	 * [KS-2112] - Unknow error when Preview a quick post 
+	 * [KS-2113] - Can NOT create topic in Forum 
+	 * [KS-2114] - Small Icon display error in Posts by User form 
+	 * [KS-2117] - Answers - Invalid title in Search Result forum 
+	 * [KS-2118] - Answers: RSS Feed is not ok with created category and question 
+	 * [KS-2119] - Invalid display of some item is Answer popup menu 
+	 * [KS-2120] - Ivalid RSS Feed 
+	 * [KS-2121] - Signature is not saved and displayed 
+	 * [KS-2122] - Rate this topic, star in Rate form is not displayed 
+	 * [KS-2125] - Discussion function does not work well 
+	 * [KS-2129] - IE7 Attach File form is invalid 
+	 * [KS-2130] - Can NOT add Forum Category in special case 
+
+	 
+** Improvement 
+
+	 * [KS-1660] - Error UI in list tag pane. See file attach 
+	 * [KS-1941] - Make "Post Reply" clickable even for guest users 
+	 * [KS-1942] - Make import/export labels clearer 
+	 * [KS-1944] - Make error messages clearer 
+	 * [KS-1945] - sort user list alphabetically 
+	 * [KS-1975] - FAQ - Language switch 
+	 * [KS-2003] - Add icon for "Untag" item in menu. See file attach 
+
+	 
+** Task
+	 * [KS-1734] - Avoid expensive calls to getAll() 
+	 * [KS-1895] - Do not use ajax by default 
+	 * [KS-1947] - Version on 1.2.x should contain-SNAPSHOT 
+	 * [KS-2126] - Upgrade KS branch 1.2.2-SNAPSHOT to use portal 2.5.7-SNAPSHOT 
+	 * [KS-2131] - Cleanup the build process to be able to deploy on eXo Nexus with the release plugin for 1.2.x 
+	 * [KS-2156] - Release KS 1.2.2 
+	
+	
+	
+
+Version 1.2.1.1
+
+
+o Upgraded to Portal 2.5.6.2 with:
+	- Kernel 2.0.8
+	- Core 2.1.6
+	- JCR 1.10.5.1
+	- PC 2.0.7
+	- WS 1.3.4 
+
+
+Version 1.2.1
+
+
+o Upgraded to Portal 2.5.6.1 with:
+	- Kernel 2.0.8
+	- Core 2.1.6
+	- JCR 1.10.5
+	- PC 2.0.7
+	- WS 1.3.4 
+
+o Data migration tool supported for migrate data from 1.1 to 1.2.1 http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+Migration+from+1-1+to+1-2
+
+** Bug
+    	 * [KS-1412] - xml markup inside [CODE] is 'swallowed' by WYSIWYG 
+	 * [KS-1695] - FAQ - In Print Preview mode, unvote function still works 
+	 * [KS-1735] - FAQ : CSS error on the contact page 
+	 * [KS-1762] - FAQ: Invalid mouse over effect in the Right click menu/pop up menu 
+	 * [KS-1764] - In IE7: Lose border in Edit profile form. see file attach 
+	 * [KS-1765] - In IE 7: Little error in topic type table in Form administration form. See file attach 
+	 * [KS-1767] - Search icon in forum should not re-use css "search" class, but a different css class 
+	 * [KS-1774] - Watch body gets "null" 
+	 * [KS-1776] - IE7- print preview small UI error in case question having comments 
+	 * [KS-1779] - Upload Icon does not appear in forum attachment 
+	 * [KS-1810] - Manage Question form: Show all question existing into pending question list. 
+	 * [KS-1827] - FAQ: Still can move category when only have one category. 
+	 * [KS-1831] - Question isn't updated after edit category which contains that question. 
+	 * [KS-1832] - mail mix/is cut with question in faq 
+	 * [KS-1844] - Can not search question in language which not default by normal user. 
+	 * [KS-1848] - User still can edit, delete post although without view permission in special case 
+	 * [KS-1851] - Show confirm message is unexact when delete post from IPBan tab. see file attach 
+	 * [KS-1852] - Forum & FAQ- QUOTE & CODE tag does not work well in special case 
+	 * [KS-1853] - Answer, IE7: Show error popup message when select discuss forum function 
+	 * [KS-1854] - Can't import category in special case 
+	 * [KS-1855] - Answer: Can not sort category and question 
+	 * [KS-1856] - Alert message is wrong when import category with wrong data format 
+	 * [KS-1857] - Exception error when importing the category zip file in special case 
+	 * [KS-1858] - Icon of topic type is still displayed in topic list although deleted this topic type 
+	 * [KS-1859] - Answer,FF: Exception when select "Discuss Forum" 
+	 * [KS-1860] - User role is still "Moderator" although user isn't moderate any category/forum. 
+	 * [KS-1861] - Forum: Datetime is not changed by new changed timezone in Pending list 
+	 * [KS-1862] - Edit profile: ticking on [Forum administrator] - checkbox isn't saved in special case 
+	 * [KS-1863] - User hasn't moderate right in forum although added. 
+	 * [KS-1864] - FORUM: Selected category is still listed in Moderator category althoug removed. 
+	 * [KS-1868] - Inspite of being deactivated, the Bold tag still effects 
+	 * [KS-1869] - Banned user can still send private message from topic content 
+	 * [KS-1870] - Can NOT activate pruned topics 
+	 * [KS-1871] - Can't set permission for user when create Forum 
+	 * [KS-1872] - Can not search Forum by State only 
+	 * [KS-1873] - Forum: Error when sort Forum/topic 
+	 * [KS-1874] - Still can create topic in forum by Banned IP in special case 
+	 * [KS-1875] - Datetime is not changed by new changed timezone when preview post 
+	 * [KS-1876] - Display value of screen name is incorrect when view topic from Edit profile form 
+	 * [KS-1877] - Show/hide Forum jump isn't updated after save 
+	 * [KS-1878] - Show duplicate language in Answer question form. See file attach 
+	 * [KS-1879] - Added relate question isn't shown after save. 
+	 * [KS-1881] - Manage question/category function disappears in toolbar although login by administrator 
+	 * [KS-1888] - CODE is not rendered properly in mail messages 
+	 * [KS-1889] - Show Forum rules is incorrect when Forum banned by IP 
+	 * [KS-1891] - Answer of multi-language question isn't displayed in special case 
+	 * [KS-1898] - In Post by user form: Show value of IP logging is "null" in special case 
+	 * [KS-1899] - Can not move category to root category 
+	 * [KS-1903] - Improve the notification messages received by exo forum 
+	 * [KS-1904] - Jump to last read post is not updated when post is moved 
+	 * [KS-1905] - Home button does not repect useAjax 
+	 * [KS-1906] - In FF 3.0: Popup menu is hidden below footer pane. See file attach 
+	 * [KS-1907] - Answer: Show text is "French" in Send mail template. 
+	 * [KS-1909] - Attached image in question isn't shown after view. 
+	 * [KS-1911] - Disapprove & Inactivate answer in Answer form isn't saved. 
+	 * [KS-1912] - Wrong message and Show pop up menu in category is unexact by other user 
+	 * [KS-1914] - Answer porlet: Alert message is shown below Import pop up 
+	 * [KS-1915] - Manage question: Filter question in category is incorrect when login by moderator. 
+	 * [KS-1916] - Category disappears in category list after drag and drop in special case. 
+	 * [KS-1917] - Advanced search: Can not search question by language property 
+	 * [KS-1918] - Normal user can not search question in category which added new 
+	 * [KS-1919] - Moderate question function don't work 
+	 * [KS-1923] - Automate the adding multi-language question although only select default language. 
+	 * [KS-1924] - Problem with validate email field in Submit question form. 
+	 * [KS-1927] - Need to refresh (F5) browser to make click on topic work 
+	 * [KS-1929] - Sort answer by rate don't work 
+	 * [KS-1933] - [BFPME-475] i18n labels 
+	 * [KS-1946] - Can't save an FAQ question while focus is in FCK Editor 
+
+
+** Improvement
+   	 * [KS-1365] - Scroll back to top when bentering a category 
+	 * [KS-1434] - Error in displaying post after being edited with long text for result 
+	 * [KS-1458] -  Errors relate to Print 
+	 * [KS-1468] - Add delete and move actions to category contextual menu 
+	 * [KS-1491] - With Guest, don't should allow submit question 
+	 * [KS-1547] - Display Page iterator only when needed 
+	 * [KS-1653] - Should allow select user from available list to Moderator field in Advanced search form. 
+	 * [KS-1769] - Improve quick search function with special character 
+	 * [KS-1775] - FAQ - Should show the name of folder in the alert message 
+	 * [KS-1778] - Direct display of image attachments is too big 
+	 * [KS-1782] - Email Notification link should open the corresponding forum page 
+	 * [KS-1783] - Avoid duplicate notifications for watched forum topics 
+	 * [KS-1798] - Remember current page index during session 
+	 * [KS-1826] - quick search should run when hit <Enter> key in search field 
+	 * [KS-1833] - Don't show "Root" category in FAQ application 
+	 * [KS-1849] - Do not allow 2 categories with same name 
+	 * [KS-1850] - Don't show alert message when export with no Category 
+	 * [KS-1897] - FAQ should render BBCode 
+	 * [KS-1910] - Refresh question list and close viewing question when click on category 
+	 * [KS-1913] - Unwatch 
+	 * [KS-1928] - Move form still displays Root 
+	 * [KS-1941] - Make "Post Reply" clickable even for guest users 
+
+
+Version 1.2 Final
 
 
 ** Bug
@@ -405,3 +590,5 @@ Version 1.2 RC1
     * [KS-599] - Search in attachments
     * [KS-1834] - Plugin to load default Data in FAQ
 
+
+ 
