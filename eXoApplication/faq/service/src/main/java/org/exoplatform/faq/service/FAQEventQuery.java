@@ -494,7 +494,7 @@ public class FAQEventQuery {
     }  		
     
     //search on answers
-    StringBuilder commentSearch = new StringBuilder("") ;  		
+    StringBuilder commentSearch = new StringBuilder() ;  		
     if (comment != null && comment.length() > 0) {
     	commentSearch.append("( exo:commentLanguage='").append(language).append("'");
     	commentSearch.append(" and jcr:contains(@exo:comments,'" + comment + "')") ;
@@ -512,7 +512,7 @@ public class FAQEventQuery {
     
     boolean isAdd = false ;
     if( questionSearch.length() > 2) {
-    	System.out.println("questionSearch" + questionSearch.toString());
+//    	System.out.println("questionSearch" + questionSearch.toString());
     	queryString.append("(").append(questionSearch.toString()) ;  			
     	isAdd = true ;
     }
@@ -573,11 +573,13 @@ public class FAQEventQuery {
     	isAdd = true ;
     }
     
-    if(isAdd) {
-    	queryString.append(" and ").append(searchCategoryScoping.toString()) ;
-    } else {
-    	queryString.append(searchCategoryScoping.toString()) ;
-    	isAdd = true ;
+    if(!searchCategoryScoping.toString().equals("()")) {
+	    if(isAdd) {
+	    	queryString.append(" and ").append(searchCategoryScoping.toString()) ;
+	    } else {
+	    	queryString.append(searchCategoryScoping.toString()) ;
+	    	isAdd = true ;
+	    }
     }
     
     

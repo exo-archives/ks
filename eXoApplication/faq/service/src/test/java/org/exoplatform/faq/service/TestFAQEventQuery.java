@@ -19,11 +19,12 @@ package org.exoplatform.faq.service;
 
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import org.exoplatform.ks.test.Closure;
+import org.exoplatform.commons.utils.ISO8601;
 
 import junit.framework.TestCase;
-import static org.exoplatform.ks.test.AssertUtils.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -103,42 +104,47 @@ public class TestFAQEventQuery extends TestCase {
   }
   
   public void testBuildQuestionQuery() throws Exception {
-    final FAQEventQuery queryObject = new FAQEventQuery() ;
-    queryObject.setPath("/foo");
-    queryObject.setType(FAQEventQuery.FAQ_QUESTION);
-    
-    
-    
-    // throws a NPE
-    //assertException(new Closure() {public void dothis() {eventQuery.getQuery();}});
-    /*
-    eventQuery.setType(type) ;
-    eventQuery.setText(text) ;
-    eventQuery.setName(categoryName) ;
-    eventQuery.setIsModeQuestion(modeQuestion) ;
-    eventQuery.setModerator(moderator) ;
-    eventQuery.setFromDate(fromDate) ;
-    eventQuery.setToDate(toDate) ;
-    eventQuery.setAuthor(author) ;
-    eventQuery.setEmail(emailAddress) ;
-    eventQuery.setAttachment(nameAttachment);
-    eventQuery.setQuestion(question) ;
-    eventQuery.setResponse(response) ;
-    eventQuery.setComment(comment) ;
-    if(language != null && language.length() > 0 && !language.equals(advancedSearch.defaultLanguage_)) {
-      eventQuery.setLanguage(language);
-      eventQuery.setSearchOnDefaultLanguage(false) ;
-    } else {
-      eventQuery.setLanguage(advancedSearch.defaultLanguage_) ;
-      eventQuery.setSearchOnDefaultLanguage(true) ;       
-    }
-
-    String userName = FAQUtils.getCurrentUser();
-    eventQuery.setUserId(userName) ;
-    eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(userName));
-    eventQuery.setAdmin(Boolean.parseBoolean(advancedSearch.faqSetting_.getIsAdmin()));  
-    */
- 
+  	String selector = "/jcr:root/foo//* [(";
+  	String predicate;
+		final FAQEventQuery eventQuery = new FAQEventQuery() ;
+		eventQuery.setType(FAQEventQuery.FAQ_QUESTION);
+		eventQuery.setPath("/foo");
+		eventQuery.setAuthor("root") ;
+		predicate = "(jcr:contains(@exo:author, 'root')";
+		assertEquals(selector + predicate + "))]", eventQuery.getQuery());
+		
+		eventQuery.setEmail("root@exoplatform") ;
+		predicate += " and jcr:contains(@exo:email, 'root@exoplatform')";
+		assertEquals(selector + predicate + "))]", eventQuery.getQuery());
+		
+		Calendar calendar = GregorianCalendar.getInstance();
+		eventQuery.setFromDate(calendar) ;
+		predicate += " and (@exo:createdDate >= xs:dateTime('"+ISO8601.format(calendar)+"'))";
+		assertEquals(selector + predicate + "))]", eventQuery.getQuery());
+		
+		calendar = GregorianCalendar.getInstance();
+		eventQuery.setToDate(calendar) ;
+		predicate += " and (@exo:createdDate <= xs:dateTime('"+ISO8601.format(calendar)+"'))";
+		assertEquals(selector + predicate + "))]", eventQuery.getQuery());
+		
+		eventQuery.setLanguage("English");
+		eventQuery.setResponse("response") ;
+		predicate += ") or ( exo:responseLanguage='English' and jcr:contains(@exo:responses,'response'))";
+		assertEquals(selector + predicate + ")]", eventQuery.getQuery());
+		
+		eventQuery.setComment("comment") ;
+		predicate += " or ( exo:commentLanguage='English' and jcr:contains(@exo:comments,'comment'))";
+		assertEquals(selector + predicate + ")]", eventQuery.getQuery());
+		
+		eventQuery.setText("text") ;
+		predicate += ") or (  jcr:contains(., 'text') and (  exo:language='English' or exo:commentLanguage='English' or exo:responseLanguage='English')";
+		assertEquals(selector + predicate + " ) ]", eventQuery.getQuery());
+		
+		eventQuery.setViewingCategories(Arrays.asList("categoryId1", "categoryId2"));
+		predicate += " )  and (exo:categoryId='categoryId1' or exo:categoryId='categoryId2')";
+		assertEquals(selector + predicate + "]", eventQuery.getQuery());
+		eventQuery.setUserId("root") ;
+		eventQuery.setAdmin(true);  
   }
 
 }
