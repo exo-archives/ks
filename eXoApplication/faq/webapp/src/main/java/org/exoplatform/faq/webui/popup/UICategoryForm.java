@@ -113,7 +113,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATEQUESTIONS_CHECKBOX, FIELD_MODERATEQUESTIONS_CHECKBOX, false )) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(VIEW_AUTHOR_INFOR, VIEW_AUTHOR_INFOR, false )) ;
     inputset.addUIFormInput(new UIFormCheckBoxInput<Boolean>(FIELD_MODERATE_ANSWERS_CHECKBOX, FIELD_MODERATE_ANSWERS_CHECKBOX, false));
-    UIFormStringInput moderator = new UIFormStringInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
+    UIFormTextAreaInput moderator = new UIFormTextAreaInput(FIELD_MODERATOR_INPUT, FIELD_MODERATOR_INPUT, null) ;
     if (isAddNew) moderator.setValue(FAQUtils.getCurrentUser());
 		moderator.addValidator(MandatoryValidator.class);
     inputset.addUIFormInput(moderator) ;
@@ -190,8 +190,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					if( moderator!= null && moderator.trim().length() >0 ) moderator += "," ;
 					moderator += str ;
 				}    
-			if(moderator.trim().length() > 0)getUIStringInput(FIELD_MODERATOR_INPUT).setValue(moderator) ;
-			else getUIStringInput(FIELD_MODERATOR_INPUT).setValue(FAQUtils.getCurrentUser()) ;
+			if(moderator.trim().length() > 0)getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(moderator) ;
+			else getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).setValue(FAQUtils.getCurrentUser()) ;
 		} 
 	}
 
@@ -250,7 +250,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
       if(index > uiCategory.maxIndex) index = uiCategory.maxIndex;
       String description = uiCategory.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue() ;
      
-      String moderator = uiCategory.getUIStringInput(FIELD_MODERATOR_INPUT).getValue() ;
+      String moderator = uiCategory.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT).getValue() ;
       if (moderator == null || moderator.trim().length() <= 0) {
         uiApp.addMessage(new ApplicationMessage("UICategoryForm.msg.moderator-required", null,
           ApplicationMessage.INFO)) ;
@@ -398,7 +398,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
   			UIFormTextAreaInput textAreaInput = inputset.getUIFormTextAreaInput(FIELD_USERPRIVATE_INPUT);
   			textAreaInput.setValue(categoryForm.getUserSelect(textAreaInput.getValue(), values));
   		} else {
-  			UIFormStringInput stringInput = inputset.getUIStringInput(FIELD_MODERATOR_INPUT);
+  		  UIFormTextAreaInput stringInput = inputset.getUIFormTextAreaInput(FIELD_MODERATOR_INPUT);
   			stringInput.setValue(categoryForm.getUserSelect(stringInput.getValue(), values));
   		}
   		uiPoupPopupWindow.setUIComponent(null);
