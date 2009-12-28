@@ -16,80 +16,29 @@
  */
 package org.exoplatform.ks.test.jcr;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.util.Calendar;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.ks.test.AbstractExoContainerTestCase;
+import org.exoplatform.ks.test.ConfigurationUnit;
+import org.exoplatform.ks.test.ConfiguredBy;
+import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 
 /**
- * An abstract test that takes care of running the unit tests with the semantic described by the
- * {#link GateInTestClassLoader}.
- *
- * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public abstract class AbstractJCRTestCase extends TestCase
+@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
+public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
 {
 
-   protected AbstractJCRTestCase()
-   {
-   }
-
-   protected AbstractJCRTestCase(String name)
-   {
-      super(name);
-   }
-
-   @Override
-   public void runBare() throws Throwable
-   {
-      ClassLoader realClassLoader = Thread.currentThread().getContextClassLoader();
-
-      //
-      Set<String> rootConfigPaths = new HashSet<String>();
-      rootConfigPaths.add("conf/root-configuration.xml");
-
-      //
-      Set<String> portalConfigPaths = new HashSet<String>();
-      portalConfigPaths.add("conf/portal-configuration.xml");
-
-      //
-      EnumMap<ContainerScope, Set<String>> configs = new EnumMap<ContainerScope, Set<String>>(ContainerScope.class);
-      configs.put(ContainerScope.ROOT, rootConfigPaths);
-      configs.put(ContainerScope.PORTAL, portalConfigPaths);
-
-      //
-      ConfiguredBy cfBy = getClass().getAnnotation(ConfiguredBy.class);
-      if (cfBy != null)
-      {
-         for (ConfigurationUnit src : cfBy.value())
-         {
-            configs.get(src.scope()).add(src.path());
-         }
-      }
-
-      //
-      try
-      {
-         ClassLoader testClassLoader = new TestClassLoader(realClassLoader, rootConfigPaths, portalConfigPaths);
-         Thread.currentThread().setContextClassLoader(testClassLoader);
-         super.runBare();
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(realClassLoader);
-      }
-   }
+   
    
    /**
     * 

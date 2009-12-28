@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.test.jcr;
+package org.exoplatform.ks.test;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Describe a configuration unit that targets a container scoped by the {@link org.exoplatform.component.test.ContainerScope}
+ * Describe a configuration unit that targets a container scoped by the {@link org.exoplatform.ks.test.component.test.ContainerScope}
  * type. The path value is the absolute path that will be used to retrieve the configuration file via the
  * {@link ClassLoader#getResources(String)} mechanism therefore the format is described by this mechanisme.
  *

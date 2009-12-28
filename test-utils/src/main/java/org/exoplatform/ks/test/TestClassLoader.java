@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.test.jcr;
+package org.exoplatform.ks.test;
 import org.gatein.common.logging.Logger;
 import org.gatein.common.logging.LoggerFactory;
 
@@ -31,9 +31,9 @@ import java.util.Vector;
  * returned by the parent classloader in the following manner:
  * <ul>
  * <li>The loading of the <code>conf/configuration.xml</code> resource is replaced by the the configuration units
- * scoped at {@link org.exoplatform.component.test.ContainerScope#ROOT}.</li>
+ * scoped at {@link org.exoplatform.ks.test.component.test.ContainerScope#ROOT}.</li>
  * <li>The loading of the <code>conf/portal/configuration.xml</code> resource is replaced by the the configuration units
- * scoped at {@link org.exoplatform.component.test.ContainerScope#PORTAL}.</li>
+ * scoped at {@link org.exoplatform.ks.test.component.test.ContainerScope#PORTAL}.</li>
  * </ul>
  *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>

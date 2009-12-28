@@ -14,15 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.test.jcr;
+package org.exoplatform.ks.test;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * Annotates a unit test extending the {@link org.exoplatform.component.test.AbstractGateInTest} to provide
+ * the various configuration unit relevant for executing the unit test.
+ *
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-public enum ContainerScope
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ConfiguredBy
 {
 
-   ROOT, PORTAL
+   /**
+    * Returns the various relevant configuration units.
+    *
+    * @return the configuration units
+    */
+   ConfigurationUnit[] value();
 
 }

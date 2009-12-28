@@ -22,12 +22,15 @@ import javax.jcr.Session;
 
 import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.Closure;
+import org.exoplatform.ks.test.ConfigurationUnit;
+import org.exoplatform.ks.test.ConfiguredBy;
+import org.exoplatform.ks.test.ContainerScope;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
  * @version $Revision$
  */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
+ @ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
 public class TestAbstractJCRTestCase extends AbstractJCRTestCase
 {
 
