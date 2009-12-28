@@ -596,6 +596,9 @@
 			</propertyDefinition>
 		</propertyDefinitions>
 	</nodeType> 	 	 	
+
+<!--  bbcode nodetypes moves to bbcode-nodetypes.xml -->
+<!-- 
 	
 	<nodeType name="exo:forumBBCode" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -635,7 +638,7 @@
 			</childNodeDefinition>
 		</childNodeDefinitions>
 	</nodeType>
-
+-->
 	<nodeType name="exo:forumSubscription" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
