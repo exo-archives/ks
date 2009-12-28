@@ -59,7 +59,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   public final static String BBCODE_NODE_TYPE = "exo:forumBBCode".intern() ;
   public final static String BBCODE_HOME_NODE_TYPE = "exo:forumBBCodeHome".intern() ;  
   
-	private List<BBCodePlugin> defaultBBCodePlugins_;
+	private List<BBCodePlugin> plugins;
 	private KSDataLocation dataLocator;
 	private SessionManager sessionManager;
 	private List<String> activeBBCodesCache;
@@ -70,18 +70,17 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 	
   public BBCodeServiceImpl()  {
     activeBBCodesCache = new ArrayList<String>();
-    defaultBBCodePlugins_ = new ArrayList<BBCodePlugin>() ;    
+    plugins = new ArrayList<BBCodePlugin>() ;    
   }
 	
   public BBCodeServiceImpl(KSDataLocation dataLocator)  {
     this();
-    this.dataLocator = dataLocator;
-    this.sessionManager = dataLocator.getSessionManager();
+    setDataLocator(dataLocator);
   }
   
 
   
-  public Node getBBcodeHome(SessionProvider sProvider) throws Exception {
+  private Node getBBcodeHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getBBCodesLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);  
 	}
@@ -90,7 +89,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
    * {@inheritDoc}
    */
 	public void registerBBCodePlugin(BBCodePlugin plugin) throws Exception {
-		defaultBBCodePlugins_.add(plugin) ;
+		plugins.add(plugin) ;
 	}
 	
   /**
@@ -103,7 +102,7 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 			NodeIterator iter = bbCodeHome.getNodes();
 			if(iter.getSize() <= 0){ 
 				List<BBCode> bbCodes = new ArrayList<BBCode>();
-		    for (BBCodePlugin pln : defaultBBCodePlugins_) {
+		    for (BBCodePlugin pln : plugins) {
 		    	List<BBCodeData> codeDatas = pln.getBBCodeData();
 		    	for (BBCodeData codeData : codeDatas) {
 		        BBCode bbCode = new BBCode();
@@ -183,17 +182,27 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
 
   private Node createNode(Node bbCodeHome, BBCode bbcode) throws Exception {
     Node bbcNode;
-    String id = bbcode.getTagName() + ((bbcode.isOption()) ? "=":"");
+    String name = getNodeName(bbcode);
     try {
     	bbcNode = bbCodeHome.getNode(bbcode.getId());
-    	if(!id.equals(bbcode.getId())) {
+    	if(!name.equals(bbcode.getId())) {
     		bbcNode.remove();
-    		bbcNode = bbCodeHome.addNode(id, BBCODE_NODE_TYPE);
+    		bbcNode = bbCodeHome.addNode(name, BBCODE_NODE_TYPE);
     	}
     } catch (Exception e) {
-    	bbcNode = bbCodeHome.addNode(id, BBCODE_NODE_TYPE);
+    	bbcNode = bbCodeHome.addNode(name, BBCODE_NODE_TYPE);
     }
     return bbcNode;
+  }
+
+  /**
+   * create a suitable node name for a given bbcode
+   * @param bbcode
+   * @return
+   */
+  private String getNodeName(BBCode bbcode) {
+    String id = bbcode.getTagName() + ((bbcode.isOption()) ? "=":"");
+    return id;
   }
 	
   /**
@@ -330,5 +339,22 @@ public class BBCodeServiceImpl implements Startable, BBCodeService, ManagementAw
   
   public void setContext(ManagementContext context) {
     this.context = context;
+  }
+
+  public KSDataLocation getDataLocator() {
+    return dataLocator;
+  }
+
+  public void setDataLocator(KSDataLocation dataLocator) {
+    this.dataLocator = dataLocator;
+    this.sessionManager = dataLocator.getSessionManager();
+  }
+
+  public List<BBCodePlugin> getPlugins() {
+    return plugins;
+  }
+
+  public void setPlugins(List<BBCodePlugin> plugins) {
+    this.plugins = plugins;
   }
 }
