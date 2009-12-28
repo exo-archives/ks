@@ -24,16 +24,11 @@ public class AssertUtils {
 	 * @param actual containment
 	 * @param expected items expected to be contained
 	 */
-	@SuppressWarnings("unchecked")
-	public static void assertContains(Collection actual, Object... expected) {
-		
-		// does not work, duno why...
-		// Assert.assertTrue(actual.containsAll(Arrays.asList(expected)));
-		
-		// .. but it won't stop me!
-		for (Object item : expected) {
+	public static <T>void assertContains(Collection<T> actual, T... expected) {
+
+		for (T item : expected) {
 			boolean found = false;
-			for (Object obj : actual) {
+			for (T obj : actual) {
 				if (obj.equals(item)) {
 				  found = true;
 				}
@@ -47,8 +42,7 @@ public class AssertUtils {
 	 * @param actual containment
 	 * @param expected items expected to be contained
 	 */
-	@SuppressWarnings("unchecked")
-	public static void assertNotContains(Collection actual, Object... expected) {
+	public static <T>void assertNotContains(Collection<T> actual, T... expected) {
 		Assert.assertFalse(actual.containsAll(Arrays.asList(expected)));
 	}
 	
@@ -58,7 +52,17 @@ public class AssertUtils {
 	 * @param expected items expected to be contained
 	 */
 	public static void assertContains(List<String> actual, String... expected) {
-		Assert.assertTrue(actual.containsAll(Arrays.asList(expected)));
+	  
+    for (String item : expected) {
+      boolean found = false;
+      for (String obj : actual) {
+        if (obj.equals(item)) {
+          found = true;
+        }
+      }
+      Assert.assertTrue("expected item was not found " + item + "@"+ item.hashCode(), found); 
+    }	  
+
 	}
 	
 	
