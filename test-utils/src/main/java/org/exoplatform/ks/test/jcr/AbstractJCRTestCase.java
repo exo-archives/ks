@@ -277,6 +277,27 @@ public abstract class AbstractJCRTestCase extends TestCase
      catch (Exception e) {
        throw new RuntimeException("failed to add node" + path, e);
      }   
-   }   
+   }
+
+   /**
+    * removes a node at a given path
+    * @param path relative path from root
+    */
+  protected void deleteNode(String path) {
+    Session session = null;
+    try {
+      session = getSession();
+      Node parent = session.getRootNode();
+      Node target = parent.getNode(path);
+      target.remove();
+      session.save();
+    } catch (Exception e) {
+      throw new RuntimeException("failed to remove node" + path, e);
+    } finally {
+      if (session != null) {
+        session.logout();
+      }
+    }
+  }   
    
 }
