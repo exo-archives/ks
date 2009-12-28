@@ -73,23 +73,28 @@ public class ForumUtils {
 	public static final int MAXTITLE = 100;
 	public static final long MAXMESSAGE = 10000;
 	
+	
+	static String buildForumLink(String url, String selectedNode, String portalName, String type, String id) throws Exception { 
+    if(url.indexOf(portalName) > 0) {
+      if(url.indexOf(portalName + "/" + selectedNode) < 0){
+        url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+      }                 
+    }
+    url = url.substring(0, url.indexOf(selectedNode)+selectedNode.length());
+    StringBuilder link = new StringBuilder().append(url);
+    if(!isEmpty(type) && !isEmpty(id)){
+      if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);
+      else link.append("/").append(type);
+      if(!id.equals(Utils.FORUM_SERVICE))link.append("/").append(id);
+    }
+    return link.toString();
+	}
+	
 	public static String createdForumLink(String type, String id) throws Exception {
 		String url = ((PortalRequestContext)Util.getPortalRequestContext()).getRequest().getRequestURL().toString();
 		String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
 		String portalName = "/" + Util.getUIPortal().getName() ;
-		if(url.indexOf(portalName) > 0) {
-			if(url.indexOf(portalName + "/" + selectedNode) < 0){
-				url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-			}									
-		}
-		url = url.substring(0, url.indexOf(selectedNode)+selectedNode.length());
-		StringBuilder link = new StringBuilder().append(url);
-		if(!isEmpty(type) && !isEmpty(id)){
-			if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);
-			else link.append("/").append(type);
-			if(!id.equals(Utils.FORUM_SERVICE))link.append("/").append(id);
-		}
-	  return link.toString();
+		return buildForumLink(url, selectedNode, portalName, type, id);
   }
 	
 	public static String getFormatDate(String format, Date myDate) {
