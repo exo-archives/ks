@@ -7411,6 +7411,14 @@ public class JCRDataStorage implements  DataStorage {
     log.info("JCR Data Storage for forum initialized to " + dataLocator);
   }
 
+  public boolean isInitRssListener() {
+    return isInitRssListener;
+  }
+
+  public void setInitRssListener(boolean isInitRssListener) {
+    this.isInitRssListener = isInitRssListener;
+  }
+
 	
 	
 	

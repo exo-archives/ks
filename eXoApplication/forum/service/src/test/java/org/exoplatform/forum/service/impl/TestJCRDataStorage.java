@@ -34,7 +34,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventListenerIterator;
+import javax.jcr.observation.ObservationManager;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
@@ -44,6 +48,7 @@ import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
+import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
@@ -163,6 +168,32 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     storage.addPlugin(notifPlugin);
 
     assertEquals("bar", storage.getServerConfig().get("foo"));
+  }
+  
+  public void testAddRSSEventListener() throws Exception {
+    ObservationManager manager = super.getSession().getWorkspace().getObservationManager();
+
+    storage.setInitRssListener(false);
+    storage.addRSSEventListenner();
+    assertFalse(hasListenerOfType(manager, ForumRSSEventListener.class));
+
+    storage.setInitRssListener(true);
+    storage.addRSSEventListenner();
+    assertTrue(hasListenerOfType(manager, ForumRSSEventListener.class));
+    
+  }
+
+  private <T extends EventListener>boolean hasListenerOfType(ObservationManager manager, Class<T> clazz) throws RepositoryException {
+    EventListenerIterator it = manager.getRegisteredEventListeners();
+    boolean found = false;
+    while (it.hasNext()) {
+      EventListener listener = it.nextEventListener();
+      if (listener.getClass() == clazz) {
+        found = true;
+        break;
+      }
+    }
+    return found;
   }
 
   
