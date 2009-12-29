@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+  <component>
+     <type>org.exoplatform.services.security.IdentityRegistry</type>
+  </component>
+  
+  <component>
+      <key>org.exoplatform.services.organization.OrganizationService</key>
+     <type>org.exoplatform.ks.test.mock.SimpleMockOrganizationService</type>
+  </component>  
+  
+  <component>
+      <key>org.exoplatform.services.cache.CacheService</key>
+     <type>org.exoplatform.services.cache.impl.CacheServiceImpl</type>
+    <init-params>
+      <object-param>
+        <name>cache.config.default</name>
+        <object type="org.exoplatform.services.cache.ExoCacheConfig">
+          <field name="name"><string>default</string></field>
+          <field name="maxSize"><int>30</int></field>
+          <field name="liveTime"><long>300</long></field>
+          <field name="distributed"><boolean>false</boolean></field>
+          <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field>
+        </object>
+      </object-param>
+    </init-params>
+  </component>    
+  
+</configuration>
+
