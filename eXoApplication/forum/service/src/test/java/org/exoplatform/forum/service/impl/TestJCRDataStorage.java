@@ -30,11 +30,16 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+import org.exoplatform.container.component.ComponentPlugin;
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -42,6 +47,7 @@ import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
+import org.exoplatform.ks.test.KernelUtils;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 
 /**
@@ -135,6 +141,28 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     Node node = getNode(avatarLocation);
     assertEquals("updated content",  stringOf(node.getNode("jcr:content").getProperty("jcr:data").getStream()));
 
+  }
+  
+  public void testAddplugin() throws Exception {
+    
+    // null plugin
+    storage.addPlugin(null);
+    assertNull(storage.getServerConfig().get("foo"));
+    
+    // not EmailNotifuPlugin
+    ComponentPlugin plugin = mock(ComponentPlugin.class);
+    storage.addPlugin(plugin);
+    assertNull(storage.getServerConfig().get("foo"));
+    
+    // with EmailNoitfyPlugin
+    InitParams params = new InitParams();
+    Map<String,String> map = new HashMap<String,String>();
+    map.put("foo","bar");
+    KernelUtils.addPropertiesParam(params, "email.configuration.info", map);
+    EmailNotifyPlugin notifPlugin = new EmailNotifyPlugin(params);
+    storage.addPlugin(notifPlugin);
+
+    assertEquals("bar", storage.getServerConfig().get("foo"));
   }
 
   

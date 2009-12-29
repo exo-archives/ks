@@ -16,10 +16,15 @@
  */
 package org.exoplatform.ks.test;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ObjectParameter;
+import org.exoplatform.container.xml.PropertiesParam;
+import org.exoplatform.container.xml.Property;
 import org.exoplatform.container.xml.ValueParam;
 
 /**
@@ -51,5 +56,17 @@ public class KernelUtils {
     param.setObject(value);
     params.addParameter(param);
    }
+
+  public static void addPropertiesParam(InitParams params, String name, Map<String, String> map) {
+    PropertiesParam param = new PropertiesParam();
+    param.setName(name);
+    Iterator<String> it = map.keySet().iterator();
+    while (it.hasNext()) {
+      String key = (String) it.next();
+      Property prop = new Property(key, map.get(key));
+      param.addProperty(prop);
+    }
+    params.addParameter(param);
+  }
 
 }
