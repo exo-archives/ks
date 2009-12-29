@@ -18,9 +18,9 @@ public class ForumEventQuery {
 	private String byUser ;
 	private String isLock;
 	private String isClosed;
-	private String topicCountMin;
-	private String postCountMin;
-	private String viewCountMin;
+	private String topicCountMin = "0";
+	private String postCountMin = "0";
+	private String viewCountMin = "0";
 	private String moderator;
 	private String remain;
 	private Calendar fromDateCreated ;
@@ -162,17 +162,15 @@ public class ForumEventQuery {
     else  queryString.append("//element(*,exo:").append(type).append(")") ;
     StringBuffer stringBuffer = new StringBuffer() ;
     stringBuffer.append("[");
-    if(valueIn.equals("title")) {
-	    if(keyValue != null && keyValue.length() > 0 ) {
+    if(keyValue != null && keyValue.length() > 0 ) {
+    	if(valueIn.equals("title")) {
 	    	stringBuffer.append("(jcr:contains(@exo:name, '").append(keyValue).append("'))") ;
-	    	isAnd = true ;
+	    } else {
+	    	stringBuffer.append("(jcr:contains(., '").append(keyValue).append("'))") ;
 	    }
-    } else {
-    	if(keyValue != null && keyValue.length() > 0 ) {
-    		stringBuffer.append("(jcr:contains(., '").append(keyValue).append("'))") ;
-    		isAnd = true ;
-    	}
+    	isAnd = true ;
     }
+    
     if(byUser != null && byUser.length() > 0) {
     	String temp = setArrays(byUser, "owner");
       if(temp != null && temp.length() > 0) { 
