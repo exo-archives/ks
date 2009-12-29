@@ -2,32 +2,31 @@ package org.exoplatform.forum.test;
 
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.ks.test.AbstractExoContainerTestCase;
+import org.exoplatform.ks.test.AbstractContainerBasedTestCase;
 import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.ConfigurationUnit;
-import org.exoplatform.ks.test.ConfiguredBy;
-import org.exoplatform.ks.test.ContainerScope;
-import org.exoplatform.ks.test.mock.SimpleMockOrganizationService;
-import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
-import org.exoplatform.services.security.IdentityRegistry;
 
-/**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
- * @version $Revision$
- */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/ForumServiceUtils-configuration.xml")})
-public class TestForumServiceUtils extends AbstractExoContainerTestCase {
+public class TestForumServiceUtils extends AbstractContainerBasedTestCase {
 
+	public TestForumServiceUtils() throws Exception {
+		super();
+
+	}
+	
+	
+  @Override
+  protected void registerComponents(ExoContainer testContainer) {
+ 
+  }
+	
+	
 
 	public void testHasPermission() throws Exception {
 		
 		String user = "user1";
-		PortalContainer container = PortalContainer.getInstance();
-		SimpleMockOrganizationService organizationService = (SimpleMockOrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
 		organizationService.addMemberships(user, "*:/platform/users");
 		
 		simulateAuthenticate(user);
@@ -52,10 +51,8 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 	}
 
 	private void simulateAuthenticate(String user) throws Exception {
-    PortalContainer container = PortalContainer.getInstance();
-    SimpleMockOrganizationService organizationService = (SimpleMockOrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
+		
 		Identity identity = new OrganizationAuthenticatorImpl(organizationService).createIdentity(user);
-		IdentityRegistry identityRegistry = (IdentityRegistry) container.getComponentInstanceOfType(IdentityRegistry.class);
 		identityRegistry.register(identity);
 	}
 
@@ -67,8 +64,6 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 	}
 
 	public void testGetPermissionByGroup() throws Exception {
-    PortalContainer container = PortalContainer.getInstance();
-    SimpleMockOrganizationService organizationService = (SimpleMockOrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
 		organizationService.addMemberships("user1", "*:/platform/users");	
 		organizationService.addMemberships("user2", "*:/platform/users");
 		organizationService.addMemberships("user3", "*:/platform");
@@ -83,8 +78,6 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 	
 	
 	public void testGetPermissionByUser() throws Exception {
-    PortalContainer container = PortalContainer.getInstance();
-    SimpleMockOrganizationService organizationService = (SimpleMockOrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
 		organizationService.addMemberships("user1", "*:/platform/users");	
 		organizationService.addMemberships("user3", "*:/platform/users");
 		
@@ -102,11 +95,23 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 	}
 	
 	public void testGetPermissionByMembership() throws Exception {
-    PortalContainer container = PortalContainer.getInstance();
-    SimpleMockOrganizationService organizationService = (SimpleMockOrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
 		organizationService.addMemberships("user1", "*:/platform/users");
 	}
 	
+	/**
+	 *       <object-param>
+        <name>cache.config.default</name>
+        <description>The default cache configuration</description>
+        <object type="org.exoplatform.services.cache.ExoCacheConfig">
+          <field name="name"><string>default</string></field>
+          <field name="maxSize"><int>300</int></field>
+          <field name="liveTime"><long>-1</long></field>
+          <field name="distributed"><boolean>false</boolean></field>
+          <field name="implementation"><string>org.exoplatform.services.cache.concurrent.ConcurrentFIFOExoCache</string></field> 
+        </object>
+      </object-param>
+	 */
+
 
 
 	
