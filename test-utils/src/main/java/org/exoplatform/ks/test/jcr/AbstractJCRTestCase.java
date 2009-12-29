@@ -46,8 +46,7 @@ public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
     */
    ManageableRepository getRepo() {
      try {
-       PortalContainer container = PortalContainer.getInstance();
-       RepositoryService repos = (RepositoryService) container.getComponentInstanceOfType(RepositoryService.class);
+       RepositoryService repos = getComponent(RepositoryService.class);
        ManageableRepository repo = repos.getDefaultRepository();
        return repo;
      } catch (Exception e) {

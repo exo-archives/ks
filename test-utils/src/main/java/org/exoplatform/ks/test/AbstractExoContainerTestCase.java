@@ -22,6 +22,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
+
 
 /**
  * An abstract test that takes care of running the unit tests with the semantic described by the
@@ -45,6 +49,8 @@ public class AbstractExoContainerTestCase extends TestCase {
   public void runBare() throws Throwable
   {
      ClassLoader realClassLoader = Thread.currentThread().getContextClassLoader();
+     
+
 
      //
      Set<String> rootConfigPaths = new HashSet<String>();
@@ -69,17 +75,39 @@ public class AbstractExoContainerTestCase extends TestCase {
         }
      }
 
-     //
-     try
-     {
-        ClassLoader testClassLoader = new TestClassLoader(realClassLoader, rootConfigPaths, portalConfigPaths);
-        Thread.currentThread().setContextClassLoader(testClassLoader);
-        super.runBare();
+     ContainerBuilder builder = new ContainerBuilder().withLoader(realClassLoader);
+     
+     Set<String> rootConfs = configs.get(ContainerScope.ROOT);
+     for (String rootConf : rootConfs) {
+      builder.withRoot(rootConf);
      }
-     finally
-     {
-        Thread.currentThread().setContextClassLoader(realClassLoader);
+     
+     Set<String> portalConfs = configs.get(ContainerScope.PORTAL);
+     for (String portalConf : portalConfs) {
+      builder.withPortal(portalConf);
      }
+
+  }
+  
+  /**
+   * Register a component to the containter
+   */
+  protected <T, I extends T>void registerComponent(Class<T> clazz, I impl) {
+    ExoContainerContext.getCurrentContainer().registerComponentImplementation(impl, clazz);
+  }
+  
+  /**
+   * Get a component from current container
+   * @param <T> type of component (key)
+   * @param <U> type of component implementation (type)
+   * @param clazz class of the registered component
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  protected <T,U extends T>U getComponent(Class<T> clazz) {
+    //ExoContainer container = ExoContainerContext.getCurrentContainer();
+    ExoContainer container = PortalContainer.getInstance();
+    return (U) container.getComponentInstanceOfType(clazz);
   }
   
 }
