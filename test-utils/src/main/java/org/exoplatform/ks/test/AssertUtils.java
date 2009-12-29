@@ -95,10 +95,22 @@ public class AssertUtils {
 		Assert.assertEquals(0, value.size());
 	}
 
+	/**
+	 * Assert a collection is not empty and not null
+	 * @param <T>
+	 * @param value
+	 */
+  public static <T>void assertNotEmpty(Collection<T> value) {
+    Assert.assertNotNull(value);
+    Assert.assertTrue(value.size()>0);
+  }	
+	
 	 public static <T> void assertEmpty(T[] value) {
 	    Assert.assertNotNull(value);
 	    Assert.assertEquals(0, value.length);
 	  }
+	 
+
 	
   /**
    * All elements of a list should be contained in the expected array of String
@@ -148,5 +160,8 @@ public class AssertUtils {
     }
     throw new AssertionFailedError("An exception should have been thrown.");
   }
+
+
+
 
 }

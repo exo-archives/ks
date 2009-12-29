@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ks.test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import org.exoplatform.container.xml.ObjectParameter;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.container.xml.Property;
 import org.exoplatform.container.xml.ValueParam;
+import org.exoplatform.container.xml.ValuesParam;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -66,6 +69,13 @@ public class KernelUtils {
       Property prop = new Property(key, map.get(key));
       param.addProperty(prop);
     }
+    params.addParameter(param);
+  }
+
+  public static void addValuesParam(InitParams params, String name, String... values) {
+    ValuesParam param = new ValuesParam();
+    param.setName(name);
+    param.setValues(new ArrayList<String>(Arrays.asList(values)));
     params.addParameter(param);
   }
 

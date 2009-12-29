@@ -44,11 +44,13 @@ import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.rss.ForumRSSEventListener;
+import org.exoplatform.ks.test.AssertUtils;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
@@ -154,12 +156,12 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     storage.addPlugin(null);
     assertNull(storage.getServerConfig().get("foo"));
     
-    // not EmailNotifuPlugin
+    // not EmailNotifyPlugin
     ComponentPlugin plugin = mock(ComponentPlugin.class);
     storage.addPlugin(plugin);
     assertNull(storage.getServerConfig().get("foo"));
     
-    // with EmailNoitfyPlugin
+    // with EmailNotifyPlugin
     InitParams params = new InitParams();
     Map<String,String> map = new HashMap<String,String>();
     map.put("foo","bar");
@@ -168,6 +170,22 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     storage.addPlugin(notifPlugin);
 
     assertEquals("bar", storage.getServerConfig().get("foo"));
+  }
+  
+  public void addRolePlugin() throws Exception {
+    storage.addRolePlugin(null);
+    AssertUtils.assertEmpty(storage.getRulesPlugins());
+    
+    // not RoleRulesPlugin
+    ComponentPlugin plugin = mock(ComponentPlugin.class);
+    storage.addRolePlugin(plugin);
+    AssertUtils.assertEmpty(storage.getRulesPlugins());
+    
+    InitParams params = new InitParams();
+    KernelUtils.addValueParam(params, "role", "ADMIN");
+    KernelUtils.addValuesParam(params, "rules", "rule1", "rule2");
+    storage.addRolePlugin(new RoleRulesPlugin(params));
+    AssertUtils.assertNotEmpty(storage.getRulesPlugins());
   }
   
   public void testAddRSSEventListener() throws Exception {
