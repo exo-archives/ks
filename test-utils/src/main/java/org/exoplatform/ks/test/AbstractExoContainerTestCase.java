@@ -28,10 +28,13 @@ import org.exoplatform.container.PortalContainer;
 
 
 /**
- * An abstract test that takes care of running the unit tests with the semantic described by the
- * {#link GateInTestClassLoader}.
- *
- * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
+ * A base test class that allows to load an exo container with a selected set of components.
+ * It is aimed at running lighter test cases than the StandaloneContainer.
+ * <u>Example usage</u> :  
+ * <pre>@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.ROOT, path = "conf/custom.xml"),@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/some.xml"),  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/other.xml")})</pre>
+ * TODO : leverage GateIn testing framework. This is a temporary fork of GateIn testing base classes.
+ * 
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 public class AbstractExoContainerTestCase extends TestCase {

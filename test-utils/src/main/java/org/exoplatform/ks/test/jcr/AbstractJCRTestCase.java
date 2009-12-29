@@ -22,7 +22,6 @@ import java.util.Calendar;
 import javax.jcr.Node;
 import javax.jcr.Session;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.test.AbstractExoContainerTestCase;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
