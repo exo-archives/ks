@@ -34,14 +34,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.ValueFormatException;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
@@ -150,7 +153,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
 
   }
   
-  public void testAddplugin() throws Exception {
+  public void testAddPlugin() throws Exception {
     
     // null plugin
     storage.addPlugin(null);
@@ -172,7 +175,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertEquals("bar", storage.getServerConfig().get("foo"));
   }
   
-  public void addRolePlugin() throws Exception {
+  public void testAddRolePlugin() throws Exception {
     storage.addRolePlugin(null);
     AssertUtils.assertEmpty(storage.getRulesPlugins());
     
@@ -215,6 +218,100 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
   }
 
   
+  public void testSaveForumAdministration() throws Exception {
+
+    // test create
+    ForumAdministration admin = new ForumAdministration();
+    admin.setCensoredKeyword("4letterword");
+    admin.setEnableHeaderSubject(true);
+    admin.setForumSortBy("name");
+    admin.setForumSortByType("descending");
+    admin.setHeaderSubject("header");
+    admin.setNotifyEmailContent("content");
+    admin.setNotifyEmailMoved("moved");
+    admin.setTopicSortBy("postCount");
+    admin.setTopicSortByType("ascending");
+    storage.saveForumAdministration(admin);
+    assertAdminSaved(admin);
+
+    // test update
+    admin.setCensoredKeyword("censored");
+    admin.setEnableHeaderSubject(false);
+    admin.setForumSortBy("forum");
+    admin.setForumSortByType("ascending");
+    admin.setHeaderSubject("subject");
+    admin.setNotifyEmailContent("c");
+    admin.setNotifyEmailMoved("m");
+    admin.setTopicSortBy("topic");
+    admin.setTopicSortByType("descending");
+    storage.saveForumAdministration(admin);
+    
+    assertAdminSaved(admin);
+  }
+  
+  public void testGetForumAdministration() throws Exception {
+    String adminPath = storage.getDataLocation().getAdministrationLocation();
+    addNode(adminPath, "exo:administration");
+    
+    Session session = getSession();
+    Node adminNode = session.getRootNode().getNode(adminPath);
+    adminNode.setProperty("exo:forumSortBy", "a");
+    adminNode.setProperty("exo:forumSortByType", "b");
+    adminNode.setProperty("exo:topicSortBy", "c");
+    adminNode.setProperty("exo:topicSortByType", "d");
+    adminNode.setProperty("exo:censoredKeyword", "e");
+    adminNode.setProperty("exo:enableHeaderSubject", true);
+    adminNode.setProperty("exo:headerSubject", "f");
+    adminNode.setProperty("exo:notifyEmailContent", "g");
+    adminNode.setProperty("exo:notifyEmailMoved", "h");
+    session.save();
+    assertNodeNotExists(adminPath);
+    ForumAdministration admin = storage.getForumAdministration();
+    assertEquals("a", admin.getForumSortBy());
+    assertEquals("b", admin.getForumSortByType());
+    assertEquals("c", admin.getTopicSortBy());
+    assertEquals("d", admin.getTopicSortByType());
+    assertEquals("e", admin.getCensoredKeyword());
+    assertEquals(true, admin.getEnableHeaderSubject());
+    assertEquals("f", admin.getHeaderSubject());
+    assertEquals("g", admin.getNotifyEmailContent());
+    assertEquals("h", admin.getNotifyEmailMoved());
+    
+  }
+  
+
+
+  private void assertAdminSaved(ForumAdministration admin) {
+    String adminPath = storage.getDataLocation().getAdministrationLocation();
+    assertNodeExists(adminPath);
+    Node adminNode = getNode(adminPath);
+    assertPropertyEquals(admin.getForumSortBy(), adminNode, "exo:forumSortBy");
+    assertPropertyEquals(admin.getForumSortByType(), adminNode, "exo:forumSortByType");
+    assertPropertyEquals(admin.getTopicSortBy(), adminNode, "exo:topicSortBy");
+    assertPropertyEquals(admin.getTopicSortByType(), adminNode, "exo:topicSortByType");
+    assertPropertyEquals(admin.getCensoredKeyword(), adminNode, "exo:censoredKeyword");
+    assertPropertyEquals(admin.getEnableHeaderSubject(), adminNode, "exo:enableHeaderSubject");
+    assertPropertyEquals(admin.getHeaderSubject(), adminNode, "exo:headerSubject");
+    assertPropertyEquals(admin.getNotifyEmailContent(), adminNode, "exo:notifyEmailContent");
+    assertPropertyEquals(admin.getNotifyEmailMoved(), adminNode, "exo:notifyEmailMoved");
+  }
+  
+  protected void assertPropertyEquals(String expected, Node node, String property) {
+    try {
+      assertEquals(expected, node.getProperty(property).getString());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  protected void assertPropertyEquals(boolean expected, Node node, String property) {
+    try {
+      assertEquals(expected, node.getProperty(property).getBoolean());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   class TextForumAttachment extends ForumAttachment {
     private String text;
 
