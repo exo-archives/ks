@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -46,7 +47,6 @@ import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
@@ -2482,8 +2482,9 @@ public class JCRDataStorage implements  DataStorage {
       Node userProfileHome = getUserProfileHome(sProvider) ;
       Node userNode = null ;
       Map<String, Long> userPostMap = (HashMap<String, Long>)infoMap.get(name) ;     
-      for(String user : userPostMap.keySet()) {
+      for(Map.Entry<String,Long> entry: userPostMap.entrySet()) {
         try{
+          String user = entry.getKey();
           userNode = userProfileHome.getNode(user) ;
           long totalPost = userNode.getProperty("exo:totalPost").getLong() ;
           userNode.setProperty("exo:totalPost", totalPost - userPostMap.get(user)) ;
@@ -3365,7 +3366,7 @@ public class JCRDataStorage implements  DataStorage {
 							List<String> emails = Utils.valuesToList(node.getProperty("exo:emailWatching").getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(node.getProperty("exo:userWatching").getValues())) {
-								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}), user)) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), user)) {
 									emailList.add(emails.get(i));
 								} 
 								i++;
@@ -3413,7 +3414,7 @@ public class JCRDataStorage implements  DataStorage {
 							List<String> emails = Utils.valuesToList(forumNode.getProperty("exo:emailWatching").getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(forumNode.getProperty("exo:userWatching").getValues())) {
-								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]),user)) {
 									emailListForum.add(emails.get(i));
 								} 
 								i++;
@@ -3429,7 +3430,7 @@ public class JCRDataStorage implements  DataStorage {
 							List<String> emails = Utils.valuesToList(categoryNode.getProperty("exo:emailWatching").getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(categoryNode.getProperty("exo:userWatching").getValues())) {
-								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[]{}),user)) {
+								if(ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]),user)) {
 									emailListCategory.add(emails.get(i));
 								} 
 								i++;
@@ -4137,7 +4138,7 @@ public class JCRDataStorage implements  DataStorage {
 			if(iter.getSize() == 1 && userTags.size() > 1){
 				if(userTags.contains(userName)){
 					userTags.remove(userName);
-					tag.setUserTag(userTags.toArray(new String[]{}));
+					tag.setUserTag(userTags.toArray(new String[userTags.size()]));
 					Node tagNode = getTagHome(sProvider).getNode(tagId);
 					long count = tagNode.getProperty("exo:useCount").getLong();
 					if(count > 1)tagNode.setProperty("exo:useCount", count - 1);
@@ -6230,10 +6231,10 @@ public class JCRDataStorage implements  DataStorage {
 			Node profileHome = getUserProfileHome(sProvider);
 			Node profile ;
 			//update topic to user profile
-			Iterator<String> it = topicMap.keySet().iterator() ;
+			Iterator<Entry<String,Long>> it = topicMap.entrySet().iterator() ;
 			String userId ;
 			while(it.hasNext()) {
-				userId = it.next() ;
+				userId = it.next().getKey();
 				if(profileHome.hasNode(userId)) {
 					profile = profileHome.getNode(userId) ;
 				}else {
@@ -6254,9 +6255,9 @@ public class JCRDataStorage implements  DataStorage {
 				profileHome.save() ;
 			}
 			//update post to user profile
-			it = postMap.keySet().iterator() ;
+			it = postMap.entrySet().iterator() ;
 			while(it.hasNext()) {
-				userId = it.next() ;
+				userId = it.next().getKey();
 				if(profileHome.hasNode(userId)) {
 					profile = profileHome.getNode(userId) ;
 				}else {
@@ -6513,8 +6514,9 @@ public class JCRDataStorage implements  DataStorage {
 		Writer writer = null;
 		for(Category category : getCategories()){
 			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream() ;
+			ByteArrayOutputStream outputStream = null;
 			try {
+			  outputStream = new ByteArrayOutputStream() ;
   			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
   			file = new File(category.getId() + ".xml");
   			file.deleteOnExit();
@@ -6536,8 +6538,9 @@ public class JCRDataStorage implements  DataStorage {
 		Writer writer = null;
 		for(Forum forum : getForums(categoryId, null)){
 			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
-			ByteArrayOutputStream outputStream =  new ByteArrayOutputStream();
+			ByteArrayOutputStream outputStream = null;
 			try {
+			  outputStream =  new ByteArrayOutputStream();
   			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
   			file = new File(forum.getId() + ".xml");
   			file.deleteOnExit();
@@ -6553,27 +6556,28 @@ public class JCRDataStorage implements  DataStorage {
 		return listFiles;
 	}
 	
-	protected List<File> createFilesFromNode(Node node) throws Exception{
-		List<File> listFiles = new ArrayList<File>();
-		File file = null;
-		Writer writer = null;
-		if(node != null){
-		  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		  try {
-			node.getSession().exportSystemView(node.getPath(), outputStream, false, false ) ;
-			file = new File(node.getName() + ".xml");
-			file.deleteOnExit();
-			file.createNewFile();
-			writer = new BufferedWriter(new FileWriter(file));
-			writer.write(outputStream.toString());
-			listFiles.add(file);
+  protected List<File> createFilesFromNode(Node node) throws Exception {
+    List<File> listFiles = new ArrayList<File>();
+    File file = null;
+    Writer writer = null;
+    if (node != null) {
+      ByteArrayOutputStream outputStream = null;
+      try {
+        outputStream = new ByteArrayOutputStream();
+        node.getSession().exportSystemView(node.getPath(), outputStream, false, false);
+        file = new File(node.getName() + ".xml");
+        file.deleteOnExit();
+        file.createNewFile();
+        writer = new BufferedWriter(new FileWriter(file));
+        writer.write(outputStream.toString());
+        listFiles.add(file);
       } finally {
         outputStream.close();
         writer.close();
-    }			
-		}
-		return listFiles;
-	}
+      }
+    }
+    return listFiles;
+  }
 	
 	protected List<File> createAllForumFiles(SessionProvider sessionProvider) throws Exception{
 		List<File> listFiles = new ArrayList<File>();
@@ -6602,54 +6606,60 @@ public class JCRDataStorage implements  DataStorage {
 		return listFiles;
 	}
 	
-	public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, 
-													ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
-		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-		List<File> listFiles = new ArrayList<File>();
-		
-		if(!isExportAll){
-			if(categoryId != null){
-				if(forumId == null || forumId.trim().length() < 1){
-					listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
-				} else {
-					Node categoryHome = getCategoryHome(sessionProvider);
-					categoryHome.getSession().exportSystemView(nodePath, bos, false, false ) ;
-					categoryHome.getSession().logout();
-					return null;
-				}
-			}else{
-				listFiles.addAll(createCategoryFiles(objectIds, sessionProvider));
-			}
-		}else{
-			listFiles.addAll(createAllForumFiles(sessionProvider));
-		}
-		
-		// tao file zip:
-		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-		try {
-		int byteReads;
-		byte[] buffer = new byte[4096]; // Create a buffer for copying
-		FileInputStream inputStream = null;
-		ZipEntry zipEntry = null;
-		for(File f : listFiles){
-			inputStream = new FileInputStream(f);
-			try {
-			zipEntry = new ZipEntry(f.getPath());
-			zipOutputStream.putNextEntry(zipEntry);
-			while((byteReads = inputStream.read(buffer)) != -1)
-				zipOutputStream.write(buffer, 0, byteReads);
-			} finally {
-			  inputStream.close();
-			}
-		}
-		
-		} finally {
-		  zipOutputStream.close();
-		}
-		File file = new File("exportCategory.zip");
-		for(File f : listFiles) f.deleteOnExit();
-		return file;
-	}
+  public Object exportXML(String categoryId,
+                          String forumId,
+                          List<String> objectIds,
+                          String nodePath,
+                          ByteArrayOutputStream bos,
+                          boolean isExportAll) throws Exception {
+    SessionProvider sessionProvider = SessionProvider.createSystemProvider();
+    List<File> listFiles = new ArrayList<File>();
+
+    if (!isExportAll) {
+      if (categoryId != null) {
+        if (forumId == null || forumId.trim().length() < 1) {
+          listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
+        } else {
+          Node categoryHome = getCategoryHome(sessionProvider);
+          categoryHome.getSession().exportSystemView(nodePath, bos, false, false);
+          categoryHome.getSession().logout();
+          return null;
+        }
+      } else {
+        listFiles.addAll(createCategoryFiles(objectIds, sessionProvider));
+      }
+    } else {
+      listFiles.addAll(createAllForumFiles(sessionProvider));
+    }
+
+    // tao file zip:
+    ZipOutputStream zipOutputStream = null;
+    try {
+      zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+      int byteReads;
+      byte[] buffer = new byte[4096]; // Create a buffer for copying
+      FileInputStream inputStream = null;
+      ZipEntry zipEntry = null;
+      for (File f : listFiles) {
+        inputStream = new FileInputStream(f);
+        try {
+          zipEntry = new ZipEntry(f.getPath());
+          zipOutputStream.putNextEntry(zipEntry);
+          while ((byteReads = inputStream.read(buffer)) != -1)
+            zipOutputStream.write(buffer, 0, byteReads);
+        } finally {
+          inputStream.close();
+        }
+      }
+
+    } finally {
+      zipOutputStream.close();
+    }
+    File file = new File("exportCategory.zip");
+    for (File f : listFiles)
+      f.deleteOnExit();
+    return file;
+  }
 
 	public void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception {
 		boolean isReset = false;
@@ -6660,12 +6670,15 @@ public class JCRDataStorage implements  DataStorage {
 		
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-		ByteArrayInputStream is = new ByteArrayInputStream(bdata) ;
+		ByteArrayInputStream is = null;
+		
+		is = new ByteArrayInputStream(bdata) ;
 		Document doc = docBuilder.parse(is);
 		doc.getDocumentElement ().normalize ();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
+		
 		try {
     is = new ByteArrayInputStream(bdata) ;
 		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
@@ -6716,7 +6729,7 @@ public class JCRDataStorage implements  DataStorage {
 	      session.save(); 
 			}
 			else {
-			  throw new Exception();
+			  throw new RuntimeException("unknown type of node to export :" + typeNodeExport);
 			}
 		} else{
 			isReset = false;
@@ -6734,6 +6747,7 @@ public class JCRDataStorage implements  DataStorage {
 		}
 		} finally {
 		  sessionProvider.close() ;
+		  is.close();
 		}
 	}
 	
