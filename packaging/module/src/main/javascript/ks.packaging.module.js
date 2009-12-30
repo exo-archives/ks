@@ -81,7 +81,7 @@ function getModule(params)
 	   
    // demo rest endpoint	   
    module.demo.rest = 
-       new Project("org.exoplatform.ks", "exo.ks.demo.rest-war", "war", module.version);
+       new Project("org.exoplatform.ks", "exo.ks.demo.rest-ksdemo", "war", module.version);
        module.extension.deployName = "rest-ksdemo"; 
        
        
