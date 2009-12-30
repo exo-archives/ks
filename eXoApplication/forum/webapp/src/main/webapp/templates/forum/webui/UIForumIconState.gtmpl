@@ -4,7 +4,7 @@
 	<%  
 		boolean isIconForum = uicomponent.getIsIconForum() ;
 	%>
-<div style="white-space:nowrap;" class="UIForumIconState" id="$uicomponent.id">
+<div class="UIForumIconState" id="$uicomponent.id">
 	<div class="ForumContains">
 	<% if(isIconForum) { %>
 		<div class="IconPost ForumNormalIcon"><%=_ctx.appRes("UIForumIconState.label.CategoryNoNewPosts")%></div>
