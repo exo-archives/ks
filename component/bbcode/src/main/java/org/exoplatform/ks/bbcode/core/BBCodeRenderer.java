@@ -139,7 +139,7 @@ public class BBCodeRenderer implements Renderer {
         */
         str = markup.substring(tagIndex + start.length(), clsIndex);
         option = str.substring(0, str.indexOf("]"));
-        if(option.indexOf("+")==0)option = option.replaceFirst("+", "");
+        if(option.indexOf("+")==0)option = option.replaceFirst("\\+", "");
         if(option.indexOf("\"")==0)option = option.replaceAll("\"", "");
         if(option.indexOf("&quot;")==0)option = option.replaceAll("&quot;", "");
         param = str.substring(str.indexOf("]")+1);

@@ -34,14 +34,16 @@ import junit.framework.TestCase;
 public class TestBBCodeRenderer extends TestCase {
 
   public void testProcessTag() {
-    /*
-    BBCodeData bbcode = new BBCodeData();
-    bbcode.setTagName("I");
-    bbcode.setReplacement("<i>{param}</i>");
-    BBCodeRenderer renderer = new BBCodeRenderer();
+    BBCodeRenderer renderer = new BBCodeRenderer();   
+    
+    // simple case
+    BBCode bbcode = createBBCode("I", "<i>{param}</i>");
     String actual = renderer.processTag("[I]italic[/I]", bbcode);
     assertEquals("<i>italic</i>", actual);
-    */
+    
+    // several occurrences
+    actual = renderer.processTag("[I]foo[/I] ... [I]bar[/I]", bbcode);
+    assertEquals("<i>foo</i> ... <i>bar</i>", actual);
   }
   
   
@@ -71,15 +73,53 @@ public class TestBBCodeRenderer extends TestCase {
   }
 
   public void testProcessOptionedTag() {
-    /*
-    BBCodeData bbcode = new BBCodeData();
-    bbcode.setTagName("email");
-    bbcode.setReplacement("<a href='mailto:{option}'>{param}</a>");
+
     BBCodeRenderer renderer = new BBCodeRenderer();
-    String actual=renderer.processOptionedTag("[email=demo@example.com]Click Here to Email me[/email]", bbcode);
-    assertEquals("<a href='mailto:demo@example.com'>Click Here to Email me</a>", actual);
-    */
+
+    // simple case
+    BBCode bbc = createOptionedBBCode("email", "<a href='mailto:{option}'>{param}</a>");
+    String markup = "[email=demo@example.com]Click Here to Email me[/email]";
+    assertEquals("<a href='mailto:demo@example.com'>Click Here to Email me</a>", renderer.processOptionedTag(markup,bbc));
+    
+    // test we can replace several occurences
+    bbc = createOptionedBBCode("foo", "foo:{option}>{param}");
+    markup = "[foo=bar]blah[/foo] ... [foo=joe]blih[/foo]";
+    assertEquals("foo:bar>blah ... foo:joe>blih", renderer.processOptionedTag(markup,bbc));
+
+    // '+' (plus) symbol is removed from option
+    bbc = createOptionedBBCode("size", "<font size='{option}'>{param}</font>");
+    markup = "[size=+2]foo[/size]";
+    assertEquals("<font size='2'>foo</font>", renderer.processOptionedTag(markup,bbc));
+    
+    // '"' (quote) symbols are ignored
+    bbc = createOptionedBBCode("url", "<a href='{option}'>{param}</a>");
+    markup = "[url=\"http://www.example.org\"]foo[/url]";
+    assertEquals("<a href='http://www.example.org'>foo</a>", renderer.processOptionedTag(markup,bbc));
+    
+    // '&quot;' (html quote entity) are ignored
+    bbc = createOptionedBBCode("url", "<a href='{option}'>{param}</a>");
+    markup = "[url=&quot;http://www.example.org&quot;]foo[/url]";
+    assertEquals("<a href='http://www.example.org'>foo</a>", renderer.processOptionedTag(markup,bbc));
+    
+    
   }
+
+  private BBCode createOptionedBBCode(String tag, String replacement) {
+    BBCode bbc = new BBCode();
+    bbc.setTagName(tag);
+    bbc.setOption(true);
+    bbc.setReplacement(replacement);
+    return bbc;
+  }
+  
+  private BBCode createBBCode(String tag, String replacement) {
+    BBCode bbc = new BBCode();
+    bbc.setTagName(tag);
+    bbc.setOption(false);
+    bbc.setReplacement(replacement);
+    return bbc;
+  }
+
 
   public void testProcessList() {
     BBCodeData bbcode = new BBCodeData();
@@ -113,6 +153,8 @@ public class TestBBCodeRenderer extends TestCase {
     assertEquals("<blockquote cite=\"author\">param</blockquote>", renderer.render("[QUOTE=author]param[/QUOTE]"));
     assertEquals("<span class=\"option\">param</span>", renderer.render("[CSS=option]param[/CSS]"));
     assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=2]param[/SIZE]"));
+    assertEquals("<font size=\"2\">param</font>", renderer.render("[SIZE=+2]param[/SIZE]"));
+    assertEquals("<font size=\"-2\">param</font>", renderer.render("[SIZE=-2]param[/SIZE]"));
   }
   
   
