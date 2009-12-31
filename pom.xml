@@ -67,9 +67,9 @@
     <url>http://builder.exoplatform.org/hudson/job/ks/</url>
   </ciManagement>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha02</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Alpha02</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/3Modules/ks/tags/2.0.0-Alpha02</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.0.0-Alpha02</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/2.0.0-Alpha02</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/3Modules/ks/branches/2.0.0-Alpha02</url>
   </scm>
 
   <modules>
