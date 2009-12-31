@@ -36,7 +36,7 @@
 }
 
 .UIForumPortlet .UIViewMemberProfile .MemberContainer {
-	width: 192px;
+	width: 242px;
 }
 
 .UIForumPortlet .UIViewMemberProfile .MemberContent {
@@ -58,12 +58,12 @@
 	line-height: 20px;
 	text-align: right;
 	padding-right: 6px;
+	width: 111px ;
 }
 
 .UIForumPortlet .UIViewMemberProfile .ProfileContainer .LabelProfile {
 	line-height: 20px;
 	text-align: left;
-	width: 65% ;
 }
 
 .UIForumPortlet .UIViewMemberProfile .ProfileContainer .LabelLink {

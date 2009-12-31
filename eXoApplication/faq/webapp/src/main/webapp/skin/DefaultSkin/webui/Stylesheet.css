@@ -1876,7 +1876,7 @@
 }
 	
 .UIAnswersPortlet .UIViewUserProfile .UserContainer{
-	width:192px;
+	width: 242px;
 }
 
 .UIAnswersPortlet .UIViewUserProfile .ProfileContainer{
@@ -1887,12 +1887,12 @@
 	line-height:20px;
 	padding-right:6px;
 	text-align:right;
+	width: 100px;
 }
 
 .UIAnswersPortlet .UIViewUserProfile .ProfileContainer .LabelProfile{
 	line-height:20px;
 	text-align:left;
-	width:65%;
 }
 
 .UIAnswersPortlet .AddIcon {
