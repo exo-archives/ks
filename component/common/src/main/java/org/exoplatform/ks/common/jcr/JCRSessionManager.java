@@ -104,7 +104,6 @@ public class JCRSessionManager implements SessionManager {
      Session session = currentSession.get();
      if (session == null)
      {
-        //session = new POMSession(this);
        session = createSession();
         currentSession.set(session);
      }
@@ -114,6 +113,18 @@ public class JCRSessionManager implements SessionManager {
      }
      return session;
   }
+  
+  private Session openOrReuseSession()
+  {
+     Session session = currentSession.get();
+     if (session == null)
+     {
+       session = createSession();
+        currentSession.set(session);
+     }
+     return session;
+  }
+  
 
   /* (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#createSession()
@@ -178,7 +189,7 @@ public class JCRSessionManager implements SessionManager {
    */
   public <T>T executeAndSave(JCRTask<T> jcrTask) {
     try {
-      openSession();
+      openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -192,7 +203,7 @@ public class JCRSessionManager implements SessionManager {
    */
   public <T>T execute(JCRTask<T> jcrTask) {
     try {
-      openSession();
+      openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
     } catch (Exception e) {
       throw new RuntimeException(e);
