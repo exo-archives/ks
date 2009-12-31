@@ -47,7 +47,7 @@ public class FAQRSSEventListener implements EventListener{
 	public void onEvent(EventIterator evIter){		
 		try{
 			//ExoContainer container = ExoContainerContext.getCurrentContainer();
-			RSSProcess process = new RSSProcess(locator);
+			RSSProcess process = new AnswersFeedGenerator(locator);
 			String path = null;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;

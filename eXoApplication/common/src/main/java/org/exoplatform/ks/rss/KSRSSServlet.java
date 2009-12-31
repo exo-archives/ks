@@ -52,20 +52,23 @@ public class KSRSSServlet extends AbstractHttpServlet {
 	      	appType = pathInfo.substring(0, pathInfo.indexOf("/"));
 	      	objectId = pathInfo.substring(pathInfo.indexOf("/") + 1);
 	      }else objectId = pathInfo;
-	      RSSProcess process = new RSSProcess(sessionProvider, appType);
+	     
 	      InputStream is = null;
 	      if(appType.equals("faq")) {
 	      	//System.out.println("objectiD =======>" + objectId) ;
-	      	is = process.getRSSNode(sessionProvider, objectId, appType) ;
+	        AnswersFeedGenerator process = new AnswersFeedGenerator();
+	      	is = process.getFeedContent(objectId) ;
 //		      response.setContentType("text/xml") ;
 	      }else if(appType.equals("forum")) { 
-	    		is = process.getRSSNode(sessionProvider, objectId, appType) ;
+	        ForumFeedGenerator process = new ForumFeedGenerator();
+	    		is = process.getFeedContent(objectId) ;
 //		      response.setContentType("text/xml") ;
 	      }else{
+	        ForumFeedGenerator process = new ForumFeedGenerator();
 	      	if(pathInfo.indexOf("/") > 0){
 	      		objectId = pathInfo.substring(pathInfo.lastIndexOf("/") + 1) ;
 	      	}else objectId = pathInfo;
-	      	is = process.getRSSOfMultiObjects(objectId, sessionProvider);
+	      	is = process.getUserFeedContent(objectId);
 	      }
 	      if(is != null) {
 	      	response.setContentType("text/xml") ;

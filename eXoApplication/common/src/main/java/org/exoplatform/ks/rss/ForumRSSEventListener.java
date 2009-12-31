@@ -45,7 +45,7 @@ public class ForumRSSEventListener implements EventListener{
 	public void onEvent(EventIterator evIter){		
 		try{
 			//ExoContainer container = ExoContainerContext.getCurrentContainer();
-			RSSProcess process = new RSSProcess(locator);
+			RSSProcess process = new ForumFeedGenerator(locator);
 			String path = null;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
