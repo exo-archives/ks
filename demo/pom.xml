@@ -14,7 +14,7 @@
   <modules>
 	<module>config</module>
 	<module>war</module>
-	<module>rest-war</module>
+	<module>rest-ksdemo</module>
 	<module>ear</module>
   </modules>
 </project>

@@ -53,7 +53,7 @@ function getProduct(version) {
   product.addDependencies(ks.demo.portal);
   product.addDependencies(ks.demo.rest);
   
-  product.addServerPatch("tomcat", portal.server.tomcat.patch) ;
+  product.addServerPatch("tomcat", ks.server.tomcat.patch) ;
   product.addServerPatch("jboss",  portal.server.jboss.patch) ;
   product.addServerPatch("jbossear",  portal.server.jbossear.patch) ;
 

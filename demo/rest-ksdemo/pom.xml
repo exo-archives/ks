@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.exoplatform.ks</groupId>
-    <artifactId>exo.ks.eXoApplication</artifactId>
+    <artifactId>exo.ks.demo</artifactId>
     <version>2.0.0-Alpha02</version>
   </parent> 
-
+	
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>exo.ks.eXoApplication.faq</artifactId>
-  <packaging>pom</packaging>
-  <name>eXo KS FAQ</name>
-  <modules>
-    <module>service</module>
-    <module>webapp</module>
-  </modules>
+  <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
+  <packaging>war</packaging>
+  <name>eXo KS Demo Portal REST war</name>
+  
+  <build>
+    <finalName>rest-ksdemo</finalName>
+  </build>
 </project>
