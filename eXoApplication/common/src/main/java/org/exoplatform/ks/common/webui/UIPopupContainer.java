@@ -33,8 +33,8 @@ public class UIPopupContainer extends UIContainer implements UIPopupComponent {
 	public UIPopupContainer()  {
 	}
 	
-	public <T extends UIPopupAction>void initChildPopupAction(Class<T> popupType, String name) throws Exception {
-	   UIPopupAction uiPopupAction = addChild(popupType, null, name + "ChildPopupAction").setRendered(true) ;
+	public <T extends AbstractPopupAction>void initChildPopupAction(Class<T> popupType, String name) throws Exception {
+	   AbstractPopupAction uiPopupAction = addChild(popupType, null, name + "ChildPopupAction").setRendered(true) ;
 	    uiPopupAction.getChild(UIPopupWindow.class).setId(name + "ChildPopupWindow") ;
 	}
 	

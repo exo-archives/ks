@@ -16,13 +16,14 @@
  */
 package org.exoplatform.faq.webui.popup;
 
+
 /**
  * @author Hung Nguyen (nguyenkequanghung@yahoo.com)
  * @since oct 26, 2006
  * @version $Id$
+ * @deprecated use {@link org.exoplatform.webui.core.UIPopupComponent}
  */
-
-public interface UIPopupComponent {
-  public void  activate()  throws Exception ;
-  public void  deActivate()  throws Exception ;
+@Deprecated
+public interface UIPopupComponent extends org.exoplatform.webui.core.UIPopupComponent {
+//TODO : remove in order to use directly webui core UIPopupComponent
 }

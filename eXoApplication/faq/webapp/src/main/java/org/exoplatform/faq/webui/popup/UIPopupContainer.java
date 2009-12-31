@@ -16,28 +16,13 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+
 import org.exoplatform.webui.config.annotation.ComponentConfig;
-import org.exoplatform.webui.core.UIContainer;
-import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
-
 /**
- * Created by The eXo Platform SARL
- * Author : Truong Nguyen
- *					truong.nguyen@exoplatform.com
- * Apr 10, 2008, 2:07:25 PM
+ * @deprecated use {@link UIPopupContainer}
  */
+@Deprecated
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
-public class UIPopupContainer extends UIContainer implements UIPopupComponent {
-	public UIPopupContainer() throws Exception {
-		UIPopupAction uiPopupAction =	addChild(UIPopupAction.class, null, "UIAnswersChildPopupAction").setRendered(true) ;
-		uiPopupAction.getChild(UIPopupWindow.class).setId("UIAnswersChildPopupWindow") ;
-	}
-	public void activate() throws Exception {
-		// TODO Auto-generated method stub
-	}
-
-	public void deActivate() throws Exception {
-		// TODO Auto-generated method stub
-	}
+public class UIPopupContainer extends org.exoplatform.ks.common.webui.UIPopupContainer {
 }

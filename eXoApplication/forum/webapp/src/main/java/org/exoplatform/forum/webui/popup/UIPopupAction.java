@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum.webui.popup;
 
+import org.exoplatform.ks.common.webui.AbstractPopupAction;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -26,7 +27,7 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
  * 2007 9:43:23 AM
  */
 @ComponentConfig(lifecycle = Lifecycle.class)
-public class UIPopupAction extends org.exoplatform.ks.common.webui.UIPopupAction {
+public class UIPopupAction extends AbstractPopupAction {
 
   protected void afterProcessRender(WebuiRequestContext context) {
     String parentId = ((UIComponent) this.getParent()).getId();

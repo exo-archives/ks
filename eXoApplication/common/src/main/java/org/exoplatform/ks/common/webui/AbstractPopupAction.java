@@ -32,11 +32,11 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
  * 2007 9:43:23 AM
  */
 @ComponentConfig(lifecycle = Lifecycle.class)
-public abstract class UIPopupAction extends UIContainer {
+public abstract class AbstractPopupAction extends UIContainer {
   
-  private static final Log log = ExoLogger.getLogger(UIPopupAction.class);
+  private static final Log log = ExoLogger.getLogger(AbstractPopupAction.class);
   
-  public UIPopupAction() {
+  public AbstractPopupAction() {
     String popupId = getAncestorName() + "PopupWindow"; 
     try {
       addChild(createUIComponent(UIPopupWindow.class, null, popupId).setRendered(false));

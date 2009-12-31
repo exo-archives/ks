@@ -156,7 +156,7 @@ public class BaseUIForm extends UIForm {
                                                 String popupId,
                                                 int width,
                                                 int height) throws Exception {
-    UIPopupAction popupAction = parent.getChild(UIPopupAction.class);
+    AbstractPopupAction popupAction = parent.getChild(AbstractPopupAction.class);
     UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class,null, null);
     popupContainer.initChildPopupAction(popupAction.getClass(), popupAction.getAncestorName());
     T form = popupContainer.addChild(componentType, null, null);
