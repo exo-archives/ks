@@ -2289,3 +2289,12 @@
 	width: 200px;
 	height: 14px;
 }
+
+.UIAnswersChildPopupAction .UIForm .UIFormGrid td.FieldLabel {
+	white-space:nowrap;
+}
+
+.UIAnswersChildPopupAction .UIForm .UIFormGrid .SelectFileFrame {
+	white-space: normal;
+	width: 300px;
+}
