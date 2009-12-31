@@ -14,13 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.webui;
+package org.exoplatform.ks.common.webui;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -34,7 +32,7 @@ import org.exoplatform.webui.form.UIForm;
 import com.google.caja.reporting.MessageType;
 
 /**
- * Base UIForm class tha brings several convenience methods for UI operations ( i18n, messages, popups,...)
+ * Base UIForm class that brings several convenience methods for UI operations ( i18n, messages, popups,...)
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
@@ -160,6 +158,7 @@ public class BaseUIForm extends UIForm {
                                                 int height) throws Exception {
     UIPopupAction popupAction = parent.getChild(UIPopupAction.class);
     UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class,null, null);
+    popupContainer.initChildPopupAction(popupAction.getClass(), popupAction.getAncestorName());
     T form = popupContainer.addChild(componentType, null, null);
     popupAction.activate(popupContainer, width, height);
     if (popupId !=null) {

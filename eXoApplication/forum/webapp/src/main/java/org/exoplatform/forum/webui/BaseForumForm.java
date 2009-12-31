@@ -18,6 +18,7 @@ package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 
 /**
  * Base class for UIForm used in forum application.

@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.webui;
+package org.exoplatform.ks.common.webui;
 
-import org.exoplatform.forum.service.FakeForumService;
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -24,10 +23,10 @@ import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class TestBaseForumForm extends AbstractUIComponentTestCase<BaseForumForm> {
+public class TestBaseUIForm extends AbstractUIComponentTestCase<BaseUIForm> {
 
   
-  public TestBaseForumForm() throws Exception {
+  public TestBaseUIForm() throws Exception {
     super();
   }
 
@@ -57,12 +56,10 @@ public class TestBaseForumForm extends AbstractUIComponentTestCase<BaseForumForm
 
 
   @Override
-  protected BaseForumForm createComponent() {
-    BaseForumForm sampleForm = new BaseForumForm();
+  protected BaseUIForm createComponent() {
+    BaseUIForm sampleForm = new BaseUIForm();
     sampleForm.setId("SampleForm");  
-    sampleForm.setForumService(new FakeForumService());
     return sampleForm;
   }
-
 
 }
