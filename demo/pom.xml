@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
-    <version>2.0.0-Alpha02</version>
+    <version>2.0.0-Alpha02-SNAPSHOT</version>
   </parent>
 
   <artifactId>exo.ks.demo</artifactId>
@@ -14,7 +14,7 @@
   <modules>
 	<module>config</module>
 	<module>war</module>
-	<module>rest-war</module>
+	<module>rest-ksdemo</module>
 	<module>ear</module>
   </modules>
 </project>
