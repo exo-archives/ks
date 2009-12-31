@@ -1237,7 +1237,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			try{
 				JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(topicDetail.categoryId+"/"+topicDetail.forumId +"/"+topicDetail.topicId);
 				if(pageList.getAvailable() > 0) {
-					UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, 700, 400);
+					UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, "SplitTopicForm", 700, 400);
 					splitTopicForm.setPageListPost(pageList) ;
 					splitTopicForm.setTopic(topicDetail.topic) ;
 					splitTopicForm.setUserProfile(topicDetail.userProfile) ;
@@ -1698,7 +1698,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
 		  UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			Topic topic = topicDetail.topic ;
-			UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365);
+			UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, "WatchToolsForm", 500, 365);
 	    watchToolsForm.setPath(topic.getPath());
 	    watchToolsForm.setEmails(topic.getEmailNotification()) ;
 	    watchToolsForm.setIsTopic(true);
