@@ -83,7 +83,7 @@
     <module>demo</module>
     <module>packaging</module>
     <module>server/tomcat/patch</module>   
-    <module>server/jboss/patch</module>   
+    <!--module>server/jboss/patch</module-->   
   </modules>
 
 <dependencyManagement>
