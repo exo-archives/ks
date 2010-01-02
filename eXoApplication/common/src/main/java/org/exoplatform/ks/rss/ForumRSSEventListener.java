@@ -44,24 +44,17 @@ public class ForumRSSEventListener implements EventListener{
   
 	public void onEvent(EventIterator evIter){		
 		try{
-			//ExoContainer container = ExoContainerContext.getCurrentContainer();
-			RSSProcess process = new ForumFeedGenerator(locator);
+		  ForumFeedGenerator process = new ForumFeedGenerator(locator);
 			String path = null;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				path = ev.getPath();
-				//System.out.println("\n\nType ==> "+ ev.getType());
-				//System.out.println("Path ==> "+ ev.getPath());
-				//if(listPropertyNotGetEvent.contains(path.substring(path.lastIndexOf("/") + 1))) continue;
 				if(ev.getType() == Event.NODE_ADDED){
-					//System.out.println("\n\n ==> Event.NODE_ADDED");
-					process.generateRSS(ev.getPath(), Event.NODE_ADDED);
+					process.itemAdded(ev.getPath());
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					//System.out.println("\n\n ==> Event.PROPERTY_CHANGED");
-					process.generateRSS(path.substring(0, path.lastIndexOf("/")), Event.PROPERTY_CHANGED);
-				}else if(ev.getType() == Event.NODE_REMOVED) {
-					//System.out.println("\n\n ==> Event.NODE_REMOVED");					
-					process.generateRSS(ev.getPath(), Event.NODE_REMOVED);
+					process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
+				}else if(ev.getType() == Event.NODE_REMOVED) {		
+					process.itemRemoved(ev.getPath());
 				}
 				break ;								
 			}

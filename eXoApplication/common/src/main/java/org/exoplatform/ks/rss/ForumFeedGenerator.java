@@ -30,43 +30,38 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Value;
-import javax.jcr.observation.Event;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.VoidReturn;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.w3c.dom.Document;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class ForumFeedGenerator extends RSSProcess {
+public final class ForumFeedGenerator extends RSSProcess {
 
-  private static final Log log = ExoLogger.getLogger(ForumFeedGenerator.class);
+  private static final Log LOG = ExoLogger.getLogger(ForumFeedGenerator.class);
   
   
-  public final String FORUM_RSS_TYPE = "exo:forumRSS".intern();
-  public final String KS_FORUM = "forum".intern();
-  public final String FORUM_APP = "ForumService".intern();
+  public static final String FORUM_RSS_TYPE = "exo:forumRSS".intern();
+  public static final String KS_FORUM = "forum".intern();
+  public static final String FORUM_APP = "ForumService".intern();
   
 
-  public ForumFeedGenerator(KSDataLocation locator) throws Exception {
+  public ForumFeedGenerator(KSDataLocation locator) {
     super(locator);
   }
 
@@ -74,154 +69,152 @@ public class ForumFeedGenerator extends RSSProcess {
     super();
   }
 
-  protected void generateFeed(String path, int typeEvent, String linkItem) throws Exception { 
-    GenerateFeedTask task = new GenerateFeedTask(path, typeEvent, linkItem);
-    dataLocator.getSessionManager().executeAndSave(task);
-  }
-  
- class GenerateFeedTask implements JCRTask<VoidReturn> {
-   String path;
-   int typeEvent;
-   String linkItem;
-   
-   
-  public GenerateFeedTask(String path, int typeEvent, String linkItem) {
-     this.path = path;
-     this.typeEvent = typeEvent;
-     this.linkItem = linkItem;
-  }
-
-
-  public VoidReturn execute(Session session) throws Exception {
-    linkItem += "?portal:componentId=forum&portal:type=action&portal:isSecure=false&uicomponent=UIBreadcumbs&"
-      + "op=ChangePath&objectId=";
-
-  if (typeEvent == Event.NODE_REMOVED) {
-    itemRemoved(path, linkItem);
-  } else if (typeEvent == Event.NODE_ADDED) {
-    itemAdded(path, linkItem);
-  } else if (typeEvent == Event.PROPERTY_CHANGED) {
-    itemUpdated(path, linkItem);
-  }
-    return VoidReturn.VALUE;
-  }
-   
- }
-
   private Node getForumServiceHome() throws Exception {
     String path = dataLocator.getForumHomeLocation();
     return dataLocator.getSessionManager().getCurrentSession().getRootNode().getNode(path);
   }
   
-  private void itemAdded(String path, String linkItem) throws Exception {
-    itemSaved(path, linkItem, false);
+  public void itemAdded(String path) {
+    try {
+      ItemSavedTask task = new ItemSavedTask(path,false);
+      dataLocator.getSessionManager().executeAndSave(task);
+    } catch (Exception e) {
+      LOG.error("itemAdded failed for " + path, e);
+    }
   }
-  private void itemUpdated(String path, String linkItem) throws Exception {
-    itemSaved(path, linkItem, true);
-  }
-
-  private void itemSaved(String path, String linkItem, final boolean updated) throws Exception {
-    Node node;
-    node = (Node)getCurrentSession().getItem(path);
-
-    if(node.isNodeType("exo:post")){
-      linkItem = node.getProperty("exo:link").getString();
-      linkItem = linkItem.substring(0, linkItem.indexOf("objectId=")+9);
-      updatePostFeed(path, linkItem, updated);
-    } else if (node.isNodeType("exo:topic")) {
-      updateTopicFeed(path, linkItem, updated);
-    } else if (node.isNodeType("exo:forum")) {
-      updateForumFeed(path, linkItem, updated);
+  public void itemUpdated(String path) {
+    try {
+      ItemSavedTask task = new ItemSavedTask(path,true);
+      dataLocator.getSessionManager().executeAndSave(task);
+    } catch (Exception e) {
+      LOG.error("itemUpdated failed for" + path, e);
     }
   }
   
-
-
-  public void itemRemoved(String path, String linkItem) throws Exception {
-    String objectId = null;
-    String description = null;
-    objectId = path.substring(path.lastIndexOf("/") + 1);
-    Node node = null;
-    if(objectId.contains("post")){
-       while(node == null){
-          try{
-            node = (Node)getCurrentSession().getItem(path);
-          }catch(PathNotFoundException pn){
-            path = path.substring(0, path.lastIndexOf("/"));
-            node = null;
-          }
-        }
-       
-       while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
-          if(node.hasProperty("exo:description"))
-            description = node.getProperty("exo:description").getString();
-          else
-            description= " ";
-            removeItemInFeed(objectId, node, description);
-            node = node.getParent();
-        }
-    } else {
-      path = path.substring(0, path.lastIndexOf("/"));
-      while(node == null){
-        try{
-          node = (Node)getCurrentSession().getItem(path);
-        }catch(PathNotFoundException pn){
-          objectId = path.substring(path.lastIndexOf("/") + 1);
-          path = path.substring(0, path.lastIndexOf("/"));
-          node = null;
-        }
-      }
-      while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
-        if(node.hasProperty("exo:description"))
-          description = node.getProperty("exo:description").getString();
-        else
-          description= " ";
-        if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")){
-          removeRSSItem(objectId, node, description);
-        } else {
-          removeItemInFeed(objectId, node, description);
-        }
-        node = node.getParent();
-      }
+  public void itemRemoved(String path)  {
+    try {
+      ItemRemovedTask task = new ItemRemovedTask(path);
+      dataLocator.getSessionManager().executeAndSave(task);
+    } catch (Exception e) {
+      LOG.error("itemRemoved failed for " + path, e);
     }
   }
+
   
-  
-  private void removeRSSItem(String objectid, Node itemNode, String feedDescription) throws Exception{
-     RSS data = new RSS();
-     Node feedNode = null;
-     try{
-       feedNode = itemNode.getNode(KS_RSS);
-     }catch(PathNotFoundException pn){
-       return;
-     }
-     getRSSData(feedNode, data);
-     
-     SyndFeed feed = updateRSSFeed(data, objectid);
-     try{
-       feed.setTitle(itemNode.getProperty("exo:name").getString());
-     }catch(PathNotFoundException pn){
-       feed.setTitle("Root");
-     }
-     feed.setDescription(feedDescription);
-     
-     SyndFeedOutput output = new SyndFeedOutput();
-     data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
-     saveRssContent(itemNode, feedNode, data, false);
-   }
-  
-  @SuppressWarnings("unchecked")
-  protected SyndFeed updateRSSFeed(RSS data, String removeItemId) throws Exception {
-    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-    Document doc = docBuilder.parse(data.getContent());
-    doc.getDocumentElement().normalize();
+  class ItemSavedTask implements JCRTask<VoidReturn> {
+    private String path;
+    private boolean updated;
     
-    SyndFeedInput input = new SyndFeedInput();
-    SyndFeed feed = input.build(doc);
+   public ItemSavedTask(String path, boolean updated) {
+      this.path = path;
+      this.updated = updated;
+   }
+
+
+   public VoidReturn execute(Session session) throws Exception {
+     Node node;
+     node = (Node)getCurrentSession().getItem(path);
+     String linkItem = getPageLink() + "?portal:componentId=forum&portal:type=action&portal:isSecure=false&uicomponent=UIBreadcumbs&"
+       + "op=ChangePath&objectId=";
+     if(node.isNodeType("exo:post")){
+       linkItem = node.getProperty("exo:link").getString();
+       linkItem = linkItem.substring(0, linkItem.indexOf("objectId=")+9);
+       postUpdated(path, linkItem, updated);
+     } else if (node.isNodeType("exo:topic")) {
+       topicUpdated(path, linkItem, updated);
+     } else if (node.isNodeType("exo:forum")) {
+       forumUpdated(path, linkItem, updated);
+     }
+     return VoidReturn.VALUE;
+   }
+    
+  }
+  
+  class ItemRemovedTask implements JCRTask<VoidReturn> {
+    private String path;
+
+    
+   public ItemRemovedTask(String path) {
+      this.path = path;
+   }
+
+
+   public VoidReturn execute(Session session) throws Exception {
+     String objectId = null;
+     String description = null;
+     objectId = path.substring(path.lastIndexOf("/") + 1);
+     Node node = null;
+     PropertyReader reader = new PropertyReader(node);
+     if(objectId.contains("post")){
+        while(node == null){
+           try{
+             node = (Node)getCurrentSession().getItem(path);
+           }catch(PathNotFoundException pn){
+             path = path.substring(0, path.lastIndexOf("/"));
+             node = null;
+           }
+         }
+        
+        while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
+             description = reader.string("exo:description", " ");
+             removeItemInFeed(objectId, node, description);
+             node = node.getParent();
+         }
+     } else {
+       path = path.substring(0, path.lastIndexOf("/"));
+       while(node == null){
+         try{
+           node = (Node)getCurrentSession().getItem(path);
+         }catch(PathNotFoundException pn){
+           objectId = path.substring(path.lastIndexOf("/") + 1);
+           path = path.substring(0, path.lastIndexOf("/"));
+           node = null;
+         }
+       }
+       while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
+           description = reader.string("exo:description", " ");
+         if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")) {
+           removeRSSItem(objectId, node, description);
+         } else {
+           removeItemInFeed(objectId, node, description);
+
+           }
+         node = node.getParent();
+       }
+     }
+   
+     return VoidReturn.VALUE;
+   }
+
+  }
+  
+
+  /**
+   * Remove one item from RSS feed based on id of object which is changed 
+   * @param itemId        id of object
+   * @param node            Node content RSS feed
+   * @param feedDescription description about RSS feed
+   * @throws Exception
+   */
+  protected void removeItemInFeed(String itemId, Node node, String feedDescription) throws Exception{
+    RSS data = new RSS(node);
+    SyndFeed feed = data.removeItem(itemId);    
+    String title = new PropertyReader(node).string("exo:name", "Root");
+    feed.setTitle(title);
+    feed.setDescription(feedDescription);
+    data.saveFeed(feed, FORUM_RSS_TYPE);
+  }
+  
+  
+
+  @SuppressWarnings("unchecked")
+  protected void removeRSSItem(String itemId, Node node, String description) throws Exception {
+    RSS data = new RSS(node);
+    SyndFeed feed = data.read();
+    
     List<SyndEntry> entries = feed.getEntries();
     List<Node> listRemovePosts = new ArrayList<Node>();
-    Node removeNode = getNodeById(removeItemId); 
+    Node removeNode = getNodeById(itemId); 
 
     if (removeNode.isNodeType("exo:topic")){
       listRemovePosts = getListRemove(removeNode,"exo:post");
@@ -230,18 +223,56 @@ public class ForumFeedGenerator extends RSSProcess {
       List<Node> listRemoveForum = new ArrayList<Node>();
       listRemoveForum = getListRemove(removeNode,"exo:topic");
 
-      for (Node node : listRemoveForum) {
-        listRemovePosts = getListRemove(node,"exo:post");
+      for (Node n : listRemoveForum) {
+        listRemovePosts = getListRemove(n,"exo:post");
         removeItem(entries ,listRemovePosts);
       }
       removeItem(entries ,listRemoveForum);
     }
-
+    
     feed.setEntries(entries);
-    return feed;
+    String title = new PropertyReader(node).string("exo:name", "Root");
+    feed.setTitle(title);
+    feed.setDescription(description);
+    data.saveFeed(feed, FORUM_RSS_TYPE);
   }
   
-  protected void updateTopicFeed(String path, String linkItem, final boolean updated){
+  protected void removeItem(List<SyndEntry> entries,List<Node> listRemove) throws RepositoryException{
+    List<SyndEntry> entries1 = new ArrayList<SyndEntry>();
+
+    boolean flag  = true;
+    for(SyndEntry syndEntry : entries){
+      flag  = true;
+        for(Node post : listRemove){
+          if(syndEntry.getUri().equals(post.getName())){
+            flag = false;
+            break;
+          }
+        }
+        if(flag){
+          entries1.add(syndEntry);
+        }
+    }
+    entries.clear();
+    entries.addAll(entries1);
+  }
+   
+  protected List<Node> getListRemove(Node removeNode, String childNodeType) throws RepositoryException{
+    List<Node> listRemove = new ArrayList<Node>();
+    NodeIterator nodeIterator = removeNode.getNodes();
+    Node nodePost = null;
+
+    while(nodeIterator.hasNext()){
+      nodePost = nodeIterator.nextNode();
+      if(nodePost.isNodeType(childNodeType)){
+        listRemove.add(nodePost);
+      }  
+    }
+ 
+    return listRemove;
+  }
+  
+  protected void topicUpdated(String path, String linkItem, final boolean updated){
     try {
       Node topicNode = (Node)getCurrentSession().getItem(path);
       NodeIterator nodeIterator = topicNode.getNodes();
@@ -249,14 +280,14 @@ public class ForumFeedGenerator extends RSSProcess {
       while(nodeIterator.hasNext()){
         postNode = nodeIterator.nextNode();
         if(postNode.isNodeType("exo:post")){
-          updatePostFeed(postNode.getPath(), linkItem, updated);
+          postUpdated(postNode.getPath(), linkItem, updated);
         }
       }
     } catch (PathNotFoundException e) {
     } catch (RepositoryException e) {
     }
   }
-   protected void updateForumFeed(String path, String linkItem, final boolean updated){
+   protected void forumUpdated(String path, String linkItem, final boolean updated){
       try {
         Node forumNode = (Node)getCurrentSession().getItem(path);
         NodeIterator nodeIterator = forumNode.getNodes();
@@ -264,7 +295,7 @@ public class ForumFeedGenerator extends RSSProcess {
         while(nodeIterator.hasNext()){
           topicNode = nodeIterator.nextNode();
           if(topicNode.isNodeType("exo:topic")){
-            updateTopicFeed(topicNode.getPath(), linkItem, updated);
+            topicUpdated(topicNode.getPath(), linkItem, updated);
           }
         }
       } catch (PathNotFoundException e) {
@@ -273,22 +304,22 @@ public class ForumFeedGenerator extends RSSProcess {
     }
   
   
-  protected void updatePostFeed(String path, String linkItem, final boolean updated){
-    boolean isNew = false;
+  protected void postUpdated(String path, String linkItem, final boolean updated){
     try{
-      boolean debug = log.isDebugEnabled();
+      boolean debug = LOG.isDebugEnabled();
       Node postNode = (Node)getCurrentSession().getItem(path);
       Node topicNode = postNode.getParent();
       String postName = postNode.getName();
-      
-      boolean isFirstPost = postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean();
-      boolean notApproved = (postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean());
-      boolean isPrivatePost = (postNode.hasProperty("exo:userPrivate") && !postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"));
-      boolean topicHasLimitedViewers = (topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0);
+      PropertyReader post = new PropertyReader(postNode);
+      PropertyReader topic = new PropertyReader(topicNode);
+      boolean isFirstPost = post.bool("exo:isFirstPost");//postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean();
+      boolean notApproved = !post.bool("exo:isApproved");//(postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean());
+      boolean isPrivatePost = hasProperty(topicNode, "exo:userPrivate") && !"exoUserPri".equals(topic.strings("exo:userPrivate")[0]); //(postNode.hasProperty("exo:userPrivate") && !postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"));
+      boolean topicHasLimitedViewers = hasProperty(topicNode, "exo:canView"); //(topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0);
       
       if ((isFirstPost && notApproved) || isPrivatePost || topicHasLimitedViewers) {
         if (debug) {
-          log.debug("Post" + postName +" was not added to feed because it is private or topic has restricted audience or it is approval pending");
+          LOG.debug("Post" + postName +" was not added to feed because it is private or topic has restricted audience or it is approval pending");
         }
         return;
       }
@@ -300,14 +331,14 @@ public class ForumFeedGenerator extends RSSProcess {
       
       if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
         if (debug) {
-          log.debug("Post" + postName +" was not added to feed because category or forum has restricted audience");
+          LOG.debug("Post" + postName +" was not added to feed because category or forum has restricted audience");
         }
         return;
       }
         
       
-      boolean inactive = (postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean());
-      boolean hidden = (postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean());
+      boolean inactive = !post.bool("exo:isActiveByTopic");//(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean());
+      boolean hidden = post.bool("exo:isHidden");//(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean());
       
       
       if(notApproved || inactive || hidden) {
@@ -316,71 +347,63 @@ public class ForumFeedGenerator extends RSSProcess {
           removePostFromParentFeeds(postNode, topicNode, forumNode, categoryNode);
         }
         if (debug) {
-          log.debug("Post" + postName +" was not added to feed because because it is hidden, inactive or not approved");
+          LOG.debug("Post" + postName +" was not added to feed because because it is hidden, inactive or not approved");
         }
         return;
       }
       
       SyndContent description;
       List<String> listContent = new ArrayList<String>();
-      listContent.add(postNode.getProperty("exo:message").getString());
+      String message = post.string("exo:message");
+      listContent.add(message);
       description = new SyndContentImpl();
-      description.setType(descriptionType);
-      description.setValue(postNode.getProperty("exo:message").getString());
-      SyndEntry entry = createNewEntry(postName, postNode.getProperty("exo:name").getString(), 
-                              linkItem, listContent, description, postNode.getProperty("exo:createdDate").getDate().getTime(), 
-                              postNode.getProperty("exo:owner").getString());
+      description.setType(RSS.PLAIN_TEXT);
+      description.setValue(message);
+      final String title = post.string("exo:name");
+      final Date created = post.date("exo:createdDate");
+      final String owner = post.string("exo:owner");
+      SyndEntry entry = RSS.createNewEntry(postName, title, linkItem, listContent, description,created , owner);
       entry.setLink(linkItem + topicNode.getName());
-      Node RSSNode = null;
-      SyndFeed feed = null;
-      for(Node node : new Node[]{topicNode, forumNode, categoryNode}){
-        isNew = false;
-        RSS data = new RSS();
-        try{
-          RSSNode = node.getNode(KS_RSS);
-          getRSSData(RSSNode, data);
-          feed = updateRSSFeed(data, postNode.getName(), entry);
-        } catch (PathNotFoundException e){
-          RSSNode = node.addNode(KS_RSS, FORUM_RSS_TYPE);
-          isNew = true;
-          feed = this.createNewFeed(node.getProperty("exo:name").getString(), node.getProperty("exo:createdDate").getDate().getTime());
+      
+      // save topic, forum and category feeds
+      for(Node node : new Node[]{topicNode, forumNode, categoryNode}) {
+        PropertyReader reader = new PropertyReader(node);
+        String desc = reader.string("exo:description", " ");
+        
+        RSS data = new RSS(node);
+        if (data.feedExists()) {
+          SyndFeed feed = null;
+          if (updated) {
+            feed = data.removeItem(postName);
+          }
+          feed = data.addEntry(entry);
+          feed.setDescription(reader.string("exo:description", " "));  
+          data.saveFeed(feed, FORUM_RSS_TYPE);
+        } else {
+          SyndFeed feed   = RSS.createNewFeed(title, created);
           feed.setLink(linkItem + node.getName());
           feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
-        } catch (Exception e) {
-          log.error("Error while generating feed for " + node.getName(), e);
-          continue;
+          feed.setDescription(desc);  
+          data.saveFeed(feed, FORUM_RSS_TYPE);
         }
-        
-        if(node.hasProperty("exo:description"))
-          feed.setDescription(node.getProperty("exo:description").getString());
-        else
-          feed.setDescription(" ");
-  
-        SyndFeedOutput output = new SyndFeedOutput();
-        data.setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
-        saveRssContent(node, RSSNode, data, isNew);
+
+
       }
     }catch(Exception e){
-      log.error("Failed to generate feed for post" + path, e);
+      LOG.error("Failed to generate feed for post" + path, e);
     }
   }
 
   private void removePostFromParentFeeds(Node postNode, Node topicNode, Node forumNode, Node categoryNode) throws Exception {
-    final String postName = postNode.getName();
-    if(topicNode.hasProperty("exo:description"))
-      removeItemInFeed(postName, topicNode, topicNode.getProperty("exo:description").getString());
-    else
-      removeItemInFeed(postName, topicNode, " ");
-    
-    if(forumNode.hasProperty("exo:description"))
-      removeItemInFeed(postName, forumNode, forumNode.getProperty("exo:description").getString());
-    else
-      removeItemInFeed(postName, forumNode, " ");
-    
-    if(categoryNode.hasProperty("exo:description"))
-      removeItemInFeed(postName, categoryNode, categoryNode.getProperty("exo:description").getString());
-    else
-      removeItemInFeed(postName, categoryNode, " ");
+    for(Node node : new Node[]{topicNode, forumNode, categoryNode}){
+      String description = new PropertyReader(node).string("exo:description", " ");
+      RSS data = new RSS(node);
+      SyndFeed feed = data.removeItem(postNode.getName());    
+      String title = new PropertyReader(node).string("exo:name", "Root");
+      feed.setTitle(title);
+      feed.setDescription(description);
+      data.saveFeed(feed, FORUM_RSS_TYPE);
+    }
   }
   
   private boolean hasProperty(Node node, String property) throws Exception {
@@ -403,23 +426,29 @@ public class ForumFeedGenerator extends RSSProcess {
     }
 
     public InputStream execute(Session session) throws Exception {
-      if(userId == null || userId.trim().length() == 0) return null;
+      if(userId == null || userId.trim().length() == 0) {
+        LOG.warn("no feed stream was generated for null user");
+        return null;
+      }
       InputStream inputStream = null;
       Map<String, SyndEntry> mapEntries = new HashMap<String, SyndEntry>();
-      Node RSSNode = null;
-      SyndEntry syndEntry = null;
-      for(String objectId : getForumSubscription(userId)){
-        try{
-          RSSNode = getNodeById(objectId).getNode(KS_RSS);
-          RSS data = new RSS();
-          getRSSData(RSSNode, data);
-          for(Object entry : updateRSSFeed(data, null, null).getEntries()){
+
+      for(String objectId : getForumSubscription(userId)) {
+      
+        SyndEntry syndEntry = null;
+        try {
+          Node node = getNodeById(objectId);
+          RSS data = new RSS(node);
+          SyndFeed feed = data.read();
+          for(Object entry : feed.getEntries()){
             syndEntry = (SyndEntry)entry;
             mapEntries.put(syndEntry.getUri(), syndEntry);
           }
-        } catch (Exception e){}
+        } catch (Exception e){
+          LOG.warn("Failed to get user subscription " + objectId + " : " + e.getMessage());
+        }
       }
-      SyndFeed feed = createNewFeed("Forum subscriptions for " + userId, new Date());
+      SyndFeed feed = RSS.createNewFeed("Forum subscriptions for " + userId, new Date());
       feed.setDescription(" ");
       feed.setEntries(Arrays.asList(mapEntries.values().toArray(new SyndEntry[]{})));
       SyndFeedOutput output = new SyndFeedOutput();
@@ -450,28 +479,20 @@ public class ForumFeedGenerator extends RSSProcess {
   
   List<String> getForumSubscription(String userId) throws Exception {
     List<String> list = new ArrayList<String>();
-    String subscriptionsPath = "ForumSystem/UserProfileHome/" + userId + "/forumSubscription" + userId;
+    String subscriptionsPath = dataLocator.getUserSubscriptionLocation(userId);
     Node subscriptionNode = getForumServiceHome().getNode(subscriptionsPath);
-    list.addAll(ValuesToList(subscriptionNode.getProperty("exo:categoryIds").getValues()));
-    list.addAll(ValuesToList(subscriptionNode.getProperty("exo:forumIds").getValues()));
-    list.addAll(ValuesToList(subscriptionNode.getProperty("exo:topicIds").getValues()));
+    PropertyReader reader = new PropertyReader(subscriptionNode); 
+    list.addAll(reader.list("exo:categoryIds"));
+    list.addAll(reader.list("exo:forumIds"));
+    list.addAll(reader.list("exo:topicIds"));
     return list;
   }
   
-  private List<String> ValuesToList(Value[] values) throws Exception {
-    List<String> list = new ArrayList<String>();
-    for (int i = 0; i < values.length; ++i) {
-      list.add(values[i].getString());
-    }
-    return list;
-  }
-  
-  public InputStream getFeedContent(String targetId) throws Exception {
+  public InputStream getFeedContent(String targetId) {
     return dataLocator.getSessionManager().executeAndSave(new GetFeedStreamTask(targetId));
   }
   
 
-  
   class GetFeedStreamTask implements JCRTask<InputStream> {
 
     private String targetId;
@@ -481,17 +502,11 @@ public class ForumFeedGenerator extends RSSProcess {
     }
 
     public InputStream execute(Session session) throws Exception {
-      Node parentNode = getForumServiceHome();
-      QueryManager qm = session.getWorkspace().getQueryManager();
-      StringBuffer queryString = new StringBuffer("/jcr:root").append(parentNode.getPath())
-                                                              .append("//*[@exo:id='")
-                                                              .append(targetId)
-                                                              .append("']");
-      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-      QueryResult result = query.execute();
-      parentNode = result.getNodes().nextNode();
+      Node parentNode = getNodeById(targetId);
       return getFeedStream(parentNode, FORUM_RSS_TYPE, "FORUM RSS FEED");
     }
+    
+
     
   }
   

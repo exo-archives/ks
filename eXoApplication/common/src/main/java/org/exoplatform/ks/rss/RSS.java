@@ -16,7 +16,27 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.w3c.dom.Document;
+
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * Created by The eXo Platform SARL
@@ -25,12 +45,25 @@ import java.io.InputStream;
  * Jan 12, 2009, 5:55:37 PM
  */
 public class RSS {
+  private static final Log LOG = ExoLogger.getLogger(RSS.class);
+  protected static final String CONTENT_PROPERTY = "exo:content".intern();
+  protected static final String RSS_NODE_NAME = "ks.rss".intern();  
+  protected static final String RSS_2_0 = "rss_2.0".intern();
+  public static final String PLAIN_TEXT = "text/plain".intern();
+  public static final String DEFAULT_FEED_LINK = "http://www.exoplatform.com".intern();
+
+  
 	private String fileName ;
-	private InputStream content ;
+	private Node itemNode;
+	
+	public RSS(Node node) {
+	  itemNode = node;
+	}
 	
 	public static String getRSSLink(String appType, String portalName, String objectId){
-		return "/" + appType + "/rss/" + appType + "/" + objectId;
+		return "/" + appType + "/rss/" + appType + "/" + objectId;   
 	}
+	
 	
 	public static String getUserRSSLink(String userId) {
 	  return "/forum/rss/"+userId;
@@ -42,10 +75,181 @@ public class RSS {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public InputStream getContent() {
-		return content;
-	}
-	public void setContent(InputStream content) {
-		this.content = content;
-	}
+	
+  public InputStream getContent() {
+    try {
+      return getFeedNode().getProperty(CONTENT_PROPERTY).getValue().getStream();
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to get feed content ", e);
+    }
+
+  }
+  
+  public void setContent(InputStream is) {
+    try {
+      getFeedNode().setProperty(CONTENT_PROPERTY, is);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to get feed content ", e);
+    }
+
+  }
+
+  private Node getFeedNode() {
+    try {
+      return itemNode.getNode(RSS_NODE_NAME);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to get feed node", e);
+    }
+  }
+
+  /**
+	 * Read a SyndFeed from the
+	 * @return
+	 * @throws Exception
+	 */
+  public SyndFeed read() {
+    try {
+    DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+    Document doc = docBuilder.parse(getContent());
+    doc.getDocumentElement().normalize();
+
+    SyndFeedInput input = new SyndFeedInput();
+    SyndFeed feed = input.build(doc);
+    return feed;
+    }
+    catch (Exception e) {
+      LOG.error("Failed to read RSS feed");
+      throw new RuntimeException(e);
+    }
+  }
+  
+  /**
+   * Remove an item for the feed
+   * @param removeItemId
+   * @return
+   * @throws Exception
+   */
+  @SuppressWarnings("unchecked")
+  public SyndFeed removeItem(String removeItemId) {
+    SyndFeed feed = read();
+    List<SyndEntry> entries = feed.getEntries();
+    if(removeItemId != null && removeItemId.trim().length() > 0){
+      for(SyndEntry syndEntry : entries){
+        if(syndEntry.getUri().equals(removeItemId)){
+          entries.remove(syndEntry);
+          break;
+        }
+      }
+    }
+    feed.setEntries(entries);
+    return feed;
+  }
+  
+  /**
+   * Adds an entry to the feed
+   * @param newEntry
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  public SyndFeed addEntry(SyndEntry newEntry) {
+    SyndFeed feed = read();
+    List<SyndEntry> entries = feed.getEntries();
+    if (newEntry != null)
+      entries.add(0, newEntry);
+    feed.setEntries(entries);
+    return feed;
+  }
+  
+
+
+  public void saveFeed(SyndFeed feed, String rssNodeType) {
+    try {
+      boolean isNew = false;
+      try {
+        itemNode.getNode(RSS_NODE_NAME);
+      } catch (PathNotFoundException pnfe) {
+        LOG.debug("Feed node not found for " + itemNode.getName() + " creating...");
+        itemNode.addNode(RSS_NODE_NAME, rssNodeType);
+        isNew = true;
+      }
+      
+      SyndFeedOutput output = new SyndFeedOutput();
+      setContent(new ByteArrayInputStream(output.outputString(feed).getBytes()));
+
+      if (isNew)
+        itemNode.getSession().save();
+      else
+        itemNode.save();
+    } catch (Exception e) {
+      LOG.error("Failed to save feed content", e);
+    }
+  }
+
+
+
+
+  public boolean feedExists() {
+    try {
+      return itemNode.hasNode(RSS_NODE_NAME);
+    } catch (Exception e) {
+      return false;
+    }
+  }
+  
+  
+  /**
+   * Create a new feed with some default content: link is the link to eXo web site
+   * and feed type is <code>rss_2.0</code>
+   * @return
+   */
+  public static SyndFeed createNewFeed(String title, Date pubDate){
+    SyndFeed feed = new SyndFeedImpl();
+    feed.setLink(DEFAULT_FEED_LINK);
+    feed.setFeedType(RSS_2_0);
+    feed.setTitle(title);
+    feed.setPublishedDate(pubDate);
+    feed.setDescription(" ");
+    return feed;
+  }
+  
+  /**
+   * Create new entry
+   * @param uri         uri of item
+   * @param title       title of item
+   * @param link        link to this item 
+   * @param listContent the content of item
+   * @param description the description for this item
+   * @return  SyndEntry
+   */
+  public static SyndEntry createNewEntry(String uri, String title, String link, List<String> listContent, SyndContent description, Date pubDate, String author){
+    SyndEntry entry = new SyndEntryImpl();
+    entry.setUri(uri);
+    entry.setTitle(title);
+    entry.setLink(link + uri);
+    entry.setContributors(listContent);
+    entry.setDescription(description);
+    entry.setPublishedDate(pubDate);
+    entry.setAuthor(author);
+    return entry;
+  }
+
+  public Node getItemNode() {
+    return itemNode;
+  }
+
+  public void setItemNode(Node itemNode) {
+    try {
+      Node rssNode = itemNode.getNode(RSS_NODE_NAME);
+      if (rssNode.hasProperty(CONTENT_PROPERTY)) {
+        setContent(rssNode.getProperty(CONTENT_PROPERTY).getValue().getStream());
+      } else {
+        throw new IllegalArgumentException("Node does not have an RSS feed child");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to set item node for RSS", e);
+    }
+    this.itemNode = itemNode;
+  }
+	
 }

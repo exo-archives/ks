@@ -16,7 +16,6 @@
  */
 package org.exoplatform.ks.rss;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +28,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
@@ -36,24 +36,23 @@ import org.exoplatform.services.log.Log;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedOutput;
 
-public abstract class RSSProcess extends RSSGenerate {
+public abstract class RSSProcess  {
 
 
   public int maxSize = 20;
   protected KSDataLocation dataLocator;
-  private static final Log log = ExoLogger.getLogger(RSSProcess.class);
+  private static final Log LOG = ExoLogger.getLogger(RSSProcess.class);
 	
 	public RSSProcess() {
 	  this.dataLocator = (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
 	}
   
-  public RSSProcess(KSDataLocation dataLocator) throws Exception{
+  public RSSProcess(KSDataLocation dataLocator) {
 	  this.dataLocator = dataLocator;
 	 }
 	
-	public RSSProcess(InitParams params, KSDataLocation dataLocator) throws Exception{
+	public RSSProcess(InitParams params, KSDataLocation dataLocator) {
     this.dataLocator = dataLocator;
 		init(params);
 	}
@@ -80,27 +79,9 @@ public abstract class RSSProcess extends RSSGenerate {
     return dataLocator.getSessionManager().getCurrentSession();
   }
 
-	/**
-	 * Create RSS file for Applications in KS. System will be filter type of application
-	 * automatically (for example: FAQ or FORUM) based on path of node is changed, after that, System will call function
-	 * to create RSS for that application.
-	 * @param	path			the path of node is changed
-	 * @param	typeEvent	the type of event
-	 * @throws Exeption
-	 */
-  public boolean generateRSS(String path, int typeEvent) throws Exception {
-    try {
-      String linkItem = this.getPageLink();
-      generateFeed(path, typeEvent, linkItem);
-    } catch (Exception e) {
-      log.error("failed to generate feed for " + path, e);
-      return false;
-    }
-
-    return true;
-  }
 	
-	 private String getPageLink() throws Exception {
+	
+	 protected String getPageLink() throws Exception {
 //   TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So, when run JUnit-test, you must comment content in this function and return null.
    try{
      PortalRequestContext portalContext = Util.getPortalRequestContext();
@@ -113,47 +94,40 @@ public abstract class RSSProcess extends RSSGenerate {
  }
 	
 	
-	protected abstract void generateFeed(String path, int typeEvent, String linkBase) throws Exception;
+  public abstract void itemAdded(String path);
 
-	public abstract InputStream getFeedContent(String targetId) throws Exception;
+  public abstract void itemUpdated(String path);
 
-
+  public abstract void itemRemoved(String path);
 	
-	protected InputStream getFeedStream(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
-    Node RSSNode = null;
-    InputStream inputStream = null;
-    
-    if(!parentNode.hasNode(KS_RSS)){
-      String feedType = "rss_2.0";
+	public abstract InputStream getFeedContent(String targetId);
 
-      SyndFeed feed = createNewFeed(feedTitle, new Date());
-      List<SyndEntry> entries = new ArrayList<SyndEntry>();
-      RSSNode = parentNode.addNode(KS_RSS, feedNodetype);
-      try{
-        feed.setTitle(parentNode.getProperty("exo:name").getString());
-        if(parentNode.hasProperty("exo:description"))
-          feed.setDescription(parentNode.getProperty("exo:description").getString());
-        else feed.setDescription(" ");
-      } catch (Exception e){
-        feed.setTitle(parentNode.getName());
-        feed.setDescription(" ");
-      }
-      feed.setLink(eXoLink);
-      feed.setFeedType(feedType);
-      feed.setEntries(entries);
-      feed.setPublishedDate(new Date());
-      RSS data = new RSS();
-      SyndFeedOutput output = new SyndFeedOutput();
-      inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
-      data.setContent(inputStream);
-      saveRssContent(parentNode, RSSNode, data, false);
-      
-      return inputStream;
-    } else {
-      RSSNode = parentNode.getNode(KS_RSS);
-      return RSSNode.getProperty(RSSGenerate.CONTENT_PROPERTY).getStream();
-    }
+	protected InputStream getFeedStream(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
+	  RSS feed = loadOrCreateFeed(parentNode, feedNodetype, feedTitle);
+	  return feed.getContent();
   }
+	
+	 protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype) throws Exception {
+	   return loadOrCreateFeed(parentNode, feedNodetype, null);
+	 }
+	
+	 protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
+	   RSS rss = new RSS(parentNode);
+	    if (!rss.feedExists()) {
+	      PropertyReader reader = new PropertyReader(parentNode);
+	      String title = reader.string("exo:name", feedTitle);
+	      String description = reader.string("exo:description", " ");
+	      SyndFeed feed = RSS.createNewFeed(title, new Date());
+	      List<SyndEntry> entries = new ArrayList<SyndEntry>();
+	      feed.setDescription(description);
+	      feed.setEntries(entries);
+	      
+	      rss = new RSS(parentNode);
+	      rss.saveFeed(feed, feedNodetype);
+
+	    } 
+	    return rss;
+	  }
 
   public KSDataLocation getDataLocator() {
     return dataLocator;
