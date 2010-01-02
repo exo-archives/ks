@@ -54,13 +54,17 @@ public class PropertyReader {
 	}
 	
 	public Date date(String name) {
-		try {
-			return node.getProperty(name).getDate().getTime();
-		}
-		catch (Exception e) {
-			return null;
-		}
+		return date(name,null);
 	}
+	
+	 public Date date(String name, Date defaultValue) {
+	    try {
+	      return node.getProperty(name).getDate().getTime();
+	    }
+	    catch (Exception e) {
+	      return defaultValue;
+	    }
+	  }
 	
 	public Boolean bool(String name) {
 	 return bool(name, false);
