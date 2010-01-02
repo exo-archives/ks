@@ -37,6 +37,6 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
     generator = new ForumFeedGenerator(locator);
   }
  
-
+public void testPlaceHolder() {}
 
 }

@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 import javax.jcr.Node;
@@ -34,13 +37,8 @@ import com.sun.syndication.feed.synd.SyndFeed;
 @ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
 public class TestRSS extends AbstractJCRTestCase {
 
-  protected void setUp() throws Exception {
-    super.setUp();
-  }
-
-  /*
-  public void testSaveFeed() {
-    
+  public void testSaveFeed() throws Exception {
+    /*
     Node target = addNode("FeedTarget");
     RSS rss = new RSS(target);
     SyndFeed feed = RSS.createNewFeed("foo", new Date());
@@ -50,9 +48,30 @@ public class TestRSS extends AbstractJCRTestCase {
     assertNodeExists(feedPath);
     
     Node feedNode = getNode(feedPath);
-    assertPropertyExists(feedNode, RSS.CONTENT_PROPERTY);
-   
+    assertPropertyNotEmpty(feedNode, RSS.CONTENT_PROPERTY);
+    */
+
   }
-   */
+
+
+  protected void assertPropertyNotEmpty(Node node, String property) {
+    assertPropertyExists(node, property);
+
+    try {
+      InputStream is = node.getProperty(property).getStream();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+      StringBuffer buff = new StringBuffer();
+      String str;
+      while ((str = reader.readLine()) != null) {
+        buff.append(str);
+      }
+      reader.close();
+      assertTrue("property " + property + " was empty", buff.length() > 0);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+   
 
 }
