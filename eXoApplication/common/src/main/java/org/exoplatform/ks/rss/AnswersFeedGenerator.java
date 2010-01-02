@@ -115,7 +115,7 @@ public final class AnswersFeedGenerator extends RSSProcess {
     // only approved or activated questions
     if ((!question.bool("exo:isActivated") || !question.bool("exo:isApproved"))) {
       RSS rss = new RSS(categoryNode);
-      SyndFeed feed = rss.removeItem(questionNodeName);
+      SyndFeed feed = rss.removeEntry(questionNodeName);
       feed.setTitle(categoryTitle);
       feed.setDescription(categoryDescription);
       rss.saveFeed(feed, FAQ_RSS_TYPE);
@@ -128,7 +128,7 @@ public final class AnswersFeedGenerator extends RSSProcess {
       SyndFeed feed = null;
 
       if (updated) {
-        feed = data.removeItem(questionNodeName);
+        feed = data.removeEntry(questionNodeName);
       }
       feed = data.addEntry(entry);
       feed.setDescription(categoryDescription);
@@ -154,16 +154,16 @@ public final class AnswersFeedGenerator extends RSSProcess {
 
     // Create new entry
     List<String> listContent = new ArrayList<String>();
-    String content = "";
+    StringBuffer content = new StringBuffer();
     if (questionNode.hasNode("faqAnswerHome") && questionNode.getNode("faqAnswerHome").hasNodes()) {
       for (String answer : getAnswers(questionNode))
-        content += " <b><u>Answer:</u></b> " + answer + ". ";
+        content.append(" <b><u>Answer:</u></b> ").append(answer).append(". ");
     }
     if (questionNode.hasNode("faqCommentHome") && questionNode.getNode("faqCommentHome").hasNodes()) {
       for (String comment : getComments(questionNode))
-        content += " <b><u>Comment:</u></b> " + comment + ". ";
+        content.append(" <b><u>Comment:</u></b> ").append(comment).append(". ");
     }
-    listContent.add(content);
+    listContent.add(content.toString());
     
     
     SyndContent description = new SyndContentImpl();
@@ -301,7 +301,7 @@ public final class AnswersFeedGenerator extends RSSProcess {
       
       String itemId = path.substring(path.lastIndexOf("/") + 1);
       RSS rss = new RSS(categoryNode);
-      SyndFeed feed = rss.removeItem(itemId);
+      SyndFeed feed = rss.removeEntry(itemId);
       String title = new PropertyReader(categoryNode).string("exo:name", "Root");
       feed.setTitle(title);
       rss.saveFeed(feed, FAQ_RSS_TYPE);

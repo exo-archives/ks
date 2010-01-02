@@ -16,7 +16,9 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.jcr.Node;
 
@@ -25,6 +27,8 @@ import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
 /**
@@ -50,6 +54,11 @@ public class TestRSS extends AbstractJCRTestCase {
     String prop = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
     assertTrue(prop.contains("foo"));
     
+    feed.setTitle("bar");
+    String prop2 = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
+    rss.saveFeed(feed, "nt:unstructured");
+    assertTrue(prop2.contains("foo"));
+    
   }
 
   public void testFeedExists() {
@@ -59,10 +68,87 @@ public class TestRSS extends AbstractJCRTestCase {
     
     SyndFeed feed = RSS.createNewFeed("foo", new Date());
     rss.saveFeed(feed, "nt:unstructured");
-    assertTrue(rss.feedExists());
-    
+    assertTrue(rss.feedExists()); 
   }
   
+  public void testAddEntry() throws Exception {
+    Node target = addNode("FeedTarget3");
+    RSS rss = new RSS(target);
+    SyndFeed feed = RSS.createNewFeed("feed3", new Date());
+    rss.saveFeed(feed, "nt:unstructured");
+    SyndContentImpl desc = new SyndContentImpl();
+    desc.setType(RSS.PLAIN_TEXT);
+    desc.setValue("value");
+    SyndEntry entry = RSS.createNewEntry("uri", "foo", "http://link", Arrays.asList("c1","c2"), desc, new Date(), "author");
+    SyndFeed d = rss.addEntry(entry);
+    
+  
+    assertFeedEntry(d, "uri");  
+    rss.saveFeed(d, "nt:unstructured");
+    
+    
+    String feedPath = "FeedTarget3/" + RSS.RSS_NODE_NAME;
+    Node feedNode = getNode(feedPath);
+    assertFeedContains(feedNode, "foo");
+    
 
+  }
+  
+  public void testRemoveEntry() throws Exception {
+    Node target = addNode("FeedTarget4");
+    RSS rss = new RSS(target);
+    SyndFeed feed = RSS.createNewFeed("feed4", new Date());
+
+    SyndContentImpl desc = new SyndContentImpl();
+    desc.setType(RSS.PLAIN_TEXT);
+    desc.setValue("value");
+    SyndEntry entry1 = RSS.createNewEntry("uri", "foo", "http://link", Arrays.asList("c1","c2"), desc, new Date(), "author");
+    SyndEntry entry2 = RSS.createNewEntry("uri2", "bar", "http://link2", Arrays.asList("c1","c2"), desc, new Date(), "author");
+    feed.setEntries(Arrays.asList(entry1, entry2));
+    rss.saveFeed(feed, "nt:unstructured");
+    Node feedNode = getNode("FeedTarget4/" + RSS.RSS_NODE_NAME);
+    assertFeedContains(feedNode, "uri");
+    
+    SyndFeed d = rss.removeEntry("uri");
+    assertNotFeedEntry(d, "uri");
+    assertFeedEntry(d, "uri2");
+   
+    rss.saveFeed(d, "nt:unstructured");
+    feedNode = getNode("FeedTarget4/" + RSS.RSS_NODE_NAME);
+    assertFeedNotContains(feedNode, "foo");
+    assertFeedContains(feedNode, "bar");
+  }
+
+  private void assertFeedContains(Node feedNode, String value) throws Exception {
+    String feedContent = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
+    assertTrue("feed content should contain " + value, feedContent.contains(value));
+  }
+  
+  private void assertFeedNotContains(Node feedNode, String value) throws Exception {
+    String feedContent = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
+    assertFalse("feed content should not contain " + value, feedContent.contains(value));
+  }
+
+  private void assertNotFeedEntry(SyndFeed feed, String uri) {
+    List<SyndEntry> entries = feed.getEntries();
+    SyndEntry found = null;
+    for (SyndEntry sentry : entries) {
+      if (sentry.getUri().equals(uri)) {
+        found = sentry;
+      }
+    }
+    assertNull("SyndEntry found", found);
+  }
+  
+  private void assertFeedEntry(SyndFeed feed, String uri) {
+    List<SyndEntry> entries = feed.getEntries();
+    SyndEntry found = null;
+    for (SyndEntry sentry : entries) {
+      if (sentry.getUri().equals(uri)) {
+        found = sentry;
+      }
+    }
+    assertNotNull("SyndEntry not found", found);
+  }
 
 }

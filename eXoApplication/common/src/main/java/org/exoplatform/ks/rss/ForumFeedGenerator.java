@@ -144,7 +144,7 @@ public final class ForumFeedGenerator extends RSSProcess {
      String description = null;
      objectId = path.substring(path.lastIndexOf("/") + 1);
      Node node = null;
-     PropertyReader reader = new PropertyReader(node);
+
      if(objectId.contains("post")){
         while(node == null){
            try{
@@ -156,7 +156,7 @@ public final class ForumFeedGenerator extends RSSProcess {
          }
         
         while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
-             description = reader.string("exo:description", " ");
+             description = new PropertyReader(node).string("exo:description", " ");
              removeItemInFeed(objectId, node, description);
              node = node.getParent();
          }
@@ -172,7 +172,7 @@ public final class ForumFeedGenerator extends RSSProcess {
          }
        }
        while(node.isNodeType("exo:forumCategory") || node.isNodeType("exo:forum") || node.isNodeType("exo:topic")){
-           description = reader.string("exo:description", " ");
+           description = new PropertyReader(node).string("exo:description", " ");
          if(node.isNodeType("exo:forum") || node.isNodeType("exo:forumCategory")) {
            removeRSSItem(objectId, node, description);
          } else {
@@ -198,7 +198,7 @@ public final class ForumFeedGenerator extends RSSProcess {
    */
   protected void removeItemInFeed(String itemId, Node node, String feedDescription) throws Exception{
     RSS data = new RSS(node);
-    SyndFeed feed = data.removeItem(itemId);    
+    SyndFeed feed = data.removeEntry(itemId);    
     String title = new PropertyReader(node).string("exo:name", "Root");
     feed.setTitle(title);
     feed.setDescription(feedDescription);
@@ -213,18 +213,17 @@ public final class ForumFeedGenerator extends RSSProcess {
     SyndFeed feed = data.read();
     
     List<SyndEntry> entries = feed.getEntries();
-    List<Node> listRemovePosts = new ArrayList<Node>();
     Node removeNode = getNodeById(itemId); 
 
     if (removeNode.isNodeType("exo:topic")){
-      listRemovePosts = getListRemove(removeNode,"exo:post");
+      List<Node> listRemovePosts = getListRemove(removeNode,"exo:post");
       removeItem(entries ,listRemovePosts);
     } else if (removeNode.isNodeType("exo:forum")){
       List<Node> listRemoveForum = new ArrayList<Node>();
       listRemoveForum = getListRemove(removeNode,"exo:topic");
 
       for (Node n : listRemoveForum) {
-        listRemovePosts = getListRemove(n,"exo:post");
+        List<Node> listRemovePosts = getListRemove(n,"exo:post");
         removeItem(entries ,listRemovePosts);
       }
       removeItem(entries ,listRemoveForum);
@@ -374,7 +373,7 @@ public final class ForumFeedGenerator extends RSSProcess {
         if (data.feedExists()) {
           SyndFeed feed = null;
           if (updated) {
-            feed = data.removeItem(postName);
+            feed = data.removeEntry(postName);
           }
           feed = data.addEntry(entry);
           feed.setDescription(reader.string("exo:description", " "));  
@@ -398,7 +397,7 @@ public final class ForumFeedGenerator extends RSSProcess {
     for(Node node : new Node[]{topicNode, forumNode, categoryNode}){
       String description = new PropertyReader(node).string("exo:description", " ");
       RSS data = new RSS(node);
-      SyndFeed feed = data.removeItem(postNode.getName());    
+      SyndFeed feed = data.removeEntry(postNode.getName());    
       String title = new PropertyReader(node).string("exo:name", "Root");
       feed.setTitle(title);
       feed.setDescription(description);
@@ -450,7 +449,7 @@ public final class ForumFeedGenerator extends RSSProcess {
       }
       SyndFeed feed = RSS.createNewFeed("Forum subscriptions for " + userId, new Date());
       feed.setDescription(" ");
-      feed.setEntries(Arrays.asList(mapEntries.values().toArray(new SyndEntry[]{})));
+      feed.setEntries(Arrays.asList(mapEntries.values().toArray(new SyndEntry[0])));
       SyndFeedOutput output = new SyndFeedOutput();
       inputStream = new ByteArrayInputStream(output.outputString(feed).getBytes());
       return inputStream;

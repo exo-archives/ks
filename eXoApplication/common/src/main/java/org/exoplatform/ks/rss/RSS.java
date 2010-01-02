@@ -126,17 +126,17 @@ public class RSS {
   
   /**
    * Remove an item for the feed
-   * @param removeItemId
+   * @param uri
    * @return
    * @throws Exception
    */
   @SuppressWarnings("unchecked")
-  public SyndFeed removeItem(String removeItemId) {
+  public SyndFeed removeEntry(String uri) {
     SyndFeed feed = read();
     List<SyndEntry> entries = feed.getEntries();
-    if(removeItemId != null && removeItemId.trim().length() > 0){
+    if(uri != null && uri.trim().length() > 0){
       for(SyndEntry syndEntry : entries){
-        if(syndEntry.getUri().equals(removeItemId)){
+        if(syndEntry.getUri().equals(uri)){
           entries.remove(syndEntry);
           break;
         }
