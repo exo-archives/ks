@@ -353,6 +353,15 @@ public class KSDataLocation {
   }
   
   /**
+   * Return the location of forum subscriptions for a given user
+   * @param userId user id
+   * @return
+   */
+  public String getUserSubscriptionLocation(String userId) {
+    return getUserProfilesLocation() +  "/" + userId + "/forumSubscription" + userId;
+  }
+  
+  /**
    * Location names for KS data storage
    * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
    * @version $Revision$
@@ -383,6 +392,8 @@ public class KSDataLocation {
     public static final String DEFAULT_APPS_LOCATION = "exo:applications";
     
   }
+
+
   
   
  
