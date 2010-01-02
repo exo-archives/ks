@@ -16,10 +16,14 @@
  */
 package org.exoplatform.ks.test.jcr;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.exoplatform.ks.test.AbstractExoContainerTestCase;
@@ -245,6 +249,45 @@ public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
         session.logout();
       }
     }
+  }
+
+  /**
+   * Asserts a node has a property
+   * @param node note to assert
+   * @param property propertyName
+   */
+  protected void assertPropertyExists(Node node, String property) {
+    try {
+      assertTrue("Node misses property " + property, node.hasProperty(property)) ;
+    } catch (RepositoryException e) {
+      throw new RuntimeException(e);
+    }
   }   
+  
+  
+  /**
+   * Asserts a property value is not empty
+   * @param node
+   * @param property
+   */
+  protected void assertBinaryPropertyNotEmpty(Node node, String property) {
+    assertPropertyExists(node, property);
+
+    try {
+      InputStream is = node.getProperty(property).getStream();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+      StringBuffer buff = new StringBuffer();
+      String str;
+      while ((str = reader.readLine()) != null) {
+        buff.append(str);
+      }
+      reader.close();
+      assertTrue("property " + property + " was empty", buff.length() > 0);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+  }
+   
    
 }
