@@ -157,6 +157,12 @@ public class ContainerBuilder
       Field singletonField = RootContainer.class.getDeclaredField("singleton_");
       singletonField.setAccessible(true);
       singletonField.set(null, null);
+      
+      // needed otherwise, we cannot call this method twice in the same thread
+      Field bootingField = RootContainer.class.getDeclaredField("booting");
+      bootingField.setAccessible(true);
+      bootingField.set(null, false);
+      RootContainer.setInstance(null);
 
       //
       ClassLoader rootCL = new ClassLoader(loader)
