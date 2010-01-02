@@ -78,7 +78,7 @@ public class AbstractExoContainerTestCase extends TestCase {
         }
      }
 
-     ContainerBuilder builder = new ContainerBuilder().withLoader(realClassLoader);
+     ContainerBuilder builder = new ContainerBuilder();
      
      Set<String> rootConfs = configs.get(ContainerScope.ROOT);
      for (String rootConf : rootConfs) {
@@ -89,7 +89,17 @@ public class AbstractExoContainerTestCase extends TestCase {
      for (String portalConf : portalConfs) {
       builder.withPortal(portalConf);
      }
+     
 
+     try
+     {
+       builder.build();
+        super.runBare();
+     }
+     finally
+     {
+        Thread.currentThread().setContextClassLoader(realClassLoader);
+     }
   }
   
   /**
