@@ -16,6 +16,9 @@
  */
 package org.exoplatform.ks.bbcode.core;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +34,9 @@ import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -43,9 +49,8 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
   private BBCodeServiceImpl bbcodeService;
   private String bbcodesPath;
 
-  @Override
+  @BeforeMethod
   protected void setUp() throws Exception {
-    super.setUp();
     bbcodeService = new BBCodeServiceImpl();
     KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
     bbcodeService.setDataLocator(locator);
@@ -54,12 +59,12 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     addNode(bbcodesPath, BBCodeServiceImpl.BBCODE_HOME_NODE_TYPE); // create node /bbcodes
   }
   
-  @Override
+  @AfterMethod
   protected void tearDown() throws Exception {
-    super.tearDown();
     deleteNode(bbcodesPath); // create node /bbcodes
   }
 
+  @Test
   public void testRegisterBBCodePlugin() throws Exception {
     BBCodePlugin plugin = new BBCodePlugin();
     plugin.setName("plugin1");
@@ -78,6 +83,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     assertEquals("plugin2", plugins.get(1).getName());
   }
 
+  @Test
   public void testInitDefaultBBCodes() throws Exception {
     
     BBCodePlugin plugin = new BBCodePlugin();
@@ -89,6 +95,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     
   }
 
+  @Test
   public void testSave() throws Exception {
     List<BBCode> bbcodes = Arrays.asList(createBBCode("foo", "replacement", "description", "example", false, false));
     bbcodeService.save(bbcodes);
@@ -103,6 +110,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     assertEquals(false, n.getProperty("exo:isActive").getBoolean());
   }
   
+  @Test
   public void testGetAll() throws Exception {
     List<BBCode> bbcodes = new ArrayList<BBCode>();
     bbcodes.add(createBBCode("foo", "replacement", "description", "example", false, true));
@@ -115,6 +123,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     assertEquals(bbcodes.size(), actual.size());
   }
 
+  @Test
   public void testGetActive() throws Exception {
     List<BBCode> bbcodes = new ArrayList<BBCode>();
     bbcodes.add(createBBCode("foo", "replacement", "description", "example", false, true));
@@ -128,6 +137,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     AssertUtils.assertContains(actual, "foo", "foo2=", "foo3", "foo4");
   }
 
+  @Test
   public void testFindById() throws Exception {
     List<BBCode> bbcodes = Arrays.asList(createBBCode("foo", "replacement", "description", "example", true, true));
     bbcodeService.save(bbcodes);
@@ -142,6 +152,7 @@ public class TestBBCodeServiceImpl extends AbstractJCRTestCase {
     assertEquals(true, actual.isActive());
   }
 
+  @Test
   public void testDelete() throws Exception {
     List<BBCode> bbcodes = Arrays.asList(createBBCode("foo", "replacement", "description", "example", false, false));
     bbcodeService.save(bbcodes);
