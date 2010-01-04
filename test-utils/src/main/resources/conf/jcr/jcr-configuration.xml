@@ -17,6 +17,7 @@
   <component>
      <key>org.exoplatform.services.document.DocumentReaderService</key>
      <type>org.exoplatform.services.document.impl.DocumentReaderServiceImpl</type>
+<!--      
      <component-plugins>
         <component-plugin>
            <name>pdf.document.reader</name>
@@ -127,11 +128,6 @@
                  <description>description</description>
                  <value>text/plain</value>
               </values-param>
-              <!-- values-param>
-                 <name>defaultEncoding</name>
-                 <description>description</description>
-                 <value>UTF-8</value>
-              </values-param -->
            </init-params>
         </component-plugin>
 
@@ -143,6 +139,7 @@
         </component-plugin>
 
      </component-plugins>
+      -->
   </component>
 
   <component>

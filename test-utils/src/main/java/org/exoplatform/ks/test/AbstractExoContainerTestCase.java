@@ -20,13 +20,10 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.testng.annotations.BeforeClass;
-import static  org.testng.AssertJUnit.*;
 
 /**
  * A base test class that allows to load an exo container with a selected set of
@@ -109,10 +106,12 @@ public abstract class AbstractExoContainerTestCase {
   
    
   /**
-   * Register a component to the containter
+   * Register a component to the container
+   * @param key component key
+   * @param instance component instance to register
    */
-  protected <T, I extends T> void registerComponent(Class<T> clazz, I impl) {
-    ExoContainerContext.getCurrentContainer().registerComponentImplementation(impl, clazz);
+  protected <T, I extends T> void registerComponent(Class<T> key, I instance) {
+    ExoContainerContext.getCurrentContainer().registerComponentInstance(key, instance);
   }
 
   /**
@@ -120,14 +119,26 @@ public abstract class AbstractExoContainerTestCase {
    * 
    * @param <T> type of component (key)
    * @param <U> type of component implementation (type)
-   * @param clazz class of the registered component
+   * @param key class of the registered component
    * @return
    */
   @SuppressWarnings("unchecked")
-  protected <T, U extends T> U getComponent(Class<T> clazz) {
+  protected <T, U extends T> U getComponent(Class<T> key) {
     // ExoContainer container = ExoContainerContext.getCurrentContainer();
     ExoContainer container = PortalContainer.getInstance();
-    return (U) container.getComponentInstanceOfType(clazz);
+    return (U) container.getComponentInstanceOfType(key);
   }
+  
+  /**
+   * Replace a component implementation by registering it against the current container
+   * @param key component key
+   * @param instance component instance to register
+   */
+  protected <T, I extends T> void replaceComponent(Class<T> key, I instance) {
+    ExoContainerContext.getCurrentContainer().unregisterComponent(key);
+    registerComponent(key, instance);
+  }
+  
+
 
 }

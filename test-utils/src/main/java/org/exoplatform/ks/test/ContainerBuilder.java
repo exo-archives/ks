@@ -173,23 +173,33 @@ public class ContainerBuilder
          @Override
          public Enumeration<URL> getResources(String name) throws IOException
          {
+           Enumeration<URL> resources;
+           
             if ("conf/configuration.xml".equals(name))
             {
-               return Collections.enumeration(configURLs);
+              resources =  Collections.enumeration(configURLs);
             }
             else if ("conf/portal/configuration.xml".equals(name))
             {
                String portalName = bootedPortalName.get();
-               return Collections.enumeration(portalConfigURLs.get(portalName));
+               resources =  Collections.enumeration(portalConfigURLs.get(portalName));
             }
             else if ("conf/portal/test-configuration.xml".equals(name))
             {
-               return Collections.enumeration(Collections.<URL>emptyList());
+              resources =  Collections.enumeration(Collections.<URL>emptyList());
             }
             else
             {
-               return super.getResources(name);
+              resources =  super.getResources(name);
             }
+            
+            if (resources!=null && resources.hasMoreElements()) {
+              System.out.println("Loaded " + name);
+            } else {
+              System.err.println("No resource found " + name);
+            }
+            return resources;
+            
          }
       };
 
