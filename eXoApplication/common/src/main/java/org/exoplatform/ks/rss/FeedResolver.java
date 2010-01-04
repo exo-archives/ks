@@ -67,6 +67,9 @@ public class FeedResolver {
 
   public FeedContentProvider resolve(String appType) {
     String impl = providers.get(appType);
+    if (impl == null) {
+      return defaultProvider;
+    }
     FeedContentProvider provider = instanciate(impl);
     return provider;
   }

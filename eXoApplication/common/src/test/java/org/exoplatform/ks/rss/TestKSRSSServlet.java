@@ -18,22 +18,22 @@ package org.exoplatform.ks.rss;
 
 import static org.testng.AssertJUnit.assertEquals;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.test.AbstractExoContainerTestCase;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.KernelUtils;
+import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -43,26 +43,52 @@ import org.testng.annotations.Test;
  * @version $Revision$
  */
 @ConfiguredBy( {
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rss-configuration.xml") })
-public class TestKSRSSServlet extends AbstractExoContainerTestCase {
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/rss-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/storage-configuration.xml") })
+public class TestKSRSSServlet extends AbstractJCRTestCase {
 
-  
-  public void _testOnService() throws Exception {
+  @Test
+  public void testOnService() throws Exception {
     final KSRSSServlet servlet = new KSRSSServlet();
 
+    // fixture
+    String objectId = "categories/Categoryf136732fc0a8000d00297cb37949b644";
+    
+    // mock servlet API
     final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    Mockito.when(request.getPathInfo()).thenReturn("/faq/categories/Categoryf136732fc0a8000d00297cb37949b644");
+    Mockito.when(request.getPathInfo()).thenReturn("/faq/" + objectId);
+    
     final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
-    final ExoContainer container = PortalContainer.getInstance();
-  
-    try {
-        servlet.onService(container, request, response);
-    } catch (ServletException e) {
-      
-    }
-    //fail("Should have thrown exception");
+    ServletOutputStream outputStream = Mockito.mock(ServletOutputStream.class);
+    Mockito.when(response.getOutputStream()).thenReturn(outputStream);
+   
+    // fake resolver
+    FeedResolver resolver = new FeedResolver();
+    resolver.setDefaultProvider(new FakeContentProvider());
+    replaceComponent(FeedResolver.class, resolver);
+    
+    // datalocator needed to
+    //KSDataLocation dataLocator = new KSDataLocation(getRepository(), getWorkspace());
+    //registerComponent(KSDataLocation.class, dataLocator);
+    //String path = dataLocator.getFaqHomeLocation();
+    //addNode(path); 
+    //addNode(path + "/" + objectId);// TODO should use the appropriate type
+   
+    servlet.onService(PortalContainer.getInstance(), request, response);
 
+    Mockito.verify(outputStream).write("test".getBytes());
+
+
+  }
+  
+  class FakeContentProvider implements FeedContentProvider {
+
+    public InputStream getFeedContent(String targetId) {
+      
+      return new ByteArrayInputStream("test".getBytes());
+    }
+    
   }
 
   @Test
@@ -97,25 +123,12 @@ public class TestKSRSSServlet extends AbstractExoContainerTestCase {
 
   private void registerFakeProvider() {
     InitParams params = new InitParams();
-    KernelUtils.addValueParam(params, "defaultProvider", FakeProvider.class.getName());
+    KernelUtils.addValueParam(params, "defaultProvider", FakeContentProvider.class.getName());
     Map<String, String> map = new HashMap<String, String>();
-    map.put("foo", FakeProvider.class.getName());
+    map.put("foo", FakeContentProvider.class.getName());
     KernelUtils.addPropertiesParam(params, "providers", map);
     FeedResolver resolver = new FeedResolver(params);
-    registerComponent(FeedResolver.class, resolver);
-
-  }
-
-  public class FakeProvider implements FeedContentProvider {
-
-    public FakeProvider() {
-      
-    }
-    
-    public InputStream getFeedContent(String targetId) {
-
-      return null;
-    }
+    replaceComponent(FeedResolver.class, resolver);
 
   }
 

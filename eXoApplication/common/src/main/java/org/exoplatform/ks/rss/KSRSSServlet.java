@@ -47,7 +47,7 @@ public class KSRSSServlet extends AbstractHttpServlet {
                         HttpServletResponse response) throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
     String pathInfo = request.getPathInfo();
-    if (pathInfo != null && pathInfo.length() <= 0) {
+    if (pathInfo == null || pathInfo.length() <= 0) {
       return;
     }
 
@@ -93,11 +93,6 @@ public class KSRSSServlet extends AbstractHttpServlet {
   private FeedContentProvider resolveFeedContentProvider(ExoContainer container, String appType) {
     FeedResolver resolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
     FeedContentProvider provider = resolver.resolve(appType);
-
-    if (provider == null) {
-      provider = resolver.getDefaultProvider();
-    }
-
     return provider;
   }
 
