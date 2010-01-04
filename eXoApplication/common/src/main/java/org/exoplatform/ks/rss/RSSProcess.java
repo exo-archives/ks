@@ -23,6 +23,9 @@ import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
@@ -37,97 +40,117 @@ import org.exoplatform.services.log.Log;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
-public abstract class RSSProcess  {
+public abstract class RSSProcess {
 
+  public int               maxSize = 20;
 
-  public int maxSize = 20;
   protected KSDataLocation dataLocator;
-  private static final Log LOG = ExoLogger.getLogger(RSSProcess.class);
-	
-	public RSSProcess() {
-	  this.dataLocator = (KSDataLocation) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(KSDataLocation.class);
-	}
-  
+
+  private static final Log LOG     = ExoLogger.getLogger(RSSProcess.class);
+
+  public RSSProcess() {
+    this.dataLocator = (KSDataLocation) ExoContainerContext.getCurrentContainer()
+                                                           .getComponentInstanceOfType(KSDataLocation.class);
+  }
+
   public RSSProcess(KSDataLocation dataLocator) {
-	  this.dataLocator = dataLocator;
-	 }
-	
-	public RSSProcess(InitParams params, KSDataLocation dataLocator) {
     this.dataLocator = dataLocator;
-		init(params);
-	}
+  }
+
+  public RSSProcess(InitParams params, KSDataLocation dataLocator) {
+    this.dataLocator = dataLocator;
+    init(params);
+  }
 
   private void init(InitParams params) {
     if (params == null) {
-		  return;
-		}
-		PropertiesParam proParams = params.getPropertiesParam("rss-limit-config");
-		if (proParams != null) {
-			String maximum = proParams.getProperty("maximum.rss");
-			if (maximum != null && maximum.length() > 0) {
-				try {
-					maxSize = Integer.parseInt(maximum);
-				} catch (Exception e) {
-					maxSize = 10;
-    		}
-    	}
+      return;
+    }
+    PropertiesParam proParams = params.getPropertiesParam("rss-limit-config");
+    if (proParams != null) {
+      String maximum = proParams.getProperty("maximum.rss");
+      if (maximum != null && maximum.length() > 0) {
+        try {
+          maxSize = Integer.parseInt(maximum);
+        } catch (Exception e) {
+          maxSize = 10;
+        }
+      }
     }
   }
-	
 
   protected Session getCurrentSession() {
     return dataLocator.getSessionManager().getCurrentSession();
   }
 
-	
-	
-	 protected String getPageLink() throws Exception {
-//   TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So, when run JUnit-test, you must comment content in this function and return null.
-   try{
-     PortalRequestContext portalContext = Util.getPortalRequestContext();
-     return (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private", "public");
-   }catch(Exception e){
-     return null;
-   }
-//   Use for JUnit-test.
-//   return null;
- }
-	
-	
-  public abstract void itemAdded(String path);
-
-  public abstract void itemUpdated(String path);
-
-  public abstract void itemRemoved(String path);
-	
-	public abstract InputStream getFeedContent(String targetId);
-
-	protected InputStream getFeedStream(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
-	  RSS feed = loadOrCreateFeed(parentNode, feedNodetype, feedTitle);
-	  return feed.getContent();
+  protected String getPageLink() throws Exception {
+    // TODO: can not get org.exoplatform.portal.webui when run JUnit-test. So,
+    // when run JUnit-test, you must comment content in this function and return
+    // null.
+    try {
+      PortalRequestContext portalContext = Util.getPortalRequestContext();
+      return (portalContext.getRequest().getRequestURL().toString()).replaceFirst("private",
+                                                                                  "public");
+    } catch (Exception e) {
+      return null;
+    }
+    // Use for JUnit-test.
+    // return null;
   }
-	
-	 protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype) throws Exception {
-	   return loadOrCreateFeed(parentNode, feedNodetype, null);
-	 }
-	
-	 protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
-	   RSS rss = new RSS(parentNode);
-	    if (!rss.feedExists()) {
-	      PropertyReader reader = new PropertyReader(parentNode);
-	      String title = reader.string("exo:name", feedTitle);
-	      String description = reader.string("exo:description", " ");
-	      SyndFeed feed = RSS.createNewFeed(title, new Date());
-	      List<SyndEntry> entries = new ArrayList<SyndEntry>();
-	      feed.setDescription(description);
-	      feed.setEntries(entries);
-	      
-	      rss = new RSS(parentNode);
-	      rss.saveFeed(feed, feedNodetype);
 
-	    } 
-	    return rss;
-	  }
+  protected InputStream getFeedStream(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
+    RSS feed = loadOrCreateFeed(parentNode, feedNodetype, feedTitle);
+    return feed.getContent();
+  }
+
+  protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype) throws Exception {
+    return loadOrCreateFeed(parentNode, feedNodetype, null);
+  }
+
+  protected RSS loadOrCreateFeed(Node parentNode, String feedNodetype, String feedTitle) throws Exception {
+    RSS rss = new RSS(parentNode);
+    if (!rss.feedExists()) {
+      PropertyReader reader = new PropertyReader(parentNode);
+      String title = reader.string("exo:name", feedTitle);
+      String description = reader.string("exo:description", " ");
+      SyndFeed feed = RSS.createNewFeed(title, new Date());
+      List<SyndEntry> entries = new ArrayList<SyndEntry>();
+      feed.setDescription(description);
+      feed.setEntries(entries);
+
+      rss = new RSS(parentNode);
+      rss.saveFeed(feed, feedNodetype);
+
+    }
+    return rss;
+  }
+
+  /**
+   * Get one node in FORUM application by id
+   * 
+   * @param objectId id of node which is got
+   * @param sProvider the session provider
+   * @return node
+   * @throws Exception
+   */
+  protected Node getNodeById(String objectId) throws Exception {
+    Node parentNode = getForumServiceHome();
+    QueryManager qm = dataLocator.getSessionManager()
+                                 .getCurrentSession()
+                                 .getWorkspace()
+                                 .getQueryManager();
+    StringBuffer queryString = new StringBuffer("/jcr:root" + parentNode.getPath()
+        + "//*[@exo:id='").append(objectId).append("']");
+    Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    parentNode = result.getNodes().nextNode();
+    return parentNode;
+  }
+
+  protected Node getForumServiceHome() throws Exception {
+    String path = dataLocator.getForumHomeLocation();
+    return dataLocator.getSessionManager().getCurrentSession().getRootNode().getNode(path);
+  }
 
   public KSDataLocation getDataLocator() {
     return dataLocator;
@@ -136,7 +159,5 @@ public abstract class RSSProcess  {
   public void setDataLocator(KSDataLocation dataLocator) {
     this.dataLocator = dataLocator;
   }
-
-	
 
 }

@@ -42,7 +42,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public final class AnswersFeedGenerator extends RSSProcess {
+public final class AnswersFeedGenerator extends RSSProcess implements FeedContentProvider, FeedListener {
 
   private static final Log   LOG          = ExoLogger.getLogger(AnswersFeedGenerator.class);
 

@@ -27,64 +27,86 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.web.AbstractHttpServlet;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
- * Created by The eXo Platform SARL
- * Author : Ha Mai Van
- *					ha.mai@exoplatform.com
+ * Created by The eXo Platform SARL Author : Ha Mai Van ha.mai@exoplatform.com
  * Jan 14, 2009, 8:58:11 AM
  */
 @SuppressWarnings("serial")
 public class KSRSSServlet extends AbstractHttpServlet {
-	public void afterInit(ServletConfig config) throws ServletException {}  
-	public void onService(ExoContainer container, HttpServletRequest request, HttpServletResponse response) 
-          throws ServletException, IOException {
+
+  private static Log LOG = ExoLogger.getLogger(KSRSSServlet.class);
+
+  public void afterInit(ServletConfig config) throws ServletException {
+  }
+
+  public void onService(ExoContainer container,
+                        HttpServletRequest request,
+                        HttpServletResponse response) throws ServletException, IOException {
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
-    String pathInfo = request.getPathInfo() ;
-    SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-    try{
-    	if(pathInfo != null && pathInfo.length() > 0){
-	    	pathInfo = pathInfo.substring(1) ;
-	      String appType = "";
-	      String objectId = "" ;
-	      if(pathInfo.indexOf("/") > 0){
-	      	appType = pathInfo.substring(0, pathInfo.indexOf("/"));
-	      	objectId = pathInfo.substring(pathInfo.indexOf("/") + 1);
-	      }else objectId = pathInfo;
-	     
-	      InputStream is = null;
-	      if(appType.equals("faq")) {
-	      	//System.out.println("objectiD =======>" + objectId) ;
-	        AnswersFeedGenerator process = new AnswersFeedGenerator();
-	      	is = process.getFeedContent(objectId) ;
-//		      response.setContentType("text/xml") ;
-	      }else if(appType.equals("forum")) { 
-	        ForumFeedGenerator process = new ForumFeedGenerator();
-	    		is = process.getFeedContent(objectId) ;
-//		      response.setContentType("text/xml") ;
-	      }else{
-	        ForumFeedGenerator process = new ForumFeedGenerator();
-	      	if(pathInfo.indexOf("/") > 0){
-	      		objectId = pathInfo.substring(pathInfo.lastIndexOf("/") + 1) ;
-	      	}else objectId = pathInfo;
-	      	is = process.getUserFeedContent(objectId);
-	      }
-	      if(is != null) {
-	      	response.setContentType("text/xml") ;
-	      	byte[] buf = new byte[is.available()];
-	        is.read(buf);
-	        ServletOutputStream os = response.getOutputStream();
-	        os.write(buf);
-	      }else {
-	      	byte[] buf = ("<br/><br/>This object is hidden or you haven't got permission to view!").getBytes();
-	      	ServletOutputStream os = response.getOutputStream();
-	        os.write(buf) ;
-	      }
-    	}
-    }catch(Exception e) {
-    	e.printStackTrace() ;
-      //throw new ServletException(e) ;
-    }finally {sessionProvider.close() ;}    		
-	}  
+    String pathInfo = request.getPathInfo();
+    if (pathInfo != null && pathInfo.length() <= 0) {
+      return;
+    }
+
+    String objectId = extractObjectId(pathInfo);
+    String appType = extractAppType(pathInfo);
+
+    FeedContentProvider provider = resolveFeedContentProvider(container, appType);
+    if (provider == null) {
+      throw new ServletException("'" + appType + "' is not a recognized application");
+    }
+
+    InputStream is = provider.getFeedContent(objectId);
+    byte[] buf = readStream(is);
+    if (buf == null) {
+      throw new ServletException("The feed '" + objectId + "' is not available");
+    }
+    response.setContentType("text/xml");
+    ServletOutputStream os = response.getOutputStream();
+    os.write(buf);
+
+  }
+
+  String extractAppType(String pathInfo) {
+    pathInfo = pathInfo.substring(1);
+    String appType = "";
+    if (pathInfo.indexOf("/") > 0) {
+      appType = pathInfo.substring(0, pathInfo.indexOf("/"));
+    } else {
+    }
+    return appType;
+  }
+
+  String extractObjectId(String pathInfo) {
+    pathInfo = pathInfo.substring(1);
+    String objectId = "";
+    if (pathInfo.indexOf("/") > 0) {
+      objectId = pathInfo.substring(pathInfo.indexOf("/") + 1);
+    } else
+      objectId = pathInfo;
+    return objectId;
+  }
+
+  private FeedContentProvider resolveFeedContentProvider(ExoContainer container, String appType) {
+    FeedResolver resolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
+    FeedContentProvider provider = resolver.resolve(appType);
+
+    if (provider == null) {
+      provider = resolver.getDefaultProvider();
+    }
+
+    return provider;
+  }
+
+  private byte[] readStream(InputStream is) throws IOException {
+    byte[] buf = null;
+    if (is != null) {
+      buf = new byte[is.available()];
+      is.read(buf);
+    }
+    return buf;
+  }
 }
