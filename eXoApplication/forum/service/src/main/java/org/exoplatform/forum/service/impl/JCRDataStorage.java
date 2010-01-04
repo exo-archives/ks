@@ -5624,18 +5624,17 @@ public class JCRDataStorage implements  DataStorage {
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iter = result.getNodes();
-				
 				while (iter.hasNext()) {
 					Node nodeObj = iter.nextNode();
 					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
 				}
-
+ 
 				if(type.equals(Utils.POST)){
 					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin, ""));
 				}
-        if(!isAdmin) {
-          listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
-        }
+			}
+			if(!isAdmin) {
+				listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
 			}
 		} catch (Exception e) {
 		  throw e;
@@ -5649,22 +5648,17 @@ public class JCRDataStorage implements  DataStorage {
 	                                                               List<String> forumCanView,List<String> categoryCanView){
 	  List<ForumSearch> tempListSearchEvent = new ArrayList<ForumSearch>();
 	  String path = null;
-	  boolean flag = false;
+	  String []strs;
 	  for (ForumSearch forumSearch : listSearchEvent) {
-	    flag = false;
       path = forumSearch.getPath();
-
-      if(path.split("/").length == 6 && categoryCanView.contains(path.split("/")[5])){
+      if(!path.contains(Utils.TOPIC)){// search category or forum
         tempListSearchEvent.add(forumSearch);
-      } 
-      for (String item : forumCanView) {
-        if(path.contains(item)){
-          flag = true;
-          break;
-        }
+        continue;
       }
-      if (flag){
-        tempListSearchEvent.add(forumSearch);
+      strs = path.split("/");
+      if(categoryCanView.contains("cateId") || categoryCanView.contains(strs[5]) || 
+      		forumCanView.contains("forumId") || forumCanView.contains(strs[6])){
+      	tempListSearchEvent.add(forumSearch);
       }
     }
   
