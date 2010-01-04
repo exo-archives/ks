@@ -521,6 +521,7 @@ public class UIForumPortlet extends UIPortletApplication {
 						this.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 						uiTopicDetail.setIdPostView(postId) ;
 						if(isReply || isQuote){
+							uiTopicDetail.setIsEditTopic(true) ;
 							if(uiTopicDetail.getCanPost()) {
 								uiTopicDetail.setIdPostView("top") ;
 								try {
