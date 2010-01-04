@@ -34,7 +34,8 @@ import org.testng.annotations.Test;
  */
 @ConfiguredBy( {
     @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rss-configuration.xml") })
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/rss-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/storage-configuration.xml") })
 public class TestForumFeedGenerator extends AbstractJCRTestCase {
 
   ForumFeedGenerator generator = null;
