@@ -1,6 +1,7 @@
 package org.exoplatform.forum.service;
 
 import java.util.List;
+import static org.testng.AssertJUnit.*;
 
 import org.exoplatform.ks.test.AbstractExoContainerTestCase;
 import org.exoplatform.ks.test.AssertUtils;
@@ -11,6 +12,8 @@ import org.exoplatform.ks.test.mock.SimpleMockOrganizationService;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 @ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/ForumServiceUtils-configuration.xml")})
 public class TestForumServiceUtils extends AbstractExoContainerTestCase {
@@ -18,14 +21,16 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
  protected SimpleMockOrganizationService organizationService = null;
  protected IdentityRegistry identityRegistry = null;
 	
+ @BeforeMethod
   protected void setUp() throws Exception {
-    super.setUp();
+   
     //PortalContainer container = PortalContainer.getInstance();
     organizationService =  getComponent(SimpleMockOrganizationService.class);// (SimpleMockOrganizationService)container.getComponentInstanceOfType(OrganizationService.class);
     identityRegistry =  getComponent(IdentityRegistry.class);////(IdentityRegistry)container.getComponentInstanceOfType(IdentityRegistry.class);
   }
   
 
+ @Test
 	public void testHasPermission() throws Exception {
 		
 		String user = "user1";
@@ -53,18 +58,19 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 	}
 
 	private void simulateAuthenticate(String user) throws Exception {
-		
 		Identity identity = new OrganizationAuthenticatorImpl(organizationService).createIdentity(user);
 		identityRegistry.register(identity);
 	}
 
 	
+ @Test
 	public void testGetPermissionNull() throws Exception {
 		List<String> emptyList = ForumServiceUtils.getUserPermission(null);
 		assertNotNull(emptyList);
 		assertEquals(0, emptyList.size());
 	}
 
+ @Test
 	public void testGetPermissionByGroup() throws Exception {
 		organizationService.addMemberships("user1", "*:/platform/users");	
 		organizationService.addMemberships("user2", "*:/platform/users");
@@ -78,7 +84,7 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 		
 	}
 	
-	
+ @Test
 	public void testGetPermissionByUser() throws Exception {
 		organizationService.addMemberships("user1", "*:/platform/users");	
 		organizationService.addMemberships("user3", "*:/platform/users");
@@ -96,6 +102,7 @@ public class TestForumServiceUtils extends AbstractExoContainerTestCase {
 		AssertUtils.assertContains(ForumServiceUtils.getUserPermission(new String [] {"user1", "user2"}), "user1", "user2");
 	}
 	
+ @Test
 	public void testGetPermissionByMembership() throws Exception {
 		organizationService.addMemberships("user1", "*:/platform/users");
 	}

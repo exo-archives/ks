@@ -25,6 +25,9 @@ import org.exoplatform.ks.test.Closure;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
+import org.testng.annotations.Test;
+
+import static  org.testng.AssertJUnit.*;
 
 /**
  * @author <a href="mailto:julien.viet@exoplatform.com">Julien Viet</a>
@@ -34,6 +37,7 @@ import org.exoplatform.ks.test.ContainerScope;
 public class TestAbstractJCRTestCase extends AbstractJCRTestCase
 {
 
+   @Test
    public void testGetSession() throws Exception
    {
      Session session = getSession();   
@@ -42,17 +46,17 @@ public class TestAbstractJCRTestCase extends AbstractJCRTestCase
      session.logout();
    }
    
-   
+   @Test
    public void testRepository() {
      assertNotNull("repository was null", getRepository());
    }
    
-   
+   @Test
    public void testWorkspace() {
      assertNotNull("workspace was null", getWorkspace());
    }
    
-   
+   @Test
    public void testAssertNodeExists() throws Exception {
      Session session = getSession();
      Node root = session.getRootNode();
@@ -65,6 +69,7 @@ public class TestAbstractJCRTestCase extends AbstractJCRTestCase
      session.logout();     
    }
  
+   @Test
    public void testAddNode() throws Exception {
      
      addNode("addnode");
@@ -85,7 +90,7 @@ public class TestAbstractJCRTestCase extends AbstractJCRTestCase
      session.logout();     
    }
    
-   
+   @Test
    public void testAddFile() throws Exception {
      
      addFile("addfile");

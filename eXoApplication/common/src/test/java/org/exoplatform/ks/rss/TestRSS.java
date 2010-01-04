@@ -16,6 +16,11 @@
  */
 package org.exoplatform.ks.rss;
 
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
+import static org.testng.AssertJUnit.assertTrue;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +31,7 @@ import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
+import org.testng.annotations.Test;
 
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -35,9 +41,11 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
+@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rss-configuration.xml")})
 public class TestRSS extends AbstractJCRTestCase {
 
+  @Test
   public void testSaveFeed() throws Exception {
     
     Node target = addNode("FeedTarget");
@@ -61,6 +69,7 @@ public class TestRSS extends AbstractJCRTestCase {
     
   }
 
+  @Test
   public void testFeedExists() {
     Node target = addNode("FeedTarget2");
     RSS rss = new RSS(target);
@@ -71,6 +80,7 @@ public class TestRSS extends AbstractJCRTestCase {
     assertTrue(rss.feedExists()); 
   }
   
+  @Test
   public void testAddEntry() throws Exception {
     Node target = addNode("FeedTarget3");
     RSS rss = new RSS(target);
@@ -94,6 +104,7 @@ public class TestRSS extends AbstractJCRTestCase {
 
   }
   
+  @Test
   public void testRemoveEntry() throws Exception {
     Node target = addNode("FeedTarget4");
     RSS rss = new RSS(target);
@@ -119,16 +130,19 @@ public class TestRSS extends AbstractJCRTestCase {
     assertFeedContains(feedNode, "bar");
   }
 
+
   private void assertFeedContains(Node feedNode, String value) throws Exception {
     String feedContent = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
     assertTrue("feed content should contain " + value, feedContent.contains(value));
   }
   
+
   private void assertFeedNotContains(Node feedNode, String value) throws Exception {
     String feedContent = feedNode.getProperty(RSS.CONTENT_PROPERTY).getString();
     assertFalse("feed content should not contain " + value, feedContent.contains(value));
   }
 
+  
   private void assertNotFeedEntry(SyndFeed feed, String uri) {
     List<SyndEntry> entries = feed.getEntries();
     SyndEntry found = null;

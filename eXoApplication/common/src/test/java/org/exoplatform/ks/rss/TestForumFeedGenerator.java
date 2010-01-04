@@ -16,27 +16,52 @@
  */
 package org.exoplatform.ks.rss;
 
+import javax.jcr.Node;
+import javax.jcr.Session;
+
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
+ *         Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
+@ConfiguredBy( {
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
+    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/rss-configuration.xml") })
 public class TestForumFeedGenerator extends AbstractJCRTestCase {
 
   ForumFeedGenerator generator = null;
-  
+
+  @BeforeMethod
   protected void setUp() throws Exception {
-    super.setUp();
     KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
     generator = new ForumFeedGenerator(locator);
   }
- 
-public void testPlaceHolder() {}
+
+  @Test
+  public void testItemAdded() throws Exception {
+    addNode("category001", "exo:forumCategory");
+    addNode("category001/forum001", "exo:forum");
+    addNode("category001/forum001/topic001", "exo:topic");
+    String path = "category001/forum001/topic001/post001";
+    addNode(path, "exo:post");
+
+    Session session = getSession();
+    Node post = session.getRootNode().getNode(path);
+    post.setProperty("exo:link", "http://test?objectId=post001");
+    post.setProperty("exo:isFirstPost", true);
+    // post.setProperty("exo:isApproved", true);
+    post.save();
+
+    generator.itemAdded("/" + path);
+
+  }
 
 }

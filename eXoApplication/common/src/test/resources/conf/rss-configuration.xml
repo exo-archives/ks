@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+   
+  <component>
+    <type>org.exoplatform.ks.rss.FeedResolver</type>
+    <init-params>
+      <value-param>
+        <name>defaultProvider</name>
+        <description>the default provider used when no app type matches</description>
+        <value>org.exoplatform.ks.rss.ForumUserFeedProvider</value>
+      </value-param>
+      <properties-param>
+      <name>providers</name>
+      <description>feed providers indexed by appType</description>
+      <property name="faq" value="org.exoplatform.ks.rss.AnswersFeedGenerator"/>
+      <property name="forum" value="org.exoplatform.ks.rss.ForumFeedGenerator"/>
+      </properties-param>
+    </init-params>
+  </component>
+   
+   
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
+    <component-plugin> 
+      <name>add.forum.nodeType</name>
+      <set-method>addPlugin</set-method>
+      <type>org.exoplatform.services.jcr.impl.AddNodeTypePlugin</type>
+      <init-params>
+        <values-param>
+          <name>autoCreatedInNewRepository</name>
+          <description>Node types configuration file</description>
+          <value>jar:/conf/forum-nodetypes.xml</value>
+        </values-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+  
+  </configuration>

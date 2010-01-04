@@ -28,6 +28,7 @@ import java.util.List;
 import junit.framework.AssertionFailedError;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 
 /**
@@ -163,6 +164,8 @@ public class ContainerBuilder
       bootingField.setAccessible(true);
       bootingField.set(null, false);
       RootContainer.setInstance(null);
+      
+      PortalContainer.setInstance(null);
 
       //
       ClassLoader rootCL = new ClassLoader(loader)

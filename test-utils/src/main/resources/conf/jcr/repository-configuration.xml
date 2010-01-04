@@ -15,13 +15,13 @@
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="target/temp/swap/system"/>
+              <property name="swap-directory" value="${test.tmpdir}/swap/system"/>
             </properties>
             <!-- 
             <value-storages>
               <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="target/temp/values/system"/>
+                  <property name="path" value="${test.tmpdir}/values/system"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -44,14 +44,14 @@
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
-              <property name="index-dir" value="target/temp/jcrlucenedb/system"/>
+              <property name="index-dir" value="${test.tmpdir}/jcrlucenedb/system"/>
             </properties>
           </query-handler>
           <lock-manager>
             <time-out>15m</time-out><!-- 15min -->
             <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
               <properties>
-                <property name="path" value="target/temp/lock/system"/>
+                <property name="path" value="${test.tmpdir}/lock/system"/>
               </properties>
             </persister>
            </lock-manager>
@@ -66,13 +66,13 @@
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="target/temp/swap/portal-test"/>
+              <property name="swap-directory" value="${test.tmpdir}/swap/portal-test"/>
             </properties>
             <!-- 
             <value-storages>
               <value-storage id="portal-test" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="target/temp/values/portal-test"/>
+                  <property name="path" value="${test.tmpdir}/values/portal-test"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -95,14 +95,14 @@
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
-              <property name="index-dir" value="target/temp/jcrlucenedb/portal-test"/>
+              <property name="index-dir" value="${test.tmpdir}/jcrlucenedb/portal-test"/>
             </properties>
           </query-handler>
           <lock-manager>
             <time-out>15m</time-out><!-- 15min -->
             <persister class="org.exoplatform.services.jcr.impl.core.lock.FileSystemLockPersister">
               <properties>
-                <property name="path" value="target/temp/lock/portal-test"/>
+                <property name="path" value="${test.tmpdir}/lock/portal-test"/>
               </properties>
             </persister>
           </lock-manager>

@@ -18,6 +18,7 @@ package org.exoplatform.ks.test.jcr;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
@@ -32,6 +33,9 @@ import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.testng.annotations.AfterClass;
+
+import static  org.testng.AssertJUnit.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -41,9 +45,49 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
 {
 
+  private String tempDir;
+  
+  
+  public void beforeContainerStart() {
+    initTempDir();
+  }
+
+  public void initTempDir() {
+    tempDir = "target/temp" + System.nanoTime() + getClass().getCanonicalName();
+    System.setProperty("test.tmpdir", tempDir);
+  }
+
+
+  public void deleteTempDir() {
+    try {
+      deleteDir(new File(tempDir));
+      System.out.println("temp dir deleted: " + tempDir);
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
    
    
-   /**
+   // Deletes all files and subdirectories under dir.
+   // Returns true if all deletions were successful.
+   // If a deletion fails, the method stops attempting to delete and returns false.
+   public static boolean deleteDir(File dir) {
+       if (dir.isDirectory()) {
+           String[] children = dir.list();
+           for (int i=0; i<children.length; i++) {
+               boolean success = deleteDir(new File(dir, children[i]));
+               if (!success) {
+                 System.out.println("could not delete " + children[i]);
+                   return false;
+               }
+           }
+       }
+   
+       // The directory is now empty so delete it
+       return dir.delete();
+   }
+
+  /**
     * 
     * @return The ManageableRepository for this test
     */
@@ -287,6 +331,22 @@ public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
       throw new RuntimeException(e);
     }
 
+  }
+
+  protected void assertPropertyEquals(String expected, Node node, String property) {
+    try {
+      assertEquals(expected, node.getProperty(property).getString());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  protected void assertPropertyEquals(boolean expected, Node node, String property) {
+    try {
+      assertEquals(expected, node.getProperty(property).getBoolean());
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
    
    

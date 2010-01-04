@@ -12,6 +12,15 @@
 
 
   <dependencies>
+
+<dependency>
+  <groupId>org.testng</groupId>
+  <artifactId>testng</artifactId>
+  <version>5.10</version>
+  <classifier>jdk15</classifier>
+</dependency>
+  
+  
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

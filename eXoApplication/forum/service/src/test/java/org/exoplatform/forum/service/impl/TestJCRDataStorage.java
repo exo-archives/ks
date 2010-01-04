@@ -25,6 +25,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNull;
+import static org.testng.AssertJUnit.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -42,9 +47,9 @@ import javax.jcr.observation.ObservationManager;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.forum.service.EmailNotifyPlugin;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.JCRTask;
@@ -57,23 +62,27 @@ import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.KernelUtils;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml")})
+@ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
+              @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/forum-configuration.xml")})
 public class TestJCRDataStorage extends AbstractJCRTestCase {
 
-  private JCRDataStorage storage;
+  private JCRDataStorage  storage;
 
+  @BeforeMethod
   protected void setUp() throws Exception {
-    super.setUp();
     storage = new JCRDataStorage();
     KSDataLocation locator = new KSDataLocation(getRepository(), getWorkspace());
     storage.setDataLocator(locator);
   }
   
+  @Test
   public void testConstructor() {
     KSDataLocation location = new KSDataLocation("foo", "bar");
     JCRDataStorage storage = new JCRDataStorage(location);
@@ -82,12 +91,14 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertEquals(storage.getPath(), location.getForumHomeLocation());
   }
   
+  @Test
   public void testPlugins() {
     KSDataLocation location = new KSDataLocation("foo", "bar");
     JCRDataStorage storage = new JCRDataStorage(location);
     storage.getDefaultPlugins();
   }
 
+  @Test
   public void testUpdateModeratorInForum() throws Exception {
     String moderatorsPropName = "exo:moderators";
     String [] moderators = new String [] {"foo", "zed"};
@@ -109,7 +120,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertContains(actual3,"foo", "zed");
   }
   
-  
+  @Test
   public void testSetDefaultAvatar() throws Exception {
 
     addNode(storage.getDataLocation().getAvatarsLocation());
@@ -125,12 +136,12 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertNodeNotExists(avatarLocation); 
   }
 
-
+  @Test
   public void testGetAvatar() throws Exception {
     String avatarLocation = storage.getDataLocation().getAvatarsLocation()  + "/username2";
-    assertNull(storage.getUserAvatar("username2"));   
-    
+    //assertNull(storage.getUserAvatar("username2"));   
     addFile(avatarLocation);
+    
     ForumAttachment attachment = storage.getUserAvatar("username2");
     assertNotNull(attachment); 
     assertEquals("avatar.text/plain", attachment.getName());
@@ -139,6 +150,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertEquals("stuff", stringOf(attachment.getInputStream()));
   }
 
+  @Test
   public void testSaveAvatar() throws Exception {
     String avatarLocation = storage.getDataLocation().getAvatarsLocation() + "/username3";
     assertNull(storage.getUserAvatar("username3"));
@@ -151,7 +163,10 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
 
   }
   
+  @Test
   public void testAddPlugin() throws Exception {
+ // fixture
+    addNode(storage.getDataLocation().getForumCategoriesLocation(), "exo:categoryHome");
     
     // null plugin
     storage.addPlugin(null);
@@ -173,6 +188,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertEquals("bar", storage.getServerConfig().get("foo"));
   }
   
+  @Test
   public void testAddRolePlugin() throws Exception {
     storage.addRolePlugin(null);
     AssertUtils.assertEmpty(storage.getRulesPlugins());
@@ -189,15 +205,19 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     AssertUtils.assertNotEmpty(storage.getRulesPlugins());
   }
   
+
   public void testAddRSSEventListener() throws Exception {
-    ObservationManager manager = super.getSession().getWorkspace().getObservationManager();
+    // fixture
+    addNode(storage.getDataLocation().getForumCategoriesLocation(), "exo:categoryHome");
 
     storage.setInitRssListener(false);
     storage.addRSSEventListenner();
+    ObservationManager manager = super.getSession().getWorkspace().getObservationManager();
     assertFalse(hasListenerOfType(manager, ForumRSSEventListener.class));
 
     storage.setInitRssListener(true);
     storage.addRSSEventListenner();
+    manager = super.getSession().getWorkspace().getObservationManager();
     assertTrue(hasListenerOfType(manager, ForumRSSEventListener.class));
     
   }
@@ -216,6 +236,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
   }
 
   
+  @Test
   public void testSaveForumAdministration() throws Exception {
 
     // test create
@@ -247,10 +268,12 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertAdminSaved(admin);
   }
   
+  @Test
   public void testGetForumAdministration() throws Exception {
-    String adminPath = storage.getDataLocation().getAdministrationLocation();
-    addNode(adminPath, "exo:administration");
     
+    // fixture
+    String adminPath = adminNodeFixture();
+
     Session session = getSession();
     Node adminNode = session.getRootNode().getNode(adminPath);
     adminNode.setProperty("exo:forumSortBy", "a");
@@ -263,7 +286,10 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     adminNode.setProperty("exo:notifyEmailContent", "g");
     adminNode.setProperty("exo:notifyEmailMoved", "h");
     session.save();
-    assertNodeNotExists(adminPath);
+
+    
+    
+    // call method and check values
     ForumAdministration admin = storage.getForumAdministration();
     assertEquals("a", admin.getForumSortBy());
     assertEquals("b", admin.getForumSortByType());
@@ -276,11 +302,20 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertEquals("h", admin.getNotifyEmailMoved());
     
   }
+
+  private String adminNodeFixture() throws Exception {
+    String adminPath = storage.getDataLocation().getAdministrationLocation();
+    if (!getSession().getRootNode().hasNode(adminPath)) {
+    addNode(adminPath, "exo:administrationHome");
+    }
+    adminPath+= "/forumAdministration";
+    addNode(adminPath, "exo:administration");
+    return adminPath;
+  }
   
 
-
   private void assertAdminSaved(ForumAdministration admin) {
-    String adminPath = storage.getDataLocation().getAdministrationLocation();
+    String adminPath = storage.getDataLocation().getAdministrationLocation() + "/forumAdministration";
     assertNodeExists(adminPath);
     Node adminNode = getNode(adminPath);
     assertPropertyEquals(admin.getForumSortBy(), adminNode, "exo:forumSortBy");
@@ -294,22 +329,6 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     assertPropertyEquals(admin.getNotifyEmailMoved(), adminNode, "exo:notifyEmailMoved");
   }
   
-  protected void assertPropertyEquals(String expected, Node node, String property) {
-    try {
-      assertEquals(expected, node.getProperty(property).getString());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-  
-  protected void assertPropertyEquals(boolean expected, Node node, String property) {
-    try {
-      assertEquals(expected, node.getProperty(property).getBoolean());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
   class TextForumAttachment extends ForumAttachment {
     private String text;
 
@@ -368,7 +387,7 @@ public class TestJCRDataStorage extends AbstractJCRTestCase {
     return child;
   }
 
-  @SuppressWarnings("unchecked")
+
   private Node stubNodeForPath(String path, JCRSessionManager manager) throws Exception {
     Node node = mock(Node.class);
     Node root = mock(Node.class);

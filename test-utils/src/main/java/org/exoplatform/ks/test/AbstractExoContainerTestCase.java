@@ -20,11 +20,13 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
+
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.testng.annotations.BeforeClass;
+import static  org.testng.AssertJUnit.*;
 
 /**
  * A base test class that allows to load an exo container with a selected set of
@@ -42,18 +44,29 @@ import org.exoplatform.container.PortalContainer;
  *         Lamarque</a>
  * @version $Revision$
  */
-public class AbstractExoContainerTestCase extends TestCase {
+public abstract class AbstractExoContainerTestCase {
 
-  protected AbstractExoContainerTestCase() {
+
+  
+  
+  @BeforeClass
+  public void startContainer() throws Exception {
+    beforeContainerStart();
+    initExoContainer();
+    afterContainerStart();
+  }
+  
+  
+  protected void afterContainerStart() {
   }
 
-  protected AbstractExoContainerTestCase(String name) {
-    super(name);
+
+  protected void beforeContainerStart() {
   }
 
-  @Override
-  public void runBare() throws Throwable {
-    ClassLoader realClassLoader = Thread.currentThread().getContextClassLoader();
+
+  private void initExoContainer() throws ClassNotFoundException {
+    ClassLoader _realClassLoader = Thread.currentThread().getContextClassLoader();
 
     //
     Set<String> rootConfigPaths = new HashSet<String>();
@@ -62,6 +75,7 @@ public class AbstractExoContainerTestCase extends TestCase {
     //
     Set<String> portalConfigPaths = new HashSet<String>();
     portalConfigPaths.add("conf/portal-configuration.xml");
+    portalConfigPaths.add("conf/" + getClass().getSimpleName() + ".xml");
 
     //
     EnumMap<ContainerScope, Set<String>> configs = new EnumMap<ContainerScope, Set<String>>(ContainerScope.class);
@@ -70,6 +84,7 @@ public class AbstractExoContainerTestCase extends TestCase {
 
     //
     ConfiguredBy cfBy = getClass().getAnnotation(ConfiguredBy.class);
+
     if (cfBy != null) {
       for (ConfigurationUnit src : cfBy.value()) {
         configs.get(src.scope()).add(src.path());
@@ -88,15 +103,11 @@ public class AbstractExoContainerTestCase extends TestCase {
       builder.withPortal(portalConf);
     }
 
-    try {
-      builder.build();
-      super.runBare();
-
-    } finally {
-      Thread.currentThread().setContextClassLoader(realClassLoader);
-    }
+    builder.build();
+  
   }
-
+  
+   
   /**
    * Register a component to the containter
    */
