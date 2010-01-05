@@ -25,4 +25,9 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 @Deprecated
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIPopupContainer extends org.exoplatform.ks.common.webui.UIPopupContainer {
+  
+  public UIPopupContainer() throws Exception {
+    UIPopupAction popupAction = new UIPopupAction();
+    initChildPopupAction(popupAction.getClass(), popupAction.getAncestorName());
+  }
 }
