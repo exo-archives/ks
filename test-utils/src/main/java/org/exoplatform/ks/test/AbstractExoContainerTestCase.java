@@ -44,8 +44,6 @@ import org.testng.annotations.BeforeClass;
 public abstract class AbstractExoContainerTestCase {
 
 
-  
-  
   @BeforeClass
   public void startContainer() throws Exception {
     beforeContainerStart();
@@ -63,8 +61,6 @@ public abstract class AbstractExoContainerTestCase {
 
 
   private void initExoContainer() throws ClassNotFoundException {
-    ClassLoader _realClassLoader = Thread.currentThread().getContextClassLoader();
-
     //
     Set<String> rootConfigPaths = new HashSet<String>();
     rootConfigPaths.add("conf/root-configuration.xml");

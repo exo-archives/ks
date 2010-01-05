@@ -16,9 +16,12 @@
  */
 package org.exoplatform.ks.test.jcr;
 
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Calendar;
@@ -33,9 +36,6 @@ import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
-import org.testng.annotations.AfterClass;
-
-import static  org.testng.AssertJUnit.*;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -56,36 +56,6 @@ public abstract class AbstractJCRTestCase extends AbstractExoContainerTestCase
     tempDir = "target/temp" + System.nanoTime() + getClass().getCanonicalName();
     System.setProperty("test.tmpdir", tempDir);
   }
-
-
-  public void deleteTempDir() {
-    try {
-      deleteDir(new File(tempDir));
-      System.out.println("temp dir deleted: " + tempDir);
-    } catch (Throwable e) {
-      e.printStackTrace();
-    }
-  }
-   
-   
-   // Deletes all files and subdirectories under dir.
-   // Returns true if all deletions were successful.
-   // If a deletion fails, the method stops attempting to delete and returns false.
-   public static boolean deleteDir(File dir) {
-       if (dir.isDirectory()) {
-           String[] children = dir.list();
-           for (int i=0; i<children.length; i++) {
-               boolean success = deleteDir(new File(dir, children[i]));
-               if (!success) {
-                 System.out.println("could not delete " + children[i]);
-                   return false;
-               }
-           }
-       }
-   
-       // The directory is now empty so delete it
-       return dir.delete();
-   }
 
   /**
     * 
