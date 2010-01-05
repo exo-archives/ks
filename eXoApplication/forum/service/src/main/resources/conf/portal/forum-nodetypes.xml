@@ -1062,7 +1062,7 @@
 	
 	<nodeType name="exo:forumData" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
-		  <supertype>nt:base</supertype>
+		  <supertype>nt:unstructured</supertype>
 	  </supertypes>
 		<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:tagHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
