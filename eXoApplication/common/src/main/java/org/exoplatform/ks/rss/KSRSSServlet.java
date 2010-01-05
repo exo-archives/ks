@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.web.AbstractHttpServlet;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -39,20 +40,20 @@ public class KSRSSServlet extends AbstractHttpServlet {
 
   private static Log LOG = ExoLogger.getLogger(KSRSSServlet.class);
 
+  private FeedResolver feedResolver;
+  
   public void afterInit(ServletConfig config) throws ServletException {
   }
 
   public void onService(ExoContainer container,
                         HttpServletRequest request,
                         HttpServletResponse response) throws ServletException, IOException {
+    
     response.setHeader("Cache-Control", "private max-age=600, s-maxage=120");
-    String pathInfo = request.getPathInfo();
-    if (pathInfo == null || pathInfo.length() <= 0) {
-      return;
-    }
 
-    String objectId = extractObjectId(pathInfo);
-    String appType = extractAppType(pathInfo);
+ 
+    String objectId = extractObjectId(request);
+    String appType = extractAppType(request);
 
     FeedContentProvider provider = resolveFeedContentProvider(container, appType);
     if (provider == null) {
@@ -70,28 +71,31 @@ public class KSRSSServlet extends AbstractHttpServlet {
 
   }
 
-  String extractAppType(String pathInfo) {
-    pathInfo = pathInfo.substring(1);
-    String appType = "";
-    if (pathInfo.indexOf("/") > 0) {
-      appType = pathInfo.substring(0, pathInfo.indexOf("/"));
-    } else {
-    }
+  String extractAppType(HttpServletRequest request) {
+    final String pathInfo = checkPathInfo(request);
+    int idx = pathInfo.indexOf("/");
+    String appType = (idx <= 0) ? "" : pathInfo.substring(0, idx); 
     return appType;
   }
 
-  String extractObjectId(String pathInfo) {
+  String checkPathInfo(HttpServletRequest request) {
+    String pathInfo = request.getPathInfo();
+    if (pathInfo == null || pathInfo.length() == 0) {
+      throw new IllegalArgumentException("Invalid null path in URL");
+    }
     pathInfo = pathInfo.substring(1);
-    String objectId = "";
-    if (pathInfo.indexOf("/") > 0) {
-      objectId = pathInfo.substring(pathInfo.indexOf("/") + 1);
-    } else
-      objectId = pathInfo;
+    return pathInfo;
+  }
+
+  String extractObjectId(HttpServletRequest request) {
+    final String pathInfo = checkPathInfo(request);
+    int idx = pathInfo.indexOf("/");
+    String objectId = (idx <= 0) ? pathInfo : pathInfo.substring(idx + 1);
     return objectId;
   }
 
   private FeedContentProvider resolveFeedContentProvider(ExoContainer container, String appType) {
-    FeedResolver resolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
+    FeedResolver resolver = getFeedResolver();
     FeedContentProvider provider = resolver.resolve(appType);
     return provider;
   }
@@ -103,5 +107,17 @@ public class KSRSSServlet extends AbstractHttpServlet {
       is.read(buf);
     }
     return buf;
+  }
+
+  public FeedResolver getFeedResolver() {
+    if (feedResolver == null) {
+      ExoContainer container = ExoContainerContext.getCurrentContainer();
+      feedResolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
+    }
+    return feedResolver;
+  }
+
+  public void setFeedResolver(FeedResolver feedResolver) {
+    this.feedResolver = feedResolver;
   }
 }

@@ -20,20 +20,13 @@ import static org.testng.AssertJUnit.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ks.test.ConfigurationUnit;
-import org.exoplatform.ks.test.ConfiguredBy;
-import org.exoplatform.ks.test.ContainerScope;
-import org.exoplatform.ks.test.KernelUtils;
-import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -42,22 +35,17 @@ import org.testng.annotations.Test;
  *         Lamarque</a>
  * @version $Revision$
  */
-@ConfiguredBy( {
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/rss-configuration.xml"),
-  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/storage-configuration.xml") })
-public class TestKSRSSServlet extends AbstractJCRTestCase {
+public class TestKSRSSServlet {
 
   @Test
   public void testOnService() throws Exception {
     final KSRSSServlet servlet = new KSRSSServlet();
 
     // fixture
-    String objectId = "categories/Categoryf136732fc0a8000d00297cb37949b644";
     
     // mock servlet API
     final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-    Mockito.when(request.getPathInfo()).thenReturn("/faq/" + objectId);
+    Mockito.when(request.getPathInfo()).thenReturn("/app/objectId");
     
     final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
     ServletOutputStream outputStream = Mockito.mock(ServletOutputStream.class);
@@ -65,15 +53,8 @@ public class TestKSRSSServlet extends AbstractJCRTestCase {
    
     // fake resolver
     FeedResolver resolver = new FeedResolver();
-    resolver.setDefaultProvider(new FakeContentProvider());
-    replaceComponent(FeedResolver.class, resolver);
-    
-    // datalocator needed to
-    //KSDataLocation dataLocator = new KSDataLocation(getRepository(), getWorkspace());
-    //registerComponent(KSDataLocation.class, dataLocator);
-    //String path = dataLocator.getFaqHomeLocation();
-    //addNode(path); 
-    //addNode(path + "/" + objectId);// TODO should use the appropriate type
+    resolver.setDefaultProvider(new FakeContentProvider("test"));
+    servlet.setFeedResolver(resolver); 
    
     servlet.onService(PortalContainer.getInstance(), request, response);
 
@@ -82,54 +63,111 @@ public class TestKSRSSServlet extends AbstractJCRTestCase {
 
   }
   
+  @Test(expectedExceptions={ServletException.class})
+  public void testNullFeed() throws Exception {
+    final KSRSSServlet servlet = new KSRSSServlet();
+
+    // fixture
+    
+    // mock servlet API
+    final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(request.getPathInfo()).thenReturn("/app/objectId");
+    
+    final HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+    ServletOutputStream outputStream = Mockito.mock(ServletOutputStream.class);
+    Mockito.when(response.getOutputStream()).thenReturn(outputStream);
+   
+    // fake resolver
+    FeedResolver resolver = new FeedResolver();
+    resolver.setDefaultProvider(new FakeContentProvider(null));
+    servlet.setFeedResolver(resolver); // resolver will be taken directly
+   
+    servlet.onService(PortalContainer.getInstance(), request, response);
+
+  }
+  
   class FakeContentProvider implements FeedContentProvider {
 
+    private String result;
+    
+    public FakeContentProvider(String result) {
+      this.result = result;
+    }
+
     public InputStream getFeedContent(String targetId) {
-      
-      return new ByteArrayInputStream("test".getBytes());
+      return (result == null) ? null:  new ByteArrayInputStream(result.getBytes());
     }
     
+  }
+  
+  
+  @Test(expectedExceptions={IllegalArgumentException.class})
+  public void testNullCheckPathInfo() {
+    final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(request.getPathInfo()).thenReturn(null);
+    KSRSSServlet servlet = new KSRSSServlet();
+    servlet.checkPathInfo(request);
+  }
+  
+  @Test
+  public void testCheckPathInfo() {
+    KSRSSServlet servlet = new KSRSSServlet();
+    final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(request.getPathInfo()).thenReturn("/foo");
+    assertEquals("foo",servlet.checkPathInfo(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/");
+    assertEquals("",servlet.checkPathInfo(request));
   }
 
   @Test
   public void testExtractAppType() {
     KSRSSServlet servlet = new KSRSSServlet();
-    assertEquals("faq", servlet.extractAppType("/faq/categories"));
-    assertEquals("faq",
-                 servlet.extractAppType("/faq/categories/Categoryf136732fc0a8000d00297cb37949b644"));
-
+    final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/faq/categories");
+    assertEquals("faq", servlet.extractAppType(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/faq/categories/Categoryf136732fc0a8000d00297cb37949b644");
+    assertEquals("faq",servlet.extractAppType(request));
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/forumCategoryf138e67cc0a8000d00bb6b574c589a4c");
     assertEquals("forum",
-                 servlet.extractAppType("/forum/forumCategoryf138e67cc0a8000d00bb6b574c589a4c"));
-    assertEquals("forum", servlet.extractAppType("/forum/forumf13a2450c0a8000d00307a860ed10cbc"));
-    assertEquals("forum", servlet.extractAppType("/forum/topicf13b3e2ac0a8000d001b09820ccd9c41"));
+                 servlet.extractAppType(request));
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/forumf13a2450c0a8000d00307a860ed10cbc");
+    assertEquals("forum", servlet.extractAppType(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/topicf13b3e2ac0a8000d001b09820ccd9c41");
+    assertEquals("forum", servlet.extractAppType(request));
 
-    assertEquals("", servlet.extractAppType("/root"));
+    Mockito.when(request.getPathInfo()).thenReturn("/root");
+    assertEquals("", servlet.extractAppType(request));
 
   }
 
   @Test
   public void testExtractObjectId() {
     KSRSSServlet servlet = new KSRSSServlet();
-    assertEquals("categories", servlet.extractObjectId("/faq/categories"));
-    assertEquals("categories/Category001", servlet.extractObjectId("/faq/categories/Category001"));
+    final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/faq/categories");
+    assertEquals("categories", servlet.extractObjectId(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/faq/categories/Category001");
+    assertEquals("categories/Category001", servlet.extractObjectId(request));
 
-    assertEquals("forumCategory001", servlet.extractObjectId("/forum/forumCategory001"));
-    assertEquals("forum001", servlet.extractObjectId("/forum/forum001"));
-    assertEquals("topic001", servlet.extractObjectId("/forum/topic001"));
-
-    assertEquals("root", servlet.extractObjectId("/root"));
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/forumCategory001");
+    assertEquals("forumCategory001", servlet.extractObjectId(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/forum001");
+    assertEquals("forum001", servlet.extractObjectId(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/forum/topic001");
+    assertEquals("topic001", servlet.extractObjectId(request));
+    
+    Mockito.when(request.getPathInfo()).thenReturn("/root");
+    assertEquals("root", servlet.extractObjectId(request));
 
   }
 
-  private void registerFakeProvider() {
-    InitParams params = new InitParams();
-    KernelUtils.addValueParam(params, "defaultProvider", FakeContentProvider.class.getName());
-    Map<String, String> map = new HashMap<String, String>();
-    map.put("foo", FakeContentProvider.class.getName());
-    KernelUtils.addPropertiesParam(params, "providers", map);
-    FeedResolver resolver = new FeedResolver(params);
-    replaceComponent(FeedResolver.class, resolver);
-
-  }
 
 }
