@@ -82,6 +82,7 @@
     <module>extension</module>
     <module>demo</module>
     <module>packaging</module>
+    <module>server/tomcat/patch</module>   
 
    
   </modules>

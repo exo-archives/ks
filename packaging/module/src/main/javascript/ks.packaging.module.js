@@ -70,6 +70,10 @@ function getModule(params)
    addDependency(new Project("org.exoplatform.ks", "exo.ks.extension.config", "jar", module.version));
    module.extension.webapp.deployName = "ks-extension";
    
+    module.server = {}
+   module.server.tomcat = {}
+   module.server.tomcat.patch =
+	new Project("org.exoplatform.ks", "exo.ks.server.tomcat.patch", "jar", module.version);
    
   // KS demo 
    module.demo = {};
