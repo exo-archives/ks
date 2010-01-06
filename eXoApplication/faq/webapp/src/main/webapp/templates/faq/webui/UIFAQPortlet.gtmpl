@@ -4,6 +4,8 @@
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
+	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/ksResources/javascript/');
 	jsmanager.importJavascript('eXo.faq.UIAnswersPortlet','/faq/javascript/');
 %>
 <link id="faq_FAQPortlet" rel="stylesheet" type="text/css" href= "/faq/skin/DefaultSkin/webui/Stylesheet-lt.css" />

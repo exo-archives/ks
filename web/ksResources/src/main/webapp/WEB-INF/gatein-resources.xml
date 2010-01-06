@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    	xsi:schemaLocation="http://www.gatein.org/xml/ns/gatein_resources_1_0.xsd"
    	xmlns="http://www.gatein.org/xml/ns/gatein_resources_1_0.xsd">  
-	<javascript>
+	<!-- javascript>
 		<param>
 			<js-module>eXo.ks.KSUtils</js-module>
 			<js-path>/javascript/eXo/ks/KSUtils.js</js-path>
@@ -16,6 +16,6 @@
       <js-module>eXo.ks.MaskLayerControl</js-module>
       <js-path>/javascript/eXo/ks/MaskLayerControl.js</js-path>
     </param>
-  </javascript>   
+  </javascript-->   
 </gatein-resources>
 
