@@ -16,7 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import org.exoplatform.forum.rendering.RenderHelper;
+import org.exoplatform.forum.rendering.RenderingException;
 import org.exoplatform.forum.service.ForumPrivateMessage;
+import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -43,12 +46,19 @@ import org.exoplatform.webui.form.UIForm;
 public class UIViewPrivateMessageForm extends UIForm implements UIPopupComponent {
 	private ForumPrivateMessage privateMessage ;
 	private UserProfile userProfile;
+	RenderHelper renderHelper = new RenderHelper();
 	public UIViewPrivateMessageForm() {}
 	
 	public ForumPrivateMessage getPrivateMessage() { return privateMessage;}
 	public void setPrivateMessage(ForumPrivateMessage privateMessage) { 
 		this.privateMessage = privateMessage;
 	}
+	
+	public String renderMessage(String str) throws RenderingException {
+		Post post = new Post();
+		post.setMessage(str);
+    return renderHelper.renderPost(post);
+  }
 	
 	public UserProfile getUserProfile() { return userProfile;}
 	public void setUserProfile(UserProfile userProfile) {

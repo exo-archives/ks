@@ -25,6 +25,7 @@ import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Forum;
@@ -47,6 +48,7 @@ import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UITopicForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -189,12 +191,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	}
 	
   private boolean getIsAutoPrune() throws Exception {
-	/*PruneSetting pruneSetting = new PruneSetting();
-		try {
-			pruneSetting = forumService.getPruneSetting(forum.getPath());
-    } catch (Exception e) {
-    }
-		return pruneSetting.isActive();*/
 		return isShowActive ;
 	}
 	
@@ -233,6 +229,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return forumService.getScreenName(userName);
 	}
 	
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+	}
+  
 	public void setIdUpdate(boolean isUpdate) { this.isUpdate = isUpdate;}
 	
 	public void updateByBreadcumbs(String categoryId, String forumId, boolean isBreadcumbs, int page) throws Exception {

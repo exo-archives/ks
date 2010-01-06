@@ -3,7 +3,6 @@
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.webui.popup.UIMoveTopicForm ;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile;
 %>
 
@@ -71,7 +70,7 @@
 									classForumIcon = "PostsIcon";
 									if(topic.getIsLock()) classForumIcon = "LockPostsIcon";
 									if(topic.getIsClosed())classForumIcon = "ClosePostsIcon";
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription()); 
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription()); 
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 							%>
 								<div class="Node">

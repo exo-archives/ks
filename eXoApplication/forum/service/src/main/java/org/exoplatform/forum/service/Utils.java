@@ -116,9 +116,9 @@ public class Utils {
 	 * @return true if there is a difference in content or size between the two arrays, false otherwise.
 	 */
 	public static boolean arraysHaveDifferentContent(String[] a, String[]b) {
-		List<String> list = new ArrayList<String>();
-		list = Arrays.asList(b);
 		if(a.length == b.length) {
+			List<String> list = new ArrayList<String>();
+			list = Arrays.asList(b);
 			for (int i = 0; i < a.length; i++) {
 		    if(!list.contains(a[i])) {
 		    	return true;

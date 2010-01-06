@@ -24,6 +24,7 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -173,6 +174,8 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 				uiForm.bbcode.setDescription(description);
 				uiForm.bbcode.setExample(example);
 				uiForm.bbcode.setOption(isOption);
+				if(uiForm.bbcode.getId() == null)
+					uiForm.bbcode.setId(uiForm.bbcode.getTagName() + ((uiForm.bbcode.isOption()) ? "=":""));
 				uiForm.example = example;
 			} else {
 				uiForm.isPriview = false;

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -37,6 +38,7 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -87,6 +89,11 @@ public class UIPageListTopicByUser extends UIContainer{
 	
 	public void setUserName(String userName) {
 		this.userName = userName ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })

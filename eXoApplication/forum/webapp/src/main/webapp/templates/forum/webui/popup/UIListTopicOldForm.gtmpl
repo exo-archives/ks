@@ -3,7 +3,6 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumTransformHTML;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	long setTime = (long)(userProfile.getTimeZone()*3600000) ;
 	String formatDate = userProfile.getShortDateFormat() + " " + userProfile.getTimeFormat() ;
@@ -44,7 +43,7 @@
 									String isActive = "" + topic.getIsActive();
 									postDate.setTime(topic.getCreatedDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate(formatDate, postDate);
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String titleTp = "Active";

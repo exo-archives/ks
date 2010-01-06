@@ -9,7 +9,6 @@
 	import org.exoplatform.ks.common.UserHelper; 
 	import org.exoplatform.services.jcr.ext.common.SessionProvider;
 	import org.exoplatform.forum.ForumUtils;
-	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.service.ForumServiceUtils;
 	import org.exoplatform.ks.common.user.CommonContact;

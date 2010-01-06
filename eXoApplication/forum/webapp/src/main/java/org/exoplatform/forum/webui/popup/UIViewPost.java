@@ -80,7 +80,6 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	private boolean isViewUserInfo = true ;
 	private ForumService forumService;
 	private UserProfile userProfile;
-//	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	RenderHelper renderHelper = new RenderHelper();
 	public UIViewPost() {
 		forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
@@ -110,15 +109,6 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     return renderHelper.renderPost(post);
   }
 	
-	/*
-	@SuppressWarnings("unused")
-  private String getReplaceByBBCode(String s) throws Exception {
-		try {
-			s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
-    } catch (Exception e) {}
-    return s;
-	}*/
-	
 	public String getPortalName() {
     PortalContainer pcontainer =  PortalContainer.getInstance() ;
     return pcontainer.getPortalContainerInfo().getContainerName() ;  
@@ -141,39 +131,6 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 
 	public void setPostView(Post post) throws Exception {
 		this.post = post ;
-		/*
-		List<String> bbcName = new ArrayList<String>();
-		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = forumService.getActiveBBCode();
-    } catch (Exception e) {
-    }
-    boolean isAdd = true;
-    BBCode bbCode;
-    for (String string : bbcName) {
-    	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
-    		}
-    	}
-    	if(isAdd) {
-    		bbCode = new BBCode();
-    		if(string.indexOf("=") >= 0){
-    			bbCode.setOption(true);
-    			string = string.replaceFirst("=", "");
-    			bbCode.setId(string+"_option");
-    		}else {
-    			bbCode.setId(string);
-    		}
-    		bbCode.setTagName(string);
-    		bbcs.add(bbCode);
-    	}
-    }
-    listBBCode.clear();
-    listBBCode.addAll(bbcs);*/
 	}
 	
 	@SuppressWarnings("unused")

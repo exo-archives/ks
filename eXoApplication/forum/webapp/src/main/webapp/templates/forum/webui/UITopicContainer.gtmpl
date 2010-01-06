@@ -1,7 +1,6 @@
 <%
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
-	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.webui.UICategory ;
@@ -490,7 +489,7 @@
 									}
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 101);
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;

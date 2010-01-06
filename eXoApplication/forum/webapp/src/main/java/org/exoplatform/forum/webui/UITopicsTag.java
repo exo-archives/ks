@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -32,6 +33,7 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -118,7 +120,10 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
-	
+	@SuppressWarnings("unused")
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+	}
 	@SuppressWarnings("unused")
   private long getSizePost(String Id) throws Exception {
 		if(mapNumberPagePost.containsKey(Id)) return mapNumberPagePost.get(Id);

@@ -24,6 +24,7 @@ import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -45,6 +46,8 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.ks.bbcode.api.BBCodeService;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -403,7 +406,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 			String topicTitle = "	" + stringInputTitle.getValue();
 			topicTitle = topicTitle.trim() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(topicTitle.length() < 1 && topicTitle.equals("null")) {k = 0;}
@@ -512,7 +515,7 @@ public class UITopicForm extends UIForm implements UIPopupComponent, UISelector 
 					}
 					String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
 					message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
-					String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+					String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
 					message = StringUtils.replace(message, "'", "&apos;");
 					checksms = checksms.replaceAll("&nbsp;", " ") ;
 					t = checksms.trim().length() ;

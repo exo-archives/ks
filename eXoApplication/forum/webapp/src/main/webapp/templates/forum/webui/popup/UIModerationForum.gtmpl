@@ -1,7 +1,6 @@
 <%  
 	import org.exoplatform.forum.service.ForumSearch;
 	import org.exoplatform.forum.service.Utils ;
-	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.ForumUtils;
 %>
 <div class="$uicomponent.id">
@@ -47,7 +46,7 @@
 														String objectId = object.getId();
 														String type = object.getType();
 														String objectTitle = object.getName();
-														String titlePost = ForumTransformHTML.getTitleInHTMLCode(object.getContent());
+														String titlePost = uiform.getTitleInHTMLCode(object.getContent());
 														postDate.setTime(object.getCreatedDate().getTime() - setTime);
 														String createdDate = ForumUtils.getFormatDate(formatDate, postDate);
 														titlePost = ForumUtils.getSubString(titlePost, 100);

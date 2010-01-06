@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
@@ -30,6 +31,7 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -72,6 +74,11 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	@SuppressWarnings("unused")
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+	}
 	
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 	  this.userProfile = userProfile;

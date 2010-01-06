@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
@@ -27,6 +28,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,6 +74,11 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	
 	public void setUpdateContainer(String categoryId, String forumId) {
 		this.categoryId = categoryId ; this.forumId = forumId ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
 	
 	@SuppressWarnings({ "unchecked", "unused" })

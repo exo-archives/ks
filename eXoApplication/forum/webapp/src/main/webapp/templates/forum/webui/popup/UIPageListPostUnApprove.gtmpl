@@ -4,7 +4,6 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumTransformHTML;
 	
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List posts = uicomponent.getPosts() ;
@@ -43,7 +42,7 @@
 									else classRow = "OddRow";
 									String postId = post.getId();
 									String postTitle = post.getName() ;
-									String message = ForumTransformHTML.getTitleInHTMLCode(post.getMessage()) ;
+									String message = uicomponent.getTitleInHTMLCode(post.getMessage()) ;
 									String titlePost = ForumUtils.getSubString(message, 100);
 									String iconPost = post.getIcon() ;
 									postDate.setTime(post.getCreatedDate().getTime() - setTime) ;

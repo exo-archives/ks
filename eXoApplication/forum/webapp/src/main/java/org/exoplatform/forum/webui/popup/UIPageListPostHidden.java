@@ -20,12 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -68,6 +70,11 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		return this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
+	}
+	
+	@SuppressWarnings("unused")
+	private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
 	
 	public void setUpdateContainer(String categoryId, String forumId, String topicId) {

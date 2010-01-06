@@ -4,7 +4,6 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumTransformHTML;
 	UserProfile userProfile = uicomponent.getUserProfile() ;
 	List topics = uicomponent.getTopicsUnApprove() ;
 %>
@@ -43,7 +42,7 @@
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postView = String.valueOf(topic.getViewCount());
 									String titleTopicStatus = "Hot thread with new post" ;

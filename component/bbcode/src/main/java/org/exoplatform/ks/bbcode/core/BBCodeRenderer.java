@@ -260,7 +260,10 @@ public class BBCodeRenderer implements Renderer {
   }
 
   public String renderExample(String s, BBCode bbco){
-  	for (BBCode bbcode : getBbcodes()) {
+  	List<BBCode> bbcodes = new ArrayList<BBCode>();
+  	bbcodes.add(bbco);
+  	bbcodes.addAll(getBbcodes());
+  	for (BBCode bbcode : bbcodes) {
   		if(bbcode.getId().equals(bbco.getId())){
   			s = processReplace(s, bbco);
   		} else {
@@ -269,5 +272,4 @@ public class BBCodeRenderer implements Renderer {
     }
   	return s;
   }
-  
 }

@@ -24,8 +24,7 @@ import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.ForumSessionUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
@@ -41,6 +40,8 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
+import org.exoplatform.ks.bbcode.api.BBCodeService;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -108,7 +109,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	public UIPostForm() throws Exception {
 		if(ForumUtils.isEmpty(getId())) setId("UIPostForm");
 		isDoubleClickSubmit = false;
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput postTitle = new UIFormStringInput(FIELD_POSTTITLE_INPUT, FIELD_POSTTITLE_INPUT, null);
 		postTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
@@ -246,7 +247,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 			String postTitle = threadContent.getUIStringInput(FIELD_POSTTITLE_INPUT).getValue();
 			String userName = UserHelper.getCurrentUser() ;
 			String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-			String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+			String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
 			checksms = checksms.replaceAll("&nbsp;", " ") ;
 			t = checksms.trim().length() ;
 			if(postTitle != null && postTitle.length() <= 3) {k = 0;}
@@ -354,7 +355,7 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 	      	editReason = ForumTransformHTML.enCodeHTML(editReason).trim() ;
 	      	String userName = userProfile.getUserId() ;
 	      	String message = threadContent.getChild(UIFormWYSIWYGInput.class).getValue();
-	      	String checksms = ForumTransformHTML.cleanHtmlCode(message) ;
+	      	String checksms = ForumTransformHTML.cleanHtmlCode(message, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes())) ;
 	      	message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 	      	message = StringUtils.replace(message, "'", "&apos;");
 	      	message = ForumTransformHTML.fixAddBBcodeAction(message);
@@ -505,11 +506,11 @@ public class UIPostForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 	      }
       } catch (Exception e) {
+      	e.printStackTrace();
       	Object[] args = {""};
   			uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.isParentDelete", args, ApplicationMessage.WARNING)) ;
   			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
   			forumPortlet.cancelAction() ;
-  			return ;
       }
 		}
 	}

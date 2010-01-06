@@ -5,7 +5,6 @@
 	import org.exoplatform.forum.service.UserProfile;
 	import org.exoplatform.forum.webui.UIForumPageIterator ; 
 	import org.exoplatform.forum.ForumUtils ;
-	import org.exoplatform.forum.ForumTransformHTML; 
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.web.application.JavascriptManager;
 	
@@ -78,7 +77,7 @@
 									if(iconClassTopic.length() <= 0) iconClassTopic = "NormalTopicIcon";
 									String topicTitle = topic.getTopicName();
 									String topicBy = topic.getOwner();
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									String postCount = String.valueOf(topic.getPostCount());
 									String postView = String.valueOf(topic.getViewCount());

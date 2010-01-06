@@ -5,7 +5,6 @@
 	import org.exoplatform.forum.service.JCRPageList;
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.ForumSessionUtils;
-	import org.exoplatform.forum.ForumTransformHTML;
 	import org.exoplatform.forum.webui.UITopicsTag ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.web.application.JavascriptManager;
@@ -139,7 +138,7 @@
 									String postNewBy = topic.getLastPostBy() ;
 									postDate.setTime(topic.getLastPostDate().getTime() - setTime);
 									String lastPostDate = ForumUtils.getFormatDate((userProfile.getShortDateFormat() + ", " + userProfile.getTimeFormat()),postDate);								
-									String titlePost = ForumTransformHTML.getTitleInHTMLCode(topic.getDescription());
+									String titlePost = uicomponent.getTitleInHTMLCode(topic.getDescription());
 									titlePost = ForumUtils.getSubString(titlePost, 100);
 									int att = topic.getNumberAttachment() ;
 									if(att < 0) att = 0;
