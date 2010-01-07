@@ -160,14 +160,26 @@ public class BaseUIForm extends UIForm {
     UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class,null, null);
     popupContainer.initChildPopupAction(popupAction.getClass(), popupAction.getAncestorName());
     T form = popupContainer.addChild(componentType, null, null);
+    form.setRendered(true);
     popupAction.activate(popupContainer, width, height);
     if (popupId !=null) {
       popupContainer.setId(popupId);
+    } else {
+      popupContainer.setId(generateComponentId(componentType));
     }
+
     ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(popupAction);
     return form;
   }
   
+  <T> String generateComponentId(Class<T> componentType) {
+    String simpleName = componentType.getSimpleName();
+    if (simpleName.startsWith("UI")) {
+      simpleName = simpleName.substring(2);
+    }
+    return simpleName;
+  }
+
   /**
    * @see #openPopup(UIContainer, Class, String, int, int)
    */

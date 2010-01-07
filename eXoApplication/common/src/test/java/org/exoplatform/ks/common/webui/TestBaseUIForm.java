@@ -29,6 +29,10 @@ public class TestBaseUIForm extends AbstractUIComponentTestCase<BaseUIForm> {
   public TestBaseUIForm() throws Exception {
     super();
   }
+  
+  public void testGenerateComponentId() {
+     assertEquals("FakeForm", component.generateComponentId(UIFakeForm.class));
+  }
 
   public void testI18n() {
     assertEquals("DoesNotExist", component.i18n("DoesNotExist"));

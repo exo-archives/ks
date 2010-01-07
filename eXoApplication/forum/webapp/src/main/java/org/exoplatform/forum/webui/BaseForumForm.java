@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.webui.core.UIComponent;
 
 /**
  * Base class for UIForm used in forum application.
@@ -28,7 +29,7 @@ import org.exoplatform.ks.common.webui.BaseUIForm;
  */
 public class BaseForumForm extends BaseUIForm {
 
-  protected ForumService forumService ;
+  private ForumService forumService ;
   
   /**
    * Get a reference to the forum service
@@ -49,7 +50,23 @@ public class BaseForumForm extends BaseUIForm {
   protected void setForumService(ForumService forumService) {
     this.forumService = forumService;
   }
+  
+  protected <T extends UIComponent> T  openPopup(Class<T> componentType,  String popupId, int width, int height) throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class) ;   
+    return openPopup(forumPortlet, componentType, popupId, width, height);
+  }
+  
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
+    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
+    return openPopup(forumPortlet, componentType, width, height);
+  }
+  
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, int width) throws Exception {
+    return openPopup(componentType, width, 0);
+  }
 
-
+  protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
+    return openPopup(componentType, popupId, width, 0);
+  }
 
 }

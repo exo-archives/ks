@@ -27,7 +27,7 @@ import org.exoplatform.webui.exception.MessageException;
 
 /**
  * Base EventListener with convenience methods delegated to the underlying BaseUIForm.
- * implementers should implement {@link #onEvent(Event, BaseUIForm)}
+ * implementers should implement {@link #onEvent(Event, BaseUIForm, String)}
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
@@ -40,10 +40,12 @@ public abstract class BaseEventListener<T extends BaseUIForm> extends EventListe
   
   public final void execute(Event<T> event) throws Exception {
     this.component = event.getSource();
-    onEvent(event, component);
+    String objectId = event.getRequestContext().getRequestParameter(UIComponent.OBJECTID);
+    onEvent(event, component, objectId);
   }
   
-  public abstract void onEvent(Event<T> event, T component) throws Exception;
+  public abstract void onEvent(Event<T> event, T component, final String objectId) throws Exception;
+  
   
   public void refresh() {
     ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(component) ;
@@ -127,6 +129,22 @@ public abstract class BaseEventListener<T extends BaseUIForm> extends EventListe
                                                 int height) throws Exception {
     return openPopup(parent, componentType, null, width, height);
   }
+  
+  
+  /**
+   * @see BaseUIForm#getLabel(String)
+   */
+  public String getLabel(String labelID)  {
+    return component.getLabel(labelID);
+  }
 
+  /**
+   * @see UIContainer#getChildById(String)
+   */
+  @SuppressWarnings("unchecked")
+  public <C extends UIComponent> C getChildById(String id) {
+    return (C)component.getChildById(id);
+  }
+  
   
 }

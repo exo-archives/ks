@@ -55,7 +55,6 @@ import org.exoplatform.forum.webui.popup.UIPageListPostHidden;
 import org.exoplatform.forum.webui.popup.UIPageListPostUnApprove;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
-import org.exoplatform.forum.webui.popup.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIRatingForm;
@@ -76,7 +75,6 @@ import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
@@ -260,8 +258,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		listWatches = forumPortlet.getWatchinhByCurrentUser();
 		
 		// TODO : replace these 2 statements by ForumService.viewTopic(topicId, userName)
-		this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
-		forumService.setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
+		this.topic = getForumService().getTopic(categoryId, forumId, topicId, userName) ;
+		getForumService().setViewCountTopic((categoryId + "/" + forumId + "/" + topicId), userName);
 		setRenderInfoPorlet();
 	}
 	
@@ -378,60 +376,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		this.isGetSv = isGetSv;
   }
 
-	/*
-  
-
-  public String getReplaceByBBCode(String s) throws Exception {
-
-    syncBBCodeCache();
-    if(!listBBCode.isEmpty()){
-      try {
-        s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
-      } catch (Exception e) {
-        log.warn("Failed to process BBCode: "+ e.getMessage());
-      }
-    }
-    return s;
-  }
-   
-  public void syncBBCodeCache() {
-		if(isGetSv) {
-			List<BBCode> bbcs = new ArrayList<BBCode>();
-			try {
-			  List<String> activeOnserver = getForumService().getActiveBBCode();
-				isGetSv = false;
-		    boolean isAdd = true;
-		    BBCode bbCode;
-		    for (String srvBBCode : activeOnserver) {
-		    	isAdd = true;
-		    	for (BBCode localBBCode : listBBCode) {
-		    		if(localBBCode.getTagName().equals(srvBBCode) || (localBBCode.getTagName().equals(srvBBCode.replaceFirst("=", "")) && localBBCode.isOption())){
-		    			bbcs.add(localBBCode);
-		    			isAdd = false;
-		    			break;
-		    		}
-		    	}
-		    	if(isAdd) {
-		    		bbCode = new BBCode();
-		    		if(srvBBCode.indexOf("=") >= 0){
-		    			bbCode.setOption(true);
-		    			srvBBCode = srvBBCode.replaceFirst("=", "");
-		    			bbCode.setId(srvBBCode+"_option");
-		    		}else {
-		    			bbCode.setId(srvBBCode);
-		    		}
-		    		bbCode.setTagName(srvBBCode);
-		    		bbcs.add(bbCode);
-		    	}
-		    }
-		    listBBCode.clear();
-		    listBBCode.addAll(bbcs);
-			} catch (Exception e) {
-			  log.warn("Failed to sync BBCodes cache: "+ e.getMessage());
-			}
-		}
-  }
-	*/
 	private boolean getCanCreateTopic() throws Exception {
 		/**
 		 * set permission for create new thread
@@ -470,7 +414,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		
 		listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
 		listUser = ForumUtils.addArrayToList(listUser, forum.getPoster());
-		listUser = ForumUtils.addArrayToList(listUser, forumService.getCategory(categoryId).getPoster());
+		listUser = ForumUtils.addArrayToList(listUser, getForumService().getCategory(categoryId).getPoster());
 		if(!listUser.isEmpty()) {
 			listUser.add(topic.getOwner());
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
@@ -544,7 +488,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		
 		listUser = ForumUtils.addArrayToList(listUser, topic.getCanView());
 		listUser = ForumUtils.addArrayToList(listUser, forum.getViewer());
-		listUser = ForumUtils.addArrayToList(listUser, forumService.getPermissionTopicByCategory(categoryId, "viewer"));
+		listUser = ForumUtils.addArrayToList(listUser, getForumService().getPermissionTopicByCategory(categoryId, "viewer"));
 		if(listUser.size() > 0) {
 			listUser.add(topic.getOwner());
 			return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
@@ -590,7 +534,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 	public String getAvatarUrl(CommonContact contact, String userId) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-		return ForumSessionUtils.getUserAvatarURL(userId, this.forumService, dservice);
+		return ForumSessionUtils.getUserAvatarURL(userId, getForumService(), dservice);
 	}
 
 
@@ -770,18 +714,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
      ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(forumPortlet) ;      
   }
   
-  private <T extends UIComponent> T  openPopup(Class<T> componentType,  String popupId, int width, int height) throws Exception {
-    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class) ;   
-    return openPopup(forumPortlet, componentType, popupId, width, height);
-  }
-  
-  private <T extends UIComponent> T openPopup(Class<T> componentType, int width, int height) throws Exception {
-    UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class);
-    return openPopup(forumPortlet, componentType, width, height);
-  }
-	
 	static public class AddPostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			try { 
 				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIAddPostContainer", 900, 460);
 				postForm.setPostIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, topicDetail.topic) ;
@@ -795,7 +729,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class RatingTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			try{
 				String userName = UserHelper.getCurrentUser() ;
 				String[] userVoteRating = topicDetail.topic.getUserVoteRating() ;
@@ -804,7 +738,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 					if(string.equalsIgnoreCase(userName)) erro = true ; 
 				}
 				if(!erro) {				  
-					UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, "RatingForm", 300, 145);
+					UIRatingForm ratingForm = topicDetail.openPopup(UIRatingForm.class, 300, 145);
 					ratingForm.updateRating(topicDetail.topic, topicDetail.categoryId, topicDetail.forumId) ;
 					topicDetail.isEditTopic = true ;
 				} else {
@@ -818,7 +752,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class AddTagTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			try {
 				UIFormStringInput stringInput = topicDetail.getUIStringInput(FIELD_ADD_TAG);
 				String tagIds = stringInput.getValue();
@@ -869,8 +803,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class UnTagTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String tagId) throws Exception {
 			topicDetail.getForumService().unTag(tagId, topicDetail.userName, topicDetail.topic.getPath());
 			topicDetail.isEditTopic = true;
 			refresh();
@@ -878,8 +811,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class OpenTopicsTagActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String tagId) throws Exception {
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.TAG) ;
 			forumPortlet.getChild(UIForumLinks.class).setValueOption("") ;
@@ -890,7 +822,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class SearchFormActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
@@ -932,15 +864,14 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class PrintActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 //			
 		}
 	}
 
 	static public class GoNumberPageActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			
-			int idbt = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
+			int idbt = Integer.parseInt(objectId) ;
 			UIFormStringInput stringInput1 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_T) ;
 			UIFormStringInput stringInput2 = topicDetail.getUIStringInput(ForumUtils.GOPAGE_ID_B) ;
 			String numberPage = "" ;
@@ -973,8 +904,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class EditActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
 				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIEditPostContainer", 900, 460);
@@ -987,9 +917,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class DeleteActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			try {
 				topicDetail.getForumService().removePost(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId, postId) ;
 				topicDetail.IdPostView = "top";
@@ -1001,9 +929,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class QuoteActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
 				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIQuoteContainer", 900, 500);			
@@ -1017,9 +943,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class PrivatePostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String postId) throws Exception {
 			Post post = topicDetail.getPost(postId);
 			if(post !=  null) {
 				UIPostForm postForm = topicDetail.openPopup(UIPostForm.class, "UIPrivatePostContainer", 900, 460);
@@ -1033,20 +957,15 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 //--------------------------------	 Topic Menu		-------------------------------------------//
 	static public class EditTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
+				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 900, 460);
 				topicForm.setTopicIds(topicDetail.categoryId, topicDetail.forumId, topicDetail.forum, topicDetail.userProfile.getUserRole()) ;
 				topicForm.setUpdateTopic(topicDetail.getTopic(), true) ;
 				topicForm.setMod(topicDetail.isMod) ;
 				topicForm.setIsDetail(true);
-				popupContainer.setId("UIEditTopicContainer") ;
-				popupAction.activate(popupContainer, 900, 460) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				topicDetail.isEditTopic = true ;
 			} catch (Exception e) {
 			  topicDetail.log.warn("Error while editing topic: "+ e.getMessage());
@@ -1057,16 +976,16 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class PrintPageActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 //			
 		}
 	}
 
 	static public class AddPollActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {	
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {	
 			try {
 				Topic topic = topicDetail.topic ;
-				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class,"PollForm", 655, 455) ;
+				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455) ;
 				pollForm.setTopicPath(topic.getPath()) ;
 			} catch (Exception e) {
 				warning("UIForumPortlet.msg.topicEmpty");
@@ -1076,7 +995,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetOpenTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1099,7 +1018,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetCloseTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1122,7 +1041,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetLockedTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1145,7 +1064,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetUnLockTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1168,7 +1087,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetMoveTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			try{
@@ -1189,7 +1108,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class SetStickTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1211,7 +1130,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetUnStickTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.topic ;
@@ -1233,12 +1152,12 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SplitTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				JCRPageList pageList = topicDetail.getForumService().getPostForSplitTopic(topicDetail.categoryId+"/"+topicDetail.forumId +"/"+topicDetail.topicId);
 				if(pageList.getAvailable() > 0) {
-					UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, "SplitTopicForm", 700, 400);
+					UISplitTopicForm splitTopicForm = topicDetail.openPopup(UISplitTopicForm.class, 700, 400);
 					splitTopicForm.setPageListPost(pageList) ;
 					splitTopicForm.setTopic(topicDetail.topic) ;
 					splitTopicForm.setUserProfile(topicDetail.userProfile) ;
@@ -1254,7 +1173,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			try {
 				Topic topic = topicDetail.topic;
 				topic.setIsApproved(true) ;
@@ -1271,7 +1190,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class SetUnApproveTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {	
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {	
 			try{
 				Topic topic = topicDetail.topic;
 				topic.setIsApproved(false) ;
@@ -1288,7 +1207,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetDeleteTopicActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try {
 				Topic topic = topicDetail.topic ;
@@ -1311,25 +1230,25 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 
 	//---------------------------------	Post Menu	 --------------------------------------//
 	static public class MergePostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 		}
 	}
 
 	static public class DownloadAttachActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			refresh();
 		}
 	}
 
 	static public class MovePostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
 			for (String postId : postIds) {
 				posts.add(topicDetail.getPost(postId));
       }
 			if(posts.size() > 0) {
-				UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, "MovePostForm",400, 430);
+				UIMovePostForm movePostForm = topicDetail.openPopup(UIMovePostForm.class, 400, 430);
 				movePostForm.setUserProfile(topicDetail.userProfile) ;
 				movePostForm.updatePost(topicDetail.topicId, posts);
 			} else {
@@ -1339,7 +1258,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetApprovePostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
@@ -1347,7 +1266,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				posts.add(topicDetail.getPost(postId));
       }
 			if(posts.isEmpty()){
-				UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, "PageListPostUnApprove", 500, 360);
+				UIPageListPostUnApprove postUnApprove = topicDetail.openPopup(UIPageListPostUnApprove.class, 500, 360);
 				postUnApprove.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
 			} else {
 				int count = 0;
@@ -1372,7 +1291,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class SetHiddenPostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			if(postIds == null || postIds.isEmpty()){
@@ -1396,7 +1315,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class SetUnHiddenPostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
@@ -1407,7 +1326,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				}
       }
 			if(posts.isEmpty()){			  
-			  UIPageListPostHidden listPostHidden = topicDetail.openPopup(UIPageListPostHidden.class, "PageListPostHidden", 500, 360);
+			  UIPageListPostHidden listPostHidden = topicDetail.openPopup(UIPageListPostHidden.class, 500, 360);
         listPostHidden.setUpdateContainer(topicDetail.categoryId, topicDetail.forumId, topicDetail.topicId) ;
 			} else {
 				int count = 0;
@@ -1432,12 +1351,12 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class SetUnApproveAttachmentActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 		}
 	}
 	
 	static public class DeletePostActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			List<String> postIds = topicDetail.getIdSelected(); 
 			List<Post> posts = new ArrayList<Post>();
@@ -1456,10 +1375,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class ViewPublicUserInfoActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			
-			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, "ViewUserProfile", 670, 400);
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String userId) throws Exception {
+			UIViewUserProfile viewUserProfile = topicDetail.openPopup(UIViewUserProfile.class, 670, 400);
 			try {
 				UserProfile selectProfile = topicDetail.getForumService().getUserInformations(topicDetail.mapUserProfile.get(userId)) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
@@ -1476,13 +1393,13 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class PrivateMessageActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			if(topicDetail.userProfile.getIsBanned()){
 			  throwWarning("UITopicDetail.msg.userIsBannedCanNotSendMail");
 			}
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;			
-			UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, "PrivateMessageForm", 650, 480);
+			UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, 650, 480);
 	    messageForm.setFullMessage(false);
 	    messageForm.setUserProfile(topicDetail.userProfile);
 	    messageForm.setSendtoField(userId) ;
@@ -1490,17 +1407,16 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class ViewPostedByUserActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIViewPostedByUser viewPostedByUser = topicDetail.openPopup(UIViewPostedByUser.class, "ViewPostedByUser", 760, 370);
+			UIViewPostedByUser viewPostedByUser = topicDetail.openPopup(UIViewPostedByUser.class, 760, 370);
 			viewPostedByUser.setUserProfile(userId) ;
 		}
 	}
 	
 	static public class ViewThreadByUserActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIViewTopicCreatedByUser topicCreatedByUser = topicDetail.openPopup(UIViewTopicCreatedByUser.class, "ViewTopicCreatedByUser", 760, 450);
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String userId) throws Exception {
+			UIViewTopicCreatedByUser topicCreatedByUser = topicDetail.openPopup(UIViewTopicCreatedByUser.class, 760, 450);
 			topicCreatedByUser.setUserId(userId) ;			
 		}
 	}
@@ -1543,7 +1459,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class QuickReplyActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			if(topicDetail.isDoubleClickQuickReply) return;
 			topicDetail.isDoubleClickQuickReply = true;
@@ -1588,8 +1504,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	  					}
 	  				} 
 	  				
-	  				// set link
-//	  				String link = ForumSessionUtils.getBreadcumbUrl(topicDetail.getLink(), topicDetail.getId(), "ViewThreadByUser", topicDetail.topicId).replaceFirst("private", "public");				
+	  				// set link				
 	  				String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicDetail.topicId).replaceFirst("private", "public");				
 	  				//
 	  				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
@@ -1639,7 +1554,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	  			}
   				refresh();
   			} else {
-  				warning("MessagePost.msg.message-empty", topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA));
+  				warning("MessagePost.msg.message-empty", getLabel(FIELD_MESSAGE_TEXTAREA));
   				topicDetail.isDoubleClickQuickReply = false;
   			}
       } catch (Exception e) {
@@ -1650,7 +1565,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class PreviewReplyActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 				
 			String message = topicDetail.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA).getValue() ;
 			String checksms = (message) ;
@@ -1683,23 +1598,23 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				post.setIsApproved(false) ;
 				post.setCreatedDate(new Date()) ;
 				
-				UIViewPost viewPost = topicDetail.openPopup(UIViewPost.class,"ViewPost", 670, 0);
+				UIViewPost viewPost = topicDetail.openPopup(UIViewPost.class, 670, 0);
 				
 				viewPost.setPostView(post) ;
 				viewPost.setViewUserInfo(false) ;
 				viewPost.setActionForm(new String[] {"Close"});
 
 			} else {
-			  warning("MessagePost.msg.message-empty", topicDetail.getLabel(FIELD_MESSAGE_TEXTAREA));
+			  warning("MessagePost.msg.message-empty", getLabel(FIELD_MESSAGE_TEXTAREA));
 			}
 		}
 	}
 	
 	static public class WatchOptionActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 		  UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			Topic topic = topicDetail.topic ;
-			UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, "WatchToolsForm", 500, 365);
+			UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365);
 	    watchToolsForm.setPath(topic.getPath());
 	    watchToolsForm.setEmails(topic.getEmailNotification()) ;
 	    watchToolsForm.setIsTopic(true);
@@ -1707,7 +1622,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}	
 	
 	static	public class AdvancedSearchActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.updateIsRendered(ForumUtils.FIELD_SEARCHFORUM_LABEL) ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(ForumUtils.FIELD_EXOFORUM_LABEL) ;
@@ -1720,8 +1635,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static	public class BanIPAllForumActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String ip) throws Exception {
 			if(!topicDetail.getForumService().addBanIP(ip)){
 				warning("UIForumAdministrationForm.sms.ipBanFalse", ip);
 				return;
@@ -1731,9 +1645,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static	public class BanIPThisForumActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String ip = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String ip) throws Exception {
 			List<String> listIp = topicDetail.forum.getBanIP();
 			if(listIp == null || listIp.size()  == 0) listIp = new ArrayList<String>();
 			listIp.add(ip);topicDetail.forum.setBanIP(listIp);
@@ -1746,7 +1658,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class AddBookMarkActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			try{
 				Topic topic = topicDetail.getTopic();
@@ -1764,7 +1676,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 
 	static public class AddWatchingActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			
 			if(topicDetail.getTopic() != null) {
 				topicDetail.isEditTopic = true;
@@ -1793,7 +1705,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 
 	static public class UnWatchActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
 			if(topicDetail.getTopic() != null) {
 				topicDetail.isEditTopic = true;
 				String path =  topicDetail.categoryId+"/"+topicDetail.forumId+"/"+topicDetail.topicId;
@@ -1818,8 +1730,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 
 	static public class RSSActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail) throws Exception {
-			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String topicId) throws Exception {
 			if(!topicDetail.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)){
 			  topicDetail.getForumService().addWatch(-1, topicId, null, topicDetail.userName);
 			}
