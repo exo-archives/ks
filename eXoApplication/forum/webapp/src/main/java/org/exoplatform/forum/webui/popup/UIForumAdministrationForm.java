@@ -19,35 +19,32 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
@@ -86,12 +83,16 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.ActivatePruneActionListener.class)
 		}
 )
-public class UIForumAdministrationForm extends UIForm implements UIPopupComponent {
-	private ForumService forumService ;
+public class UIForumAdministrationForm extends BaseForumForm implements UIPopupComponent {
+  
+  private static final Log LOG = ExoLogger.getLogger(UIForumAdministrationForm.class);
+  
+
 	private BBCodeService bbCodeService;
+	
+	// main bean
 	private ForumAdministration administration ;
-	private int id = 0 ;
-	private boolean isRenderListTopic = false ;
+
 	public static final String FIELD_FORUMSORT_TAB = "forumSortTab" ;
 	public static final String FIELD_CENSOREDKEYWORD_TAB = "forumCensorTab" ;
 	public static final String FIELD_ACTIVETOPIC_TAB = "activeTopicTab" ;
@@ -121,6 +122,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	public static final String FIELD_ACTIVEABOUT_INPUT = "activeAbout" ;
 	public static final String FIELD_SETACTIVE_INPUT = "setActive" ;
 	public static final String BAN_IP_PAGE_ITERATOR = "IpBanPageIterator" ;
+	
 	@SuppressWarnings("unchecked")
   private JCRPageList pageList ;
 	private List<String> listIpBan = new ArrayList<String>();
@@ -130,9 +132,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private UIForumPageIterator pageIterator ;
 	private String notifyEmail_ = "";
 	private String notifyMove_ = "";
+	private int id = 0 ;
+	private boolean isRenderListTopic = false ;
+	
 	public UIForumAdministrationForm() throws Exception {
-		bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	  bbCodeService = getApplicationComponent(BBCodeService.class);
 		addChild(UIListTopicOld.class, null, null) ;
 		this.setActions(new String[]{"Save", "Cancel"}) ;
 		pageIterator = addChild(UIForumPageIterator.class, null, BAN_IP_PAGE_ITERATOR);
@@ -141,7 +145,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
   public void setInit() throws Exception{
   	getPruneSettings();
   	
-		this.administration = forumService.getForumAdministration();
+		this.administration = getForumService().getForumAdministration();
 		UIFormInputWithActions forumSortTab = new UIFormInputWithActions(FIELD_FORUMSORT_TAB) ;
 		UIFormInputWithActions forumCensorTab = new UIFormInputWithActions(FIELD_CENSOREDKEYWORD_TAB) ;
 		UIFormInputWithActions notifyEmailTab = new UIFormInputWithActions(FIELD_NOTIFYEMAIL_TAB);
@@ -150,77 +154,23 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 		UIFormInputWithActions autoPruneTab = new UIFormInputWithActions(FIELD_AUTOPRUNE_TAB);
 		UIFormInputWithActions topicTypeManagerTag = new UIFormInputWithActions(FIELD_TOPICTYPEMANAGER_TAB);
 		
-		String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
-																"modifiedDate",	"topicCount", "postCount"}; 
-		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>(this.getLabel("forumName"), "name")) ;
-		for (String string : idLables) {
-			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
-		}
-		UIFormSelectBox forumSortBy = new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, ls);
-		forumSortBy.setValue(administration.getForumSortBy()) ;
+
+    UIFormSelectBox forumSortBy = initForumSortField();
+    UIFormSelectBox forumSortByType = initForumSortDirectionField();
+		UIFormSelectBox topicSortBy = initTopicSortField();		
+    UIFormSelectBox topicSortByType = initTopicSortDirectionField();
 		
-		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
-		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
-		UIFormSelectBox forumSortByType = new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, ls);
-		forumSortByType.setValue(administration.getForumSortByType()) ;
+		UIFormTextAreaInput censorKeyword = initCensoredKeywordsField();
 		
-		idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
-				"lastPostDate", "postCount", "viewCount", "numberAttachments"}; 
-		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name")) ;
-		for (String string : idLables) {
-			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
-		}
+		UIFormStringInput activeAbout = initActiveAboutField();
+		UIFormRadioBoxInput setActive = initSetActiveField();
+	  UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
+    UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
 		
-		UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
-		topicSortBy.setValue(administration.getTopicSortBy()) ;
+		UIFormCheckBoxInput<Boolean> enableHeaderSubject = initEnableHeaderField();
+		UIFormStringInput headerSubject = initEnableHeaderSubjectField();
 		
-		ls = new ArrayList<SelectItemOption<String>>() ;
-		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
-		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
-		UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
-		topicSortByType.setValue(administration.getTopicSortByType()) ;
-		
-		UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
-		censorKeyword.setValue(administration.getCensoredKeyword()) ;
-		
-		UIFormStringInput activeAbout = new UIFormStringInput(FIELD_ACTIVEABOUT_INPUT, FIELD_ACTIVEABOUT_INPUT, null);
-		activeAbout.setValue("0");
-		activeAbout.addValidator(PositiveNumberFormatValidator.class);
-		List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
-		options.add( new SelectItemOption<String>("true", "true") ) ;
-		options.add( new SelectItemOption<String>("false", "false") ) ;
-		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
-		setActive.setValue("false") ;
-		
-		String value = administration.getNotifyEmailContent();
-		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
-		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
-		notifyEmail.setToolBarName("Basic");
-		notifyEmail.setValue(value); this.notifyEmail_ = value;
-		value = administration.getNotifyEmailMoved();
-		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
-		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
-		notifyEmailMoved.setToolBarName("Basic");
-		notifyEmailMoved.setValue(value); this.notifyMove_ = value;
-		
-		UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
-		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
-		UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
-		String headerSubject_ = administration.getHeaderSubject(); 
-		if(ForumUtils.isEmpty(headerSubject_)) headerSubject_ = this.getLabel("notifyEmailHeaderSubjectDefault");
-		headerSubject.setValue(headerSubject_);
-		//headerSubject.setEditable(administration.getEnableHeaderSubject());
-		
-		setListBBcode();
-    
-		for (BBCode bbc : listBBCode) {
-			UIFormCheckBoxInput<Boolean>isActiveBBcode = new UIFormCheckBoxInput<Boolean>(bbc.getId(), bbc.getId(), false);
-    	isActiveBBcode.setChecked(bbc.isActive());
-      bbcodeTab.addChild(isActiveBBcode);
-    }
+		initBBCodesFields(bbcodeTab);
 		
 		forumSortTab.addUIFormInput(forumSortBy) ;
 		forumSortTab.addUIFormInput(forumSortByType) ;
@@ -252,40 +202,154 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			addUIFormInput(ipBanTab);
 		}
 		
-		
-		List<ActionData> actions = new ArrayList<ActionData>() ;
+
+		initEmailField(notifyEmailTab, FIELD_NOTIFYEMAIL_TEXTAREA);		
+		initEmailField(notifyEmailTab, FIELD_NOTIFYEMAILMOVED_TEXTAREA);
+	}
+
+  private void initBBCodesFields(UIFormInputWithActions bbcodeTab) throws Exception {
+    loadBBCodes();
+    
+		for (BBCode bbc : listBBCode) {
+			UIFormCheckBoxInput<Boolean>isActiveBBcode = new UIFormCheckBoxInput<Boolean>(bbc.getId(), bbc.getId(), false);
+    	isActiveBBcode.setChecked(bbc.isActive());
+      bbcodeTab.addChild(isActiveBBcode);
+    }
+  }
+
+  private void initEmailField(UIFormInputWithActions notifyEmailTab, String param) throws Exception {
+    List<ActionData> actions = new ArrayList<ActionData>() ;
 		ActionData ad = new ActionData() ;
 		ad.setActionListener("GetDefaultMail") ;
-		ad.setActionParameter(FIELD_NOTIFYEMAIL_TEXTAREA) ;
+		ad.setActionParameter(param) ;
 		ad.setCssIconClass("Refresh") ;
 		ad.setActionName("TitleResetMail");
 		actions.add(ad) ;
-		notifyEmailTab.setActionField(FIELD_NOTIFYEMAIL_TEXTAREA, actions);
+		notifyEmailTab.setActionField(param, actions);
+  }
+
+  private UIFormStringInput initEnableHeaderSubjectField() {
+    UIFormStringInput headerSubject = new UIFormStringInput(FIELD_HEADERSUBJECT_INPUT, FIELD_HEADERSUBJECT_INPUT, null);
+		String headerSubject_ = administration.getHeaderSubject(); 
+		if(ForumUtils.isEmpty(headerSubject_)) headerSubject_ = this.getLabel("notifyEmailHeaderSubjectDefault");
+		headerSubject.setValue(headerSubject_);
+    return headerSubject;
+  }
+
+  private UIFormCheckBoxInput<Boolean> initEnableHeaderField() {
+    UIFormCheckBoxInput<Boolean> enableHeaderSubject = new UIFormCheckBoxInput<Boolean>(FIELD_ENABLEHEADERSUBJECT_CHECKBOX, FIELD_ENABLEHEADERSUBJECT_CHECKBOX, false);
+		enableHeaderSubject.setChecked(administration.getEnableHeaderSubject());
+    return enableHeaderSubject;
+  }
+
+  private UIFormTextAreaInput initCensoredKeywordsField() {
+    UIFormTextAreaInput censorKeyword = new UIFormTextAreaInput(FIELD_CENSOREDKEYWORD_TEXTAREA, FIELD_CENSOREDKEYWORD_TEXTAREA, null);
+		censorKeyword.setValue(administration.getCensoredKeyword()) ;
+    return censorKeyword;
+  }
+
+  private UIFormStringInput initActiveAboutField() throws Exception {
+    UIFormStringInput activeAbout = new UIFormStringInput(FIELD_ACTIVEABOUT_INPUT, FIELD_ACTIVEABOUT_INPUT, null);
+		activeAbout.setValue("0");
+		activeAbout.addValidator(PositiveNumberFormatValidator.class);
+    return activeAbout;
+  }
+
+  private UIFormWYSIWYGInput initNotifyMoveField() {
+    String value;
+		value = administration.getNotifyEmailMoved();
+		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
+		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
+		notifyEmailMoved.setToolBarName("Basic");
+		notifyEmailMoved.setValue(value); 
+		this.notifyMove_ = value;
+    return notifyEmailMoved;
+  }
+
+  private UIFormWYSIWYGInput initNotifyEmailField() {
+    String value = administration.getNotifyEmailContent();
+		if(ForumUtils.isEmpty(value)) value = this.getLabel("notifyEmailContentDefault");
+		UIFormWYSIWYGInput notifyEmail = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAIL_TEXTAREA, FIELD_NOTIFYEMAIL_TEXTAREA, "");
+		notifyEmail.setToolBarName("Basic");
+		notifyEmail.setValue(value); 
+		this.notifyEmail_ = value;
+    return notifyEmail;
+  }
+
+  private UIFormRadioBoxInput initSetActiveField() {
+    List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
+		options.add( new SelectItemOption<String>("true", "true") ) ;
+		options.add( new SelectItemOption<String>("false", "false") ) ;
+		UIFormRadioBoxInput setActive = new UIFormRadioBoxInput(FIELD_SETACTIVE_INPUT, FIELD_SETACTIVE_INPUT, options);
+		setActive.setValue("false") ;
+    return setActive;
+  }
+
+  private UIFormSelectBox initTopicSortDirectionField() {
+    List<SelectItemOption<String>> ls;
+		ls = new ArrayList<SelectItemOption<String>>() ;
+		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
+		UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
+		topicSortByType.setValue(administration.getTopicSortByType()) ;
+    return topicSortByType;
+  }
+
+  private UIFormSelectBox initTopicSortField() {
+    String[] idLables;
+    List<SelectItemOption<String>> ls;
+    idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
+				"lastPostDate", "postCount", "viewCount", "numberAttachments"}; 
+		ls = new ArrayList<SelectItemOption<String>>() ;
+		ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name")) ;
+		for (String string : idLables) {
+			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
+		}
 		
-		actions = new ArrayList<ActionData>() ;
-		ad = new ActionData() ;
-		ad.setActionListener("GetDefaultMail") ;
-		ad.setActionParameter(FIELD_NOTIFYEMAILMOVED_TEXTAREA) ;
-		ad.setCssIconClass("Refresh") ;
-		ad.setActionName("TitleResetMail");
-		actions.add(ad) ;
-		notifyEmailTab.setActionField(FIELD_NOTIFYEMAILMOVED_TEXTAREA, actions);
-	}
+		UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
+		topicSortBy.setValue(administration.getTopicSortBy()) ;
+    return topicSortBy;
+  }
+
+  private UIFormSelectBox initForumSortDirectionField() {
+ 
+    List<SelectItemOption<String>> ls;
+		ls = new ArrayList<SelectItemOption<String>>() ;
+		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
+		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
+		UIFormSelectBox forumSortByType = new UIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT, FIELD_FORUMSORTBYTYPE_INPUT, ls);
+		forumSortByType.setValue(administration.getForumSortByType()) ;
+    return forumSortByType;
+  }
+
+  private UIFormSelectBox initForumSortField() {
+    String []idLables = new String[]{"forumOrder", "isLock", "createdDate",
+																"modifiedDate",	"topicCount", "postCount"}; 
+		List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
+		ls.add(new SelectItemOption<String>(this.getLabel("forumName"), "name")) ;
+		for (String string : idLables) {
+			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
+		}
+		UIFormSelectBox forumSortBy = new UIFormSelectBox(FIELD_FORUMSORTBY_INPUT, FIELD_FORUMSORTBY_INPUT, ls);
+    forumSortBy.setValue(administration.getForumSortBy()) ;
+    return forumSortBy;
+  }
 	
-	public void setListBBcode() throws Exception {
+	public void loadBBCodes() throws Exception {
 		listBBCode = new ArrayList<BBCode>();
 		try {
 			listBBCode.addAll(bbCodeService.getAll());
     } catch (Exception e) {
-	    e.printStackTrace();
+	    LOG.error("failed to set BBCode List", e);
     }
 	}
 	
 	private List<PruneSetting> getPruneSettings() throws Exception {
 		listPruneSetting = new ArrayList<PruneSetting>();
 		try {
-			listPruneSetting.addAll(forumService.getAllPruneSetting());
+			listPruneSetting.addAll(getForumService().getAllPruneSetting());
     } catch (Exception e) {
+      LOG.error("failed to get prune settings", e);
     }
 		return listPruneSetting;
 	}
@@ -300,7 +364,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	@SuppressWarnings("unused")
   private List<TopicType> getTopicTypes() throws Exception {
 		listTT = new ArrayList<TopicType>();
-		listTT.addAll(forumService.getTopicTypes());
+		listTT.addAll(getForumService().getTopicTypes());
 		return listTT;
 	}
 	
@@ -327,9 +391,9 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	private List<String> getListIpBan() throws Exception{
 		listIpBan = new ArrayList<String>();
 		try {
-			listIpBan.addAll(forumService.getBanList());
+			listIpBan.addAll(getForumService().getBanList());
 		} catch (Exception e) {
-			e.printStackTrace();
+      LOG.error("failed to get ban list", e);
 		}
 		pageList = new ForumPageList(8, listIpBan.size());
 		pageList.setPageSize(8);
@@ -342,7 +406,7 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 			else  pageIterator.setRendered(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+      LOG.error("failed to init page iterator", e);
 		}
 		return list;
 	}
@@ -378,16 +442,16 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
 			return ip;
 		} catch (Exception e){
+      LOG.error("failed to check IP address", e);
 			return null;
 		}
 	}
 	
-	static	public class SaveActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm administrationForm = event.getSource() ;
-			UIFormInputWithActions forumSortTab = administrationForm.getChildById(FIELD_FORUMSORT_TAB) ;
-			UIFormInputWithActions forumCensor = administrationForm.getChildById(FIELD_CENSOREDKEYWORD_TAB) ;
-			UIFormInputWithActions notifyEmailTab = administrationForm.getChildById(FIELD_NOTIFYEMAIL_TAB) ;
+	static	public class SaveActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+			UIFormInputWithActions forumSortTab = getChildById(FIELD_FORUMSORT_TAB) ;
+			UIFormInputWithActions forumCensor = getChildById(FIELD_CENSOREDKEYWORD_TAB) ;
+			UIFormInputWithActions notifyEmailTab = getChildById(FIELD_NOTIFYEMAIL_TAB) ;
 			String forumSortBy = forumSortTab.getUIFormSelectBox(FIELD_FORUMSORTBY_INPUT).getValue() ;
 			String forumSortByType = forumSortTab.getUIFormSelectBox(FIELD_FORUMSORTBYTYPE_INPUT).getValue() ;
 			String topicSortBy = forumSortTab.getUIFormSelectBox(FIELD_TOPICSORTBY_INPUT).getValue() ;
@@ -403,15 +467,11 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			String notifyEmailMoved = ((UIFormWYSIWYGInput)notifyEmailTab.getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA)).getValue() ;
 			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAIL_TEXTAREA)}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIForumAdministrationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
 				return;
 			}
 			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.mailContentInvalid", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA)}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			  warning("UIForumAdministrationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
 				return;
 			}
 			ForumAdministration forumAdministration = new ForumAdministration() ;
@@ -425,13 +485,14 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			forumAdministration.setNotifyEmailContent(notifyEmail) ;
 			forumAdministration.setNotifyEmailMoved(notifyEmailMoved);
 			try {
-				administrationForm.forumService.saveForumAdministration(forumAdministration) ;
+				administrationForm.getForumService().saveForumAdministration(forumAdministration) ;
 				if(!forumSortBy.equals(administrationForm.administration.getForumSortBy()) || !forumSortByType.equals(administrationForm.administration.getForumSortByType())){
 					forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true);
 				}
 			} catch (Exception e) {
+	      LOG.error("failed to save forum administration", e);
 			}
-			UIFormInputWithActions bbcodeTab = administrationForm.getChildById(FIELD_BBCODE_TAB) ;
+			UIFormInputWithActions bbcodeTab = getChildById(FIELD_BBCODE_TAB) ;
 //			
 			List<BBCode> bbCodes = new ArrayList<BBCode>();
 			boolean inactiveAll = true;
@@ -448,66 +509,55 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 				if(isActive) inactiveAll = false;
       }
 			if(administrationForm.listBBCode.size() > 0 && inactiveAll){
-				UIApplication uiApplication = administrationForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIForumAdministrationForm.msg.inactiveAllBBCode", new String[]{administrationForm.getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA)}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+			  warning("UIForumAdministrationForm.msg.inactiveAllBBCode", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
 				return;
 			}
 			if(!bbCodes.isEmpty()){
 				try {
 					administrationForm.bbCodeService.save(bbCodes);
 	      } catch (Exception e) {
+	        LOG.error("failed to save bbcodes", e);
 	      }
 			}
 			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+	    event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
-	static	public class RunPruneActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource() ;
-			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
-			if(pruneSetting.getInActiveDay() == 0) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.not-set-activeDay", new Object[]{}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return;
-			}else {
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIRunPruneForm pruneForm = popupAction.activate(UIRunPruneForm.class, 200) ;
-				pruneForm.setPruneSetting(pruneSetting);
-				pruneForm.setId("RunPruneForm");
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-			}
-		}
-	}
+  static public class RunPruneActionListener extends BaseEventListener<UIForumAdministrationForm> {
+    public void onEvent(Event<UIForumAdministrationForm> event,
+                        UIForumAdministrationForm administrationForm, final String pruneId) throws Exception {
+      PruneSetting pruneSetting = administrationForm.getPruneSetting(pruneId);
+      if (pruneSetting.getInActiveDay() == 0) {
+        warning("UIForumAdministrationForm.sms.not-set-activeDay");
+        return;
+      } else {
+        UIRunPruneForm pruneForm = administrationForm.openPopup(UIRunPruneForm.class, 200);
+        pruneForm.setPruneSetting(pruneSetting);
+      }
+    }
+  }
 	
-	static	public class GetDefaultMailActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			if(id.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
-				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
+	static	public class GetDefaultMailActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+			if(objectId.equals(FIELD_NOTIFYEMAIL_TEXTAREA)) {
+				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)getChildById(FIELD_NOTIFYEMAIL_TAB)).
 																																					getChildById(FIELD_NOTIFYEMAIL_TEXTAREA);
-				areaInput.setValue(uiForm.getLabel("notifyEmailContentDefault"));
+				areaInput.setValue(getLabel("notifyEmailContentDefault"));
 			} else {
-				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB)).
+				UIFormWYSIWYGInput areaInput = ((UIFormInputWithActions)getChildById(FIELD_NOTIFYEMAIL_TAB)).
 				getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA);
-				areaInput.setValue(uiForm.getLabel("EmailToAuthorMoved"));
+				areaInput.setValue(getLabel("EmailToAuthorMoved"));
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			refresh();
 		}
 	}
 	
-	static	public class SelectTabActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static	public class SelectTabActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
 			UIForumAdministrationForm uiForm = event.getSource();
 			int temp = uiForm.id;
-			uiForm.id = Integer.parseInt(id);
+			uiForm.id = Integer.parseInt(objectId);
 			UIFormInputWithActions notifyEmailTab = uiForm.getChildById(FIELD_NOTIFYEMAIL_TAB) ;
 			UIFormWYSIWYGInput notifyEmailForm = notifyEmailTab.getChildById(FIELD_NOTIFYEMAIL_TEXTAREA) ;
 			UIFormWYSIWYGInput notifyMoveForm = notifyEmailTab.getChildById(FIELD_NOTIFYEMAILMOVED_TEXTAREA);
@@ -523,132 +573,92 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 	      popupWindow.setWindowSize(650, 450) ;
 	      event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
 			} else {
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			  refresh();
 			}
 		}
 	}
 
-	static	public class AddNewBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAddBBCodeForm bbcForm = popupAction.activate(UIAddBBCodeForm.class, 670) ;
-			bbcForm.setId("AddBBCodeForm") ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	static	public class AddNewBBCodeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {	 
+      administrationForm.openPopup(UIAddBBCodeForm.class, 670);
 		}
 	}
 
-	static	public class EditBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
-			BBCode bbCode = uiForm.getBBCode(bbcId);
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAddBBCodeForm bbcForm = popupAction.activate(UIAddBBCodeForm.class, 670) ;
-			bbcForm.setEditBBcode(bbCode);
-			bbcForm.setId("EditBBCodeForm") ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	static	public class EditBBCodeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String bbcodeId) throws Exception {
+			BBCode bbCode = administrationForm.getBBCode(bbcodeId);
+			UIAddBBCodeForm bbcForm = administrationForm.openPopup(UIAddBBCodeForm.class, "EditBBCodeForm", 670);
+	    bbcForm.setEditBBcode(bbCode);
 		}
 	}
 	
-	static	public class DeleteBBCodeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String bbcId = event.getRequestContext().getRequestParameter(OBJECTID);
-			uiForm.bbCodeService.delete(bbcId);
-			uiForm.setListBBcode();
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+	static	public class DeleteBBCodeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+		  administrationForm.bbCodeService.delete(objectId);
+		  administrationForm.loadBBCodes();
+			refresh();
 		}
 	}
 
-	static	public class AddTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAddTopicTypeForm topicTypeForm = popupAction.activate(UIAddTopicTypeForm.class,700);
-			topicTypeForm.setId("AddTopicTypeForm");
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	static	public class AddTopicTypeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+			administrationForm.openPopup(UIAddTopicTypeForm.class,700);
 		}
 	}
 	
-	static	public class EditTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String topicTId = event.getRequestContext().getRequestParameter(OBJECTID);
-			TopicType topicType = uiForm.getTopicType(topicTId);
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAddTopicTypeForm topicTypeForm = popupAction.activate(UIAddTopicTypeForm.class,700);
-			topicTypeForm.setId("EditTopicTypeForm");
+	static	public class EditTopicTypeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String topicTId) throws Exception {
+			TopicType topicType = administrationForm.getTopicType(topicTId);
+			UIAddTopicTypeForm topicTypeForm = administrationForm.openPopup(UIAddTopicTypeForm.class,"EditTopicTypeForm", 700);
 			topicTypeForm.setTopicType(topicType);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
-	static	public class DeleteTopicTypeActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String topicTypeId = event.getRequestContext().getRequestParameter(OBJECTID);
-			uiForm.forumService.removeTopicType(topicTypeId);
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class);
+	static	public class DeleteTopicTypeActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String topicTypeId) throws Exception {
+		  administrationForm.getForumService().removeTopicType(topicTypeId);
+			UIForumPortlet forumPortlet = administrationForm.getAncestorOfType(UIForumPortlet.class);
 			UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 			topicContainer.setTopicType(topicTypeId);
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 			if(forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()){
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 			}
 		}
 	}
 	
-	static	public class CancelActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
+	static	public class CancelActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
 	}
 
-	static	public class ActivatePruneActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIForumAdministrationForm uiForm = event.getSource();
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+	static	public class ActivatePruneActionListener extends BaseEventListener<UIForumAdministrationForm> {
+	  public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String pruneId) throws Exception {
+			PruneSetting pruneSetting = administrationForm.getPruneSetting(pruneId);
 			if(pruneSetting.getInActiveDay() == 0) {
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIAutoPruneSettingForm pruneSettingForm = popupAction.activate(UIAutoPruneSettingForm.class, 525) ;
+				UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(UIAutoPruneSettingForm.class, 525) ;
 				pruneSettingForm.setPruneSetting(pruneSetting);
-				pruneSettingForm.setId("AutoPruneSettingForm") ;
 				pruneSettingForm.setActivate(true);
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				pruneSetting.setActive(!pruneSetting.isActive());
-				uiForm.forumService.savePruneSetting(pruneSetting);
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+				administrationForm.getForumService().savePruneSetting(pruneSetting);
+				refresh();
 			}
 		}
 	}
 	
-	static	public class PruneSettingActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm uiForm = event.getSource();
-			String pruneId = event.getRequestContext().getRequestParameter(OBJECTID);
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAutoPruneSettingForm pruneSettingForm = popupAction.activate(UIAutoPruneSettingForm.class, 525) ;
-			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+	static	public class PruneSettingActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String pruneId) throws Exception {
+			UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(UIAutoPruneSettingForm.class, 525) ;
+			PruneSetting pruneSetting = administrationForm.getPruneSetting(pruneId);
 			pruneSettingForm.setPruneSetting(pruneSetting);
-			pruneSettingForm.setId("AutoPruneSettingForm") ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
-	static	public class AddIpActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm administrationForm = event.getSource();
-			UIFormInputWithActions inputWithActions = (UIFormInputWithActions)administrationForm.getChildById(IP_BAN_TAB);
+	static	public class AddIpActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+			UIFormInputWithActions inputWithActions = getChildById(IP_BAN_TAB);
 			String[] ip = new String[]{((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT1)).getValue(),
 																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT2)).getValue(),
 																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT3)).getValue(),
@@ -657,43 +667,31 @@ public class UIForumAdministrationForm extends UIForm implements UIPopupComponen
 			for(int i = 1; i <= 4; i ++){
 				((UIFormStringInput)inputWithActions.getChildById("newIpBan" + i)).setValue("");
 			}
-			UIForumAdministrationForm uiForm = event.getSource();
-			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-			String ipAdd = uiForm.checkIpAddress(ip);
+			String ipAdd = administrationForm.checkIpAddress(ip);
 			if(ipAdd == null){
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipInvalid", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIForumAdministrationForm.sms.ipInvalid");
 				return ;
 			} 
-			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			if(!fservice.addBanIP(ipAdd)){
-				uiApp.addMessage(new ApplicationMessage("UIForumAdministrationForm.sms.ipBanFalse", new Object[]{ipAdd}, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			
+			if(!administrationForm.getForumService().addBanIP(ipAdd)){
+			  warning("UIForumAdministrationForm.sms.ipBanFalse", ipAdd);
 				return;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+			refresh();
 		}
 	}
 	
-	static	public class PostsActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm forumAdministrationForm = event.getSource();
-			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UIPopupContainer popupContainer = forumAdministrationForm.getAncestorOfType(UIPopupContainer.class);
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIPageListPostByIP viewPostedByUser = popupAction.activate(UIPageListPostByIP.class, 650) ;
-			viewPostedByUser.setIp(ip) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+	static	public class PostsActionListener extends BaseEventListener<UIForumAdministrationForm> {
+	  public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String ip) throws Exception {
+	    UIPageListPostByIP viewPostedByUser = administrationForm.openPopup(UIPageListPostByIP.class, 650);
+			viewPostedByUser.setIp(ip);
 		}
 	}
 	
-	static	public class UnBanActionListener extends EventListener<UIForumAdministrationForm> {
-		public void execute(Event<UIForumAdministrationForm> event) throws Exception {
-			UIForumAdministrationForm administrationForm = event.getSource();
-			String ip = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			ForumService fservice = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
-			fservice.removeBan(ip) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+	static	public class UnBanActionListener extends BaseEventListener<UIForumAdministrationForm> {
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String ip) throws Exception {
+			administrationForm.getForumService().removeBan(ip) ;
+			refresh();
 		}
 	}
 }

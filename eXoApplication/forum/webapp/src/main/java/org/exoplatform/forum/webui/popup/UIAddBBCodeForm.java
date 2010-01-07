@@ -152,7 +152,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 			popupAction.deActivate() ;
 			UIForumAdministrationForm forumAdministration = popupContainer.getChild(UIForumAdministrationForm.class) ;
-			forumAdministration.setListBBcode();
+			forumAdministration.loadBBCodes();
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
@@ -201,7 +201,7 @@ public class UIAddBBCodeForm extends UIForm implements UIPopupComponent {
 	static	public class CancelActionListener extends EventListener<UIAddBBCodeForm> {
 		public void execute(Event<UIAddBBCodeForm> event) throws Exception {
 			UIAddBBCodeForm addBBCodeForm = event.getSource();
-			UIPopupContainer popupContainer = addBBCodeForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupContainer popupContainer = (UIPopupContainer)addBBCodeForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
