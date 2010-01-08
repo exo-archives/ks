@@ -16,10 +16,12 @@
  */
 package org.exoplatform.forum;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.exoplatform.forum.service.Utils;
 
@@ -181,8 +183,14 @@ public class TestForumUtils extends TestCase {
     assertEquals("0", ForumUtils.removeZeroFirstNumber(str));
     str = "   000";
     assertEquals("0", ForumUtils.removeZeroFirstNumber(str));
-    str = "0000123";
-    assertEquals("123", ForumUtils.removeZeroFirstNumber(str));
+    str = "00001230";
+    assertEquals("1230", ForumUtils.removeZeroFirstNumber(str));
+    str = "   00001230";
+    assertEquals("1230", ForumUtils.removeZeroFirstNumber(str));
+    str = "1230   ";
+    assertEquals("1230", ForumUtils.removeZeroFirstNumber(str));
+    str = "1230";
+    assertEquals("1230", ForumUtils.removeZeroFirstNumber(str));
   }
 
   public void testRemoveStringResemble() throws Exception {
@@ -206,32 +214,76 @@ public class TestForumUtils extends TestCase {
   	assertEquals(false, ForumUtils.isArrayEmpty(new String[]{"abc"}));
   }
   
-  public void testAddArrayToList() {
-  	//fail("Not yet implemented");
+  public void testAddArrayToList() throws Exception {
+  	List<String> list = new ArrayList<String>();
+  	String[] arrs = new String[] {};
+  	assertEquals("[]", ForumUtils.addArrayToList(list, arrs).toString());
+  	arrs = new String[] {"abc","def"};
+  	assertEquals("[abc, def]", ForumUtils.addArrayToList(list, arrs).toString());
+  	list.add("test");
+  	assertEquals("[abc, def, test]", ForumUtils.addArrayToList(list, arrs).toString());
+  	list = new ArrayList<String>();
+  	list.add("test");
+  	list.add("abc");
+  	assertEquals("[test, abc, def]", ForumUtils.addArrayToList(list, arrs).toString());
+  	arrs = new String[] {"abc","def"," ","zyx"};
+  	assertEquals("[test, abc, def, zyx]", ForumUtils.addArrayToList(list, arrs).toString());
   }
 
-  public void testAddStringToString() {
-    //fail("Not yet implemented");
+  public void testAddStringToString() throws Exception {
+  	String input = "", output="";
+  	assertEquals("[ ]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
+  	input = "abc"; output="";
+  	assertEquals("[ ]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
+  	input = "abc"; output="abc";
+  	assertEquals("[abc]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
+  	input = "abc"; output="def";
+  	assertEquals("[abc, def]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
+  	input = "abc,xyz"; output="def,ghi";
+  	assertEquals("[abc, xyz, def, ghi]", Arrays.asList(ForumUtils.addStringToString(input, output)).toString());
   }
 
   public void testIsStringInStrings() {
-    //fail("Not yet implemented");
+    String []strs = new String[] {}; String str = " abc";
+    assertEquals(false, ForumUtils.isStringInStrings(strs, str));
+    strs = new String[] {"ab c", "xyz", "def", "foo"};
+    assertEquals(false, ForumUtils.isStringInStrings(strs, str));
+    strs = new String[] {"abc ", "xyz", "def", "foo"};
+    assertEquals(true, ForumUtils.isStringInStrings(strs, str));
   }
 
   public void testIsStringInList() {
-    //fail("Not yet implemented");
+  	List<String> strs = Arrays.asList(new String[] {}); String str = "abc";
+  	assertEquals(false, ForumUtils.isStringInList(strs, str));
+  	strs = Arrays.asList(new String[] {"ab c", "xyz", "def", "foo"});
+  	assertEquals(false, ForumUtils.isStringInList(strs, str));
+  	strs = Arrays.asList(new String[] {"abc", "xyz", "def", "foo"});
+  	assertEquals(true, ForumUtils.isStringInList(strs, str));
   }
 
   public void testGetSubString() {
-    //fail("Not yet implemented");
+    String title = "";
+    assertEquals("", ForumUtils.getSubString(title, 14));
+    title = "test title test abcnde aads";
+    assertEquals("test title...", ForumUtils.getSubString(title, 14));
+  	assertEquals("test title test...", ForumUtils.getSubString(title, 17));
   }
 
   public void testGetLabel() {
-    //fail("Not yet implemented");
+  	String label = "", key="";
+  	assertEquals("", ForumUtils.getLabel(label, key));
+  	label = "label"; key="key";
+  	assertEquals("label", ForumUtils.getLabel(label, key));
+  	label = "label '<keyWord>'"; key="key";
+  	assertEquals("label 'key'", ForumUtils.getLabel(label, key));
+  	label = "label '<keyWord>'"; key="%^((&()(*(";
+  	assertEquals("label '%^((&()(*('", ForumUtils.getLabel(label, key));
+  	label = "label '<keyWord>'"; key="[\\w\\s]";
+  	assertEquals("label '[ws]'", ForumUtils.getLabel(label, key));
   }
 
   public void testGetColor() {
-    //fail("Not yet implemented");
+  	assertEquals("DarkGoldenRod", ForumUtils.getColor()[1]);
   }
 
   public void testGetDefaultMail() {
@@ -254,8 +306,13 @@ public class TestForumUtils extends TestCase {
     //fail("Not yet implemented");
   }
 
-  public void testGetListInValus() {
-    //fail("Not yet implemented");
+  public void testGetListInValus() throws Exception {
+    String values = "";
+    assertEquals("[]", ForumUtils.getListInValus(values).toString());
+    values = "value,value, value,   value,   value  ,value";
+    assertEquals("[value]", ForumUtils.getListInValus(values).toString());
+    values = "value,abc,   test, test, values, text, abc, abcd";
+    assertEquals("[value, abc, test, values, text, abcd]", ForumUtils.getListInValus(values).toString());
   }
 
   public void testGetLimitUploadSize() {
@@ -263,11 +320,28 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testGetActionViewInfoUser() {
-    //fail("Not yet implemented");
+  	assertEquals("", 
+  			ForumUtils.getActionViewInfoUser("", "conponentId", "actionRepl", "actionWith"));
+  	assertEquals("javascript:eXo.submitAction(/link/UIForumPortlet/actionWith/id=abc)", 
+  			ForumUtils.getActionViewInfoUser("javascript:eXo.submitAction(/link/conponentId/actionRepl/id=abc)", "conponentId", "actionRepl", "actionWith"));
+  	assertEquals("javascript:ajaxGet('/link/UIForumPortlet/actionWith/id=abc&ajaxRequest=true')", 
+  			ForumUtils.getActionViewInfoUser("/link/conponentId/actionRepl/id=abc", "conponentId", "actionRepl", "actionWith"));
   }
 
-  public void testGetCalculateListEmail() {
-    //fail("Not yet implemented");
+  public void testGetCalculateListEmail() throws Exception {
+  	String s = "";
+  	assertEquals("", ForumUtils.getCalculateListEmail(s));
+  	
+  	s = "abc@abc.com";
+  	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>", ForumUtils.getCalculateListEmail(s));
+  	
+  	s = "abc@abc.com, abz@abc.com";
+  	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>,<br/><span title='abz@abc.com'>abz@abc.com</span>", 
+  			ForumUtils.getCalculateListEmail(s));
+  	
+  	s = "abc@abc.com, emailverylong@exoplaforum.com";
+  	assertEquals("<span title='abc@abc.com'>abc@abc.com</span>,<br/><span title='emailverylong@exoplaforum.com'>emailverylong@e...</span>", 
+  			ForumUtils.getCalculateListEmail(s));
   }
 
 }
