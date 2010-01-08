@@ -73,11 +73,11 @@ public class TestForumUtils extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testGetInstanceTempCalendar() {
-//  	get calendar return Time Zone is 0 with all server system.
+  //public void testGetInstanceTempCalendar() {
+   //  	get calendar return Time Zone is 0 with all server system.
   	//assertEquals((new Date()).getTimezoneOffset(), GregorianCalendar.getInstance().getTimeZone().getRawOffset());
   	//assertEquals(0, ForumUtils.getInstanceTempCalendar().getTimeZone().getRawOffset());
-  }
+  //}
 
   public void testIsValidEmailAddresses() throws Exception {
     String emails = "";
