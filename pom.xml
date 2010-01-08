@@ -73,18 +73,15 @@
   </scm>
 
   <modules>
-
-    <!--module>web/ksportal</module-->
     <module>test-utils</module>
     <module>component</module>
     <module>web</module>
     <module>eXoApplication</module>
     <module>extension</module>
     <module>demo</module>
+    <module>server/tomcat/patch</module>
+<!--    <module>server/jboss/patch</module>  -->
     <module>packaging</module>
-    <module>server/tomcat/patch</module>   
-
-   
   </modules>
 
 <dependencyManagement>
