@@ -205,26 +205,6 @@
                      </execution>
                   </executions>
                </plugin>
-               <!-- assembly is not compatible with relocation of tomcat to exo-working -->
-               <!-- 
-               <plugin>
-                  <artifactId>maven-assembly-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>tomcat-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>single</goal>
-                        </goals>
-                        <configuration>
-                           <descriptors>
-                              <descriptor>src/main/assembly/tomcat-zip.xml</descriptor>
-                           </descriptors>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               -->
             </plugins>
          </build>
       </profile>
@@ -305,28 +285,44 @@
                      </execution>
                   </executions>
                </plugin>
-               <!-- assembly is not compatible with relocation of jboss to exo-working -->
-               <!-- 
-               <plugin>
-                  <artifactId>maven-assembly-plugin</artifactId>
-                  <executions>
-                     <execution>
-                        <id>jbossas-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>single</goal>
-                        </goals>
-                        <configuration>
-                           <descriptors>
-                              <descriptor>src/main/assembly/jbossear-zip.xml</descriptor>
-                           </descriptors>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-               -->
             </plugins>
          </build>
+      </profile>
+      <profile>
+        <id>release</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>tomcat-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                  <configuration>
+                    <descriptors>
+                      <descriptor>src/main/assembly/tomcat-zip.xml</descriptor>
+                    </descriptors>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>jbossas-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                  <configuration>
+                    <descriptors>
+                      <descriptor>src/main/assembly/jbossear-zip.xml</descriptor>
+                    </descriptors>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
       </profile>
    </profiles>
 </project>
