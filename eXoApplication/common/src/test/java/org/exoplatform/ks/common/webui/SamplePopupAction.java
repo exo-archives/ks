@@ -16,10 +16,32 @@
  */
 package org.exoplatform.ks.common.webui;
 
+import org.exoplatform.webui.application.WebuiRequestContext;
+
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UIFakeForm extends BaseUIForm {
- 
+public class SamplePopupAction extends AbstractPopupAction {
+  
+  public SamplePopupAction() {
+    super();
+  }
+
+  @Override
+  protected void afterProcessRender(WebuiRequestContext context) {
+  }
+
+  @Override
+  protected String getAncestorName() {
+    
+    return "SamplePortlet";
+  }
+
+  @Override
+  public Class<? extends UIPopupContainer> getPopupContainerType() {
+    
+    return SamplePopupContainer.class;
+  }
+  
 }

@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ks.common.webui;
 
+
+
 import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 
 /**
@@ -41,6 +43,23 @@ public class TestBaseUIForm extends AbstractUIComponentTestCase<BaseUIForm> {
     assertEquals("value", component.i18n("key"));
   }
 
+  public void testOpenPopupOverPopup() throws Exception {
+    
+    // fixture
+    new SamplePortlet(component);
+    SamplePortlet parent = component.getAncestorOfType(SamplePortlet.class) ;   
+    
+    // first open a popup with first form
+    SampleForm form = component.openPopup(parent, SampleForm.class, "UIAddPostContainer", 900, 460);
+
+    // then  attempt to open a child popup on top with legacy method
+    UIPopupContainer popupContainer = form.getAncestorOfType(UIPopupContainer.class) ;
+    SamplePopupAction popupAction = popupContainer.getChild(SamplePopupAction.class);
+    assertNotNull("UIPopupAction not found", popupAction);
+    
+  }
+  
+  
   public void testGetLabel() {
 
     assertEquals("NonExisting", component.getLabel("NonExisting"));

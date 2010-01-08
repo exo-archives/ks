@@ -16,10 +16,14 @@
  */
 package org.exoplatform.ks.common.webui;
 
+import org.exoplatform.webui.core.UIPopupComponent;
+import org.exoplatform.webui.form.UIForm;
+
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UIFakeForm extends BaseUIForm {
- 
+public class SampleForm extends UIForm implements UIPopupComponent {
+  public void activate() throws Exception {}
+  public void deActivate() throws Exception {}
 }

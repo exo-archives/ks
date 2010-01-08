@@ -20,6 +20,6 @@ package org.exoplatform.ks.common.webui;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UIFakeForm extends BaseUIForm {
- 
+public class SamplePopupContainer extends UIPopupContainer {
+
 }

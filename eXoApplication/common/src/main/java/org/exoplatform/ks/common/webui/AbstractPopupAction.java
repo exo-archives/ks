@@ -46,11 +46,10 @@ public abstract class AbstractPopupAction extends UIContainer {
     }
   }
   
-  
-
   protected abstract String getAncestorName();
 
 
+  public abstract Class<? extends UIPopupContainer> getPopupContainerType();
 
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
@@ -104,4 +103,15 @@ public abstract class AbstractPopupAction extends UIContainer {
     WebuiRequestContext context = RequestContext.getCurrentInstance();
     context.addUIComponentToUpdateByAjax(this);
   }
+
+  public final UIPopupContainer prepareForNewForm() throws Exception {
+    Class<? extends UIPopupContainer> containerType = getPopupContainerType();
+    UIPopupContainer popupContainer = createUIComponent(containerType, null, null);
+    
+    // prepare new child popup
+    AbstractPopupAction childPopupAction  = popupContainer.addChild(getClass(), null, getName() + "ChildPopupAction").setRendered(true);
+    childPopupAction.getChild(UIPopupWindow.class).setId(getName() + "ChildPopupWindow") ;
+    return popupContainer;
+  }
+
 }

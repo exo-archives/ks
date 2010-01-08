@@ -17,6 +17,7 @@
 package org.exoplatform.faq.webui.popup;
 
 import org.exoplatform.ks.common.webui.AbstractPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
@@ -39,4 +40,10 @@ public class UIPopupAction extends AbstractPopupAction {
 
     return "Answers";
   }
+  
+  public Class<? extends UIPopupContainer> getPopupContainerType() {
+    return org.exoplatform.faq.webui.popup.UIPopupContainer.class;
+  }
+
+
 }

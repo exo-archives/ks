@@ -16,10 +16,16 @@
  */
 package org.exoplatform.ks.common.webui;
 
+import org.exoplatform.webui.core.UIContainer;
+
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public class UIFakeForm extends BaseUIForm {
- 
+public class  SamplePortlet extends UIContainer {
+  public SamplePortlet(BaseUIForm component) throws Exception {
+    addChild(SamplePopupAction.class, null, "SamplePortletPopupAction") ;
+    addChild(component);
+    
+  }
 }

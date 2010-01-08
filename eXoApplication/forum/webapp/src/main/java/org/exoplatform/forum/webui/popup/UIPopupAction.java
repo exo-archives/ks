@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.ks.common.webui.AbstractPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -42,4 +43,11 @@ public class UIPopupAction extends AbstractPopupAction {
   protected String getAncestorName() {
     return "UIForum";
   }
+
+
+  public Class<? extends UIPopupContainer> getPopupContainerType() {
+    return org.exoplatform.forum.webui.popup.UIPopupContainer.class;
+  }
+
+
 }
