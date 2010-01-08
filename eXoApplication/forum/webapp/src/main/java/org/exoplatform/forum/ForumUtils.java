@@ -101,8 +101,10 @@ public class ForumUtils {
 		/*h,hh,H, m, mm, d, dd, DDD, DDDD, M, MM, MMM, MMMM, yy, yyyy
 		 * */
 		if(myDate == null) return "";
-		if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
-		if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		if(!isEmpty(format)) {
+			if(format.indexOf("DDDD") >= 0)format = format.replaceAll("DDDD", "EEEE");
+			if(format.indexOf("DDD") >= 0)format = format.replaceAll("DDD", "EEE");
+		}
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		Locale locale = new Locale(portalContext.getLocale().getLanguage(), portalContext.getLocale().getCountry());
 		Format formatter = new SimpleDateFormat(format, locale);
@@ -183,9 +185,9 @@ public class ForumUtils {
 			} else {
 				className[i] = "notStar" ;
 			}
-			className[5] = ("" + voteRating) ;
+			className[5] = String.valueOf(voteRating) ;
 			if(className[5].length() >= 3) className[5] = className[5].substring(0, 3) ;
-			if(k == 0) className[5] = "" + star ; 
+			if(k == 0) className[5] = String.valueOf(star) ; 
 		}
 		return className ;
 	}
