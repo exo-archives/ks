@@ -95,7 +95,7 @@ public class TestForumUtils extends TestCase {
     // email have before '.' is number
     emails = "test@test.787";
     assertEquals(false, ForumUtils.isValidEmailAddresses(emails));
-    
+    // basic case
     emails = "test@test.com";
     assertEquals(true, ForumUtils.isValidEmailAddresses(emails));
     emails = "test@test.com.vn";
@@ -105,54 +105,75 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testGetSizeFile() {
+  	// case where file size is 0 byte
   	double fileZise = 0;
   	assertEquals("0.0 Byte", ForumUtils.getSizeFile(fileZise));
   	
+  	// case where file size is 999 byte
   	fileZise = 999;
   	assertEquals("999.0 Byte", ForumUtils.getSizeFile(fileZise));
 
+  	// case where file size is 1000 byte
   	fileZise = 1000;
   	assertEquals("0.976 Kb", ForumUtils.getSizeFile(fileZise));
 
+  	// case where file size is 1Kb
   	fileZise = 1024;
   	assertEquals("1.0 Kb", ForumUtils.getSizeFile(fileZise));
 
+  	// case where file size is more 1Kb
   	fileZise = 1000000;
   	assertEquals("976.562 Kb", ForumUtils.getSizeFile(fileZise));
 
+  	// case where file size is 1Mb
+  	fileZise = 1048576;
+  	assertEquals("1Mb", ForumUtils.getSizeFile(fileZise));
+  	// case where file size is more 1Mb
   	fileZise = 1200000;
   	assertEquals("1.144 Mb", ForumUtils.getSizeFile(fileZise));
   }
 
   public void testGetTimeZoneNumberInString() {
+  	// timeZone is empty
   	String timeZone = "";
   	assertEquals(null, ForumUtils.getTimeZoneNumberInString(timeZone));
   	
+  	// timeZone at Eniwetok. ZoneTime is -12.
   	timeZone =  "(GMT -12:00) Eniwetok, Kwajalein";
   	assertEquals("-12.00", ForumUtils.getTimeZoneNumberInString(timeZone));
   	
+  	// timeZone at Australia. ZoneTime is +10.
   	timeZone =  "(GMT +10:00) Eastern Australia, Guam, Vladivostok";
   	assertEquals("+10.00", ForumUtils.getTimeZoneNumberInString(timeZone));
   	
+  	// timeZone at London. ZoneTime is 0.
   	timeZone =  "(GMT 0:00) Greenwich Mean Time: Dublin, London, Lisbon, Casablanca";
   	assertEquals("0.00", ForumUtils.getTimeZoneNumberInString(timeZone));
   	
+  	// timeZone at Calcutta. ZoneTime is +5.5.
   	timeZone =  "(GMT +5:30) Bombay, Calcutta, Madras, New Delhi";
   	assertEquals("+5.50", ForumUtils.getTimeZoneNumberInString(timeZone));
   }
 
   public void testGetStarNumber() throws Exception {
-//  	class return arrays class css of VoteRatingForm 
-  	double voteRating = 0;// voteRating is small more 5 
+//  	class return arrays class css of VoteRatingForm.
+  	// vote max is 5, vote is value mean of users voting.
+  	//case not vote, vote is 0.
+  	double voteRating = 0;
   	assertEquals("[notStar, notStar, notStar, notStar, notStar, 0]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
-  	voteRating = 4;
+  	// vote is 4
+  	voteRating = 4; 
   	assertEquals("[star, star, star, star, notStar, 4]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
+  	// vote is 4.24
   	voteRating = 4.24;
   	assertEquals("[star, star, star, star, notStar, 4.2]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
+  	// vote is 4.25
   	voteRating = 4.25;
   	assertEquals("[star, star, star, star, halfStar, 4.2]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
+  	// vote is 4.74
   	voteRating = 4.74;
   	assertEquals("[star, star, star, star, halfStar, 4.7]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
+  	// vote is 4.75
   	voteRating = 4.75;
   	assertEquals("[star, star, star, star, star, 4.7]", Arrays.asList(ForumUtils.getStarNumber(voteRating)).toString());
   }
