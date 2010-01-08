@@ -127,7 +127,7 @@ public class TestForumUtils extends TestCase {
 
   	// case where file size is 1Mb
   	fileZise = 1048576;
-  	assertEquals("1Mb", ForumUtils.getSizeFile(fileZise));
+  	assertEquals("1.0 Mb", ForumUtils.getSizeFile(fileZise));
   	// case where file size is more 1Mb
   	fileZise = 1200000;
   	assertEquals("1.144 Mb", ForumUtils.getSizeFile(fileZise));
