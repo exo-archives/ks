@@ -200,7 +200,10 @@ public class TestForumUtils extends TestCase {
   }
 
   public void testIsArrayEmpty() {
-  	
+  	assertEquals(true, ForumUtils.isArrayEmpty(null));
+  	assertEquals(true, ForumUtils.isArrayEmpty(new String[]{}));
+  	assertEquals(true, ForumUtils.isArrayEmpty(new String[]{" "}));
+  	assertEquals(false, ForumUtils.isArrayEmpty(new String[]{"abc"}));
   }
   
   public void testAddArrayToList() {
