@@ -1776,6 +1776,8 @@
 
 .UIAnswersPortlet .UIAttachMentForm .SelectFileFrame {
 	margin: 0px;
+	white-space: normal;
+	width: 300px;
 }
 
 .UIMaskWorkspace .UIAnswersPortlet	{
@@ -2292,9 +2294,4 @@
 
 .UIAnswersChildPopupAction .UIForm .UIFormGrid td.FieldLabel {
 	white-space:nowrap;
-}
-
-.UIAnswersChildPopupAction .UIForm .UIFormGrid .SelectFileFrame {
-	white-space: normal;
-	width: 300px;
 }
