@@ -179,59 +179,26 @@ public class UIQuestions extends UIContainer {
 		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
 	
+	//hard code selectedNode of forum portlet
 	private String getLinkDiscuss(String topicId) throws Exception {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String link = "";
+		String link = portalContext.getRequest().getRequestURL().toString();
 		try {
-			String nodePath = portalContext.getNodePath();
-			List<String> values = calculateUrlDisscuss();
-			link = getLink().replaceAll(nodePath.substring(nodePath.indexOf("/")+1), values.get(0)); 
-			String key = link.substring(link.indexOf("=")+1, link.indexOf("&amp;"));
-			link = link.replaceFirst(key, values.get(1));
-			link = FAQUtils.getLink(link, this.getId(),"UIBreadcumbs", "Setting", "ChangePath", topicId);
+			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+			String portalName = "/" + Util.getUIPortal().getName() ;
+			if(link.indexOf(portalName) > 0) {
+	      if(link.indexOf(portalName + "/" + selectedNode) < 0){
+	      	link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+	      }                 
+	    }
+			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
+			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
     } catch (Exception e) {
     	e.printStackTrace();
-	    link = portalContext.getRequest().getRequestURL().toString();
     }
 		return link;
 	}
-	
-	
-	@SuppressWarnings("unchecked")
-  private List<String> calculateUrlDisscuss() throws Exception {
-		List<String> values = new ArrayList<String>();
-		List<PageNavigation> navigations = new ArrayList<PageNavigation>();
-		navigations = Util.getUIPortal().getNavigations();
-		DataStorage dataStorage = (DataStorage)PortalContainer.getInstance().getComponentInstanceOfType(DataStorage.class) ;
-		for(PageNavigation nav : navigations) {
-			for(PageNode pageNode : nav.getNodes()) {
-				if(pageNode.getPageReference() != null) {
-					Page page = dataStorage.getPage(pageNode.getPageReference());
-					ArrayList<ModelObject> children2 = page.getChildren();
-					for(ModelObject modelObject : children2) {
-						if(modelObject instanceof Application) {
-						  // FIXME : was broken when upgrading to beta3
-						  /*
-							if(((PortletId)((Application) modelObject).getRef()).getPortletName().equals("ForumPortlet")){
-								values.add(pageNode.getName());// PageNode Name
-								values.add(((Application) modelObject).getStorageName());// componentId
-								return values;
-							}
-							*/
-						}
-					}
-				}
-			}	
-		}
-		return values;
-	}
-	
-	private String convertLinkToForum(String s){
-		s = s.replaceAll("answers", "forum").replaceFirst(getId(), "UIBreadcumbs")
-				 .replaceFirst("DiscussForum", "ChangePath").replaceAll("amp;", "");
-		return s;
-	}
-	
+
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  

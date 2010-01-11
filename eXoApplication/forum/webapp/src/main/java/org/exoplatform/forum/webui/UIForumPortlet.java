@@ -520,8 +520,8 @@ public class UIForumPortlet extends UIPortletApplication {
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 						this.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 						uiTopicDetail.setIdPostView(postId) ;
+						uiTopicDetail.setIsEditTopic(true) ;
 						if(isReply || isQuote){
-							uiTopicDetail.setIsEditTopic(true) ;
 							if(uiTopicDetail.getCanPost()) {
 								uiTopicDetail.setIdPostView("top") ;
 								try {
