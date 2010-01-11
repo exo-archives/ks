@@ -32,11 +32,15 @@ public class PropertyReader {
 	}
 
 	public long l(String name) {
+		return l(name, 0);
+	}
+
+	public long l(String name, long l) {
 		try {
 			return node.getProperty(name).getLong();
 		}
 		catch (Exception e) {
-			return 0;
+			return l;
 		}
 	}
 
