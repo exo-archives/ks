@@ -5124,6 +5124,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			messageNode.setProperty(EXO_TYPE, Utils.RECEIVE_MESSAGE);
 		}
 		for (String userName : userNames) {
+			if(userName.equals(userNameFirst)) continue;
 			try {
 				profileNode = userProfileNode.getNode(userName);
 				totalMessage = profileNode.getProperty(EXO_NEW_MESSAGE).getLong() + 1;

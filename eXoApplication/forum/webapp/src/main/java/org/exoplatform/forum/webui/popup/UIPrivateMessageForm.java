@@ -17,8 +17,10 @@
 package org.exoplatform.forum.webui.popup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -131,6 +133,13 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 		fieldInput.setValue(values) ;
 	}
 	
+	private String removeCurrentUser(String s) throws Exception {
+		if(s.equals(userName)) return "";
+		if(s.contains(userName+",")) s = StringUtils.remove(s, userName+",");
+		if(s.contains(","+userName)) s = StringUtils.remove(s, ","+userName);
+		return s;
+	}
+	
 	@SuppressWarnings("unused")
 	private int getIsSelected() {
 		return this.id ;
@@ -154,6 +163,14 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 			String sendTo = areaInput.getValue() ;
 			sendTo = ForumUtils.removeSpaceInString(sendTo) ;
 			sendTo = ForumUtils.removeStringResemble(sendTo) ;
+			sendTo = messageForm.removeCurrentUser(sendTo) ;
+			if(ForumUtils.isEmpty(sendTo)){
+				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA) };
+				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sendToCurrentUser", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+			}
+
 			String erroUser = UserHelper.checkValueUser(sendTo) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
 				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
