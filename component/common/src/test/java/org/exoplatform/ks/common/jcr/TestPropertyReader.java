@@ -91,6 +91,12 @@ public class TestPropertyReader extends TestCase {
     when(prop.getLong()).thenReturn(expected);
     long actual = reader.l("long");
     assertEquals(expected, actual);
+
+ // test default value
+    when(prop.getLong()).thenThrow(new PropertyNotFoundException());
+    expected = 123L;
+    actual = reader.l("long", expected);
+    assertEquals(expected, actual);
   }
 
   public void testList() throws Exception {
