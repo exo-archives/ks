@@ -31,16 +31,14 @@ import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -61,7 +59,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIPollForm extends UIForm implements UIPopupComponent {
+public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 	public static final String FIELD_QUESTION_INPUT = "Question" ;
 	final static public String FIELD_OPTIONS = "Option" ;
 	public static final String FIELD_TIMEOUT_INPUT = "TimeOut" ;
@@ -156,8 +154,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			long timeOut = 0;
 			if(!ForumUtils.isEmpty(timeOutStr)){
 				if(timeOutStr.length() > 4){
-					Object[] args = {uiForm.getLabel(FIELD_TIMEOUT_INPUT) };
-					throw new MessageException(new ApplicationMessage("UIPollForm.msg.longTimeOut", args, ApplicationMessage.WARNING)) ;
+					uiForm.warning("UIPollForm.msg.longTimeOut", new String[]{uiForm.getLabel(FIELD_TIMEOUT_INPUT)}) ;
 				}
 				timeOut = Long.parseLong(timeOutStr) ; 
 			}
@@ -170,10 +167,8 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 			for(String value : values) {
 				if(!ForumUtils.isEmpty(value)){
 					if(value.length() > MAX_TITLE) {
-						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-						Object[] args = { uiForm.getLabel(FIELD_OPTIONS)+"("+i+")", String.valueOf(MAX_TITLE) };
-						uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+						String[] args = new String[]{uiForm.getLabel(FIELD_OPTIONS)+"("+i+")", String.valueOf(MAX_TITLE)};
+						uiForm.warning("NameValidator.msg.warning-long-text", args) ;
 						return ;
 					}
 					values_.add(ForumTransformHTML.enCodeHTML(value));
@@ -190,10 +185,8 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 				sizeOption = 0;
 			}else {
 				if(question.length() > MAX_TITLE) {
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					Object[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(MAX_TITLE) };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					String[] args = { uiForm.getLabel(FIELD_QUESTION_INPUT), String.valueOf(MAX_TITLE) };
+					uiForm.warning("NameValidator.msg.warning-long-text", args) ;
 					return ;
 				}
 			}
@@ -303,8 +296,7 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
         }
 			}
 			if(!ForumUtils.isEmpty(sms)) {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIPollForm.msg." + sms, args, ApplicationMessage.WARNING)) ;
+				uiForm.warning("UIPollForm.msg." + sms) ;
 			}
 		}
 	}

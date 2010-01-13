@@ -28,15 +28,15 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -60,7 +60,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIPrivateMessageForm.SelectTabActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UISelector {
+public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent, UISelector {
 	private ForumService forumService ;
 	private UserProfile userProfile ;
 	private String userName ;
@@ -158,32 +158,26 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 			UIPrivateMessageForm messageForm = event.getSource() ; 
 			UIFormInputWithActions MessageTab = messageForm.getChildById(FIELD_SENDMESSAGE_TAB);
 			UIFormTextAreaInput areaInput = messageForm.getUIFormTextAreaInput(FIELD_SENDTO_TEXTAREA) ;
-			UIApplication uiApp = messageForm.getAncestorOfType(UIApplication.class) ;
 			String sendTo = areaInput.getValue() ;
 			sendTo = ForumUtils.removeSpaceInString(sendTo) ;
 			sendTo = ForumUtils.removeStringResemble(sendTo) ;
 			sendTo = messageForm.removeCurrentUser(sendTo) ;
 			if(ForumUtils.isEmpty(sendTo)){
-				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA) };
-				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sendToCurrentUser", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				messageForm.warning("UIPrivateMessageForm.msg.sendToCurrentUser", new String[]{messageForm.getLabel(FIELD_SENDTO_TEXTAREA)}) ;
 				return ;
 			}
 
 			String erroUser = UserHelper.checkValueUser(sendTo) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
-				Object[] args = { messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				messageForm.warning("NameValidator.msg.erroUser-input", new String[]{messageForm.getLabel(FIELD_SENDTO_TEXTAREA)}) ;
 				return ;
 			}
 			UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
 			String mailTitle = stringInput.getValue() ;
 			int maxText = 80 ;
 			if(mailTitle.length() > maxText) {
-				Object[] args = { messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				messageForm.warning("NameValidator.msg.warning-long-text", 
+															new String[]{messageForm.getLabel(FIELD_MAILTITLE_INPUT), String.valueOf(maxText)}) ;
 				return ;
 			}
 			mailTitle = ForumTransformHTML.enCodeHTML(mailTitle);
@@ -202,9 +196,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 				areaInput.setValue("") ;
 				stringInput.setValue("") ;
 				formWYSIWYGInput.setValue("") ;
-				Object[] args = { "" };
-				uiApp.addMessage(new ApplicationMessage("UIPrivateMessageForm.msg.sent-successfully", args, ApplicationMessage.INFO)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				messageForm.info("UIPrivateMessageForm.msg.sent-successfully") ;
 				if(messageForm.fullMessage){
 					messageForm.id = 1;
 					event.getRequestContext().addUIComponentToUpdateByAjax(messageForm.getParent()) ;
@@ -213,9 +205,7 @@ public class UIPrivateMessageForm extends UIForm implements UIPopupComponent, UI
 					forumPortlet.cancelAction() ;
 				}
 			} else {
-				Object[] args = { messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.empty-input", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				messageForm.warning("NameValidator.msg.empty-input", new String[]{ messageForm.getLabel(FIELD_MAILMESSAGE_INPUT) }) ;
 			}
 		}
 	}

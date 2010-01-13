@@ -28,15 +28,15 @@ import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -52,33 +52,24 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIRatingForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIRatingForm extends UIForm implements UIPopupComponent {
+public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
 	private Topic topic ;
 	private String categoryId ;
 	private String forumId ;
 	
-	public UIRatingForm() throws Exception {
-		
-	}
+	public UIRatingForm() throws Exception {}
 	
 	public void updateRating(Topic topic,	String categoryId, String forumId) {
 		this.topic = topic ;
 		this.categoryId = categoryId ;
 		this.forumId = forumId ;
 	}
-	public void activate() throws Exception {
-		// TODO Auto-generated method stub
-	}
-	public void deActivate() throws Exception {
-		// TODO Auto-generated method stub
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
-	static	public class VoteTopicActionListener extends EventListener<UIRatingForm> {
-		public void execute(Event<UIRatingForm> event) throws Exception {
-			UIRatingForm uiForm = event.getSource() ;
-			String vote = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static	public class VoteTopicActionListener extends  BaseEventListener<UIRatingForm> {
+    public void onEvent(Event<UIRatingForm> event, UIRatingForm uiForm, final String vote) throws Exception {
 			Topic topic = uiForm.topic ;
-			
 			String userName = UserHelper.getCurrentUser() ;
 			String[] Vote = topic.getUserVoteRating() ;
 			int k = Vote.length ;
@@ -96,9 +87,7 @@ public class UIRatingForm extends UIForm implements UIPopupComponent {
 			try {
 				forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topic, false, true, ForumUtils.getDefaultMail()) ;
 			} catch (PathNotFoundException e) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIRatingForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIRatingForm.msg.forum-deleted") ;
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 				categoryContainer.updateIsRender(true) ;
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
