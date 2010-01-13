@@ -35,17 +35,16 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Vu Duy Tu
@@ -60,7 +59,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIMoveTopicForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
+public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 	private ForumService forumService ;
 	private String forumId ;
 	private List<Topic> topics ;
@@ -152,18 +151,14 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 		return forums ;
 	}
 	
-	static	public class SaveActionListener extends EventListener<UIMoveTopicForm> {
-    public void execute(Event<UIMoveTopicForm> event) throws Exception {
-			UIMoveTopicForm uiForm = event.getSource() ;
-			String forumPath = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class SaveActionListener extends BaseEventListener<UIMoveTopicForm> {
+    public void onEvent(Event<UIMoveTopicForm> event, UIMoveTopicForm uiForm, final String forumPath) throws Exception {
 			if(!ForumUtils.isEmpty(forumPath)) {
 				try {
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
 					// set link
-//					String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");
 					String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");
-					
 					//
 					uiForm.forumService.moveTopic(uiForm.topics , forumPath, res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved"), link) ;
 					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -183,12 +178,10 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 					}
         } catch (ItemExistsException e) {
-        	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
+        	warning("UIImportForm.msg.ObjectIsExist") ;
         	return;
         } catch (Exception e) {
-        	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIMoveTopicForm.msg.parent-deleted", null, ApplicationMessage.WARNING)) ;
+        	warning("UIMoveTopicForm.msg.parent-deleted") ;
         	return;
         }
 			}

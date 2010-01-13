@@ -32,14 +32,16 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -56,7 +58,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 
-public class UIModerationForum extends UIForm implements UIPopupComponent {
+public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private ForumService forumService;
 	private String[] path = new String[]{};
@@ -133,11 +135,9 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
     }
 		return null;
 	}
-	
-	static	public class OpenActionListener extends EventListener<UIModerationForum> {
-		public void execute(Event<UIModerationForum> event) throws Exception {
-			String objectId = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			UIModerationForum moderationForum  = event.getSource();
+
+	static	public class OpenActionListener extends BaseEventListener<UIModerationForum> {
+		public void onEvent(Event<UIModerationForum> event, UIModerationForum moderationForum, final String objectId ) throws Exception {
 			ForumSearch forumSearch = moderationForum.getObject(objectId); 
 			UIPopupContainer popupContainer = moderationForum.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
@@ -149,7 +149,7 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
-					e.printStackTrace();
+					moderationForum.log.warn("Failed to view topic: "+ e.getMessage(), e);
 				}
 			} else {
 				try {
@@ -160,7 +160,7 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
-					e.printStackTrace();
+					moderationForum.log.warn("Failed to view post: "+ e.getMessage(), e);
 				}
 			}
 		}

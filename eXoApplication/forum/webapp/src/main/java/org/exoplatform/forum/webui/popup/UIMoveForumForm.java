@@ -31,16 +31,15 @@ import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -55,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIMoveForumForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIMoveForumForm extends UIForm implements UIPopupComponent {
+public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 	public static final String FIELD_CATEGORY_SELECTBOX = "SelectCategory" ;
 	private List<Forum> forums_ ;
 	private String categoryId_ ;
@@ -96,12 +95,10 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 	}
 	public void deActivate() throws Exception {
 	}
-	
-	static	public class SaveActionListener extends EventListener<UIMoveForumForm> {
-    public void execute(Event<UIMoveForumForm> event) throws Exception {
-			UIMoveForumForm uiForm = event.getSource() ;
+
+	static	public class SaveActionListener extends BaseEventListener<UIMoveForumForm> {
+    public void onEvent(Event<UIMoveForumForm> event, UIMoveForumForm uiForm, final String categoryPath) throws Exception {
 			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			String categoryPath = event.getRequestContext().getRequestParameter(OBJECTID);
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
 			try {
@@ -121,12 +118,10 @@ public class UIMoveForumForm extends UIForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 				}
       } catch (ItemExistsException e) {
-      	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-      	uiApp.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING)) ;
+      	warning("UIImportForm.msg.ObjectIsExist") ;
       	return;
       } catch (Exception e) {
-	    	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-	    	uiApp.addMessage(new ApplicationMessage("UIMoveForumForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
+	    	warning("UIMoveForumForm.msg.forum-deleted") ;
 	    	return;
       }
 		}
