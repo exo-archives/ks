@@ -17,11 +17,10 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
@@ -45,30 +44,25 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
   public static final Log log = ExoLogger.getLogger(UIExportForm.class);
   
 	private boolean isExportAll = false;
-	private final String LIST_CATEGORIES = "listCategories";
-	private final String CREATE_ZIP = "createZip";
-	private final String FILE_NAME = "FileName";
-	private String EXPORT_MODE = "ExportMode";
-	private String EXPORT_ALL = "ExportAll";
-	private String EXPORT_CATEGORIES = "ExportCategories";
+	private final static String LIST_CATEGORIES = "listCategories";
+	private final static String CREATE_ZIP = "createZip";
+	private final static String FILE_NAME = "FileName";
+	private static String EXPORT_MODE = "ExportMode";
+	private static String EXPORT_ALL = "ExportAll";
+	private static String EXPORT_CATEGORIES = "ExportCategories";
 	List<Object> listObjects = new ArrayList<Object>();
 	private Object object_ = "";
-	public void activate() throws Exception { }
+	
+	public UIExportForm(){}
 
-	public void deActivate() throws Exception { }
-
-	public UIExportForm(){
-		
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 
 	public void setObjectId(Object object){
 		this.object_ = object;
 		this.setActions(new String[]{"Save", "Cancel"});
 		if(object == null || object instanceof Category){
-		  
 		  Category cat = (Category)object;
-		  
-
 			UIFormCheckBoxInput<Boolean> checkBoxInput = null;
 			try {
 				UIFormInputWithActions formInputWithActions = new UIFormInputWithActions(LIST_CATEGORIES);
@@ -92,7 +86,6 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 			  log.warn("failed to list forum categories", e);
 			}
 			
-
 			UIFormStringInput stringInput = new UIFormStringInput(FILE_NAME, null);
 			stringInput.setValue(getLabel("DefaultFileName"));
 			checkBoxInput = new UIFormCheckBoxInput<Boolean>(CREATE_ZIP, CREATE_ZIP, false );
@@ -120,32 +113,33 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	private List<String> getListSelected(){
 		List<String> listId = new ArrayList<String>();
-		UIFormCheckBoxInput<Boolean> checkBox = null;
-		for(UIComponent component : ((UIFormInputWithActions)this.getChildById(LIST_CATEGORIES)).getChildren()){
-			checkBox = (UIFormCheckBoxInput<Boolean>)component;
-			if(checkBox.isChecked()) listId.add(checkBox.getId());
-		}		
+		List<UIComponent> children = ((UIFormInputWithActions)this.getChildById(LIST_CATEGORIES)).getChildren() ;
+		for(UIComponent child : children) {
+			if(child instanceof UIFormCheckBoxInput) {
+				if(((UIFormCheckBoxInput)child).isChecked()) {
+					listId.add(child.getName());
+				}
+			}
+		}
 		return listId;
 	} 
 
 	static public class SaveActionListener extends EventListener<UIExportForm> {
-		@SuppressWarnings("unchecked")
 		public void execute(Event<UIExportForm> event) throws Exception {
 			UIExportForm exportForm = event.getSource() ;
-			String fileName = ((UIFormStringInput)exportForm.getChildById(exportForm.FILE_NAME)).getValue();
+			String fileName = ((UIFormStringInput)exportForm.getChildById(FILE_NAME)).getValue();
 			UIForumPortlet portlet = exportForm.getAncestorOfType(UIForumPortlet.class) ;
 			if(fileName == null || fileName.trim().length() < 1){
 				exportForm.warning("UIExportForm.msg.nameFileExport");
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
 			}
-			UIFormRadioBoxInput radioBoxInput = exportForm.getChildById(exportForm.EXPORT_MODE);
+			UIFormRadioBoxInput radioBoxInput = exportForm.getChildById(EXPORT_MODE);
 			if(radioBoxInput != null){
 				String value = radioBoxInput.getValue();
-				if(value.equals(exportForm.EXPORT_CATEGORIES)){
+				if(value.equals(EXPORT_CATEGORIES)){
 					exportForm.isExportAll = false;
 				} else {
 					exportForm.isExportAll = true;
@@ -179,15 +173,12 @@ public class UIExportForm extends BaseForumForm implements UIPopupComponent{
 				file = (File)exportForm.getForumService().exportXML(categoryId, forumId, listId, nodePath, bos, exportForm.isExportAll);
 			} catch(Exception e){
 				log.error("export failed: ", e);
-	      UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsNoLonagerExist", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
-				
+				exportForm.warning("UIImportForm.msg.ObjectIsNoLonagerExist");
 				return;
 			}
 			InputStream inputStream = null;
 			if(file == null){
-				boolean isCreateZipFile = ((UIFormCheckBoxInput<Boolean>)exportForm.getChildById(exportForm.CREATE_ZIP)).isChecked();
+				boolean isCreateZipFile = exportForm.getUIFormCheckBoxInput(CREATE_ZIP).isChecked();
 				inputStream = new ByteArrayInputStream(bos.toByteArray()) ;
 				if(!isCreateZipFile){
 					// create file xml to dowload

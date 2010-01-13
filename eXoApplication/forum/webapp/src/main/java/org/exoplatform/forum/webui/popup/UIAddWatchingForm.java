@@ -27,16 +27,14 @@ import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.event.Event;
-import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
 
@@ -55,7 +53,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIAddWatchingForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
+public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 	final static public String EMAIL_ADDRESS = "emails" ;
 	public static final String USER_NAME = "userName" ; 
 	private String path = "";
@@ -118,11 +116,9 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 		}
 		return contact ;
 	}
-	
-	static	public class SaveActionListener extends EventListener<UIAddWatchingForm> {
-		@SuppressWarnings("unchecked")
-		public void execute(Event<UIAddWatchingForm> event) throws Exception {
-			UIAddWatchingForm uiForm = event.getSource() ;
+
+	static	public class SaveActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			String path = uiForm.path;
 			List<String> values = (List<String>) uiForm.uiFormMultiValue.getValue();
@@ -139,8 +135,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 				isEmail = ForumUtils.isValidEmailAddresses(value) ;
 				if(isEmail) {
 				} else {
-					String[] args = new String[] { "" } ;
-					throw new MessageException(new ApplicationMessage("UIAddMultiValueForm.msg.invalid-field", args, ApplicationMessage.WARNING)) ;
+					warning("UIAddMultiValueForm.msg.invalid-field") ;
 				}
 			} 
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
@@ -152,10 +147,7 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 			uiForm.path = "";
 			uiForm.initForm() ;
 			forumPortlet.cancelAction() ;
-			Object[] args = { };
-			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-			uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			info("UIAddWatchingForm.msg.successfully") ;
 			if(uiForm.isCategory()) {
 				UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
 				category.setIsEditCategory(true);
@@ -164,16 +156,14 @@ public class UIAddWatchingForm	extends UIForm	implements UIPopupComponent {
 		}
 	}
 	
-	static	public class RefreshActionListener extends EventListener<UIAddWatchingForm> {
-		public void execute(Event<UIAddWatchingForm> event) throws Exception {
-			UIAddWatchingForm uiForm = event.getSource() ;
+	static	public class RefreshActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			uiForm.initForm() ;
 		}
 	}
 	
-	static	public class CancelActionListener extends EventListener<UIAddWatchingForm> {
-		public void execute(Event<UIAddWatchingForm> event) throws Exception {
-			UIAddWatchingForm uiForm = event.getSource() ;
+	static	public class CancelActionListener extends BaseEventListener<UIAddWatchingForm> {
+    public void onEvent(Event<UIAddWatchingForm> event, UIAddWatchingForm uiForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			forumPortlet.cancelAction() ;
 		}
