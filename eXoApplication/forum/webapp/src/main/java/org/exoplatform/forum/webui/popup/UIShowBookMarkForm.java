@@ -41,15 +41,17 @@ import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -66,7 +68,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIShowBookMarkForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
+public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 	ForumService forumService ;
 	public final String BOOKMARK_ITERATOR = "BookmarkPageIterator";
 	private JCRPageList pageList ;
@@ -117,12 +119,9 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					 (id.indexOf(Utils.TOPIC) >= 0)? ForumUtils.TOPIC :(""))));
 	}
 	
-	static	public class OpenLinkActionListener extends EventListener<UIShowBookMarkForm> {
-		public void execute(Event<UIShowBookMarkForm> event) throws Exception {
-			UIShowBookMarkForm bookmarkForm = event.getSource() ;
-			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static	public class OpenLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
+    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String id) throws Exception {
 			UIForumPortlet forumPortlet = bookmarkForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIApplication uiApp = bookmarkForm.getAncestorOfType(UIApplication.class) ;
 			UIBreadcumbs breadcumbs = forumPortlet.getChild(UIBreadcumbs.class);
 			String userName = forumPortlet.getUserProfile().getUserId();
 			long role = forumPortlet.getUserProfile().getUserRole();
@@ -137,7 +136,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					Forum forum = bookmarkForm.forumService.getForum(categoryId, forumId ) ;
 					if(forum == null || topic == null) {
 						breadcumbs.setOpen(false) ;
-						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						warning("UIShowBookMarkForm.msg.link-not-found") ;
 						id = bookmarkForm.getBookMarkId(id) ;
 						if(!ForumUtils.isEmpty(id)) {
 							bookmarkForm.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), id, false) ;
@@ -181,7 +180,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 					Forum forum = (Forum)bookmarkForm.forumService.getObjectNameById(id, Utils.FORUM ) ;
 					if(forum == null) {
 						breadcumbs.setOpen(false) ;
-						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						warning("UIShowBookMarkForm.msg.link-not-found") ;
 						id = bookmarkForm.getBookMarkId(id) ;
 						if(!ForumUtils.isEmpty(id)) {
 							bookmarkForm.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), id, false) ;
@@ -233,7 +232,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 				}
 			} catch (Exception e) {
 				breadcumbs.setOpen(false) ;
-				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+				warning("UIShowBookMarkForm.msg.link-not-found") ;
 				id = bookmarkForm.getBookMarkId(id) ;
 				if(!ForumUtils.isEmpty(id)) {
 					bookmarkForm.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), id, false) ;
@@ -243,8 +242,7 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 			}
 			if(!isRead) {
 				breadcumbs.setOpen(false) ;
-				String[] s = new String[]{};
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+				warning("UIForumPortlet.msg.do-not-permission") ;
 				return;
 			}
 			forumPortlet.cancelAction() ;
@@ -252,9 +250,8 @@ public class UIShowBookMarkForm extends UIForm implements UIPopupComponent{
 		}
 	}
 	
-	static	public class DeleteLinkActionListener extends EventListener<UIShowBookMarkForm> {
-		public void execute(Event<UIShowBookMarkForm> event) throws Exception {
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static	public class DeleteLinkActionListener extends BaseEventListener<UIShowBookMarkForm> {
+    public void onEvent(Event<UIShowBookMarkForm> event, UIShowBookMarkForm bookmarkForm, String path) throws Exception {
 			UIShowBookMarkForm bookMark = event.getSource() ;
 			UIForumPortlet forumPortlet = bookMark.getAncestorOfType(UIForumPortlet.class) ;
 			bookMark.forumService.saveUserBookmark(forumPortlet.getUserProfile().getUserId(), path, false) ;
