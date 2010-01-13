@@ -3867,7 +3867,9 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	      }
       }
 			if(posts.size() > 0) {
-				Collections.sort(posts, new Utils.DatetimeComparatorDESC()) ;
+				try {
+					Collections.sort(posts, new Utils.DatetimeComparatorPostDESC()) ;
+        } catch (Exception e) {}
 				String []postPaths = new String[posts.size()];
 				int i = 0;
 				for (Post p : posts) {

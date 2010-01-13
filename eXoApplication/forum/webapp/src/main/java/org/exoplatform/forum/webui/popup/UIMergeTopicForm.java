@@ -26,21 +26,18 @@ import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.webui.UIForumPortlet;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
-
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -55,7 +52,9 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIMergeTopicForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
+public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
+	private static final String TITLE = "title"; 
+	private static final String DESTINATION = "destination"; 
 	private List<Topic> listTopic ;
 	private String link;
 	public UIMergeTopicForm() throws Exception {
@@ -68,8 +67,8 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 	      list.add(new SelectItemOption<String>(topic.getTopicName(), topic.getId()));
       }
 		}
-		UIFormSelectBox destination = new UIFormSelectBox("destination", "destination", list) ;
-		UIFormStringInput titleThread = new UIFormStringInput("title","title", null) ;
+		UIFormSelectBox destination = new UIFormSelectBox(DESTINATION, DESTINATION, list) ;
+		UIFormStringInput titleThread = new UIFormStringInput(TITLE,TITLE, null) ;
 		if(this.listTopic != null && this.listTopic.size() > 0) {
 			destination.setValue(this.listTopic.get(0).getId()) ;
 			titleThread.setValue(this.listTopic.get(0).getTopicName());
@@ -88,15 +87,13 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 	public void activate() throws Exception {
 		intAddChild() ;
 	}
-	
 	public void deActivate() throws Exception {}
 	
 	static	public class SaveActionListener extends EventListener<UIMergeTopicForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UIMergeTopicForm> event) throws Exception {
 			UIMergeTopicForm uiForm = event.getSource() ;
-			String topicMergeId = uiForm.getUIFormSelectBox("destination").getValue() ;
-			String topicMergeTitle = uiForm.getUIStringInput("title").getValue() ;
+			String topicMergeId = uiForm.getUIFormSelectBox(DESTINATION).getValue() ;
+			String topicMergeTitle = uiForm.getUIStringInput(TITLE).getValue() ;
 			topicMergeTitle = ForumTransformHTML.enCodeHTML(topicMergeTitle).trim() ;
 			if(!ForumUtils.isEmpty(topicMergeTitle)) {
 				Topic topicMerge = new Topic() ;
@@ -119,7 +116,6 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 							if(topicMergeId.equals(topic.getId())) {continue ;}
 							try {
 								// set link
-//								link = (ForumSessionUtils.getBreadcumbUrl(link, uiForm.getId(), "Cancel", "pathId")).replaceFirst("private", "public");
 								link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
 								forumService.mergeTopic(categoryId+"/"+forumId+"/"+topic.getId(), destTopicPath, emailContent, link) ;
 		          } catch (Exception e) {
@@ -134,6 +130,7 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 			        	list.add(topicMerge) ;
 			          forumService.modifyTopic(list, 7) ;
 			        } catch (Exception e) {
+			        	e.printStackTrace();
 			          isMerge = false;
 			        }
 						}
@@ -142,13 +139,11 @@ public class UIMergeTopicForm extends UIForm implements UIPopupComponent {
 					isMerge = false;
 				}
         if(!isMerge) {
-        	UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIMergeTopicForm.msg.forum-deleted", null, ApplicationMessage.WARNING)) ;
-        	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        	uiForm.warning("UIMergeTopicForm.msg.forum-deleted") ;
         }
 			} else {
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIMergeTopicForm.msg.checkEmptyTitle", args, ApplicationMessage.WARNING)) ;
+				uiForm.warning("UIMergeTopicForm.msg.checkEmptyTitle") ;
+				return;
 			}
 			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class);
 			forumPortlet.cancelAction() ;
