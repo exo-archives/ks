@@ -21,15 +21,14 @@ import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.upload.UploadService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
@@ -41,7 +40,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 		}
 )
 
-public class UIImportForm extends UIForm implements UIPopupComponent{
+public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 	private final String FILE_UPLOAD = "FileUpload";
 	private String categoryPath = null;
 	public void activate() throws Exception { }
@@ -86,17 +85,14 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 	}
 
 	static public class SaveActionListener extends EventListener<UIImportForm> {
-		@SuppressWarnings("deprecation")
     public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			
 			UIForumPortlet forumPortlet = importForm.getAncestorOfType(UIForumPortlet.class) ;
 
 			UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
-			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			if(uploadInput.getUploadResource() == null){
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				importForm.warning("UIImportForm.msg.file-not-found") ;
 				return;
 			}
 			String fileName = uploadInput.getUploadResource().getFileName();
@@ -123,8 +119,7 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
 					importSuccess = importForm.extractFromZipFile(zipInputStream, nodePath, service);
 				} else {
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.mimetype-invalid");
 					return;
 				}
   			popupAction.deActivate() ;
@@ -138,32 +133,26 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
   			}
   			if(importSuccess){
   				service.updateDataImported();
-  				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
+  				importForm.warning("UIImportForm.msg.import-successful");
   			}
-  			event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
   			isUdateForm = true;
 			} catch(PathNotFoundException pnf){
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryNoLongerExist", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				importForm.warning("UIImportForm.msg.CategoryNoLongerExist");
 				isErr = true;
 			} catch (AccessDeniedException ace) {
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				importForm.warning("UIImportForm.msg.access-denied");
 				isErr = true;
 			} catch (ConstraintViolationException con) {
 					if(ForumUtils.isEmpty(importForm.categoryPath)){
-						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception-category", null, ApplicationMessage.WARNING));
+						importForm.warning("UIImportForm.msg.constraint-violation-exception-category");
 					} else {
-						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception-forum", null, ApplicationMessage.WARNING));
+						importForm.warning("UIImportForm.msg.constraint-violation-exception-forum");
 					}
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
 				isErr = true;
 			} catch(ItemExistsException ie){
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.ObjectIsExist", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				importForm.warning("UIImportForm.msg.ObjectIsExist");
 			} catch (Exception ise) {
-				uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+				importForm.warning("UIImportForm.msg.filetype-error");
 				return;
 			}
 //		remove temp file in upload service and server
