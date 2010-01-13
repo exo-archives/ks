@@ -20,22 +20,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -64,6 +66,11 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+	
+	@SuppressWarnings("unused")
+  private String getTitleInHTMLCode(String s) {
+		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
+	}
 	
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
@@ -102,10 +109,8 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 		return null ;
 	}
 
-	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostUnApprove> {
-		public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
-			UIPageListPostUnApprove uiForm = event.getSource() ;
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostUnApprove> {
+    public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPost(postId) ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -117,8 +122,8 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 		}
 	}
 
-	static	public class UnApproveActionListener extends EventListener<UIPageListPostUnApprove> {
-		public void execute(Event<UIPageListPostUnApprove> event) throws Exception {
+	static	public class UnApproveActionListener extends BaseEventListener<UIPageListPostUnApprove> {
+    public void onEvent(Event<UIPageListPostUnApprove> event, UIPageListPostUnApprove uiForm, final String objectId) throws Exception {
 			UIPageListPostUnApprove postUnApprove = event.getSource() ;
 			Post post = new Post() ;
 			boolean haveCheck = false ;
@@ -132,7 +137,7 @@ public class UIPageListPostUnApprove extends UIForumKeepStickPageIterator implem
 				}
 			}
 			if(!haveCheck) {
-				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null)) ;
+				warning("UIPageListPostUnApprove.sms.notCheck") ;
 			} else {
 				try {
 					postUnApprove.forumService.modifyPost(posts, 1) ;

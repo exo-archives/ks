@@ -28,16 +28,16 @@ import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -108,10 +108,8 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		return forumService.getPost(this.categoryId, this.forumId, this.topicId, postId) ;
 	}
 	
-	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostHidden> {
-		public void execute(Event<UIPageListPostHidden> event) throws Exception {
-			UIPageListPostHidden uiForm = event.getSource() ;
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostHidden> {
+    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPost(postId) ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
@@ -123,9 +121,8 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 		}
 	}
 
-	static public class UnHiddenActionListener extends EventListener<UIPageListPostHidden> {
-		public void execute(Event<UIPageListPostHidden> event) throws Exception {
-			UIPageListPostHidden postHidden = event.getSource();
+	static public class UnHiddenActionListener extends BaseEventListener<UIPageListPostHidden> {
+    public void onEvent(Event<UIPageListPostHidden> event, UIPageListPostHidden postHidden, final String objectId) throws Exception {
 			Post post = new Post();
 			List<Post> posts = new ArrayList<Post>();
 			boolean haveCheck = false;
@@ -138,7 +135,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 				}
 			}
 			if (!haveCheck) {
-				throw new MessageException(new ApplicationMessage("UIPageListPostUnApprove.sms.notCheck", null));
+				warning("UIPageListPostUnApprove.sms.notCheck");
 			} else {
 				try {
 					postHidden.forumService.modifyPost(posts, 2);

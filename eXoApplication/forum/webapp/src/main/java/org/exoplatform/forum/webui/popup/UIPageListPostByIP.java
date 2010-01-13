@@ -35,15 +35,15 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -60,7 +60,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIPageListPostByIP.DeletePostLinkActionListener.class)
 		}
 )
-public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
+public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent  {
 	private ForumService forumService ;
 	private UserProfile userProfile = null ;
 	private String userName = "";
@@ -126,24 +126,24 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 		return null ;
 	}
 
-	static	public class OpenPostLinkActionListener extends EventListener<UIPageListPostByIP> {
-		public void execute(Event<UIPageListPostByIP> event) throws Exception {
-			UIPageListPostByIP uiForm = event.getSource() ;
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class OpenPostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPostById(postId) ;
-			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(post == null){
-				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+				warning("UIShowBookMarkForm.msg.link-not-found") ;
 				return ;
 			}
 			boolean isRead = true;
 			if(uiForm.userProfile.getUserRole() > 0) {
-				String path =	post.getPath().replaceFirst("/exo:applications/ForumService/", "");
-				String []id = path.split("/") ;
+				String ids[] = post.getPath().split("/");
+				int leng = ids.length;
+				String categoryId = ids[leng - 4];
+				String forumId = ids[leng - 3];
+				String topicId = ids[leng - 2];
 				try {
-					Category category = uiForm.forumService.getCategory(id[0]);
+					Category category = uiForm.forumService.getCategory(categoryId);
 					if(category == null) {
-						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
+						warning("UIShowBookMarkForm.msg.link-not-found") ;
 						return ;
 					}
 					String[] privateUser = category.getUserPrivate();
@@ -156,12 +156,11 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 					}
 					if(isRead) {
 						String path_ = "" ;
-						Forum forum = uiForm.forumService.getForum(id[0] , id[1] ) ;
-						if(forum != null ) path_ = forum.getPath()+"/"+id[2] ;
+						Forum forum = uiForm.forumService.getForum(categoryId , forumId ) ;
+						if(forum != null ) path_ = forum.getPath()+"/"+topicId ;
 						Topic topic = uiForm.forumService.getTopicByPath(path_, false) ;
 						if(forum == null || topic == null) {
-							String[] s = new String[]{};
-							uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+							warning("UIForumPortlet.msg.do-not-permission") ;
 							return;
 						}
 						if(uiForm.userProfile.getUserRole() == 1 && (forum.getModerators() != null && forum.getModerators().length > 0 && 
@@ -192,8 +191,7 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 						}
 					}
 				} catch (Exception e) {
-					String[] s = new String[]{};
-					uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", s, ApplicationMessage.WARNING)) ;
+					warning("UIShowBookMarkForm.msg.link-not-found") ;
 				}
 			}
 			if(isRead){
@@ -205,8 +203,7 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 				viewPost.setActionForm(new String[] {"Close", "OpenTopicLink"});
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				String[] s = new String[]{};
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
+				warning("UIForumPortlet.msg.do-not-permission") ;
 				return;
 			}
 		}
@@ -266,7 +263,6 @@ public class UIPageListPostByIP  extends UIForm implements UIPopupComponent  {
 	}
 
 	public void activate() throws Exception {	}
-
 	public void deActivate() throws Exception {	}
 
 }
