@@ -33,19 +33,16 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIForumKeepStickPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -157,7 +154,6 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 					String forumId = string[string.length - 2] ;
 					try {
 						// set link
-//						String link = ForumSessionUtils.getBreadcumbUrl(uiForm.getLink(), uiForm.getId(), "Cancel", "pathId").replaceFirst("private", "public");	
 						String link = ForumUtils.createdForumLink(ForumUtils.TOPIC, "pathId").replaceFirst("private", "public");	
 						//
 						WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
@@ -171,19 +167,14 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 						UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
-						Object[] args = { };
-						throw new MessageException(new ApplicationMessage("UISplitTopicForm.msg.forum-deleted", args, ApplicationMessage.WARNING)) ;
+						uiForm.warning("UISplitTopicForm.msg.forum-deleted") ;
 					}		
 				}else {
-					Object[] args = { };
-					throw new MessageException(new ApplicationMessage("UITopicDetail.msg.notCheckPost", args, ApplicationMessage.WARNING)) ;
+					uiForm.warning("UITopicDetail.msg.notCheckPost") ;
 				}
 			} else {
 				uiForm.getIdSelected();
-				Object[] args = { uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) };
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.ShortText", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				uiForm.warning("NameValidator.msg.ShortText", new String[]{ uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) }) ;
 				return;
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
