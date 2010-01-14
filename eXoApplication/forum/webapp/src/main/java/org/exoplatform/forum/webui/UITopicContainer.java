@@ -655,9 +655,6 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		public void onEvent(Event<UITopicContainer> event, UITopicContainer uiTopicContainer, final String objectId) throws Exception {
 			Forum forum = uiTopicContainer.getForum() ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-//			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-//			UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
 			UIForumForm forumForm = openPopup(forumPortlet, UIForumForm.class, "EditForumForm", 650, 480);
 			boolean isMode = false ;
 			if(uiTopicContainer.userProfile.getUserRole() == 1) isMode = true;
@@ -666,11 +663,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			forumForm.setCategoryValue(uiTopicContainer.categoryId, false) ;
 			forumForm.setForumValue(forum, true);
 			forumForm.setForumUpdate(true) ;
-//			popupContainer.setId("EditForumForm") ;
-//			popupAction.activate(popupContainer, 650, 480) ;
 			uiTopicContainer.isUpdate = true ;
 			uiTopicContainer.isReload = false;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 	
@@ -745,13 +739,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			forums.add(forum);
 			uiTopicContainer.isUpdate = true ;
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-//			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//			UIMoveForumForm moveForumForm = popupAction.createUIComponent(UIMoveForumForm.class, null, null) ;
 			UIMoveForumForm moveForumForm = openPopup(forumPortlet, UIMoveForumForm.class, 315, 365);
 			moveForumForm.setListForum(forums, uiTopicContainer.categoryId);
 			moveForumForm.setForumUpdate(true) ;
-//			popupAction.activate(moveForumForm, 315, 365) ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 	
@@ -782,12 +772,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 				return;
 			}
-//			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//			UIExportForm exportForm = popupAction.createUIComponent(UIExportForm.class, null, null) ;
 			UIExportForm exportForm = openPopup(forumPortlet, UIExportForm.class, 380, 160) ;
 			exportForm.setObjectId(forum);
-//			popupAction.activate(exportForm, 380, 160) ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}	
 
@@ -796,13 +782,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			try {
 				uiTopicContainer.forum = uiTopicContainer.forumService.getForum(uiTopicContainer.categoryId, uiTopicContainer.forumId);;
 				UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
-//				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//				UIWatchToolsForm watchToolsForm = popupAction.createUIComponent(UIWatchToolsForm.class, null, null) ;
 				UIWatchToolsForm watchToolsForm = openPopup(forumPortlet, UIWatchToolsForm.class, 500, 365) ;
 				watchToolsForm.setPath(uiTopicContainer.forum.getPath());
 				watchToolsForm.setEmails(uiTopicContainer.forum.getEmailNotification()) ;
-//				popupAction.activate(watchToolsForm, 500, 365) ;
-//				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch (Exception e) {
       	e.printStackTrace();
 				warning("UITopicContainer.msg.forum-deleted") ;
@@ -833,12 +815,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
-//				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//				UIPageListTopicUnApprove pageListTopicUnApprove	= popupAction.createUIComponent(UIPageListTopicUnApprove.class, null, null) ;
 				UIPageListTopicUnApprove pageListTopicUnApprove	= openPopup(forumPortlet, UIPageListTopicUnApprove.class, 500, 365) ;
 				pageListTopicUnApprove.setUpdateContainer(uiTopicContainer.categoryId, uiTopicContainer.forumId) ;
-//				popupAction.activate(pageListTopicUnApprove, 500, 365) ;
-//				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 		}
 	}	
@@ -882,16 +860,10 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(checked) {
-//				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-//				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-//				UITopicForm topicForm = popupContainer.addChild(UITopicForm.class, null, null) ;
 				UITopicForm topicForm = openPopup(forumPortlet, UITopicForm.class, "UIEditTopicContainer", 850, 460) ;
 				topicForm.setTopicIds(uiTopicContainer.categoryId, uiTopicContainer.forumId, uiTopicContainer.forum, uiTopicContainer.userProfile.getUserRole()) ;
 				topicForm.setUpdateTopic(topic, true) ;
 				topicForm.setMod(uiTopicContainer.isModerator) ;
-//				popupContainer.setId("UIEditTopicContainer") ;
-//				popupAction.activate(popupContainer, 850, 460) ;
-//				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
 				warning("UICategory.msg.notCheck") ;
 			}
@@ -1078,12 +1050,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 0) {
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIMoveTopicForm moveTopicForm = popupAction.createUIComponent(UIMoveTopicForm.class, null, null) ;
+				UIMoveTopicForm moveTopicForm = openPopup(forumPortlet, UIMoveTopicForm.class, 400, 420) ;
 				moveTopicForm.setUserProfile(uiTopicContainer.userProfile) ;
 				moveTopicForm.updateTopic(uiTopicContainer.forumId, topics, false);
-				popupAction.activate(moveTopicForm, 400, 420) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} 
 			if(topics.size() == 0){
 				warning("UITopicContainer.sms.notCheckMove") ;
@@ -1105,11 +1074,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 			}
 			UIForumPortlet forumPortlet = uiTopicContainer.getAncestorOfType(UIForumPortlet.class) ;
 			if(topics.size() > 1) {
-				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-				UIMergeTopicForm mergeTopicForm = popupAction.createUIComponent(UIMergeTopicForm.class, null, null) ;
+				UIMergeTopicForm mergeTopicForm = openPopup(forumPortlet, UIMergeTopicForm.class, 560, 260) ;
 				mergeTopicForm.updateTopics(topics) ;
-				popupAction.activate(mergeTopicForm, 560, 260) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} 
 			if(topics.size() <= 1){
 				warning("UITopicContainer.sms.notCheckThreads") ;
@@ -1286,13 +1252,8 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	static	public class BanIpForumToolsActionListener extends BaseEventListener<UITopicContainer> {
 		public void onEvent(Event<UITopicContainer> event, UITopicContainer uiForm, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			UIBanIPForumManagerForm ipForumManager = popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
-			popupContainer.setId("BanIPForumManagerForm") ;
+			UIBanIPForumManagerForm ipForumManager = openPopup(forumPortlet, UIBanIPForumManagerForm.class, "BanIPForumManagerForm", 450, 500) ;
 			ipForumManager.setForumId(uiForm.categoryId + "/" + uiForm.forumId);
-			popupAction.activate(popupContainer, 450, 500) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
