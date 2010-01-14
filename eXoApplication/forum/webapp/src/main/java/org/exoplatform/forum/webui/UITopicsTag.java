@@ -34,15 +34,13 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 
@@ -68,7 +66,6 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 )
 
 public class UITopicsTag extends UIForumKeepStickPageIterator {
-	private ForumService forumService ;
 	private String tagId = "" ;
 	private Tag tag ;
 	private boolean isUpdateTag = true ;
@@ -78,9 +75,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private List<Topic> topics = new ArrayList<Topic>();
 	private Map<String, Long> mapNumberPagePost = new HashMap<String, Long>();
-	public UITopicsTag() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-	}
+	public UITopicsTag() throws Exception {}
 	
 	public void setIdTag(String tagId) throws Exception {
 		this.tagId = tagId ;
@@ -114,7 +109,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 
 	@SuppressWarnings("unused")
   private String getScreenName(String userName)throws Exception {
-		return forumService.getScreenName(userName);
+		return getForumService().getScreenName(userName);
 	}
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
@@ -137,7 +132,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String userLogin = this.userProfile.getUserId();
 			long role = this.userProfile.getUserRole() ;
 			if(role >=2){ isHidden = "false" ;}
-			Forum forum = this.forumService.getForum(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
+			Forum forum = this.getForumService().getForum(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)]);
 			if(role == 1) {
 				if(!ForumServiceUtils.hasPermission(forum.getModerators(), userLogin)){
 					isHidden = "false" ;
@@ -146,7 +141,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			if(forum.getIsModeratePost() || topic.getIsModeratePost()) {
 				if(isHidden.equals("false") && !(topic.getOwner().equals(userLogin))) isApprove = "true" ;
 			}
-			long availablePost = this.forumService.getAvailablePost(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, userLogin)	; 
+			long availablePost = this.getForumService().getAvailablePost(Ids[(Ids.length - 3)], Ids[(Ids.length - 2)], Ids[(Ids.length - 1)], isApprove, isHidden, userLogin)	; 
 			long value = availablePost/maxPost;
 			if(value*maxPost < availablePost) value = value + 1;
 			mapNumberPagePost.put(Id, value);
@@ -159,7 +154,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Topic> getTopicsTag() throws Exception {
-		this.pageList = forumService.getTopicByMyTag(userIdAndtagId, strOrderBy);
+		this.pageList = getForumService().getTopicByMyTag(userIdAndtagId, strOrderBy);
 		int maxTopic = this.userProfile.getMaxTopicInPage().intValue() ;
 		if(maxTopic <= 0) maxTopic = 10;
 		this.pageList.setPageSize(maxTopic) ;
@@ -180,7 +175,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	private Tag getTagById() throws Exception {
 		if(this.isUpdateTag) {
 			try{
-				this.tag = forumService.getTag(this.tagId) ;
+				this.tag = getForumService().getTag(this.tagId) ;
 			}catch (Exception e) {
 				throw e;
 			}
@@ -195,26 +190,15 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
 
-//	@SuppressWarnings("unused")
-//	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-//		List<Tag> tags = new ArrayList<Tag>();
-//		try {
-//			tags = this.forumService.getTagsByTopic(tagIds);
-//    } catch (Exception e) {
-//    	throw e;
-//    }
-//    return tags;
-//	}
-	
   private Topic getTopic(String topicId) throws Exception {
 		for (Topic topic : topics) {
 			if(topic.getId().equals(topicId)) return topic ;
 		}
-		return (Topic)forumService.getObjectNameById(topicId, Utils.TOPIC)  ;
+		return (Topic)getForumService().getObjectNameById(topicId, Utils.TOPIC)  ;
 	}
 	
 	private Forum getForum(String categoryId, String forumId) throws Exception {
-		return this.forumService.getForum(categoryId, forumId);
+		return this.getForumService().getForum(categoryId, forumId);
 	}
 	
 	@SuppressWarnings("unused")
@@ -234,10 +218,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		return "";
 	}
 	
-	static public class OpenTopicActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag uiTopicsTag = event.getSource();
-			String idAndNumber = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static public class OpenTopicActionListener extends BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag uiTopicsTag, final String idAndNumber) throws Exception {
 			String []id = idAndNumber.split(",") ;
 			Topic topic = uiTopicsTag.getTopic(id[0]);
 			String[]ids = topic.getPath().split("/");
@@ -250,8 +232,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			String[] privateUsers = category.getUserPrivate();
 			if(privateUsers.length > 0 && privateUsers[0].trim().length() > 0 && 
 					!ForumServiceUtils.hasPermission(privateUsers, uiTopicsTag.userProfile.getUserId())){
-				UIApplication uiApp = uiTopicsTag.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", null, ApplicationMessage.WARNING)) ;
+				warning("UIForumPortlet.msg.do-not-permission") ;
 				return ;
 			}
 			
@@ -276,10 +257,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		}
 	}
 	
-	static public class OpenTopicsTagActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicsTag = event.getSource() ;
-			String tagId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static public class OpenTopicsTagActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicsTag, final String tagId) throws Exception {
 			UIForumPortlet forumPortlet = topicsTag.getParent() ;
 			forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(tagId) ;
 			topicsTag.setIdTag(tagId) ;
@@ -287,9 +266,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		}
 	}
 	
-	static public class RemoveTopicActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicsTag = event.getSource();
+	static public class RemoveTopicActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicsTag, final String objectId) throws Exception {
 			UIForumPortlet forumPortlet = topicsTag.getParent();
 			boolean hasCheck = false;
 			String topicPath = "";
@@ -298,7 +276,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				for (String topicId : (List<String>)topicsTag.getIdSelected()) {
 					topicPath = topicsTag.getTopic(topicId).getPath();
 					try {
-						topicsTag.forumService.unTag(topicsTag.tagId, userId, topicPath);
+						topicsTag.getForumService().unTag(topicsTag.tagId, userId, topicPath);
 					} catch (Exception e) {
 					}
 					hasCheck = true;
@@ -306,8 +284,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 			}catch (Exception e) {
 			}
 			if (!hasCheck) {
-				Object[] args = {};
-				throw new MessageException(new ApplicationMessage("UITopicContainer.sms.notCheckMove", args, ApplicationMessage.WARNING));
+				warning("UITopicContainer.sms.notCheckMove");
 			} else {
 				topicsTag.isUpdateTag = true;
 				Tag tag = topicsTag.getTagById();
@@ -324,10 +301,8 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		}
 	}
 	
-	static public class AddBookMarkActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicTag = event.getSource();
-			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static public class AddBookMarkActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String topicId) throws Exception {	;
 			if(!ForumUtils.isEmpty(topicId)) {
 				try{
 					Topic topic = topicTag.getTopic(topicId);
@@ -336,7 +311,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					StringBuffer buffer = new StringBuffer();
 					buffer.append("ThreadNoNewPost//").append(topic.getTopicName()).append("//").append(path) ;
 					String userName = topicTag.userProfile.getUserId() ;
-					topicTag.forumService.saveUserBookmark(userName, buffer.toString(), true) ;
+					topicTag.getForumService().saveUserBookmark(userName, buffer.toString(), true) ;
 					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateUserProfileInfo() ;
 				} catch (Exception e) {
@@ -345,29 +320,16 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 		}
 	}
 	
-	static public class RSSActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag uiForm = event.getSource();
-			String forumId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static public class RSSActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag uiForm, final String forumId) throws Exception {
 			if(!uiForm.getUserProfile().getUserId().equals(UserProfile.USER_GUEST)){
-				uiForm.forumService.addWatch(-1, forumId, null, uiForm.getUserProfile().getUserId());
+				uiForm.getForumService().addWatch(-1, forumId, null, uiForm.getUserProfile().getUserId());
 			}
-			/*String rssLink = uiForm.getRSSLink(forumId);
-			UIForumPortlet portlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-			popupContainer.setId("ForumRSSForm") ;
-			UIRSSForm exportForm = popupContainer.addChild(UIRSSForm.class, null, null) ;
-			popupAction.activate(popupContainer, 560, 170) ;
-			exportForm.setRSSLink(rssLink);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;*/
 		}
 	}
 	
-	static public class AddWatchingActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicTag = event.getSource();
-			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static public class AddWatchingActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String topicId) throws Exception {
 			if(!ForumUtils.isEmpty(topicId)) {
 				try{
 					Topic topic = topicTag.getTopic(topicId);
@@ -375,46 +337,32 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					path = path.substring(path.indexOf(Utils.CATEGORY));
 					List<String> values = new ArrayList<String>();
 					values.add(topicTag.userProfile.getEmail());
-					topicTag.forumService.addWatch(1, path, values, topicTag.userProfile.getUserId()) ;
+					topicTag.getForumService().addWatch(1, path, values, topicTag.userProfile.getUserId()) ;
 					UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
 					forumPortlet.updateWatchinh();
 					topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
-					Object[] args = { };
-					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.successfully", args, ApplicationMessage.INFO)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					info("UIAddWatchingForm.msg.successfully") ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 				} catch (Exception e) {
 					e.printStackTrace();
-					Object[] args = { };
-					UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.fall", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("UIAddWatchingForm.msg.fall") ;
 				}					
 			}
 		}
 	}
 
-	static public class UnWatchActionListener extends EventListener<UITopicsTag> {
-		public void execute(Event<UITopicsTag> event) throws Exception {
-			UITopicsTag topicTag = event.getSource();
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static public class UnWatchActionListener extends  BaseEventListener<UITopicsTag> {
+		public void onEvent(Event<UITopicsTag> event, UITopicsTag topicTag, final String path) throws Exception {
 			try {
-				topicTag.forumService.removeWatch(1, path, topicTag.userProfile.getUserId()+"/"+topicTag.getEmailWatching(path)) ;
+				topicTag.getForumService().removeWatch(1, path, topicTag.userProfile.getUserId()+"/"+topicTag.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = topicTag.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
 				topicTag.listWatches = forumPortlet.getWatchinhByCurrentUser();
-				Object[] args = { };
-				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchSuccessfully", args, ApplicationMessage.INFO)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 			} catch (Exception e) {
 				e.printStackTrace();
-				Object[] args = { };
-				UIApplication uiApp = topicTag.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddWatchingForm.msg.UnWatchfall", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIAddWatchingForm.msg.UnWatchfall") ;
 			}
 		}
 	}

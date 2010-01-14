@@ -25,15 +25,12 @@ import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 /**
@@ -50,7 +47,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIQuickSearchForm.AdvancedSearchActionListener.class)			
 		}
 )
-public class UIQuickSearchForm extends UIForm {
+public class UIQuickSearchForm extends BaseUIForm {
 	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
 	
 	public UIQuickSearchForm() throws Exception {
@@ -68,8 +65,7 @@ public class UIQuickSearchForm extends UIForm {
 				for (int i = 0; i < special.length(); i++) {
 					char c = special.charAt(i);
 					if(text.indexOf(c) >= 0) {
-						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+						uiForm.warning("UIQuickSearchForm.msg.failure") ;
 						return ;
 					}
 				}
@@ -94,8 +90,7 @@ public class UIQuickSearchForm extends UIForm {
 															forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums(), forumIdsOfModerator);
 				}catch (Exception e) {
 					e.printStackTrace();
-					UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
+					uiForm.warning("UIQuickSearchForm.msg.failure") ;
 					return ;
 				}
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -109,8 +104,7 @@ public class UIQuickSearchForm extends UIForm {
 				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			} else {
 				formStringInput.setValue("") ;
-				Object[] args = { };
-				throw new MessageException(new ApplicationMessage("UIQuickSearchForm.msg.checkEmpty", args, ApplicationMessage.WARNING)) ;
+				uiForm.warning("UIQuickSearchForm.msg.checkEmpty") ;
 			}
 		}
 	}

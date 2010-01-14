@@ -23,19 +23,17 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIPollForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -43,8 +41,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormRadioBoxInput;
 
 /**
@@ -65,8 +61,7 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 			@EventConfig(listeners = UITopicPoll.VoteAgainPollActionListener.class)
 		}
 )
-public class UITopicPoll extends UIForm	{
-	private ForumService forumService ;
+public class UITopicPoll extends BaseForumForm	{
 	private Poll poll_ ;
 	private String categoryId, forumId, topicId ;
 	private boolean isAgainVote = false ;
@@ -77,7 +72,6 @@ public class UITopicPoll extends UIForm	{
 	private UserProfile userProfile;
 	
 	public UITopicPoll() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	}
 
 	@SuppressWarnings("unused")
@@ -87,7 +81,7 @@ public class UITopicPoll extends UIForm	{
 			userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
     } catch (Exception e) {
 			try {
-				userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), "");
+				userProfile = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), "");
       } catch (Exception ex) {
       }
     }
@@ -97,7 +91,7 @@ public class UITopicPoll extends UIForm	{
 	public void setForum(Forum forum) {
 		if(forum == null){
 			try {
-				this.forum = forumService.getForum(categoryId, forumId);
+				this.forum = getForumService().getForum(categoryId, forumId);
       } catch (Exception e) {
       }
 		} else {
@@ -144,7 +138,7 @@ public class UITopicPoll extends UIForm	{
 			if(userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId())) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
 			try {
-				poll_ = forumService.getPoll(categoryId, forumId, topicId) ; 
+				poll_ = getForumService().getPoll(categoryId, forumId, topicId) ; 
       } catch (Exception e) {
       }
 			this.init() ;
@@ -253,8 +247,7 @@ public class UITopicPoll extends UIForm	{
 					}
 				}
 				if(radioInput.getValue().equalsIgnoreCase("vote")) {
-					Object[] args = { };
-					throw new MessageException(new ApplicationMessage("UITopicPoll.msg.notCheck", args, ApplicationMessage.WARNING)) ;
+					topicPoll.warning("UITopicPoll.msg.notCheck") ;
 				} else {
 					// order number
 					List<SelectItemOption<String>> options = new ArrayList<SelectItemOption<String>>() ;
@@ -383,19 +376,17 @@ public class UITopicPoll extends UIForm	{
 					poll.setUserVote(setUserVote) ;
 					poll.setVote(votes) ;
 				} else {
-					Object[] args = { };
-					throw new MessageException(new ApplicationMessage("UITopicPoll.msg.notCheck", args, ApplicationMessage.WARNING)) ;
+					topicPoll.warning("UITopicPoll.msg.notCheck") ;
 				}
 			}
-			topicPoll.forumService.savePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
+			topicPoll.getForumService().savePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll.getParent()) ;
 		}
 	}
 	
-	static public class EditPollActionListener extends EventListener<UITopicPoll> {
-		public void execute(Event<UITopicPoll> event) throws Exception {
-			UITopicPoll topicPoll = event.getSource() ;
+	static public class EditPollActionListener extends BaseEventListener<UITopicPoll> {
+		public void onEvent(Event<UITopicPoll> event, UITopicPoll topicPoll, final String objectId) throws Exception {
 			UIPopupAction popupAction ;
 			try {
 				UIForumPortlet forumPortlet = topicPoll.getAncestorOfType(UIForumPortlet.class) ;
@@ -418,7 +409,7 @@ public class UITopicPoll extends UIForm	{
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
 			try {
-				topicPoll.forumService.removePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
+				topicPoll.getForumService().removePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
       } catch (Exception e) {
       }
 			if(topicPoll.poll_.getIsMultiCheck()) {
@@ -456,10 +447,8 @@ public class UITopicPoll extends UIForm	{
 		}
 	}
 
-	static public class ClosedPollActionListener extends EventListener<UITopicPoll> {
-		public void execute(Event<UITopicPoll> event) throws Exception {
-			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UITopicPoll topicPoll = event.getSource() ;
+	static public class ClosedPollActionListener extends BaseEventListener<UITopicPoll> {
+		public void onEvent(Event<UITopicPoll> event, UITopicPoll topicPoll, final String id) throws Exception {
 			if(id.equals("true")) {
 				topicPoll.poll_.setIsClosed(false) ;
 				topicPoll.poll_.setTimeOut(0);
@@ -467,7 +456,7 @@ public class UITopicPoll extends UIForm	{
 				topicPoll.poll_.setIsClosed(!topicPoll.poll_.getIsClosed()) ;
 			}
 			try {
-				topicPoll.forumService.setClosedPoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, topicPoll.poll_) ;
+				topicPoll.getForumService().setClosedPoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, topicPoll.poll_) ;
       } catch (Exception e) {
       }
 			topicPoll.isAgainVote = false ;

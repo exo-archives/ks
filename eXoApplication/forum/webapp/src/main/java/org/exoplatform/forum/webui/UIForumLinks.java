@@ -33,15 +33,13 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -56,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIForumLinks.SelectActionListener.class)			
 		}
 )
-public class UIForumLinks extends UIForm {
+public class UIForumLinks extends BaseUIForm {
 	private ForumService forumService ;
 	public static final String FIELD_FORUMLINK_SELECTBOX = "forumLink" ;
 	public static final String FIELD_FORUMHOMEPAGE_LABEL = "forumHomePage" ;
@@ -193,9 +191,7 @@ public class UIForumLinks extends UIForm {
 						} else isErro = true ;
 					}
 					if(isErro) {
-						Object[] args = { };
-						UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-						uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
+						uiForm.warning("UIShowBookMarkForm.msg.link-not-found") ;
 						path = Utils.FORUM_SERVICE ;
 					}
 					if(path.indexOf(Utils.FORUM_SERVICE) >= 0) {
