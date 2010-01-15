@@ -29,7 +29,6 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIForm;
 
-import com.google.caja.reporting.MessageType;
 
 /**
  * Base UIForm class that brings several convenience methods for UI operations ( i18n, messages, popups,...)
