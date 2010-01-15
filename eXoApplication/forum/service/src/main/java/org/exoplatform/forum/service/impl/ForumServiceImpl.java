@@ -53,7 +53,6 @@ import org.exoplatform.forum.service.conf.InitializeForumPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.management.annotations.ManagedBy;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.User;
@@ -92,18 +91,30 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
     storage.addInitRssPlugin(plugin) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void addPlugin(ComponentPlugin plugin) throws Exception {
     storage.addPlugin(plugin) ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void addRolePlugin(ComponentPlugin plugin) throws Exception {
     storage.addRolePlugin(plugin) ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void addInitialDataPlugin(ComponentPlugin plugin) throws Exception {
   	storage.addInitialDataPlugin(plugin) ;
   }
@@ -118,15 +129,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.error("Error while updating category listeners "+ e.getMessage());
   	}
 
-    SessionProvider systemSession = SessionProvider.createSystemProvider() ;
-  	try{
-  	  log.info("initializing user profiles...");
-  		//initUserProfile(systemSession);  		
-  	}catch (Exception e) {
-  	  log.error("Error while initializing user profiles: "+ e.getMessage());
-  	}finally{
-  		systemSession.close() ;
-  	}
   	try{
   	  log.info("initializing default data...");
   		storage.initDefaultData() ;
@@ -224,6 +226,9 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public void removeMember(User user) throws Exception {
     storage.deleteUserProfile(user);
     forumStatisticsService.removeMember(user.getUserName());
@@ -231,9 +236,12 @@ public class ForumServiceImpl implements ForumService, Startable {
 	
 	
 	public void createUserProfile (User user) throws Exception  {
-	 
+
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public void updateUserProfile (User user) throws Exception {
 	  storage.populateUserProfile(user, false);
 	}
@@ -242,273 +250,242 @@ public class ForumServiceImpl implements ForumService, Startable {
 	 * @deprecated use {@link #updateUserProfile(User)}
 	 */
 	public void saveEmailUserProfile(String userId, String email) throws Exception{
-
 	}
 	
-	
-	public void saveCategory(SessionProvider sProvider, Category category, boolean isNew) throws Exception {
-		sProvider.close() ;
-		saveCategory(category, isNew);
-  }
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void saveCategory(Category category, boolean isNew) throws Exception {
     storage.saveCategory(category, isNew);
   }
 	
+  /**
+   * {@inheritDoc}
+   */
 	public void calculateModerator(String categoryPath, boolean isNew) throws Exception {
 		storage.calculateModerator(categoryPath, false);
 	}
-	
-	public Category getCategory(SessionProvider sProvider, String categoryId) throws Exception {
-		sProvider.close() ;
-    return getCategory(categoryId);
-  }
-	
+
+  /**
+   * {@inheritDoc}
+   */
   public Category getCategory(String categoryId) throws Exception {
     return storage.getCategory(categoryId);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String[] getPermissionTopicByCategory(String categoryId, String type) throws Exception {
   	return storage.getPermissionTopicByCategory(categoryId, type);
   }
   
-  public List<Category> getCategories(SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-    return getCategories();
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public List<Category> getCategories() throws Exception {
     return storage.getCategories();
   }
-
-  public Category removeCategory(SessionProvider sProvider, String categoryId) throws Exception {
-  	sProvider.close() ;
-    return removeCategory(categoryId) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public Category removeCategory(String categoryId) throws Exception {
     return storage.removeCategory(categoryId) ;
   }
-
+  
+  /**
+   * {@inheritDoc}
+   */
 	public void saveModOfCategory(List<String> moderatorCate, String userId, boolean isAdd) {
 		storage.saveModOfCategory(moderatorCate, userId, isAdd);
   }
-
-  public void modifyForum(SessionProvider sProvider, Forum forum, int type) throws Exception {
-  	sProvider.close() ;
-    modifyForum(forum, type) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void modifyForum(Forum forum, int type) throws Exception {
     storage.modifyForum(forum, type) ;
   }
   
-  public void saveForum(SessionProvider sProvider, String categoryId, Forum forum, boolean isNew) throws Exception {
-  	sProvider.close() ;
-    saveForum(categoryId, forum, isNew);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
     storage.saveForum(categoryId, forum, isNew);
   }
-
-  public void saveModerateOfForums(SessionProvider sProvider, List<String> forumPaths, String userName, boolean isDelete) throws Exception {
-  	sProvider.close() ;
-    saveModerateOfForums(forumPaths, userName, isDelete) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
     storage.saveModerateOfForums(forumPaths, userName, isDelete) ;
   }
-
-  public void moveForum(SessionProvider sProvider, List<Forum> forums, String destCategoryPath) throws Exception {
-  	sProvider.close() ;
-    moveForum(forums, destCategoryPath);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void moveForum(List<Forum> forums, String destCategoryPath) throws Exception {
     storage.moveForum(forums, destCategoryPath);
   }
 
-  public Forum getForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
-  	sProvider.close() ;
-    return getForum(categoryId, forumId);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Forum getForum(String categoryId, String forumId) throws Exception {
     return storage.getForum(categoryId, forumId);
   }
-
-  public List<Forum> getForums(SessionProvider sProvider, String categoryId, String strQuery) throws Exception {
-  	sProvider.close() ;
-    return getForums(categoryId, strQuery);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<Forum> getForums(String categoryId, String strQuery) throws Exception {
     return storage.getForums(categoryId, strQuery);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public List<Forum> getForumSummaries(String categoryId, String strQuery) throws Exception {
     return storage.getForumSummaries(categoryId, strQuery);
   }
   
-  
-  public Forum removeForum(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
-  	sProvider.close() ;
-    return removeForum(categoryId, forumId);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Forum removeForum(String categoryId, String forumId) throws Exception {
     return storage.removeForum(categoryId, forumId);
   }
-
-  public void modifyTopic(SessionProvider sProvider, List<Topic> topics, int type) throws Exception {
-  	sProvider.close() ;
-    modifyTopic(topics, type) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void modifyTopic(List<Topic> topics, int type) throws Exception {
     storage.modifyTopic(topics, type) ;
   }
 
-  public void saveTopic(SessionProvider sProvider, String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
-  	sProvider.close() ;
-    saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
   }
 
-  public Topic getTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId, String userRead) throws Exception {
-  	sProvider.close() ;
-    return getTopic(categoryId, forumId, topicId, userRead);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Topic getTopic(String categoryId, String forumId, String topicId, String userRead) throws Exception {
     return storage.getTopic(categoryId, forumId, topicId, userRead);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void setViewCountTopic(String path, String userRead) throws Exception {
   	storage.setViewCountTopic(path, userRead);
   }
   
-  public Topic getTopicByPath(SessionProvider sProvider, String topicPath, boolean isLastPost) throws Exception{
-  	sProvider.close() ;
-    return getTopicByPath(topicPath, isLastPost) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Topic getTopicSummary(String topicPath) throws Exception{
 	  return storage.getTopicSummary(topicPath, true) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public Topic getTopicByPath(String topicPath, boolean isLastPost) throws Exception{
     return storage.getTopicByPath(topicPath, isLastPost) ;
   }
 
-  public JCRPageList getPageTopic(SessionProvider sProvider, String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
-  	sProvider.close() ;
-  	return getPageTopic(categoryId, forumId, strQuery, strOrderBy);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public LazyPageList<Topic>  getTopicList(String categoryId, String forumId, String strQuery, String strOrderBy, int pageSize) throws Exception {
     return storage.getTopicList(categoryId, forumId, strQuery, strOrderBy, pageSize);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPageTopic(String categoryId, String forumId, String strQuery, String strOrderBy) throws Exception {
   	return storage.getPageTopic(categoryId, forumId, strQuery, strOrderBy);
   }
-
-  public List<Topic> getTopics(SessionProvider sProvider, String categoryId, String forumId) throws Exception {
-  	sProvider.close() ;
-    return getTopics(categoryId, forumId);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<Topic> getTopics(String categoryId, String forumId) throws Exception {
     return storage.getTopics(categoryId, forumId);
   }
-
-  public void moveTopic(SessionProvider sProvider, List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
-  	sProvider.close() ;
-    moveTopic(topics, destForumPath, mailContent, link);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void moveTopic(List<Topic> topics, String destForumPath, String mailContent, String link) throws Exception {
     storage.moveTopic(topics, destForumPath, mailContent, link);
   }
-
-  public Topic removeTopic(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
-  	sProvider.close() ;
-    return removeTopic(categoryId, forumId, topicId);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public Topic removeTopic(String categoryId, String forumId, String topicId) throws Exception {
     return storage.removeTopic(categoryId, forumId, topicId);
   }
-
-  public Post getPost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
-  	sProvider.close() ;
-    return getPost(categoryId, forumId, topicId, postId);
-  }
   
+  /**
+   * {@inheritDoc}
+   */  
   public Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception {
     return storage.getPost(categoryId, forumId, topicId, postId);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public long getLastReadIndex(String path, String isApproved, String isHidden, String userLogin) throws Exception {
   	return storage.getLastReadIndex(path, isApproved, isHidden, userLogin);
   }
-  
+
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPostForSplitTopic(String topicPath) throws Exception {
   	return storage.getPostForSplitTopic(topicPath);
   }
-  
-  public JCRPageList getPosts(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
-  	sProvider.close() ;
-    return getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
-  }
-  
+
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPosts(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String strQuery, String userLogin) throws Exception {
     return storage.getPosts(categoryId, forumId, topicId, isApproved, isHidden, strQuery, userLogin);
   }
 
-  public long getAvailablePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
-  	sProvider.close() ;
-    return getAvailablePost(categoryId, forumId, topicId, isApproved, isHidden, userLogin);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
     return storage.getAvailablePost(categoryId, forumId, topicId, isApproved, isHidden, userLogin);
   }
   
-  public void savePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
-  	sProvider.close() ;
-    savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
   }
-
-  public void modifyPost(SessionProvider sProvider, List<Post> posts, int type) throws Exception {
-  	sProvider.close() ;
-    modifyPost(posts, type);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void modifyPost(List<Post> posts, int type) throws Exception {
     storage.modifyPost(posts, type);
   }
-
-  public void movePost(SessionProvider sProvider, List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
-   	sProvider.close() ;
-  	String []postPaths = new String[posts.size()];
-		int i = 0;
-		for (Post p : posts) {
-			postPaths[i] = p.getPath(); ++i;
-    }
-    movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void movePost(List<Post> posts, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
   	String []postPaths = new String[posts.size()];
 		int i = 0;
@@ -518,426 +495,374 @@ public class ForumServiceImpl implements ForumService, Startable {
     movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void movePost(String[] postPaths, String destTopicPath, boolean isCreatNewTopic, String mailContent, String link) throws Exception {
     storage.movePost(postPaths, destTopicPath, isCreatNewTopic, mailContent, link);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception {
   	storage.mergeTopic(srcTopicPath, destTopicPath, mailContent, link);
   }
   
-  public Post removePost(SessionProvider sProvider, String categoryId, String forumId, String topicId, String postId) throws Exception {
-  	sProvider.close() ;
-    return removePost(categoryId, forumId, topicId, postId);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
     return storage.removePost(categoryId, forumId, topicId, postId);
   }
-
-  public Object getObjectNameByPath(SessionProvider sProvider, String path) throws Exception {
-  	sProvider.close() ;
-    return getObjectNameByPath(path);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public Object getObjectNameByPath(String path) throws Exception {
     return storage.getObjectNameByPath(path);
   }
-
-  public Object getObjectNameById(SessionProvider sProvider, String path, String type) throws Exception {
-  	sProvider.close() ;
-  	return getObjectNameById(path, type);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public Object getObjectNameById(String path, String type) throws Exception {
   	return storage.getObjectNameById(path, type);
   }
 
-  public List<ForumLinkData> getAllLink(SessionProvider sProvider, String strQueryCate, String strQueryForum)throws Exception {
-  	sProvider.close() ;
-    return getAllLink(strQueryCate, strQueryForum) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */ 
   public List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum)throws Exception {
     return storage.getAllLink(strQueryCate, strQueryForum) ;
   }
-
-  public String getForumHomePath(SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-  	return getForumHomePath() ;  	
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public String getForumHomePath() throws Exception {
   	return storage.getDataLocation().getForumHomeLocation();
   }
-
-  public Poll getPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
-  	sProvider.close() ;
-    return getPoll(categoryId, forumId, topicId) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
     return storage.getPoll(categoryId, forumId, topicId) ;
   }
 
-  public Poll removePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId) throws Exception {
-  	sProvider.close() ;
-    return removePoll(categoryId, forumId, topicId);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception {
     return storage.removePoll(categoryId, forumId, topicId);
   }
 
-  public void savePoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception {
-  	sProvider.close() ;
-    savePoll(categoryId, forumId, topicId, poll, isNew, isVote) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void savePoll(String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception {
     storage.savePoll(categoryId, forumId, topicId, poll, isNew, isVote) ;
   }
-
-  public void setClosedPoll(SessionProvider sProvider, String categoryId, String forumId, String topicId, Poll poll) throws Exception {
-  	sProvider.close() ;
-    setClosedPoll(categoryId, forumId, topicId, poll) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception {
     storage.setClosedPoll(categoryId, forumId, topicId, poll) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
 		storage.addTag(tags, userName, topicPath);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public List<Tag> getAllTags() throws Exception {
 	  return storage.getAllTags();
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public List<Tag> getMyTagInTopic(String[] tagIds) throws Exception {
 	  return storage.getMyTagInTopic(tagIds);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public Tag getTag(String tagId) throws Exception {
 	  return storage.getTag(tagId);
   }
 	
+  /**
+   * {@inheritDoc}
+   */
 	public List<String> getAllTagName(String strQuery, String userAndTopicId) throws Exception {
 		return storage.getAllTagName(strQuery, userAndTopicId);
 	}
 
+  /**
+   * {@inheritDoc}
+   */
 	public List<String> getTagNameInTopic(String userAndTopicId) throws Exception {
 		return storage.getTagNameInTopic(userAndTopicId);
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public JCRPageList getTopicByMyTag(String userIdAndtagId, String strOrderBy) throws Exception {
 	  return storage.getTopicByMyTag(userIdAndtagId, strOrderBy);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public void saveTag(Tag newTag) throws Exception {
 		storage.saveTag(newTag);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public void unTag(String tagId, String userName, String topicPath) throws Exception {
 		storage.unTag(tagId, userName, topicPath);
   }
 
-	public void addTag(SessionProvider sProvider, List<Tag> tags, String userName, String topicPath) throws Exception {
-		sProvider.close() ;
-		addTag(tags, userName, topicPath) ;
-  }
-
-	public List<Tag> getAllTags(SessionProvider sProvider) throws Exception {
-		sProvider.close() ;
-	  return getAllTags();
-  }
-
-	public List<Tag> getMyTagInTopic(SessionProvider sProvider, String[] tagIds) throws Exception {
-		sProvider.close() ;
-	  return getMyTagInTopic(tagIds);
-  }
-
-	public Tag getTag(SessionProvider sProvider, String tagId) throws Exception {
-		sProvider.close() ;
-	  return getTag(tagId);
-  }
-
-	public JCRPageList getTopicByMyTag(SessionProvider sProvider, String userIdAndtagId, String strOrderBy) throws Exception {
-		sProvider.close() ;
-	  return getTopicByMyTag(userIdAndtagId, strOrderBy);
-  }
-
-	public void saveTag(SessionProvider sProvider, Tag newTag) throws Exception {
-		sProvider.close() ;
-		saveTag(newTag);
-  }
-
-	public void unTag(SessionProvider sProvider, String tagId, String userName, String topicPath) throws Exception {
-		sProvider.close() ;
-		unTag(tagId, userName, topicPath);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
 	public void saveUserModerator(String userName, List<String> ids, boolean isModeCate) throws Exception {
 		storage.saveUserModerator(userName, ids, isModeCate);
 	}
-
-  public void saveUserProfile(SessionProvider sProvider, UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
-  	sProvider.close() ;
-    saveUserProfile(userProfile, isOption, isBan) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveUserProfile(UserProfile userProfile, boolean isOption, boolean isBan) throws Exception {
     storage.saveUserProfile(userProfile, isOption, isBan) ;
   }
   
-  public UserProfile getUserInfo(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-    return getUserInfo(userName);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getUserInfo(String userName) throws Exception {
     return storage.getUserInfo(userName);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<String> getUserModerator(String userName, boolean isModeCate) throws Exception {
   	return storage.getUserModerator(userName, isModeCate);
   }
-  
-  public UserProfile getUserProfileManagement(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-  	return getUserProfileManagement(userName);
-  }
-  
+
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getUserProfileManagement(String userName) throws Exception {
   	return storage.getUserProfileManagement(userName);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveLastPostIdRead(String userId, String[] lastReadPostOfForum, String[] lastReadPostOfTopic) throws Exception {
   	storage.saveLastPostIdRead(userId, lastReadPostOfForum, lastReadPostOfTopic);
   }
   
-  public void saveUserBookmark(SessionProvider sProvider, String userName, String bookMark, boolean isNew) throws Exception {
-  	sProvider.close() ;
-    saveUserBookmark(userName, bookMark, isNew);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void saveUserBookmark(String userName, String bookMark, boolean isNew) throws Exception {
     storage.saveUserBookmark(userName, bookMark, isNew);
   }
-
-  public void saveCollapsedCategories(SessionProvider sProvider, String userName, String categoryId, boolean isAdd) throws Exception {
-  	sProvider.close() ;
-  	saveCollapsedCategories(userName, categoryId, isAdd);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveCollapsedCategories(String userName, String categoryId, boolean isAdd) throws Exception {
   	storage.saveCollapsedCategories(userName, categoryId, isAdd);
   }
   
-  public JCRPageList getPageListUserProfile(SessionProvider sProvider)throws Exception {
-  	sProvider.close() ;
-    return getPageListUserProfile();
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPageListUserProfile()throws Exception {
     return storage.getPageListUserProfile();
   }
 
-  public JCRPageList getPrivateMessage(SessionProvider sProvider, String userName, String type) throws Exception {
-  	sProvider.close() ;
-    return getPrivateMessage(userName, type);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public JCRPageList getPrivateMessage(String userName, String type) throws Exception {
     return storage.getPrivateMessage(userName, type);
   }
   
-  public long getNewPrivateMessage(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-  	return getNewPrivateMessage(userName);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public long getNewPrivateMessage(String userName) throws Exception {
   	return storage.getNewPrivateMessage(userName);
   }
   
-  public void removePrivateMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
-  	sProvider.close() ;
-    removePrivateMessage(messageId, userName, type) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void removePrivateMessage(String messageId, String userName, String type) throws Exception {
     storage.removePrivateMessage(messageId, userName, type) ;
   }
 
-  public void saveReadMessage(SessionProvider sProvider, String messageId, String userName, String type) throws Exception {
-  	sProvider.close() ;
-    saveReadMessage(messageId, userName, type) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void saveReadMessage(String messageId, String userName, String type) throws Exception {
     storage.saveReadMessage(messageId, userName, type) ;
   }
 
-  public void savePrivateMessage(SessionProvider sProvider, ForumPrivateMessage privateMessage) throws Exception {
-  	sProvider.close() ;
-    savePrivateMessage(privateMessage) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public void savePrivateMessage(ForumPrivateMessage privateMessage) throws Exception {
     storage.savePrivateMessage(privateMessage) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public ForumSubscription getForumSubscription(String userId) throws Exception {
   	return storage.getForumSubscription(userId);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveForumSubscription(ForumSubscription forumSubscription, String userId) throws Exception {
   	storage.saveForumSubscription(forumSubscription, userId);
   }
-  
-  public JCRPageList getPageTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
-  	sProvider.close() ;
-    return getPageTopicOld(date, forumPatch) ;
-  }
-  
+ 
+  /**
+   * {@inheritDoc}
+   */ 
   public JCRPageList getPageTopicOld(long date, String forumPatch) throws Exception {
     return storage.getPageTopicOld(date, forumPatch) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<Topic> getAllTopicsOld(long date, String forumPatch) throws Exception {
   	return storage.getAllTopicsOld(date, forumPatch);
 	}
 
-  public List<Topic> getAllTopicsOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
-		sProvider.close() ;
-		return getAllTopicsOld(date, forumPatch);
-	}
-
-  public long getTotalTopicOld(SessionProvider sProvider, long date, String forumPatch) throws Exception {
-  	sProvider.close() ;
-  	return getTotalTopicOld(date, forumPatch);
-  }
-
+  /**
+   * {@inheritDoc}
+   */
 	public long getTotalTopicOld(long date, String forumPatch) {
 		return storage.getTotalTopicOld(date, forumPatch);
 	}
-	
-  public JCRPageList getPageTopicByUser(SessionProvider sProvider, String userName, boolean isMod, String strOrderBy) throws Exception {
-  	sProvider.close() ;
-    return getPageTopicByUser(userName, isMod, strOrderBy);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPageTopicByUser(String userName, boolean isMod, String strOrderBy) throws Exception {
     return storage.getPageTopicByUser(userName, isMod, strOrderBy);
   }
-
-  public JCRPageList getPagePostByUser(SessionProvider sProvider, String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
-  	sProvider.close() ;
-    return getPagePostByUser(userName, userId, isMod, strOrderBy);
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public JCRPageList getPagePostByUser(String userName, String userId, boolean isMod, String strOrderBy) throws Exception {
     return storage.getPagePostByUser(userName, userId, isMod, strOrderBy);
   }
 
-  public ForumStatistic getForumStatistic(SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-    return getForumStatistic();
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public ForumStatistic getForumStatistic() throws Exception {
     return storage.getForumStatistic();
   }
-
-  public void saveForumStatistic(SessionProvider sProvider, ForumStatistic forumStatistic) throws Exception {
-  	sProvider.close() ;
-    saveForumStatistic(forumStatistic) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveForumStatistic(ForumStatistic forumStatistic) throws Exception {
     storage.saveForumStatistic(forumStatistic) ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
   	storage.updateStatisticCounts(topicCount, postCount) ;
   }
   
-  public List<ForumSearch> getQuickSearch(SessionProvider sProvider, String textQuery, String type, String pathQuery, String userId,
-  		List<String> listCateIds,List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
-  	sProvider.close() ;
-    return getQuickSearch(textQuery, type, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public List<ForumSearch> getQuickSearch(String textQuery, String type, String pathQuery, String userId,
   		List<String> listCateIds,List<String> listForumIds, List<String> forumIdsOfModerator) throws Exception {
     return storage.getQuickSearch(textQuery, type, pathQuery, userId, listCateIds, listForumIds, forumIdsOfModerator);
   }
 
-  public List<ForumSearch> getAdvancedSearch(SessionProvider sProvider,ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception {
-  	sProvider.close() ;
-    return getAdvancedSearch(eventQuery, listCateIds, listForumIds);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public List<ForumSearch> getAdvancedSearch(ForumEventQuery eventQuery, List<String> listCateIds, List<String> listForumIds) throws Exception {
     return storage.getAdvancedSearch(eventQuery, listCateIds, listForumIds);
   }
-
-  public ForumAdministration getForumAdministration(SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-    return getForumAdministration();
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public ForumAdministration getForumAdministration() throws Exception {
     return storage.getForumAdministration();
   }
-
-  public void saveForumAdministration(SessionProvider sProvider, ForumAdministration forumAdministration) throws Exception {
-  	sProvider.close() ;
-    saveForumAdministration(forumAdministration) ;
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void saveForumAdministration(ForumAdministration forumAdministration) throws Exception {
     storage.saveForumAdministration(forumAdministration) ;
   }
-
-  public void addWatch(SessionProvider sProvider, int watchType, String path,List<String> values, String currentUser) throws Exception {
-  	sProvider.close() ;
-    addWatch(watchType, path, values, currentUser) ; 
-  }
   
+  /**
+   * {@inheritDoc}
+   */
   public void addWatch(int watchType, String path,List<String> values, String currentUser) throws Exception {
     storage.addWatch(watchType, path, values, currentUser) ; 
   }
 
-  public void removeWatch(SessionProvider sProvider, int watchType, String path,String values) throws Exception {
-  	sProvider.close() ;
-    removeWatch(watchType, path, values) ; 
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public void removeWatch(int watchType, String path,String values) throws Exception {
     storage.removeWatch(watchType, path, values) ; 
   }
 
-  public List<ForumSearch> getJobWattingForModerator(SessionProvider sProvider, String[] paths) throws Exception {
-  	sProvider.close() ;
-    return getJobWattingForModerator(paths); 
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception {
     return storage.getJobWattingForModerator(paths); 
   }
 
-  public int getJobWattingForModeratorByUser(SessionProvider sProvider, String userId) throws Exception {
-  	sProvider.close() ;
-    return getJobWattingForModeratorByUser(userId);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public int getJobWattingForModeratorByUser(String userId) throws Exception {
     return storage.getJobWattingForModeratorByUser(userId);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void userLogin(String userId) throws Exception {
 
 		// TODO: login and onlineUserlist shoudl be anaged by
@@ -972,339 +897,364 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void userLogout(String userId) throws Exception {
   	if(onlineUserList_.contains(userId)){
   		onlineUserList_.remove(userId) ;
   	}
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isOnline(String userId) throws Exception {
     try{
       if(onlineUserList_.contains(userId)) return true ;			
     }	catch (Exception e) {
-      e.printStackTrace() ;
+      log.error("could not determine if user " + userId + " is online", e);
     }
     return false; 
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public List<String> getOnlineUsers() throws Exception {
     return onlineUserList_ ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public String getLastLogin() throws Exception {
     return lastLogin_ ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public SendMessageInfo getMessageInfo(String name) throws Exception {
     return storage.getMessageInfo(name) ;
   }
 
-  public JCRPageList searchUserProfile(SessionProvider sProvider, String userSearch) throws Exception {
-  	sProvider.close() ;
-    return searchUserProfile(userSearch);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public JCRPageList searchUserProfile(String userSearch) throws Exception {
     return storage.searchUserProfile(userSearch);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean isAdminRole(String userName) throws Exception {
     return storage.isAdminRole(userName);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public List<Post> getNewPosts(int number) throws Exception{
     return storage.getNewPosts(number);
   }
-  
-  public NodeIterator search(String queryString, SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-  	return search(queryString) ;
-  }	
   
   public NodeIterator search(String queryString) throws Exception {
   	return storage.search(queryString) ;
   }
   
-  public void evaluateActiveUsers(SessionProvider sProvider, String query) throws Exception {
-  	sProvider.close() ;
-  	evaluateActiveUsers(query) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void evaluateActiveUsers(String query) throws Exception {
   	storage.evaluateActiveUsers(query) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void updateTopicAccess (String userId, String topicId) throws Exception {
 	  storage.updateTopicAccess(userId, topicId) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void updateForumAccess (String userId, String forumId) throws Exception {
   	storage.updateForumAccess(userId, forumId);
   }
- /* public Object exportXML(List<String> listCategoryIds, String forumId, String nodePath, ByteArrayOutputStream bos, SessionProvider sessionProvider) throws Exception{
-	  return storage.exportXML(listCategoryIds, forumId, nodePath, bos, sessionProvider);
-  }*/
   
-  public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll, SessionProvider sProvider) throws Exception{
-  	sProvider.close() ;
-	  return exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
 	  return storage.exportXML(categoryId, forumId, objectIds, nodePath, bos, isExportAll);
   }
 
-  
-  public List<UserProfile> getQuickProfiles(SessionProvider sProvider, List<String> userList) throws Exception {
-  	return getQuickProfiles(userList) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public List<UserProfile> getQuickProfiles(List<String> userList) throws Exception {
   	return storage.getQuickProfiles(userList) ;
   }
   
-  public UserProfile getQuickProfile(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-  	return getQuickProfile(userName) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getQuickProfile(String userName) throws Exception {
   	return storage.getQuickProfile(userName) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public String getScreenName(String userName) throws Exception {
   	return storage.getScreenName(userName);
   }
   
-  public UserProfile getUserInformations(SessionProvider sProvider, UserProfile userProfile) throws Exception {
-  	sProvider.close() ;
-  	return getUserInformations(userProfile) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getUserInformations(UserProfile userProfile) throws Exception {
   	return storage.getUserInformations(userProfile) ;
   }
   
-  public UserProfile getDefaultUserProfile(SessionProvider sProvider, String userName, String ip) throws Exception {
-  	sProvider.close() ;
-  	return getDefaultUserProfile(userName, ip) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getDefaultUserProfile(String userName, String ip) throws Exception {
   	return storage.getDefaultUserProfile(userName, ip) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile updateUserProfileSetting(UserProfile userProfile) throws Exception {
   	return storage.updateUserProfileSetting(userProfile);
   }
   
-  public List<String> getBookmarks(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-  	return getBookmarks(userName) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public List<String> getBookmarks(String userName) throws Exception {
   	return storage.getBookmarks(userName) ;
   }
   
-  public UserProfile getUserSettingProfile(SessionProvider sProvider, String userName) throws Exception {
-  	sProvider.close() ;
-  	return getUserSettingProfile(userName) ;
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public UserProfile getUserSettingProfile(String userName) throws Exception {
   	return storage.getUserSettingProfile(userName) ;
   }
   
-  public void saveUserSettingProfile(SessionProvider sProvider, UserProfile userProfile) throws Exception {
-  	sProvider.close() ;
-  	saveUserSettingProfile(userProfile);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void saveUserSettingProfile(UserProfile userProfile) throws Exception {
   	storage.saveUserSettingProfile(userProfile);
   }
 
-  
-  public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport, SessionProvider sProvider) throws Exception {
-  	sProvider.close() ;
-	  importXML(nodePath, bis, typeImport);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */
   public void importXML(String nodePath, ByteArrayInputStream bis,int typeImport) throws Exception {
 	  storage.importXML(nodePath, bis, typeImport);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void updateDataImported() throws Exception{
   	storage.updateDataImported();
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void updateForum(String path) throws Exception{
   	storage.updateForum(path) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<String> getBanList() throws Exception {
   	return storage.getBanList() ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public boolean addBanIP(String ip) throws Exception {
   	return storage.addBanIP(ip) ;
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public void removeBan(String ip) throws Exception {
   	storage.removeBan(ip) ;
   }
 
-  public JCRPageList getListPostsByIP(String ip, String strOrderBy, SessionProvider sProvider) throws Exception{
-  	sProvider.close() ;
-  	return getListPostsByIP(ip, strOrderBy);
-  }
-  
+  /**
+   * {@inheritDoc}
+   */  
   public JCRPageList getListPostsByIP(String ip, String strOrderBy) throws Exception{
   	return storage.getListPostsByIP(ip, strOrderBy);
   }
   
+  /**
+   * {@inheritDoc}
+   */
   public List<String> getForumBanList(String forumId) throws Exception {
   	return storage.getForumBanList(forumId);
   }
 
-	public boolean addBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
-		sProvider.close() ;
-	  return addBanIPForum(ip, forumId);
-  }
-	
+  /**
+   * {@inheritDoc}
+   */
 	public boolean addBanIPForum(String ip, String forumId) throws Exception {
 	  return storage.addBanIPForum(ip, forumId);
   }
 
-	public void removeBanIPForum(SessionProvider sProvider, String ip, String forumId) throws Exception {
-		sProvider.close() ;
-	  removeBanIPForum(ip, forumId);
-  }
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void removeBanIPForum(String ip, String forumId) throws Exception {
 	  storage.removeBanIPForum(ip, forumId);
   }
 	
-	public void registerListenerForCategory(SessionProvider sProvider, String categoryId) throws Exception{
-		sProvider.close() ;
-		registerListenerForCategory(categoryId);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void registerListenerForCategory(String categoryId) throws Exception{
 		storage.registerListenerForCategory(categoryId);
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public void unRegisterListenerForCategory(String path) throws Exception{
 		storage.unRegisterListenerForCategory(path) ;
 	}
 	
-	public ForumAttachment getUserAvatar(String userName, SessionProvider sProvider) throws Exception{
-		sProvider.close() ;
-		return getUserAvatar(userName);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public ForumAttachment getUserAvatar(String userName) throws Exception{
 		return storage.getUserAvatar(userName);
 	}
 	
-	public void saveUserAvatar(String userId, ForumAttachment fileAttachment, SessionProvider sProvider) throws Exception{
-		sProvider.close() ;
-		saveUserAvatar(userId, fileAttachment);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void saveUserAvatar(String userId, ForumAttachment fileAttachment) throws Exception{
 		storage.saveUserAvatar(userId, fileAttachment);
 	}
 	
-	public void setDefaultAvatar(String userName, SessionProvider sProvider)throws Exception{
-		sProvider.close() ;
-		setDefaultAvatar(userName);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void setDefaultAvatar(String userName)throws Exception{
 		storage.setDefaultAvatar(userName);
 	}
 	
-	public List<Watch> getWatchByUser(String userId, SessionProvider sProvider) throws Exception{
-		sProvider.close() ;
-		return getWatchByUser(userId);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public List<Watch> getWatchByUser(String userId) throws Exception{
 		return storage.getWatchByUser(userId);
 	}
 	
-	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId, SessionProvider sProvider) throws Exception{
-		sProvider.close() ;
-		updateEmailWatch(listNodeId, newEmailAdd, userId);
-	}
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void updateEmailWatch(List<String> listNodeId, String newEmailAdd, String userId) throws Exception{
 		storage.updateEmailWatch(listNodeId, newEmailAdd, userId);
 	}
 
-
+  /**
+   * {@inheritDoc}
+   */
 	public List<PruneSetting> getAllPruneSetting() throws Exception {
 	  return storage.getAllPruneSetting();
   }
 
-	public List<PruneSetting> getAllPruneSetting(SessionProvider sProvider) throws Exception {
-		sProvider.close() ;
-	  return getAllPruneSetting();
-  }
-
+  /**
+   * {@inheritDoc}
+   */
 	public void savePruneSetting(PruneSetting pruneSetting) throws Exception {
 		storage.savePruneSetting(pruneSetting);
   }
 
-	public void savePruneSetting(SessionProvider sProvider, PruneSetting pruneSetting) throws Exception {
-		sProvider.close() ;
-		savePruneSetting(pruneSetting);
-  }
-
+  /**
+   * {@inheritDoc}
+   */
 	public PruneSetting getPruneSetting(String forumPath) throws Exception {
 	  return storage.getPruneSetting(forumPath);
   }
 
-	public PruneSetting getPruneSetting(SessionProvider sProvider, String forumPath) throws Exception {
-		sProvider.close() ;
-	  return getPruneSetting(forumPath);
-  }
-	
+  /**
+   * {@inheritDoc}
+   */
 	public void runPrune(PruneSetting pSetting) throws Exception {
 		storage.runPrune(pSetting) ;
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public void runPrune(String forumPath) throws Exception {
 		storage.runPrune(forumPath) ;
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public long checkPrune(PruneSetting pSetting) throws Exception {
 		return storage.checkPrune(pSetting) ;
 	}
 	
+  /**
+   * {@inheritDoc}
+   */
 	public JCRPageList getPageTopicByType(String type) throws Exception {
 	  return storage.getPageTopicByType(type);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public TopicType getTopicType(String Id) throws Exception {
 	  return storage.getTopicType(Id);
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public List<TopicType> getTopicTypes() throws Exception {
 	  return storage.getTopicTypes();
   }
 
+  /**
+   * {@inheritDoc}
+   */
 	public void removeTopicType(String topicTypeId) throws Exception {
 		storage.removeTopicType(topicTypeId);
 	}
 
+  /**
+   * {@inheritDoc}
+   */
 	public void saveTopicType(TopicType topicType) throws Exception {
 	  storage.saveTopicType(topicType);
   }
 	
+  /**
+   * {@inheritDoc}
+   */
 	public void updateUserProfileInfo(String name) throws Exception {
 		storage.updateUserProfileInfo(name) ;
 	}
