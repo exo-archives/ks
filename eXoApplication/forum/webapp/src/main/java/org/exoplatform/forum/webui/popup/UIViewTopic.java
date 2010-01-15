@@ -38,9 +38,11 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -69,7 +71,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile ;
 	private long pageSelect ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
-//	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	RenderHelper renderHelper = new RenderHelper();
 	public UIViewTopic() throws Exception {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
@@ -81,40 +82,8 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public Topic getTopic() { return topic;}
 	public void setTopic(Topic topic) {
 		this.topic = topic;
-		/*
-		List<String> bbcName = new ArrayList<String>();
-		List<BBCode> bbcs = new ArrayList<BBCode>();
-		try {
-			bbcName = forumService.getActiveBBCode();
-    } catch (Exception e) {
-    }
-    boolean isAdd = true;
-    BBCode bbCode;
-    for (String string : bbcName) {
-    	isAdd = true;
-    	for (BBCode bbc : listBBCode) {
-    		if(bbc.getTagName().equals(string) || (bbc.getTagName().equals(string.replaceFirst("=", "")) && bbc.isOption())){
-    			bbcs.add(bbc);
-    			isAdd = false;
-    			break;
-    		}
-    	}
-    	if(isAdd) {
-    		bbCode = new BBCode();
-    		if(string.indexOf("=") >= 0){
-    			bbCode.setOption(true);
-    			string = string.replaceFirst("=", "");
-    			bbCode.setId(string+"_option");
-    		}else {
-    			bbCode.setId(string);
-    		}
-    		bbCode.setTagName(string);
-    		bbcs.add(bbCode);
-    	}
-    }
-    listBBCode.clear();
-    listBBCode.addAll(bbcs);*/
 	}
+
 	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		return this.userProfile ;
@@ -127,14 +96,6 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	public String renderPost(Post post) throws RenderingException {
     return renderHelper.renderPost(post);
   }
-	
-/*	@SuppressWarnings("unused")
-  private String getReplaceByBBCode(String s) throws Exception {
-		try {
-			s = Utils.getReplacementByBBcode(s, listBBCode, forumService);
-    } catch (Exception e) {}
-    return s;
-	}*/
 	
 	@SuppressWarnings("unused")
 	private void initPage() throws Exception {

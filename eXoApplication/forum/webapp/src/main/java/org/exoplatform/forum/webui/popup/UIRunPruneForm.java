@@ -20,8 +20,10 @@ package org.exoplatform.forum.webui.popup;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.PruneSetting;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -81,17 +83,6 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIRunPruneForm> event) throws Exception {
 			UIRunPruneForm uiform = event.getSource();
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			/*long date = uiform.pruneSetting.getInActiveDay();
-			List<Topic> listTopic = forumService.getAllTopicsOld(date, uiform.pruneSetting.getForumPath());
-			if(!listTopic.isEmpty()){
-				for (Topic topic : listTopic) {
-		      topic.setIsActive(false);
-	      }
-				forumService.modifyTopic(listTopic, 6) ;
-				uiform.pruneSetting.setLastRunDate(GregorianCalendar.getInstance().getTime());
-				uiform.pruneSetting.setActive(true);
-				//forumService.savePruneSetting(uiform.pruneSetting);
-			}*/
 			forumService.runPrune(uiform.pruneSetting) ;
 			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
 			popupContainer.getChild(UIPopupAction.class).deActivate() ;
