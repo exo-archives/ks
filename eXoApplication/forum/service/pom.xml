@@ -13,6 +13,16 @@
   
   <dependencies>   
 
+    <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>exo.ws.rest.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+      <scope>provided</scope>
+    </dependency>    
      <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -63,24 +73,6 @@
       <artifactId>xml-apis</artifactId>
       <scope>provided</scope>
     </dependency>   
-  
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <scope>test</scope>
-    </dependency> 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>   
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.test-utils</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>   
-    
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
@@ -101,10 +93,7 @@
       <artifactId>exo.core.component.security.core</artifactId>
       <scope>provided</scope>
     </dependency>
-    
-
-
-    <dependency>
+      <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.core</artifactId>
       <scope>provided</scope>  
@@ -141,7 +130,34 @@
       <artifactId>exo-comet-service</artifactId>
       <scope>provided</scope>
     </dependency>  
-    
+  
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
+    </dependency> 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>   
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.test-utils</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>   
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <classifier>jdk15</classifier>
+      <scope>test</scope>
+    </dependency>      
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <scope>test</scope>
+    </dependency>     
     
     <!-- replace the following dependency by exo-comet-service when it is available in repo -->
     <!-- 
