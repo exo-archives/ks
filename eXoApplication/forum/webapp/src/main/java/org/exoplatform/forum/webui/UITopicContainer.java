@@ -148,7 +148,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	public boolean isLogin() {return isLogin;}
 	public void setLogin(boolean isLogin) {this.isLogin = isLogin;}
 	
-	private UserProfile getUserProfile() { return userProfile ;}
+	public UserProfile getUserProfile() { return userProfile ;}
 	public void setUserProfile(UserProfile userProfile) throws Exception {
 		this.userProfile	= userProfile ;
   }
@@ -158,7 +158,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
-  private String getLastPostIdReadOfTopic(String topicId) throws Exception {
+  public String getLastPostIdReadOfTopic(String topicId) throws Exception {
 		return userProfile.getLastPostIdReadOfTopic(topicId);
 	}
 	
@@ -186,7 +186,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		setForum(true);
 	}
 	
-  private boolean getIsAutoPrune() throws Exception {
+  public boolean getIsAutoPrune() throws Exception {
 		return isShowActive ;
 	}
 	
@@ -201,7 +201,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     }
   }
   
-  private String[] getIconTopicType(String typeId) throws Exception {
+  public String[] getIconTopicType(String typeId) throws Exception {
 		try {
 			TopicType topicType = topicTypeM.get(typeId);
 			if(topicType != null) {
@@ -221,11 +221,11 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
     }
 	}
 	
-  private String getScreenName(String userName) throws Exception {
+  public String getScreenName(String userName) throws Exception {
 		return getForumService().getScreenName(userName);
 	}
 	
-	private String getTitleInHTMLCode(String s) {
+	public String getTitleInHTMLCode(String s) {
 		return ForumTransformHTML.getTitleInHTMLCode(s, new ArrayList<String>((new ExtendedBBCodeProvider()).getSupportedBBCodes()));
 	}
   
@@ -394,7 +394,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return "";
 	}
 	
-	private String[] getActionMenuForum() throws Exception {
+	public String[] getActionMenuForum() throws Exception {
 		String []actions ;
 		if(userProfile.getUserRole() == 0) actions = new String[]{"EditForum", "SetUnLockForum", "SetLockedForum", "SetOpenForum", "SetCloseForum", 
 				"MoveForum", "RemoveForum", "ExportForum", "WatchOption", "BanIpForumTools"};
@@ -403,14 +403,14 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return actions;
 	}
 
-	private String[] getActionMenuTopic() throws Exception {
+	public String[] getActionMenuTopic() throws Exception {
 		String []actions = {"EditTopic", "SetOpenTopic", "SetCloseTopic", "SetLockedTopic", "SetUnLockTopic", "SetStickTopic",
 				"SetUnStickTopic", "SetMoveTopic", "SetDeleteTopic", "MergeTopic", "SetUnWaiting", "ApproveTopics", "ActivateTopics"}; 
 		return actions;
 	}
 	
 	
-  private List<Topic> getTopicPageList() throws Exception {
+  public List<Topic> getTopicPageList() throws Exception {
   	if(pageList == null) return  new ArrayList<Topic>();
 		maxPage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > maxPage)this.pageSelect = maxPage ;
@@ -442,7 +442,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		return getForumService().getTopic(categoryId, forumId, topicId, userProfile.getUserId()) ;
 	}
 	
-  private long getSizePost(Topic topic) throws Exception {
+  public long getSizePost(Topic topic) throws Exception {
 		long maxPost = userProfile.getMaxPostInPage() ;
 		if(maxPost <= 0) maxPost = 10;
 		if(topic.getPostCount() >= maxPost) {
@@ -463,22 +463,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		} else return 1;
 	}
 	
-	private String[] getStarNumber(Topic topic) throws Exception {
+	public String[] getStarNumber(Topic topic) throws Exception {
 		double voteRating = topic.getVoteRating() ;
 		return ForumUtils.getStarNumber(voteRating) ;
 	}
-
-	/*@SuppressWarnings("unused")
-	private List<Tag> getTagsByTopic(String[] tagIds) throws Exception {
-		List<Tag> list = new ArrayList<Tag>();
-		try {
-			list = this.getForumService().getTagsByTopic(tagIds);
-    } catch (Exception e) {
-    }
-		return list;	
-	}*/
 	
-	private boolean isModerator() {
+	public boolean isModerator() {
 		return isModerator;
 	}
 	
@@ -486,7 +476,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	  this.listWatches = listWatches;
   }
 	
-	private boolean isWatching(String path) throws Exception {
+	public boolean isWatching(String path) throws Exception {
 		for (Watch watch : listWatches) {
 			if(path.equals(watch.getNodePath())) return true;
     }
