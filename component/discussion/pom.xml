@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.component</artifactId>
+    <version>2.0.0-Alpha03-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>exo.ks.component.discussion</artifactId>
+  <name>eXo KS Discussion</name>
+  
+  <dependencies>
+  
+
+    
+
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.commons</artifactId>
+      <scope>provided</scope>
+    </dependency>   
+ 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    
+     <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.container</artifactId>
+      <scope>test</scope>
+    </dependency>       
+
+     <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>exo.kernel.component.cache</artifactId>
+      <scope>test</scope>
+    </dependency>         
+
+     <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.resources</artifactId>
+      <scope>test</scope>
+    </dependency>        
+     <dependency>
+         <groupId>org.chromattic</groupId>
+         <version>1.0.0-beta13</version>
+         <artifactId>chromattic.api</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.spi</artifactId>
+         <version>1.0.0-beta13</version>
+         <scope>compile</scope>
+      </dependency>  
+    
+
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.apt</artifactId>
+         <version>1.0.0-beta13</version>
+         <scope>compile</scope>
+      </dependency>
+
+     <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.test-utils</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>  
+       
+ 
+      <!-- should remove it, it's because of usage : org.chromattic.common.AbstractFilterIterator --> 
+      
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.core</artifactId>
+         <version>1.0.0-beta13</version>
+         <scope>test</scope>
+      </dependency>      
+      
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.exo</artifactId>
+         <version>1.0.0-beta13</version>
+         <scope>test</scope>
+      </dependency>    
+     
+<!-- 
+
+      <dependency>
+         <groupId>org.chromattic</groupId>
+         <artifactId>chromattic.common</artifactId>
+         <version>1.0.0-beta13</version>
+      </dependency>
+
+ -->
+
+
+  </dependencies>
+</project>
