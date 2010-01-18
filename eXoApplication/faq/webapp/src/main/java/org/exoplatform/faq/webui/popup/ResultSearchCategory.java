@@ -30,14 +30,14 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
+
 
 /**
  * Created by The eXo Platform SARL
@@ -53,7 +53,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = ResultSearchCategory.CloseActionListener.class)
 		}
 )
-public class ResultSearchCategory extends UIForm implements UIPopupComponent{
+public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent{
 	private List<Category> listCategory_ = null ;
 	private String LIST_RESULT_SEARCH = "listResultCategoriesSearch";
 	private UIAnswersPageIterator pageIterator ;
@@ -110,23 +110,14 @@ public class ResultSearchCategory extends UIForm implements UIPopupComponent{
 			try {
 				faqService.isExisting(categoryId) ;
 			} catch (Exception e) {
-				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				resultSearch.warning("UIQuestions.msg.category-id-deleted") ;
 				return ;
 			}
 			uiQuestions.setCategoryId(categoryId) ;
 			uiQuestions.setDefaultLanguage() ;
 			UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
-			//breadcumbs.setUpdataPath(null) ;
-			/*String oldPath = "" ;
-			List<String> listPath = faqService.getCategoryPath(sessionProvider, categoryId) ;
-			for(int i = listPath.size() -1 ; i >= 0; i --) {
-				oldPath = oldPath + "/" + listPath.get(i);
-			}*/
-			//String newPath ="FAQService" + "/" + categoryId ;
-			//uiQuestions.setPath(newPath) ;
 			breadcumbs.setUpdataPath(categoryId);
+
 			event.getRequestContext().addUIComponentToUpdateByAjax(breadcumbs) ;
 			UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class);
 			categories.setPathCategory(breadcumbs.getPaths());

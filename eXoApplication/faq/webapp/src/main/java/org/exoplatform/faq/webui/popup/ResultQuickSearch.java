@@ -30,14 +30,14 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -54,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = ResultQuickSearch.CloseActionListener.class)
 		}
 )
-public class ResultQuickSearch extends UIForm implements UIPopupComponent{
+public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent{
 	private List<ObjectSearchResult> searchResults_ = new ArrayList<ObjectSearchResult>() ;
 	private String LIST_RESULT_SEARCH = "listResultSearch";
 	private UIAnswersPageIterator pageIterator ;
@@ -98,18 +98,13 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
-	static	public class OpenCategoryActionListener extends EventListener<ResultQuickSearch> {
-		public void execute(Event<ResultQuickSearch> event) throws Exception {
-			ResultQuickSearch resultQuickSearch = event.getSource() ;
-			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			//System.out.println("categoryID=>"+ id);
+	static	public class OpenCategoryActionListener extends BaseEventListener<ResultQuickSearch> {
+		public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
 			FAQService faqService = FAQUtils.getFAQService() ;
 			UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			if(!faqService.isExisting(id)){
-				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIQuestions.msg.category-id-deleted") ;
 				return ;
 			}
 			uiQuestions.setCategoryId(id) ;
@@ -126,19 +121,14 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 		}
 	}
 
-	static	public class LinkQuestionActionListener extends EventListener<ResultQuickSearch> {
-		public void execute(Event<ResultQuickSearch> event) throws Exception {
-			ResultQuickSearch resultQuickSearch = event.getSource() ;
-			String id = event.getRequestContext().getRequestParameter(OBJECTID) ;
-			//System.out.println("questionID ==>" + id);
+	static	public class LinkQuestionActionListener extends BaseEventListener<ResultQuickSearch> {
+		public void onEvent(Event<ResultQuickSearch> event, ResultQuickSearch resultQuickSearch, final String id) throws Exception {
 			FAQService faqService = FAQUtils.getFAQService() ;
 			try {				
 				UIAnswersPortlet answerPortlet = resultQuickSearch.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIQuestions uiQuestions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
-				//uiQuestions.pageList.setObjectId(id.substring(id.lastIndexOf("/") + 1));
 				String categoryId = faqService.getCategoryPathOf(id) ; 
 				uiQuestions.setCategoryId(categoryId) ;
-				//uiQuestions.updateCurrentLanguage() ;
 				uiQuestions.setDefaultLanguage() ; 
 				uiQuestions.viewingQuestionId_ = id ;
 				uiQuestions.updateCurrentQuestionList() ;
@@ -154,9 +144,7 @@ public class ResultQuickSearch extends UIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
 			} catch (Exception e) {
 				e.printStackTrace();
-				UIApplication uiApplication = resultQuickSearch.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIQuestions.msg.question-id-deleted") ;
 			}
 		}
 	}

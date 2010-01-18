@@ -31,14 +31,13 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIResultContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -55,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = ResultSearchQuestion.CloseActionListener.class)
 		}
 )
-public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
+public class ResultSearchQuestion extends BaseUIForm implements UIPopupComponent{
 	private List<Question> listQuestion_ = null ;
 	private String language_ = "" ;
 	public ResultSearchQuestion() throws Exception {
@@ -101,7 +100,6 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	public void setLanguage(String language) {this.language_ = language ;}
 	public String getLanguage() { return language_ ;}
 
@@ -117,9 +115,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 			try {
 				faqService.isExisting(questionId) ;
 			} catch (Exception e) {
-				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				resultSearch.warning("UIQuestions.msg.question-id-deleted") ;
 				return ;
 			}
 			UIResultContainer uiResultContainer = resultSearch.getParent() ;
@@ -192,9 +188,7 @@ public class ResultSearchQuestion extends UIForm implements UIPopupComponent{
 				answerPortlet.cancelAction() ;
 			} catch (Exception e) {
 				e.printStackTrace();
-				UIApplication uiApplication = resultSearch.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				resultSearch.warning("UIQuestions.msg.question-id-deleted") ;
 			}
 		}
 	}

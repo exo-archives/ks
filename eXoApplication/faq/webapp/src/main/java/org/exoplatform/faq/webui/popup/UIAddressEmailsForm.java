@@ -30,20 +30,19 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.impl.GroupImpl;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPageIterator;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 /**
@@ -62,7 +61,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
   @EventConfig(listeners = UIAddressEmailsForm.ShowPageActionListener.class, phase = Phase.DECODE),
   @EventConfig(listeners = UIAddressEmailsForm.CancelActionListener.class, phase = Phase.DECODE)
 })
-public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
+public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent {
 	public static final String USER_SEARCH = "user-search".intern();
   public static final String USER_GROUP = "user-group".intern();
 
@@ -215,9 +214,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
       UIAddressEmailsForm uiAddressForm = event.getSource() ;
       List<User> checkedUser = uiAddressForm.getCheckedUser();
       if(checkedUser.size() <= 0) {
-        UIApplication uiApp = uiAddressForm.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UIAddressEmailsForm.msg.user-email-required",null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
         return ;
       }
       UIAnswersPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIAnswersPortlet.class) ;
@@ -261,9 +258,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
     	UIAddressEmailsForm uiAddressForm = event.getSource() ;
       List<User> checkedUser = uiAddressForm.getCheckedUser();
       if(checkedUser.isEmpty()) {
-        UIApplication uiApp = uiAddressForm.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UIAddressEmailsForm.msg.user-email-required",null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
         return ;
       }
       UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;

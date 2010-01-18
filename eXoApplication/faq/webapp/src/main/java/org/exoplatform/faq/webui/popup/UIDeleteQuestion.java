@@ -24,6 +24,7 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -44,7 +45,6 @@ import org.exoplatform.webui.form.UIForm;
     }
 )
 public class UIDeleteQuestion extends UIForm implements UIPopupComponent  {
-  @SuppressWarnings("unused")
   private boolean isManagement_ = false ;
   
   private Question question_ = null ;

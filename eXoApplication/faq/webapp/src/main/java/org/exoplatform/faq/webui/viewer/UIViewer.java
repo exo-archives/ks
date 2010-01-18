@@ -21,15 +21,11 @@ import java.util.List;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
-import org.exoplatform.faq.rendering.RenderingException;
-import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.CategoryInfo;
-import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.resolver.ResourceResolver;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

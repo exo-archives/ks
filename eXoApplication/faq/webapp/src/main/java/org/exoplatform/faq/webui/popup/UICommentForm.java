@@ -16,9 +16,6 @@
  */
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
@@ -28,7 +25,6 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
-import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -37,15 +33,14 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.ks.bbcode.api.BBCode;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
@@ -65,7 +60,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
     }
 )
 
-public class UICommentForm extends UIForm implements UIPopupComponent {
+public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	private String languageSelected ;
 	private Question question_ ;
 	private Comment comment ;
@@ -145,24 +140,19 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
     }
   }
 	
-	static public class SaveActionListener extends EventListener<UICommentForm> {
-		public void execute(Event<UICommentForm> event) throws Exception {
-			UICommentForm commentForm = event.getSource() ;
+	static public class SaveActionListener extends BaseEventListener<UICommentForm> {
+		public void onEvent(Event<UICommentForm> event, UICommentForm commentForm, final String objectId) throws Exception {
 			String comment = ((UIFormWYSIWYGInput)commentForm.getChildById(commentForm.COMMENT_CONTENT)).getValue();
 			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
       ValidatorDataInput validatorDataInput = new ValidatorDataInput();
       if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
-				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UICommentForm.msg.comment-is-null", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UICommentForm.msg.comment-is-null") ;
         return;
 			}
       if(!commentForm.faqService.isExisting(commentForm.question_.getPath())){
-				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.comment-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      	warning("UIQuestions.msg.comment-id-deleted") ;
       }
 			try{								
 				//Create link by Vu Duy Tu.
@@ -256,9 +246,7 @@ public class UICommentForm extends UIForm implements UIPopupComponent {
 				} else {questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);}
 			} catch(Exception e){
 				e.printStackTrace();
-				UIApplication uiApplication = commentForm.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIQuestions.msg.category-id-deleted") ;
 			}
       //questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;

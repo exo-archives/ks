@@ -26,17 +26,16 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 /**
@@ -55,7 +54,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
     }
 )
 
-public class UIAttachMentForm extends UIForm implements UIPopupComponent {
+public class UIAttachMentForm extends BaseUIForm implements UIPopupComponent {
   private int numberUpload = 5 ;
   private static final String FILE_UPLOAD = "FileUpload" ;
   private boolean isChangeAvatar = false;
@@ -107,9 +106,7 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
           fileAttachment.setNodeName(IdGenerator.generate() + uploadResource.getFileName().substring(uploadResource.getFileName().lastIndexOf(".")));
           listFileAttachment.add(fileAttachment) ;
         } else {
-        	UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-        	uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.size-of-file-is-0", new Object[]{uploadResource.getFileName()}, ApplicationMessage.WARNING)) ;
-        	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        	attachMentForm.warning("UIAttachMentForm.msg.size-of-file-is-0", new String[]{uploadResource.getFileName()}) ;
         	return ;
         }
 //      remove temp file in upload service and server
@@ -117,24 +114,18 @@ public class UIAttachMentForm extends UIForm implements UIPopupComponent {
       }
       
       if(listFileAttachment.isEmpty()) {
-        UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-        uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      	attachMentForm.warning("UIAttachMentForm.msg.file-not-found") ;
         return ;
       }
       
       UIPopupContainer popupContainer = attachMentForm.getAncestorOfType(UIPopupContainer.class) ;
       if(attachMentForm.isChangeAvatar) {
       	if(listFileAttachment.get(0).getMimeType().indexOf("image") < 0){
-      		UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-          uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.fileIsNotImage", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      		attachMentForm.warning("UIAttachMentForm.msg.fileIsNotImage") ;
           return ;
       	}
       	if(listFileAttachment.get(0).getSize() >= (2 * 1048576)){
-      		UIApplication uiApp = attachMentForm.getAncestorOfType(UIApplication.class) ;
-          uiApp.addMessage(new ApplicationMessage("UIAttachMentForm.msg.avatar-upload-long", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+      		attachMentForm.warning("UIAttachMentForm.msg.avatar-upload-long") ;
           return ;
       	}
       	FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);

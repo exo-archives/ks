@@ -29,12 +29,13 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -52,7 +53,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
     }
 )
 
-public class UIAddRelationForm extends UIForm implements UIPopupComponent {
+public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 	private String homeCategoryName = "";
   private List<Question> listQuestion = new ArrayList<Question>() ;
   private List<String> quesIdsSelect = new ArrayList<String>() ;

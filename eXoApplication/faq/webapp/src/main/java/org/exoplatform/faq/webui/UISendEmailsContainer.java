@@ -17,10 +17,10 @@
 package org.exoplatform.faq.webui;
 
 import org.exoplatform.faq.webui.popup.UIPopupAction;
-import org.exoplatform.faq.webui.popup.UIPopupComponent;
 import org.exoplatform.faq.webui.popup.UISendMailForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 

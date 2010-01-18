@@ -31,19 +31,20 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuickSearch;
 import org.exoplatform.faq.webui.UIResultContainer;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.exception.MessageException;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormDateTimeInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
@@ -59,7 +60,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UIAdvancedSearchForm.CancelActionListener.class, phase = Phase.DECODE)
 		}
 )
-public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
+public class UIAdvancedSearchForm extends BaseUIForm implements UIPopupComponent	{
 	final static private String FIELD_TEXT = "Text" ;
 	final static	private String FIELD_SEARCHOBJECT_SELECTBOX = "SearchObject" ;
 	final static private String FIELD_CATEGORY_NAME = "CategoryName" ;
@@ -252,8 +253,7 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 		Calendar calendar = dateTimeInput.getCalendar();
 		if(!FAQUtils.isFieldEmpty(dateTimeInput.getValue())){
 			if(calendar == null){
-				Object[] args = {getLabel(field)};
-				throw new MessageException(new ApplicationMessage("UIAdvancedSearchForm.msg.error-input-text-date", args, ApplicationMessage.WARNING)) ;
+				warning("UIAdvancedSearchForm.msg.error-input-text-date", new String[]{getLabel(field)}) ;
 			}
 		}
 		return calendar;
@@ -293,10 +293,9 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			String question = advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).getValue() ;
 			String response = advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).getValue() ;
 			String comment = advancedSearch.getUIFormTextAreaInput(FIELD_COMMENT).getValue() ;
-			UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class) ;
 			try {
 				if(fromDate.getTimeInMillis() >= toDate.getTimeInMillis()){
-					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-from-less-than-to", new String[]{}, ApplicationMessage.WARNING)) ;
+					advancedSearch.warning("UIAdvancedSearchForm.msg.erro-from-less-than-to") ;
 					return ;
 				}
       } catch (Exception e) {
@@ -310,22 +309,19 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			 */
 			if(advancedSearch.getFromDate() != null && advancedSearch.getToDate() != null) {
 				if(advancedSearch.getFromDate().after(advancedSearch.getToDate())){
-					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.date-time-invalid", null)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					advancedSearch.warning("UIAdvancedSearchForm.msg.date-time-invalid") ;
 					return ;
 				}
 			}
 			if(!FAQUtils.isValidEmailAddresses(emailAddress)) {
-				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.email-invalid",null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				advancedSearch.warning("UIAdvancedSearchForm.msg.email-invalid") ;
 				return ;
 			}
 			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
 					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment) || 
 					FAQUtils.CheckSpecial(nameAttachment)) { 
-				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				advancedSearch.warning("UIAdvancedSearchForm.msg.failure") ;
 				return ;
 			}
 			
@@ -432,7 +428,4 @@ public class UIAdvancedSearchForm extends UIForm implements UIPopupComponent	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
-
-
-
 }
