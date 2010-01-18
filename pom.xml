@@ -8,7 +8,6 @@
     <version>6</version>
   </parent>
   
-
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
   <version>2.0.0-Alpha03-SNAPSHOT</version>
@@ -54,8 +53,10 @@
     <!-- Build settings -->
     <!-- ************** -->
 
+    <!-- We enforce Java 6 to build to use Chromattic and APT -->
+    <jdk.min.version>1.6</jdk.min.version>
     <!-- maven-release-plugin -->
-    <arguments>-Prelease,pkg-tomcat,arc-tomcat,pkg-jbossas,arc-jbossas,run-its -Dgatein.working.dir=target</arguments>
+    <arguments>-Prelease,java-api-compat,pkg-tomcat,arc-tomcat,pkg-jbossas,arc-jbossas,run-its -Dgatein.working.dir=target</arguments>
 
   </properties>
 
@@ -280,6 +281,37 @@
        <version>${commons-collections.version}</version>
     </dependency>                         
   </dependencies>     
-</dependencyManagement>     
-  
+</dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>java-api-compat</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jvnet</groupId>
+            <artifactId>animal-sniffer</artifactId>
+            <version>1.2</version>
+            <executions>
+              <execution>
+                <id>check-java-compatibility</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+                <configuration>
+                  <signature>
+                    <groupId>org.jvnet.animal-sniffer</groupId>
+                    <artifactId>java1.5</artifactId>
+                    <version>1.0</version>
+                  </signature>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
