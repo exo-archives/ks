@@ -289,7 +289,7 @@
          </build>
       </profile>
       <profile>
-        <id>release</id>
+        <id>arc-tomcat</id>
         <build>
           <plugins>
             <plugin>
@@ -307,6 +307,18 @@
                     </descriptors>
                   </configuration>
                 </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+      <profile>
+        <id>arc-jbossas</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <executions>
                 <execution>
                   <id>jbossas-assembly</id>
                   <phase>package</phase>
