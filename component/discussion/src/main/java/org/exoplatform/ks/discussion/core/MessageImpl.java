@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.chromattic.api.RelationshipType;
+import org.chromattic.api.annotations.Create;
+import org.chromattic.api.annotations.Id;
 import org.chromattic.api.annotations.ManyToOne;
 import org.chromattic.api.annotations.OneToMany;
 import org.chromattic.api.annotations.PrimaryType;
@@ -30,25 +32,53 @@ import org.exoplatform.ks.discussion.api.Message;
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@PrimaryType(name="discussion=message")
+@PrimaryType(name="discussion:message")
 public abstract class MessageImpl implements Message {
+  
+  
+  @Id
+  public abstract String getId();
 
   @Property(name="discussion:author")
   public abstract String getAuthor();
 
+  public abstract void setAuthor(String author); 
+  
   @Property(name="discussion:body")
   public abstract String getBody();
+  
+  public abstract void setBody(String body);
 
   @Property(name="discussion:title")
   public abstract String getTitle();
+
+  public abstract void setTitle(String title);
   
-  @Property(name="discussion:createdAt")
-  public abstract Date getCreatedAt();
+  @Property(name="discussion:timestamp")
+  public abstract Date getTimestamp();
+  
+  public abstract void setTimestamp(Date timestamp);
 
   @OneToMany(type=RelationshipType.HIERARCHIC)
   public abstract List<Message> getReplies();
 
   @ManyToOne
   public abstract Message getParent();
+  
+  @Create
+  public abstract MessageImpl create();
+  
+  
+  /**
+   * Initializes this with another message.
+   * @param source source message to read
+   * @throws IllegalStateException if this is transient
+   */
+  public void read(Message source) {
+    setAuthor(source.getAuthor());
+    setBody(source.getBody());
+    setTitle(source.getTitle());
+    setTimestamp(source.getTimestamp());
+  }
   
 }

@@ -44,6 +44,8 @@ public abstract class DiscussionImpl implements Discussion {
 
   @OneToOne
   @MappedBy("startmessage")
-  public abstract Message getStartMessage() ;
+  public abstract Message getStartMessage();
+  
+  public abstract void setStartMessage(Message startMessage);
 
 }

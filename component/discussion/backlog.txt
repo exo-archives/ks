@@ -1,0 +1,8 @@
+
+ * get only summary of message (titles)
+ * get messages in (reverse) chronological order instead of threads
+ *  (un)Register listeners on conversations (used for feeds, activity steams, sharing on 3rd party system such as FB)
+ 
+ 
+ * discussion can be closed and no longer accept messages
+ * discussion length (number of messages)

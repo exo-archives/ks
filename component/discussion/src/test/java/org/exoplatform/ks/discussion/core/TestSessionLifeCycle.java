@@ -34,10 +34,10 @@ public class TestSessionLifeCycle implements SessionLifeCycle {
 
 
 
-  public TestSessionLifeCycle() {
+  public TestSessionLifeCycle() { 
     super();
   }
-
+ 
  
   public void close(Session session) {
     session.logout();

@@ -34,12 +34,14 @@ public abstract class ChannelImpl implements Channel {
   public abstract String getId();
 
   @Create
-  public abstract DiscussionImpl createDiscussion();
+  public abstract DiscussionImpl createDiscussion(String name);
   
   @Path
   public abstract String getPath();
   
   @Name
   public abstract String getName();
+
+
   
 }

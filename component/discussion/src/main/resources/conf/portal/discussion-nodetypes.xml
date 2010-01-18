@@ -27,12 +27,7 @@
     <supertypes>
       <supertype>nt:base</supertype>
       <supertype>mix:referenceable</supertype>
-    </supertypes>
-    <propertyDefinitions>
-      <propertyDefinition name="discussion:name" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-    </propertyDefinitions>    
+    </supertypes>  
     <childNodeDefinitions>
       <childNodeDefinition name="*" defaultPrimaryType="discussion:discussion" autoCreated="false" mandatory="false"
         onParentVersion="COPY" protected="false" sameNameSiblings="false">
@@ -48,14 +43,9 @@
     <supertypes>
       <supertype>nt:base</supertype>
       <supertype>mix:referenceable</supertype>
-    </supertypes>
-    <propertyDefinitions>
-      <propertyDefinition name="discussion:name" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
-        <valueConstraints/>
-      </propertyDefinition>
-    </propertyDefinitions>    
+    </supertypes>  
     <childNodeDefinitions>
-      <childNodeDefinition name="discussion:startmessage" defaultPrimaryType="discussion:message" autoCreated="true" mandatory="false"
+      <childNodeDefinition name="startmessage" defaultPrimaryType="discussion:message" autoCreated="true" mandatory="true"
         onParentVersion="COPY" protected="false" sameNameSiblings="false">
         <requiredPrimaryTypes>
           <requiredPrimaryType>discussion:message</requiredPrimaryType>
@@ -79,7 +69,7 @@
       <propertyDefinition name="discussion:body" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>  
-      <propertyDefinition name="discussion:createdAt" requiredType="Date" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
+      <propertyDefinition name="discussion:timestamp" requiredType="Date" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="false">
         <valueConstraints/>
       </propertyDefinition>            
     </propertyDefinitions>    

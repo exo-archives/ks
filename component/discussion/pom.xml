@@ -9,6 +9,9 @@
   <artifactId>exo.ks.component.discussion</artifactId>
   <name>eXo KS Discussion</name>
   
+  <properties>
+  <jdk.min.version>1.6</jdk.min.version>
+  </properties>
   <dependencies>
   
 

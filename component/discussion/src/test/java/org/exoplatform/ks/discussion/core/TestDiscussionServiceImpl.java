@@ -17,10 +17,14 @@
 package org.exoplatform.ks.discussion.core;
 
 
+import java.util.Date;
+import java.util.List;
+
 import org.chromattic.api.ChromatticBuilder;
 import org.chromattic.apt.InstrumentorImpl;
 import org.exoplatform.ks.discussion.api.Channel;
 import org.exoplatform.ks.discussion.api.Discussion;
+import org.exoplatform.ks.discussion.api.Message;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
@@ -36,6 +40,8 @@ import org.testng.annotations.Test;
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/discussion-configuration.xml")})
 public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
 
+  
+
   @Test
   public void testGetWorkspace() {
     DiscussionServiceImpl discussionService = new TestDiscussionService();
@@ -49,7 +55,8 @@ public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
   @Test
   public void testCreateDiscussion() {
     DiscussionServiceImpl discussionService = new TestDiscussionService();
-    Discussion disc = discussionService.createDiscussion();
+    Message message = new TestMessage("title", "author", "body", new Date());
+    Discussion disc = discussionService.startDiscussion(message);
     Assert.assertNotNull(disc);
     String name = disc.getName();
     Assert.assertNotNull(name);
@@ -58,14 +65,39 @@ public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
   }
   
   
+  @Test(expectedExceptions=IllegalArgumentException.class)
+  public void testDiscussionWithoutStartMessage() {
+    DiscussionServiceImpl discussionService = new TestDiscussionService();
+    discussionService.startDiscussion(null);
+  }
+  
   @Test
   public void testFindDiscussionById() {
     DiscussionServiceImpl discussionService = new TestDiscussionService();
-    Discussion disc = discussionService.createDiscussion();
+    Message message = new TestMessage("title", "author", "body", new Date());
+    Discussion disc = discussionService.startDiscussion(message);
     String discussionId = disc.getId();
     Discussion actual = discussionService.findDiscussion(discussionId);
     Assert.assertNotNull(actual);
     Assert.assertEquals(actual.getName(), disc.getName());
+    Assert.assertNotNull(disc.getStartMessage());
+    
+  }
+  
+  @Test
+  public void testAddReply() {
+    DiscussionServiceImpl discussionService = new TestDiscussionService();
+    Message message = new TestMessage("title", "author", "body", new Date());
+   
+    Discussion disc = discussionService.startDiscussion(message);
+    String messageId = disc.getStartMessage().getId();
+    
+    Message reply = new TestMessage(null, "author2", "body2", null);
+    Message actual = discussionService.reply(messageId, reply);
+    
+    Assert.assertNotNull(actual);
+    Assert.assertEquals(actual.getAuthor(), "author2");
+    Assert.assertNotNull(actual.getTimestamp()); // timestamp is added if missing
     
   }
   
@@ -81,5 +113,59 @@ public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
     }
     
   }
+  
+  
+  
+  public class TestMessage implements Message {
+
+    private String title;
+    private String author;
+    private String body;
+    private Date timestamp;
+
+    public TestMessage(String title, String author, String body, Date timestamp) {
+      this.title = title;
+      this.author = author;
+      this.body=body;
+      this.timestamp = timestamp;
+    }
+
+    public String getAuthor() {
+
+      return author;
+    }
+
+    public String getBody() {
+
+      return body;
+    }
+
+    public Message getParent() {
+
+      return null;
+    }
+
+    public List<Message> getReplies() {
+
+      return null;
+    }
+
+    public Date getTimestamp() {
+
+      return timestamp;
+    }
+
+    public String getTitle() {
+
+      return title;
+    }
+
+    public String getId() {
+      
+      return null;
+    }
+
+  }  
+  
   
 }

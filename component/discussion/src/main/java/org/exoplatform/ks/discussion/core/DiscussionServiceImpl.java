@@ -16,14 +16,19 @@
  */
 package org.exoplatform.ks.discussion.core;
 
+import java.util.Date;
+
 import org.chromattic.api.BuilderException;
 import org.chromattic.api.Chromattic;
 import org.chromattic.api.ChromatticBuilder;
 import org.chromattic.api.ChromatticSession;
+import org.chromattic.apt.InstrumentorImpl;
 import org.exoplatform.ks.discussion.api.Channel;
 import org.exoplatform.ks.discussion.api.Discussion;
 import org.exoplatform.ks.discussion.api.DiscussionException;
 import org.exoplatform.ks.discussion.api.DiscussionService;
+import org.exoplatform.ks.discussion.api.Message;
+import org.exoplatform.ks.discussion.api.ObjectNotFoundException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -48,6 +53,10 @@ public class DiscussionServiceImpl implements DiscussionService {
     builder = ChromatticBuilder.create();
   }
 
+  /**
+   * Get the discussion workspace. That is : the parent node of all channels.
+   * @return
+   */
   Workspace getWorkspace() {
     Chromattic chromattic = getChromattic();
     session = chromattic.openSession();
@@ -64,11 +73,7 @@ public class DiscussionServiceImpl implements DiscussionService {
 
   protected Chromattic getChromattic() {
     if (chromattic == null) {
-      
-
-      //
-      builder.setOption(ChromatticBuilder.INSTRUMENTOR_CLASSNAME,
-                        "org.chromattic.apt.InstrumentorImpl");
+      builder.setOption(ChromatticBuilder.INSTRUMENTOR_CLASSNAME, InstrumentorImpl.class.getName());
       builder.add(Workspace.class);
       builder.add(ChannelImpl.class);
       builder.add(DiscussionImpl.class);
@@ -76,51 +81,138 @@ public class DiscussionServiceImpl implements DiscussionService {
 
       // unfortunately builder.build() does not use an unchecked exception, I'm
       // working around that here
+      // TODO : Should be fixed in next chromattic version
       try {
         chromattic = builder.build();
       } catch (Exception e) {
         throw new BuilderException(e.getMessage());
       }
-
     }
 
     return chromattic;
   }
 
-  public Discussion createDiscussion() {
+  /**
+   * {@inheritDoc}
+   */
+  public Discussion startDiscussion(Message startMessage) {
     Channel target = getWorkspace().getDefaultChannel();
-    return createDiscussion(target.getId());
+    return startDiscussion(target.getId(), startMessage);
   }
 
-  public Discussion createDiscussion(String channelId) {
-    ChannelImpl channel = session.findById(ChannelImpl.class, channelId);
-    Discussion discussion = channel.createDiscussion();
-    String name = generateDiscussionName(channel);
-    session.persist(channel, discussion, name);
+  /**
+   * {@inheritDoc}
+   */
+    public Discussion startDiscussion(String channelId, Message message) {
+    if (message == null) {
+      throw new IllegalArgumentException("An initial message is mandatory to start a discussion");
+    }
+    
+    // find Channel
+    ChannelImpl channel = findChannelById(channelId);
+  
+    // create the discussion in the channel
+    String discussionName = generateChildName(channel);
+    DiscussionImpl discussion = session.insert(channel, DiscussionImpl.class, discussionName);
+    
+    // create the start message
+    MessageImpl startMessage = (MessageImpl) discussion.getStartMessage();
+    startMessage.read(message);
+    session.save();
     return discussion;
   }
 
-  private String generateDiscussionName(ChannelImpl channel) {
-    String name = String.valueOf(System.currentTimeMillis());
-    DiscussionImpl discussion = session.findByPath(channel, DiscussionImpl.class, name);
-    byte max = 100;
-    while (discussion != null) {
-      LOG.warn("discussion " + name + " already exists in " + channel.getPath()
-          + " attempting to generate a new one.");
-      name = String.valueOf(System.currentTimeMillis());
-      discussion = session.findByPath(channel, DiscussionImpl.class, name);
-
-      if (--max == 0) {
-        throw new DiscussionException("Failed to create a new name for discussion in "
-            + channel.getPath() + "after 100 attempts.");
-      }
+  private ChannelImpl findChannelById(String channelId) {
+    ChannelImpl channel = session.findById(ChannelImpl.class, channelId);
+    if (channel == null) {
+      throw new ObjectNotFoundException(channelId);
     }
-    return name;
+    return channel;
   }
 
+
+  /**
+   * {@inheritDoc}
+   */
   public Discussion findDiscussion(String discussionId) {
     Discussion discussion = session.findById(Discussion.class, discussionId);
     return discussion;
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public Message findMessage(String messageId) {
+    Message message = session.findById(Message.class, messageId);
+    return message;
+  }
+  
+  /**
+   * load a message by id
+   * @param messageId
+   * @return
+   * @throws ObjectNotFoundException if te message was not found
+   */
+  private MessageImpl findMessageById(String messageId) {
+    MessageImpl message = session.findById(MessageImpl.class, messageId);
+    if (message == null) {
+      throw new ObjectNotFoundException(messageId);
+    }
+    return message;
+  }
+  
+
+  /**
+   * {@inheritDoc}
+   */
+  public Message reply(String messageId, Message reply) {
+      
+    MessageImpl parentMessage = findMessageById(messageId);
+
+    String name = generateChildName(parentMessage);
+    MessageImpl addedReply = session.insert(parentMessage, MessageImpl.class, name);
+    addedReply.read(reply);
+    
+    if (reply.getTimestamp() == null) addedReply.setTimestamp(new Date());
+    if (reply.getTitle() == null) addedReply.setTitle(parentMessage.getTitle());
+    if (reply.getBody() == null || reply.getBody().length() <= 0) {
+      throw new IllegalArgumentException("a message cannot have an empty body");
+    }
+    parentMessage.getReplies().add(addedReply);
+    session.save();
+    return addedReply;
+  }
+
+
+  
+  
+  /**
+   * Generate a valid child node name. The name is based on the current timestamp.
+   * For the extremely rare cases where the name would already exist, 100 consecutive attempts
+   * are made to find a name in the same way.
+   * @param <T> must be a Chromattic managed type
+   * @param parent parent node where a child name should be generated
+   * @return name of the child node
+   * @throws DiscussionException when the name already exists after 100 attempts
+   * @see System#currentTimeMillis()
+   */
+  private <T>String generateChildName(T parent) {
+    String name = String.valueOf(System.currentTimeMillis());
+    Object discussion = session.findByPath(parent, parent.getClass(), name);
+    String path = session.getPath(parent);
+    byte max = 100;
+    while (discussion != null) {
+      LOG.warn("Child node name '" + name + "' already exists in " + path
+          + ". Trying to generate a new one.");
+      name = String.valueOf(System.currentTimeMillis());
+      discussion = session.findByPath(parent, parent.getClass(), name);
+
+      if (--max == 0) {
+        throw new DiscussionException("Failed to generate an available child node name in "
+            + path + "after 100 attempts.");
+      }
+    }
+    return name;
   }
 
 }

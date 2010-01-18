@@ -16,56 +16,34 @@
  */
 package org.exoplatform.ks.discussion.api;
 
-import java.util.Date;
-import java.util.List;
-
 /**
- * <p>A message is an element of a discussion. A message can have replies or be replies of a parent message.</p>
+ * Used when an object od the discussion api was fetched by ID but not found. 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-public interface Message {
+public class ObjectNotFoundException extends DiscussionException {
+
 
   /**
-   * Identifier of the message
-   * @return
+   * 
    */
-  String getId();
+  private static final long serialVersionUID = -1482325973754501628L;
   
   /**
-   * Title of the message
-   * @return
+   * Identifier of the object that was not found
    */
-  String getTitle();
+  private String objectId;
   
-  /**
-   * The author of the message. Can be a username, email or any identifier in the target system.
-   * @return
-   */
-  String getAuthor();
-  
-  /**
-   * Body of the message
-   * @return
-   */
-  String getBody();
-  
-  /**
-   * Get this message's replies
-   * @return
-   */
-  List<Message> getReplies();
-  
-  /**
-   * Date of message
-   * @return
-   */
-  Date getTimestamp();
-  
-  /**
-   * Get the message this is a reply to
-   * @return
-   */
-  Message getParent();
-  
+  public ObjectNotFoundException(String objectId) {
+    this.objectId = objectId;
+  }
+
+  public String getObjectId() {
+    return objectId;
+  }
+
+  public String getMessage() {
+    return "Could not find an object with the identifier " + objectId;
+  }
+
 }
