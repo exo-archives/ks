@@ -188,8 +188,9 @@
                               <argument>-Dclean.server=${exo.projects.app.tomcat.version}</argument>
                               <argument>-Dexo.m2.home=${maven.home}</argument>
                               <argument>-Xshare:auto</argument>
-                              <argument>-Xms128m</argument>
-                              <argument>-Xmx512m</argument>
+                              <argument>-Xms64m</argument>
+                              <argument>-Xmx1024m</argument>
+                              <argument>-XX:MaxPermSize=128m</argument>
                               <argument>-classpath</argument>
                               <argument>${basedir}/target/exopackage/lib/js.jar</argument>
                               <argument>org.mozilla.javascript.tools.shell.Main</argument>
@@ -268,8 +269,9 @@
                               <argument>-Dclean.server=${exo.projects.app.jboss.version}</argument>
                               <argument>-Dexo.m2.home=${maven.home}</argument>
                               <argument>-Xshare:auto</argument>
-                              <argument>-Xms128m</argument>
-                              <argument>-Xmx512m</argument>
+                              <argument>-Xms64m</argument>
+                              <argument>-Xmx1024m</argument>
+                              <argument>-XX:MaxPermSize=128m</argument>
                               <argument>-classpath</argument>
                               <argument>${basedir}/target/exopackage/lib/js.jar</argument>
                               <argument>org.mozilla.javascript.tools.shell.Main</argument>
