@@ -62,23 +62,7 @@
          <artifactId>portal.packaging.product</artifactId>
          <version>${project.version}</version>
          <type>js</type>
-       </dependency> 
-       <!-- Missing dep for exobuild -->
-       <dependency>
-         <groupId>org.exoplatform.ks</groupId>
-         <artifactId>exo.ks.server.tomcat.patch</artifactId>
-         <version>${project.version}</version>
-       </dependency>       
-       <dependency>
-         <groupId>c3p0</groupId>
-         <artifactId>c3p0</artifactId>
-         <version>0.9.1.2</version>
-       </dependency>       
-       <dependency>
-         <groupId>com.google.code.guice</groupId>
-         <artifactId>guice-jmx</artifactId>
-         <version>2.0</version>
-       </dependency>       
+       </dependency>      
   </dependencies>
          
    <build>
@@ -89,7 +73,7 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <version>2.1</version>
             <configuration>
-              <repositoryUrl>xxx</repositoryUrl>
+              <repositoryUrl>http://repository.exoplatform.org/all</repositoryUrl>
             </configuration>
          </plugin>
          <!-- check-out exobuild -->
@@ -200,7 +184,7 @@
                               <argument>-Dexo.working.dir=${gatein.working.dir}</argument>
                               <!--argument>-Dexo.src.dir=NONE</argument-->
                               <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument><!-- to get the server ref install -->
-                              <argument>-Dexo.m2.repos=file:${settings.localRepository}</argument>
+                              <argument>-Dexo.m2.repos=file:${settings.localRepository},http://repository.exoplatform.org/all</argument>
                               <argument>-Dclean.server=${exo.projects.app.tomcat.version}</argument>
                               <argument>-Dexo.m2.home=${maven.home}</argument>
                               <argument>-Xshare:auto</argument>
@@ -280,7 +264,7 @@
                               <argument>-Dexo.conf.dir=${basedir}/target/exopackage-conf</argument>
                               <argument>-Dexo.working.dir=${gatein.working.dir}</argument>
                               <argument>-Dexo.dep.dir=${exo.projects.directory.dependencies}</argument>
-                              <argument>-Dexo.m2.repos=file:${settings.localRepository},http://maven2.exoplatform.org/rest/maven2,http://repository.jboss.org/maven2</argument>
+                              <argument>-Dexo.m2.repos=file:${settings.localRepository},http://repository.exoplatform.org/all</argument>
                               <argument>-Dclean.server=${exo.projects.app.jboss.version}</argument>
                               <argument>-Dexo.m2.home=${maven.home}</argument>
                               <argument>-Xshare:auto</argument>
