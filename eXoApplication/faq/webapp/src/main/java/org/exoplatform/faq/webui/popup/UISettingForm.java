@@ -36,6 +36,7 @@ import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -47,7 +48,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -76,7 +76,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 				@EventConfig(listeners = UISettingForm.CancelActionListener.class)
 		}
 )
-public class UISettingForm extends UIForm implements UIPopupComponent	{
+public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 	public final String DISPLAY_TAB = "DisplayTab";
 	public final String SET_DEFAULT_EMAIL_TAB = "DefaultEmail";
 	public final String SET_DEFAULT_ADDNEW_QUESTION_TAB = "AddNewQuestionTab";
@@ -341,7 +341,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 				if(defaultAddnewQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultAddnewQuestion)) defaultAddnewQuestion = " ";
 				if(defaultEditQuestion == null || !validatorDataInput.fckContentIsNotEmpty(defaultEditQuestion)) defaultEditQuestion = " ";
-				UIApplication uiApplication = settingForm.getAncestorOfType(UIApplication.class) ;
 				UIFormInputWithActions Discussion = settingForm.getChildById(DISCUSSION_TAB);
 				boolean isDiscus = (Boolean)Discussion.getUIFormCheckBoxInput(ENABLE_DISCUSSION).getValue();
 				if(isDiscus) {
@@ -349,8 +348,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 					if(!settingForm.idForumName.isEmpty() && !FAQUtils.isFieldEmpty(value)) {
 						faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0)+";"+settingForm.idForumName.get(1));
 					}else {
-						 uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.pathCategory-empty", null, ApplicationMessage.WARNING)) ;
-			       event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						settingForm.warning("UISettingForm.msg.pathCategory-empty") ;
 			       return ;
 					}
 				}else{
@@ -359,8 +357,7 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				faqSetting.setIsDiscussForum(isDiscus);
 				faqSetting.setEmailMoveQuestion(emailMoveQuestion);
 				FAQUtils.savePortletPreference(faqSetting, defaultAddnewQuestion.replaceAll("&amp;", "&"), defaultEditQuestion.replaceAll("&amp;", "&"));
-        uiApplication.addMessage(new ApplicationMessage("UISettingForm.msg.update-successful", null, ApplicationMessage.INFO)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				settingForm.info("UISettingForm.msg.update-successful") ;
 			} else {
 				faqSetting.setOrderBy(String.valueOf(settingForm.getUIFormSelectBox(ORDER_BY).getValue())) ;
 				faqSetting.setOrderType(String.valueOf(settingForm.getUIFormSelectBox(ORDER_TYPE).getValue())) ;
@@ -377,7 +374,6 @@ public class UISettingForm extends UIForm implements UIPopupComponent	{
 				questions.updateCurrentQuestionList() ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiPortlet) ;
 			}
-			return ;
 		}
 	}
 	

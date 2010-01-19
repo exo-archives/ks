@@ -31,15 +31,14 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -56,7 +55,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 
-public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
+public class UIMoveCategoryForm extends BaseUIForm	implements UIPopupComponent{
 	private String categoryId_ ;
 	private FAQSetting faqSetting_ ;
 	private boolean isCateSelect = false;
@@ -91,11 +90,9 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 		}
 	}
 
-	static public class SaveActionListener extends EventListener<UIMoveCategoryForm> {
-		public void execute(Event<UIMoveCategoryForm> event) throws Exception {
-			UIMoveCategoryForm moveCategory = event.getSource() ;	
+	static public class SaveActionListener extends BaseEventListener<UIMoveCategoryForm> {
+		public void onEvent(Event<UIMoveCategoryForm> event, UIMoveCategoryForm moveCategory, String destCategoryId) throws Exception {
 			UIAnswersPortlet answerPortlet = moveCategory.getAncestorOfType(UIAnswersPortlet.class) ;
-			String destCategoryId = event.getRequestContext().getRequestParameter(OBJECTID);
 			String categoryId = moveCategory.getCategoryID() ;
 			try {
 				boolean canMove = moveCategory.faqSetting_.isAdmin();
@@ -103,10 +100,7 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 				if(canMove){
 					faqService_.moveCategory(categoryId, destCategoryId) ;
 				}else {
-					UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-category", 
-																		new Object[]{"destination"}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					warning("UIQuestions.msg.can-not-move-category") ;
 					return;
 				}
 				if(moveCategory.isCateSelect) {
@@ -131,14 +125,10 @@ public class UIMoveCategoryForm extends UIForm	implements UIPopupComponent{
 				}
 				moveCategory.isCateSelect = false;
 			}catch(ItemExistsException ie){
-				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.already-in-destination", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIQuestions.msg.already-in-destination") ;
 			}catch (Exception e) {
-				//e.printStackTrace() ;
-				UIApplication uiApplication = moveCategory.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				moveCategory.log.warn("Can not move this category. Exception: " + e.getMessage());
+				warning("UIQuestions.msg.category-id-deleted") ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
 			answerPortlet.cancelAction() ;

@@ -30,13 +30,14 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -54,7 +55,7 @@ import org.exoplatform.webui.form.UIForm;
 				@EventConfig(listeners = UIWatchManager.CancelActionListener.class)
 		}
 )
-public class UIWatchManager  extends UIForm	implements UIPopupComponent{
+public class UIWatchManager  extends BaseUIForm	implements UIPopupComponent{
 	private String categoryId_ = "";
 	private List<Watch> listWatchs_ = new ArrayList<Watch>() ;
 	private String LIST_EMAILS_WATCH = "listEmailsWatch";
@@ -71,7 +72,6 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	public void deActivate() throws Exception {}
 
 	public String getCategoryID() { return categoryId_; }
-  @SuppressWarnings("static-access")
   public void setCategoryID(String s) throws Exception {
   	this.categoryId_ = s ;  	
   	this.listWatchs_ = faqService_.getWatchByCategory(categoryId_);
@@ -81,7 +81,7 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 	    pageIterator = this.getChildById(LIST_EMAILS_WATCH);
 	    pageIterator.updatePageList(pageList);
     } catch (Exception e) {
-    	 e.printStackTrace();
+    	 log.error("Can not get category by categoryId, exception: " + e.getMessage());
     }
   }
   
@@ -132,14 +132,13 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
   	return listWatchs_ ;
   }*/
   
+  @SuppressWarnings("unused")
   private List<Watch> getListWatch() throws Exception { 
   	return this.listWatchs_ ;
   }
   
-  static	public class EditEmailActionListener extends EventListener<UIWatchManager> {
-		public void execute(Event<UIWatchManager> event) throws Exception {
-			UIWatchManager watchManager = event.getSource() ;
-			String user = event.getRequestContext().getRequestParameter(OBJECTID);
+  static	public class EditEmailActionListener extends BaseEventListener<UIWatchManager> {
+		public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String user) throws Exception {
 			UIWatchContainer watchContainer = watchManager.getParent() ;
 			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
 			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
@@ -154,10 +153,8 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 		}
 	}
 
-	static	public class OpenCategoryActionListener extends EventListener<UIWatchManager> {
-		public void execute(Event<UIWatchManager> event) throws Exception {
-			UIWatchManager watchManager = event.getSource() ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+	static	public class OpenCategoryActionListener extends BaseEventListener<UIWatchManager> {
+		public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String categoryId) throws Exception {
 			UIAnswersPortlet uiPortlet = watchManager.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
 			
@@ -174,10 +171,8 @@ public class UIWatchManager  extends UIForm	implements UIPopupComponent{
 		}
 	}
 
-	static	public class DeleteEmailActionListener extends EventListener<UIWatchManager> {
-		public void execute(Event<UIWatchManager> event) throws Exception {
-			UIWatchManager watchManager = event.getSource() ;
-			String user = event.getRequestContext().getRequestParameter(OBJECTID);
+	static	public class DeleteEmailActionListener extends BaseEventListener<UIWatchManager> {
+		public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String user) throws Exception {
 			watchManager.curentPage_ = watchManager.pageIterator.getPageSelected();
 			faqService_.deleteCategoryWatch(watchManager.getCategoryID(), user);
 			watchManager.setCategoryID(watchManager.getCategoryID());

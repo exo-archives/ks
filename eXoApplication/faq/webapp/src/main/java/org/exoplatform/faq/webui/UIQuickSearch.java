@@ -27,6 +27,8 @@ import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
 import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -34,7 +36,6 @@ import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 /**
  * Created by The eXo Platform SARL
@@ -50,7 +51,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIQuickSearch.AdvancedSearchActionListener.class)			
 		}
 )
-public class UIQuickSearch  extends UIForm {
+public class UIQuickSearch  extends BaseUIForm {
 	final static	private String FIELD_SEARCHVALUE = "inputValue" ;
 	private FAQSetting faqSetting_ = new FAQSetting() ;
 
@@ -72,19 +73,14 @@ public class UIQuickSearch  extends UIForm {
 		this.setSubmitAction(this.event("Search")) ;
 	}
 
-	static public class SearchActionListener extends EventListener<UIQuickSearch> {
-		public void execute(Event<UIQuickSearch> event) throws Exception {
-			UIQuickSearch uiQuickSearch = event.getSource() ;
+	static public class SearchActionListener extends BaseEventListener<UIQuickSearch> {
+		public void onEvent(Event<UIQuickSearch> event, UIQuickSearch uiQuickSearch, String objectId) throws Exception {
 			UIFormStringInput formStringInput = uiQuickSearch.getUIStringInput(FIELD_SEARCHVALUE) ;
 			UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIApplication uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
 				if(FAQUtils.CheckSpecial(text)) { 
-					uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("UIAdvancedSearchForm.msg.failure") ;
 					return ;
 				}
 				FAQService faqService = FAQUtils.getFAQService() ;
@@ -98,23 +94,20 @@ public class UIQuickSearch  extends UIForm {
 				try {
 					list = faqService.getSearchResults(eventQuery);
 				} catch (Exception e) {
-					e.printStackTrace();
-					uiApp = uiQuickSearch.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIQuickSearch.msg.failure", null, ApplicationMessage.WARNING)) ;
+					warning("UIQuickSearch.msg.failure") ;
 					return ;
 				}
-				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 750) ;
+				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
+				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 500) ;
+//				UIResultContainer resultcontainer = openPopup(uiPortlet, UIResultContainer.class, "ResultQuickSearch", 750, 0) ;
+				resultcontainer.setId("ResultQuickSearch") ;
 				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
-				popupContainer.setId("ResultQuickSearch") ;
-				//List<ObjectSearchResult> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
 				result.setSearchResults(list);
-//				formStringInput.setValue("") ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} else {
-				uiApp.addMessage(new ApplicationMessage("UIQuickSeach.msg.no-text-to-search", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIQuickSeach.msg.no-text-to-search") ;
 				return ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

@@ -16,7 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,19 +23,16 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIWatchContainer;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
 
-@SuppressWarnings({ "unused", "unchecked" })
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class ,
 		template =	"app:/templates/faq/webui/popup/UIWatchForm.gtmpl",
@@ -45,22 +41,18 @@ import org.exoplatform.webui.form.UIFormStringInput;
 				@EventConfig(listeners = UIWatchForm.CancelActionListener.class)
 		}
 )
-public class UIWatchForm extends UIForm	implements UIPopupComponent{
+
+public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
 	public static final String USER_NAME = "userName" ; 
 	public static final String EMAIL_ADDRESS = "emailAddress" ;
 	private String categoryId_ = "";
 	private UIFormMultiValueInputSet emailAddress;
 	private UIFormStringInput userName ;
-	//private boolean isUpdate = false ;
-	//private long curentPage_ = 1 ;
 	
 	public UIWatchForm() throws Exception {
-		List<String> list = new ArrayList<String>() ;
-		String user = FAQUtils.getCurrentUser() ;
 		userName = new UIFormStringInput(USER_NAME, USER_NAME, null) ;
 		emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
 		emailAddress.setType(UIFormStringInput.class) ;
-		//emailAddress.setValue(list) ;
   	addUIFormInput(userName);
 		addUIFormInput(emailAddress);
   }
@@ -81,10 +73,9 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
   }
   
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
+    @SuppressWarnings("unchecked")
     public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource() ;
-			UIApplication uiApp = uiWatchForm.getAncestorOfType(UIApplication.class) ;
-			
 			UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class);
       String name = uiWatchForm.getUIStringInput(USER_NAME).getValue() ;
       String listEmail = "";
@@ -93,17 +84,14 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
 				listEmail += string.trim() + "," ;
       }
 			if (FAQUtils.isFieldEmpty(name)) {
-        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.name-field-empty", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				uiWatchForm.warning("UIWatchForm.msg.name-field-empty") ;
         return ;
       }
       if (FAQUtils.isFieldEmpty(listEmail)) {
-        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.to-field-empty", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        uiWatchForm.warning("UIWatchForm.msg.to-field-empty") ;
         return ;
       } else if (!FAQUtils.isValidEmailAddresses(listEmail)) {
-        uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.invalid-to-field", null)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+        uiWatchForm.warning("UIWatchForm.msg.invalid-to-field") ;
         return ;
       }
       String categoryId = uiWatchForm.getCategoryID() ;
@@ -112,23 +100,12 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
     	Watch watch = new Watch() ;
     	watch.setUser(name) ;
     	watch.setEmails(listEmail);
-    	//if(uiWatchForm.isUpdate) {
-    		faqService.addWatchCategory(categoryId , watch) ;
-    		UIWatchManager watchManager = watchContainer.findFirstComponentOfType(UIWatchManager.class) ;
-    		//watchManager.setCurentPage(uiWatchForm.curentPage_)  ;
-    		UIPopupAction uiPopupAction = watchContainer.getChild(UIPopupAction.class) ;
-        uiPopupAction.deActivate() ;
-        watchManager.setCategoryID(categoryId);
-    		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
-    		/*} else {
-      	faqService.addWatchCategory(categoryId , watch) ;
-      	uiApp.addMessage(new ApplicationMessage("UIWatchForm.msg.successful", null,	ApplicationMessage.INFO)) ;
-       	 event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-       	 UIQuestions uiQuestions = uiPortlet.findFirstComponentOfType(UIQuestions.class) ;
-       	event.getRequestContext().addUIComponentToUpdateByAjax(uiQuestions) ;
-    	}*/
-      
-      //event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ; 
+  		faqService.addWatchCategory(categoryId , watch) ;
+  		UIWatchManager watchManager = watchContainer.findFirstComponentOfType(UIWatchManager.class) ;
+  		UIPopupAction uiPopupAction = watchContainer.getChild(UIPopupAction.class) ;
+      uiPopupAction.deActivate() ;
+      watchManager.setCategoryID(categoryId);
+  		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
 		}
 	}
 
@@ -140,7 +117,4 @@ public class UIWatchForm extends UIForm	implements UIPopupComponent{
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
 		}
 	}
-	
-	
-	
 }

@@ -11,16 +11,14 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.upload.UploadService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 @ComponentConfig(
@@ -32,7 +30,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 		}
 )
 
-public class UIImportForm extends UIForm implements UIPopupComponent{
+public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 	private final String FILE_UPLOAD = "FileUpload";
 	private String categoryId_ ;
 	public void activate() throws Exception { }
@@ -53,16 +51,13 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 			UIImportForm importForm = event.getSource() ;
 			FAQService service = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 			UIAnswersPortlet portlet = importForm.getAncestorOfType(UIAnswersPortlet.class) ;
-			UIApplication uiApplication = importForm.getAncestorOfType(UIApplication.class) ;
 			try{
 				service.getCategoryById(importForm.categoryId_);
 
 				UIFormUploadInput uploadInput = (UIFormUploadInput)importForm.getChildById(importForm.FILE_UPLOAD);
 				
 				if(uploadInput.getUploadResource() == null){
-					uiApplication.addMessage(new ApplicationMessage("UIAttachMentForm.msg.file-not-found", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(importForm) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					importForm.warning("UIAttachMentForm.msg.file-not-found") ;
 					return;
 				}
 				String fileName = uploadInput.getUploadResource().getFileName();
@@ -74,40 +69,31 @@ public class UIImportForm extends UIForm implements UIPopupComponent{
 				}else if ("text/xml".equals(mimeType)){
 					isZip = false ;
 				}else{
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.mimetype-invalid", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.mimetype-invalid");
 					return;
 				}				
 				try{
 					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)){
-						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-fail", null, ApplicationMessage.WARNING));
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+						importForm.warning("UIImportForm.msg.import-fail");
 					} else {
-						uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.import-successful", null));
-			      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+						importForm.warning("UIImportForm.msg.import-successful");
 					}
 				} catch (AccessDeniedException ace) {
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.access-denied", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.access-denied");
 				} catch (ConstraintViolationException con) {
-					Object[] args = { null };
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.constraint-violation-exception", args, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.constraint-violation-exception");
 				} catch (ItemExistsException ise) {
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.CategoryIsExist", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.CategoryIsExist");
 				} catch(Exception e){
-					uiApplication.addMessage(new ApplicationMessage("UIImportForm.msg.filetype-error", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages());
+					importForm.warning("UIImportForm.msg.filetype-error");
 				}
 				
 				UploadService uploadService = importForm.getApplicationComponent(UploadService.class) ;
 				uploadService.removeUpload(uploadInput.getUploadId()) ;
 			} catch (Exception e){
 				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
+				importForm.warning("UIQuestions.msg.admin-moderator-removed-action") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 			}			
 			
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;

@@ -23,16 +23,16 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.faq.service.Answer;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -44,7 +44,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
@@ -68,7 +67,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 		}
 )
 @SuppressWarnings("unused")
-public class UISendMailForm extends UIForm implements UIPopupComponent	{
+public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 	private boolean isViewCC = false;
 	private boolean isViewBCC = false;
 	
@@ -87,7 +86,6 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	private List<SelectItemOption<String>> listLanguageToReponse = new ArrayList<SelectItemOption<String>>() ;
 	private List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
 	private String languageIsResponsed = "" ;
-	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	private String questionChanged_ = new String() ;
 	private String link_ = "" ;
 	public List<User> toUsers = new ArrayList<User>();
@@ -124,7 +122,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 		try {
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		} catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Can not add Plugin Email Norify, exception: " + e.getMessage());
 		}
 	}
 
@@ -148,7 +146,7 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 		questionLanguage.setComments(question.getComments());
 		
 		listQuestionLanguage.add(questionLanguage) ;
-		for(QuestionLanguage questionLanguage2 : faqService_.getQuestionLanguages(questionPath)) {
+		for(QuestionLanguage questionLanguage2 : getFAQService().getQuestionLanguages(questionPath)) {
 			String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
 			questionLanguage2.setDetail(quest2) ;
 			if(!isContainLanguageList(listQuestionLanguage, question.getLanguage()))
@@ -237,10 +235,8 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 	}
 	public String getFieldBCCValue(){return getUIStringInput(FILED_ADD_BCC).getValue();}
 	
-	static public class SendActionListener extends EventListener<UISendMailForm> {
-		public void execute(Event<UISendMailForm> event) throws Exception {
-			UISendMailForm sendMailForm = event.getSource() ;		
-			UIApplication uiApp = sendMailForm.getAncestorOfType(UIApplication.class) ;
+	static public class SendActionListener extends BaseEventListener<UISendMailForm> {
+		public void onEvent(Event<UISendMailForm> event, UISendMailForm sendMailForm, String objectId) throws Exception {
 			String fromName = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM_NAME)).getValue() ;
 			String from = ((UIFormStringInput)sendMailForm.getChildById(FILED_FROM)).getValue() ;
 			String fullFrom = fromName +" (" + from +	") <"+ sendMailForm.getServerConfig().get("account")+">" ;
@@ -253,36 +249,28 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			if (cc != null && cc.indexOf(";") > -1) cc = cc.replace(';', ',') ;
 			if (bcc != null && bcc.indexOf(";") > -1) bcc = bcc.replace(';', ',') ;
 			if (FAQUtils.isFieldEmpty(fromName)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.fromName-field-empty", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.fromName-field-empty") ;
 				return ;
 			} else if (FAQUtils.isFieldEmpty(from)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.from-field-empty", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.from-field-empty") ;
 				return ;
 			} else if(!FAQUtils.isValidEmailAddresses(from)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-from-field",null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.invalid-from-field") ;
 				return ;
 			} else if (FAQUtils.isFieldEmpty(to)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.to-field-empty", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.to-field-empty") ;
 				return ;
 			} else if (!FAQUtils.isValidEmailAddresses(to)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-to-field", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.invalid-to-field") ;
 				return ;
 			} else if(!FAQUtils.isValidEmailAddresses(cc)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-cc-field",null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.invalid-cc-field") ;
 				return ;
 			} else if(!FAQUtils.isValidEmailAddresses(bcc)) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.invalid-bcc-field",null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.invalid-bcc-field") ;
 				return ;
 			} else if(subject == null || subject.trim().length() < 0){
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.subject-field-empty",null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UISendMailForm.msg.subject-field-empty") ;
 				return ;
 			}
 			Message	message = new Message(); 
@@ -294,15 +282,13 @@ public class UISendMailForm extends UIForm implements UIPopupComponent	{
 			message.setSubject(subject) ;
 			message.setBody(body) ;
 			try {
-				faqService_.sendMessage(message) ;
+				sendMailForm.getFAQService().sendMessage(message) ;
 			} catch(Exception e) {
-				uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-error", null)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				e.printStackTrace() ;
+				warning("UISendMailForm.msg.send-mail-error") ;
+				sendMailForm.log.error("Can not send email, exception: " + e.getMessage());
 				return ;
 			}
-			uiApp.addMessage(new ApplicationMessage("UISendMailForm.msg.send-mail-success", null, ApplicationMessage.INFO)) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			info("UISendMailForm.msg.send-mail-success") ;
 			UIAnswersPortlet portlet = sendMailForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;

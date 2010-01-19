@@ -34,6 +34,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -42,7 +43,6 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -57,7 +57,7 @@ import org.exoplatform.webui.form.UIForm;
       @EventConfig(listeners = UIPrintAllQuestions.CloseActionListener.class)
     }
 )
-public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
+public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent{
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private String categoryId = null;
 	private String currentUser_;
@@ -78,14 +78,13 @@ public class UIPrintAllQuestions extends UIForm implements UIPopupComponent{
 	
 	private String getQuestionRelationById(String questionId) {
 		Question question = new Question();
-		//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
 		try {
 			question = faqService_.getQuestionById(questionId);
 			if(question != null) {
 				return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can not get Question Relation by Id, exception: " + e.getMessage());
 		}
 		return "" ;
 	}

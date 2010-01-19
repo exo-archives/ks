@@ -21,17 +21,16 @@ import java.util.List;
 import java.util.Locale;
 
 import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -48,7 +47,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UILanguageForm.CancelActionListener.class)
 		}
 )
-public class UILanguageForm extends UIForm implements UIPopupComponent	{
+public class UILanguageForm extends BaseUIForm implements UIPopupComponent	{
   private List<String> LIST_LANGUAGE = new ArrayList<String>() ;
   private List<String> listLocaldName = new ArrayList<String>() ;
   private List<String> LANGUAGE_SELECT = new ArrayList<String>() ;
@@ -92,17 +91,13 @@ public class UILanguageForm extends UIForm implements UIPopupComponent	{
     return this.LANGUAGE_SELECT ;
   }
 	
-	static public class SelectedLanguageActionListener extends EventListener<UILanguageForm> {
-	  public void execute(Event<UILanguageForm> event) throws Exception {
-      UILanguageForm languageForm = event.getSource() ;
-      String languageIsSelect = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static public class SelectedLanguageActionListener extends BaseEventListener<UILanguageForm> {
+	  public void onEvent(Event<UILanguageForm> event, UILanguageForm languageForm, String languageIsSelect) throws Exception {
       if(languageForm.LANGUAGE_SELECT.contains(languageIsSelect)){
         if(languageForm.LANGUAGE_SELECT.indexOf(languageIsSelect) > 0) {
           languageForm.LANGUAGE_SELECT.remove(languageIsSelect) ;
         } else {
-          UIApplication uiApplication = languageForm.getAncestorOfType(UIApplication.class) ;
-          uiApplication.addMessage(new ApplicationMessage("UILanguageForm.msg.language-is-default", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        	warning("UILanguageForm.msg.language-is-default") ;
           return ;
         }
       } else if(!languageForm.LANGUAGE_SELECT.contains(languageIsSelect)){

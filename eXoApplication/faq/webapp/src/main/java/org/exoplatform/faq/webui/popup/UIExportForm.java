@@ -10,15 +10,13 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.ValidatorDataInput;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
@@ -29,7 +27,7 @@ import org.exoplatform.webui.form.UIFormStringInput;
 			@EventConfig(listeners = UIExportForm.CancelActionListener.class)
 		}
 )
-public class UIExportForm extends UIForm implements UIPopupComponent{
+public class UIExportForm extends BaseUIForm implements UIPopupComponent{
 	//private final String TYPE_EXPORT = "ExportType";
 	private final String FILE_NAME = "FileName";
 	private String objectId = "";
@@ -55,9 +53,7 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
 			ValidatorDataInput validatorDataInput = new ValidatorDataInput();
 			UIAnswersPortlet portlet = exportForm.getAncestorOfType(UIAnswersPortlet.class) ;
 			if(!validatorDataInput.fckContentIsNotEmpty(fileName)){
-				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIExportForm.msg.nameFileExport", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				exportForm.warning("UIExportForm.msg.nameFileExport") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 				return;
 			}
@@ -74,15 +70,11 @@ public class UIExportForm extends UIForm implements UIPopupComponent{
         
         String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
         event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
-			
 			} catch (Exception e){
 				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
-				UIApplication uiApplication = exportForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				exportForm.warning("UIQuestions.msg.admin-moderator-removed-action") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 			}
-	        
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			popupAction.deActivate() ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

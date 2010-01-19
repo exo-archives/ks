@@ -25,6 +25,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -34,7 +35,6 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -56,7 +56,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 )
 
 @SuppressWarnings({"unchecked", "unused"})
-public class UIFAQSettingForm extends UIForm implements UIPopupComponent{
+public class UIFAQSettingForm extends BaseUIForm implements UIPopupComponent{
 	public static final String SELECT_CATEGORY_TAB = "SelectCategoryTab"; 
 	public static final String EDIT_TEMPLATE_TAB = "EditTemplateTab";
 	public static final String PREFERENCE_TAB = "PreferenceTab";
@@ -140,9 +140,7 @@ public class UIFAQSettingForm extends UIForm implements UIPopupComponent{
 				UIFormInputWithActions withActions  = uiform.getChildById(EDIT_TEMPLATE_TAB);
 				String textAre = (String) withActions.getUIFormTextAreaInput(FIELD_TEMPLATE_TEXTARE).getValue();
 				if(FAQUtils.isFieldEmpty(textAre)) {
-					UIApplication uiApp = uiform.getAncestorOfType(UIApplication.class) ;
-					uiApp.addMessage(new ApplicationMessage("UIViewerSettingForm.msg.ContentTemplateEmpty", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					uiform.warning("UIViewerSettingForm.msg.ContentTemplateEmpty") ;
 					return;
 				}else {
 					uiform.faqService_.saveTemplate(textAre);

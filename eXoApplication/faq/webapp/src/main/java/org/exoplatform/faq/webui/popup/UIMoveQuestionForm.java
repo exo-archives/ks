@@ -29,15 +29,14 @@ import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -53,7 +52,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIMoveQuestionForm.CancelActionListener.class)
 		}
 )
-public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
+public class UIMoveQuestionForm extends BaseUIForm implements UIPopupComponent {
 	private String questionId_ = new String() ;
 	private String homeCategoryName = "";
 	private String link;
@@ -100,25 +99,19 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 		else faqSetting_.setOrderType("asc") ;
 	}
 
-	static public class OkActionListener extends EventListener<UIMoveQuestionForm> {
-		public void execute(Event<UIMoveQuestionForm> event) throws Exception {
-			UIMoveQuestionForm moveQuestionForm = event.getSource() ;
-			String cateId = event.getRequestContext().getRequestParameter(OBJECTID);
+	static public class OkActionListener extends BaseEventListener<UIMoveQuestionForm> {
+		public void onEvent(Event<UIMoveQuestionForm> event, UIMoveQuestionForm moveQuestionForm, String cateId) throws Exception {
 			UIAnswersPortlet portlet = moveQuestionForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 			try{
 				if(!moveQuestionForm.faqSetting_.isAdmin() && !faqService_.isCategoryModerator(cateId, FAQUtils.getCurrentUser())){
-					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.can-not-move-question", new Object[]{""}, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					warning("UIQuestions.msg.can-not-move-question") ;
 					return;
 				}
 				try {
 					Question question = faqService_.getQuestionById(moveQuestionForm.questionId_) ;
 					if(cateId.substring(cateId.lastIndexOf("/") + 1).equals(question.getCategoryId())) {
-						UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-						uiApplication.addMessage(new ApplicationMessage("UIMoveQuestionForm.msg.choice-orther", null, ApplicationMessage.WARNING)) ;
-						event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+						warning("UIMoveQuestionForm.msg.choice-orther") ;
 						return ;
 					}
 					question.setCategoryId(cateId) ;
@@ -135,16 +128,12 @@ public class UIMoveQuestionForm extends UIForm implements UIPopupComponent {
 					questionList.add(question.getPath()) ;
 					faqService_.moveQuestions(questionList, cateId, link, moveQuestionForm.faqSetting_) ;
 					questions.updateCurrentQuestionList() ;
-				}catch (Exception e) {				
-					e.printStackTrace() ;
-					UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				}catch (Exception e) {
+					moveQuestionForm.log.warn("Can not move this question. Exception: " + e.getMessage());
+					warning("UIQuestions.msg.question-id-deleted") ;
 				}
 			} catch(Exception e){
-				UIApplication uiApplication = moveQuestionForm.getAncestorOfType(UIApplication.class) ;
-				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+				warning("UIQuestions.msg.category-id-deleted") ;
 			}
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			questions.setDefaultLanguage() ;

@@ -30,6 +30,7 @@ import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -38,7 +39,6 @@ import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -54,7 +54,7 @@ import org.exoplatform.webui.form.UIForm;
 			@EventConfig(listeners = UIPopupViewQuestion.CloseActionListener.class)
 		}
 )
-public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
+public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent {
 	private String questionId_ = null ;
   private String language_ = "" ;
   private static	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -79,7 +79,6 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	
   public Question getViewQuestion() {
   	Question question = null;
-  	//SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
 	    question = faqService_.getQuestionById(questionId_);
 	    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
@@ -92,9 +91,8 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
 	    	}
 	    }
     } catch (Exception e) {
-	    e.printStackTrace();
+	    log.error("Can not get Question Language, exception: " + e.getMessage());
     }
-    //sessionProvider.close();
   	return question;
   }
   
@@ -110,14 +108,13 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
   
   public String getQuestionRelationById(String questionId) {
     Question question = new Question();
-    //SessionProvider sessionProvider = FAQUtils.getSystemProvider();
     try {
       question = faqService_.getQuestionById(questionId);
       if(question != null) {
         return question.getCategoryId() + "/" + question.getId() + "/" + question.getQuestion();
       }
     } catch (Exception e) {
-    	e.printStackTrace() ;
+    	log.error("Can not get Question Relation by Id, exception: " + e.getMessage());
     }
     return "" ;
   }
@@ -163,7 +160,7 @@ public class UIPopupViewQuestion extends UIForm implements UIPopupComponent {
       String fileName = attachment.getName() ;
       return getFileSource(input, fileName, dservice);
     } catch (Exception e) {
-      e.printStackTrace() ;
+    	log.error("Can not get File Source, exception: " + e.getMessage());
       return null;
     }
   }

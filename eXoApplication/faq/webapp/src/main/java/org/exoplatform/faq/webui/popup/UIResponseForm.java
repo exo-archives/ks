@@ -28,10 +28,10 @@ import javax.jcr.PathNotFoundException;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.service.Answer;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -49,7 +49,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
@@ -73,13 +72,12 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 		}
 )
 
-public class UIResponseForm extends UIForm implements UIPopupComponent {
+public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 	private static final String QUESTION_LANGUAGE = "Language" ;
 	private static final String RESPONSE_CONTENT = "QuestionRespone" ;
 	private static final String SHOW_ANSWER = "QuestionShowAnswer" ;
 	private static final String IS_APPROVED = "IsApproved" ;
 	private Question question_ = null ;
-	private static FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 
 	private String questionDetail = new String();
 	private String questionContent = new String();
@@ -153,7 +151,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 			}			
 			this.setListRelation();
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			log.error("Can not set Question id, exception: " + e.getMessage());
 		}
 		this.questionId_ = question.getPath() ;
 		
@@ -166,7 +164,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		defaultLanguage.setState(QuestionLanguage.VIEW) ;
 		languageMap.put(defaultLanguage.getLanguage(), defaultLanguage) ;
 		try {
-			for(QuestionLanguage language : faqService.getQuestionLanguages(questionId_)){
+			for(QuestionLanguage language : getFAQService().getQuestionLanguages(questionId_)){
 				if(language.getLanguage().equals(currentLanguage)){
 					questionDetail = language.getDetail();
 					questionContent = language.getQuestion();
@@ -176,7 +174,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					listLanguageToReponse.add(new SelectItemOption<String>(language.getLanguage(), language.getLanguage()));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can not set Question id, exception: " + e.getMessage());
 		}
 		
 		checkShowAnswer_.setChecked(question_.isActivated()) ;
@@ -215,7 +213,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 		this.setListIdQuesRela(Arrays.asList(relations)) ;
 		if(relations != null && relations.length > 0)
 			for(String relation : relations) {
-				listRelationQuestion.add(faqService.getQuestionById(relation).getQuestion()) ;
+				listRelationQuestion.add(getFAQService().getQuestionById(relation).getQuestion()) ;
 			}
 	}
 	public List<String> getListRelation() {
@@ -300,7 +298,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 								question_.getAnswers()[i].setPostId(post.getId());
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							log.error("Can not discuss question into forum, exception: " + e.getMessage());
 						}
 	        }
 				}
@@ -343,9 +341,7 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 				}
 
 				if(responseForm.mapAnswers.isEmpty()){
-					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIResponseForm.msg.response-null", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					responseForm.warning("UIResponseForm.msg.response-null") ;
 					return ;
 				}
 				
@@ -372,17 +368,15 @@ public class UIResponseForm extends UIForm implements UIPopupComponent {
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
-					faqService.saveAnswer(question.getPath(), answers) ;
-					faqService.updateQuestionRelatives(question.getPath(), question.getRelations()) ;
+					responseForm.getFAQService().saveAnswer(question.getPath(), answers) ;
+					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), question.getRelations()) ;
 					// author: Vu Duy Tu. Make discuss forum
 					responseForm.updateDiscussForum(linkForum);
 				} catch (PathNotFoundException e) {
-					e.printStackTrace();
-					UIApplication uiApplication = responseForm.getAncestorOfType(UIApplication.class) ;
-					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+					responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
+					responseForm.warning("UIQuestions.msg.question-id-deleted") ;
 				} catch (Exception e) {
-					e.printStackTrace() ;
+					responseForm.log.error("Can not save Question, exception: " + e.getMessage());
 				}
 
 				//cancel

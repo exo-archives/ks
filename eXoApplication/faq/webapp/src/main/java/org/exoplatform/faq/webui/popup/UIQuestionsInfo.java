@@ -27,11 +27,13 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.JCRPageList;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPageIterator;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -42,7 +44,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
@@ -67,12 +68,11 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 )
 
 @SuppressWarnings("unused")
-public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
+public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
   private static final String LIST_QUESTION_INTERATOR = "FAQUserPageIteratorTab1" ;
   private static final String LIST_QUESTION_NOT_ANSWERED_INTERATOR = "FAQUserPageIteratorTab2" ;
   private static final String LIST_CATEGORIES = "ListCategories";
   private FAQSetting faqSetting_ = new FAQSetting();
-  private static FAQService faqService_ =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ; 
   private JCRPageList pageList ;
   private JCRPageList pageListNotAnswer ;
   private UIAnswersPageIterator pageIterator ;
@@ -123,12 +123,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   	FAQService faqService = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
   	if(faqSetting_.isAdmin()) {
   		List<Cate> listCate = faqService.listingCategoryTree() ;
-  		this.listCategories.add(new SelectItemOption<String>(faqService_.getCategoryNameOf(Utils.CATEGORY_HOME), Utils.CATEGORY_HOME)) ;
+  		this.listCategories.add(new SelectItemOption<String>(getFAQService().getCategoryNameOf(Utils.CATEGORY_HOME), Utils.CATEGORY_HOME)) ;
       for(Cate cat : listCate) {
       	this.listCategories.add(new SelectItemOption<String>(cat.getCategory().getName(), cat.getCategory().getPath())) ;
       }
   	}else {
-  		List<String> listCate = faqService_.getListCateIdByModerator(FAQUtils.getCurrentUser()) ;  		
+  		List<String> listCate = getFAQService().getListCateIdByModerator(FAQUtils.getCurrentUser()) ;  		
   		moderateCates.clear() ;
   		for(String str : listCate) {
   			try{
@@ -140,7 +140,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       			moderateCates.add(Utils.CATEGORY_HOME) ;
   				}
   			}catch(Exception e) {
-  				e.printStackTrace() ;
+  				log.error("Can not set List Category, exception: " + e.getMessage());
   			}
   			
   		}
@@ -172,7 +172,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+    	log.error("Can not get tatal pages, exception: " + e.getMessage());
       return 1 ;
     }
   }
@@ -186,13 +186,13 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     List<String>userPrivates = UserHelper.getAllGroupAndMembershipOfUser(FAQUtils.getCurrentUser());
     if(faqSetting_.isAdmin()) {
     	if(this.cateId_.equals(Utils.ALL)){
-    		this.pageList = faqService_.getAllQuestions() ;
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(Utils.ALL, false) ;
+    		this.pageList = getFAQService().getAllQuestions() ;
+    		pageListNotAnswer = getFAQService().getQuestionsNotYetAnswer(Utils.ALL, false) ;
     	} else {
     		String cateId = cateId_;
     		if(cateId.indexOf("/") > 0) cateId = cateId.substring(cateId.lastIndexOf("/")+1);
-    		this.pageList = faqService_.getAllQuestionsByCatetory(cateId, this.faqSetting_);
-    		pageListNotAnswer = faqService_.getQuestionsNotYetAnswer(cateId, false) ;
+    		this.pageList = getFAQService().getAllQuestionsByCatetory(cateId, this.faqSetting_);
+    		pageListNotAnswer = getFAQService().getQuestionsNotYetAnswer(cateId, false) ;
     	}
       this.pageList.setPageSize(5);
       pageIterator.updatePageList(this.pageList) ;
@@ -209,11 +209,11 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       }
       
       if(listCateId.size() > 0) {
-        this.pageList = faqService_.getQuestionsByListCatetory(listCateId, false) ;
+        this.pageList = getFAQService().getQuestionsByListCatetory(listCateId, false) ;
         this.pageList.setPageSize(5);
         pageIterator.updatePageList(this.pageList) ;
         
-        this.pageListNotAnswer = faqService_.getQuestionsByListCatetory(listCateId, true) ;
+        this.pageListNotAnswer = getFAQService().getQuestionsByListCatetory(listCateId, true) ;
         this.pageListNotAnswer.setPageSize(5);
         pageQuesNotAnswerIterator.updatePageList(this.pageListNotAnswer) ;
       }
@@ -222,9 +222,9 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
   
 	private String getCategoryPath(String questionPath){
   	try{
-  		return faqService_.getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/"+Utils.QUESTION_HOME)));
+  		return getFAQService().getParentCategoriesName(questionPath.substring(0, questionPath.indexOf("/"+Utils.QUESTION_HOME)));
   	}catch(Exception e){
-  		e.printStackTrace();
+  		log.error("Can not get category path, exception: " + e.getMessage());
   		return questionPath;
   	}
   }
@@ -244,7 +244,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
 	        }
         }
       } catch (Exception e) {
-        e.printStackTrace();
+      	log.error("Can not get list Question, exception: " + e.getMessage());
       }
     }
     isChangeTab_ = false;
@@ -269,21 +269,19 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
           pageIterator.setSelectPage(pageSelectNotAnswer) ;
         }
       } catch (Exception e) {
-        e.printStackTrace();
+      	log.error("Can not get list Question not Answered, exception: " + e.getMessage());
       }
     }
     isChangeTab_ = false;
     return listQuestionNotYetAnswered_ ;
   }
   
-  static public class EditQuestionActionListener extends EventListener<UIQuestionsInfo> {
+  static public class EditQuestionActionListener extends BaseEventListener<UIQuestionsInfo> {
     @SuppressWarnings("static-access")
-    public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionsInfo = event.getSource() ;
-      String quesId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+    public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String quesId) throws Exception {
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       try{
-        Question question = faqService_.getQuestionById(quesId) ;
+        Question question = questionsInfo.getFAQService().getQuestionById(quesId) ;
         UIQuestionForm questionForm = questionManagerForm.getChildById(questionManagerForm.UI_QUESTION_FORM) ;
         questionForm.setFAQSetting(questionsInfo.faqSetting_);
         questionForm.setIsChildOfManager(true) ;
@@ -307,17 +305,14 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  static public class ResponseQuestionActionListener extends EventListener<UIQuestionsInfo> {
-    @SuppressWarnings("static-access")
-    public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionsInfo = event.getSource() ;
-      String ids = event.getRequestContext().getRequestParameter(OBJECTID);
+  static public class ResponseQuestionActionListener extends BaseEventListener<UIQuestionsInfo> {
+    public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String ids) throws Exception {
       String questionId = ids.substring(0, ids.lastIndexOf("/")) ;
       String language = ids.substring(ids.lastIndexOf("/") + 1) ;
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       try{
-        Question question = faqService_.getQuestionById(questionId) ;
-        boolean isModerateAnswer = faqService_.isModerateAnswer(question.getPath());
+        Question question = questionsInfo.getFAQService().getQuestionById(questionId) ;
+        boolean isModerateAnswer = questionsInfo.getFAQService().isModerateAnswer(question.getPath());
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
         responseForm.updateChildOfQuestionManager(true) ;        
@@ -328,9 +323,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         questionManagerForm.isViewResponseQuestion = true ;
         questionManagerForm.isResponseQuestion = true ;
       } catch(Exception e) {
-        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+        warning("UIQuestions.msg.question-id-deleted");
         for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
           if(questionsInfo.listQuestion_.get(i).getPath().equals(questionId)) {
             questionsInfo.listQuestion_.remove(i) ;
@@ -343,14 +336,12 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  static public class DeleteQuestionActionListener extends EventListener<UIQuestionsInfo> {
-    public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionsInfo = event.getSource() ;
-      String questionId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  static public class DeleteQuestionActionListener extends BaseEventListener<UIQuestionsInfo> {
+    public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String questionId) throws Exception {
       UIPopupContainer popupContainer = questionsInfo.getAncestorOfType(UIPopupContainer.class);
       UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
       try {
-        Question question = faqService_.getQuestionById(questionId) ;
+        Question question = questionsInfo.getFAQService().getQuestionById(questionId) ;
         UIDeleteQuestion deleteQuestion = popupAction.activate(UIDeleteQuestion.class, 500) ;
         deleteQuestion.setQuestionId(question) ;
         deleteQuestion.setIsManagement(true) ;
@@ -370,9 +361,7 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
         }
         //event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       } catch(Exception e) {
-        UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      	warning("UIQuestions.msg.question-id-deleted") ;
         for(int i = 0; i < questionsInfo.listQuestion_.size() ; i ++) {
           if(questionsInfo.listQuestion_.get(i).getId().equals(questionId)) {
             questionsInfo.listQuestion_.remove(i) ;
@@ -407,10 +396,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  static public class ChangeTabActionListener extends EventListener<UIQuestionsInfo> {
-    public void execute(Event<UIQuestionsInfo> event) throws Exception {
-      UIQuestionsInfo questionsInfo = event.getSource() ;
-      String idTab = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  static public class ChangeTabActionListener extends BaseEventListener<UIQuestionsInfo> {
+    public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String idTab) throws Exception {
       UIQuestionManagerForm questionManagerForm = questionsInfo.getAncestorOfType(UIQuestionManagerForm.class) ;
       if(idTab.equals("0")) {
         questionsInfo.isEditTab_ = true ;
@@ -431,21 +418,19 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
     }
   }
   
-  static public class ChangeQuestionStatusActionListener extends EventListener<UIQuestionsInfo> {
-  	public void execute(Event<UIQuestionsInfo> event) throws Exception {
-  		UIQuestionsInfo questionsInfo = event.getSource() ;
-  		String ids = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  static public class ChangeQuestionStatusActionListener extends BaseEventListener<UIQuestionsInfo> {
+    public void onEvent(Event<UIQuestionsInfo> event, UIQuestionsInfo questionsInfo, String ids) throws Exception {
   		String action = ids.substring(0, ids.indexOf("/")) ;
   		String questionId = ids.substring(ids.indexOf("/") + 1) ;
   		try{
-  			Question question = faqService_.getQuestionById(questionId);
+  			Question question = questionsInfo.getFAQService().getQuestionById(questionId);
   			if(action.equals("approved")){
   				question.setApproved(!question.isApproved());
   			} else {
   				question.setActivated(!question.isActivated());
   			}
   			FAQUtils.getEmailSetting(questionsInfo.faqSetting_, false, false);
-  			faqService_.saveQuestion(question, false,questionsInfo.faqSetting_);
+  			questionsInfo.getFAQService().saveQuestion(question, false,questionsInfo.faqSetting_);
   			UIAnswersPortlet portlet = questionsInfo.getAncestorOfType(UIAnswersPortlet.class) ;
   			UIQuestions questions = portlet.findFirstComponentOfType(UIQuestions.class) ;
   			questions.setDefaultLanguage();
@@ -455,10 +440,8 @@ public class UIQuestionsInfo extends UIForm implements UIPopupComponent {
       	}
       	event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;
   		}catch (Exception e){
-  			e.printStackTrace() ;
-  			UIApplication uiApplication = questionsInfo.getAncestorOfType(UIApplication.class) ;
-        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+  			questionsInfo.log.error("Can not Change Question Status, exception: " + e.getMessage());
+  			warning("UIQuestions.msg.question-id-deleted") ;
   		}
       event.getRequestContext().addUIComponentToUpdateByAjax(questionsInfo.getAncestorOfType(UIPopupContainer.class)) ;
   	}
