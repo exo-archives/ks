@@ -22,17 +22,16 @@ import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
+import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
@@ -53,7 +52,7 @@ import org.exoplatform.webui.form.validator.MandatoryValidator;
 		}
 )
 
-public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
+public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponent {
 	public static final String FIELD_TOPICTYPENAME_INPUT = "topicTypeName" ;
 	public static final String FIELD_TOPICTYPEICON_TAB = "topicTypeIcon" ;
 	private TopicType topicType;
@@ -88,11 +87,7 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 
 	static	public class CancelActionListener extends EventListener<UIAddTopicTypeForm> {
 		public void execute(Event<UIAddTopicTypeForm> event) throws Exception {
-			UIAddTopicTypeForm topicTypeForm = event.getSource();
-			UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-			popupAction.deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			event.getSource().cancelChildPopupAction();
 		}
 	}
 
@@ -111,10 +106,7 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 	    }
 			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
-				Object[] args = {};
-				UIApplication uiApp = topicTypeForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIAddTopicTypeForm.smg.SameNameType", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType") ;
 				return ;
 			}
 			topicType.setName(typeName.trim());
@@ -126,18 +118,18 @@ public class UIAddTopicTypeForm extends UIForm implements UIPopupComponent {
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 			}
 			topicTypeForm.isEdit = false;
-			UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
 			try {
+				UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+				popupAction.deActivate() ;
 	      UITopicForm topicForm = popupContainer.getChild(UITopicForm.class);
 	      topicForm.addNewTopicType();
 	      event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
       } catch (Exception e) {
-      	UIForumAdministrationForm administrationForm = popupContainer.getChild(UIForumAdministrationForm.class);
+      	topicTypeForm.cancelChildPopupAction();
+      	UIForumAdministrationForm administrationForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIForumAdministrationForm.class);
       	event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
       }
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-			popupAction.deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }

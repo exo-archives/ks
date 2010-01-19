@@ -9,7 +9,7 @@
 						String id = "";
 					%>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_TAGNAME_INPUT);%></td>
+							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_TAGNAME_INPUT);%></td>
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_TAGNAME_INPUT);%></div>
 								<% id = uiform.FIELD_TAGNAME_INPUT + "Help"; %>
@@ -46,7 +46,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
+							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_REPLACEMENT_TEXTARE);%></td>
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_REPLACEMENT_TEXTARE);%></div>
 								<% id = uiform.FIELD_REPLACEMENT_TEXTARE + "Help"; %>
@@ -83,7 +83,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
+							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_DESCRIPTION_TEXTARE);%></td>
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_DESCRIPTION_TEXTARE);%></div>
 								<% id = uiform.FIELD_DESCRIPTION_TEXTARE + "Help"; %>
@@ -120,7 +120,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></td>
 							<td class="FieldComponent" style="width:360px;">
 								<div class="FloatLeft"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE);%></div>
 								<% id = uiform.FIELD_EXAMPLE_TEXTARE + "Help"; %>
@@ -178,7 +178,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="FieldLabel"><%=uicomponent.getLabel(uiform.FIELD_USEOPTION_CHECKBOX);%></td>
+							<td class="FieldLabel"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_USEOPTION_CHECKBOX);%></td>
 							<td class="FieldComponent" colspan="2">
 								<div class="FloatLeft" id="<%=uiform.FIELD_USEOPTION_CHECKBOX%>"><%uiform.renderField(uiform.FIELD_USEOPTION_CHECKBOX);%></div>
 								<% id = uiform.FIELD_USEOPTION_CHECKBOX + "Help"; %>
@@ -218,7 +218,7 @@
 							 String actionPriview = uicomponent.event("Preview","back");
 						%>
 						<tr>
-							<td class="FieldPriview"><%=uicomponent.getLabel(uiform.FIELD_EXAMPLE_TEXTARE);%></td>
+							<td class="FieldPriview"><%=_ctx.appRes("UIAddBBCodeForm.label."+ uiform.FIELD_EXAMPLE_TEXTARE);%></td>
 						</tr>
 						<tr>
 							<td class="FieldPriview"><%uiform.renderField(uiform.FIELD_EXAMPLE_TEXTARE); %></td>

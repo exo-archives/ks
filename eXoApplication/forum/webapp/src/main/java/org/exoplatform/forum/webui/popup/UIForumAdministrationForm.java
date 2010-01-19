@@ -35,6 +35,7 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -54,7 +55,6 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
-
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -579,15 +579,17 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 	}
 
 	static	public class AddNewBBCodeActionListener extends BaseEventListener<UIForumAdministrationForm> {
-		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {	 
-      administrationForm.openPopup(UIAddBBCodeForm.class, 670);
+		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
+			 UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+		   administrationForm.openPopup(popupContainer, UIAddBBCodeForm.class, 670, 0);
 		}
 	}
 
 	static	public class EditBBCodeActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String bbcodeId) throws Exception {
+			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
 			BBCode bbCode = administrationForm.getBBCode(bbcodeId);
-			UIAddBBCodeForm bbcForm = administrationForm.openPopup(UIAddBBCodeForm.class, "EditBBCodeForm", 670);
+			UIAddBBCodeForm bbcForm = administrationForm.openPopup(popupContainer, UIAddBBCodeForm.class, "EditBBCodeForm", 670, 0);
 	    bbcForm.setEditBBcode(bbCode);
 		}
 	}
@@ -602,14 +604,16 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 
 	static	public class AddTopicTypeActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
-			administrationForm.openPopup(UIAddTopicTypeForm.class,700);
+			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+			administrationForm.openPopup(popupContainer, UIAddTopicTypeForm.class, 700, 0);
 		}
 	}
 	
 	static	public class EditTopicTypeActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String topicTId) throws Exception {
 			TopicType topicType = administrationForm.getTopicType(topicTId);
-			UIAddTopicTypeForm topicTypeForm = administrationForm.openPopup(UIAddTopicTypeForm.class,"EditTopicTypeForm", 700);
+			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIAddTopicTypeForm topicTypeForm = administrationForm.openPopup(popupContainer, UIAddTopicTypeForm.class,"EditTopicTypeForm", 700, 0);
 			topicTypeForm.setTopicType(topicType);
 		}
 	}

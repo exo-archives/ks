@@ -23,22 +23,19 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.jcr.util.IdGenerator;
 import org.exoplatform.upload.UploadResource;
 import org.exoplatform.upload.UploadService;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormUploadInput;
 
 /**
@@ -56,7 +53,7 @@ import org.exoplatform.webui.form.UIFormUploadInput;
 		}
 )
 
-public class UIAttachFileForm extends UIForm implements UIPopupComponent {
+public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent {
 
 	final static public String FIELD_UPLOAD	 = "upload";
 	private boolean	           isTopicForm	 = true;
@@ -93,7 +90,6 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 	static	public class SaveActionListener extends EventListener<UIAttachFileForm> {
 		public void execute(Event<UIAttachFileForm> event) throws Exception {
 			UIAttachFileForm uiForm = event.getSource();
-			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			List<BufferAttachment> files = new ArrayList<BufferAttachment>() ;
 			int i = 0 ;
 			BufferAttachment attachfile ;
@@ -117,48 +113,44 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					attachfile.setSize((long)uploadResource.getUploadedSize());
 					files.add(attachfile) ;
 				} catch (Exception e) {
-					uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-error", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-					e.printStackTrace() ;
+					uiForm.log.error("Can not attach file, exception: " + e.getMessage()) ;
+					uiForm.warning("UIAttachFileForm.msg.upload-error") ;
 					return ;
 				}
 				uploadService.removeUpload(input.getUploadId()) ;
 			}
 			if(files.isEmpty()){
-				uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.upload-not-save", null, ApplicationMessage.WARNING));
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				uiForm.warning("UIAttachFileForm.msg.upload-not-save") ;
 				return ;
 			}
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
-			UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
 			if(uiForm.isTopicForm) {
+				UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
 				for (BufferAttachment file : files) {
 					topicForm.addToUploadFileList(file) ;
 				}
 				topicForm.refreshUploadFileList() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
 			} else if(uiForm.isChangeAvatar_){
 				if(files.get(0).getMimeType().indexOf("image") < 0){
-          uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.fileIsNotImage", null, ApplicationMessage.WARNING)) ;
-          event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					uiForm.warning("UIAttachFileForm.msg.fileIsNotImage") ;
           return ;
       	}
 				if(files.get(0).getSize() >= (2 * 1048576)){
-					uiApp.addMessage(new ApplicationMessage("UIAttachFileForm.msg.avatar-upload-long", null, ApplicationMessage.WARNING));
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					uiForm.warning("UIAttachFileForm.msg.avatar-upload-long") ;
 					return ;
 				}
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
 			} else {
+				UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
 				for (BufferAttachment file : files) {
 					postForm.addToUploadFileList(file) ;
 				}
 				postForm.refreshUploadFileList() ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(postForm) ;
 			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			uiForm.cancelChildPopupAction();
 		}
 	}
 
@@ -174,10 +166,7 @@ public class UIAttachFileForm extends UIForm implements UIPopupComponent {
 					uploadService.removeUpload(input.getUploadId()) ;
 				}catch(Exception e) {}				
 			}
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-			popupAction.cancelPopupAction(); 
-			//event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			uiForm.cancelChildPopupAction();
 		}
 	}
 }

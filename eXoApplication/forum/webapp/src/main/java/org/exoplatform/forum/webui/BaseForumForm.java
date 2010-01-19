@@ -18,7 +18,9 @@ package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.core.UIComponent;
 
 /**
@@ -68,5 +70,19 @@ public class BaseForumForm extends BaseUIForm {
   protected <T extends UIComponent> T openPopup(Class<T> componentType, String popupId, int width) throws Exception {
     return openPopup(componentType, popupId, width, 0);
   }
-
+  
+  protected void cancelChildPopupAction() throws Exception {
+  	UIPopupContainer popupContainer = this.getAncestorOfType(UIPopupContainer.class) ;
+  	if(popupContainer != null) {
+			UIPopupAction popupAction;
+			if(((UIComponent)this.getParent()).getId().equals(popupContainer.getId())){
+				popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
+			} else {
+				popupAction = popupContainer.getChild(UIPopupAction.class) ;
+			}
+			popupAction.cancelPopupAction();
+  	} else {
+  		this.getAncestorOfType(UIForumPortlet.class).cancelAction();
+  	}
+  }
 }
