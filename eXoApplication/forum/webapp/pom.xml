@@ -1,19 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.eXoApplication.forum</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
-  </parent> 
-
+  </parent>
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS Forum application</name>
-
-  <dependencies> 
-  
-  
+  <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
@@ -31,84 +27,83 @@
       <artifactId>exo.ks.eXoApplication.common</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
-    </dependency> 
-  
-   <dependency>
+    </dependency>
+    <dependency>
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
       <scope>provided</scope>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.component.common</artifactId>
       <scope>provided</scope>
-    </dependency>      
-   <dependency>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <scope>provided</scope>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
-    </dependency>  
-     <dependency>
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web</artifactId>
       <scope>provided</scope>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>javax.portlet</groupId>
       <artifactId>portlet-api</artifactId>
       <scope>provided</scope>
-    </dependency>     
+    </dependency>
     <dependency>
       <groupId>xpp3</groupId>
       <artifactId>xpp3</artifactId>
       <scope>provided</scope>
-    </dependency>                   
-     <dependency>
+    </dependency>
+    <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <scope>provided</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.eXo</artifactId>
       <scope>provided</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
       <scope>provided</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.jcr</groupId>
       <artifactId>exo.jcr.component.core</artifactId>
       <scope>provided</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.core</artifactId>
       <scope>provided</scope>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.portal</artifactId>
       <scope>provided</scope>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
       <scope>provided</scope>
@@ -117,8 +112,7 @@
       <groupId>org.exoplatform.comet</groupId>
       <artifactId>exo-comet-service</artifactId>
       <scope>provided</scope>
-    </dependency>    
- 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.test-utils</artifactId>
@@ -128,10 +122,8 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-    </dependency>    
-		
+    </dependency>
   </dependencies>
-
   <build>
     <finalName>forum</finalName>
   </build>

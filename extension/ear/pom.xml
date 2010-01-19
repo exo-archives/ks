@@ -1,36 +1,31 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.extension</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
-
-
   <artifactId>exo.ks.extension.ear</artifactId>
   <packaging>ear</packaging>
   <name>eXo KS Extension configuration ear</name>
- 
-  
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.config</artifactId>
       <version>${project.version}</version>
-    </dependency>     
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.component.rendering</artifactId>
       <version>${project.version}</version>
-    </dependency>     
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
       <version>${project.version}</version>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
       <version>${project.version}</version>
@@ -40,8 +35,8 @@
       <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-    </dependency>    
-     <dependency>
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
       <version>${project.version}</version>
@@ -57,162 +52,154 @@
       <artifactId>exo.ks.web.ksResources</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-    </dependency>              
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.extension.webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
-<!--
+    <!--
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web</artifactId>
       <version>{org.exoplatform.portal.version}</version>
       <scope>provided</scope>
     </dependency>   
--->    
-
-<!-- HACK : cometd packaging should be provided by platform -->
+-->
+    <!-- HACK : cometd packaging should be provided by platform -->
     <dependency>
-      <groupId>org.exoplatform.comet</groupId>    
+      <groupId>org.exoplatform.comet</groupId>
       <artifactId>exo-comet-webapp</artifactId>
       <version>${org.exoplatform.comet.version}</version>
-      <type>war</type>      
+      <type>war</type>
     </dependency>
-
-
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>cometd-bayeux</artifactId>
       <version>6.1.11</version>
     </dependency>
-    
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>cometd-api</artifactId>
       <version>0.9.20080221</version>
     </dependency>
-    
     <dependency>
       <groupId>org.mortbay.jetty</groupId>
       <artifactId>jetty-util</artifactId>
       <version>6.1.11</version>
-    </dependency> 
-
-    <dependency>        
+    </dependency>
+    <dependency>
       <groupId>org.exoplatform.comet</groupId>
       <artifactId>exo-comet-service</artifactId>
-      <version>${org.exoplatform.comet.version}</version>   
+      <version>${org.exoplatform.comet.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.exoplatform.kernel</groupId>
-          <artifactId>exo.kernel.container</artifactId>  
+          <artifactId>exo.kernel.container</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.exoplatform.kernel</groupId>
-          <artifactId>exo.kernel.component.common</artifactId>  
-        </exclusion>     
+          <artifactId>exo.kernel.component.common</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.exoplatform.ws</groupId>
-          <artifactId>exo.ws.rest.core</artifactId>  
-        </exclusion>        
+          <artifactId>exo.ws.rest.core</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.exoplatform.ws</groupId>
-          <artifactId>exo.ws.commons</artifactId>  
-        </exclusion>        
+          <artifactId>exo.ws.commons</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.exoplatform.ws</groupId>
-          <artifactId>exo.ws.frameworks.json</artifactId>  
-        </exclusion>              
+          <artifactId>exo.ws.frameworks.json</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
-      
-
-  </dependencies>  
+  </dependencies>
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-ear-plugin</artifactId>
         <configuration>
-           <displayName>ks-extension</displayName>        
-           <defaultLibBundleDir>lib</defaultLibBundleDir>
-           <modules>
-             <webModule>
-               <groupId>org.exoplatform.comet</groupId>
-               <artifactId>exo-comet-webapp</artifactId>
-               <contextRoot>cometd</contextRoot>
-               <bundleFileName>cometd.war</bundleFileName>
-             </webModule>       
-             <jarModule>
-               <groupId>org.exoplatform.comet</groupId>
-               <artifactId>exo-comet-service</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>      
-             <jarModule>
-               <groupId>org.mortbay.jetty</groupId>
-               <artifactId>cometd-bayeux</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>      
-             <jarModule>
-               <groupId>org.mortbay.jetty</groupId>
-               <artifactId>jetty-util</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>  
-             <jarModule>
-               <groupId>org.mortbay.jetty</groupId>
-               <artifactId>cometd-api</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>                                         
-             <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.extension.config</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>           
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.extension.webapp</artifactId>
-               <contextRoot>ks</contextRoot>
-                <bundleFileName>ks.war</bundleFileName>
-             </webModule>
-             <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.eXoApplication.common</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>
-             <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
-               <contextRoot>faq</contextRoot>
-                <bundleFileName>faq.war</bundleFileName>
-             </webModule>             
-              <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>   
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
-               <contextRoot>forum</contextRoot>
-                <bundleFileName>forum.war</bundleFileName>
-             </webModule>     
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.web.ksResources</artifactId>
-               <contextRoot>ksResources</contextRoot>
-                <bundleFileName>ksResources.war</bundleFileName>
-             </webModule>                                                           
+          <displayName>ks-extension</displayName>
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
+          <modules>
+            <webModule>
+              <groupId>org.exoplatform.comet</groupId>
+              <artifactId>exo-comet-webapp</artifactId>
+              <contextRoot>cometd</contextRoot>
+              <bundleFileName>cometd.war</bundleFileName>
+            </webModule>
+            <jarModule>
+              <groupId>org.exoplatform.comet</groupId>
+              <artifactId>exo-comet-service</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.mortbay.jetty</groupId>
+              <artifactId>cometd-bayeux</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.mortbay.jetty</groupId>
+              <artifactId>jetty-util</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.mortbay.jetty</groupId>
+              <artifactId>cometd-api</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.extension.config</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.extension.webapp</artifactId>
+              <contextRoot>ks</contextRoot>
+              <bundleFileName>ks.war</bundleFileName>
+            </webModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.common</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
+              <contextRoot>faq</contextRoot>
+              <bundleFileName>faq.war</bundleFileName>
+            </webModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
+              <contextRoot>forum</contextRoot>
+              <bundleFileName>forum.war</bundleFileName>
+            </webModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.web.ksResources</artifactId>
+              <contextRoot>ksResources</contextRoot>
+              <bundleFileName>ksResources.war</bundleFileName>
+            </webModule>
           </modules>
         </configuration>
       </plugin>
-    </plugins>  
-    <finalName>gatein-exo-ks-${project.version}</finalName>    
+    </plugins>
+    <finalName>gatein-exo-ks-${project.version}</finalName>
   </build>
 </project>

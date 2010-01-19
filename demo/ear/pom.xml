@@ -1,38 +1,34 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
-
   <artifactId>exo.ks.demo.ear</artifactId>
   <packaging>ear</packaging>
   <name>eXo KS Demo Portal ear</name>
   <description>KS Demo EAR for GateIn</description>
-  
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.config</artifactId>
       <version>${project.version}</version>
-    </dependency>     
-
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-    </dependency> 
-    
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.demo.webapp</artifactId>
       <version>${project.version}</version>
       <type>war</type>
-    </dependency>     
-  </dependencies>  
-
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -40,27 +36,27 @@
         <artifactId>maven-ear-plugin</artifactId>
         <configuration>
           <defaultLibBundleDir>lib</defaultLibBundleDir>
-          <displayName>ksdemo</displayName>        
+          <displayName>ksdemo</displayName>
           <modules>
-             <jarModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.demo.config</artifactId>
-               <includeInApplicationXml>true</includeInApplicationXml>
-             </jarModule>              
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.demo.webapp</artifactId>
-               <contextRoot>ksdemo</contextRoot>
-             </webModule>  
-             <webModule>
-               <groupId>org.exoplatform.ks</groupId>
-               <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
-               <contextRoot>rest-ksdemo</contextRoot>
-             </webModule>                                                       
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.demo.config</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.demo.webapp</artifactId>
+              <contextRoot>ksdemo</contextRoot>
+            </webModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
+              <contextRoot>rest-ksdemo</contextRoot>
+            </webModule>
           </modules>
         </configuration>
       </plugin>
-    </plugins>  
-    <finalName>gatein-exo-ks-sample-${project.version}</finalName>    
+    </plugins>
+    <finalName>gatein-exo-ks-sample-${project.version}</finalName>
   </build>
 </project>

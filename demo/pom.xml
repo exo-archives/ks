@@ -1,20 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
-
   <artifactId>exo.ks.demo</artifactId>
   <name>eXo KS Demo Portal</name>
   <packaging>pom</packaging>
   <description>eXo KS Demo Portal</description>
-
   <modules>
-	<module>config</module>
-	<module>war</module>
-	<module>rest-ksdemo</module>
-	<module>ear</module>
+    <module>config</module>
+    <module>war</module>
+    <module>rest-ksdemo</module>
+    <module>ear</module>
   </modules>
 </project>

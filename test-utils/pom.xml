@@ -1,16 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
-
   <artifactId>exo.ks.test-utils</artifactId>
   <name>eXo KS test utils</name>
   <packaging>jar</packaging>
-
-
   <dependencies>
     <dependency>
       <groupId>javax.jcr</groupId>
@@ -23,20 +21,20 @@
     <dependency>
       <groupId>picocontainer</groupId>
       <artifactId>picocontainer</artifactId>
-    </dependency> 
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.resources</artifactId>
-    </dependency>     
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.component.web</artifactId>
-    </dependency>       
+    </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <classifier>jdk15</classifier>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -44,18 +42,15 @@
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.container</artifactId>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
     </dependency>
-    
     <dependency>
       <groupId>org.exoplatform.kernel</groupId>
       <artifactId>exo.kernel.commons</artifactId>
     </dependency>
-
-    
     <dependency>
       <groupId>org.exoplatform.portal</groupId>
       <artifactId>exo.portal.webui.core</artifactId>
@@ -67,7 +62,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-    </dependency>      
+    </dependency>
   </dependencies>
-
 </project>
