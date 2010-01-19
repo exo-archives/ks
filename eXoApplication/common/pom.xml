@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.eXoApplication.common</artifactId>
-  <name>eXo KS Applications commons</name>
   <packaging>jar</packaging>
+  <name>eXo KS Applications commons</name>
   <dependencies>
     <!-- added by us -->
     <dependency>

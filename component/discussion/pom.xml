@@ -36,8 +36,8 @@
     </dependency>
     <dependency>
       <groupId>org.chromattic</groupId>
-      <version>1.0.0-beta13</version>
       <artifactId>chromattic.api</artifactId>
+      <version>1.0.0-beta13</version>
     </dependency>
     <dependency>
       <groupId>org.chromattic</groupId>

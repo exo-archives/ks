@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>exo.ks.packaging</artifactId>
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
   <artifactId>portal.packaging.product</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Portal Packaging Product</name>
-  <properties>
-    <exobuild.name>portal</exobuild.name>
-    <exobuild.type>product</exobuild.type>
-  </properties>
   <!-- Attach .js to the pom -->
   <build>
     <plugins>
@@ -62,4 +58,8 @@
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <exobuild.name>portal</exobuild.name>
+    <exobuild.type>product</exobuild.type>
+  </properties>
 </project>

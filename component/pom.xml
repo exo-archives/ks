@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.component</artifactId>
-  <name>eXo KS Components</name>
   <packaging>pom</packaging>
+  <name>eXo KS Components</name>
   <modules>
     <module>common</module>
     <module>rendering</module>

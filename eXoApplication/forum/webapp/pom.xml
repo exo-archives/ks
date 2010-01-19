@@ -9,6 +9,9 @@
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS Forum application</name>
+  <build>
+    <finalName>forum</finalName>
+  </build>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
@@ -124,7 +127,4 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
-  <build>
-    <finalName>forum</finalName>
-  </build>
 </project>

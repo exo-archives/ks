@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.demo</artifactId>
-  <name>eXo KS Demo Portal</name>
   <packaging>pom</packaging>
+  <name>eXo KS Demo Portal</name>
   <description>eXo KS Demo Portal</description>
   <modules>
     <module>config</module>

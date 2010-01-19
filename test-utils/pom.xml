@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.test-utils</artifactId>
-  <name>eXo KS test utils</name>
   <packaging>jar</packaging>
+  <name>eXo KS test utils</name>
   <dependencies>
     <dependency>
       <groupId>javax.jcr</groupId>

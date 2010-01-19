@@ -10,26 +10,8 @@
   <packaging>ear</packaging>
   <name>eXo KS Demo Portal ear</name>
   <description>KS Demo EAR for GateIn</description>
-  <dependencies>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.demo.config</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.demo.webapp</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-  </dependencies>
   <build>
+    <finalName>gatein-exo-ks-sample-${project.version}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -57,6 +39,24 @@
         </configuration>
       </plugin>
     </plugins>
-    <finalName>gatein-exo-ks-sample-${project.version}</finalName>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.config</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.rest-ksdemo</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.demo.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+  </dependencies>
 </project>

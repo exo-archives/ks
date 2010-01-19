@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.extension.webapp</artifactId>
-  <name>eXo KS Extension configuration war</name>
   <packaging>war</packaging>
+  <name>eXo KS Extension configuration war</name>
   <build>
     <finalName>gatein-exo-ks-${project.version}</finalName>
   </build>

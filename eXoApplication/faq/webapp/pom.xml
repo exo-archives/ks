@@ -9,6 +9,10 @@
   <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS FAQ application</name>
+  <build>
+    <!-- see is we can remove this  -->
+    <finalName>faq</finalName>
+  </build>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -116,8 +120,4 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-  <build>
-    <!-- see is we can remove this  -->
-    <finalName>faq</finalName>
-  </build>
 </project>

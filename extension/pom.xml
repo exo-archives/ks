@@ -7,8 +7,8 @@
     <version>2.0.0-Alpha03-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.extension</artifactId>
-  <name>eXo KS Extension</name>
   <packaging>pom</packaging>
+  <name>eXo KS Extension</name>
   <description>KS Extension Root Pom</description>
   <modules>
     <module>config</module>
