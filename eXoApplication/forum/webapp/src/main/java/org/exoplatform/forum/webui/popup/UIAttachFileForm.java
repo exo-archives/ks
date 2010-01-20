@@ -113,7 +113,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
 					attachfile.setSize((long)uploadResource.getUploadedSize());
 					files.add(attachfile) ;
 				} catch (Exception e) {
-					uiForm.log.error("Can not attach file, exception: " + e.getMessage()) ;
+					uiForm.log.error("Can not attach file, exception: ", e) ;
 					uiForm.warning("UIAttachFileForm.msg.upload-error") ;
 					return ;
 				}

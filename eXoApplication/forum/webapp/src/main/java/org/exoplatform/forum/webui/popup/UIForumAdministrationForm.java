@@ -36,8 +36,6 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -85,9 +83,6 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 )
 public class UIForumAdministrationForm extends BaseForumForm implements UIPopupComponent {
   
-  private static final Log LOG = ExoLogger.getLogger(UIForumAdministrationForm.class);
-  
-
 	private BBCodeService bbCodeService;
 	
 	// main bean
@@ -340,7 +335,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 		try {
 			listBBCode.addAll(bbCodeService.getAll());
     } catch (Exception e) {
-	    LOG.error("failed to set BBCode List", e);
+	    log.error("failed to set BBCode List", e);
     }
 	}
 	
@@ -349,7 +344,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 		try {
 			listPruneSetting.addAll(getForumService().getAllPruneSetting());
     } catch (Exception e) {
-      LOG.error("failed to get prune settings", e);
+      log.error("failed to get prune settings", e);
     }
 		return listPruneSetting;
 	}
@@ -393,7 +388,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 		try {
 			listIpBan.addAll(getForumService().getBanList());
 		} catch (Exception e) {
-      LOG.error("failed to get ban list", e);
+      log.error("failed to get ban list", e);
 		}
 		pageList = new ForumPageList(8, listIpBan.size());
 		pageList.setPageSize(8);
@@ -406,7 +401,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 			else  pageIterator.setRendered(true);
 		} catch (Exception e) {
-      LOG.error("failed to init page iterator", e);
+      log.error("failed to init page iterator", e);
 		}
 		return list;
 	}
@@ -440,9 +435,10 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 				if(ips[i] < 0 || ips[i] > 255) return null;
 			}
 			if(ips[0] == 255 && ips[1] == 255 && ips[2] == 255 && ips[3] == 255) return null;
+			if(ips[0] == 0 && ips[1] == 0 && ips[2] == 0 && ips[3] == 0) return null;
 			return ip;
 		} catch (Exception e){
-      LOG.error("failed to check IP address", e);
+      log.error("failed to check IP address, Ip is not format number.");
 			return null;
 		}
 	}
@@ -490,7 +486,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 					forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true);
 				}
 			} catch (Exception e) {
-	      LOG.error("failed to save forum administration", e);
+				administrationForm.log.error("failed to save forum administration", e);
 			}
 			UIFormInputWithActions bbcodeTab = getChildById(FIELD_BBCODE_TAB) ;
 //			
@@ -516,7 +512,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 				try {
 					administrationForm.bbCodeService.save(bbCodes);
 	      } catch (Exception e) {
-	        LOG.error("failed to save bbcodes", e);
+	      	administrationForm.log.error("failed to save bbcodes", e);
 	      }
 			}
 			forumPortlet.cancelAction() ;
@@ -627,13 +623,13 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 			if(forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()){
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
 			}
+			refresh();
 		}
 	}
 	
 	static	public class CancelActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
+			event.getSource().getAncestorOfType(UIForumPortlet.class).cancelAction() ;
 		}
 	}
 
@@ -641,7 +637,8 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 	  public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String pruneId) throws Exception {
 			PruneSetting pruneSetting = administrationForm.getPruneSetting(pruneId);
 			if(pruneSetting.getInActiveDay() == 0) {
-				UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(UIAutoPruneSettingForm.class, 525) ;
+				UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
 				pruneSettingForm.setPruneSetting(pruneSetting);
 				pruneSettingForm.setActivate(true);
 			} else {
@@ -654,23 +651,28 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 	
 	static	public class PruneSettingActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String pruneId) throws Exception {
-			UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(UIAutoPruneSettingForm.class, 525) ;
+			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIAutoPruneSettingForm pruneSettingForm = administrationForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
 			PruneSetting pruneSetting = administrationForm.getPruneSetting(pruneId);
 			pruneSettingForm.setPruneSetting(pruneSetting);
 		}
 	}
 	
+	private String getValueIp(UIFormInputWithActions inputWithActions, String inputId) throws Exception {
+		UIFormStringInput stringInput = inputWithActions.getUIStringInput(inputId) ;  
+		String vl = stringInput.getValue();
+		stringInput.setValue("");
+		return ForumUtils.isEmpty(vl)?"0":vl;
+	}
+	
 	static	public class AddIpActionListener extends BaseEventListener<UIForumAdministrationForm> {
 		public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String objectId) throws Exception {
 			UIFormInputWithActions inputWithActions = getChildById(IP_BAN_TAB);
-			String[] ip = new String[]{((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT1)).getValue(),
-																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT2)).getValue(),
-																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT3)).getValue(),
-																	((UIFormStringInput)inputWithActions.getChildById(NEW_IP_BAN_INPUT4)).getValue(),
-																	};
-			for(int i = 1; i <= 4; i ++){
-				((UIFormStringInput)inputWithActions.getChildById("newIpBan" + i)).setValue("");
-			}
+			String[] ip = new String[]{ administrationForm.getValueIp(inputWithActions, NEW_IP_BAN_INPUT1),
+																	administrationForm.getValueIp(inputWithActions, NEW_IP_BAN_INPUT2),
+																	administrationForm.getValueIp(inputWithActions, NEW_IP_BAN_INPUT3),
+																	administrationForm.getValueIp(inputWithActions, NEW_IP_BAN_INPUT4)
+																};
 			String ipAdd = administrationForm.checkIpAddress(ip);
 			if(ipAdd == null){
 				warning("UIForumAdministrationForm.sms.ipInvalid");
@@ -687,7 +689,8 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 	
 	static	public class PostsActionListener extends BaseEventListener<UIForumAdministrationForm> {
 	  public void onEvent(Event<UIForumAdministrationForm> event, UIForumAdministrationForm administrationForm, final String ip) throws Exception {
-	    UIPageListPostByIP viewPostedByUser = administrationForm.openPopup(UIPageListPostByIP.class, 650);
+	  	UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+	    UIPageListPostByIP viewPostedByUser = administrationForm.openPopup(popupContainer, UIPageListPostByIP.class, 650, 0);
 			viewPostedByUser.setIp(ip);
 		}
 	}

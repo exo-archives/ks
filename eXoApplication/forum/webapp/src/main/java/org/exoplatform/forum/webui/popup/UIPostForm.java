@@ -483,7 +483,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet);
 	      }
       } catch (Exception e) {
-      	uiForm.log.error("Can not save post into this topic, exception: " + e.getMessage());
+      	uiForm.log.error("Can not save post into this topic, exception: " + e.getMessage(), e);
       	uiForm.warning("UIPostForm.msg.isParentDelete") ;
   			forumPortlet.cancelAction() ;
       }

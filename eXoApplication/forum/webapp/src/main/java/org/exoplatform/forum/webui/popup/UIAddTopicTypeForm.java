@@ -23,8 +23,10 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
+import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -113,9 +115,12 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			topicType.setIcon(typeIcon);
 			forumService.saveTopicType(topicType);
 			if(topicTypeForm.isEdit) {
-				UITopicContainer topicContainer = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicContainer.class);
-				topicContainer.setTopicType(topicType.getId());
-				event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+				UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
+				if(forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()){
+					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
+					topicContainer.setTopicType(topicType.getId());
+					event.getRequestContext().addUIComponentToUpdateByAjax(topicContainer) ;
+				}
 			}
 			topicTypeForm.isEdit = false;
 			try {

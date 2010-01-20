@@ -429,7 +429,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				HttpServletRequest request = context.getRequest();
 				return request.getRemoteAddr();
 	    } catch (Exception e) {
-	      log.warn("Failed to extract IP: "+ e.getMessage());
+	      log.warn("Failed to extract IP: "+ e.getMessage(), e);
 	    }
 		}
 		return "";
@@ -473,7 +473,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			}
 			return this.topic ;
 		} catch (Exception e) {
-		  log.warn("Failed to load topic: "+ e.getMessage());
+		  log.warn("Failed to load topic: "+ e.getMessage(), e);
 		}
 		return null ;
 	}
@@ -512,7 +512,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			String fileName = attachment.getName() ;
 			return ForumSessionUtils.getFileSource(input, fileName, dservice);
 		} catch (PathNotFoundException e) {
-		  log.warn("Failed get file source: "+ e.getMessage());
+		  log.warn("Failed get file source: "+ e.getMessage(), e);
 			return null;
 		}
 	}
@@ -561,7 +561,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				this.pageSelect = maxPage;
 			}
 		} catch (Exception e) {
-		  log.warn("Failed to init topic page: "+ e.getMessage());
+		  log.warn("Failed to init topic page: "+ e.getMessage(), e);
 		}
 	}
 	
@@ -584,7 +584,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 					lastPostId = "";
 				}
       } catch (Exception e) {
-        log.warn("Failed to find last read index for topic: "+ e.getMessage());
+        log.warn("Failed to find last read index for topic: "+ e.getMessage(), e);
       }
 			posts = pageList.getPage(pageSelect) ;
 			pageSelect = pageList.getCurrentPage();
@@ -618,11 +618,11 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 						mapUserProfile.put(profile.getUserId(), profile) ;
 					}
 				}catch(Exception e) {
-				  log.warn("Failed to load qui profiles: "+ e.getMessage());
+				  log.warn("Failed to load qui profiles: "+ e.getMessage(), e);
 				}
 			}
 		} catch (Exception e) {
-		  log.warn("Failed to load posts page: "+ e.getMessage());
+		  log.warn("Failed to load posts page: "+ e.getMessage(), e);
     }
 		return posts ;
 	}
@@ -641,7 +641,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		try {
 			list = getForumService().getMyTagInTopic(listTagId.toArray(new String[listTagId.size()]));
     } catch (Exception e) {
-      log.warn("Failed to load user tags in topic: "+ e.getMessage());
+      log.warn("Failed to load user tags in topic: "+ e.getMessage(), e);
     }
 		return list;	
 	}
@@ -678,7 +678,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			try{
 				mapUserProfile.put(userName, getForumService().getQuickProfile(userName)) ;			
 			}catch(Exception e){
-			  log.warn("Failed load user info: "+ e.getMessage());
+			  log.warn("Failed load user info: "+ e.getMessage(), e);
 			}
 		}
 		return mapUserProfile.get(userName) ;
@@ -968,7 +968,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				topicForm.setIsDetail(true);
 				topicDetail.isEditTopic = true ;
 			} catch (Exception e) {
-			  topicDetail.log.warn("Error while editing topic: "+ e.getMessage());
+			  topicDetail.log.warn("Error while editing topic: "+ e.getMessage(), e);
 				warning("UIForumPortlet.msg.topicEmpty");
 				topicDetail.refreshPortlet();
 			}
@@ -1165,7 +1165,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				  warning("UITopicContainer.sms.NotSplit");
 				}
 			} catch (Exception e) {
-			  topicDetail.log.warn("Failed to split topic: "+ e.getMessage());
+			  topicDetail.log.warn("Failed to split topic: "+ e.getMessage(), e);
 				warning("UIForumPortlet.msg.topicEmpty");
 				topicDetail.refreshPortlet();
 			}
