@@ -34,7 +34,7 @@ import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.impl.GroupImpl;
+import org.exoplatform.services.organization.idm.ExtGroup;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPageIterator;
@@ -86,11 +86,10 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
     uiSelect.setOnChange("ChangeGroup") ;
     addUIFormInput(uiSelect) ;
     uiPageList_ = new UIPageIterator() ;
-    //this.addChild(uiPageList_);
     try {
     	setUserList(UserHelper.getAllUser()) ;
     } catch (Exception e) {
-    	e.printStackTrace();
+    	log.error("Can not set users list, exception: " + e.getMessage());
     }
   }
   
@@ -99,15 +98,19 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
   	options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
   	OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
 	  Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
-	  List<String> groupIds = new ArrayList<String>() ;
-	  for (Object object : objGroupIds) {
-	    groupIds.add(((GroupImpl)object).getId()) ;
-	  }
-	  if(!groupIds.isEmpty()){
-	    for(String publicCg : groupIds) {
-	    	options.add(new SelectOption(publicCg, publicCg));
-	    }
-	  }
+	  try {
+	  	List<String> groupIds = new ArrayList<String>() ;
+	  	for (Object object : objGroupIds) {
+	  		groupIds.add(((ExtGroup)object).getId()) ;
+	  	}
+	  	if(!groupIds.isEmpty()){
+	  		for(String publicCg : groupIds) {
+	  			options.add(new SelectOption(publicCg, publicCg));
+	  		}
+	  	}
+    } catch (Exception e) {
+    	log.error("Can not get all groups user , exception: " + e.getMessage());
+    }
     return options ;
   }
   
@@ -145,8 +148,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 			ObjectPageList objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10) ;
 		    uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
-			//this.isViewSearchUser = false;
-			e.printStackTrace();
+			log.error("Can not search user by key, exception: " + e.getMessage());
 		}
 	}
   
@@ -297,7 +299,6 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       }
     }
 
-  
   static public class ChangeGroupActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
     	UIAddressEmailsForm uiAddressForm = event.getSource();  
@@ -310,35 +311,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
     }
   }
-  /*
-  static public class SearchUserActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-      UIAddressEmailsForm uiAddressForm = event.getSource() ;  
-      String text = uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_SEARCH).getValue() ;
-      String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
-      List<User> listUsers = new ArrayList<User>() ;
-      List<User> listResult = new ArrayList<User>() ;
-      if(group.equals("all-group")) listUsers = FAQUtils.getAllUser() ;
-      else listUsers = FAQUtils.getUserByGroupId(group) ;
-      uiAddressForm.selectedAddressId_ = group ;
-      try {
-      	if(!FAQUtils.isFieldEmpty(text)) {
-      		for(User user: listUsers) {
-      			if(user.getFullName().contains(text) || user.getEmail().contains(text) || user.getUserName().contains(text)) listResult.add(user); 
-      		}
-      uiAddressForm.setUserList(listResult) ;
-      		((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(group) ;
-      		event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
-      	}
-      } catch (Exception e) {
-      	UIApplication uiApp = uiAddressForm.getAncestorOfType(UIApplication.class) ;
-      	uiApp.addMessage(new ApplicationMessage("UIAddressEmailsForm.msg.search-error-keyword", null)) ;
-      	event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-      	return ;
-      }
-    }
-  }*/
-  
+    
   static public class CancelActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
       UIAddressEmailsForm uiAddressForm = event.getSource() ;
