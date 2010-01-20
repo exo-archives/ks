@@ -239,7 +239,7 @@
     <org.exoplatform.ws.version>2.1.0-Beta05</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.0-Beta05</org.exoplatform.jcr.version>
     <org.exoplatform.comet.version>2.1.0_gtn_Alpha01</org.exoplatform.comet.version>
-    <org.exoplatform.portal.version>3.0.0-Beta04</org.exoplatform.portal.version>
+    <org.exoplatform.portal.version>3.0.0-Beta05</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>

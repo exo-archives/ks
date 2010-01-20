@@ -42,7 +42,7 @@ import org.exoplatform.faq.service.FileAttachment;
 import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.SessionProviderFactory;
+//import org.exoplatform.portal.webui.util.SessionProviderFactory;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.organization.OrganizationService;
@@ -224,9 +224,9 @@ public class FAQUtils {
 		} else return new String[] {} ;
 	}
 
-	public static SessionProvider getSystemProvider() {
+	/*public static SessionProvider getSystemProvider() {
 		return SessionProviderFactory.createSystemProvider();
-	}
+	}*/
 
 	static public String getCurrentUser() throws Exception {
 		return Util.getPortalRequestContext().getRemoteUser();
