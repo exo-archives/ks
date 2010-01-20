@@ -152,11 +152,8 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent{
 	static	public class CloseActionListener extends EventListener<ResultQuickSearch> {
 		public void execute(Event<ResultQuickSearch> event) throws Exception {
 			ResultQuickSearch resultSearch = event.getSource() ;
-//			UIAnswersPortlet portlet = resultSearch.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = resultSearch.getAncestorOfType(UIPopupAction.class) ;
-			System.out.println("\n\n popupAction: "  + popupAction.getId());
 			popupAction.cancelPopupAction();
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 
