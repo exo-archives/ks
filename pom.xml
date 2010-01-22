@@ -30,9 +30,6 @@
     <org.exoplatform.exopackage.version>1.2.0</org.exoplatform.exopackage.version>
     <org.exoplatform.mvnexobuild.version>1.2.0</org.exoplatform.mvnexobuild.version>
 
-    <maven.test.skip>true</maven.test.skip>
-    <!-- ignore test failures -->
-    <maven.test.failure.ignore>true</maven.test.failure.ignore>
   </properties>
   
   <issueManagement>
