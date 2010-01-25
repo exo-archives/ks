@@ -35,6 +35,10 @@ function getProduct(version) {
   portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
   portal.starter.deployName = "starter";
   product.addDependencies(portal.starter);
+  
+  portal.fck = new Project("org.exoplatform.platform", "exo.platform.web.fck", "war", "3.0.0-Beta04-SNAPSHOT");
+  portal.fck.deployName = "fck";
+  product.addDependencies(portal.fck);
 
   // cometd (requried for KS)
   product.addDependencies(ks.comet.cometd);
