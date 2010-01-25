@@ -579,11 +579,12 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
   static public class AttachmentActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource() ;     
-      UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-      UIAttachMentForm attachMentForm = uiChildPopup.activate(UIAttachMentForm.class, 550) ;
+      org.exoplatform.ks.common.webui.UIPopupContainer popupContainer = questionForm.
+      	getAncestorOfType(org.exoplatform.ks.common.webui.UIPopupContainer.class) ;
+//      UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIAttachMentForm attachMentForm = questionForm.openPopup(popupContainer, UIAttachMentForm.class, 550, 0) ;
       attachMentForm.setNumberUpload(5);
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
+//      event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
     }
   }
   
@@ -619,9 +620,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
         UIQuestionManagerForm questionManagerForm = questionForm.getParent() ;
         questionManagerForm.isEditQuestion = false ;
         UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class) ;
-        UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class) ;
-        if(attachMentForm != null) {
-          UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+        UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+        if(popupAction != null) {
           popupAction.deActivate() ;
         } 
         event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;

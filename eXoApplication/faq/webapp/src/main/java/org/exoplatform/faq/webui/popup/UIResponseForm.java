@@ -414,19 +414,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				} else {
 					UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
 					questionManagerForm.isResponseQuestion = false ;
-
 					UIPopupContainer popupContainer = questionManagerForm.getAncestorOfType(UIPopupContainer.class) ;
-					UIAttachMentForm attachMentForm = popupContainer.findFirstComponentOfType(UIAttachMentForm.class) ;
-					if(attachMentForm != null) {
-						UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+					UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
+					if(popupAction != null) {
 						popupAction.deActivate() ;
-					} else {
-						UIAddRelationForm addRelationForm = popupContainer.findFirstComponentOfType(UIAddRelationForm.class) ;
-						if(addRelationForm != null) {
-							UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-							popupAction.deActivate() ;
-						}
-					}
+					} 
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 				}
 			}
