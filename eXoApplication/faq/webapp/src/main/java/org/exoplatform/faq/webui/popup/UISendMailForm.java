@@ -30,9 +30,9 @@ import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
-import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -299,9 +299,8 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 	static public class ToActionListener extends EventListener<UISendMailForm> {
 		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;
-			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
-			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
-			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			UIPopupContainer popupContainer = sendMailForm.getAncestorOfType(UIPopupContainer.class);
+			UIAddressEmailsForm addressEmailsForm = sendMailForm.openPopup(popupContainer, UIAddressEmailsForm.class, 660, 0) ;
 			addressEmailsForm.setRecipientsType(FILED_TO);
 			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_TO)).getValue() ;
 			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
@@ -323,16 +322,15 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 				addressEmailsForm.setAlreadyCheckedUser(userList);
 			}
 
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class CcActionListener extends EventListener<UISendMailForm> {
 		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;
-			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
-			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
-			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			UIPopupContainer popupContainer = sendMailForm.getAncestorOfType(UIPopupContainer.class);
+			UIAddressEmailsForm addressEmailsForm = sendMailForm.openPopup(popupContainer, UIAddressEmailsForm.class, 660, 0) ;
 			addressEmailsForm.setRecipientsType(FILED_ADD_CC);
 			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_CC)).getValue() ;
 			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
@@ -354,16 +352,15 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 				addressEmailsForm.setAlreadyCheckedUser(userList);
 			}
 
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
 	static public class BccActionListener extends EventListener<UISendMailForm> {
 		public void execute(Event<UISendMailForm> event) throws Exception {
 			UISendMailForm sendMailForm = event.getSource() ;
-			UISendEmailsContainer emailContainer = sendMailForm.getParent() ;
-			UIPopupAction popupAction = emailContainer.getChild(UIPopupAction.class) ;
-			UIAddressEmailsForm addressEmailsForm = popupAction.activate(UIAddressEmailsForm.class, 660) ;
+			UIPopupContainer popupContainer = sendMailForm.getAncestorOfType(UIPopupContainer.class);
+			UIAddressEmailsForm addressEmailsForm = sendMailForm.openPopup(popupContainer, UIAddressEmailsForm.class, 660, 0) ;
 			addressEmailsForm.setRecipientsType(FILED_ADD_BCC);
 			String toAddressString = ((UIFormStringInput)sendMailForm.getChildById(FILED_ADD_BCC)).getValue() ;
 			InternetAddress[] toAddresses = FAQUtils.getInternetAddress(toAddressString) ;
@@ -385,7 +382,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 				addressEmailsForm.setAlreadyCheckedUser(userList);
 			}
 
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	

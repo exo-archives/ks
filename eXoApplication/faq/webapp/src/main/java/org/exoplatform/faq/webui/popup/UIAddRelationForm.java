@@ -96,7 +96,7 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     	setListCate(Utils.CATEGORY_HOME) ;
       initPage() ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Set Relationed is fall, exception: ", e);
     }
   }
   
@@ -168,17 +168,10 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   private List<Question> getQuestions(String cateId) { return mapQuestion_.get(cateId) ; }
   
   static public class SaveActionListener extends EventListener<UIAddRelationForm> {
-    @SuppressWarnings("static-access")
     public void execute(Event<UIAddRelationForm> event) throws Exception {
       UIAddRelationForm addRelationForm = event.getSource() ;
-      UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
-      UIResponseForm responseForm = popupContainer.getChild(UIResponseForm.class) ;
-      if(responseForm == null) {
-        UIAnswersPortlet portlet = addRelationForm.getAncestorOfType(UIAnswersPortlet.class) ;
-        UIQuestionManagerForm questionManagerForm = portlet.findFirstComponentOfType(UIQuestionManagerForm.class) ;
-        responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
-      }
-      
+      UIResponseForm responseForm = addRelationForm.getAncestorOfType(UIAnswersPortlet.class).
+      															findFirstComponentOfType(UIResponseForm.class) ;
       List<String> listQuestionPath = new ArrayList<String>() ;
       for(Question question : addRelationForm.listQuestion) {
         if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
@@ -186,30 +179,16 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
         }
       }
       responseForm.setListIdQuesRela(listQuestionPath) ;
-      
       List<String> contents = getFAQService().getQuestionContents(listQuestionPath) ;
-      
       responseForm.setListRelationQuestion(contents) ;
-      //((UIFormSelectBox)responseForm.getChildById(responseForm.RELATIONS)).setOptions(listOption) ;
-      /*if(someQuestionIsDeleted){
-	      UIApplication uiApplication = addRelationForm.getAncestorOfType(UIApplication.class) ;
-	      uiApplication.addMessage(new ApplicationMessage("UIAddRelationForm.msg.question-id-moved", new Object[]{}, ApplicationMessage.WARNING)) ;
-	      event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
-      }*/
-      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;
+      addRelationForm.cancelChildPopupAction();
     }
   }
 
   static public class CancelActionListener extends EventListener<UIAddRelationForm> {
     public void execute(Event<UIAddRelationForm> event) throws Exception {
-      UIAddRelationForm addRelationForm = event.getSource() ;     
-      UIPopupContainer popupContainer = addRelationForm.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+      event.getSource().cancelChildPopupAction() ;     
     }
   }
 }

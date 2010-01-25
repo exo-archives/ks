@@ -40,10 +40,9 @@ import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -353,7 +352,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				//link
 				UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
-				
+				//TODO: review link
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
 				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
@@ -437,11 +436,9 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 			public void execute(Event<UIResponseForm> event) throws Exception {
 				UIResponseForm response = event.getSource() ;
 				UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIAddRelationForm addRelationForm = popupAction.activate(UIAddRelationForm.class, 500) ;
+				UIAddRelationForm addRelationForm = response.openPopup(popupContainer, UIAddRelationForm.class, 500, 0) ;
 				addRelationForm.setQuestionId(response.questionId_) ;
 				addRelationForm.setRelationed(response.getListIdQuesRela()) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			}
 		}
 

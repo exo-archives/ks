@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -52,69 +52,69 @@ import org.exoplatform.webui.form.UIFormStringInput;
  * Oct 2, 2008, 10:47:27 AM
  */
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
-    template = "app:/templates/faq/webui/popup/UIAddressEmailsForm.gtmpl", 
-    events = {
-  //@EventConfig(listeners = UIAddressEmailsForm.SearchUserActionListener.class),
-  @EventConfig(listeners = UIAddressEmailsForm.AddActionListener.class),
-  @EventConfig(listeners = UIAddressEmailsForm.SearchActionListener.class),
-  @EventConfig(listeners = UIAddressEmailsForm.ChangeGroupActionListener.class, phase = Phase.DECODE),
-  @EventConfig(listeners = UIAddressEmailsForm.ShowPageActionListener.class, phase = Phase.DECODE),
-  @EventConfig(listeners = UIAddressEmailsForm.CancelActionListener.class, phase = Phase.DECODE)
+		template = "app:/templates/faq/webui/popup/UIAddressEmailsForm.gtmpl", 
+		events = {
+	//@EventConfig(listeners = UIAddressEmailsForm.SearchUserActionListener.class),
+	@EventConfig(listeners = UIAddressEmailsForm.AddActionListener.class),
+	@EventConfig(listeners = UIAddressEmailsForm.SearchActionListener.class),
+	@EventConfig(listeners = UIAddressEmailsForm.ChangeGroupActionListener.class, phase = Phase.DECODE),
+	@EventConfig(listeners = UIAddressEmailsForm.ShowPageActionListener.class, phase = Phase.DECODE),
+	@EventConfig(listeners = UIAddressEmailsForm.CancelActionListener.class, phase = Phase.DECODE)
 })
 public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent {
 	public static final String USER_SEARCH = "user-search".intern();
-  public static final String USER_GROUP = "user-group".intern();
+	public static final String USER_GROUP = "user-group".intern();
 
 	public Map<String, User> checkedList_ = new HashMap<String, User>() ;
-  public Map<String, User> newCheckedList_ = new HashMap<String, User>() ;
-  
-  private static final String FILED_ALL_GROUP = "all-group" ;
-  private String selectedAddressId_ = "" ;
-  private String recipientsType_ = "";
-  private UIPageIterator uiPageList_ ;
-  public void setRecipientsType(String type) {
-    recipientsType_ = type;
-  }
+	public Map<String, User> newCheckedList_ = new HashMap<String, User>() ;
+	
+	private static final String FILED_ALL_GROUP = "all-group" ;
+	private String selectedAddressId_ = "" ;
+	private String recipientsType_ = "";
+	private UIPageIterator uiPageList_ ;
+	public void setRecipientsType(String type) {
+		recipientsType_ = type;
+	}
 
-  public String getRecipientType() {
-    return recipientsType_;
-  }
+	public String getRecipientType() {
+		return recipientsType_;
+	}
 
-  public UIAddressEmailsForm() throws Exception {
-  	addUIFormInput(new UIFormStringInput(USER_SEARCH, USER_SEARCH, null)) ;
-    UIFormSelectBoxWithGroups uiSelect = new UIFormSelectBoxWithGroups(USER_GROUP, USER_GROUP, getOptions()) ;
-    uiSelect.setOnChange("ChangeGroup") ;
-    addUIFormInput(uiSelect) ;
-    uiPageList_ = new UIPageIterator() ;
-    try {
-    	setUserList(UserHelper.getAllUser()) ;
-    } catch (Exception e) {
-    	log.error("Can not set users list, exception: " + e.getMessage());
-    }
-  }
-  
-  public List<SelectItem> getOptions() throws Exception {
-  	List<SelectItem> options = new ArrayList<SelectItem>() ;
-  	options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
-  	OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
-	  Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
-	  try {
-	  	List<String> groupIds = new ArrayList<String>() ;
-	  	for (Object object : objGroupIds) {
-	  		groupIds.add(((ExtGroup)object).getId()) ;
-	  	}
-	  	if(!groupIds.isEmpty()){
-	  		for(String publicCg : groupIds) {
-	  			options.add(new SelectOption(publicCg, publicCg));
-	  		}
-	  	}
-    } catch (Exception e) {
-    	log.error("Can not get all groups user , exception: " + e.getMessage());
-    }
-    return options ;
-  }
-  
-  private void searchUserProfileByKey(String keyWord) throws Exception {
+	public UIAddressEmailsForm() throws Exception {
+		addUIFormInput(new UIFormStringInput(USER_SEARCH, USER_SEARCH, null)) ;
+		UIFormSelectBoxWithGroups uiSelect = new UIFormSelectBoxWithGroups(USER_GROUP, USER_GROUP, getOptions()) ;
+		uiSelect.setOnChange("ChangeGroup") ;
+		addUIFormInput(uiSelect) ;
+		uiPageList_ = new UIPageIterator() ;
+		try {
+			setUserList(UserHelper.getAllUser()) ;
+		} catch (Exception e) {
+			log.error("Can not set users list, exception: " + e.getMessage());
+		}
+	}
+	
+	public List<SelectItem> getOptions() throws Exception {
+		List<SelectItem> options = new ArrayList<SelectItem>() ;
+		options.add(new SelectOption(FILED_ALL_GROUP, FILED_ALL_GROUP));
+		OrganizationService organizationService =(OrganizationService)PortalContainer.getComponent(OrganizationService.class) ;
+		Object[] objGroupIds = organizationService.getGroupHandler().getAllGroups().toArray() ;
+		try {
+			List<String> groupIds = new ArrayList<String>() ;
+			for (Object object : objGroupIds) {
+				groupIds.add(((ExtGroup)object).getId()) ;
+			}
+			if(!groupIds.isEmpty()){
+				for(String publicCg : groupIds) {
+					options.add(new SelectOption(publicCg, publicCg));
+				}
+			}
+		} catch (Exception e) {
+			log.error("Can not get all groups user , exception: " + e.getMessage());
+		}
+		return options ;
+	}
+	
+	private void searchUserProfileByKey(String keyWord) throws Exception {
 		try {
 			Map<String, User> mapObject = new HashMap<String, User>();
 			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
@@ -146,204 +146,199 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 			}
 
 			ObjectPageList objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10) ;
-		    uiPageList_.setPageList(objPageList) ;
+				uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
 			log.error("Can not search user by key, exception: " + e.getMessage());
 		}
 	}
-  
-  @SuppressWarnings("unchecked")
-  public List<User> getUsers() throws Exception {
-    List<User> users = new ArrayList<User>(uiPageList_.getCurrentPageData()) ;
-    for(User c : users) {
-      UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName()) ;
-      if(uiInput == null) addUIFormInput(new UIFormCheckBoxInput<Boolean>(c.getUserName(),c.getUserName(), null)) ;
-    }
-    for(User c : checkedList_.values()) {
-      UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName()) ;
-      if(uiInput != null) uiInput.setChecked(true) ;
-    }
-    return users ;
-  }
-  
-  public List<User> getListAllUsers() throws Exception {
-  	List<User> users = UserHelper.getAllUser() ;
-  	 return users ;
-  }
-  public void setUserList(List<User> userList) throws Exception {
-  	ObjectPageList objPageList = new ObjectPageList(userList, 10) ;
-    uiPageList_.setPageList(objPageList) ;
-  }
-  
-  public void setAlreadyCheckedUser(List<User> alreadyCheckedUser) throws Exception {
-    for (User ct : alreadyCheckedUser) {
-      checkedList_.put(ct.getUserName(), ct) ;
-    }
-  }
-  
-  public String[] getActions() {
-    return new String[] { "Save", "Cancel" };
-  }
+	
+	@SuppressWarnings("unchecked")
+	public List<User> getUsers() throws Exception {
+		List<User> users = new ArrayList<User>(uiPageList_.getCurrentPageData()) ;
+		for(User c : users) {
+			UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName()) ;
+			if(uiInput == null) addUIFormInput(new UIFormCheckBoxInput<Boolean>(c.getUserName(),c.getUserName(), null)) ;
+		}
+		for(User c : checkedList_.values()) {
+			UIFormCheckBoxInput uiInput = getUIFormCheckBoxInput(c.getUserName()) ;
+			if(uiInput != null) uiInput.setChecked(true) ;
+		}
+		return users ;
+	}
+	
+	public List<User> getListAllUsers() throws Exception {
+		List<User> users = UserHelper.getAllUser() ;
+		 return users ;
+	}
+	public void setUserList(List<User> userList) throws Exception {
+		ObjectPageList objPageList = new ObjectPageList(userList, 10) ;
+		uiPageList_.setPageList(objPageList) ;
+	}
+	
+	public void setAlreadyCheckedUser(List<User> alreadyCheckedUser) throws Exception {
+		for (User ct : alreadyCheckedUser) {
+			checkedList_.put(ct.getUserName(), ct) ;
+		}
+	}
+	
+	public String[] getActions() {
+		return new String[] { "Save", "Cancel" };
+	}
 
-  public void activate() throws Exception { }
-  public void deActivate() throws Exception { }
-  
-  public UIPageIterator  getUIPageIterator() {  return uiPageList_ ; }
+	public void activate() throws Exception { }
+	public void deActivate() throws Exception { }
+	
+	public UIPageIterator	getUIPageIterator() {	return uiPageList_ ; }
 
-  public long getAvailablePage(){ return uiPageList_.getAvailablePage() ; }
+	public long getAvailablePage(){ return uiPageList_.getAvailablePage() ; }
 
-  public long getCurrentPage() { return uiPageList_.getCurrentPage(); }
+	public long getCurrentPage() { return uiPageList_.getCurrentPage(); }
 
-  protected void updateCurrentPage(int page) throws Exception{
-    uiPageList_.setCurrentPage(page) ;
-  }
-  
-  @SuppressWarnings("unchecked")
-  public List<User> getCheckedUser() throws Exception {
-    List<User> userList = new ArrayList<User>();
-    for (User user : new ArrayList<User>(uiPageList_.getCurrentPageData())) {
-      UIFormCheckBoxInput<Boolean> uiCheckbox = getChildById(user.getUserName());
-      if (uiCheckbox != null && uiCheckbox.isChecked()) {
-      	userList.add(user);
-      }
-    }
-    return userList;
-  }
+	protected void updateCurrentPage(int page) throws Exception{
+		uiPageList_.setCurrentPage(page) ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<User> getCheckedUser() throws Exception {
+		List<User> userList = new ArrayList<User>();
+		for (User user : new ArrayList<User>(uiPageList_.getCurrentPageData())) {
+			UIFormCheckBoxInput<Boolean> uiCheckbox = getChildById(user.getUserName());
+			if (uiCheckbox != null && uiCheckbox.isChecked()) {
+				userList.add(user);
+			}
+		}
+		return userList;
+	}
 
-  
-  static public class AddActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-      UIAddressEmailsForm uiAddressForm = event.getSource() ;
-      List<User> checkedUser = uiAddressForm.getCheckedUser();
-      if(checkedUser.size() <= 0) {
-        uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
-        return ;
-      }
-      UIAnswersPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIAnswersPortlet.class) ;
-      String toAddress = "";
-      StringBuffer sb = new StringBuffer() ;
-      for (User ct : checkedUser) {
-        uiAddressForm.newCheckedList_.put(ct.getUserName(), ct) ;
-      }
-      for (User user : uiAddressForm.newCheckedList_.values()) {
-        if(user.getEmail() != null)
-          toAddress += user.getFullName() + "<" + user.getEmail() + "> ," ;
-      }
-      List<String> listMail = Arrays.asList( sb.toString().split(",")) ; 
-      String email = null ;
-      for(User c : checkedUser) {
-        email = c.getEmail() ;
-        if(!listMail.contains(email)) {
-          if(sb != null && sb.length() > 0) sb.append(",") ;
-          if(email != null) sb.append(email) ;
-        }
-      }
-      UISendMailForm uiSendMailForm = uiPortlet.findFirstComponentOfType(UISendMailForm.class) ;
-      if (uiAddressForm.getRecipientType().equals("To")) {
-        uiSendMailForm.setFieldToValue(toAddress) ;
-        uiSendMailForm.setToUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
-      } else if (uiAddressForm.getRecipientType().equals("AddCc")) {
-      	uiSendMailForm.setFieldCCValue(toAddress) ;
-      	uiSendMailForm.setAddCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
-      } else if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-      	uiSendMailForm.setFieldBCCValue(toAddress) ;
-      	uiSendMailForm.setAddBCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
-      }
-        uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_ ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm) ;
-        event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm.getParent());
-    }
-  }
-  
-  static public class ReplaceActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-    	UIAddressEmailsForm uiAddressForm = event.getSource() ;
-      List<User> checkedUser = uiAddressForm.getCheckedUser();
-      if(checkedUser.isEmpty()) {
-      	uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
-        return ;
-      }
-      UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;
-      uiAddressForm.checkedList_.clear() ;
-      uiAddressForm.newCheckedList_.clear() ;
-      String toAddress = "";
-      StringBuffer sb = new StringBuffer() ;
-      for (User ct : checkedUser) {
-        uiAddressForm.newCheckedList_.put(ct.getUserName(), ct) ;
-      }
-      for (User user : uiAddressForm.newCheckedList_.values()) {
-        if(user.getEmail() != null) { 
-          toAddress += user.getFullName() + "<" + user.getEmail() + "> ," ;
-          if(sb.length() > 0) sb.append(",") ;
-          sb.append(user.getEmail()) ;
-        }
-      }
-      UISendMailForm uiSendMailForm = uiPopupContainer.getChild(UISendMailForm.class) ;
-      if (uiAddressForm.getRecipientType().equals("to")) {
-      	uiSendMailForm.setFieldToValue(toAddress) ;
-      	uiSendMailForm.setToUsers(checkedUser) ;
-      }
-      if (uiAddressForm.getRecipientType().equals("AddCc")) {
-      	uiSendMailForm.setFieldCCValue(toAddress) ;
-      	uiSendMailForm.setAddCCUsers(checkedUser) ;
-      }
-      if (uiAddressForm.getRecipientType().equals("AddBcc")) {
-      	uiSendMailForm.setFieldBCCValue(toAddress) ;
-      	uiSendMailForm.setAddBCCUsers(checkedUser) ;
-      }
-    uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_ ;
-    event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm) ;
-    UIPopupAction uiPopupAction = uiAddressForm.getAncestorOfType(UIPopupAction.class) ;
-    uiPopupAction.deActivate() ;
-    event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-      }
-    }
+	
+	static public class AddActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			UIAddressEmailsForm uiAddressForm = event.getSource() ;
+			List<User> checkedUser = uiAddressForm.getCheckedUser();
+			if(checkedUser.size() <= 0) {
+				uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
+				return ;
+			}
+			UIAnswersPortlet uiPortlet = uiAddressForm.getAncestorOfType(UIAnswersPortlet.class) ;
+			String toAddress = "";
+			StringBuffer sb = new StringBuffer() ;
+			for (User ct : checkedUser) {
+				uiAddressForm.newCheckedList_.put(ct.getUserName(), ct) ;
+			}
+			for (User user : uiAddressForm.newCheckedList_.values()) {
+				if(user.getEmail() != null)
+					toAddress += user.getFullName() + "<" + user.getEmail() + "> ," ;
+			}
+			List<String> listMail = Arrays.asList( sb.toString().split(",")) ; 
+			String email = null ;
+			for(User c : checkedUser) {
+				email = c.getEmail() ;
+				if(!listMail.contains(email)) {
+					if(sb != null && sb.length() > 0) sb.append(",") ;
+					if(email != null) sb.append(email) ;
+				}
+			}
+			UISendMailForm uiSendMailForm = uiPortlet.findFirstComponentOfType(UISendMailForm.class) ;
+			if (uiAddressForm.getRecipientType().equals("To")) {
+				uiSendMailForm.setFieldToValue(toAddress) ;
+				uiSendMailForm.setToUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
+			} else if (uiAddressForm.getRecipientType().equals("AddCc")) {
+				uiSendMailForm.setFieldCCValue(toAddress) ;
+				uiSendMailForm.setAddCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
+			} else if (uiAddressForm.getRecipientType().equals("AddBcc")) {
+				uiSendMailForm.setFieldBCCValue(toAddress) ;
+				uiSendMailForm.setAddBCCUsers(new ArrayList<User>(uiAddressForm.newCheckedList_.values())) ;
+			}
+			uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_ ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm.getParent());
+		}
+	}
+	
+	static public class ReplaceActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			UIAddressEmailsForm uiAddressForm = event.getSource() ;
+			List<User> checkedUser = uiAddressForm.getCheckedUser();
+			if(checkedUser.isEmpty()) {
+				uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
+				return ;
+			}
+			UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;
+			uiAddressForm.checkedList_.clear() ;
+			uiAddressForm.newCheckedList_.clear() ;
+			String toAddress = "";
+			StringBuffer sb = new StringBuffer() ;
+			for (User ct : checkedUser) {
+				uiAddressForm.newCheckedList_.put(ct.getUserName(), ct) ;
+			}
+			for (User user : uiAddressForm.newCheckedList_.values()) {
+				if(user.getEmail() != null) { 
+					toAddress += user.getFullName() + "<" + user.getEmail() + "> ," ;
+					if(sb.length() > 0) sb.append(",") ;
+					sb.append(user.getEmail()) ;
+				}
+			}
+			UISendMailForm uiSendMailForm = uiPopupContainer.getChild(UISendMailForm.class) ;
+			if (uiAddressForm.getRecipientType().equals("to")) {
+				uiSendMailForm.setFieldToValue(toAddress) ;
+				uiSendMailForm.setToUsers(checkedUser) ;
+			}
+			if (uiAddressForm.getRecipientType().equals("AddCc")) {
+				uiSendMailForm.setFieldCCValue(toAddress) ;
+				uiSendMailForm.setAddCCUsers(checkedUser) ;
+			}
+			if (uiAddressForm.getRecipientType().equals("AddBcc")) {
+				uiSendMailForm.setFieldBCCValue(toAddress) ;
+				uiSendMailForm.setAddBCCUsers(checkedUser) ;
+			}
+			uiAddressForm.checkedList_ = uiAddressForm.newCheckedList_ ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiSendMailForm) ;
+			uiAddressForm.cancelChildPopupAction();
+		}
+	}
 
-  static public class ChangeGroupActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-    	UIAddressEmailsForm uiAddressForm = event.getSource();  
-      String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
-      if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getAllUser()) ;
-      else uiAddressForm.setUserList(UserHelper.getUserByGroupId(group)) ;
-      uiAddressForm.selectedAddressId_ = group ;
-      uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null) ;
-      ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(uiAddressForm.selectedAddressId_) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
-    }
-  }
-    
-  static public class CancelActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-      UIAddressEmailsForm uiAddressForm = event.getSource() ;
-      UIPopupAction uiPopupAction = uiAddressForm.getAncestorOfType(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
-    }
-  }
-  
-  static public class ShowPageActionListener extends EventListener<UIAddressEmailsForm> {
-    public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-    	UIAddressEmailsForm uiAddressForm = event.getSource() ;
-      int page = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
-      for (User user : uiAddressForm.getCheckedUser()) {
-        uiAddressForm.newCheckedList_.put(user.getUserName(), user) ;
-        uiAddressForm.checkedList_.put(user.getUserName(), user) ;
-      }
-      uiAddressForm.updateCurrentPage(page) ; 
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);           
-    }
-  }
-  
-  static public class SearchActionListener extends EventListener<UIAddressEmailsForm> {
-	  public void execute(Event<UIAddressEmailsForm> event) throws Exception {
-		  UIAddressEmailsForm uiAddressForm = event.getSource() ;
-		  String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
-		  if(searchValue == null || searchValue.trim().length() < 1)
-			  uiAddressForm.setUserList(UserHelper.getAllUser());
-		  else
-			  uiAddressForm.searchUserProfileByKey(searchValue);
-		  event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);           
-	  }
-  }
+	static public class ChangeGroupActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			UIAddressEmailsForm uiAddressForm = event.getSource();	
+			String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
+			if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getAllUser()) ;
+			else uiAddressForm.setUserList(UserHelper.getUserByGroupId(group)) ;
+			uiAddressForm.selectedAddressId_ = group ;
+			uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null) ;
+			((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(uiAddressForm.selectedAddressId_) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
+		}
+	}
+		
+	static public class CancelActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			event.getSource().cancelChildPopupAction() ;
+		}
+	}
+	
+	static public class ShowPageActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			UIAddressEmailsForm uiAddressForm = event.getSource() ;
+			int page = Integer.parseInt(event.getRequestContext().getRequestParameter(OBJECTID)) ;
+			for (User user : uiAddressForm.getCheckedUser()) {
+				uiAddressForm.newCheckedList_.put(user.getUserName(), user) ;
+				uiAddressForm.checkedList_.put(user.getUserName(), user) ;
+			}
+			uiAddressForm.updateCurrentPage(page) ; 
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);					 
+		}
+	}
+	
+	static public class SearchActionListener extends EventListener<UIAddressEmailsForm> {
+		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
+			UIAddressEmailsForm uiAddressForm = event.getSource() ;
+			String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
+			if(searchValue == null || searchValue.trim().length() < 1)
+				uiAddressForm.setUserList(UserHelper.getAllUser());
+			else
+				uiAddressForm.searchUserProfileByKey(searchValue);
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);					 
+		}
+	}
 }
 

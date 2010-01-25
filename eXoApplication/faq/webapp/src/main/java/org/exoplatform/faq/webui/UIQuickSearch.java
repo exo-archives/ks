@@ -24,8 +24,6 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.webui.popup.ResultQuickSearch;
 import org.exoplatform.faq.webui.popup.UIAdvancedSearchForm;
-import org.exoplatform.faq.webui.popup.UIPopupAction;
-import org.exoplatform.faq.webui.popup.UIPopupContainer;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -75,8 +73,6 @@ public class UIQuickSearch  extends BaseUIForm {
 			UIQuickSearch uiQuickSearch = event.getSource() ;
 			UIFormStringInput formStringInput = uiQuickSearch.getUIStringInput(FIELD_SEARCHVALUE) ;
 			UIAnswersPortlet uiPortlet = uiQuickSearch.getAncestorOfType(UIAnswersPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			String text = formStringInput.getValue() ;
 			if(text != null && text.trim().length() > 0) {
 				if(FAQUtils.CheckSpecial(text)) { 
@@ -98,17 +94,12 @@ public class UIQuickSearch  extends BaseUIForm {
 					uiQuickSearch.warning("UIQuickSearch.msg.failure") ;
 					return ;
 				}
-				UIResultContainer resultcontainer = popupAction.activate(UIResultContainer.class, 750) ;
-				ResultQuickSearch result = resultcontainer.getChild(ResultQuickSearch.class) ;
-				popupContainer.setId("ResultQuickSearch") ;
-				//List<ObjectSearchResult> listQuickSearch = uiQuickSearch.getResultListQuickSearch(list) ;
+				ResultQuickSearch result = uiQuickSearch.openPopup(uiPortlet, ResultQuickSearch.class, "UIResultQuickSearchs", 750, 0) ;
 				result.setSearchResults(list);
-//				formStringInput.setValue("") ;
 			} else {
 				uiQuickSearch.warning("UIQuickSeach.msg.no-text-to-search") ;
 				return ;
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 
@@ -116,13 +107,8 @@ public class UIQuickSearch  extends BaseUIForm {
 		public void execute(Event<UIQuickSearch> event) throws Exception {
 			UIQuickSearch uiForm = event.getSource() ;
 			UIAnswersPortlet uiPortlet = uiForm.getAncestorOfType(UIAnswersPortlet.class);
-			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIResultContainer resultContainer = popupAction.activate(UIResultContainer.class, 500) ;
-			resultContainer.setIsRenderedContainer(1) ;
-			UIAdvancedSearchForm uiAdvancedSearchForm = resultContainer.getChild(UIAdvancedSearchForm.class) ;
-			resultContainer.setId("AdvanceSearchForm") ;
+			UIAdvancedSearchForm uiAdvancedSearchForm = uiForm.openPopup(uiPortlet, UIAdvancedSearchForm.class, "AdvanceSearchForm", 650, 0) ;
 			uiAdvancedSearchForm.setIsQuickSearch() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 }
