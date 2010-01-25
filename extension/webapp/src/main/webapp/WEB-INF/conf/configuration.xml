@@ -35,6 +35,8 @@
   <!-- Configure the FAQ templates -->
   <import>war:/ks-extension/ks/faq/templates-configuration.xml</import>
   
+  <import>war:/ks-extension/organization/idm-configuration.xml</import>
+  
   
   
   
