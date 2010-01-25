@@ -1,12 +1,29 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"> 
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
+    Copyright (C) 2003-2010 eXo Platform SAS.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation; either version 3
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, see <http://www.gnu.org/licenses/>.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>exo.parent</artifactId>
     <version>8-SNAPSHOT</version>
   </parent>
-
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks-parent</artifactId>
   <version>1.2.3-SNAPSHOT</version>
@@ -14,12 +31,27 @@
   <name>eXo Knowledge Suite</name>
   <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
   <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
-  
+  <organization>
+    <name>eXo Platform SAS</name>
+    <url>http://www.exoplatform.com</url>
+  </organization>
+  <scm>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.exoplatform.org/browse/KS</url>
+  </issueManagement>
+  <ciManagement>
+    <system>hudson</system>
+    <url>http://builder.exoplatform.org/hudson/job/ks-1.2.x-ci/</url>
+  </ciManagement>
   <properties>
     <!-- Informations for the Manifests -->
     <exo.product.name>exo-ks</exo.product.name>
     <exo.product.specification>1.2</exo.product.specification>
-    
     <!-- Dependencies -->
     <org.exoplatform.kernel.version>2.0.10-SNAPSHOT</org.exoplatform.kernel.version>
     <org.exoplatform.core.version>2.1.8-SNAPSHOT</org.exoplatform.core.version>
@@ -29,38 +61,7 @@
     <org.exoplatform.portal.version>2.5.8-SNAPSHOT</org.exoplatform.portal.version>
     <org.exoplatform.exopackage.version>1.2.0</org.exoplatform.exopackage.version>
     <org.exoplatform.mvnexobuild.version>1.2.0</org.exoplatform.mvnexobuild.version>
-
   </properties>
-  
-  <issueManagement>
-  	<system>jira</system>
-  	<url>http://jira.exoplatform.org/browse/KS</url>
-  </issueManagement>
-  
-  <ciManagement>
-  	<system>hudson</system>
-  	<url>http://builder.exoplatform.org/hudson/job/ks/</url>
-  </ciManagement>
-
-  <organization>
-  	<name>eXo Platform SAS</name>
-  	<url>http://www.exoplatform.com</url>
-  </organization>
-
-  <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
-  </scm> 
-  
-  <modules>
-    <module>web</module>
-    <module>eXoApplication</module>
-    <module>server</module>
-    <module>migration1.2</module>   
-    <module>packaging</module>
-  </modules>
-
   <build>
     <resources>
       <resource>
@@ -80,7 +81,6 @@
         </includes>
       </testResource>
     </testResources>
-
     <pluginManagement>
       <plugins>
         <plugin>
@@ -95,7 +95,8 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
-            <forkMode>pertest</forkMode><!--once , pertest -->
+            <forkMode>pertest</forkMode>
+            <!--once , pertest -->
             <systemProperties>
               <property>
                 <name>mock.portal.dir</name>
@@ -106,32 +107,37 @@
         </plugin>
       </plugins>
     </pluginManagement>
-  
-  <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <phase>compile</phase>
-              <configuration>
-                <tasks>
-                  <copy failonerror="false" todir="${basedir}/target/${project.build.finalName}/WEB-INF/classes">
-                    <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes">
-                      <include name="**/*_en.properties" />
-                    </fileset>
-                    <globmapper from="*_en.properties" to="*.properties" />
-                  </copy>
-                </tasks>
-              </configuration>
-              <goals>
-                <goal>run</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <configuration>
+              <tasks>
+                <copy failonerror="false" todir="${basedir}/target/${project.build.finalName}/WEB-INF/classes">
+                  <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes">
+                    <include name="**/*_en.properties"/>
+                  </fileset>
+                  <globmapper from="*_en.properties" to="*.properties"/>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-
-  </project>
+  <modules>
+    <module>web</module>
+    <module>eXoApplication</module>
+    <module>server</module>
+    <module>migration1.2</module>
+    <module>packaging</module>
+  </modules>
+</project>
