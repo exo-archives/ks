@@ -29,48 +29,35 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumPageList;
-import org.exoplatform.forum.service.ForumService;
-import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.webui.UIBreadcumbs;
-import org.exoplatform.forum.webui.UICategory;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
-import org.exoplatform.forum.webui.UIForumContainer;
-import org.exoplatform.forum.webui.UIForumDescription;
-import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
-import org.exoplatform.forum.webui.UITopicDetailContainer;
-import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.forum.webui.UITopicsTag;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormSelectBox;
@@ -98,7 +85,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 			@EventConfig(listeners = UIForumUserSettingForm.CancelActionListener.class, phase=Phase.DECODE)
 		}
 )
-public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
+public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComponent {
 	public static final String FIELD_USERPROFILE_FORM = "ForumUserProfile" ;
 	public static final String FIELD_USEROPTION_FORM = "ForumUserOption" ;
 	public static final String FIELD_USERWATCHMANGER_FORM = "ForumUserWatches" ;
@@ -127,7 +114,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private String tabId = "ForumUserProfile";
-	private ForumService forumService ;
 	private UserProfile userProfile = null ;
 	private String[] permissionUser = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
@@ -136,7 +122,6 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	private final String defaultAvatar = "/forum/skin/DefaultSkin/webui/background/Avatar1.gif";
 	
 	public UIForumUserSettingForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		permissionUser = new String[]{res.getString("UIForumPortlet.label.PermissionAdmin").toLowerCase(), 
@@ -154,7 +139,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	@SuppressWarnings({ "unchecked" })
 	private void initForumOption() throws Exception {
 		try {
-			this.userProfile = forumService.getUserSettingProfile(UserHelper.getCurrentUser()) ;
+			this.userProfile = getForumService().getUserSettingProfile(UserHelper.getCurrentUser()) ;
 		} catch (Exception e) {			
 			e.printStackTrace() ;
 		}
@@ -267,13 +252,13 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		inputSetOption.addUIFormInput(isShowForumJump) ;
 		
 		UIFormInputWithActions inputUserWatchManger = new UIFormInputWithActions(FIELD_USERWATCHMANGER_FORM);
-		listWatches = forumService.getWatchByUser(this.userProfile.getUserId());
+		listWatches = getForumService().getWatchByUser(this.userProfile.getUserId());
 		
 		UIFormCheckBoxInput formCheckBoxRSS = null;
 		UIFormCheckBoxInput formCheckBoxEMAIL = null;
 		String listObjectId = "", watchId;
 		List<String> listId = new ArrayList<String>();
-		ForumSubscription forumSubscription = forumService.getForumSubscription(userProfile.getUserId());
+		ForumSubscription forumSubscription = getForumService().getForumSubscription(userProfile.getUserId());
 		listId.addAll(Arrays.asList(forumSubscription.getCategoryIds()));
 		listId.addAll(Arrays.asList(forumSubscription.getForumIds()));
 		listId.addAll(Arrays.asList(forumSubscription.getTopicIds()));
@@ -358,7 +343,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		forumSubscription.setCategoryIds(cateIds.toArray(new String[]{}));
 		forumSubscription.setForumIds(forumIds.toArray(new String[]{}));
 		forumSubscription.setTopicIds(topicIds.toArray(new String[]{}));
-		forumService.saveForumSubscription(forumSubscription, userProfile.getUserId());
+		getForumService().saveForumSubscription(forumSubscription, userProfile.getUserId());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -391,7 +376,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		String url = defaultAvatar;
 		try {
 			DownloadService dservice = getApplicationComponent(DownloadService.class) ;
-			url = ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.forumService, dservice);
+			url = ForumSessionUtils.getUserAvatarURL(UserHelper.getCurrentUser(), this.getForumService(), dservice);
 		} catch (Exception e) {
 			url = defaultAvatar;
 		}
@@ -409,46 +394,8 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	public void deActivate() throws Exception {
 	}
 	
-	private boolean canView(Category category, Forum forum, Topic topic, Post post, UserProfile userProfile) throws Exception{
-		if(userProfile.getUserRole() == 0) return true;
-		boolean canView = true;
-		boolean isModerator = false;
-		if(category == null) return false;
-		String[] listUsers = category.getUserPrivate();
-		//check category is private:
-		if(listUsers.length > 0 && listUsers[0].trim().length() > 0 && !ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId())) 
-			return false;
-		else
-			canView = true;
-		
-		// check forum
-		if(forum != null){
-			listUsers = forum.getModerators();
-			if(userProfile.getUserRole() == 1 && (listUsers.length > 0 && listUsers[0].trim().length() > 0 && 
-					ForumServiceUtils.hasPermission(listUsers, userProfile.getUserId()))) {
-				isModerator = true;
-				canView = true;
-			} else if(forum.getIsClosed()) return false;
-			else canView = true;
-			
-			// ckeck Topic:
-			if(topic != null){
-				if(isModerator) canView = true;
-				else if(!topic.getIsClosed() && topic.getIsActive() && topic.getIsActiveByForum() && topic.getIsApproved() && 
-								!topic.getIsWaiting() &&((topic.getCanView().length == 1 && topic.getCanView()[0].trim().length() < 1) ||
-								ForumServiceUtils.hasPermission(topic.getCanView(), userProfile.getUserId()) ||
-								ForumServiceUtils.hasPermission(forum.getViewer(), userProfile.getUserId()) ||
-								ForumServiceUtils.hasPermission(forum.getPoster(), userProfile.getUserId()) )) canView = true;
-				else canView = false;
-			}
-		}
-		
-		return canView;
-	}
-	
-	static	public class SaveActionListener extends EventListener<UIForumUserSettingForm> {
-		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
-			UIForumUserSettingForm uiForm = event.getSource() ;
+	static	public class SaveActionListener extends BaseEventListener<UIForumUserSettingForm> {
+		public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String objectId) throws Exception {
 			UIFormInputWithActions inputSetProfile = uiForm.getChildById(FIELD_USERPROFILE_FORM) ;
 			String userTitle = inputSetProfile.getUIStringInput(FIELD_USERTITLE_INPUT).getValue() ;
 			String screenName = inputSetProfile.getUIStringInput(FIELD_SCREENNAME_INPUT).getValue() ;
@@ -466,10 +413,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			if (ForumUtils.isEmpty(signature)) {
 				signature = "" ;
 			} else if (signature.trim().length() > maxText) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				Object[] args = { uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_SIGNATURE_TEXTAREA), String.valueOf(maxText) }) ;
 				return ;
 			}
 		
@@ -503,11 +447,11 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 			userProfile.setIsAutoWatchMyTopics(isAutoWatchMyTopics);
 			userProfile.setIsAutoWatchTopicIPost(isAutoWatchTopicIPost);
 			
-			uiForm.forumService.saveUserSettingProfile(userProfile);
+			uiForm.getForumService().saveUserSettingProfile(userProfile);
 			try {
 	      uiForm.saveForumSubscription();
       } catch (Exception e) {
-      	e.printStackTrace();
+      	uiForm.log.error("Can not save forum subscription, exception: ", e);
       }
 			forumPortlet.updateUserProfileInfo() ;
 			userProfile = forumPortlet.getUserProfile();
@@ -530,12 +474,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		}
 	}
 	
-	static	public class OpenTabActionListener extends EventListener<UIForumUserSettingForm> {
-		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
-			UIForumUserSettingForm uiForm = event.getSource() ;
-			uiForm.tabId = event.getRequestContext().getRequestParameter(OBJECTID);
-//			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+	static	public class OpenTabActionListener extends BaseEventListener<UIForumUserSettingForm> {
+		public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String objectId) throws Exception {
+			uiForm.tabId = objectId; refresh();
 		}
 	}
 	
@@ -544,34 +485,32 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
+//			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+			UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0) ;
 			attachFileForm.updateIsTopicForm(false) ;
 			attachFileForm.setIsChangeAvatar(true);
 			attachFileForm.setMaxField(1);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+//			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	
 	static public class SetDefaultAvatarActionListener extends EventListener<UIForumUserSettingForm> {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
-			uiForm.forumService.setDefaultAvatar(uiForm.userProfile.getUserId());
+			uiForm.getForumService().setDefaultAvatar(uiForm.userProfile.getUserId());
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
 	
-	static public class DeleteEmailWatchActionListener extends EventListener<UIForumUserSettingForm> {
-		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
-			UIForumUserSettingForm uiForm = event.getSource() ;
-			String input =  event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static public class DeleteEmailWatchActionListener extends BaseEventListener<UIForumUserSettingForm> {
+		public void onEvent(Event<UIForumUserSettingForm> event, UIForumUserSettingForm uiForm, String input) throws Exception {
 			String userId = input.substring(0, input.indexOf("/"));
 			String email = input.substring(input.lastIndexOf("/"));
 			String path = (input.substring(0, input.lastIndexOf("/"))).replace(userId + "/", "");
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			String emails = userId + "/" + email;
 			try {
-				uiForm.forumService.removeWatch(1, path, emails) ;
+				uiForm.getForumService().removeWatch(1, path, emails) ;
 				for(int i = 0; i < uiForm.listWatches.size(); i ++){
 					if(uiForm.listWatches.get(i).getNodePath().equals(path) && uiForm.listWatches.get(i).getUserId().equals(userId)){
 						uiForm.listWatches.remove(i);
@@ -617,13 +556,10 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	static public class UpdateEmailActionListener extends EventListener<UIForumUserSettingForm> {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
-			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIFormInputWithActions inputUserWatchManger = uiForm.getChildById(FIELD_USERWATCHMANGER_FORM);
-			String newEmailAdd = ((UIFormStringInput)inputUserWatchManger.getChildById(EMAIL_ADD)).getValue();
+			String newEmailAdd = inputUserWatchManger.getUIStringInput(EMAIL_ADD).getValue();
 			if(newEmailAdd == null || newEmailAdd.trim().length() < 1 || !ForumUtils.isValidEmailAddresses(newEmailAdd)){
-				Object[] args = { };
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIForumUserSettingForm.msg.Email-inValid", args, ApplicationMessage.WARNING)) ;
+				uiForm.warning("UIForumUserSettingForm.msg.Email-inValid") ;
 				return;
 			}
 			UIFormCheckBoxInput<Boolean> formCheckBoxEMAIL = null;
@@ -636,9 +572,9 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 				}
 			}
 			if(listObjectId.size() > 0){
-				uiForm.forumService.updateEmailWatch(listObjectId, newEmailAdd, uiForm.userProfile.getUserId());
+				uiForm.getForumService().updateEmailWatch(listObjectId, newEmailAdd, uiForm.userProfile.getUserId());
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getParent()) ;
 		}
 	}
 	
@@ -646,87 +582,22 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 		public void execute(Event<UIForumUserSettingForm> event) throws Exception {
 			UIForumUserSettingForm uiForm = event.getSource() ;
 			String path =  event.getRequestContext().getRequestParameter(OBJECTID) ;
-			boolean isErro = false ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			UserProfile userProfile = forumPortlet.getUserProfile();
-			boolean isRead = true;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			
 			String []id = path.split("/") ;
-			String cateId="", forumId="", topicId="";
+			String paths="";
 			for (int i = 0; i < id.length; i++) {
-	      if(id[i].indexOf(Utils.CATEGORY) >= 0) cateId = id[i];
-	      else if(id[i].indexOf(Utils.FORUM) >= 0) forumId = id[i];
-	      else if(id[i].indexOf(Utils.TOPIC) >= 0) topicId = id[i];
-      }
-			Category category = null;
-			Forum forum = null;
-			Topic topic = null;
-			try{
-				category = forumService.getCategory(cateId) ;
-				forum = forumService.getForum(cateId , forumId ) ;
-				topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
-			} catch (Exception e) { 
+				if(id[i].indexOf(Utils.CATEGORY) >= 0) paths = id[i];
+				else if(id[i].indexOf(Utils.FORUM) >= 0) paths = paths + "/" + id[i];
+				else if(id[i].indexOf(Utils.TOPIC) >= 0) paths = paths + "/" + id[i];
 			}
-			isRead = uiForm.canView(category, forum, topic, null, userProfile);
-			
-			if(ForumUtils.isEmpty(forumId)) {
-				if(category != null) {
-					if(isRead){
-						UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
-						categoryContainer.getChild(UICategory.class).update(category, null);
-						categoryContainer.updateIsRender(false) ;
-						forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(cateId);
-						forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-					}
-				} else isErro = true ;
-			} else if(ForumUtils.isEmpty(topicId)) {
-				if(forum != null) {
-					if(isRead) {
-						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-						uiForumContainer.setIsRenderChild(true) ;
-						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-						UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
-						uiTopicContainer.setUpdateForum(cateId, forum, 0) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId+"/"+forumId));
-						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-					}
-				} else isErro = true ;
-			} else {
-				if(topic != null) {
-					if(isRead){
-						forumPortlet.updateIsRendered(ForumUtils.FORUM);
-						UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-						UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-						uiForumContainer.setIsRenderChild(false) ;
-						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-						uiTopicDetail.setUpdateForum(forum) ;
-						uiTopicDetail.setTopicFromCate(cateId, forumId, topic, 0) ;
-						uiTopicDetail.setIdPostView("top") ;
-						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(cateId, forumId , topic.getId()) ;
-						forumService.updateTopicAccess(forumPortlet.getUserProfile().getUserId(),  topic.getId()) ;
-						forumPortlet.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
-						forumPortlet.getChild(UIForumLinks.class).setValueOption((cateId + "/" + forumId + " "));
-						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
-					}
-				} else isErro = true ;
+			try {
+				forumPortlet.calculateRenderComponent(paths, event.getRequestContext());
+				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+				forumPortlet.cancelAction() ;
+			} catch (Exception e) {
+				uiForm.log.error("Can not open this link, exception: ",e);
+				forumPortlet.cancelAction() ;
 			}
-			if(isErro) {
-				Object[] args = { };
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", args, ApplicationMessage.WARNING)) ;
-				return;
-			}
-			if(!isRead) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				String[] s = new String[]{};
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission", s, ApplicationMessage.WARNING)) ;
-				return;
-			}
-			forumPortlet.cancelAction() ;
 		}
 	}
 	

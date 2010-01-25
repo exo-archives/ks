@@ -142,6 +142,8 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
 				}
 				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 				forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
+				UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);
+				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;
 			} else {
 				UIPostForm postForm = forumPortlet.findFirstComponentOfType(UIPostForm.class);
 				for (BufferAttachment file : files) {

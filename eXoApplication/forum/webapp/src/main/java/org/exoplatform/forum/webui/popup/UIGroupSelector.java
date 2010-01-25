@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -162,11 +163,16 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 			String returnField = uiGroupSelector.getReturnField() ;
 			((UISelector)uiGroupSelector.getReturnComponent()).updateSelect(returnField, user) ;
 			try {
-				UIPopupContainer uiPopupContainer = uiGroupSelector.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
-				uiPopup.deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
+				UIPopupContainer popupContainer = uiGroupSelector.getAncestorOfType(UIPopupContainer.class) ;
+				UIPopupAction popupAction;
+				if(((UIComponent)uiGroupSelector.getParent()).getId().equals(popupContainer.getId())){
+					popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
+				} else {
+					popupAction = popupContainer.getChild(UIPopupAction.class) ;
+				}
+				popupAction.deActivate();
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector.getReturnComponent()) ;
 			}catch (NullPointerException e) {
 				UIPopupAction uiPopup = uiGroupSelector.getAncestorOfType(UIPopupAction.class) ;
 				uiPopup.deActivate() ;

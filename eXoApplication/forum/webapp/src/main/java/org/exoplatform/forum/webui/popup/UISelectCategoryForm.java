@@ -23,7 +23,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -32,7 +33,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
@@ -49,7 +49,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 			@EventConfig(listeners = UISelectCategoryForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 	)
-	public class UISelectCategoryForm extends UIForm implements UIPopupComponent {
+	public class UISelectCategoryForm extends BaseForumForm implements UIPopupComponent {
 		private List<String> listIdIsSelected = new ArrayList<String>();
 		List<ForumLinkData> forumLinks = new ArrayList<ForumLinkData>();
 		public UISelectCategoryForm() {
@@ -103,20 +103,16 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 						}
 					}
 				}
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIModeratorManagementForm managementForm = popupContainer.getChild(UIModeratorManagementForm.class) ;
+				UIModeratorManagementForm managementForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIModeratorManagementForm.class) ;
 				managementForm.setModCateValues(listIdSelected) ;
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(managementForm);
+				uiForm.cancelChildPopupAction();
 			}
 		}
 		
 		static	public class CancelActionListener extends EventListener<UISelectCategoryForm> {
 			public void execute(Event<UISelectCategoryForm> event) throws Exception {
-				UISelectCategoryForm uiForm = event.getSource() ;
-				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+				event.getSource().cancelChildPopupAction();
 			}
 		}
 	}

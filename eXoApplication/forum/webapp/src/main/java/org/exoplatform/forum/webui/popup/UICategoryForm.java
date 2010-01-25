@@ -33,18 +33,18 @@ import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 import org.exoplatform.webui.form.UIFormInputWithActions;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -86,7 +86,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 		}
 )
 
-public class UICategoryForm extends UIForm implements UIPopupComponent, UISelector{
+public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISelector{
 	public static final String CATEGORY_DETAIL_TAB = "DetailTab"; 
 	public static final String CATEGORY_PERMISSION_TAB = "PermissionTab"; 
 	
@@ -202,7 +202,6 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 	}
 
 	public void updateSelect(String selectField, String value) throws Exception {
-		//UIFormStringInput fieldInput = getUIStringInput(selectField) ;
 		UIFormTextAreaInput fieldInput = getUIFormTextAreaInput(selectField);
 		String values = fieldInput.getValue() ;
 		if(!ForumUtils.isEmpty(values)) {
@@ -215,26 +214,19 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		fieldInput.setValue(values) ;
 	}
 	
-	static	public class SaveActionListener extends EventListener<UICategoryForm> {
-		public void execute(Event<UICategoryForm> event) throws Exception {
-			UICategoryForm uiForm = event.getSource() ;
+	static	public class SaveActionListener extends BaseEventListener<UICategoryForm> {
+		public void onEvent(Event<UICategoryForm> event, UICategoryForm uiForm, String objectId) throws Exception {
 			if(uiForm.isDoubleClickSubmit) return;
 			String categoryTitle = uiForm.getUIStringInput(FIELD_CATEGORYTITLE_INPUT).getValue();
 			int maxText = ForumUtils.MAXTITLE ;
 			if(categoryTitle.length() > maxText) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				Object[] args = { uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_CATEGORYTITLE_INPUT), String.valueOf(maxText) }) ;
 				return ;
 			}
 			categoryTitle = ForumTransformHTML.enCodeHTML(categoryTitle);
 			String description = uiForm.getUIFormTextAreaInput(FIELD_DESCRIPTION_INPUT).getValue();
 			if(!ForumUtils.isEmpty(description) && description.length() > maxText) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				Object[] args = { uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.warning-long-text", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.warning-long-text", new String[]{ uiForm.getLabel(FIELD_DESCRIPTION_INPUT), String.valueOf(maxText) }) ;
 				return ;
 			}
 			description = ForumTransformHTML.enCodeHTML(description);
@@ -242,23 +234,17 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(ForumUtils.isEmpty(categoryOrder)) categoryOrder = "0";
 			categoryOrder = ForumUtils.removeZeroFirstNumber(categoryOrder) ;
 			if(categoryOrder.length() > 3) {
-				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
-				Object[] args = { uiForm.getLabel(FIELD_CATEGORYORDER_INPUT) };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erro-large-number", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.erro-large-number", new String[]{ uiForm.getLabel(FIELD_CATEGORYORDER_INPUT) }) ;
 				return ;
 			}
 			String moderator = uiForm.getUIFormTextAreaInput(FIELD_MODERAROR_MULTIVALUE).getValue();
 			moderator = ForumUtils.removeSpaceInString(moderator) ;
 			moderator = ForumUtils.removeStringResemble(moderator) ;
 			String []moderators = ForumUtils.splitForForum(moderator);
-			UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 			if(!ForumUtils.isEmpty(moderator)) {
 				String erroUser = UserHelper.checkValueUser(moderator) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
-					Object[] args = { uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("NameValidator.msg.erroUser-input", new String[]{ uiForm.getLabel(FIELD_MODERAROR_MULTIVALUE), erroUser }) ;
 					return ;
 				}
 			} else {moderators = new String[]{" "};}
@@ -273,9 +259,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			if(!ForumUtils.isEmpty(userPrivate)) {
 				String erroUser = UserHelper.checkValueUser(userPrivate) ;
 				if(!ForumUtils.isEmpty(erroUser)) {
-					Object[] args = { uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser };
-					uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+					warning("NameValidator.msg.erroUser-input", new String[]{ uiForm.getLabel(FIELD_USERPRIVATE_MULTIVALUE), erroUser }) ;
 					return ;
 				}
 			} else {userPrivates = new String[]{" "};}
@@ -292,23 +276,17 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 			String erroUser = UserHelper.checkValueUser(topicable) ;
 			erroUser = UserHelper.checkValueUser(topicable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
-				Object[] args = { uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.erroUser-input", new String[]{ uiForm.getLabel(FIELD_TOPICABLE_MULTIVALUE), erroUser }) ;
 				return ;
 			}
 			erroUser = UserHelper.checkValueUser(postable) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
-				Object[] args = { uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.erroUser-input", new String[]{ uiForm.getLabel(FIELD_POSTABLE_MULTIVALUE), erroUser }) ;
 				return ;
 			}
 			erroUser = UserHelper.checkValueUser(viewer) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
-				Object[] args = { uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser };
-				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("NameValidator.msg.erroUser-input", new String[]{ uiForm.getLabel(FIELD_VIEWER_MULTIVALUE), erroUser }) ;
 				return ;
 			}
 			
@@ -350,9 +328,7 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 					}
 				}
 			} catch (Exception e) {
-				Object[] args = { };
-				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				warning("UIForumPortlet.msg.catagory-deleted") ;
 				
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
 				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
@@ -368,10 +344,8 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		}
 	}
 	
-	static	public class SelectTabActionListener extends EventListener<UICategoryForm> {
-		public void execute(Event<UICategoryForm> event) throws Exception {
-			String id = event.getRequestContext().getRequestParameter(OBJECTID)	;
-			UICategoryForm uiForm = event.getSource();
+	static	public class SelectTabActionListener extends BaseEventListener<UICategoryForm> {
+		public void onEvent(Event<UICategoryForm> event, UICategoryForm uiForm, String id) throws Exception {
 			uiForm.id = Integer.parseInt(id);
 			UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
 			if(uiForm.id == 1) {
@@ -383,10 +357,9 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 		}
 	}
 	
-	static	public class AddPrivateActionListener extends EventListener<UICategoryForm> {
-		public void execute(Event<UICategoryForm> event) throws Exception {
-			UICategoryForm categoryForm = event.getSource() ;
-			String[] objects = ((String)event.getRequestContext().getRequestParameter(OBJECTID)).split(",");	;
+	static	public class AddPrivateActionListener extends BaseEventListener<UICategoryForm> {
+		public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String objectId) throws Exception {;
+			String[] objects = objectId.split(",");
 			String type = objects[0];
 			String param = objects[1];
 			UIForumPortlet forumPortlet = categoryForm.getAncestorOfType(UIForumPortlet.class);
@@ -400,21 +373,21 @@ public class UICategoryForm extends UIForm implements UIPopupComponent, UISelect
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
 			}
 			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;
-			if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
-			else if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
+			UIGroupSelector uiGroupSelector = null ;
+			if(type.equals("1")){
+				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
+			}	else if(type.equals("2")) {
+				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 600, 0) ;
+			}
 			uiGroupSelector.setType(type) ;
 			uiGroupSelector.setSelectedGroups(null) ;
 			uiGroupSelector.setComponent(categoryForm, new String[]{param}) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 
 	static	public class CancelActionListener extends EventListener<UICategoryForm> {
 		public void execute(Event<UICategoryForm> event) throws Exception {
-			UIForumPortlet forumPortlet = event.getSource().getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
+			event.getSource().getAncestorOfType(UIForumPortlet.class).cancelAction() ;
 		}
 	}
 	

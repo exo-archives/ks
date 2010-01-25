@@ -23,6 +23,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.user.CommonContact;
+import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -31,7 +32,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SARL
@@ -47,7 +47,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 @SuppressWarnings("unused")
-public class UIViewUserProfile extends UIForm implements UIPopupComponent {
+public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 	
 	private UserProfile userProfile ;
 	private UserProfile userProfileLogin ;

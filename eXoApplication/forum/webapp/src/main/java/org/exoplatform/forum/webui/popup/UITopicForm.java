@@ -24,19 +24,18 @@ import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategoryContainer;
@@ -47,7 +46,6 @@ import org.exoplatform.forum.webui.popup.UIForumInputWithActions.ActionData;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -106,7 +104,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 		}
 )
 
-public class UITopicForm extends BaseUIForm implements UISelector {
+public class UITopicForm extends BaseForumForm implements UISelector {
 	
 	public static final String FIELD_THREADCONTEN_TAB = "ThreadContent" ;
 	public static final String FIELD_THREADICON_TAB = "ThreadIcon" ;
@@ -144,13 +142,11 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 	private int id = 0;
 	private Topic topic = new Topic() ;
 	private List<TopicType> listTT = new ArrayList<TopicType>();
-	private ForumService forumService;
 	private boolean isDoubleClickSubmit = false; 
 	@SuppressWarnings("unchecked")
 	public UITopicForm() throws Exception {
 		if(getId()== null)setId("UITopicForm");
 		isDoubleClickSubmit = false;
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput topicTitle = new UIFormStringInput(FIELD_TOPICTITLE_INPUT, FIELD_TOPICTITLE_INPUT, null);
 		topicTitle.addValidator(MandatoryValidator.class);
 		UIFormStringInput editReason = new UIFormStringInput(FIELD_EDITREASON_INPUT, FIELD_EDITREASON_INPUT, null);
@@ -272,7 +268,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 		if(!ForumUtils.isArrayEmpty(canV)){
 			info = getLabel("CanViewParentInfo");
 		} else {
-			canV = forumService.getPermissionTopicByCategory(categoryId, "viewer");
+			canV = getForumService().getPermissionTopicByCategory(categoryId, "viewer");
 			if(!ForumUtils.isArrayEmpty(canV)){
 				info = getLabel("CanViewParentInfo");
 			}
@@ -283,7 +279,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 		if(!ForumUtils.isArrayEmpty(canV)){
 			info = getLabel("CanPostParentInfo");
 		} else {
-			canV = forumService.getPermissionTopicByCategory(categoryId, "poster");
+			canV = getForumService().getPermissionTopicByCategory(categoryId, "poster");
 			if(!ForumUtils.isArrayEmpty(canV)){
 				info = getLabel("CanPostParentInfo");
 			}
@@ -293,7 +289,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 	
 	private void setTopicType() throws Exception {
 		listTT.clear();
-		listTT.addAll(forumService.getTopicTypes());
+		listTT.addAll(getForumService().getTopicTypes());
 	}
 	
 	public void addNewTopicType() throws Exception {
@@ -359,7 +355,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 	public void setUpdateTopic(Topic topic, boolean isUpdate) throws Exception {
 		if(isUpdate) {
 			this.topicId = topic.getId() ;
-			this.topic =	forumService.getTopic(categoryId, forumId, topicId, "") ;
+			this.topic =	getForumService().getTopic(categoryId, forumId, topicId, "") ;
 			UIForumInputWithActions threadContent = this.getChildById(FIELD_THREADCONTEN_TAB);
 			threadContent.getUIStringInput(FIELD_EDITREASON_INPUT).setRendered(true) ;
 			threadContent.getUIStringInput(FIELD_TOPICTITLE_INPUT).setValue(ForumTransformHTML.unCodeHTML(this.topic.getTopicName()));
@@ -383,9 +379,8 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 			UIForumInputWithActions threadPermission = this.getChildById(FIELD_THREADPERMISSION_TAB);
 			threadPermission.getUIFormTextAreaInput(FIELD_CANVIEW_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanView()));
 			threadPermission.getUIFormTextAreaInput(FIELD_CANPOST_INPUT).setValue(ForumUtils.unSplitForForum(this.topic.getCanPost()));
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 			String postId = topicId.replaceFirst(Utils.TOPIC, Utils.POST) ;
-			Post post = forumService.getPost(this.categoryId, this.forumId, this.topicId, postId);
+			Post post = getForumService().getPost(this.categoryId, this.forumId, this.topicId, postId);
 			if(post != null && post.getAttachments() != null && post.getAttachments().size() > 0) {
 				this.attachments_ = post.getAttachments();
 				this.refreshUploadFileList();
@@ -426,12 +421,9 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 				postNew.setIcon(uiIconSelector.getSelectedIcon());
 				
 				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIViewPost viewPost = popupAction.activate(UIViewPost.class, 670) ;
-				viewPost.setId("UIViewTopic") ;
+				UIViewPost viewPost = openPopup(popupContainer, UIViewPost.class, "ViewTopic", 670, 0) ;
 				viewPost.setPostView(postNew) ;
 				viewPost.setActionForm(new String[] {"Close"});
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 			}else {
 				String[] args = {""} ;
     		if(k == 0) {
@@ -448,7 +440,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 	
 	private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
 		try {
-			this.forum = (Forum)forumService.getObjectNameById(forum.getId(), Utils.FORUM);
+			this.forum = (Forum)getForumService().getObjectNameById(forum.getId(), Utils.FORUM);
 			if(this.forum.getIsClosed() || this.forum.getIsLock()) return false;
 			if(userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
 				String[] canCreadTopic = forum.getCreateTopicRole();
@@ -463,7 +455,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 	}
 
 	private String[] getCensoredKeyword() throws Exception {
-		ForumAdministration forumAdministration = forumService.getForumAdministration() ;
+		ForumAdministration forumAdministration = getForumService().getForumAdministration() ;
 		String stringKey = forumAdministration.getCensoredKeyword();
 		if(stringKey != null && stringKey.length() > 0) {
 			stringKey = stringKey.toLowerCase().replaceAll(", ", ",").replaceAll(" ,", ",") ;
@@ -610,7 +602,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 							topicNew.setId(uiForm.topicId);
 							topicNew.setEditReason(editReason) ;
 							try {
-								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
+								uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, false, false, ForumUtils.getDefaultMail());
 								if(uiForm.isDetail){
 									forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath((uiForm.categoryId + "/" + uiForm.forumId + "/" + uiForm.topicId)) ;
 									UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
@@ -641,12 +633,12 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 			            } catch (Exception e) {}
 				      	}
 								topicNew.setRemoteAddr(remoteAddr);
-								uiForm.forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
+								uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());
 								if(userProfile.getIsAutoWatchMyTopics()) {
 									List<String> values = new ArrayList<String>();
 									values.add(userProfile.getEmail());
 									String path = uiForm.categoryId + "/" + uiForm.forumId + "/" + topicNew.getId();
-									uiForm.forumService.addWatch(1, path, values, userName) ;
+									uiForm.getForumService().addWatch(1, path, values, userName) ;
 								}
 							} catch (PathNotFoundException e) {
 								forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
@@ -708,11 +700,9 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 		public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm uiForm = event.getSource() ;
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAttachFileForm attachFileForm = uiChildPopup.activate(UIAttachFileForm.class, 500) ;
+			UIAttachFileForm attachFileForm = uiForm.openPopup(popupContainer, UIAttachFileForm.class, 500, 0) ;
 			attachFileForm.updateIsTopicForm(true) ;
 			attachFileForm.setMaxField(5);
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 	
@@ -735,10 +725,7 @@ public class UITopicForm extends BaseUIForm implements UISelector {
 		public void execute(Event<UITopicForm> event) throws Exception {
 			UITopicForm topicForm = event.getSource();
 			UIPopupContainer popupContainer = topicForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-			UIAddTopicTypeForm topicTypeForm = popupAction.activate(UIAddTopicTypeForm.class,700);
-			topicTypeForm.setId("AddTopicTypeForm");
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			topicForm.openPopup(popupContainer, UIAddTopicTypeForm.class, "AddTopicTypeForm", 700, 0);
 		}
 	}
 

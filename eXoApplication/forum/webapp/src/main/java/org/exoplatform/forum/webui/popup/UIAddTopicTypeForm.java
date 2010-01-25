@@ -114,8 +114,8 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			topicType.setName(typeName.trim());
 			topicType.setIcon(typeIcon);
 			forumService.saveTopicType(topicType);
+			UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
 			if(topicTypeForm.isEdit) {
-				UIForumPortlet forumPortlet = topicTypeForm.getAncestorOfType(UIForumPortlet.class);
 				if(forumPortlet.getChild(UIForumContainer.class).isRendered() && !forumPortlet.findFirstComponentOfType(UITopicDetailContainer.class).isRendered()){
 					UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class);
 					topicContainer.setTopicType(topicType.getId());
@@ -124,13 +124,12 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			}
 			topicTypeForm.isEdit = false;
 			try {
-				UIPopupContainer popupContainer = topicTypeForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
-				popupAction.deActivate() ;
-	      UITopicForm topicForm = popupContainer.getChild(UITopicForm.class);
+				topicTypeForm.cancelChildPopupAction();
+	      UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
 	      topicForm.addNewTopicType();
 	      event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
       } catch (Exception e) {
+      	e.printStackTrace();
       	topicTypeForm.cancelChildPopupAction();
       	UIForumAdministrationForm administrationForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIForumAdministrationForm.class);
       	event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;

@@ -29,7 +29,6 @@ import org.exoplatform.forum.webui.popup.UIModerationForum;
 import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
 import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPopupContainer;
-//import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
 import org.exoplatform.services.log.ExoLogger;
@@ -106,7 +105,7 @@ public class UIForumActionBar extends UIContainer	{
   	ContinuationService continuation = getApplicationComponent(ContinuationService.class);;
     return continuation.getUserToken(userProfile.getUserId());
     } catch (Exception e) {
-      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
+//      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
     }
     return "";
   }
