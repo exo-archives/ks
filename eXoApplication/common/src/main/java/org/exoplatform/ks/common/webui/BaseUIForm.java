@@ -187,5 +187,19 @@ public class BaseUIForm extends UIForm {
     return openPopup(parent, componentType, null, width, height);
   }
 
+  protected void cancelChildPopupAction() throws Exception {
+  	UIPopupContainer popupContainer = this.getAncestorOfType(UIPopupContainer.class) ;
+  	AbstractPopupAction popupAction;
+  	if(popupContainer != null) {
+			if(((UIComponent)this.getParent()).getId().equals(popupContainer.getId())){
+				popupAction = popupContainer.getAncestorOfType(AbstractPopupAction.class) ;
+			} else {
+				popupAction = popupContainer.getChild(AbstractPopupAction.class) ;
+			}
+  	} else {
+  		popupAction = this.getAncestorOfType(AbstractPopupAction.class);
+  	}
+  	popupAction.cancelPopupAction();
+  }
   
 }
