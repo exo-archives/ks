@@ -72,7 +72,6 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	private int tabSelect = 0;
 	private String emailAddress;
 	
-	@SuppressWarnings("unused")
 	//private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
 	public UIUserWatchManager() throws Exception {

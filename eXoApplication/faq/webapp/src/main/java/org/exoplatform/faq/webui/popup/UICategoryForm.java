@@ -21,15 +21,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.Category;
-import org.exoplatform.faq.service.FAQService;
+import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -46,6 +46,7 @@ import org.exoplatform.webui.form.UIFormTextAreaInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
 import org.exoplatform.webui.organization.account.UIUserSelector;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -66,7 +67,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 				)
 			,
 		    @ComponentConfig(
-             id = "UIForumUserPopupWindow",
+             id = "UICategoryUserPopupWindow",
              type = UIPopupWindow.class,
              template =  "system:/groovy/webui/core/UIPopupWindow.gtmpl",
              events = {
@@ -78,7 +79,7 @@ import org.exoplatform.webui.organization.account.UIUserSelector;
 		}
 )
 
-public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISelector 	{
+public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, UISelector 	{
 	private String categoryId_ = "";
 	private String parentId_ ;
 	//protected long index_ = 0;
@@ -90,13 +91,12 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
   final private static String FIELD_MODERATEQUESTIONS_CHECKBOX = "moderatequestions" ;
   public static final String VIEW_AUTHOR_INFOR = "ViewAuthorInfor".intern();
   final private static String FIELD_MODERATE_ANSWERS_CHECKBOX = "moderateAnswers" ;
-  private FAQService faqService_ ;
   private boolean isAddNew_ = true ;
   private String oldName_ = "";
   private Category currentCategory_ ;
   private long maxIndex = 1;
 	public UICategoryForm() throws Exception {
-		faqService_ =	(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+		setActions(new String[] {"Save","Cancel"});
 	}
 	
 	public void updateAddNew(boolean isAddNew) throws Exception {
@@ -104,7 +104,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
     UIFormInputWithActions inputset = new UIFormInputWithActions("UIAddCategoryForm") ;
     inputset.addUIFormInput(new UIFormStringInput(FIELD_NAME_INPUT, FIELD_NAME_INPUT, null).addValidator(MandatoryValidator.class)) ;
     UIFormStringInput index = new UIFormStringInput(FIELD_INDEX_INPUT, FIELD_INDEX_INPUT, null) ;
-    maxIndex = faqService_.getMaxindexCategory(parentId_) + 1;
+    maxIndex = getFAQService().getMaxindexCategory(parentId_) + 1;
     if(isAddNew)index.setValue(String.valueOf(maxIndex));
     inputset.addUIFormInput(index) ;
     inputset.addUIFormInput(new UIFormTextAreaInput(FIELD_USERPRIVATE_INPUT, FIELD_USERPRIVATE_INPUT, null)) ;
@@ -138,15 +138,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 		}
 		addChild(inputset) ;
 	}
-	public String getLabel(String id) {
-		try {
-			return super.getLabel(id) ;
-		} catch (Exception e) {
-			return id ;
-		}
-	}
 
-	public String[] getActions() { return new String[] {"Save","Cancel"} ; }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 
@@ -218,12 +210,12 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
       }
       
       if(uiCategory.isAddNew_) {
-      	if(uiCategory.faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      	if(uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
       		uiCategory.warning("UICateforyForm.sms.cate-name-exist") ;
       		return ;
         }
       }else {
-      	if(!name.equals(uiCategory.oldName_) && uiCategory.faqService_.isCategoryExist(name, uiCategory.parentId_)) {
+      	if(!name.equals(uiCategory.oldName_) && uiCategory.getFAQService().isCategoryExist(name, uiCategory.parentId_)) {
       		uiCategory.warning("UICateforyForm.sms.cate-name-exist") ;
       		return ;
         }
@@ -291,13 +283,13 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			cat.setViewAuthorInfor(viewAuthorInfor);
 			cat.setIndex(index);
 			cat.setModerators(users) ;
-			uiCategory.faqService_.saveCategory(uiCategory.parentId_, cat, uiCategory.isAddNew_) ;
+			uiCategory.getFAQService().saveCategory(uiCategory.parentId_, cat, uiCategory.isAddNew_) ;
 			
 			if(!uiCategory.isAddNew_) {
 				UICategories categories = answerPortlet.findFirstComponentOfType(UICategories.class) ;
 				if(uiCategory.categoryId_.equals(categories.getCategoryPath())) {
 					UIQuestions questions = answerPortlet.findFirstComponentOfType(UIQuestions.class) ;
-					questions.viewAuthorInfor = uiCategory.faqService_.isViewAuthorInfo(uiCategory.categoryId_) ;
+					questions.viewAuthorInfor = uiCategory.getFAQService().isViewAuthorInfo(uiCategory.categoryId_) ;
 				}
 			}
 			
@@ -307,10 +299,8 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 		}
 	}
 
-	static	public class SelectPermissionActionListener extends EventListener<UICategoryForm> {
-		public void execute(Event<UICategoryForm> event) throws Exception {
-			UICategoryForm categoryForm = event.getSource() ;
-			String permType = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class SelectPermissionActionListener extends BaseEventListener<UICategoryForm> {
+		public void onEvent(Event<UICategoryForm> event, UICategoryForm categoryForm, String permType) throws Exception {
 			String types[] = permType.split(",");
 			UIAnswersPortlet answersPortlet = categoryForm.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction1 = answersPortlet.getChild(UIPopupAction.class);
@@ -322,15 +312,16 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 				popupAction1.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
 			}
-			UIPopupAction childPopup = categoryForm.getAncestorOfType(UIPopupContainer.class).getChild(UIPopupAction.class) ;
-			UIGroupSelector uiGroupSelector = childPopup.activate(UIGroupSelector.class, 500) ;
+			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class);
+			UIGroupSelector uiGroupSelector = null ;
+			if(types[1].equals(UISelectComponent.TYPE_GROUP)){
+				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 550, 0) ;
+			}	else if(types[1].equals(UISelectComponent.TYPE_MEMBERSHIP)) {
+				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 550, 0) ;
+			}
 			uiGroupSelector.setType(types[1]) ;
-			if(types[1].equals(UISelectComponent.TYPE_USER) ) uiGroupSelector.setId("UIUserSelector") ;
-			if(types[1].equals(UISelectComponent.TYPE_MEMBERSHIP) ){ uiGroupSelector.setId("UIMebershipSelector") ;}
-			if(types[1].equals(UISelectComponent.TYPE_GROUP) ) uiGroupSelector.setId("UIGroupSelector") ;
 			uiGroupSelector.setSelectedGroups(null) ;
 			uiGroupSelector.setComponent(categoryForm, new String[]{types[0]}) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(childPopup) ;  
 		}
 	}
 
@@ -404,8 +395,8 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
 			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);
-			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIForumUserPopupWindow");
-			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIForumUserPopupWindow", "UIForumUserPopupWindow") ;
+			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UICategoryUserPopupWindow");
+			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UICategoryUserPopupWindow", "UICategoryUserPopupWindows") ;
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);

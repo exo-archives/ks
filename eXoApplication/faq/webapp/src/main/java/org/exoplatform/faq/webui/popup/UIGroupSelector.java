@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.exoplatform.commons.utils.PageList;
-import org.exoplatform.faq.webui.UIAnswersPortlet;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -156,14 +156,12 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
       String user = event.getRequestContext().getRequestParameter(OBJECTID) ;
       UIGroupSelector uiGroupSelector = event.getSource();
       UIPopupContainer uiPopupContainer = uiGroupSelector.getAncestorOfType(UIPopupContainer.class) ;
-      UIPopupAction uiPopup = uiPopupContainer.getChild(UIPopupAction.class) ;
       String returnField = uiGroupSelector.getReturnField() ; 
       ((UISelector)uiGroupSelector.getReturnComponent()).updateSelect(returnField, user) ;
+      UIPopupAction uiPopup = uiPopupContainer.getAncestorOfType(UIPopupAction.class);
       uiPopup.deActivate() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup) ;      
-      // add
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopup.getAncestorOfType(UIAnswersPortlet.class).findFirstComponentOfType(UICategoryForm.class)) ;      
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer.getAncestorOfType(UIPopupAction.class)) ;
+      event.getRequestContext().addUIComponentToUpdateByAjax(uiGroupSelector.getReturnComponent()) ;      
     }
   }
 

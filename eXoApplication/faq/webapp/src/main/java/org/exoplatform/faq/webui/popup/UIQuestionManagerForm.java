@@ -42,6 +42,7 @@ import org.exoplatform.webui.form.UIForm;
     }
 )
 
+@SuppressWarnings("unused")
 public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
   public static final String UI_QUESTION_INFO = "QuestionInfo" ;
   public static final String UI_QUESTION_FORM = "UIQuestionForm" ;
@@ -63,7 +64,6 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
     addChild(UIQuestionsInfo.class, null, UI_QUESTION_INFO) ;
     addChild(UIQuestionForm.class, null, UI_QUESTION_FORM) ;
     addChild(UIResponseForm.class, null, UI_RESPONSE_FORM) ;
-    setActions(new String[]{"Cancel"}) ;
   }
   
   public void setFAQSetting(FAQSetting setting) throws Exception{
@@ -71,41 +71,29 @@ public class UIQuestionManagerForm extends UIForm implements UIPopupComponent {
 	  questionsInfo.setFAQSetting(setting);
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsEdit() {
     return this.isEditQuestion ;
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsViewEdit() {
     return this.isViewEditQuestion ;
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsResponse() {
     return this.isResponseQuestion ;
   }
   
-  @SuppressWarnings("unused")
   private boolean getIsVewResponse() {
     return this.isViewResponseQuestion ;
   }
-  
-  @SuppressWarnings("unused")
-  /*private String[] getActions() {
-    return new String[]{"Cancel"} ;
-  }*/
   
   static public class CancelActionListener extends EventListener<UIQuestionManagerForm> {
     public void execute(Event<UIQuestionManagerForm> event) throws Exception {
       UIQuestionManagerForm questionManagerForm = event.getSource() ;
       UIAnswersPortlet portlet = questionManagerForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIAnswersContainer container = portlet.findFirstComponentOfType(UIAnswersContainer.class) ;
-      //uiQuestions.setIsNotChangeLanguage() ;
-      UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
-      popupAction.deActivate() ;
+      portlet.cancelAction();
       event.getRequestContext().addUIComponentToUpdateByAjax(container) ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
 }

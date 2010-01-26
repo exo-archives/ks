@@ -29,7 +29,6 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -139,9 +138,8 @@ public class UIWatchManager  extends BaseUIForm	implements UIPopupComponent{
   
   static	public class EditEmailActionListener extends BaseEventListener<UIWatchManager> {
 		public void onEvent(Event<UIWatchManager> event, UIWatchManager watchManager, String user) throws Exception {
-			UIWatchContainer watchContainer = watchManager.getParent() ;
-			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
-			UIWatchForm watchForm = popupAction.activate(UIWatchForm.class, 420) ;
+			UIPopupContainer popupContainer = watchManager.getParent() ;
+			UIWatchForm watchForm = openPopup(popupContainer, UIWatchForm.class, 420, 0) ;
 			for(Watch watch : watchManager.listWatchs_) {
 				if(watch.getUser().equals(user)) {
 					watchForm.setWatch(watch) ;
@@ -149,7 +147,6 @@ public class UIWatchManager  extends BaseUIForm	implements UIPopupComponent{
 					break ;
 				}
 			}
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 

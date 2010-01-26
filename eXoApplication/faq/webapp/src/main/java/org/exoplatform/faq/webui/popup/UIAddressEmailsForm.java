@@ -28,7 +28,6 @@ import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
-//import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -46,12 +45,14 @@ import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
+
 /**
  * Created by The eXo Platform SARL
  * Author : Truong Nguyen
  *					truong.nguyen@exoplatform.com
  * Oct 2, 2008, 10:47:27 AM
  */
+
 @ComponentConfig(lifecycle = UIFormLifecycle.class, 
 		template = "app:/templates/faq/webui/popup/UIAddressEmailsForm.gtmpl", 
 		events = {
@@ -110,7 +111,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 				}
 			}
 		} catch (Exception e) {
-			log.error("Can not get all groups user , exception: " + e.getMessage());
+			log.error("Can not get all groups user , exception: ",e);
 		}
 		return options ;
 	}

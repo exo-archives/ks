@@ -53,6 +53,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
     }
 )
 
+@SuppressWarnings("unused")
 public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
 	private String homeCategoryName = "";
   private List<Question> listQuestion = new ArrayList<Question>() ;
@@ -63,7 +64,6 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
   
-  @SuppressWarnings("unused")
   private List<String> listCateSelected = new ArrayList<String>() ;
   private List<Cate> listCategory_ = new ArrayList<Cate>() ;
  
@@ -73,7 +73,6 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     
   }
   
-  @SuppressWarnings("unused")
   private List<Cate> getListCate(){
     return this.listCategory_ ;
   }

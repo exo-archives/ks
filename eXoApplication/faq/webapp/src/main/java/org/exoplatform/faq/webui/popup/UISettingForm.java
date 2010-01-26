@@ -33,16 +33,14 @@ import org.exoplatform.faq.webui.UIAnswersContainer;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
-import org.exoplatform.faq.webui.UIWatchContainer;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
-import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -377,28 +375,20 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 		}
 	}
 	
-	static public class UserWatchManagerActionListener extends EventListener<UISettingForm> {
-		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;
-			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
-			UIWatchContainer watchContainer = settingForm.getParent() ;
-			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
-			UIUserWatchManager watchForm = popupAction.activate(UIUserWatchManager.class, 600) ;
+	static public class UserWatchManagerActionListener extends BaseEventListener<UISettingForm> {
+		public void onEvent(Event<UISettingForm> event, UISettingForm settingForm, String objectId) throws Exception {
+			UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIUserWatchManager watchForm = openPopup(watchContainer, UIUserWatchManager.class, 600, 0) ;
 			watchForm.setFAQSetting(settingForm.faqSetting_);
-		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
-	static public class ChangeAvatarActionListener extends EventListener<UISettingForm> {
-		public void execute(Event<UISettingForm> event) throws Exception {
-			UISettingForm settingForm = event.getSource() ;
-			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
-			UIWatchContainer watchContainer = settingForm.getParent() ;
-			UIPopupAction popupAction = watchContainer.getChild(UIPopupAction.class) ;
-			UIAttachMentForm attachMentForm = popupAction.activate(UIAttachMentForm.class, 550) ;
+	static public class ChangeAvatarActionListener extends BaseEventListener<UISettingForm> {
+		public void onEvent(Event<UISettingForm> event, UISettingForm settingForm, String objectId) throws Exception {
+			UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIAttachMentForm attachMentForm = openPopup(watchContainer, UIAttachMentForm.class, 550, 0) ;
 			attachMentForm.setNumberUpload(1);
 			attachMentForm.setIsChangeAvatar(true);
-		  event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
 	
@@ -476,11 +466,9 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 			UISettingForm settingForm = event.getSource() ;		
 			UIAnswersPortlet uiPortlet = settingForm.getAncestorOfType(UIAnswersPortlet.class);
 			try {
-				UIWatchContainer pupupContainer = settingForm.getParent() ;
-				UIPopupAction popupAction = pupupContainer.getChild(UIPopupAction.class) ;
-				UISelectCategoryForumForm listCateForm = popupAction.activate(UISelectCategoryForumForm.class, 400) ;
+				UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class) ;
+				UISelectCategoryForumForm listCateForm = settingForm.openPopup(watchContainer, UISelectCategoryForumForm.class, 400, 0) ;
 				listCateForm.setListCategory();
-				event.getRequestContext().addUIComponentToUpdateByAjax(pupupContainer) ;
       } catch (ClassCastException e) {
       	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
       	UISelectCategoryForumForm listCateForm = popupAction.createUIComponent(UISelectCategoryForumForm.class, null, null) ;

@@ -570,12 +570,12 @@ public class UIQuestions extends UIContainer {
 			UIQuestions question = event.getSource() ; 
 			UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
 			UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class);
-			UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 480) ;
-			watchContainer.setIsRenderedContainer(1) ;
-			UISettingForm uiSetting = watchContainer.getChild(UISettingForm.class) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UISettingForm uiSetting = popupContainer.addChild(UISettingForm.class, null, null) ;
 			uiSetting.setFaqSetting(question.faqSetting_);
-			watchContainer.setId("CategorySettingForm") ;
 			uiSetting.init() ;
+			popupContainer.setId("CategorySettingForm") ;
+			popupAction.activate(popupContainer, 480, 0) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -586,7 +586,6 @@ public class UIQuestions extends UIContainer {
 			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-
 			UIQuestionManagerForm questionManagerForm = popupContainer.addChild(UIQuestionManagerForm.class, null, null) ;
 			popupContainer.setId("FAQQuestionManagerment") ;
 			popupAction.activate(popupContainer, 900, 850) ;

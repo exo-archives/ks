@@ -17,12 +17,11 @@
 package org.exoplatform.faq.webui.popup;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
-import org.exoplatform.faq.webui.UIWatchContainer;
+import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -73,15 +72,12 @@ public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
   }
   
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
-    @SuppressWarnings("unchecked")
     public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource() ;
-			UIWatchContainer watchContainer = uiWatchForm.getAncestorOfType(UIWatchContainer.class);
       String name = uiWatchForm.getUIStringInput(USER_NAME).getValue() ;
       String listEmail = "";
-      List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
-			for (String string : values) {
-				listEmail += string.trim() + "," ;
+			for (Object obj : uiWatchForm.emailAddress.getValue()) {
+				listEmail += String.valueOf(obj).trim() + "," ;
       }
 			if (FAQUtils.isFieldEmpty(name)) {
 				uiWatchForm.warning("UIWatchForm.msg.name-field-empty") ;
@@ -101,20 +97,17 @@ public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
     	watch.setUser(name) ;
     	watch.setEmails(listEmail);
   		faqService.addWatchCategory(categoryId , watch) ;
+  		UIAnswersPortlet watchContainer = uiWatchForm.getAncestorOfType(UIAnswersPortlet.class);
   		UIWatchManager watchManager = watchContainer.findFirstComponentOfType(UIWatchManager.class) ;
-  		UIPopupAction uiPopupAction = watchContainer.getChild(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
       watchManager.setCategoryID(categoryId);
-  		event.getRequestContext().addUIComponentToUpdateByAjax(watchContainer) ; 
+  		event.getRequestContext().addUIComponentToUpdateByAjax(watchManager) ; 
+  		uiWatchForm.cancelChildPopupAction();
 		}
 	}
 
 	static public class CancelActionListener extends EventListener<UIWatchForm> {
     public void execute(Event<UIWatchForm> event) throws Exception {
-			UIWatchForm uiWatchForm = event.getSource() ;						
-      UIPopupAction uiPopupAction = uiWatchForm.getAncestorOfType(UIPopupAction.class) ;
-      uiPopupAction.deActivate() ;
-      event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupAction) ;
+			event.getSource().cancelChildPopupAction() ;						
 		}
 	}
 }

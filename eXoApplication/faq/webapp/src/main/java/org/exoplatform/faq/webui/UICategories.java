@@ -545,12 +545,12 @@ public class UICategories extends UIContainer{
 			UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 			try {
 				//if(uiCategories.faqSetting_.isAdmin() || uiCategories.faqService_.isCategoryModerator(categoryId, FAQUtils.getCurrentUser())) {
-					UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-					UIWatchContainer watchContainer = popupAction.activate(UIWatchContainer.class, 600) ;
-					UIWatchManager watchManager = watchContainer.getChild(UIWatchManager.class) ;
-					popupContainer.setId("WatchManager") ;
-					watchManager.setCategoryID(categoryId) ;
-					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, "PopupWatchManager") ;
+				UIWatchManager watchManager = popupContainer.addChild(UIWatchManager.class, null, null) ;
+//				popupContainer.setId("WatchManager") ;
+				watchManager.setCategoryID(categoryId) ;
+				popupAction.activate(popupContainer, 600, 0);
+				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				/*} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

@@ -39,10 +39,9 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
-import org.exoplatform.web.application.ApplicationMessage;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
-import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -56,6 +55,8 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormInputWithActions.ActionData;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
+
+
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen
@@ -579,12 +580,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
   static public class AttachmentActionListener extends EventListener<UIQuestionForm> {
     public void execute(Event<UIQuestionForm> event) throws Exception {
       UIQuestionForm questionForm = event.getSource() ;     
-      org.exoplatform.ks.common.webui.UIPopupContainer popupContainer = questionForm.
-      	getAncestorOfType(org.exoplatform.ks.common.webui.UIPopupContainer.class) ;
-//      UIPopupAction uiChildPopup = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
+      UIPopupContainer popupContainer = questionForm.getAncestorOfType(UIPopupContainer.class) ;
       UIAttachMentForm attachMentForm = questionForm.openPopup(popupContainer, UIAttachMentForm.class, 550, 0) ;
       attachMentForm.setNumberUpload(5);
-//      event.getRequestContext().addUIComponentToUpdateByAjax(uiChildPopup) ;
     }
   }
   
