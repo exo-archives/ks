@@ -28,9 +28,10 @@ import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIFormSelectBoxWithGroups;
-import org.exoplatform.faq.webui.UISendEmailsContainer;
+//import org.exoplatform.faq.webui.UISendEmailsContainer;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseUIForm;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.Query;
 import org.exoplatform.services.organization.User;
@@ -263,7 +264,8 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 				uiAddressForm.warning("UIAddressEmailsForm.msg.user-email-required") ;
 				return ;
 			}
-			UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;
+			UIPopupContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UIPopupContainer.class) ;
+//			UISendEmailsContainer uiPopupContainer = uiAddressForm.getAncestorOfType(UISendEmailsContainer.class) ;
 			uiAddressForm.checkedList_.clear() ;
 			uiAddressForm.newCheckedList_.clear() ;
 			String toAddress = "";
