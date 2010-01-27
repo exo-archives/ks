@@ -205,6 +205,21 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 	}
 } ;
 
+UIForumPortlet.prototype.visibleAction = function(id) {
+	var parent = document.getElementById(id);
+	var addCategory = eXo.core.DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
+	var addForum = eXo.core.DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
+	if(document.getElementById("UICategories")){
+		addCategory.className = "Icon AddCategory";
+		addForum.className = "Icon AddForum";
+	} else {
+		addCategory.className = "Icon AddCategory DisableAction";
+		addForum.className = "Icon AddForum DisableAction";
+		addCategory.firstElementChild.href = "javascript:void(0);";
+		addForum.firstElementChild.href = "javascript:void(0);";
+	}
+};
+
 UIForumPortlet.prototype.checkActionTopic = function(obj, evt) {
 	eXo.webui.UIPopupSelectCategory.show(obj, evt) ;
 	var parentMenu = document.getElementById("ModerationMenu") ;

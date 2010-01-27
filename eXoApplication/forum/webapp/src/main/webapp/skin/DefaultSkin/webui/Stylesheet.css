@@ -240,6 +240,13 @@
 	white-space:nowrap;
 }
 
+.UIForumPortlet .UIForumActionBar .DisableAction a {
+	color: gray;
+}
+
+.UIForumPortlet .UIForumActionBar .DisableAction a:hover {
+	color: gray;
+}
 /******************************	OverButton	***************************************/
 .UIForumPortlet .UITopicContainer .DefaultStyle {
 	border-top:1px solid #d8d8d8;
