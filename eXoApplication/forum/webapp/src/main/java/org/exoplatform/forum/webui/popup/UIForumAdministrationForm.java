@@ -528,7 +528,8 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
         warning("UIForumAdministrationForm.sms.not-set-activeDay");
         return;
       } else {
-        UIRunPruneForm pruneForm = administrationForm.openPopup(UIRunPruneForm.class, 200);
+      	UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIRunPruneForm pruneForm = administrationForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
         pruneForm.setPruneSetting(pruneSetting);
       }
     }

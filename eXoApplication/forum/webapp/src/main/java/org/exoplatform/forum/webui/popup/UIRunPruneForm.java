@@ -17,11 +17,8 @@
 package org.exoplatform.forum.webui.popup;
 
 
-import org.exoplatform.container.PortalContainer;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.PruneSetting;
-import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -29,7 +26,6 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
-import org.exoplatform.webui.form.UIForm;
 
 /**
  * Created by The eXo Platform SAS
@@ -47,7 +43,7 @@ import org.exoplatform.webui.form.UIForm;
 		}
 )
 
-public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
+public class UIRunPruneForm  extends BaseForumForm implements UIPopupComponent {
 	private PruneSetting pruneSetting;
 	private long topicOld = 0;
 	public UIRunPruneForm() {
@@ -56,8 +52,7 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 	
 	public void setPruneSetting(PruneSetting pruneSetting) throws Exception{
 		this.pruneSetting = pruneSetting ;
-		ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-		this.topicOld = forumService.checkPrune(pruneSetting);
+		this.topicOld = getForumService().checkPrune(pruneSetting);
 	}
 	
 	public long getTopicOld() {
@@ -73,21 +68,15 @@ public class UIRunPruneForm  extends UIForm implements UIPopupComponent {
 	
 	static	public class CloseActionListener extends EventListener<UIRunPruneForm> {
 		public void execute(Event<UIRunPruneForm> event) throws Exception {
-			UIRunPruneForm uiform = event.getSource();
-			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			event.getSource().cancelChildPopupAction();
 		}
 	}
 
 	static	public class RunActionListener extends EventListener<UIRunPruneForm> {
 		public void execute(Event<UIRunPruneForm> event) throws Exception {
 			UIRunPruneForm uiform = event.getSource();
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-			forumService.runPrune(uiform.pruneSetting) ;
-			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
-			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
+			uiform.getForumService().runPrune(uiform.pruneSetting) ;
+			uiform.cancelChildPopupAction();
 		}
 	}
 }
