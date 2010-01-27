@@ -1,11 +1,11 @@
 <%
-	import org.exoplatform.faq.webui.popup.UIPopupAction ;
 	import org.exoplatform.web.application.JavascriptManager;
 	
 	def rcontext = _ctx.getRequestContext();
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.ks.KSUtils', '/ksResources/javascript/');
 	jsmanager.importJavascript('eXo.ks.MaskLayerControl', '/ksResources/javascript/');
+	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
 %>
 
 <div class="UIAnswersPortlet" id="$uicomponent.id">

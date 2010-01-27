@@ -531,38 +531,6 @@ UIForumPortlet.prototype.setShowInfo = function(elm) {
 //	}
 //};
 
-UIForumPortlet.prototype.setMaskLayer = function(id) {
-	var DOMUtil = eXo.core.DOMUtil;
-	var forumPortlet = document.getElementById(id) ;
-	var masklayer = DOMUtil.findFirstDescendantByClass(forumPortlet, "div", "MaskLayerForum") ;
-	var popupAction = DOMUtil.findFirstDescendantByClass(forumPortlet, "span", "UIForumPopupAction") ;
-	var popupWindow = DOMUtil.findFirstDescendantByClass(popupAction, "div", "UIPopupWindow") ;
- 	if(masklayer) {
-  	masklayer.style.width = "auto";
-  	masklayer.style.height = "auto";
-	 	if(popupWindow) {
-		 	if(popupWindow.style.display == "block") {
-				masklayer.style.width = (forumPortlet.offsetWidth - 3) + "px";
-				masklayer.style.height = (forumPortlet.offsetHeight - 3) + "px";
-			}
-			var closeButton = DOMUtil.findFirstDescendantByClass(popupAction, "div", "CloseButton") ;
-			if(closeButton) {
-				var newDiv = DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
-				if(!newDiv) newDiv = document.createElement("div");
-				closeButton.appendChild(newDiv);
-				newDiv.style.width = "16px";
-				newDiv.style.height = "16px";
-				newDiv.className = "ClosePopup";
-				newDiv.innerHTML = '<span></span>' ;
-				newDiv.onclick = function(){
-					masklayer.style.width = "auto";
-					masklayer.style.height = "auto";
-				};
-			}
-	 	}
-	}
-};
-
 UIForumPortlet.prototype.onloadReSizeAvatar = function(idElm) {
 	setTimeout("eXo.forum.UIForumPortlet.reSizeAvatar('"+idElm+"')", 1000);
 };
