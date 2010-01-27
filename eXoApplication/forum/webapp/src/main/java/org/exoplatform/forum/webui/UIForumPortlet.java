@@ -62,6 +62,7 @@ import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupMessages;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -119,6 +120,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
 		UIPopupAction popupAction = addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
+		popupAction.getChild(UIPopupWindow.class).setId("UIForumPopupWindow");
 		popupAction.setAncestorName("UIForum");
 		loadPreferences();
 	}
