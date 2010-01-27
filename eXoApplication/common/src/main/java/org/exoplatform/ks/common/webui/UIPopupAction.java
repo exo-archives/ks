@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+/***************************************************************************
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -8,13 +8,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
- */
-package org.exoplatform.forum.webui.popup;
+ ***************************************************************************/
+package org.exoplatform.ks.common.webui;
 
 import org.exoplatform.ks.common.webui.AbstractPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -24,30 +24,36 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 /**
- * Created by The eXo Platform SARL Author : hung.nguyen@exoplatform.com Aug 02,
- * 2007 9:43:23 AM
+ * Created by The eXo Platform SAS
+ * Author : Vu Duy Tu
+ *          tu.duy@exoplatform.com
+ * Jan 26, 2010 - 10:19:17 AM  
  */
+
 @ComponentConfig(lifecycle = Lifecycle.class)
 public class UIPopupAction extends AbstractPopupAction {
-
+	private String ancestorName ;
   protected void afterProcessRender(WebuiRequestContext context) {
     String parentId = ((UIComponent) this.getParent()).getId();
-    context.getJavascriptManager()
-           .addOnLoadJavascript("function(){eXo.forum.UIForumPortlet.setMaskLayer('" + parentId
-               + "');}");
+    	context.getJavascriptManager()
+      .addOnLoadJavascript("function(){eXo.ks.KSUtils.setMaskLayer('" + parentId
+          + "');}");
   }
   
-
-
   @Override
   protected String getAncestorName() {
-    return "UIForum";
+  	try {
+  		return ((UIComponent) this.getParent()).getId().replaceFirst("Portlet", "");
+    } catch (NullPointerException e) {
+	    return ancestorName;
+    }
   }
 
-
+  public void setAncestorName(String ancestorName) {
+	  this.ancestorName = ancestorName;
+  }
+  
   public Class<? extends UIPopupContainer> getPopupContainerType() {
-    return org.exoplatform.forum.webui.popup.UIPopupContainer.class;
+    return UIPopupContainer.class;
   }
-
-
 }

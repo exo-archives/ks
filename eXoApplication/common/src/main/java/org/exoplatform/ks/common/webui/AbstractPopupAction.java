@@ -56,7 +56,7 @@ public abstract class AbstractPopupAction extends UIContainer {
     context.getWriter()
            .append("<span class=\"")
            .append(getId())
-           .append("\" id=\"")
+           .append(" UIKSPopupAction\" id=\"")
            .append(getId())
            .append("\">");
     renderChildren(context);

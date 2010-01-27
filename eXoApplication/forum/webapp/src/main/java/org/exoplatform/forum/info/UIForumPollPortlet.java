@@ -17,7 +17,7 @@
 package org.exoplatform.forum.info;
 
 import org.exoplatform.forum.webui.UITopicPoll;
-import org.exoplatform.forum.webui.popup.UIPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;

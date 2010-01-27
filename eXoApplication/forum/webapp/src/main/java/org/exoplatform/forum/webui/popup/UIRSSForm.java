@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

@@ -12,7 +12,7 @@
 
 <div class="UIForumPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer">
-		<div id="MaskLayerForum" class="MaskLayerForum"><span></span></div>
+		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
 	</div>
 	<%
 		List children = uicomponent.getChildren() ;

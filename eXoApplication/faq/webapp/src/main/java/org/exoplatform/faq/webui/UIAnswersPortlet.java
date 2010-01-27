@@ -20,8 +20,8 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 
 import org.exoplatform.faq.service.FAQSetting;
-import org.exoplatform.faq.webui.popup.UIPopupAction;
 import org.exoplatform.faq.webui.popup.UISettingForm;
+import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -49,6 +49,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
   	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
     uiPopup.setId("UIAnswersPopupAction") ;
     uiPopup.getChild(UIPopupWindow.class).setId("UIAnswersPopupWindow");
+    uiPopup.setAncestorName("Answers");
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    

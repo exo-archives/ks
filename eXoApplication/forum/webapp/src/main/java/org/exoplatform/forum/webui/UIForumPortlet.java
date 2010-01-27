@@ -40,7 +40,6 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
-import org.exoplatform.forum.webui.popup.UIPopupAction;
 import org.exoplatform.forum.webui.popup.UIPostForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UISettingEditModeForm;
@@ -49,6 +48,7 @@ import org.exoplatform.forum.webui.popup.UIViewTopicCreatedByUser;
 import org.exoplatform.forum.webui.popup.UIViewUserProfile;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.user.CommonContact;
+import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
@@ -118,7 +118,8 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UITopicsTag.class, null, null).setRendered(isTagRendered) ;
 		addChild(UISearchForm.class, null, null).setRendered(isSearchRendered) ;
 		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
-		addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
+		UIPopupAction popupAction = addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
+		popupAction.setAncestorName("UIForum");
 		loadPreferences();
 	}
 	

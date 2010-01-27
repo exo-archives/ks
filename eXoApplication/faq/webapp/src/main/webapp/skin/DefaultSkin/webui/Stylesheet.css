@@ -2295,3 +2295,16 @@
 .UIAnswersChildPopupAction .UIForm .UIFormGrid td.FieldLabel {
 	white-space:nowrap;
 }
+
+.UIAnswersPortlet .ParentMaskLayer {
+	position:relative ;
+	z-index:0;
+}
+
+.UIAnswersPortlet .ParentMaskLayer .KSMaskLayer {
+	left:0px;	top:0px;
+	z-index:5;
+	position:absolute ;
+	visibility:visible;
+	background:url('background/Point1x1.png') no-repeat top center ;	
+}

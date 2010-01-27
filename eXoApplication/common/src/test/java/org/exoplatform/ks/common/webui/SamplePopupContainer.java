@@ -22,4 +22,8 @@ package org.exoplatform.ks.common.webui;
  */
 public class SamplePopupContainer extends UIPopupContainer {
 
+	public SamplePopupContainer() throws Exception {
+	  super();
+  }
+
 }

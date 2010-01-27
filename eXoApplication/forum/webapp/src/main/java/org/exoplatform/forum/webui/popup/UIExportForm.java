@@ -14,6 +14,7 @@ import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
+import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.services.compress.CompressData;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

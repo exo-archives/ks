@@ -421,7 +421,7 @@
 	z-index:0;
 }
 
-.UIForumPortlet .ParentMaskLayer .MaskLayerForum {
+.UIForumPortlet .ParentMaskLayer .KSMaskLayer {
 	left:0px;	top:0px;
 	z-index:5;
 	position:absolute ;
