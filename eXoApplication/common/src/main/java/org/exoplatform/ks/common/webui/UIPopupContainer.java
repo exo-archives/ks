@@ -19,7 +19,6 @@ package org.exoplatform.ks.common.webui;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPopupComponent;
-import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 
 /**
@@ -31,20 +30,10 @@ import org.exoplatform.webui.core.lifecycle.UIContainerLifecycle;
 @ComponentConfig(lifecycle = UIContainerLifecycle.class)
 public class UIPopupContainer extends UIContainer implements UIPopupComponent {
 	public UIPopupContainer() throws Exception  {
-		UIPopupAction popupAction = new UIPopupAction();
-    initChildPopupAction(popupAction.getClass(), popupAction.getAncestorName());
+    addChild(UIPopupAction.class, null, null).setRendered(true) ;
 	}
 	
-	public <T extends AbstractPopupAction>void initChildPopupAction(Class<T> popupType, String name) throws Exception {
-	   AbstractPopupAction uiPopupAction = addChild(popupType, null, name + "ChildPopupAction").setRendered(true) ;
-	    uiPopupAction.getChild(UIPopupWindow.class).setId(name + "ChildPopupWindow") ;
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
-	public void activate() throws Exception {
-		// TODO Auto-generated method stub
-	}
-
-	public void deActivate() throws Exception {
-		// TODO Auto-generated method stub
-	}
 }

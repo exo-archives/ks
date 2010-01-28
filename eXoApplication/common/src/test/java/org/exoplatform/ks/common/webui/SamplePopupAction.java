@@ -24,7 +24,7 @@ import org.exoplatform.webui.application.WebuiRequestContext;
  */
 public class SamplePopupAction extends AbstractPopupAction {
   
-  public SamplePopupAction() {
+  public SamplePopupAction() throws Exception {
     super();
   }
 
@@ -32,16 +32,4 @@ public class SamplePopupAction extends AbstractPopupAction {
   protected void afterProcessRender(WebuiRequestContext context) {
   }
 
-  @Override
-  protected String getAncestorName() {
-    
-    return "SamplePortlet";
-  }
-
-  @Override
-  public Class<? extends UIPopupContainer> getPopupContainerType() {
-    
-    return SamplePopupContainer.class;
-  }
-  
 }

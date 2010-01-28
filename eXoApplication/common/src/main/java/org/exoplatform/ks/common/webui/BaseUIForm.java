@@ -155,7 +155,7 @@ public class BaseUIForm extends UIForm {
                                                 String popupId,
                                                 int width,
                                                 int height) throws Exception {
-    AbstractPopupAction popupAction = parent.getChild(AbstractPopupAction.class);
+  	AbstractPopupAction popupAction = parent.getChild(AbstractPopupAction.class);
     UIPopupContainer popupContainer = popupAction.prepareForNewForm();
 
     T form = popupContainer.addChild(componentType, null, null);
@@ -166,8 +166,10 @@ public class BaseUIForm extends UIForm {
     } else {
       popupContainer.setId(generateComponentId(componentType));
     }
-
-    ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(popupAction);
+    if(parent instanceof UIPopupContainer)
+    	((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(parent);
+    else 
+    	((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(popupAction);
     return form;
   }
   
@@ -189,15 +191,15 @@ public class BaseUIForm extends UIForm {
 
   protected void cancelChildPopupAction() throws Exception {
   	UIPopupContainer popupContainer = this.getAncestorOfType(UIPopupContainer.class) ;
-  	AbstractPopupAction popupAction;
+  	UIPopupAction popupAction;
   	if(popupContainer != null) {
 			if(((UIComponent)this.getParent()).getId().equals(popupContainer.getId())){
-				popupAction = popupContainer.getAncestorOfType(AbstractPopupAction.class) ;
+				popupAction = popupContainer.getAncestorOfType(UIPopupAction.class) ;
 			} else {
-				popupAction = popupContainer.getChild(AbstractPopupAction.class) ;
+				popupAction = popupContainer.getChild(UIPopupAction.class) ;
 			}
   	} else {
-  		popupAction = this.getAncestorOfType(AbstractPopupAction.class);
+  		popupAction = this.getAncestorOfType(UIPopupAction.class);
   	}
   	popupAction.cancelPopupAction();
   }

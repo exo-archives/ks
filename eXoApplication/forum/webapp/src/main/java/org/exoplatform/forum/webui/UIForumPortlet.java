@@ -121,7 +121,6 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
 		UIPopupAction popupAction = addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 		popupAction.getChild(UIPopupWindow.class).setId("UIForumPopupWindow");
-		popupAction.setAncestorName("UIForum");
 		loadPreferences();
 	}
 	

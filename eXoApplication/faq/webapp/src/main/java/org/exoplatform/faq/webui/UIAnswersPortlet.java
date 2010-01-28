@@ -49,7 +49,6 @@ public class UIAnswersPortlet extends UIPortletApplication {
   	UIPopupAction uiPopup =  addChild(UIPopupAction.class, null, null) ;
     uiPopup.setId("UIAnswersPopupAction") ;
     uiPopup.getChild(UIPopupWindow.class).setId("UIAnswersPopupWindow");
-    uiPopup.setAncestorName("Answers");
   }
   
   public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    

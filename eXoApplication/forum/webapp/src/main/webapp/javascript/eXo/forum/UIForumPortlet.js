@@ -212,6 +212,10 @@ UIForumPortlet.prototype.visibleAction = function(id) {
 	if(document.getElementById("UICategories")){
 		addCategory.className = "Icon AddCategory";
 		addForum.className = "Icon AddForum";
+	} else if(document.getElementById("UICategory")){
+		addCategory.className = "Icon AddCategory DisableAction";
+		addCategory.firstElementChild.href = "javascript:void(0);";
+		addForum.className = "Icon AddForum";
 	} else {
 		addCategory.className = "Icon AddCategory DisableAction";
 		addForum.className = "Icon AddForum DisableAction";

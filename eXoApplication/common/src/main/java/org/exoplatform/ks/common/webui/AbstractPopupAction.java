@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ks.common.webui;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -25,6 +23,7 @@ import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
+import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 /**
@@ -34,23 +33,10 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 @ComponentConfig(lifecycle = Lifecycle.class)
 public abstract class AbstractPopupAction extends UIContainer {
   
-  private static final Log log = ExoLogger.getLogger(AbstractPopupAction.class);
-  
-  public AbstractPopupAction() {
-    String popupId = getAncestorName() + "PopupWindow"; 
-    try {
-      addChild(createUIComponent(UIPopupWindow.class, null, popupId).setRendered(false));
-    } catch (Exception e) {
-      log.error("failed to create popup container for " + popupId);
-      throw new RuntimeException(e);
-    }
+  public AbstractPopupAction() throws Exception {
+     addChild(createUIComponent(UIPopupWindow.class, null, null).setRendered(false));
   }
   
-  protected abstract String getAncestorName();
-
-
-  public abstract Class<? extends UIPopupContainer> getPopupContainerType();
-
   @Override
   public void processRender(WebuiRequestContext context) throws Exception {
     context.getWriter()
@@ -105,9 +91,16 @@ public abstract class AbstractPopupAction extends UIContainer {
   }
 
   public final UIPopupContainer prepareForNewForm() throws Exception {
-    Class<? extends UIPopupContainer> containerType = getPopupContainerType();
-    UIPopupContainer popupContainer = createUIComponent(containerType, null, null);
-    
+    UIPopupContainer popupContainer = createUIComponent(UIPopupContainer.class, null, null);
+  	String id = "UIPopup";  
+  	try {
+  		id = getParent().getId();
+  		if(!id.contains("Portlet") || id.contains("Container")){
+  			id = getAncestorOfType(UIPortletApplication.class).getId().replaceFirst("Portlet", "");
+  			setId(id+"ChildPopupAction");
+  			getChild(UIPopupWindow.class).setId(id + "ChildPopupWindow") ;
+  		}
+    } catch (Exception e) {}
     // prepare new child popup
     AbstractPopupAction childPopupAction  = popupContainer.addChild(getClass(), null, getName() + "ChildPopupAction").setRendered(true);
     childPopupAction.getChild(UIPopupWindow.class).setId(getName() + "ChildPopupWindow") ;

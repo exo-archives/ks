@@ -16,8 +16,6 @@
  ***************************************************************************/
 package org.exoplatform.ks.common.webui;
 
-import org.exoplatform.ks.common.webui.AbstractPopupAction;
-import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -32,28 +30,14 @@ import org.exoplatform.webui.core.lifecycle.Lifecycle;
 
 @ComponentConfig(lifecycle = Lifecycle.class)
 public class UIPopupAction extends AbstractPopupAction {
-	private String ancestorName ;
+	public UIPopupAction() throws Exception {
+	  super();
+  }
+
   protected void afterProcessRender(WebuiRequestContext context) {
     String parentId = ((UIComponent) this.getParent()).getId();
     	context.getJavascriptManager()
       .addOnLoadJavascript("function(){eXo.ks.KSUtils.setMaskLayer('" + parentId
           + "');}");
   }
-  
-  @Override
-  protected String getAncestorName() {
-  	try {
-  		return ((UIComponent) this.getParent()).getId().replaceFirst("Portlet", "");
-    } catch (NullPointerException e) {
-	    return ancestorName;
-    }
-  }
-
-  public void setAncestorName(String ancestorName) {
-	  this.ancestorName = ancestorName;
-  }
-  
-  public Class<? extends UIPopupContainer> getPopupContainerType() {
-    return UIPopupContainer.class;
-  }
-}
+ }
