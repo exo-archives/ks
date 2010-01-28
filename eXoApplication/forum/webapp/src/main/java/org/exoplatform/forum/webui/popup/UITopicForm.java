@@ -771,10 +771,8 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 		fieldInput.setValue(values) ;
 	}
 	
-	static	public class AddValuesUserActionListener extends EventListener<UITopicForm> {
-		public void execute(Event<UITopicForm> event) throws Exception {
-			UITopicForm uiTopicForm = event.getSource() ;
-			String objctId = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static	public class AddValuesUserActionListener extends BaseEventListener<UITopicForm> {
+		public void onEvent(Event<UITopicForm> event, UITopicForm uiTopicForm, String objctId) throws Exception {
 			String[]array = objctId.split("/") ;
 			String childId = array[0] ;
 			if(!ForumUtils.isEmpty(childId)) {
@@ -789,10 +787,12 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
 				}
 				UIPopupContainer popupContainer = uiTopicForm.getAncestorOfType(UIPopupContainer.class) ;
-				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class).setRendered(true) ;
-				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600) ;
-				if(array[1].equals("0")) uiGroupSelector.setId("UIUserSelector");
-				else if(array[1].equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
+				UIGroupSelector uiGroupSelector = null ;
+				if(array[1].equals("1")){
+					uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 600, 0) ;
+				}	else if(array[1].equals("2")) {
+					uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
+				}
 				uiGroupSelector.setType(array[1]) ;
 				uiGroupSelector.setSelectedGroups(null) ;
 				uiGroupSelector.setComponent(uiTopicForm, new String[]{childId}) ;

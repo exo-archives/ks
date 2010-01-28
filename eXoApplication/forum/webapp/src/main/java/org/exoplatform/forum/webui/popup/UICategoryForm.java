@@ -376,9 +376,9 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
 			UIGroupSelector uiGroupSelector = null ;
 			if(type.equals("1")){
-				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
-			}	else if(type.equals("2")) {
 				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 600, 0) ;
+			}	else if(type.equals("2")) {
+				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
 			}
 			uiGroupSelector.setType(type) ;
 			uiGroupSelector.setSelectedGroups(null) ;

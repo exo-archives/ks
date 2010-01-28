@@ -496,9 +496,9 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIGroupSelector uiGroupSelector = null ;
 				if(array[1].equals("1")){
-					uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
-				}	else if(array[1].equals("2")) {
 					uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 600, 0) ;
+				}	else if(array[1].equals("2")) {
+					uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "GroupSelector", 600, 0) ;
 				}
 				uiGroupSelector.setType(array[1]) ;
 				uiGroupSelector.setSelectedGroups(null) ;
