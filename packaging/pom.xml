@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.exoplatform.platform</groupId>
       <artifactId>exo.platform.web.fck</artifactId>
-      <version>${org.exoplatform.platform.version>}</version>
+      <version>${org.exoplatform.platform.version}</version>
     </dependency>    
   </dependencies>
 </project>
