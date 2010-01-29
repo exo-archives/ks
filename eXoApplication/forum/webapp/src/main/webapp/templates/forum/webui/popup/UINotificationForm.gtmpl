@@ -1,0 +1,95 @@
+<div class="UINotificationForm">
+	<% uiform.begin() %>
+	<div class="UIFormTabPane">
+		<div class="UITabPane">
+			<div class="TabPaneContent">				
+				<div class="WorkingArea">
+				 	<div class="UIHorizontalTabs">
+				 		<div class="LeftHorizontalTabs">
+				 			<div class="RightHorizontalTabs">
+				 				<div class="CenterHorizontalTabs">
+									<div class="TabsContainer">
+									<%
+										String classCss = "SelectedTab" ; 
+										int i = 0;
+										for(String tabconten : uicomponent.getChildren()){ 
+											String link = "javascript:void(0);";
+											if(uiform.tabIsSelected(i)) classCss = "SelectedTab" ;
+											else {
+												classCss = "NormalTab" ;
+												link = uicomponent.event("SelectTab",""+i) ;
+											}
+									%> 
+											<div class="UITab NormalTabStyle">
+												<div class="$classCss">
+													<div class="LeftTab">
+														<div class="RightTab">
+															<div class="MiddleTab">
+																<a href="$link">
+																	<%=_ctx.appRes(uiform.id + ".label." + tabconten.id); %>
+																</a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+									<%
+											i++ ;
+										}
+									%>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="UIForm">
+						<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+							<% 
+							String display =	"block";
+							int j = 0;
+							for(tabconten in uiform.getChildren()){
+								if(uiform.tabIsSelected(j))display =	"block";
+								else {display = "none";}
+							%>
+									<div style="display:$display;" id="UITabContent" class="UITabContent">
+										<% 
+											uiform.renderChild(tabconten.id) ; 
+										%>
+									</div>
+							<%
+								j ++ ;
+								}
+							%>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>	
+		</div>	
+	</div>
+
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+					</td>
+				</tr>
+	 		</table> 
+		</div>
+	<%uiform.end()%>
+</div>

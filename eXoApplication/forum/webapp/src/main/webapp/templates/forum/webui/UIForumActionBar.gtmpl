@@ -15,7 +15,7 @@
 		jsmanager.addJavascript("eXo.forum.UIForumPortlet.visibleAction('"+uicomponent.id+"');") ;
 	}
 %>
-<div class="UIForumActionBar" id="$uicomponent.id">
+<div class="UIForumActionBar" id="UIForumActionBar">
 	<div class="LeftForumActionBar">
 		<div class="RightForumActionBar">
 			<div class="CenterForumActionBar">
@@ -23,24 +23,78 @@
 					<table>
 						<tr>
 							<td style="width:85%;" class="ControlButtonContainer">
-								<%String[] actions = ["EditProfile","OpenBookMark"];
+								<%String[] actions = [""];
 									if(isAdmin) { 
 										actions = ["AddCategory","AddForum","ManageModerator","OpenAdministration","EditProfile","OpenBookMark"];
+									} else {
+										actions = ["EditProfile","OpenBookMark"];
 									}
+									boolean isAdm = false;
 									for(action in actions){	
+										if(action.equals("OpenAdministration")){
+											isAdm = true;
+										} else isAdm = false;
 								%>
+
 									<div class="DefaultStyle ControlButton ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
-										<div class="LeftOverButton">
-											<div class="RightOverButton">
-												<div class="CenterOverButton">
-													<div class="Icon $action">
-														<a href="<%=uicomponent.event(action)%>" style="display:block;">
-															<span><%= _ctx.appRes("UIForumActionBar.label." + action); %></span>
-														</a>
+										<%if(isAdm){%>
+										<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">	
+										<%}%>
+											<div class="LeftOverButton">
+												<div class="RightOverButton">
+													<div class="CenterOverButton">
+														<div class="Icon $action">
+														<%if(isAdm){%>
+															<div class="DownArrow1Icon" style="padding-right:16px;">
+																<a href="javaScript: void(0);"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
+															</div>
+														<%} else {%>
+															<a href="<%=uicomponent.event(action)%>" style="display:block;">
+																<span><%= _ctx.appRes("UIForumActionBar.label." + action); %></span>
+															</a>
+														<%}%>
+														</div>
 													</div>
 												</div>
 											</div>
-										</div>
+										<%if(isAdm){%>
+											<div style="position:relative;">
+											<% /*Begin Popup Menu*/ %>
+												<div class="UIPopupCategory SearchPopup" style="display:none; left:0px; top:auto;">
+													<div class="UIRightClickPopupMenu" style="display:block;">
+														<div class="UIContextMenuContainer">
+															<div class="TopLeftRightClickPopupMenu">
+																<div class="TopRightRightClickPopupMenu">
+																	<div class="TopCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+															<div class="MiddleLeftRightClickPopupMenu">
+																<div class="MiddleRightRightClickPopupMenu">
+																	<div class="UIRightPopupMenuContainer" style="min-width:125px; width:125px">
+																	<% for(ac in ["SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", 
+																								"TopicTypeManager", "OpenIPBan", action, "ExportCategory", "ImportCategory"]){ %>
+																		<div class="ItemIcon $ac">
+																			<a class="MenuItem" href="<%=uicomponent.event(ac)%>" style="display:block">
+																				<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
+																			</a>
+																		</div>
+																	<% } %>
+																	</div>
+																</div>
+															</div>
+															<div class="BottomLeftRightClickPopupMenu">
+																<div class="BottomRightRightClickPopupMenu">
+																	<div class="BottomCenterRightClickPopupMenu"><span></span></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											<% /*End Popup Menu*/ %>
+											</div>
+											
+										</div>	
+										<%}%>
 									</div>
 									<div class="SeparatorLineForum ControlButton"><span></span></div>
 								<% }%>

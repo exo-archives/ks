@@ -1,0 +1,61 @@
+
+/**************************** UISortSettingForm ****************************************/
+.UIForumPortlet .UISortSettingForm {
+	padding: 15px 10px;
+}
+
+/**************************** UICensorKeywordForm ****************************************/
+.UIForumPortlet .UICensorKeywordForm {
+	padding: 15px 10px;
+}
+/**************************** UINotificationForm ****************************************/
+.UIForumPortlet .UINotificationForm {
+	padding: 15px 10px;
+}
+
+.UINotificationForm .InputContent{
+  float: left;
+}
+
+.UINotificationForm .InputContent input{
+  width: 150px;
+}
+
+.UINotificationForm .notifyEmailMoveTab .FieldComponent {
+  width: 450px;
+}
+
+.UINotificationForm .notifyEmailMoveTab .FieldComponent div{
+  float: left;
+  width: 430px;
+}
+
+.UINotificationForm #notifyEmailMoveTab{
+	padding: 10px 0px;
+}
+
+.UINotificationForm #notifyEmailMoveTab .UIFormGrid {
+	width: 100%;
+}
+
+.UINotificationForm .notifyEmailAddNewTab .FieldComponent {
+  width: 450px;
+}
+
+.UINotificationForm .notifyEmailAddNewTab .FieldComponent div{
+  float: left;
+  width: 430px;
+}
+
+.UINotificationForm #notifyEmailAddNewTab{
+	padding: 10px 0px;
+}
+
+.UINotificationForm #notifyEmailAddNewTab .UIFormGrid {
+	width: 100%;
+}
+
+#notifyEmail {
+  width: 400px;
+  height: 150px;
+}

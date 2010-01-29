@@ -19,7 +19,10 @@ package org.exoplatform.forum.webui;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.webui.popup.UIAutoPruneForm;
+import org.exoplatform.forum.webui.popup.UIBBCodeManagerForm;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
+import org.exoplatform.forum.webui.popup.UICensorKeywordForm;
 import org.exoplatform.forum.webui.popup.UIExportForm;
 import org.exoplatform.forum.webui.popup.UIForumAdministrationForm;
 import org.exoplatform.forum.webui.popup.UIForumForm;
@@ -27,8 +30,12 @@ import org.exoplatform.forum.webui.popup.UIForumUserSettingForm;
 import org.exoplatform.forum.webui.popup.UIImportForm;
 import org.exoplatform.forum.webui.popup.UIModerationForum;
 import org.exoplatform.forum.webui.popup.UIModeratorManagementForm;
+import org.exoplatform.forum.webui.popup.UINotificationForm;
+import org.exoplatform.forum.webui.popup.UIOpenIPBanForm;
 import org.exoplatform.forum.webui.popup.UIPrivateMessageForm;
 import org.exoplatform.forum.webui.popup.UIShowBookMarkForm;
+import org.exoplatform.forum.webui.popup.UISortSettingForm;
+import org.exoplatform.forum.webui.popup.UITopicTypeManagerForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.log.ExoLogger;
@@ -53,17 +60,25 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 		template =	"app:/templates/forum/webui/UIForumActionBar.gtmpl", 
 		events = {
 				@EventConfig(listeners = UIForumActionBar.AddCategoryActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.AddForumActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ManageModeratorActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.EditProfileActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
-				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class)
+				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.SortSettingActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.CensorKeywordActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.NotificationActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.BBCodeManagerActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.AutoPruneActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.TopicTypeManagerActionListener.class),
+				@EventConfig(listeners = UIForumActionBar.OpenIPBanActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UIForumActionBar extends UIContainer	{
 	private boolean hasCategory = false ;
 	private UserProfile userProfile ;
@@ -75,7 +90,6 @@ public class UIForumActionBar extends UIContainer	{
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
 	} 
 	
-	@SuppressWarnings("unused")
 	private UserProfile getUserProfile() throws Exception {
 		userProfile = ((UIForumPortlet)this.getParent()).getUserProfile() ;
 		return userProfile;
@@ -85,12 +99,10 @@ public class UIForumActionBar extends UIContainer	{
 		this.hasCategory = hasCategory ;
 	}
 	
-	@SuppressWarnings("unused")
 	private int getTotalJobWattingForModerator() throws Exception {
 		return forumService.getJobWattingForModeratorByUser(this.userProfile.getUserId());
 	}
 	
-	@SuppressWarnings("unused")
 	private long getNewMessage() throws Exception {
 		try {
 			String username = this.userProfile.getUserId();
@@ -123,7 +135,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 800, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
   static public class ModerationActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -150,7 +162,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 550, 380) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
 	static public class ImportCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -163,7 +175,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 400, 150) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
 	static public class ExportCategoryActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -177,7 +189,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 500, 400) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
 	static public class AddForumActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -215,7 +227,7 @@ public class UIForumActionBar extends UIContainer	{
 				popupAction.activate(popupContainer, 760, 350) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
 	static public class EditProfileActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -229,7 +241,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(popupContainer, 580, 480) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 
 	static public class OpenBookMarkActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -240,7 +252,7 @@ public class UIForumActionBar extends UIContainer	{
 			popupAction.activate(bookMarkForm, 520, 360) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
-	}	
+	}
 	
 	static public class OpenAdministrationActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
@@ -255,4 +267,78 @@ public class UIForumActionBar extends UIContainer	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
+
+	static public class SortSettingActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UISortSettingForm sortSettingForm = popupAction.createUIComponent(UISortSettingForm.class, null, null) ;
+			sortSettingForm.setInitForm();
+			popupAction.activate(sortSettingForm, 520, 220) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class CensorKeywordActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UICensorKeywordForm censorKeywordForm = popupAction.createUIComponent(UICensorKeywordForm.class, null, null) ;
+			censorKeywordForm.setInitForm();
+			popupAction.activate(censorKeywordForm, 520, 220) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class NotificationActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UINotificationForm notificationForm = popupAction.createUIComponent(UINotificationForm.class, null, null) ;
+			notificationForm.setInitForm();
+			popupAction.activate(notificationForm, 720, 450) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class BBCodeManagerActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UIBBCodeManagerForm codeManagerForm = popupAction.createUIComponent(UIBBCodeManagerForm.class, null, null) ;
+			popupAction.activate(codeManagerForm, 520, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class AutoPruneActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UIAutoPruneForm pruneForm = popupAction.createUIComponent(UIAutoPruneForm.class, null, null) ;
+			popupAction.activate(pruneForm, 520, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class TopicTypeManagerActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UITopicTypeManagerForm topicTypeManager  = popupAction.createUIComponent(UITopicTypeManagerForm.class, null, null) ;
+			popupAction.activate(topicTypeManager, 520, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
+	static public class OpenIPBanActionListener extends EventListener<UIForumActionBar> {
+		public void execute(Event<UIForumActionBar> event) throws Exception {
+			UIForumActionBar uiActionBar = event.getSource() ;
+			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
+			UIOpenIPBanForm openIPBanForm = popupAction.createUIComponent(UIOpenIPBanForm.class, null, null) ;
+			popupAction.activate(openIPBanForm, 520, 360) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+		}
+	}
+	
 }

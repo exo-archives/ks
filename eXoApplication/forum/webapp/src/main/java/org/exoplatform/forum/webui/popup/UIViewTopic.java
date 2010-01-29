@@ -58,7 +58,7 @@ import org.exoplatform.webui.form.UIForm;
  */
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIViewTopic.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
 		events = {
 			@EventConfig(listeners = UIViewTopic.ApproveActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIViewTopic.DeleteTopicActionListener.class, phase = Phase.DECODE),

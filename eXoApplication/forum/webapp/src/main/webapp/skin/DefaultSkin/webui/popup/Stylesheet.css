@@ -17,36 +17,8 @@
 @import url('UIViewPost/Stylesheet.css') ;
 @import url('UIShowBookMarkForm/Stylesheet.css') ;
 @import url('UIPrivateMessageForm/Stylesheet.css') ;
+@import url('UIForumAdministractionForm/Stylesheet.css') ;
 
-.UIForumAdministrationForm .InputContent{
-  float: left;
-}
-
-.UIForumAdministrationForm .InputContent input{
-  width: 150px;
-}
-
-.UIForumAdministrationForm .notifyEmailTab .FieldComponent {
-  width: 450px;
-}
-
-.UIForumAdministrationForm .notifyEmailTab .FieldComponent div{
-  float: left;
-  width: 430px;
-}
-
-.UIForumAdministrationForm #notifyEmailTab{
-	padding: 10px 0px;
-}
-
-.UIForumAdministrationForm #notifyEmailTab .UIFormGrid {
-	width: 100%;
-}
-
-#notifyEmail {
-  width: 400px;
-  height: 150px;
-}
 
 /**************************** UIAdvancedSearchForm ****************************************/
 .UIForumPortlet .UIAdvancedSearchForm {

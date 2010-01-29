@@ -102,6 +102,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 	public static final String NEW_IP_BAN_INPUT3 = "newIpBan3";
 	public static final String NEW_IP_BAN_INPUT4 = "newIpBan4";
 	public static final String SEARCH_IP_BAN = "searchIpBan";
+	
 	public static final String FIELD_FORUMSORTBY_INPUT = "forumSortBy" ;
 	public static final String FIELD_FORUMSORTBYTYPE_INPUT = "forumSortByType" ;
 	public static final String FIELD_TOPICSORTBY_INPUT = "topicSortBy" ;
@@ -159,11 +160,12 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
 		
 		UIFormStringInput activeAbout = initActiveAboutField();
 		UIFormRadioBoxInput setActive = initSetActiveField();
-	  UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
-    UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
 		
 		UIFormCheckBoxInput<Boolean> enableHeaderSubject = initEnableHeaderField();
 		UIFormStringInput headerSubject = initEnableHeaderSubjectField();
+	  UIFormWYSIWYGInput notifyEmail = initNotifyEmailField();
+    UIFormWYSIWYGInput notifyEmailMoved = initNotifyMoveField();
+		
 		
 		initBBCodesFields(bbcodeTab);
 		
@@ -251,8 +253,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
   }
 
   private UIFormWYSIWYGInput initNotifyMoveField() {
-    String value;
-		value = administration.getNotifyEmailMoved();
+    String value = administration.getNotifyEmailMoved();
 		if(ForumUtils.isEmpty(value)) value = this.getLabel("EmailToAuthorMoved");
 		UIFormWYSIWYGInput notifyEmailMoved = new UIFormWYSIWYGInput(FIELD_NOTIFYEMAILMOVED_TEXTAREA, FIELD_NOTIFYEMAILMOVED_TEXTAREA, "");
 		notifyEmailMoved.setToolBarName("Basic");
@@ -281,8 +282,7 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
   }
 
   private UIFormSelectBox initTopicSortDirectionField() {
-    List<SelectItemOption<String>> ls;
-		ls = new ArrayList<SelectItemOption<String>>() ;
+    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
 		ls.add(new SelectItemOption<String>(this.getLabel("descending"), "descending")) ;
 		UIFormSelectBox topicSortByType = new UIFormSelectBox(FIELD_TOPICSORTBYTYPE_INPUT, FIELD_TOPICSORTBYTYPE_INPUT, ls);
@@ -291,23 +291,19 @@ public class UIForumAdministrationForm extends BaseForumForm implements UIPopupC
   }
 
   private UIFormSelectBox initTopicSortField() {
-    String[] idLables;
-    List<SelectItemOption<String>> ls;
-    idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
+    String[] idLables = new String[]{"isLock", "createdDate", "modifiedDate", 
 				"lastPostDate", "postCount", "viewCount", "numberAttachments"}; 
-		ls = new ArrayList<SelectItemOption<String>>() ;
+    List<SelectItemOption<String>> ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("threadName"), "name")) ;
 		for (String string : idLables) {
 			ls.add(new SelectItemOption<String>(this.getLabel(string), string)) ;
 		}
-		
 		UIFormSelectBox topicSortBy = new UIFormSelectBox(FIELD_TOPICSORTBY_INPUT, FIELD_TOPICSORTBY_INPUT, ls);
 		topicSortBy.setValue(administration.getTopicSortBy()) ;
     return topicSortBy;
   }
 
   private UIFormSelectBox initForumSortDirectionField() {
- 
     List<SelectItemOption<String>> ls;
 		ls = new ArrayList<SelectItemOption<String>>() ;
 		ls.add(new SelectItemOption<String>(this.getLabel("ascending"), "ascending")) ;
