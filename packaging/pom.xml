@@ -57,5 +57,11 @@
       <artifactId>jetty-util</artifactId>
       <version>6.1.11</version>
     </dependency>
+    <!-- temporary until fck is released -->
+    <dependency>
+      <groupId>org.exoplatform.platform</groupId>
+      <artifactId>exo.platform.web.fck</artifactId>
+      <version>${org.exoplatform.platform.version>}</version>
+    </dependency>    
   </dependencies>
 </project>
