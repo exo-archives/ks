@@ -1,0 +1,75 @@
+<% 
+	import org.exoplatform.web.application.JavascriptManager;
+	def jsManager = _ctx.getRequestContext().getJavascriptManager() 
+%>
+<div class="UITopicTypeManagerForm UIBBCodeManagerForm">
+	<% uiform.begin() %>
+	<div class="AutoPruneContainer">
+		<div id="AutoPruneContainer" style="padding:0px 16px 0px 1px;">
+			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+				<thead>
+					<tr>
+						<th style="width:60px; text-align:center"><%=_ctx.appRes("UITopicTypeManagerForm.label.Icon");%></th>
+						<th style="text-align:left"><%=_ctx.appRes("UITopicTypeManagerForm.label.TypeName");%></th>
+						<th width="80px"><%=_ctx.appRes("UIForumPortlet.label.Action"); %></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
+			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
+				<tbody>
+				<% 
+						List topicTypes = uicomponent.getTopicTypes();
+						int k_ = 0; 
+						for(topicType in topicTypes) {
+							String topicTId = topicType.getId();
+							if(k_%2 == 0) classCssInbox = "whileRow";
+							else classCssInbox = "OddRow";
+							++k_;
+				%>
+					<tr>
+						<td style="width:60px; text-align:center"><div class="Icon16x16 <%=topicType.getIcon()%>" style="margin:auto"><span></span></div></td>
+						<td style="text-align:left"><%=topicType.getName()%></td>
+						<td width="80px">
+							<div class="ActionContainer" style="margin:0px auto; width:60px;">
+								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("EditTopicType", topicTId)%>">
+									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Edit"); %>" class="Icon16x16 EditIcon"><span></span></div>							
+								</div>
+								<div style="cursor:pointer; float:left; margin:4px;" onclick="<%=uiform.event("DeleteTopicType", topicTId)%>">
+									 <div title="<%=_ctx.appRes("UITopicTypeManagerForm.title.Delete"); %>" class="Icon16x16 DeleteIcon"><span></span></div>							
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</div>
+						</td>
+					</tr>
+				<%  } %>
+				</tbody>
+			</table>
+		</div>
+	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid');") ; %>
+		<div class="UIAction"> 
+			<table class="ActionContainer">
+				<tr>
+					<td align="center">
+					<% for(action in uicomponent.getActions()) { 
+						 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+						 String link = uicomponent.event(action) ;
+					%>
+							<div onclick="$link" class="ActionButton LightBlueStyle">
+								<div class="ButtonLeft">
+									<div class="ButtonRight">
+										<div class="ButtonMiddle">
+											<a href="javascript:void(0);">$actionLabel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						<%}%>
+					</td>
+				</tr>
+			</table> 
+		</div>
+	</div>
+	<%uiform.end()%>			
+</div>

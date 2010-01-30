@@ -25,13 +25,13 @@
 							<td style="width:85%;" class="ControlButtonContainer">
 								<%String[] actions = [""];
 									if(isAdmin) { 
-										actions = ["AddCategory","AddForum","ManageModerator","OpenAdministration","EditProfile","OpenBookMark"];
+										actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
 									} else {
 										actions = ["EditProfile","OpenBookMark"];
 									}
 									boolean isAdm = false;
 									for(action in actions){	
-										if(action.equals("OpenAdministration")){
+										if(action.equals("Administrations")){
 											isAdm = true;
 										} else isAdm = false;
 								%>
@@ -46,7 +46,7 @@
 														<div class="Icon $action">
 														<%if(isAdm){%>
 															<div class="DownArrow1Icon" style="padding-right:16px;">
-																<a href="javaScript: void(0);"><%=_ctx.appRes("UICategory.label.manageCategory");%></a>
+																<a href="javaScript: void(0);"><%=_ctx.appRes("UIForumActionBar.label.Administrations");%></a>
 															</div>
 														<%} else {%>
 															<a href="<%=uicomponent.event(action)%>" style="display:block;">
@@ -71,8 +71,7 @@
 															<div class="MiddleLeftRightClickPopupMenu">
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer" style="min-width:125px; width:125px">
-																	<% for(ac in ["SortSetting", "CensorKeyword", "Notification", "BBCodeManager", "AutoPrune", 
-																								"TopicTypeManager", "OpenIPBan", action, "ExportCategory", "ImportCategory"]){ %>
+																	<% for(ac in uicomponent.getActionMenu()){ %>
 																		<div class="ItemIcon $ac">
 																			<a class="MenuItem" href="<%=uicomponent.event(ac)%>" style="display:block">
 																				<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>

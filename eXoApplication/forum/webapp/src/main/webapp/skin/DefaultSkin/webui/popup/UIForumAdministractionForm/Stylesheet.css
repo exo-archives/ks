@@ -59,3 +59,78 @@
   width: 400px;
   height: 150px;
 }
+
+/**************************** BBCodeContainer ****************************************/
+.UIForumPortlet .UIBBCodeManagerForm {
+	padding: 15px 10px;
+}
+
+.UIBBCodeManagerForm .BBCodeContainer {
+	width: 100%;
+	height: 260px;
+	padding: 1px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.UIBBCodeManagerForm .BBCodeContainer .UIGrid{
+	*width: 97%;
+}
+
+.UIBBCodeManagerForm .UIAction {
+	padding: 15px 0px 5px 0px;
+}
+
+.UIForumPortlet .UIAddBBCodeForm {
+	padding: 8px;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .UIForm .HorizontalLayout{
+	padding: 8px;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .UIForm .UIFormGrid{
+	width: 100%;
+}
+
+.UIForumPortlet .UIAddBBCodeForm .UIForm .UIFormGrid{
+	width: 100%;
+}
+
+.UIAddBBCodeForm #Replacement {
+	width: 450px;
+	height: 120px;
+}
+
+.UIAddBBCodeForm #Description {
+	width: 450px;
+	height: 55px;
+}
+
+.UIAddBBCodeForm .FieldComponent #Example {
+	width: 320px;
+	height: 55px;
+}
+
+.UIAddBBCodeForm .FieldPriview {
+ padding-left: 60px;
+ line-height: 20px;
+}
+
+.UIAddBBCodeForm .FieldPriview #Example {
+	width: 500px;
+	height: 50px;
+}
+
+.UIAddBBCodeForm .PreviewContainer {
+	width: 500px;
+	min-height: 50px;
+	border:3px double #B7B7B7;
+	max-height: 150px;
+	overflow: auto;
+	background: #ffffff;
+}
+
+.UIAddBBCodeForm .FieldComponent .UIAction .ActionContainer{
+	margin: 8px 0px;
+}

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -156,10 +157,10 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 	      uiform.pruneSetting.setPeriodTime(uiform.convertDay(type, Long.parseLong(date_)));
 	      if(uiform.isActivate) {uiform.pruneSetting.setActive(true); uiform.isActivate = false;}
 	      uiform.getForumService().savePruneSetting(uiform.pruneSetting);
+	      UIAutoPruneForm autoPruneForm = uiform.getAncestorOfType(UIForumPortlet.class).
+	      	findFirstComponentOfType(UIAutoPruneForm.class);
+	      event.getRequestContext().addUIComponentToUpdateByAjax(autoPruneForm);
 	      uiform.cancelChildPopupAction();
-				/*UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
-				popupContainer.getChild(UIPopupAction.class).deActivate() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;*/
 			} catch (NumberFormatException e) {
 				String[] args = new String[]{uiform.getLabel(FIELD_INACTIVEDAY_INPUT)};
 				if(isInactiveDay)args = new String[]{uiform.getLabel(FIELD_JOBDAY_INPUT)};
@@ -187,9 +188,6 @@ public class UIAutoPruneSettingForm extends BaseForumForm implements UIPopupComp
 	static	public class CloseActionListener extends EventListener<UIAutoPruneSettingForm> {
 		public void execute(Event<UIAutoPruneSettingForm> event) throws Exception {
 			event.getSource().cancelChildPopupAction();
-//			UIPopupContainer popupContainer = uiform.getAncestorOfType(UIPopupContainer.class) ;
-//			popupContainer.getChild(UIPopupAction.class).deActivate() ;
-//			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer) ;
 		}
 	}
 }

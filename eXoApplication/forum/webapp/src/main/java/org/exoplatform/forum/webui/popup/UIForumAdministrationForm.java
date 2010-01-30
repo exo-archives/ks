@@ -75,6 +75,7 @@ import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 			@EventConfig(listeners = UIForumAdministrationForm.EditTopicTypeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.DeleteTopicTypeActionListener.class), 
 			@EventConfig(listeners = UIForumAdministrationForm.CancelActionListener.class, phase=Phase.DECODE),
+			
 			@EventConfig(listeners = UIForumAdministrationForm.SelectTabActionListener.class, phase=Phase.DECODE),
 			@EventConfig(listeners = UIForumAdministrationForm.PruneSettingActionListener.class),
 			@EventConfig(listeners = UIForumAdministrationForm.RunPruneActionListener.class),

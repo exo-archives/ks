@@ -124,16 +124,14 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			}
 			topicTypeForm.isEdit = false;
 			try {
-				topicTypeForm.cancelChildPopupAction();
 	      UITopicForm topicForm = forumPortlet.findFirstComponentOfType(UITopicForm.class);
 	      topicForm.addNewTopicType();
 	      event.getRequestContext().addUIComponentToUpdateByAjax(topicForm) ;
       } catch (Exception e) {
-      	e.printStackTrace();
-      	topicTypeForm.cancelChildPopupAction();
-      	UIForumAdministrationForm administrationForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIForumAdministrationForm.class);
-      	event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+      	UITopicTypeManagerForm typeManagerForm = topicTypeForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UITopicTypeManagerForm.class);
+      	event.getRequestContext().addUIComponentToUpdateByAjax(typeManagerForm) ;
       }
+      topicTypeForm.cancelChildPopupAction();
 		}
 	}
 }

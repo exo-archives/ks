@@ -16,15 +16,21 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.webui.BaseEventListener;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.Event.Phase;
+import org.exoplatform.webui.form.UIFormCheckBoxInput;
 
 /**
  * Created by The eXo Platform SAS
@@ -35,25 +41,89 @@ import org.exoplatform.webui.event.Event.Phase;
 
 @ComponentConfig(
 		lifecycle = UIFormLifecycle.class,
-		template = "app:/templates/forum/webui/popup/UIFormForum.gtmpl",
+		template = "app:/templates/forum/webui/popup/UIAutoPruneForm.gtmpl",
 		events = {
-			@EventConfig(listeners = UIAutoPruneForm.SaveActionListener.class),
+			@EventConfig(listeners = UIAutoPruneForm.PruneSettingActionListener.class),
+			@EventConfig(listeners = UIAutoPruneForm.RunPruneActionListener.class),
+			@EventConfig(listeners = UIAutoPruneForm.ActivatePruneActionListener.class),
 			@EventConfig(listeners = UIAutoPruneForm.CloseActionListener.class, phase = Phase.DECODE)
 		}
 )
+@SuppressWarnings("unused")
 public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
-
+	private List<PruneSetting> listPruneSetting = new ArrayList<PruneSetting>();
+	public UIAutoPruneForm() {
+  }
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	
-	static	public class SaveActionListener extends BaseEventListener<UIAutoPruneForm> {
-		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, String objId) throws Exception {
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-		}
-
+  @SuppressWarnings("unchecked")
+  private List<PruneSetting> getPruneSettings() throws Exception {
+		listPruneSetting = new ArrayList<PruneSetting>();
+		try {
+			UIFormCheckBoxInput<Boolean>isActiveBBcode;
+			for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
+				listPruneSetting.add(pruneSetting);
+				isActiveBBcode = getUIFormCheckBoxInput(pruneSetting.getId());
+				if(isActiveBBcode == null){
+					isActiveBBcode = new UIFormCheckBoxInput<Boolean>(pruneSetting.getId(), pruneSetting.getId(), false); 
+					addUIFormInput(isActiveBBcode);
+				}
+	    	isActiveBBcode.setChecked(pruneSetting.isActive());
+      }
+    } catch (Exception e) {
+      log.error("failed to get prune settings", e);
+    }
+		return listPruneSetting;
 	}
+	
+	private PruneSetting getPruneSetting(String pruneId) throws Exception {
+		for (PruneSetting prune : listPruneSetting) {
+	    if(prune.getId().equals(pruneId)) return prune;
+    }
+		return new PruneSetting();
+	}
+	
+  static public class RunPruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+    public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+      PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+      if (pruneSetting.getInActiveDay() == 0) {
+        warning("UIAutoPruneForm.sms.not-set-activeDay");
+        return;
+      } else {
+      	UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+        UIRunPruneForm pruneForm = uiForm.openPopup(popupContainer, UIRunPruneForm.class, 200, 0);
+        pruneForm.setPruneSetting(pruneSetting);
+      }
+    }
+  }
 
+  static	public class ActivatePruneActionListener extends BaseEventListener<UIAutoPruneForm> {
+	  public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			boolean isActive = uiForm.getUIFormCheckBoxInput(pruneId).isChecked();
+			if(pruneSetting.getInActiveDay() == 0) {
+				UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+				UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
+				pruneSettingForm.setPruneSetting(pruneSetting);
+				pruneSettingForm.setActivate(isActive);
+			} else {
+				pruneSetting.setActive(isActive);
+				uiForm.getForumService().savePruneSetting(pruneSetting);
+				refresh();
+			}
+		}
+	}
+	
+	static	public class PruneSettingActionListener extends BaseEventListener<UIAutoPruneForm> {
+		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, final String pruneId) throws Exception {
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIAutoPruneSettingForm pruneSettingForm = uiForm.openPopup(popupContainer, UIAutoPruneSettingForm.class, 525, 0) ;
+			PruneSetting pruneSetting = uiForm.getPruneSetting(pruneId);
+			pruneSettingForm.setPruneSetting(pruneSetting);
+		}
+	}
+	
 	static	public class CloseActionListener extends BaseEventListener<UIAutoPruneForm> {
 		public void onEvent(Event<UIAutoPruneForm> event, UIAutoPruneForm uiForm, String objId) throws Exception {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;

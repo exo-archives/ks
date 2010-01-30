@@ -10,7 +10,7 @@
 	String classCssInbox = "";
 %>
 <div class="UIFormInputWithActions UIForumAdministrationForm" style="*width:97%;">	
-	<% uiform.begin() %>	
+	<% uiform.begin() %>
 	<div class="UIFormTabPane">
 		<div class="UITabPane">
 			<div class="TabPaneContent">

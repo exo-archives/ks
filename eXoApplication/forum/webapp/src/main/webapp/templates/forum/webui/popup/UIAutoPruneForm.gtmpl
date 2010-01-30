@@ -1,0 +1,116 @@
+<% 
+	import org.exoplatform.forum.ForumUtils;
+	import org.exoplatform.web.application.JavascriptManager;
+	JavascriptManager jsManager = _ctx.getRequestContext().getJavascriptManager();
+%>
+<div class="UIAutoPruneForm UIBBCodeManagerForm">
+	<% uiform.begin() %>
+	<div class="AutoPruneContainer">
+		<div id="AutoPruneContainer" style="padding:0px 16px 0px 1px;">
+			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+				<thead>
+					<tr>
+						<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumPortlet.label.category"); %></th>
+						<th style="width:120px; text-align:center"><%=_ctx.appRes("UIForumPortlet.label.forum"); %></th>
+						<th width="40px"><%=_ctx.appRes("UIAutoPruneForm.label.Active"); %></th>
+						<th><%=_ctx.appRes("UIAutoPruneForm.label.LastRun"); %></th>
+						<th width="60px"><%=_ctx.appRes("UIForumPortlet.label.Action"); %></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="BBCodeContainer" id="TableContent" style="padding:1px;width:100%;">
+			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
+				<tbody>
+					<%  
+						List pruneSettings = uicomponent.getPruneSettings();
+						int t_ = 0;
+						String cateTemp = " ";
+						for(pruneSetting  in pruneSettings) {
+							String categoryName = pruneSetting.getCategoryName();
+							String forumName = pruneSetting.getForumName();
+							String pruneId = pruneSetting.getId();
+							String lastRun = "";
+							if(pruneSetting.getLastRunDate() != null){
+								lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
+							}
+							if(t_%2 == 0) classCssInbox = "whileRow";
+							else classCssInbox = "OddRow";
+							++t_;
+							if(categoryName.equals(cateTemp)) {
+					%>
+					<tr class="$classCssInbox">
+						<td style="width:120px; text-align:center">$categoryName</td>
+						<td style="width:120px; text-align:center">$forumName</td>
+						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
+						<td>$lastRun</td>
+						<td width="60px">
+							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+									 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+								</div>
+								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+									 <div title="Run" class="RunIcon"><span></span></div>							
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</div>
+						</td>
+					</tr>
+						<% } else { %>
+					<tr class="$classCssInbox">
+						<td style="width:120px; text-align:center"><b>$categoryName</b></td>
+						<td style="width:120px; text-align:center"> </td>
+						<td width="40px"> </td>
+						<td> </td>
+						<td width="60px"> </td>
+					</tr>
+							<% if(classCssInbox.equals("whileRow")) 
+										classCssInbox = "OddRow";
+								 else classCssInbox = "whileRow";
+								++t_;
+							%>
+					<tr class="$classCssInbox">
+						<td style="width:120px; text-align:center">$categoryName</td>
+						<td style="width:120px; text-align:center">$forumName</td>
+						<td width="40px"><div onclick="<%=uiform.event("ActivatePrune", pruneId)%>"><% uiform.renderField(pruneId); %></div></td>
+						<td>$lastRun</td>
+						<td width="60px">
+							<div class="ActionContainer" style="margin:0px auto; width:52px;">
+								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("PruneSetting", pruneId)%>">
+									 <div title="Prune Setting" class="PruneSettingIcon"><span></span></div>							
+								</div>
+								<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("RunPrune", pruneId)%>">
+									 <div title="Run" class="RunIcon"><span></span></div>							
+								</div>
+								<div style="clear:left;"><span></span></div>
+							</div>
+						</td>
+					</tr>
+						<%}
+							cateTemp = categoryName;
+						%>
+					<%} %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid');") ; %>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+					<div onclick="<%=uicomponent.event("Close");%>" class="ActionButton LightBlueStyle">
+						<div class="ButtonLeft">
+							<div class="ButtonRight">
+								<div class="ButtonMiddle">
+									<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close"); %></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

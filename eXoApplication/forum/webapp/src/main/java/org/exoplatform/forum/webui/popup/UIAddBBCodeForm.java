@@ -147,10 +147,10 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       }
       uiForm.cancelChildPopupAction();
 			try {
-				UIForumAdministrationForm administrationForm = uiForm.getAncestorOfType(UIForumPortlet.class)
-					.findFirstComponentOfType(UIForumAdministrationForm.class);
-				administrationForm.loadBBCodes() ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(administrationForm) ;
+				UIBBCodeManagerForm codeManagerForm = uiForm.getAncestorOfType(UIForumPortlet.class)
+					.findFirstComponentOfType(UIBBCodeManagerForm.class);
+				codeManagerForm.loadBBCodes() ;codeManagerForm.initCheckBoxActiveBBCode();
+				event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm) ;
       } catch (Exception e) {
       	e.printStackTrace();
       }

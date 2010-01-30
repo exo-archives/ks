@@ -1,0 +1,80 @@
+<%	
+	import org.exoplatform.ks.bbcode.api.BBCode;
+	import org.exoplatform.forum.ForumUtils;
+	List bbcodes = uiform.getListBBcode();
+%>
+<div class="UIBBCodeManagerForm">
+	<% uiform.begin() %>	
+	<div style="padding:0px 16px 0px 1px;">
+		<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+			<thead>
+				<tr>
+					<th style="width:80px; text-align:center"><%=_ctx.appRes("UIBBCodeManagerForm.label.TAG");%></th>
+					<th><%=_ctx.appRes("UIBBCodeManagerForm.label.Description");%></th>
+					<th width="40px"><%=_ctx.appRes("UIBBCodeManagerForm.label.Active");%></th>
+					<th width="60px"><%=_ctx.appRes("UIBBCodeManagerForm.label.Edit/Delete");%></th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div class="BBCodeContainer">
+		<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
+			<tbody>
+			<%
+				int l = 0;
+				for(bbcode in bbcodes) {
+					if(l%2 == 0) classCssInbox = "whileRow";
+					else classCssInbox = "OddRow";
+					++l;
+					String bbcodeId = bbcode.getId();
+			%>				
+				<tr class="$classCssInbox">
+					<td style="width:80px;text-align:center">
+						<span><%=bbcode.getTagName();%></span>
+						<% if(bbcode.isOption()) {%>
+						<span>(<%=_ctx.appRes("UIBBCodeManagerForm.label.Option");%>)</span>
+						<% } %>
+					</td>
+					<td style="text-align:left"><%=bbcode.getDescription();%></td>
+					<td style="width:40px;text-align:center"><% uiform.renderField(uiform.getIdCheckBox(bbcodeId)); %></td>
+					<td style="width:60px;text-align:center">
+						<div class="ActionContainer" style="margin:0px auto; width:42px;">
+							<div style="cursor:pointer; float:left; margin:2px;" onclick="<%=uiform.event("EditBBCode", bbcodeId)%>">
+								 <div title="Edit BBCode" class="Icon16x16 EditIcon"><span></span></div>							
+							</div>
+							<div style="cursor:pointer; float:left; margin:2px;" onclick="if(confirm('<%=_ctx.appRes("UIBBCodeManagerForm.msg.confirm-delete-BBCode")%>')){<%=uiform.event("DeleteBBCode", bbcodeId)%>;}">
+								 <div title="Delete BBCode" class="Icon16x16 DeleteIcon"><span></span></div>							
+							</div>
+							<div style="clear:left;"><span></span></div>
+						</div>
+					</td>
+				</tr>
+			<%} %>
+			</tbody>
+		</table>
+	</div>
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes("UIBBCodeManagerForm.action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+						<div onclick="$link" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);">$actionLabel</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					<%}%>
+				</td>
+			</tr>
+		</table> 
+	</div>
+				 
+	<%uiform.end()%>
+</div>
