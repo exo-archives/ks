@@ -153,11 +153,11 @@ public class UINotificationForm extends BaseForumForm implements UIPopupComponen
 			
 			String notifyEmailMoved = notifyEmailMoveTab.getChild(UIFormWYSIWYGInput.class).getValue() ;
 			if(notifyEmail == null || notifyEmail.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-				warning("UIForumAdministrationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
+				warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAIL_TEXTAREA));
 				return;
 			}
 			if(notifyEmailMoved == null || notifyEmailMoved.replaceAll("<p>", "").replaceAll("</p>", "").replaceAll("&nbsp;", "").trim().length() < 1){
-			  warning("UIForumAdministrationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
+			  warning("UINotificationForm.msg.mailContentInvalid", getLabel(FIELD_NOTIFYEMAILMOVED_TEXTAREA));
 				return;
 			}
 			uiForm.administration.setEnableHeaderSubject(enableHeaderSubject) ;

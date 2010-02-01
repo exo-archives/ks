@@ -1637,7 +1637,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	static	public class BanIPAllForumActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String ip) throws Exception {
 			if(!topicDetail.getForumService().addBanIP(ip)){
-				warning("UIForumAdministrationForm.sms.ipBanFalse", ip);
+				warning("UIBanIPForumManagerForm.sms.ipBanFalse", ip);
 				return;
 			}
 			refresh();

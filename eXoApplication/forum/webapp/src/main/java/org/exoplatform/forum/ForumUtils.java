@@ -346,7 +346,7 @@ public class ForumUtils {
 	public static String getDefaultMail(){
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
-		return res.getString("UIForumAdministrationForm.label.notifyEmailContentDefault");
+		return res.getString("UINotificationForm.label.notifyEmailContentDefault");
 	}
 	
 	public static boolean enableIPLogging(){

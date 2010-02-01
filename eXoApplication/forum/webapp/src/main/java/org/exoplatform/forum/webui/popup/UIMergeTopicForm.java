@@ -110,7 +110,7 @@ public class UIMergeTopicForm extends BaseUIForm implements UIPopupComponent {
 					String link = uiForm.getLink();
 					WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 					ResourceBundle res = context.getApplicationResourceBundle() ;
-					String emailContent = res.getString("UIForumAdministrationForm.label.EmailToAuthorMoved");
+					String emailContent = res.getString("UINotificationForm.label.EmailToAuthorMoved");
 					try {
 						for(Topic topic : uiForm.listTopic) {
 							if(topicMergeId.equals(topic.getId())) {continue ;}

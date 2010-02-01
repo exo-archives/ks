@@ -151,8 +151,7 @@ public class UIListTopicOld extends UIContainer {
 			UIListTopicOld listTopicOld = event.getSource() ;
 			String topicId = event.getRequestContext().getRequestParameter(OBJECTID)	;
 			Topic topic = listTopicOld.getTopicById(topicId) ;
-			UIForumAdministrationForm administrationForm = listTopicOld.getParent();
-			UIPopupContainer popupContainer = administrationForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIPopupContainer popupContainer = listTopicOld.getAncestorOfType(UIPopupContainer.class) ;
 			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
 			UIViewTopic viewTopic = popupAction.activate(UIViewTopic.class, 700) ;
 			viewTopic.setTopic(topic) ;
