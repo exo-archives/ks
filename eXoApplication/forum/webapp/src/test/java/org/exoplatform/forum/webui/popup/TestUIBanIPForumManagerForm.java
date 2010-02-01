@@ -31,6 +31,7 @@ public class TestUIBanIPForumManagerForm extends AbstractUIComponentTestCase<UIB
   public void testCheckIpAddress() throws Exception {
     assertNull(component.checkIpAddress(new String []{"aaa","bbb","ccc","ddd"}));
     assertNull(component.checkIpAddress(new String []{"255","255","255","255"}));
+    assertNull(component.checkIpAddress(new String []{"0","0","0","0"}));
     assertNull(component.checkIpAddress(new String []{"192","168","0"}));
     assertEquals("192.168.0.13", component.checkIpAddress(new String []{"192","168","0","13"}));
   }

@@ -13,7 +13,7 @@
 	boolean isShowIP = uicomponent.getHasEnableIPLogging() ;
 %>
 
-<div class="UIPageListPostByUser">
+<div class="UIPageListPostByUser" id="searchIpBan">
 	<% uiform.begin() %>
 		<div class="UITopicContainer">
 		 	<div class="UIForumContainer">
@@ -118,23 +118,18 @@
 			<table class="ActionContainer">
 				<tr>
 					<td align="center">
-	        <% for(action in uicomponent.getActions()) { 
-	        	 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
-	           String link = uicomponent.event(action) ;
-	        %>
-	        		<div onclick="$link" class="ActionButton LightBlueStyle">
-		      	  	<div class="ButtonLeft">
-		        	  	<div class="ButtonRight">
-		          	  	<div class="ButtonMiddle">
-			          	  	<a href="javascript:void(0);">$actionLabel</a>
-		          	  	</div>
-		            	</div>
-		          	</div>
-		        	</div>
-	          <%}%>
-	      	</td>
+						<div onclick="<%=uicomponent.event("Cancel")%>" class="ActionButton LightBlueStyle">
+							<div class="ButtonLeft">
+								<div class="ButtonRight">
+									<div class="ButtonMiddle">
+										<a href="javascript:void(0);"><%=_ctx.appRes("UIForumPortlet.label.Close");%></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
 				</tr>
-		  </table> 
+			</table> 
 		</div>
 	<%uiform.end()%>
 </div>

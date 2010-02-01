@@ -210,10 +210,8 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 		}
 	}
 
-	static	public class DeletePostLinkActionListener extends EventListener<UIPageListPostByIP> {
-		public void execute(Event<UIPageListPostByIP> event) throws Exception {
-			UIPageListPostByIP uiForm = event.getSource() ;
-			String postId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+	static	public class DeletePostLinkActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiForm, final String postId) throws Exception {
 			Post post = uiForm.getPostById(postId);
 			String[] path = post.getPath().split("/");
 			int length = path.length;
@@ -232,10 +230,8 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
-	static public class SetOrderByActionListener extends EventListener<UIPageListPostByIP> {
-		public void execute(Event<UIPageListPostByIP> event) throws Exception {
-			UIPageListPostByIP uiContainer = event.getSource();
-			String path = event.getRequestContext().getRequestParameter(OBJECTID)	;
+	static public class SetOrderByActionListener extends BaseEventListener<UIPageListPostByIP> {
+    public void onEvent(Event<UIPageListPostByIP> event, UIPageListPostByIP uiContainer, final String path) throws Exception {
 			if(!ForumUtils.isEmpty(uiContainer.strOrderBy)) {
 				if(uiContainer.strOrderBy.indexOf(path) >= 0) {
 					if(uiContainer.strOrderBy.indexOf("descending") > 0) {
@@ -255,11 +251,12 @@ public class UIPageListPostByIP  extends BaseUIForm implements UIPopupComponent 
 
 	static	public class CancelActionListener extends EventListener<UIPageListPostByIP> {
 		public void execute(Event<UIPageListPostByIP> event) throws Exception {
-			UIPageListPostByIP pageListPostByIP = event.getSource();
-			UIPopupContainer popupContainer = pageListPostByIP.getAncestorOfType(UIPopupContainer.class) ;
-			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class) ;
-			popupAction.deActivate() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+			UIPageListPostByIP listPostByIP = event.getSource();
+			listPostByIP.cancelChildPopupAction();
+			UIBanIPForumManagerForm form =listPostByIP.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBanIPForumManagerForm.class);
+			if(form != null) {
+				event.getRequestContext().addUIComponentToUpdateByAjax(form);
+			}
 		}
 	}
 

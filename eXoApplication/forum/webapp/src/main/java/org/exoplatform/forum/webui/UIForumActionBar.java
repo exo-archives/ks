@@ -25,6 +25,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.popup.UIAutoPruneForm;
 import org.exoplatform.forum.webui.popup.UIBBCodeManagerForm;
+import org.exoplatform.forum.webui.popup.UIBanIPForumManagerForm;
 import org.exoplatform.forum.webui.popup.UICategoryForm;
 import org.exoplatform.forum.webui.popup.UICensorKeywordForm;
 import org.exoplatform.forum.webui.popup.UIExportForm;
@@ -353,8 +354,10 @@ public class UIForumActionBar extends UIContainer	{
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
 			UIPopupAction popupAction = ((UIForumPortlet)uiActionBar.getParent()).getChild(UIPopupAction.class) ;
-			UIOpenIPBanForm openIPBanForm = popupAction.createUIComponent(UIOpenIPBanForm.class, null, null) ;
-			popupAction.activate(openIPBanForm, 520, 360) ;
+			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+			UIBanIPForumManagerForm openIPBanForm = popupContainer.addChild(UIBanIPForumManagerForm.class, null, null) ;
+			popupContainer.setId("BanIPForumManagerForm");
+			popupAction.activate(popupContainer, 450, 500) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}

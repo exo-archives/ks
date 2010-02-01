@@ -74,7 +74,7 @@ SearchIpBan.prototype.searchIpBan = function(keyword) {
 	keyword = keyword || 'all';
 	var url = '/portal/rest/ks/forum/filter/' + keyword + '/';
 	var forumId = this.uiTabContentNode.getAttribute("forumId");
-	if(forumId){
+	if(forumId != 'null'){
 		url = '/portal/rest/ks/forum/filterIpBanforum/' + forumId + '/' +keyword + '/';
 	}
 	//alert(url);
@@ -162,16 +162,13 @@ SearchIpBan.prototype.buildIpBanItemNode = function(ip) {
 	var fieldLabelNode = document.createElement('td');
 	fieldLabelNode.className = 'FieldLabel';
 	fieldLabelNode.innerHTML = ip;
-	
 	ipBanItemNode.appendChild(fieldLabelNode.cloneNode(true));
-		var forumId = this.uiTabContentNode.getAttribute("forumId");
-	if(forumId){
-		fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIBanIPForumManagerForm\',\'OpenPosts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
-				[<a style="color: red;" href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIBanIPForumManagerForm\',\'UnBan\',\'&objectId=' + ip + '\')">X</a>]';
-	} else {
-		fieldLabelNode.innerHTML = '[<a href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'Posts\',\'&objectId=' + ip + '\')">Posts</a>]&nbsp;\
-				[<a style="color: red;" href="javascript:eXo.webui.UIForm.submitEvent(\'forum#UIForumAdministrationForm\',\'UnBan\',\'&objectId=' + ip + '\')">X</a>]';
-	}
+	
+	fieldLabelNode.setAttribute("align", "center");
+	var link = this.uiTabContentNode.getAttribute("link");
+	link = String(link).replace("OBJIP", ip);
+	var link2 = String(link).replace("OpenPosts","UnBan");
+	fieldLabelNode.innerHTML = '[<a href="'+link+'">Posts</a>]&nbsp;[<a style="color: red;" href="'+link2+'">X</a>]';
 	ipBanItemNode.appendChild(fieldLabelNode);
 	return ipBanItemNode;
 }
