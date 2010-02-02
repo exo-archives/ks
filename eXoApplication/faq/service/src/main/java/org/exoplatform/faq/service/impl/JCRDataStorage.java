@@ -130,7 +130,7 @@ public class JCRDataStorage implements DataStorage {
 		try{
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  e.printStackTrace() ;
 		}
 		
 	}

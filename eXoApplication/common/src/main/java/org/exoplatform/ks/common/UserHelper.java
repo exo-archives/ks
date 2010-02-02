@@ -106,32 +106,46 @@ public class UserHelper {
 
   @SuppressWarnings("unchecked")
   public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
-  	List<User> users = getUserHandler().findUsersByGroup(groupId).getAll() ;
-  	for (User user : users) {
-  		if(user.getUserName().equals(userId)) return true ;
+    List<User> userList = new ArrayList<User>() ;
+  	PageList pageList = getUserHandler().findUsersByGroup(groupId) ;
+  	for(int i = 1; i < pageList.getAvailablePage(); i++) {
+  	  userList.clear() ;
+  	  userList.addAll(pageList.getPage(i)) ;
+  	  for (User user : userList) {
+        if(user.getUserName().equals(userId)) return true ;
+      }
   	}
+  	
   	return false ;
   }
 
-  @SuppressWarnings("unchecked")
-  public static List<User> getUserByGroupId(String groupId) throws Exception {
+  //@SuppressWarnings("unchecked")
+  /*public static List<User> getUserByGroupId(String groupId) throws Exception {
   	return getUserHandler().findUsersByGroup(groupId).getAll() ;
-  }
+  }*/
 
+  @SuppressWarnings("unchecked")
+  public static PageList getUserPageListByGroupId(String groupId) throws Exception {
+    return getUserHandler().findUsersByGroup(groupId) ;
+  }
+  
   public static User getUserByUserId(String userId) throws Exception {
   	return getUserHandler().findUserByName(userId) ;
   }
 
-  @SuppressWarnings("unchecked")
-  /**
+  /*@SuppressWarnings("unchecked")
+  **
    * @deprecated this method is danngerous and may not work with all OrganizationService impl
-   */
+   *
   public static List<User> getAllUser() throws Exception {
   	PageList pageList = getUserHandler().getUserPageList(10) ;
   	List<User>list = pageList.getAll() ;
   	return list;
+  }*/
+  
+  public static PageList getAllUserPageList() throws Exception {
+    return getUserHandler().getUserPageList(10);
   }
-
   
   public static String[] getUserGroups() throws Exception {
   	Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();

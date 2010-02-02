@@ -18,10 +18,13 @@ package org.exoplatform.faq.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jcr.Node;
 
+import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.UserHelper;
@@ -61,9 +64,26 @@ public class FAQServiceUtils {
 			if(str.indexOf("/") >= 0) {
 				if(str.indexOf(":") >= 0) { //membership
 					String[] array = str.split(":") ;
-					List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+					PageList userPageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;					
+					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
 					if(array[0].length() > 1){
-						for(User user: userList) {
+					  List<User> userList = new ArrayList<User>() ;
+					  for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+					    userList.clear() ;
+					    userList.addAll(userPageList.getPage(i)) ;
+				      for (User user : userList) {
+				        if(!users.contains(user.getUserName())){
+	                Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+	                for(Membership member : memberships){
+	                  if(member.getMembershipType().equals(array[0])) {
+	                    users.add(user.getUserName()) ;
+	                    break ;
+	                  }
+	                }           
+	              }
+				      }
+					  }
+						/*for(User user: userList) {
 							if(!users.contains(user.getUserName())){
 								Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
 								for(Membership member : memberships){
@@ -73,23 +93,44 @@ public class FAQServiceUtils {
 									}
 								}						
 							}
-						}
+						}*/
 					}else {
 						if(array[0].charAt(0)== 42) {
-							for(User user: userList) {
+						  List<User> userList = new ArrayList<User>() ;
+						  for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+						    userList.clear() ;
+	              userList.addAll(userPageList.getPage(i)) ;
+	              for (User user : userList) {
+	                if(!users.contains(user.getUserName())){
+	                  users.add(user.getUserName()) ;
+	                }
+	              }
+	            }
+							/*for(User user: userList) {
 								if(!users.contains(user.getUserName())){
 									users.add(user.getUserName()) ;
 								}
-							}
+							}*/
 						}
 					}
 				}else { //group
-					List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
-					for(User user: userList) {
+					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
+				  PageList userPageList = organizationService.getUserHandler().findUsersByGroup(str) ;
+				  List<User> userList = new ArrayList<User>() ;
+          for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+            userList.clear() ;
+            userList.addAll(userPageList.getPage(i)) ;
+            for (User user : userList) {
+              if(!users.contains(user.getUserName())){
+                users.add(user.getUserName()) ;
+              }
+            }
+          }
+					/*for(User user: userList) {
 						if(!users.contains(user.getUserName())){
 							users.add(user.getUserName()) ;
 						}
-					}
+					}*/
 				}
 			}else {//user
 				if(!users.contains(str)){

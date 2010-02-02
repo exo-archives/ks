@@ -107,11 +107,19 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
     List<String> children = new ArrayList<String>() ; 
     OrganizationService service = getApplicationComponent(OrganizationService.class) ;
     if(TYPE_USER.equals(type_)){
-      PageList userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId()) ;    
-      for(Object child : userPageList.getAll()){
+      PageList userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId()) ;
+      List<User> userList = new ArrayList<User>() ;
+      for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+        userList.clear() ;
+        userList.addAll(userPageList.getPage(i)) ;
+        for (User user : userList) {
+          children.add(user.getUserName()) ;
+        }
+      }
+      /*for(Object child : userPageList.getAll()){
       	String userName = ((User)child).getUserName() ;
         children.add(userName) ;
-      }
+      }*/
     } else if(TYPE_MEMBERSHIP.equals(type_)) {
       for(String child :  getListMemberhip()){
         children.add(child) ;

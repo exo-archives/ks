@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
@@ -135,9 +136,26 @@ public class ForumServiceUtils {
 			str = str.trim();
 			if (isMembershipExpression(str)) {
 				String[] array = str.split(":") ;
-				List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+				//List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
+				PageList pageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;
 				if(array[0].length() > 1){
-					for(User user: userList) {
+				  List<User> userList = new ArrayList<User>() ;
+			    for(int i = 1; i < pageList.getAvailablePage(); i++) {
+			      userList.clear() ;
+			      userList.addAll(pageList.getPage(i)) ;
+			      for (User user : userList) {
+			        if(!users.contains(user.getUserName())){
+	              Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
+	              for(Membership member : memberships){
+	                if(member.getMembershipType().equals(array[0])) {
+	                  users.add(user.getUserName()) ;
+	                  break ;
+	                }
+	              }           
+	            }
+			      }
+			    }
+					/*for(User user: userList) {
 						if(!users.contains(user.getUserName())){
 							Collection<Membership> memberships = organizationService.getMembershipHandler().findMembershipsByUser(user.getUserName()) ;
 							for(Membership member : memberships){
@@ -147,24 +165,45 @@ public class ForumServiceUtils {
 								}
 							}						
 						}
-					}
+					}*/
 				}else {
 					if(array[0].charAt(0)== 42) {
-						for(User user: userList) {
+					  List<User> userList = new ArrayList<User>() ;					  
+	          for(int i = 1; i < pageList.getAvailablePage(); i++) {
+	            userList.clear() ;
+	            userList.addAll(pageList.getPage(i)) ;
+	            for (User user : userList) {
+	              if(!users.contains(user.getUserName())){
+	                users.add(user.getUserName()) ;
+	              }
+	            }
+	          }
+						/*for(User user: userList) {
 							if(!users.contains(user.getUserName())){
 								users.add(user.getUserName()) ;
 							}
-						}
+						}*/
 					}
 				}			
 
 			} else if (isGroupExpression(str)) {
-				List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
-				for(User user: userList) {
+				//List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
+			  PageList pageList = organizationService.getUserHandler().findUsersByGroup(str) ;
+			  List<User> userList = new ArrayList<User>() ;
+        for(int i = 1; i < pageList.getAvailablePage(); i++) {
+          userList.clear() ;
+          userList.addAll(pageList.getPage(i)) ;
+          for (User user : userList) {
+            if(!users.contains(user.getUserName())){
+              users.add(user.getUserName()) ;
+            }
+          }
+        }
+				/*for(User user: userList) {
 					if(!users.contains(user.getUserName())){
 						users.add(user.getUserName()) ;
 					}
-				}
+				}*/
 			} else {
 				if(!users.contains(str)){
 					users.add(str) ;

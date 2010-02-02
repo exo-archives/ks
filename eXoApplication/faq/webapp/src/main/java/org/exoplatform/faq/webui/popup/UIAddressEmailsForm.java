@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.exoplatform.commons.utils.ObjectPageList;
+import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.webui.SelectItem;
 import org.exoplatform.faq.webui.SelectOption;
@@ -89,7 +90,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 		addUIFormInput(uiSelect) ;
 		uiPageList_ = new UIPageIterator() ;
 		try {
-			setUserList(UserHelper.getAllUser()) ;
+		  setUserList(UserHelper.getAllUserPageList()) ;
 		} catch (Exception e) {
 			log.error("Can not set users list, exception: " + e.getMessage());
 		}
@@ -168,14 +169,18 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 		return users ;
 	}
 	
-	public List<User> getListAllUsers() throws Exception {
+	/*public List<User> getListAllUsers() throws Exception {
 		List<User> users = UserHelper.getAllUser() ;
 		 return users ;
-	}
-	public void setUserList(List<User> userList) throws Exception {
+	}*/
+	/*public void setUserList(List<User> userList) throws Exception {
 		ObjectPageList objPageList = new ObjectPageList(userList, 10) ;
 		uiPageList_.setPageList(objPageList) ;
-	}
+	}*/
+	
+	public void setUserList(PageList userList) throws Exception {
+    uiPageList_.setPageList(userList) ;
+  }
 	
 	public void setAlreadyCheckedUser(List<User> alreadyCheckedUser) throws Exception {
 		for (User ct : alreadyCheckedUser) {
@@ -304,8 +309,8 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
 			UIAddressEmailsForm uiAddressForm = event.getSource();	
 			String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
-			if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getAllUser()) ;
-			else uiAddressForm.setUserList(UserHelper.getUserByGroupId(group)) ;
+			if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getAllUserPageList()) ;
+			else uiAddressForm.setUserList(UserHelper.getUserPageListByGroupId(group)) ;
 			uiAddressForm.selectedAddressId_ = group ;
 			uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null) ;
 			((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(uiAddressForm.selectedAddressId_) ;
@@ -337,7 +342,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 			UIAddressEmailsForm uiAddressForm = event.getSource() ;
 			String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
 			if(searchValue == null || searchValue.trim().length() < 1)
-				uiAddressForm.setUserList(UserHelper.getAllUser());
+				uiAddressForm.setUserList(UserHelper.getAllUserPageList());
 			else
 				uiAddressForm.searchUserProfileByKey(searchValue);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);					 
