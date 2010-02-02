@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform</groupId>
     <artifactId>exo.parent</artifactId>
-    <version>6</version>
+    <version>7</version>
   </parent>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
@@ -80,10 +80,15 @@
         <version>${org.exoplatform.core.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.exoplatform.comet</groupId>
-        <artifactId>exo-comet-service</artifactId>
-        <version>${org.exoplatform.comet.version}</version>
+        <groupId>org.exoplatform.platform</groupId>
+        <artifactId>exo.platform.commons.comet.service</artifactId>
+        <version>${org.exoplatform.platform.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.exoplatform.platform</groupId>
+        <artifactId>exo.platform.commons.comet.webapp</artifactId>
+        <version>${org.exoplatform.platform.version}</version>
+      </dependency>      
       <dependency>
         <groupId>org.exoplatform.portal</groupId>
         <artifactId>exo.portal.component.portal</artifactId>
@@ -238,10 +243,9 @@
     <org.exoplatform.core.version>2.3.0-Beta05</org.exoplatform.core.version>
     <org.exoplatform.ws.version>2.1.0-Beta05</org.exoplatform.ws.version>
     <org.exoplatform.jcr.version>1.12.0-Beta05</org.exoplatform.jcr.version>
-    <org.exoplatform.comet.version>2.1.0_gtn_Alpha01</org.exoplatform.comet.version>
     <org.exoplatform.portal.version>3.0.0-Beta05</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <org.exoplatform.platform.version>3.0.0-Beta04-SNAPSHOT</org.exoplatform.platform.version>
+    <org.exoplatform.platform.version>3.0.0-Beta05</org.exoplatform.platform.version>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>

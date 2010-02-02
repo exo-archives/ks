@@ -16,16 +16,16 @@ function getModule(params)
  
   	// COMET (required by KS)
   	// TODO, should be passed in params and have its own module .js definition 
-  var cometVersion = "${org.exoplatform.comet.version}";
+  var cometVersion = "${org.exoplatform.platform.version}";
   module.comet = {};
 
     
   module.comet.cometd =
-	new Project("org.exoplatform.comet", "exo-comet-webapp", "war", cometVersion).
+	new Project("org.exoplatform.platform", "exo.platform.commons.comet.webapp", "war", cometVersion).
     addDependency(new Project("org.mortbay.jetty", "cometd-bayeux", "jar", "6.1.11")).
 	addDependency(new Project("org.mortbay.jetty", "jetty-util", "jar", "6.1.11")).
 	addDependency(new Project("org.mortbay.jetty", "cometd-api", "jar", "0.9.20080221")).
-	addDependency(new Project("org.exoplatform.comet", "exo-comet-service", "jar", cometVersion));  	
+	addDependency(new Project("org.exoplatform.platform", "exo.platform.commons.comet.service", "jar", cometVersion));  	
 	module.comet.cometd.deployName = "cometd";
   // KS
 

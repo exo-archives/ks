@@ -20,14 +20,14 @@
           <defaultLibBundleDir>lib</defaultLibBundleDir>
           <modules>
             <webModule>
-              <groupId>org.exoplatform.comet</groupId>
-              <artifactId>exo-comet-webapp</artifactId>
+              <groupId>org.exoplatform.platform</groupId>
+              <artifactId>exo.platform.commons.comet.webapp</artifactId>
               <contextRoot>cometd</contextRoot>
               <bundleFileName>cometd.war</bundleFileName>
             </webModule>
             <jarModule>
-              <groupId>org.exoplatform.comet</groupId>
-              <artifactId>exo-comet-service</artifactId>
+              <groupId>org.exoplatform.platform</groupId>
+              <artifactId>exo.platform.commons.comet.service</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>
             <jarModule>
@@ -154,9 +154,9 @@
 -->
     <!-- HACK : cometd packaging should be provided by platform -->
     <dependency>
-      <groupId>org.exoplatform.comet</groupId>
-      <artifactId>exo-comet-webapp</artifactId>
-      <version>${org.exoplatform.comet.version}</version>
+      <groupId>org.exoplatform.platform</groupId>
+      <artifactId>exo.platform.commons.comet.webapp</artifactId>
+      <version>${org.exoplatform.platform.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -175,9 +175,8 @@
       <version>6.1.11</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.comet</groupId>
-      <artifactId>exo-comet-service</artifactId>
-      <version>${org.exoplatform.comet.version}</version>
+      <groupId>org.exoplatform.platform</groupId>
+      <artifactId>exo.platform.commons.comet.service</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.exoplatform.kernel</groupId>
