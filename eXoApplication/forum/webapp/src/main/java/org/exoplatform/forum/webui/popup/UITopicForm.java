@@ -320,7 +320,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 			fileUpload.setActionListener("") ;
 			fileUpload.setActionType(ActionData.TYPE_ATT) ;
 			fileUpload.setCssIconClass("AttachmentIcon ZipFileIcon") ;
-			String fileName = ForumUtils.getSizeFile((double)attachdata.getSize());
+			String fileName = ForumUtils.getSizeFile(attachdata.getSize());
 			fileName = attachdata.getName() + "("+ fileName +")" ;
 			fileUpload.setActionName(fileName) ;
 			fileUpload.setShowLabel(true) ;

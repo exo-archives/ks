@@ -135,17 +135,18 @@ public class ForumUtils {
 		return true ;
 	}
 	
-	public static String getSizeFile(double size) {
-		String unit = " Byte" ;
+	public static String getSizeFile(long size) {
+	  String sizeStr = String.valueOf(size) ;
+	  String unit = " Byte" ;
 		if(size >= 1024) {
-			size = size/1024 ;
+		  double convertedSize = (double)size/1024 ;
 			unit = " Kb" ;
+			if(convertedSize >= 1024) {
+			  convertedSize = convertedSize/1024 ;
+	      unit = " Mb" ;	      
+	    }
+			sizeStr = String.format("%.2g", convertedSize) ;
 		}
-		if(size >= 1024) {
-			size = size/1024 ;
-			unit = " Mb" ;
-		}
-		String sizeStr = String.format("%.2g%n", size) ;		
 		return (sizeStr + unit);
 	}
 	
