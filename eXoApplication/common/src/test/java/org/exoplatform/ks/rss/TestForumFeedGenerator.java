@@ -68,7 +68,7 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
   }
   
   
-  @Test
+  //@Test
   public void testItemRemoved() throws Exception {
     String path = feedFixture();
    
