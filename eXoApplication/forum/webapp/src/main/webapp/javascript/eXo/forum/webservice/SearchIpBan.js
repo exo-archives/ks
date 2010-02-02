@@ -72,12 +72,13 @@ SearchIpBan.prototype.searchIpBanTimeout = function() {
 SearchIpBan.prototype.searchIpBan = function(keyword) {
 	// Get data from service, url: /portal/rest/ks/forum/filter/{strIP}/
 	keyword = keyword || 'all';
-	var url = '/portal/rest/ks/forum/filter/' + keyword + '/';
+	var restPath = this.uiTabContentNode.getAttribute("restPath");
+	var url = restPath + '/ks/forum/filter/' + keyword + '/';
 	var forumId = this.uiTabContentNode.getAttribute("forumId");
 	if(forumId != 'null'){
-		url = '/portal/rest/ks/forum/filterIpBanforum/' + forumId + '/' +keyword + '/';
+		url = restPath + '/ks/forum/filterIpBanforum/' + forumId + '/' +keyword + '/';
 	}
-	//alert(url);
+//	alert(url);
 	this.url_ = url;
   var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
   this.ajaxWrapper(handler, url, 'GET');

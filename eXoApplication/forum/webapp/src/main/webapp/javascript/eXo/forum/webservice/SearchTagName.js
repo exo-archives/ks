@@ -149,8 +149,9 @@ SearchTagName.prototype.searchTagName = function(keyword) {
 	if(strs.length >= 1)keyword = strs[strs.length-1];
 	keyword = keyword || ' ';
 	var userAndTopicId = this.parentNode.getAttribute("userAndTopicId");
+	var restPath = this.parentNode.getAttribute("restPath");
 	if(userAndTopicId){
-		var url = '/portal/rest/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
+		var url = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
 		this.url_ = url;
 	  var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
 	  this.ajaxWrapper(handler, url, 'GET');

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -204,6 +205,16 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	public String getRSSLink(String cateId){
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
+	}
+	
+  private String getRestPath() throws Exception {
+		try {
+			ExoContainerContext exoContext = (ExoContainerContext)PortalContainer.getInstance().getComponentInstanceOfType(ExoContainerContext.class);
+	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+    } catch (Exception e) {
+	    log.error("Can not get portal name or rest context name, exception: ",e);
+    }
+		return "";
 	}
 	
 	public UserProfile getUserProfile() {

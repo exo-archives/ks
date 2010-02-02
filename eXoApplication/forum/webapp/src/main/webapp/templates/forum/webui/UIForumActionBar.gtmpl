@@ -9,9 +9,9 @@
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.loadScroll()', 1000);") ;
 	if(userProfile.getUserRole() <= 1) {
-		//jsmanager.importJavascript('eXo.core.JSON') ;
-		//jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
-		//jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
+		jsmanager.importJavascript('eXo.core.JSON') ;
+		jsmanager.importJavascript('eXo.forum.ForumTotalJob','/forum/javascript/') ;
+		jsmanager.addJavascript('eXo.forum.ForumTotalJob.init("'+uicomponent.userProfile.getUserId()+'","'+uicomponent.getUserToken()+'");') ;
 		jsmanager.addJavascript("eXo.forum.UIForumPortlet.visibleAction('"+uicomponent.id+"');") ;
 	}
 %>

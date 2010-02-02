@@ -11,7 +11,7 @@
 		String forumId = uicomponent.forumId.replaceAll("/",".") ;
 		String linkOp = uicomponent.event("OpenPosts", "OBJIP");
 	%>
-	<div id="UITabContent"  forumId="$forumId" link="$linkOp" class="UITabContent">
+	<div id="UITabContent" restPath="<%=uicomponent.getRestPath();%>" forumId="$forumId" link="$linkOp" class="UITabContent">
 		<div style="width:400px; margin:auto;">
 			<div class="UIQuickSearchForm" style="padding:10px 0px;">
 				<div style="float:left;">

@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
@@ -85,6 +87,17 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 	  isForum = true;
   }
 	
+	@SuppressWarnings("unused")
+  private String getRestPath() throws Exception {
+		try {
+			ExoContainerContext exoContext = (ExoContainerContext)PortalContainer.getInstance().getComponentInstanceOfType(ExoContainerContext.class);
+	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+    } catch (Exception e) {
+	    log.error("Can not get portal name or rest context name, exception: ",e);
+    }
+		return "";
+	}
+	
 	@SuppressWarnings({ "unused", "unchecked" })
   private List<String> getListIpBan() throws Exception {
 		List<String> listIpBan = new ArrayList<String>();
@@ -112,6 +125,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 	/**
 	 * Validates an IP Address. IP elements must be 4 integers between 0 and 255.
 	 * 255.255.255.255 is not a valid IP address;
+	 * 0.0.0.0 is not a valid IP address;
 	 * @param ipAdd elements of the address
 	 * @return null if the address is not valid
 	 */
