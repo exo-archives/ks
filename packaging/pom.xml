@@ -62,6 +62,7 @@
       <groupId>org.exoplatform.platform</groupId>
       <artifactId>exo.platform.web.fck</artifactId>
       <version>${org.exoplatform.platform.version}</version>
+      <type>war</type>
     </dependency>    
   </dependencies>
 </project>
