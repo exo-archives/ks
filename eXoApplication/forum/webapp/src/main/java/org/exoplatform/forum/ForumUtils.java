@@ -137,21 +137,16 @@ public class ForumUtils {
 	
 	public static String getSizeFile(double size) {
 		String unit = " Byte" ;
-		if(size >= 1000) {
+		if(size >= 1024) {
 			size = size/1024 ;
 			unit = " Kb" ;
 		}
-		if(size >= 1000) {
+		if(size >= 1024) {
 			size = size/1024 ;
 			unit = " Mb" ;
 		}
-		String str = String.valueOf(size) ;
-		int t = str.indexOf("."); 
-		if(t > 0) {
-			if(str.length() > (t+4))
-				str = str.substring(0,(t+4)) ;
-		}
-		return (str + unit);
+		String sizeStr = String.format("%.2g%n", size) ;		
+		return (sizeStr + unit);
 	}
 	
 	public static String getTimeZoneNumberInString(String string) {
