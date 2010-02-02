@@ -19,8 +19,10 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.container.PortalContainer;
@@ -110,7 +112,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
   
   private void searchUserProfileByKey(String keyWord) throws Exception {
 		try {
-			Map<String, User> mapObject = new HashMap<String, User>();
+			Set<User> users = new HashSet<User>();
 			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
 			keyWord = "*" + keyWord + "*" ;
 			Query q; 
@@ -118,28 +120,28 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 			q = new Query() ;
 			q.setUserName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by last name
 			q = new Query() ;
 			q.setLastName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by firstname
 			q = new Query() ;
 			q.setFirstName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by email
 			q = new Query() ;
 			q.setEmail(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 
-			ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(mapObject.values()), 10) ;
+			ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(users), 10) ;
 		    uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
 			//this.isViewSearchUser = false;
@@ -165,12 +167,9 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
   	List<User> users = FAQUtils.getAllUser() ;
   	 return users ;
   }
+  
   public void setUserList(List<User> userList) throws Exception {
-  	Map<String, User> mapUser = new HashMap<String, User>();
-  	for (User user : userList) {
-  		mapUser.put(user.getUserName(), user);
-		}
-  	ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(mapUser.values()), 10) ;
+  	ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(new HashSet<User>(userList)), 10) ;
     uiPageList_.setPageList(objPageList) ;
   }
   
