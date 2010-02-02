@@ -139,7 +139,7 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
 				mapObject.put(((User)obj).getUserName(), (User)obj);
 			}
 
-			ObjectPageList objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10) ;
+			ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(mapObject.values()), 10) ;
 		    uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
 			//this.isViewSearchUser = false;
@@ -166,7 +166,11 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
   	 return users ;
   }
   public void setUserList(List<User> userList) throws Exception {
-  	ObjectPageList objPageList = new ObjectPageList(userList, 10) ;
+  	Map<String, User> mapUser = new HashMap<String, User>();
+  	for (User user : userList) {
+  		mapUser.put(user.getUserName(), user);
+		}
+  	ObjectPageList objPageList = new ObjectPageList(new ArrayList<User>(mapUser.values()), 10) ;
     uiPageList_.setPageList(objPageList) ;
   }
   
@@ -302,12 +306,12 @@ public class UIAddressEmailsForm extends UIForm implements UIPopupComponent {
   static public class ChangeGroupActionListener extends EventListener<UIAddressEmailsForm> {
     public void execute(Event<UIAddressEmailsForm> event) throws Exception {
     	UIAddressEmailsForm uiAddressForm = event.getSource();  
-      String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
+      String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(USER_GROUP)).getValue() ;
       if(group.equals("all-group")) uiAddressForm.setUserList(FAQUtils.getAllUser()) ;
       else uiAddressForm.setUserList(FAQUtils.getUserByGroupId(group)) ;
       uiAddressForm.selectedAddressId_ = group ;
-      uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null) ;
-      ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).setValue(uiAddressForm.selectedAddressId_) ;
+      uiAddressForm.getUIStringInput(USER_GROUP).setValue(null) ;
+      ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(USER_GROUP)).setValue(uiAddressForm.selectedAddressId_) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm) ;
     }
   }
