@@ -109,7 +109,7 @@ public class UIGroupSelector extends UIGroupMembershipSelector implements UIPopu
 		if(TYPE_USER.equals(type_)){
 			PageList userPageList = service.getUserHandler().findUsersByGroup(this.getCurrentGroup().getId()) ;
 			List<User> userList = new ArrayList<User>() ;
-	    for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+	    for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
 	      userList.clear() ;
 	      userList.addAll(userPageList.getPage(i)) ;
 	      for (User user : userList) {

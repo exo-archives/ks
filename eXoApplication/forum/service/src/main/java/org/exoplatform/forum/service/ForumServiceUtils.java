@@ -42,6 +42,7 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;
+import org.exoplatform.services.security.MembershipEntry;
 
 /**
  * Created by The eXo Platform SAS
@@ -65,8 +66,8 @@ public class ForumServiceUtils {
 		IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
 		Identity identity = identityRegistry.getIdentity(userId);
 		if (identity == null) {
-			if (log.isDebugEnabled()) log.debug("Could not retrieve identity for " + userId + ". Permissions not granted.");
-			return false;
+		  if (log.isDebugEnabled()) log.debug("Could not retrieve identity for " + userId + ". Permissions not granted.");
+      return false;		  
 		}
 		
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || userGroupMembership[0].equals(" ")) return false;
@@ -133,6 +134,7 @@ public class ForumServiceUtils {
 				(userGroupMembership.length == 1 && userGroupMembership[0].equals(" "))) return users ; 
 		OrganizationService organizationService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
 		for(String str : userGroupMembership) {
+		  
 			str = str.trim();
 			if (isMembershipExpression(str)) {
 				String[] array = str.split(":") ;
@@ -140,7 +142,7 @@ public class ForumServiceUtils {
 				PageList pageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;
 				if(array[0].length() > 1){
 				  List<User> userList = new ArrayList<User>() ;
-			    for(int i = 1; i < pageList.getAvailablePage(); i++) {
+			    for(int i = 1; i <= pageList.getAvailablePage(); i++) {
 			      userList.clear() ;
 			      userList.addAll(pageList.getPage(i)) ;
 			      for (User user : userList) {
@@ -168,8 +170,9 @@ public class ForumServiceUtils {
 					}*/
 				}else {
 					if(array[0].charAt(0)== 42) {
+					  pageList = organizationService.getUserHandler().findUsersByGroup(array[1]) ;
 					  List<User> userList = new ArrayList<User>() ;					  
-	          for(int i = 1; i < pageList.getAvailablePage(); i++) {
+	          for(int i = 1; i <= pageList.getAvailablePage(); i++) {
 	            userList.clear() ;
 	            userList.addAll(pageList.getPage(i)) ;
 	            for (User user : userList) {
@@ -187,10 +190,9 @@ public class ForumServiceUtils {
 				}			
 
 			} else if (isGroupExpression(str)) {
-				//List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
 			  PageList pageList = organizationService.getUserHandler().findUsersByGroup(str) ;
 			  List<User> userList = new ArrayList<User>() ;
-        for(int i = 1; i < pageList.getAvailablePage(); i++) {
+			  for(int i = 1; i <= pageList.getAvailablePage(); i++) {
           userList.clear() ;
           userList.addAll(pageList.getPage(i)) ;
           for (User user : userList) {
@@ -205,7 +207,7 @@ public class ForumServiceUtils {
 					}
 				}*/
 			} else {
-				if(!users.contains(str)){
+			  if(!users.contains(str)){
 					users.add(str) ;
 				}
 			}

@@ -108,7 +108,7 @@ public class UserHelper {
   public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
     List<User> userList = new ArrayList<User>() ;
   	PageList pageList = getUserHandler().findUsersByGroup(groupId) ;
-  	for(int i = 1; i < pageList.getAvailablePage(); i++) {
+  	for(int i = 1; i <= pageList.getAvailablePage(); i++) {
   	  userList.clear() ;
   	  userList.addAll(pageList.getPage(i)) ;
   	  for (User user : userList) {
@@ -143,9 +143,9 @@ public class UserHelper {
   	return list;
   }*/
   
-  public static PageList getAllUserPageList() throws Exception {
+  /*public static PageList getAllUserPageList() throws Exception {
     return getUserHandler().getUserPageList(10);
-  }
+  }*/
   
   public static String[] getUserGroups() throws Exception {
   	Object[] objGroupIds = getGroupHandler().findGroupsOfUser(UserHelper.getCurrentUser()).toArray();

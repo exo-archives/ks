@@ -92,7 +92,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 		addUIFormInput(uiSelect) ;
 		uiPageList_ = new UIPageIterator() ;
 		try {
-		  setUserList(UserHelper.getAllUserPageList()) ;
+		  setUserList(UserHelper.getPageListUser()) ;
 		} catch (Exception e) {
 			log.error("Can not set users list, exception: " + e.getMessage());
 		}
@@ -311,7 +311,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 		public void execute(Event<UIAddressEmailsForm> event) throws Exception {
 			UIAddressEmailsForm uiAddressForm = event.getSource();	
 			String group = ((UIFormSelectBoxWithGroups)uiAddressForm.getChildById(UIAddressEmailsForm.USER_GROUP)).getValue() ;
-			if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getAllUserPageList()) ;
+			if(group.equals("all-group")) uiAddressForm.setUserList(UserHelper.getPageListUser()) ;
 			else uiAddressForm.setUserList(UserHelper.getUserPageListByGroupId(group)) ;
 			uiAddressForm.selectedAddressId_ = group ;
 			uiAddressForm.getUIStringInput(UIAddressEmailsForm.USER_GROUP).setValue(null) ;
@@ -344,7 +344,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 			UIAddressEmailsForm uiAddressForm = event.getSource() ;
 			String searchValue = ((UIFormStringInput)uiAddressForm.getChildById(UIAddressEmailsForm.USER_SEARCH)).getValue();
 			if(searchValue == null || searchValue.trim().length() < 1)
-				uiAddressForm.setUserList(UserHelper.getAllUserPageList());
+				uiAddressForm.setUserList(UserHelper.getPageListUser());
 			else
 				uiAddressForm.searchUserProfileByKey(searchValue);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiAddressForm);					 

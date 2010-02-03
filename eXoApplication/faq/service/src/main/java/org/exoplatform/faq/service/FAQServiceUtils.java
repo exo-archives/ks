@@ -68,7 +68,7 @@ public class FAQServiceUtils {
 					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(array[1]).getAll() ;
 					if(array[0].length() > 1){
 					  List<User> userList = new ArrayList<User>() ;
-					  for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+					  for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
 					    userList.clear() ;
 					    userList.addAll(userPageList.getPage(i)) ;
 				      for (User user : userList) {
@@ -97,7 +97,7 @@ public class FAQServiceUtils {
 					}else {
 						if(array[0].charAt(0)== 42) {
 						  List<User> userList = new ArrayList<User>() ;
-						  for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+						  for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
 						    userList.clear() ;
 	              userList.addAll(userPageList.getPage(i)) ;
 	              for (User user : userList) {
@@ -117,7 +117,7 @@ public class FAQServiceUtils {
 					//List<User> userList = organizationService.getUserHandler().findUsersByGroup(str).getAll() ;
 				  PageList userPageList = organizationService.getUserHandler().findUsersByGroup(str) ;
 				  List<User> userList = new ArrayList<User>() ;
-          for(int i = 1; i < userPageList.getAvailablePage(); i++) {
+          for(int i = 1; i <= userPageList.getAvailablePage(); i++) {
             userList.clear() ;
             userList.addAll(userPageList.getPage(i)) ;
             for (User user : userList) {
