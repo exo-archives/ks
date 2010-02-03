@@ -456,7 +456,45 @@
 }
 
 .UIForumPortlet .BanIpToolsIcon {
-  background: url('icons/BanIpToolsIcon.gif') no-repeat left center;
+  background: url('icons/OpenIPBanIcon.png') no-repeat left center;
+}
+
+.UIForumPortlet .ExportForumIcon {
+  background:url('icons/Export.gif') no-repeat left center;
+}
+
+.UIForumPortlet .ExportCategoryIcon {
+  background:url('icons/Export.gif') no-repeat left center;
+}
+
+.UIForumPortlet .ImportForumIcon {
+  background:url('icons/Import.gif') no-repeat left;
+}
+
+.UIForumPortlet .ImportCategoryIcon {
+  background:url('icons/Import.gif') no-repeat left;
+}
+
+.UIForumPortlet .OpenIPBanIcon {
+  background: url('icons/OpenIPBanIcon.png') no-repeat left center;
+}
+.UIForumPortlet .SortSettingIcon {
+  background: url('icons/SortSettingIcon.png') no-repeat left center;
+}
+.UIForumPortlet .CensorKeywordIcon {
+  background: url('icons/CensorKeywordIcon.png') no-repeat left center;
+}
+.UIForumPortlet .NotificationIcon {
+  background: url('icons/NotificationIcon.png') no-repeat left center;
+}
+.UIForumPortlet .BBCodeManagerIcon {
+  background: url('icons/BBCodeManagerIcon.png') no-repeat left center;
+}
+.UIForumPortlet .AutoPruneIcon {
+  background: url('icons/AutoPruneIcon.png') no-repeat left center;
+}
+.UIForumPortlet .TopicTypeManagerIcon {
+  background: url('icons/TopicTypeManagerIcon.png') no-repeat left center;
 }
 
 .UIForumPortlet .PrivateMessage {

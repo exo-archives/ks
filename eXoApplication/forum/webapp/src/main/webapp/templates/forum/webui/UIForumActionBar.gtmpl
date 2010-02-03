@@ -72,7 +72,7 @@
 																<div class="MiddleRightRightClickPopupMenu">
 																	<div class="UIRightPopupMenuContainer" style="min-width:125px; width:125px">
 																	<% for(ac in uicomponent.getActionMenu()){ %>
-																		<div class="ItemIcon $ac">
+																		<div class="ItemIcon ${ac}Icon">
 																			<a class="MenuItem" href="<%=uicomponent.event(ac)%>" style="display:block">
 																				<span><%= _ctx.appRes("UIForumActionBar.label." + ac); %></span>
 																			</a>
