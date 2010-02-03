@@ -120,7 +120,7 @@ public class TestForumUtils extends TestCase {
 
   	// case where file size is more 1Kb
 	  fileZise = 1000000;
-    assertEquals("976,6 Kb", ForumUtils.getSizeFile(fileZise));
+    assertEquals("976.6 Kb", ForumUtils.getSizeFile(fileZise));
   	
   	// case where file size is 1Mb
   	fileZise = 1048576;
@@ -128,10 +128,10 @@ public class TestForumUtils extends TestCase {
   	// case where file size is more 1Mb
   	
   	fileZise = 1200000;
-  	assertEquals("1,1 Mb", ForumUtils.getSizeFile(fileZise));
+  	assertEquals("1.1 Mb", ForumUtils.getSizeFile(fileZise));
   	
   	fileZise = 1300000;
-    assertEquals("1,2 Mb", ForumUtils.getSizeFile(fileZise));
+    assertEquals("1.2 Mb", ForumUtils.getSizeFile(fileZise));
   }
 
   public void testGetTimeZoneNumberInString() {
