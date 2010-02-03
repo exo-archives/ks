@@ -66,8 +66,9 @@ public class ForumServiceUtils {
 		IdentityRegistry identityRegistry = (IdentityRegistry) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(IdentityRegistry.class);
 		Identity identity = identityRegistry.getIdentity(userId);
 		if (identity == null) {
-		  if (log.isDebugEnabled()) log.debug("Could not retrieve identity for " + userId + ". Permissions not granted.");
-      return false;		  
+		  OrganizationService oService = (OrganizationService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(OrganizationService.class);
+		  Collection<MembershipEntry> memberships = oService.getMembershipHandler().findMembershipsByUser(userId) ;
+			identity = new Identity(userId, memberships) ;
 		}
 		
 		if(userGroupMembership == null || userGroupMembership.length <= 0 || userGroupMembership[0].equals(" ")) return false;
