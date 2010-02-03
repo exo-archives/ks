@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.JCRPageList;
@@ -117,7 +117,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 			String email = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIWatchToolsForm uiForm = event.getSource();
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			try {
 				String path = uiForm.path;
 				forumService.removeWatch(1, path, "/" + email) ;

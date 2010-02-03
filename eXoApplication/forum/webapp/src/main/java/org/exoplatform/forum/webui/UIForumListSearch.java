@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -146,7 +146,7 @@ public class UIForumListSearch extends UIContainer {
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			UserProfile userProfile = forumPortlet.getUserProfile();
 			boolean isRead = true;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			
 			String []id = path.split("/") ;
 			String cateId="", forumId="", topicId="", postId="";

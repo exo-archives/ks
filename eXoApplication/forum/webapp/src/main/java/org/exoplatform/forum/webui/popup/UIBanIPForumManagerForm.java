@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.JCRPageList;
@@ -90,7 +89,7 @@ public class UIBanIPForumManagerForm extends BaseForumForm implements UIPopupCom
 	@SuppressWarnings("unused")
   private String getRestPath() throws Exception {
 		try {
-			ExoContainerContext exoContext = (ExoContainerContext)PortalContainer.getInstance().getComponentInstanceOfType(ExoContainerContext.class);
+			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
 	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
     } catch (Exception e) {
 	    log.error("Can not get portal name or rest context name, exception: ",e);

@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui.popup;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -68,7 +68,7 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 	}
 
 	public UIViewUserProfile() {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 	}
 
   private boolean isAdmin(String userId) throws Exception {

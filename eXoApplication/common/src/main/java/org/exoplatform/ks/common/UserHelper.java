@@ -194,7 +194,11 @@ public class UserHelper {
   }
 
   static public String getCurrentUser() throws Exception {
-  	return Util.getPortalRequestContext().getRemoteUser();
+  	try {
+  		return Util.getPortalRequestContext().getRemoteUser();
+    } catch (Exception e) {
+	    return null;
+    }
   }
 
 }

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
@@ -228,7 +229,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 	      if(ids[i].indexOf(Utils.CATEGORY) >= 0) cateId = ids[i];
 	      if(ids[i].indexOf(Utils.FORUM) >= 0) forumId = ids[i];
       }
-			Category category = ((ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class)).getCategory(cateId);
+			Category category = ((ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class)).getCategory(cateId);
 			String[] privateUsers = category.getUserPrivate();
 			if(privateUsers.length > 0 && privateUsers[0].trim().length() > 0 && 
 					!ForumServiceUtils.hasPermission(privateUsers, uiTopicsTag.userProfile.getUserId())){

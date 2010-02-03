@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -78,7 +79,7 @@ public class UICategories extends UIContainer	{
 	private List<String> collapCategories = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	public UICategories() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
 	}
 	

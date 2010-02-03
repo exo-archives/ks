@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
@@ -61,7 +61,7 @@ public class UIPageListPostHidden extends UIForumKeepStickPageIterator implement
 	private List<Post> listPost = new ArrayList<Post>() ;
 	
 	public UIPageListPostHidden() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"UnHidden","Cancel"});
 	}
 

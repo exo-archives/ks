@@ -12,7 +12,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.nodetype.ConstraintViolationException;
 
 import org.exoplatform.commons.utils.MimeTypeResolver;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
@@ -101,7 +101,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 			String mimeType = mimeTypeResolver.getMimeType(fileName);
 			ByteArrayInputStream xmlInputStream = null;
 			String nodePath = null;
-			ForumService service = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService service = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			if(ForumUtils.isEmpty(importForm.categoryPath)){
 				nodePath = service.getForumHomePath();
 			} else {

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.SettingPortletPreference;
 import org.exoplatform.forum.service.Category;
@@ -148,7 +148,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 	private List<Category> getCategoryList() throws Exception {
 		List<Category> categoryList = new ArrayList<Category>();
 		try {
-			ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+			ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 			String userId = userProfile.getUserId();
 			if(userProfile.getUserRole() > 0) {
 				for (Category category : forumService.getCategories()) {
@@ -190,7 +190,7 @@ public class UISettingEditModeForm extends UIForm implements UIPopupComponent {
 		if (this.userProfile.getUserRole() > 0)
 			strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 		try {
-			ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+			ForumService forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 			forumList = forumService.getForums(categoryId, strQuery);
 		} catch (Exception e) {
 			forumList = new ArrayList<Forum>();

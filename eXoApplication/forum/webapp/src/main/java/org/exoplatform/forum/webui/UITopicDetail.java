@@ -209,7 +209,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
   private String getRestPath() throws Exception {
 		try {
-			ExoContainerContext exoContext = (ExoContainerContext)PortalContainer.getInstance().getComponentInstanceOfType(ExoContainerContext.class);
+			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
 	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
     } catch (Exception e) {
 	    log.error("Can not get portal name or rest context name, exception: ",e);

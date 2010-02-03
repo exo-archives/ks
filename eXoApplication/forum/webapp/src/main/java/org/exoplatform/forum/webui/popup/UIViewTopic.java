@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -74,7 +75,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	RenderHelper renderHelper = new RenderHelper();
 	public UIViewTopic() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
 	}
 	public void activate() throws Exception {	}

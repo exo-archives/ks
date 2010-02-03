@@ -18,7 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import javax.jcr.PathNotFoundException;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
@@ -82,7 +82,7 @@ public class UIRatingForm extends BaseUIForm implements UIPopupComponent {
 			temp[k] = userName ;
 			topic.setVoteRating(voteRating) ;
 			topic.setUserVoteRating(temp) ;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
 			try {
 				forumService.saveTopic(uiForm.categoryId, uiForm.forumId, topic, false, true, ForumUtils.getDefaultMail()) ;

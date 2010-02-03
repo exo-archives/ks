@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
@@ -74,7 +75,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	private UserProfile userProfile;
 	RenderHelper renderHelper = new RenderHelper();
 	public UIViewPost() {
-		forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+		forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 	}
 	
 	public void setActionForm(String[] actions) {

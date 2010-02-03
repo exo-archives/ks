@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
@@ -60,7 +60,7 @@ import org.exoplatform.webui.form.UIFormCheckBoxInput;
 		
 		public void setSelectCateId(List<String> listIdIsSelected) throws Exception {
 	    this.listIdIsSelected = listIdIsSelected;
-	    ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+	    ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink("", "");
     }
 

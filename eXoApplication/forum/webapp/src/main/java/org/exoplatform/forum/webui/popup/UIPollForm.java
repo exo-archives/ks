@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
@@ -269,7 +269,7 @@ public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 				poll.setUserVote(new String[] {}) ;
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 				try {
 					if(uiForm.isUpdate) {
 						poll.setId(uiForm.getId()) ;

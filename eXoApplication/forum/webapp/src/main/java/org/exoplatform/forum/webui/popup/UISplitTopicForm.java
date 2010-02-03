@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -68,7 +68,7 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 	private ForumService forumService = null;
 	public static final String FIELD_SPLITTHREAD_INPUT = "SplitThread" ;
 	public UISplitTopicForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addUIFormInput(new UIFormStringInput(FIELD_SPLITTHREAD_INPUT,FIELD_SPLITTHREAD_INPUT, null));
 		this.setActions(new String []{"Save", "Cancel"});
 	}

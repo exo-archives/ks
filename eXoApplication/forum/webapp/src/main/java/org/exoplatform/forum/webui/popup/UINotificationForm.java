@@ -22,7 +22,6 @@ import java.util.List;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.webui.BaseForumForm;
-import org.exoplatform.forum.webui.UICategory;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.webui.config.annotation.ComponentConfig;

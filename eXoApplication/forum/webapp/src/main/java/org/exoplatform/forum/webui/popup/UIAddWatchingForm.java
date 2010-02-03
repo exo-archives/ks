@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
@@ -139,7 +139,7 @@ public class UIAddWatchingForm	extends BaseUIForm	implements UIPopupComponent {
 				}
 			} 
 			if(values_.size() > 0 && !ForumUtils.isEmpty(path)) {
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 				try {
 					forumService.addWatch(1, path, values_, UserHelper.getCurrentUser()) ;
 				}catch (Exception e) {}

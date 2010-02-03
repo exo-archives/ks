@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumSearch;
@@ -118,7 +118,7 @@ public class UISearchForm extends UIForm implements UISelector {
 	private List<TopicType> listTT = new ArrayList<TopicType>();
 	public UISearchForm() throws Exception {
 		if(this.getId() == null)setId("UISearchForm");
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		UIFormStringInput searchValue = new UIFormStringInput(FIELD_SEARCHVALUE_INPUT, FIELD_SEARCHVALUE_INPUT, null) ;
 		UIFormStringInput searchUser = new UIFormStringInput(FIELD_SEARCHUSER_INPUT, FIELD_SEARCHUSER_INPUT, null) ;
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;

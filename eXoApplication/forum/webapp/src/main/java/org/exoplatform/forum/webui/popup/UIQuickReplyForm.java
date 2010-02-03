@@ -25,7 +25,7 @@ import javax.portlet.ActionResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumQuickReplyPortlet;
@@ -87,7 +87,7 @@ public class UIQuickReplyForm extends UIForm {
 		this.isModerator = isModerator;
 		this.userName = UserHelper.getCurrentUser() ;
 		try {
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.topic = forumService.getTopic(categoryId, forumId, topicId, userName) ;
     } catch (Exception e) {
     	topic = new Topic();
@@ -106,7 +106,7 @@ public class UIQuickReplyForm extends UIForm {
 	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
 			UIQuickReplyForm quickReply = event.getSource() ;
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			ForumAdministration forumAdministration = forumService.getForumAdministration() ;
 			UIFormTextAreaInput textAreaInput = quickReply.getUIFormTextAreaInput(FIELD_MESSAGE_TEXTAREA) ;
 			String message = textAreaInput.getValue() ;

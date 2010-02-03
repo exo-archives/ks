@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import javax.jcr.ItemExistsException;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -91,7 +91,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
   }
 	
 	public UIMoveTopicForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 	}
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}

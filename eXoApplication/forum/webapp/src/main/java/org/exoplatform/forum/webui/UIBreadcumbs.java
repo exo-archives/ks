@@ -22,7 +22,7 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.service.Category;
@@ -77,7 +77,7 @@ public class UIBreadcumbs extends UIContainer {
 	private String tooltipLink = Utils.FORUM_SERVICE;
 	private UserProfile userProfile ;
 	public UIBreadcumbs()throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		breadcumbs_.add(ForumUtils.FIELD_EXOFORUM_LABEL) ;
 		path_.add(FORUM_SERVICE) ;
 		addChild(UIQuickSearchForm.class, null, QUICK_SEARCH) ;

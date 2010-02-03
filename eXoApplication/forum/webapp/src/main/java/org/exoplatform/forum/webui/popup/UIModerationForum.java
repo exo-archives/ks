@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumSearch;
@@ -70,7 +70,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
   private JCRPageList pageList ;
 	private UIForumPageIterator pageIterator ;
 	public UIModerationForum() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		pageIterator = addChild(UIForumPageIterator.class, null, SEARCH_ITERATOR);
 		setActions(new String[]{"Close"});
 	}

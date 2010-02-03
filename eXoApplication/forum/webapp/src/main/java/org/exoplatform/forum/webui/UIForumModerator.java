@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -45,7 +45,7 @@ public class UIForumModerator extends UIContainer	{
 	ForumService forumService;
 	private long role = 3; 
 	public UIForumModerator() throws Exception { 
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 	}
 	
 	@SuppressWarnings("unused")

@@ -18,7 +18,7 @@ package org.exoplatform.forum.webui.popup;
 
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
 import org.exoplatform.forum.service.ForumService;
@@ -56,7 +56,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 	private String userName = "";
 	private boolean isRenderIterator = false ;
 	public UIListSentPrivateMessage() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListSentMessage") ;
 	}
 	@SuppressWarnings("unused")

@@ -16,7 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.ks.common.UserHelper;
@@ -55,7 +55,7 @@ public class UIPostRules extends UIContainer	{
 			try {
 				this.userProfile = this.getAncestorOfType(UIForumPortlet.class).getUserProfile() ;
       } catch (Exception e) {
-  			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+  			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
   			userProfile = forumService.getDefaultUserProfile(UserHelper.getCurrentUser(), "") ;
       }
 		}

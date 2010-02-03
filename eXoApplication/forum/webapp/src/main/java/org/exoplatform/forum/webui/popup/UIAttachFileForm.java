@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.BufferAttachment;
 import org.exoplatform.forum.service.ForumService;
@@ -140,7 +140,7 @@ public class UIAttachFileForm extends BaseForumForm implements UIPopupComponent 
 					uiForm.warning("UIAttachFileForm.msg.avatar-upload-long") ;
 					return ;
 				}
-				ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
+				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 				forumService.saveUserAvatar(UserHelper.getCurrentUser(), files.get(0));
 				UIForumUserSettingForm settingForm = forumPortlet.findFirstComponentOfType(UIForumUserSettingForm.class);
 				event.getRequestContext().addUIComponentToUpdateByAjax(settingForm) ;

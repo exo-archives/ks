@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPrivateMessage;
@@ -74,7 +74,7 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 	public static final String FIELD_REPLY_LABEL = "Reply" ;
 	public static final String FIELD_FORWARD_LABEL = "Forward" ;
 	public UIPrivateMessageForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		UIFormTextAreaInput SendTo = new UIFormTextAreaInput(FIELD_SENDTO_TEXTAREA, FIELD_SENDTO_TEXTAREA, null);
 		SendTo.addValidator(MandatoryValidator.class);
 		UIFormStringInput MailTitle = new UIFormStringInput(FIELD_MAILTITLE_INPUT, FIELD_MAILTITLE_INPUT, null);

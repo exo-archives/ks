@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Topic;
@@ -62,7 +62,7 @@ public class UIPageListTopicUnApprove extends UIForumKeepStickPageIterator imple
 	private String categoryId, forumId ;
 	private List<Topic> topics ;
 	public UIPageListTopicUnApprove() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		this.setActions(new String[]{"ApproveTopic","Cancel"});
 	}
 	public void activate() throws Exception {	}

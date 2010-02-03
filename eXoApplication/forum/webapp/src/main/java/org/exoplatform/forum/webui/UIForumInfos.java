@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
@@ -79,7 +79,7 @@ public class UIForumInfos extends UIContainer	{
 						if(listUser != null && listUser.length > 0)
 							isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
 						if(isLock || listUser == null || listUser.length == 0 || listUser[0].equals(" ")){
-							ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+							ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 							listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopicRole");
 							if(listUser != null && listUser.length > 0 && !listUser[0].equals(" ")){
 								isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;

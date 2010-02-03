@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
@@ -71,7 +71,7 @@ public class UISelectItemForum extends BaseForumForm implements UIPopupComponent
 			this.forumLinks = uiForumLinks.getForumLinks();
 		}
 		if(this.forumLinks ==	null || this.forumLinks.size() <= 0) {
-			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			this.forumLinks = forumService.getAllLink("", "");
 		}
 	}

@@ -16,17 +16,13 @@
  */
 package org.exoplatform.forum;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.exoplatform.forum.service.Utils;
-
 import junit.framework.TestCase;
+
+import org.exoplatform.forum.service.Utils;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>

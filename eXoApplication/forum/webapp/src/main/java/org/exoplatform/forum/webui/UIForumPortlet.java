@@ -27,7 +27,7 @@ import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
@@ -110,7 +110,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	private List<String>invisibleCategories = new ArrayList<String>();
 	private List<Watch> listWatches = null;
 	public UIForumPortlet() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIBreadcumbs.class, null, null) ;
 		boolean isRenderBar = !UserHelper.isAnonim() ;
 		addChild(UIForumActionBar.class, null, null).setRendered(isRenderBar);
@@ -121,7 +121,9 @@ public class UIForumPortlet extends UIPortletApplication {
 		addChild(UIForumLinks.class, null, null).setRendered(isJumpRendered) ;
 		UIPopupAction popupAction = addChild(UIPopupAction.class, null, "UIForumPopupAction") ;
 		popupAction.getChild(UIPopupWindow.class).setId("UIForumPopupWindow");
-		loadPreferences();
+		try {
+			loadPreferences();
+    } catch (Exception e) {}
 	}
 	
 	 public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
@@ -163,7 +165,7 @@ public class UIForumPortlet extends UIPortletApplication {
 	    super.processRender(app, context) ;
 	 }
 	
-	private void renderComponentByURL( WebuiRequestContext context) throws Exception {
+	 public void renderComponentByURL( WebuiRequestContext context) throws Exception {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = ((HttpServletRequest)portalContext.getRequest()).getRequestURL().toString();
 		url = (url.contains(Utils.FORUM_SERVICE))? url.substring(url.lastIndexOf(Utils.FORUM_SERVICE)): (
@@ -438,7 +440,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		else  return false;
 	}
 	
-	private boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
+	public boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
 		String[] viewer = cate.getUserPrivate();
 		if(userProfile == null) updateUserProfileInfo();
 		String userId = userProfile.getUserId();

@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.TopicType;
 import org.exoplatform.forum.webui.BaseForumForm;
@@ -106,7 +106,7 @@ public class UIAddTopicTypeForm extends BaseForumForm implements UIPopupComponen
 			while (typeName.indexOf("  ") >= 0) {
 				typeName = StringUtils.replace(typeName, "  ", " ");
 	    }
-			ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			if(!typeName.equalsIgnoreCase(topicType.getName()) && topicTypeForm.checkIsSameName(forumService, typeName)) {
 				topicTypeForm.warning("UIAddTopicTypeForm.smg.SameNameType") ;
 				return ;

@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.jcr.ItemExistsException;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
@@ -75,7 +75,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unused")
   private List<Category> getCategories() throws Exception {
-		ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		List<Category> categorys =	new ArrayList<Category>();
 		for (Category category :forumService.getCategories()) {
 			if( !category.getId().equals(categoryId_) ) {
@@ -98,7 +98,7 @@ public class UIMoveForumForm extends BaseUIForm implements UIPopupComponent {
 
 	static	public class SaveActionListener extends BaseEventListener<UIMoveForumForm> {
     public void onEvent(Event<UIMoveForumForm> event, UIMoveForumForm uiForm, final String categoryPath) throws Exception {
-			ForumService forumService =	(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+			ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			List<Forum> forums = uiForm.forums_ ;
 			String categoryId = categoryPath.substring((categoryPath.lastIndexOf("/")+1))	;
 			try {

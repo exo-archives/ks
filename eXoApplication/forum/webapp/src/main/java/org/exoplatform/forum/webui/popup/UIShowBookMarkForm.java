@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumPageList;
 import org.exoplatform.forum.service.ForumService;
@@ -59,7 +59,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 	UIForumPageIterator pageIterator ;
 	private List<String> bookMarks = new ArrayList<String>();
 	public UIShowBookMarkForm() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		pageIterator = addChild(UIForumPageIterator.class, null, BOOKMARK_ITERATOR);
 	}
 	

@@ -19,7 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
@@ -73,7 +73,7 @@ public class UIPageListPostByUser extends UIContainer {
 	private boolean hasEnableIPLogging = true;
 	private List<Post> posts = new ArrayList<Post>() ;
 	public UIPageListPostByUser() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		this.userName = null ;
 		addChild(UIForumPageIterator.class, null, "PageListPostByUser") ;
 	}

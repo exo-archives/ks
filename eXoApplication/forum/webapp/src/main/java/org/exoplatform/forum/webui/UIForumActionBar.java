@@ -16,10 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -90,7 +87,7 @@ public class UIForumActionBar extends UIContainer	{
 	 private static final Log log = ExoLogger.getLogger(UIForumActionBar.class);
 	
 	public UIForumActionBar() throws Exception {
-		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 	} 
 	
 	private UserProfile getUserProfile() throws Exception {
