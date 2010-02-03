@@ -16,6 +16,7 @@
  */
 package org.exoplatform.forum;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -113,29 +114,24 @@ public class TestForumUtils extends TestCase {
   	fileZise = 1023;
   	assertEquals("1023 Byte", ForumUtils.getSizeFile(fileZise));
 
-  	// case where file size is 1000 byte
-  	/*fileZise = 1000;
-  	assertEquals("0.976 Kb", ForumUtils.getSizeFile(fileZise));*/
-
-  	// case where file size is 1Kb
+  	  	// case where file size is 1Kb
   	fileZise = 1024;
-  	assertEquals("1.0 Kb", ForumUtils.getSizeFile(fileZise));
+  	assertEquals("1 Kb", ForumUtils.getSizeFile(fileZise));
 
   	// case where file size is more 1Kb
-  	/*fileZise = 1000000;
-  	System.out.println("ForumUtils.getSizeFile(fileZise) ==> " + ForumUtils.getSizeFile(fileZise)); 
-  	assertEquals("9.8 Kb", ForumUtils.getSizeFile(fileZise));*/
-
+	  fileZise = 1000000;
+    assertEquals("976,6 Kb", ForumUtils.getSizeFile(fileZise));
+  	
   	// case where file size is 1Mb
   	fileZise = 1048576;
-  	assertEquals("1.0 Mb", ForumUtils.getSizeFile(fileZise));
+  	assertEquals("1 Mb", ForumUtils.getSizeFile(fileZise));
   	// case where file size is more 1Mb
   	
   	fileZise = 1200000;
-  	assertEquals("1.1 Mb", ForumUtils.getSizeFile(fileZise));
+  	assertEquals("1,1 Mb", ForumUtils.getSizeFile(fileZise));
   	
   	fileZise = 1300000;
-    assertEquals("1.2 Mb", ForumUtils.getSizeFile(fileZise));
+    assertEquals("1,2 Mb", ForumUtils.getSizeFile(fileZise));
   }
 
   public void testGetTimeZoneNumberInString() {

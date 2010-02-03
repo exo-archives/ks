@@ -20,6 +20,7 @@
 
 package org.exoplatform.forum;
 
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,15 +139,16 @@ public class ForumUtils {
 	public static String getSizeFile(long size) {
 	  String sizeStr = String.valueOf(size) ;
 	  String unit = " Byte" ;
-		if(size >= 1024) {
-		  double convertedSize = (double)size/1024 ;
-			unit = " Kb" ;
-			if(convertedSize >= 1024) {
-			  convertedSize = convertedSize/1024 ;
-	      unit = " Mb" ;	      
-	    }
-			sizeStr = String.format("%.2g", convertedSize) ;
-		}
+	  if(size >= 1024) {
+      DecimalFormat df = new DecimalFormat("#.#");
+      double convertedSize = (double)size/1024 ;
+      unit = " Kb" ;
+      if(convertedSize >= 1024) {
+        convertedSize = convertedSize/1024 ;
+        unit = " Mb" ;        
+      }
+      sizeStr = df.format(convertedSize) ;
+    }
 		return (sizeStr + unit);
 	}
 	
