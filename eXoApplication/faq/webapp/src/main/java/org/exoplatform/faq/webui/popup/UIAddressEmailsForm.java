@@ -19,8 +19,10 @@ package org.exoplatform.faq.webui.popup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
@@ -119,7 +121,7 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 	
 	private void searchUserProfileByKey(String keyWord) throws Exception {
 		try {
-			Map<String, User> mapObject = new HashMap<String, User>();
+			Set<User> users = new HashSet<User>();
 			OrganizationService service = this.getApplicationComponent(OrganizationService.class) ;
 			keyWord = "*" + keyWord + "*" ;
 			Query q; 
@@ -127,29 +129,29 @@ public class UIAddressEmailsForm extends BaseUIForm implements UIPopupComponent 
 			q = new Query() ;
 			q.setUserName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by last name
 			q = new Query() ;
 			q.setLastName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by firstname
 			q = new Query() ;
 			q.setFirstName(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 			// search by email
 			q = new Query() ;
 			q.setEmail(keyWord) ;
 			for(Object obj : service.getUserHandler().findUsers(q).getAll()){
-				mapObject.put(((User)obj).getUserName(), (User)obj);
+				users.add((User)obj);
 			}
 
-			ObjectPageList objPageList = new ObjectPageList(Arrays.asList(mapObject.values().toArray()), 10) ;
-				uiPageList_.setPageList(objPageList) ;
+			ObjectPageList objPageList = new ObjectPageList((new ArrayList<User>(users)), 10) ;
+			uiPageList_.setPageList(objPageList) ;
 		} catch (Exception e) {
 			log.error("Can not search user by key, exception: " + e.getMessage());
 		}
