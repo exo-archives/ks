@@ -101,8 +101,7 @@ public class UIBreadcumbs extends UIContainer {
 	}
 
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
-		@SuppressWarnings("static-access")
-    public void execute(Event<UIBreadcumbs> event) throws Exception {
+		public void execute(Event<UIBreadcumbs> event) throws Exception {
 			UIBreadcumbs uiBreadcums = event.getSource() ;			
 			String paths = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIFAQPortlet faqPortlet = uiBreadcums.getAncestorOfType(UIFAQPortlet.class) ;
@@ -117,7 +116,9 @@ public class UIBreadcumbs extends UIContainer {
 				sProvider.close();
 			} else {
 				uiQuestions.setPath(paths) ;
-				categoryId = paths.substring(paths.lastIndexOf("/")+1, paths.length()) ;
+				if(paths.indexOf("Category") > 0){
+					categoryId = paths.substring(paths.lastIndexOf("Category")).replaceAll("/", "") ;
+				}
 				try {
 					uiQuestions.setCategories(categoryId) ;
 				} catch (Exception e) {
