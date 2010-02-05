@@ -219,8 +219,9 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 				UIPopupContainer popupContainer = messageForm.getAncestorOfType(UIPopupContainer.class) ;
 				UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
 				UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 500) ;
-				if(type.equals("0")) uiGroupSelector.setId("UIUserSelector");
-				else if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
+				if(type.equals("1")) uiGroupSelector.setId("UIMemberShipSelector");
+				else if(type.equals("2")) uiGroupSelector.setId("GroupSelector");
+				else uiGroupSelector.setId("UIUserSelector");
 				uiGroupSelector.setType(type) ;
 				uiGroupSelector.setSelectedGroups(null) ;
 				uiGroupSelector.setComponent(messageForm, new String[]{FIELD_SENDTO_TEXTAREA}) ;
