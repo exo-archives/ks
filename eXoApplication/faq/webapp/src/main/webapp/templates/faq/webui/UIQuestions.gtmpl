@@ -241,7 +241,6 @@ jsmanager.addCustomizedOnLoadScript("setTimeout('eXo.faq.UIFAQPortlet.loadAction
                     questionActions = uicomponent.getActionQuestionWithUser();
                 }
                 List listQuestion = uicomponent.getListQuestion();
-                System.out.println("\n\n======>listQS: " + listQuestion.size());
                 String questionContent = new String();
                 int questionId = 0 ;
 
