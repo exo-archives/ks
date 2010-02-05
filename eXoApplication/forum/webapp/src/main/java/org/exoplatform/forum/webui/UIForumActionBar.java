@@ -17,6 +17,7 @@
 package org.exoplatform.forum.webui;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
@@ -66,7 +67,6 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 				@EventConfig(listeners = UIForumActionBar.OpenBookMarkActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.PrivateMessageActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ModerationActionListener.class),
-//				@EventConfig(listeners = UIForumActionBar.OpenAdministrationActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ImportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.ExportCategoryActionListener.class),
 				@EventConfig(listeners = UIForumActionBar.SortSettingActionListener.class),
@@ -121,10 +121,13 @@ public class UIForumActionBar extends UIContainer	{
 	
   public String getUserToken()throws Exception {
     try {
-  	ContinuationService continuation = getApplicationComponent(ContinuationService.class);;
-    return continuation.getUserToken(userProfile.getUserId());
+	  	//ContinuationService continuation = (ContinuationService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
+    	ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
+    	System.out.println("=====>" + continuation);
+	  	System.out.println("\n\n Token: " + continuation.getUserToken(userProfile.getUserId()));
+	    return continuation.getUserToken(userProfile.getUserId());
     } catch (Exception e) {
-//      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
+      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
     }
     return "";
   }
