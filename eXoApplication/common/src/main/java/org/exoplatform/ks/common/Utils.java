@@ -16,11 +16,23 @@
  */
 package org.exoplatform.ks.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Value;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
@@ -28,6 +40,7 @@ import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.w3c.dom.Document;
 
 
 /**
@@ -83,7 +96,64 @@ public class Utils {
     }
   	return list.toArray(new String[]{});
   }
-
+  
+  static public String generateCheckSum(byte[] b) throws Exception {
+    try{
+      MessageDigest md = MessageDigest.getInstance("SHA1");
+      md.update(b) ;
+      byte[] mdbytes = md.digest();
+   
+      //convert the byte to hex format
+      StringBuffer sb = new StringBuffer("");
+      for (int i = 0; i < mdbytes.length; i++) {
+        sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+      }
+       return sb.toString() ;
+    }catch(Exception e) {
+      log.warn("Can not generate checksum for exporting data") ;
+      return "" ;
+    }
+  }
+  
+  static public File getXMLFile(ByteArrayOutputStream bos, String appName, String objectType, Date createDate, String fileName) throws Exception {
+    byte[] byteData = bos.toByteArray() ;
+    
+    DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();   
+    InputStream is  = new ByteArrayInputStream(byteData) ;
+    Document document = docBuilder.parse(is) ;
+    
+    org.w3c.dom.Attr namespace = document.createAttribute("xmlns:exoks") ;
+    namespace.setValue("http://www.exoplatform.com/exoks/2.0") ;
+    document.getFirstChild().getAttributes().setNamedItem(namespace) ;
+    
+    org.w3c.dom.Attr attName = document.createAttribute("exoks:applicationName") ;
+    attName.setValue(appName) ;
+    document.getFirstChild().getAttributes().setNamedItem(attName) ;
+    
+    org.w3c.dom.Attr dataType = document.createAttribute("exoks:objectType") ;
+    dataType.setValue(objectType) ;
+    document.getFirstChild().getAttributes().setNamedItem(dataType) ;
+    
+    org.w3c.dom.Attr exportDate = document.createAttribute("exoks:exportDate") ;
+    exportDate.setValue(createDate.toString()) ;
+    document.getFirstChild().getAttributes().setNamedItem(exportDate) ;
+    
+    org.w3c.dom.Attr checkSum = document.createAttribute("exoks:checkSum") ;
+    checkSum.setValue(generateCheckSum(byteData)) ;
+    document.getFirstChild().getAttributes().setNamedItem(checkSum) ;
+    
+    DOMSource source = new DOMSource(document.getFirstChild()) ;
+    
+    File file = new File(fileName + ".xml");
+    file.deleteOnExit();
+    file.createNewFile();
+    StreamResult result = new StreamResult(file) ;
+    TransformerFactory tFactory = TransformerFactory.newInstance();
+    Transformer transformer = tFactory.newTransformer();
+    transformer.transform(source, result) ;
+    return file ;
+  }
+  
   public static String convertCodeHTML(String s) {
   	if (s == null || s.length() <= 0)
   		return "";

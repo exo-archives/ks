@@ -51,6 +51,12 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -95,6 +101,7 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
+import org.w3c.dom.Document;
 
 /**
  * Created by The eXo Platform SARL
@@ -2979,24 +2986,9 @@ public class JCRDataStorage implements DataStorage {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
     File file = null;
     List<File> listFiles = new ArrayList<File>();
-    //Writer writer = null;
-    //if(categoryId != null){
-	    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
-	    file = new File(categoryNode.getName() + ".xml");
-	    file.deleteOnExit();
-    	file.createNewFile();
-    	Writer writer = null;
-    	try {
-    	writer = new BufferedWriter(new FileWriter(file));
-	    writer.write(bos.toString());
-    	listFiles.add(file);
-    	} finally {
-    	  if (writer != null) {
-    	     writer.close();
-    	  }
-    	}
-
-    // tao file zip:
+    Calendar date = GregorianCalendar.getInstance() ;
+    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
+  	listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
     ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
     try {
       int byteReads;

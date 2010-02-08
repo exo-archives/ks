@@ -59,6 +59,10 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
@@ -132,6 +136,7 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 
 
 /**
@@ -6436,23 +6441,26 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	protected List<File> createCategoryFiles(List<String> objectIds, SessionProvider sessionProvider) throws Exception{
 		Node categoryHome = getCategoryHome(sessionProvider);
 		List<File> listFiles = new ArrayList<File>();
-		File file = null;
-		Writer writer = null;
+		//File file = null;
+		//Writer writer = null;
 		for(Category category : getCategories()){
 			if(objectIds != null && objectIds.size() > 0 && !objectIds.contains(category.getId())) continue;
 			ByteArrayOutputStream outputStream = null;
 			try {
 			  outputStream = new ByteArrayOutputStream() ;
+			  Calendar date = new GregorianCalendar() ;
   			categoryHome.getSession().exportSystemView(category.getPath(), outputStream, false, false ) ;
-  			file = new File(category.getId() + ".xml");
+  	    
+  			/*file = new File(category.getId() + ".xml");
   			file.deleteOnExit();
   			file.createNewFile();
   			writer = new BufferedWriter(new FileWriter(file));
-  			writer.write(outputStream.toString());
-  			listFiles.add(file);
+  			writer.write(outputStream.toString());*/
+  			listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Category", 
+  			                                                               date.getTime(), category.getId()));
 			} finally {
 			  outputStream.close();
-			  writer.close();
+			  //writer.close();
 			}
 		}
 		return listFiles;
@@ -6460,46 +6468,42 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	protected List<File> createForumFiles(String categoryId, List<String> objectIds, SessionProvider sessionProvider) throws Exception{
 		List<File> listFiles = new ArrayList<File>();
-		File file = null;
-		Writer writer = null;
+		//File file = null;
+		//Writer writer = null;
 		for(Forum forum : getForums(categoryId, null)){
 			if(objectIds.size() > 0 && !objectIds.contains(forum.getId())) continue;
 			ByteArrayOutputStream outputStream = null;
 			try {
 			  outputStream =  new ByteArrayOutputStream();
+			  Calendar calendar = GregorianCalendar.getInstance() ;
   			getCategoryHome(sessionProvider).getSession().exportSystemView(forum.getPath(), outputStream, false, false ) ;
-  			file = new File(forum.getId() + ".xml");
+  			
+  			/*file = new File(forum.getId() + ".xml");
   			file.deleteOnExit();
   			file.createNewFile();
   			writer = new BufferedWriter(new FileWriter(file));
-  			writer.write(outputStream.toString());
-  			listFiles.add(file);
+  			writer.write(outputStream.toString());*/
+  			listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", "Forum", calendar.getTime(), forum.getId()));
 	    } finally {
 	        outputStream.close();
-	        writer.close();
+	        //writer.close();
 	    }
 		}
 		return listFiles;
 	}
 	
-  protected List<File> createFilesFromNode(Node node) throws Exception {
+  protected List<File> createFilesFromNode(Node node, String type) throws Exception {
     List<File> listFiles = new ArrayList<File>();
-    File file = null;
-    Writer writer = null;
     if (node != null) {
       ByteArrayOutputStream outputStream = null;
       try {
         outputStream = new ByteArrayOutputStream();
+        Calendar calendar = GregorianCalendar.getInstance() ;
         node.getSession().exportSystemView(node.getPath(), outputStream, false, false);
-        file = new File(node.getName() + ".xml");
-        file.deleteOnExit();
-        file.createNewFile();
-        writer = new BufferedWriter(new FileWriter(file));
-        writer.write(outputStream.toString());
-        listFiles.add(file);
+        listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(outputStream, "eXo Knowledge Suite - Forum", type, calendar.getTime(), node.getName()));
+        
       } finally {
         outputStream.close();
-        writer.close();
       }
     }
     return listFiles;
@@ -6512,22 +6516,22 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		listFiles.addAll(createFilesFromNodeIter(categoryHome, null, getStatisticHome(sessionProvider), ""));*/
 		
 		// Create Administration file
-		listFiles.addAll(createFilesFromNode(getAdminHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getAdminHome(sessionProvider), Locations.ADMINISTRATION_HOME));
 		
 		//Create UserProfile files
-		listFiles.addAll(createFilesFromNode(getUserProfileHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getUserProfileHome(sessionProvider), Locations.USER_PROFILE_HOME));
 		
 		// create tag files
-		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getTagHome(sessionProvider), Locations.TAG_HOME));
 		
 		// Create BBCode file
-		listFiles.addAll(createFilesFromNode(getBBCodesHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getBBCodesHome(sessionProvider), Locations.BBCODE_HOME));
 		
 		// Create BanIP file
-		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getBanIPHome(sessionProvider), Locations.BANIP_HOME));
 		
 		// Create category home file
-		listFiles.addAll(createFilesFromNode(getCategoryHome(sessionProvider)));
+		listFiles.addAll(createFilesFromNode(getCategoryHome(sessionProvider), Locations.FORUM_CATEGORIES_HOME));
 		
 		return listFiles;
 	}
@@ -6557,8 +6561,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
     } else {
       listFiles.addAll(createAllForumFiles(sessionProvider));
     }
-
-    // tao file zip:
+    
     ZipOutputStream zipOutputStream = null;
     try {
       zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
@@ -6600,7 +6603,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		Document doc = docBuilder.parse(is);
 		doc.getDocumentElement ().normalize ();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
-		
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
 		
 		try {
