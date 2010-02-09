@@ -520,12 +520,12 @@ public class UIForumPortlet extends UIPortletApplication {
 						uiForumContainer.setIsRenderChild(false) ;
 						uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
 						UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+						uiTopicDetail.setIsEditTopic(true) ;
 						uiTopicDetail.setUpdateForum(forum) ;
 						uiTopicDetail.setTopicFromCate(id[0], id[1] , topic, page) ;
 						uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1] , topic.getId()) ;
 						this.getChild(UIForumLinks.class).setValueOption((id[0] + "/" + id[1] + " "));
 						uiTopicDetail.setIdPostView(postId) ;
-						uiTopicDetail.setIsEditTopic(true) ;
 						if(isReply || isQuote){
 							if(uiTopicDetail.getCanPost()) {
 								uiTopicDetail.setIdPostView("top") ;
