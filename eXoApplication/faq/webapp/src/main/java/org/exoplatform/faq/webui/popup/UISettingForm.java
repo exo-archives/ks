@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -127,19 +127,19 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 	}
 	
 	public void setPathCatygory(List<String> idForumName) {
-		this.idForumName =  idForumName;
+		this.idForumName =	idForumName;
 		((UIFormInputWithActions)getChildById(DISCUSSION_TAB)).getUIStringInput(FIELD_CATEGORY_PATH_INPUT).setValue(idForumName.get(1));
 	}
 	
 	private void setListCate() throws Exception {
-    String userName = FAQUtils.getCurrentUser();
-    List<String>userPrivates = null;
-    if(userName != null){
-    	userPrivates = UserHelper.getAllGroupAndMembershipOfUser(userName);
-    }
-    this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree()) ;
+		String userName = FAQUtils.getCurrentUser();
+		List<String>userPrivates = null;
+		if(userName != null){
+			userPrivates = UserHelper.getAllGroupAndMembershipOfUser(userName);
+		}
+		this.listCate.addAll(FAQUtils.getFAQService().listingCategoryTree()) ;
 
-  }
+	}
 	
 	public void init() throws Exception {
 		if(isEditPortlet_){
@@ -271,24 +271,24 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 	}
 	
 	public FAQSetting getFaqSetting() {
-  	return faqSetting_;
-  }
+		return faqSetting_;
+	}
 
 	public void setFaqSetting(FAQSetting faqSetting) {
-  	this.faqSetting_ = faqSetting;
-  }
-  
-  public String[] getActions() { 
-  	return new String[]{"Save", "Cancel"};
-  }
-  
-  public void activate() throws Exception { }
+		this.faqSetting_ = faqSetting;
+	}
+	
+	public String[] getActions() { 
+		return new String[]{"Save", "Cancel"};
+	}
+	
+	public void activate() throws Exception { }
 
-  public void deActivate() throws Exception { }
-  
-  private String getSelectedTab(){
-	  return tabSelected;
-  }
+	public void deActivate() throws Exception { }
+	
+	private String getSelectedTab(){
+		return tabSelected;
+	}
 	
 	static public class SaveActionListener extends EventListener<UISettingForm> {
 		public void execute(Event<UISettingForm> event) throws Exception {
@@ -349,7 +349,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 						faqSetting.setIdNameCategoryForum(settingForm.idForumName.get(0)+";"+settingForm.idForumName.get(1));
 					}else {
 						settingForm.warning("UISettingForm.msg.pathCategory-empty") ;
-			       return ;
+						 return ;
 					}
 				}else{
 					faqSetting.setIdNameCategoryForum("");
@@ -416,19 +416,19 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 			UIFormInputWithActions formInputWithActions = settingForm.getChildById(settingForm.SET_DEFAULT_EMAIL_TAB);
 			UIFormWYSIWYGInput input = null;
 			if(id.equals("0")){
-				emailContent =  res.getString("SendEmail.AddNewQuestion.Default");
+				emailContent =	res.getString("SendEmail.AddNewQuestion.Default");
 				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
 											formInputWithActions.getChildById(settingForm.SET_DEFAULT_ADDNEW_QUESTION_TAB))
 											.getChildById(EMAIL_DEFAULT_ADD_QUESTION);
 				input.setValue(emailContent);
 			} else if (id.equals("1")) {
-				emailContent =  res.getString("SendEmail.EditOrResponseQuestion.Default");
+				emailContent =	res.getString("SendEmail.EditOrResponseQuestion.Default");
 				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
 											formInputWithActions.getChildById(settingForm.SET_DEFAULT_EDIT_QUESTION_TAB))
 											.getChildById(EMAIL_DEFAULT_EDIT_QUESTION);
 				input.setValue(emailContent);
 			} else {
-				emailContent =  res.getString("SendEmail.MoveQuetstion.Default");
+				emailContent =	res.getString("SendEmail.MoveQuetstion.Default");
 				input = (UIFormWYSIWYGInput)((UIFormInputWithActions)
 						formInputWithActions.getChildById(settingForm.SET_EMAIL_MOVE_QUESTION_TAB))
 						.getChildById(EMAIL_MOVE_QUESTION);
@@ -452,7 +452,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 			if(tab.equals("parent")){
 				settingForm.isResetMail = false;
 				if(id == 0) settingForm.tabSelected = settingForm.DISPLAY_TAB;
-				else if(id == 2)  settingForm.tabSelected = DISCUSSION_TAB;
+				else if(id == 2)	settingForm.tabSelected = DISCUSSION_TAB;
 				else if(id == 3) settingForm.tabSelected = settingForm.CATEGORY_SCOPING;
 				else settingForm.tabSelected = settingForm.SET_DEFAULT_EMAIL_TAB;
 			} else {
@@ -471,14 +471,12 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 				UIPopupContainer watchContainer = settingForm.getAncestorOfType(UIPopupContainer.class) ;
 				UISelectCategoryForumForm listCateForm = settingForm.openPopup(watchContainer, UISelectCategoryForumForm.class, 400, 0) ;
 				listCateForm.setListCategory();
-      } catch (ClassCastException e) {
-      	UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
-      	UISelectCategoryForumForm listCateForm = popupAction.createUIComponent(UISelectCategoryForumForm.class, null, null) ;
-      	listCateForm.setListCategory();
-      	popupAction.activate(listCateForm, 400, 400);
+			} catch (Exception e) {
+				UIPopupAction popupAction = uiPortlet.getChild(UIPopupAction.class) ; 
+				UISelectCategoryForumForm listCateForm = popupAction.createUIComponent(UISelectCategoryForumForm.class, null, null) ;
+				listCateForm.setListCategory();
+				popupAction.activate(listCateForm, 400, 400);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
-      } catch (Exception e) {
-      	e.printStackTrace();
 			}
 		}
 	}
