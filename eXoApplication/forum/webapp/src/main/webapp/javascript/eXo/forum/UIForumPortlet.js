@@ -207,20 +207,21 @@ UIForumPortlet.prototype.checkAction = function(obj, evt) {
 
 UIForumPortlet.prototype.visibleAction = function(id) {
 	var parent = document.getElementById(id);
-	var addCategory = eXo.core.DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
-	var addForum = eXo.core.DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
+	var DOMUtil = eXo.core.DOMUtil;
+	var addCategory = DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
+	var addForum = DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
 	if(document.getElementById("UICategories")){
 		addCategory.className = "Icon AddCategory";
 		addForum.className = "Icon AddForum";
 	} else if(document.getElementById("UICategory")){
 		addCategory.className = "Icon AddCategory DisableAction";
-		addCategory.firstElementChild.href = "javascript:void(0);";
 		addForum.className = "Icon AddForum";
+		addCategory.childNodes[1].href = "javascript:void(0);";
 	} else {
 		addCategory.className = "Icon AddCategory DisableAction";
 		addForum.className = "Icon AddForum DisableAction";
-		addCategory.firstElementChild.href = "javascript:void(0);";
-		addForum.firstElementChild.href = "javascript:void(0);";
+		addCategory.childNodes[1].href = "javascript:void(0);";
+		addForum.childNodes[1].href = "javascript:void(0);";
 	}
 };
 
