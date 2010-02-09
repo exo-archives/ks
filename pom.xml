@@ -245,7 +245,7 @@
     <org.exoplatform.jcr.version>1.12.0-Beta05</org.exoplatform.jcr.version>
     <org.exoplatform.portal.version>3.0.0-Beta05</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <org.exoplatform.platform.version>3.0.0-Beta05</org.exoplatform.platform.version>
+    <org.exoplatform.platform.version>3.0.0-CR01-SNAPSHOT</org.exoplatform.platform.version>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
@@ -265,6 +265,8 @@
     <mockito.version>1.8.1</mockito.version>
     <testng.version>5.10</testng.version>
     <commons-collections.version>3.2.1</commons-collections.version>
+    <org.mortbay.jetty.cometd-bayeux.version>6.1.11</org.mortbay.jetty.cometd-bayeux.version>
+    
     <!-- ************** -->
     <!-- Build settings -->
     <!-- ************** -->

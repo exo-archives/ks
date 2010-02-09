@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>org.exoplatform.ks</groupId>
+    <artifactId>exo.ks.demo</artifactId>
+    <version>2.0.0-Alpha03-SNAPSHOT</version>
+  </parent> 
+	
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>exo.ks.demo.cometd-war</artifactId>
+  <packaging>war</packaging>
+  <name>eXo KS Demo Comet WebApp</name>
+  
+  <build>
+    <finalName>cometd-ksdemo</finalName>
+  </build>
+</project>

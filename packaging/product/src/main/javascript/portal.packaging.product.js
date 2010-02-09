@@ -55,6 +55,7 @@ function getProduct(version) {
 
   // KS demo
   product.addDependencies(ks.demo.portal);
+  product.addDependencies(ks.demo.cometd);
   product.addDependencies(ks.demo.rest);
   
   product.addServerPatch("tomcat", ks.server.tomcat.patch) ;

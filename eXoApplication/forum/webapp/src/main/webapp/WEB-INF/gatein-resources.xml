@@ -32,7 +32,7 @@
     <css-path>/skin/DefaultSkin/webui/Stylesheet.css</css-path>
   </portlet-skin>
  
-  <javascript>
+  <!-- javascript>
     <param>
       <js-module>eXo.forum.UIForumPortlet</js-module>
       <js-path>/javascript/eXo/forum/UIForumPortlet.js</js-path>
@@ -44,7 +44,7 @@
       <js-module>eXo.forum.UIForumPortlet</js-module>
       <js-path>/javascript/eXo/forum/webservice/SearchTagName.js</js-path>
     </param>
-  </javascript>   
+  </javascript-->   
 
 </gatein-resources>
 

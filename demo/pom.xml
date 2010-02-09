@@ -13,6 +13,7 @@
   <modules>
     <module>config</module>
     <module>war</module>
+    <module>cometd-ksdemo</module>
     <module>rest-ksdemo</module>
     <module>ear</module>
   </modules>

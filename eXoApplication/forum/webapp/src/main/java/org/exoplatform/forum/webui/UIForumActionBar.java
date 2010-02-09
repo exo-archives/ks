@@ -49,6 +49,8 @@ import org.exoplatform.webui.core.UIContainer;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
+import org.mortbay.cometd.AbstractBayeux;
+import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 
 /**
  * Created by The eXo Platform SARL
@@ -119,12 +121,20 @@ public class UIForumActionBar extends UIContainer	{
     }
 	}
 	
+	protected String getCometdContextName() {
+    String cometdContextName = "cometd";
+    try {
+      EXoContinuationBayeux bayeux = 
+        (EXoContinuationBayeux) PortalContainer.getInstance().getComponentInstanceOfType(AbstractBayeux.class);
+      return (bayeux == null ? "cometd" : bayeux.getCometdContextName());
+    } catch (Exception e) {
+    }    
+    return cometdContextName;
+  }
+	
   public String getUserToken()throws Exception {
     try {
-	  	//ContinuationService continuation = (ContinuationService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ContinuationService.class);
     	ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
-    	System.out.println("=====>" + continuation);
-	  	System.out.println("\n\n Token: " + continuation.getUserToken(userProfile.getUserId()));
 	    return continuation.getUserToken(userProfile.getUserId());
     } catch (Exception e) {
       log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);

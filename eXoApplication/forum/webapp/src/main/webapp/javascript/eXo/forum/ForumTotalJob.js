@@ -9,14 +9,15 @@ function ForumTotalJob() {
   
 } ;
 
-ForumTotalJob.prototype.init = function(eXoUser, eXoToken){
+ForumTotalJob.prototype.init = function(eXoUser, eXoToken, contextName){
 	if (!eXo.core.Cometd) {
 		eXo.require('eXo.core.Cometd');
 	}
   if(String(eXoToken) != ''){
-		if (!eXo.core.Cometd.isConnected()) {
-			eXo.core.Cometd.exoId = eXoUser;
-		  eXo.core.Cometd.exoToken = eXoToken;
+	  if (!eXo.core.Cometd.isConnected()) {
+		eXo.core.Cometd.url = '/' + contextName + '/cometd' ;  
+		eXo.core.Cometd.exoId = eXoUser;
+		eXo.core.Cometd.exoToken = eXoToken;
 	    eXo.core.Cometd.addOnConnectionReadyCallback(this.subcribeCometdTopics);
 	    eXo.core.Cometd.init();
 	  } else {
