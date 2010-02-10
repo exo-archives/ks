@@ -36,7 +36,7 @@ function getProduct(version) {
   portal.starter.deployName = "starter";
   product.addDependencies(portal.starter);
   
-  portal.fck = new Project("org.exoplatform.platform", "exo.platform.web.fck", "war", "3.0.0-Beta05");
+  portal.fck = new Project("org.exoplatform.platform", "exo.platform.web.fck", "war", "${org.exoplatform.platform.version}");
   portal.fck.deployName = "fck";
   product.addDependencies(portal.fck);
 
