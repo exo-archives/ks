@@ -29,8 +29,10 @@ Welcome on GateIn Tomcat packaging
    Open a terminal, go to tomcat/bin and type the command:
       "./gatein.sh run" for production
       "./gatein.sh run" for development 
-      
+   
    You may need to change the permission of all *.sh files in the tomcat/bin dir by using: chmod +x *.sh
+   If there are exception or the server can not start successfuly you should rename starter.war to starter.war.war 
+then delete the extracted "starter" folder and restart server
 
  For both OS environments, you need to set the JAVA_HOME variable.
 
@@ -40,15 +42,12 @@ Welcome on GateIn Tomcat packaging
     http://localhost:8080/portal
     http://localhost:8080/portal/public/classic
 
-    - For KS demo
-    http://localhost:8080/ksdemo
-    http://localhost:8080/ksdemo/public/classic
 
-
- You can log into the portal and ksdemo with the following accounts: root, john, mary, demo. 
+ You can log into the portal with the following accounts: root, john, mary, demo. 
  All those accounts have the default password "gtn".
 
 For more documentation and latest updated news, please visit our website www.gatein.org.
+For more information about this release of product, please open this link http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-Alpha03+Release+Notes
 
 Thank your for using GateIn !
 JBoss & eXo Platform develoment teams
