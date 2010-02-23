@@ -32,8 +32,10 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.resources.LocaleConfig;
 import org.exoplatform.services.resources.LocaleConfigService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.core.model.SelectItemOption;
@@ -363,7 +365,14 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			UIPopupContainer popupContainer = advancedSearch.getAncestorOfType(UIPopupContainer.class);
 			ResultQuickSearch result = popupContainer.getChild(ResultQuickSearch.class);
 			if(result == null)result = popupContainer.addChild(ResultQuickSearch.class, null, null);
-      result.setSearchResults(advancedSearch.getFAQService().getSearchResults(eventQuery)) ;
+			try {
+				result.setSearchResults(advancedSearch.getFAQService().getSearchResults(eventQuery)) ;
+      } catch (javax.jcr.query.InvalidQueryException e) {
+      	UIApplication uiApp = advancedSearch.getAncestorOfType(UIApplication.class);
+      	uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				return ;
+      }
       
 			// TODO: review code reset form.
 			/**

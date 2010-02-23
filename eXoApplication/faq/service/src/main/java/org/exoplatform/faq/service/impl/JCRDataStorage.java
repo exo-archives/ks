@@ -2646,7 +2646,10 @@ public class JCRDataStorage implements DataStorage {
 				if(eventQuery.isQuestionLevelSearch()) {
 				//directly return because there is only one this type of search
 					if(!eventQuery.isLanguageLevelSearch() && !eventQuery.isAnswerCommentLevelSearch()) {
+						List<String> list = new ArrayList<String>();
 						for(Node node : listQuestion) {
+							if(list.contains(node.getName())) continue;
+							else list.add(node.getName());
 							results.add(getResultObj(node)) ;
 						}
 						return results ;
@@ -2796,10 +2799,10 @@ public class JCRDataStorage implements DataStorage {
 						searchMap.put(nodeObj.getName(), getResultObj(nodeObj)) ;
 					}					
 				}
-				return	Arrays.asList(searchMap.values().toArray(new ObjectSearchResult[]{}));
+				return	new ArrayList<ObjectSearchResult> (searchMap.values());
 			}			
 		} catch (Exception e) {
-			e.printStackTrace() ;
+			throw e;
 		} finally {sProvider.close() ;}
 		return new ArrayList<ObjectSearchResult> () ;
 	}
