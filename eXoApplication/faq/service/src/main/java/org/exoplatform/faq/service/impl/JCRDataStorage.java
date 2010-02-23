@@ -1577,7 +1577,7 @@ public class JCRDataStorage implements DataStorage {
 					while(iter.hasNext()) {
 						attNode = iter.nextNode() ;
 						if(attNode.isNodeType("exo:faqAttachment")) {
-							attNode.setProperty("exo:categoryId", catId) ;
+							attNode.getNode("jcr:content").setProperty("exo:categoryId", catId) ;
 						}
 					}
 					updateAnswers(questionNode, catId) ;
