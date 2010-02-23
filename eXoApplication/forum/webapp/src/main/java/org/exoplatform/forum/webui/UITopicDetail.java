@@ -329,9 +329,14 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
   public void setRenderInfoPorlet() throws Exception {
-
-    isMod = (userProfile.getUserRole() == UserProfile.ADMIN)
-        || (ForumServiceUtils.hasPermission(forum.getModerators(), userName));
+		/**
+		 * Set permission for current user login.  	
+		*/  
+  	isMod = (userProfile.getUserRole() == UserProfile.ADMIN)
+        		||(ForumServiceUtils.hasPermission(forum.getModerators(), userName));
+    canCreateTopic = getCanCreateTopic();
+    isCanPost = isCanPostReply();
+    
     try {
     	PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     	ActionResponse actionRes = (ActionResponse) pcontext.getResponse();
@@ -352,7 +357,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
     else {
       list.set(0, "");
     }
-    list.set(1, String.valueOf(getCanCreateTopic()));
+    list.set(1, String.valueOf(canCreateTopic));
     list.set(2, String.valueOf(isCanPost));
     param.setInfoRules(list);
     param.setRenderRule(true);
@@ -361,11 +366,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 
   private void sendQuickReplyEvent(ActionResponse actionRes) {
     ForumParameter param = new ForumParameter() ;
-    try {
-    	isCanPost = isCanPostReply();
-    } catch (Exception e) {
-    	isCanPost = false;
-    }
     param.setRenderQuickReply(isCanPost);
     param.setModerator(isMod);
     param.setCategoryId(categoryId) ; 
@@ -392,7 +392,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		 * set permission for create new thread
 		 */
 		String[] strings = this.forum.getCreateTopicRole();
-		canCreateTopic = this.isMod;
+		boolean canCreateTopic = this.isMod;
 		if(!canCreateTopic){ 
 			if(isIPBaned(getIPRemoter())) canCreateTopic = false;
 			else {
@@ -418,15 +418,18 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		if(isMod) return true;
 		if(isIPBaned(getIPRemoter())) return false;
 		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
-		List<String> listUser = new ArrayList<String>() ;
-		
-		listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
-		listUser = ForumUtils.addArrayToList(listUser, forum.getPoster());
-		listUser = ForumUtils.addArrayToList(listUser, getForumService().getCategory(categoryId).getPoster());
-		if(!listUser.isEmpty()) {
-			listUser.add(topic.getOwner());
-			return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
-		}
+		try {
+			List<String> listUser = new ArrayList<String>() ;
+			listUser = ForumUtils.addArrayToList(listUser, topic.getCanPost());
+			listUser = ForumUtils.addArrayToList(listUser, forum.getPoster());
+			listUser = ForumUtils.addArrayToList(listUser, getForumService().getCategory(categoryId).getPoster());
+			if(!listUser.isEmpty()) {
+				listUser.add(topic.getOwner());
+				return ForumServiceUtils.hasPermission(listUser.toArray(new String[listUser.size()]), userName);
+			}
+    } catch (Exception e) {
+	    log.error("Check can reply is fall, exception: ", e);
+    }
 		return true ;
 	}
 	
@@ -477,7 +480,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		try {
 			if(this.isEditTopic || this.topic == null) {
 				this.topic = getForumService().getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST) ;
-				isCanPost = isCanPostReply();
+//				isCanPost = isCanPostReply();
 				this.isEditTopic = false ;
 			}
 			return this.topic ;
