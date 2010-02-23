@@ -16,6 +16,7 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class FAQRSSEventListener implements EventListener{
   
 	public void onEvent(EventIterator evIter){		
 		try{
-
 		  AnswersFeedGenerator process = new AnswersFeedGenerator(locator);
 			String path = null;
+			String path_= "";
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				path = ev.getPath();
@@ -61,15 +62,20 @@ public class FAQRSSEventListener implements EventListener{
 					}
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
 					process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
-				}else if(ev.getType() == Event.NODE_REMOVED) {				
-					int length = ev.getPath().indexOf("/Question") + 41 ;
-					if(length == ev.getPath().length()) {
-						process.itemRemoved(ev.getPath());
-					} else if (ev.getPath().indexOf("/faqCommentHome") > 0 || ev.getPath().indexOf("/faqAnswerHome") > 0) {
-						process.itemUpdated(ev.getPath().substring(0, ev.getPath().indexOf("/Question") + 41));
+				}else if(ev.getType() == Event.NODE_REMOVED) {
+					if(path_.contains(path) || path_.length() == 0) {
+						path_ = path;
 					}
 				}
 				//break ;								
+			}
+			if(path_.length() > 0){
+				int length = path.indexOf("/Question") + 41 ;
+				if(length == path.length()) {
+					process.itemRemoved(path);
+				} else if (path.indexOf("/faqCommentHome") > 0 || path.indexOf("/faqAnswerHome") > 0) {
+					process.itemUpdated(path.substring(0, path.indexOf("/Question") + 41));
+				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace() ;

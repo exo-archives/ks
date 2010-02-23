@@ -293,18 +293,26 @@ public final class AnswersFeedGenerator extends RSSProcess implements FeedConten
     }
 
     public VoidReturn execute(Session session) throws Exception {
-      String categoryPath = path.substring(0, path.indexOf("/questions/"));
-      Node categoryNode = (Node) getCurrentSession().getItem(categoryPath);
-      while (!categoryNode.isNodeType("exo:faqCategory")) {
-        categoryNode = categoryNode.getParent();
+    	System.out.println("\n\n =====> categoryPath ");
+    	try {
+    		String categoryPath = path.substring(0, path.indexOf("/questions/"));
+    		System.out.println("\n\n =====> categoryPath " + categoryPath);
+    		Node categoryNode = (Node) session.getItem(categoryPath);
+    		if(categoryNode == null ) categoryNode = (Node) getCurrentSession().getItem(categoryPath);
+    		System.out.println("\n\n =====> Node " + categoryNode.getName());
+    		while (!categoryNode.isNodeType("exo:faqCategory")) {
+    			categoryNode = categoryNode.getParent();
+    		}
+    		
+    		String itemId = path.substring(path.lastIndexOf("/") + 1);
+    		RSS rss = new RSS(categoryNode);
+    		SyndFeed feed = rss.removeEntry(itemId);
+    		String title = new PropertyReader(categoryNode).string("exo:name", "Root");
+    		feed.setTitle(title);
+    		rss.saveFeed(feed, FAQ_RSS_TYPE);
+      } catch (Exception e) {
+      	e.printStackTrace();
       }
-      
-      String itemId = path.substring(path.lastIndexOf("/") + 1);
-      RSS rss = new RSS(categoryNode);
-      SyndFeed feed = rss.removeEntry(itemId);
-      String title = new PropertyReader(categoryNode).string("exo:name", "Root");
-      feed.setTitle(title);
-      rss.saveFeed(feed, FAQ_RSS_TYPE);
       
       return VoidReturn.VALUE;
     }

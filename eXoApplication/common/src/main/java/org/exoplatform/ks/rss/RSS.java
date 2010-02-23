@@ -21,8 +21,14 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
+import javax.jcr.nodetype.NoSuchNodeTypeException;
+import javax.jcr.version.VersionException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -94,11 +100,13 @@ public class RSS {
 
   }
 
-  private Node getFeedNode() {
+  private Node getFeedNode() throws Exception {
+  	System.out.println("\n\n itemNode: " + itemNode.getPath());
     try {
       return itemNode.getNode(RSS_NODE_NAME);
     } catch (Exception e) {
-      throw new RuntimeException("Failed to get feed node", e);
+    	return itemNode.addNode(RSS_NODE_NAME, "nt:file");
+//      throw new RuntimeException("Failed to get feed node", e);
     }
   }
 
@@ -111,7 +119,8 @@ public class RSS {
     try {
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-    Document doc = docBuilder.parse(getContent());
+    InputStream inputStream = getContent();
+    Document doc = docBuilder.parse(inputStream);
     doc.getDocumentElement().normalize();
 
     SyndFeedInput input = new SyndFeedInput();
@@ -119,6 +128,7 @@ public class RSS {
     return feed;
     }
     catch (Exception e) {
+    	e.printStackTrace();
       LOG.error("Failed to read RSS feed");
       throw new RuntimeException(e);
     }
