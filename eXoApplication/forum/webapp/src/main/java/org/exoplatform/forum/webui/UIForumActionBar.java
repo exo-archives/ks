@@ -82,7 +82,6 @@ import org.mortbay.cometd.continuation.EXoContinuationBayeux;
 )
 @SuppressWarnings("unused")
 public class UIForumActionBar extends UIContainer	{
-	private boolean hasCategory = false ;
 	private UserProfile userProfile ;
 	private ForumService forumService ;
 	
@@ -95,10 +94,6 @@ public class UIForumActionBar extends UIContainer	{
 	private UserProfile getUserProfile() throws Exception {
 		userProfile = ((UIForumPortlet)this.getParent()).getUserProfile() ;
 		return userProfile;
-	}
-	
-	public void setHasCategory(boolean hasCategory) {
-		this.hasCategory = hasCategory ;
 	}
 	
 	private String[] getActionMenu() throws Exception {
@@ -214,7 +209,7 @@ public class UIForumActionBar extends UIContainer	{
 	static public class AddForumActionListener extends EventListener<UIForumActionBar> {
 		public void execute(Event<UIForumActionBar> event) throws Exception {
 			UIForumActionBar uiActionBar = event.getSource() ;
-			if(uiActionBar.hasCategory) {
+			if(uiActionBar.forumService.getCategories().size() > 0) {
 				UIForumPortlet forumPortlet = uiActionBar.getParent();
 				UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;

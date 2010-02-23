@@ -201,11 +201,6 @@ public class UICategories extends UIContainer	{
     } catch (Exception e) {
     	categoryList = new ArrayList<Category>();
     }
-    
-		if(categoryList.size() > 0)
-			forumPortlet.getChild(UIForumActionBar.class).setHasCategory(true) ;
-		else 
-			forumPortlet.getChild(UIForumActionBar.class).setHasCategory(false) ;
 		return categoryList;
 	}	
 	

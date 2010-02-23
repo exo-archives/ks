@@ -160,7 +160,7 @@ public class UIForumPortlet extends UIPortletApplication {
 			try {
 				 renderComponentByURL(context);
 	    } catch (Exception e) {
-		    log.error("Can not open component by url, view exception: " + e.getMessage(), e);
+		    log.error("Can not open component by url, view exception: ", e);
 	    }
 	    super.processRender(app, context) ;
 	 }
@@ -468,7 +468,7 @@ public class UIForumPortlet extends UIPortletApplication {
   }
 	
 	public void calculateRenderComponent(String path, WebuiRequestContext context) throws Exception {
-		UIApplication uiApp = this.getAncestorOfType(UIApplication.class) ;
+		UIApplication uiApp = (UIApplication)this;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		if(path.equals(Utils.FORUM_SERVICE)) {
 			this.updateIsRendered(ForumUtils.CATEGORIES);
