@@ -72,11 +72,9 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 	final static private String FIELD_QUESTION = "Question" ;
 	final static private String FIELD_RESPONSE = "Response" ;
 	final static private String FIELD_COMMENT = "Comment" ;
-	//final static private String FIELD_ATTACHMENT = "attachment" ;
 	final static private String ITEM_EMPTY= "empty" ;
 	final static private String ITEM_CATEGORY="faqCategory" ;
 	final static private String ITEM_QUESTION="faqQuestion" ;
-//	final static private String ITEM_ATTACHMENT="faqAttachment" ;
 	
 	final static private String ITEM_MODERATEQUESTION_EMPTY2= "empty2" ;
 	final static private String ITEM_MODERATEQUESTION_TRUE="true" ;
@@ -111,7 +109,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		list.add(new SelectItemOption<String>(ITEM_EMPTY, "categoryAndQuestion")) ;
 		list.add(new SelectItemOption<String>(ITEM_CATEGORY, "faqCategory")) ;
 		list.add(new SelectItemOption<String>(ITEM_QUESTION, "faqQuestion")) ;
-//		list.add(new SelectItemOption<String>(ITEM_ATTACHMENT, "faqAttachment")) ;
 		UIFormSelectBox searchType = new UIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX, FIELD_SEARCHOBJECT_SELECTBOX, list) ;
 		searchType.setOnChange("Onchange") ;
 		UIFormStringInput categoryName = new UIFormStringInput(FIELD_CATEGORY_NAME, FIELD_CATEGORY_NAME, null) ;
@@ -136,7 +133,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		UIFormTextAreaInput question = new UIFormTextAreaInput(FIELD_QUESTION, FIELD_QUESTION, null) ;
 		UIFormTextAreaInput response = new UIFormTextAreaInput(FIELD_RESPONSE, FIELD_RESPONSE, null) ;
 		UIFormTextAreaInput comment = new UIFormTextAreaInput(FIELD_COMMENT, FIELD_COMMENT, null) ;
-		//UIFormStringInput attachment = new UIFormStringInput(FIELD_ATTACHMENT,FIELD_ATTACHMENT, null) ;
 		
 		addUIFormInput(text) ;
 		addUIFormInput(searchType) ;
@@ -150,7 +146,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		addUIFormInput(question) ;
 		addUIFormInput(response) ;
 		addUIFormInput(comment) ;
-		//addUIFormInput(attachment);
 		addUIFormInput(fromDate) ;
 		addUIFormInput(toDate) ;
 	}
@@ -179,7 +174,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false) ;
 		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false) ;
-		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
+
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
@@ -202,7 +197,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(true) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(true) ;
 		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(true) ;
-		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
+
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
@@ -225,7 +220,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 		UIFormTextAreaInput question = getUIFormTextAreaInput(FIELD_QUESTION).setRendered(false) ;
 		UIFormTextAreaInput response = getUIFormTextAreaInput(FIELD_RESPONSE).setRendered(false) ;
 		UIFormTextAreaInput comment = getUIFormTextAreaInput(FIELD_COMMENT).setRendered(false) ;
-		//UIFormStringInput attachment = getUIStringInput(FIELD_ATTACHMENT).setRendered(isAttachment);
+
 		author.setValue("") ;
 		emailAddress.setValue("") ;
 		language.setValue("") ;
@@ -297,8 +292,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
       } catch (Exception e) {
       }
 			
-			//String nameAttachment = advancedSearch.getUIStringInput(FIELD_ATTACHMENT).getValue();
-			String nameAttachment = "";
 			
 			/**
 			 * Check validation of data inputed
@@ -315,8 +308,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			}
 			if(FAQUtils.CheckSpecial(text) || FAQUtils.CheckSpecial(categoryName) || FAQUtils.CheckSpecial(moderator) ||
 					FAQUtils.CheckSpecial(author) || FAQUtils.CheckSpecial(emailAddress) ||
-					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment) || 
-					FAQUtils.CheckSpecial(nameAttachment)) { 
+					FAQUtils.CheckSpecial(question) || FAQUtils.CheckSpecial(response) || FAQUtils.CheckSpecial(comment)) { 
 				advancedSearch.warning("UIAdvancedSearchForm.msg.failure") ;
 				return ;
 			}
@@ -334,7 +326,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			eventQuery.setToDate(toDate) ;
 			eventQuery.setAuthor(author) ;
 			eventQuery.setEmail(emailAddress) ;
-			eventQuery.setAttachment(nameAttachment);
+			eventQuery.setAttachment("");
 			eventQuery.setQuestion(question) ;
 			eventQuery.setResponse(response) ;
 			eventQuery.setComment(comment) ;
@@ -350,12 +342,7 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 			/**
 			 * Check all values are got from UIForm, if don't have any thing then view warning
 			 */
-			//if(!FAQUtils.isFieldEmpty(nameAttachment)) isEmpty = true;
-			/*if(!eventQuery.getIsAnd() && (response == null || response.trim().length() < 1)) {
-				uiApp.addMessage(new ApplicationMessage("UIAdvancedSearchForm.msg.erro-empty-search", null, ApplicationMessage.WARNING)) ;
-				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
-				return ;
-			}*/
+
 			String userName = FAQUtils.getCurrentUser();
 			eventQuery.setUserId(userName) ;
 			eventQuery.setUserMembers(UserHelper.getAllGroupAndMembershipOfUser(userName));
@@ -373,42 +360,6 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
 				return ;
       }
-      
-			// TODO: review code reset form.
-			/**
-			 * Reset form to Search category
-			 */
-			if(type.equals("faqCategory")) {
-				advancedSearch.setIsSearchCategory();
-				advancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
-				advancedSearch.getUIStringInput(FIELD_TEXT).setValue(text) ;
-				advancedSearch.getUIStringInput(FIELD_CATEGORY_NAME).setValue(categoryName) ;
-				advancedSearch.getUIFormSelectBox(FIELD_ISMODERATEQUESTION).setValue(modeQuestion) ;
-				advancedSearch.getUIStringInput(FIELD_CATEGORY_MODERATOR).setValue(moderator) ;
-				if(fromDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
-				if(toDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
-				
-			}else if(type.equals("faqQuestion")){
-				// Cache data in UIForm to reset
-				advancedSearch.setIsSearchQuestion();
-				advancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
-				advancedSearch.getUIStringInput(FIELD_TEXT).setValue(text) ;
-				advancedSearch.getUIStringInput(FIELD_AUTHOR).setValue(author) ;
-				advancedSearch.getUIStringInput(FIELD_EMAIL_ADDRESS).setValue(emailAddress) ;
-				advancedSearch.getUIFormSelectBox(FIELD_LANGUAGE).setValue(language) ;
-				if(fromDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
-				if(toDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
-				advancedSearch.getUIFormTextAreaInput(FIELD_QUESTION).setValue(question) ;
-				advancedSearch.getUIFormTextAreaInput(FIELD_RESPONSE).setValue(response) ;
-				advancedSearch.getUIFormTextAreaInput(FIELD_COMMENT).setValue(comment) ;
-				//advancedSearch.getUIStringInput(FIELD_ATTACHMENT).setValue(nameAttachment);
-			} else { // Reset form to search all questions and categories
-				advancedSearch.setIsQuickSearch();
-				advancedSearch.getUIFormSelectBox(FIELD_SEARCHOBJECT_SELECTBOX).setValue(type);
-				advancedSearch.getUIStringInput(FIELD_TEXT).setValue(text) ;
-				if(fromDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_FROM_DATE).setCalendar(fromDate) ;
-				if(toDate != null) advancedSearch.getUIFormDateTimeInput(FIELD_TO_DATE).setCalendar(toDate) ;
-			}
       event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
 		}
 	}

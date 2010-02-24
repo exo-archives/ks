@@ -42,6 +42,8 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -253,7 +255,27 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	private void updateDiscussForum(String linkForum) throws Exception{
+//hard code selectedNode of forum portlet
+	private String getLinkDiscuss(String topicId) throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String link = portalContext.getRequest().getRequestURL().toString();
+		try {
+			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+			String portalName = "/" + Util.getUIPortal().getName() ;
+			if(link.indexOf(portalName) > 0) {
+	      if(link.indexOf(portalName + "/" + selectedNode) < 0){
+	      	link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+	      }                 
+	    }
+			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
+			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+		return link;
+	}
+	
+	private void updateDiscussForum() throws Exception{
 		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String topicId = question_.getTopicIdDiscuss();
@@ -263,7 +285,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				if(topic != null) {
 					String []ids = topic.getPath().split("/");
 					int t = ids.length;
-					linkForum = linkForum.replaceFirst("OBJECTID", topicId);
+					String linkForum = getLinkDiscuss(topicId);
 					Post post;
 					int l = question_.getAnswers().length;
 					for (int i = 0; i < l; ++i) {
@@ -356,7 +378,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				//TODO: review link
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
-				String linkForum = link.replaceAll("faq", "forum").replaceFirst("UIQuestions", "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", question.getPath());
 				question.setLink(link) ;
 				
@@ -371,7 +392,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					responseForm.getFAQService().saveAnswer(question.getPath(), answers) ;
 					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), question.getRelations()) ;
 					// author: Vu Duy Tu. Make discuss forum
-					responseForm.updateDiscussForum(linkForum);
+					responseForm.updateDiscussForum();
 				} catch (PathNotFoundException e) {
 					responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
 					responseForm.warning("UIQuestions.msg.question-id-deleted") ;
