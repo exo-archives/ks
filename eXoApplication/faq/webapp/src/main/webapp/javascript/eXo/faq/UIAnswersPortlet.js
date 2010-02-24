@@ -696,4 +696,24 @@ UIAnswersPortlet.prototype.createLink = function(cpId,isAjax) {
 	}
 } ;
 
+UIAnswersPortlet.prototype.showTreeNode = function(obj, isShow) {
+	if(isShow === "false") return ;
+	var DOMUtil = eXo.core.DOMUtil ;
+	var parentNode = DOMUtil.findAncestorByClass(obj, "ParentNode") ;
+	var nodes = DOMUtil.findChildrenByClass(parentNode, "div", "Node") ;
+	var selectedNode = DOMUtil.findAncestorByClass(obj, "Node") ;
+	var nodeSize = nodes.length ;
+	var childrenContainer = null ;
+	for(var i = 0 ; i < nodeSize ; i ++ ) {
+		childrenContainer = DOMUtil.findFirstDescendantByClass(nodes[i], "div", "ChildNodeContainer") ;
+		if (nodes[i] === selectedNode) {
+			childrenContainer.style.display = "block" ;
+			nodes[i].className = "Node SmallGrayPlus" ;
+		} else {		
+			childrenContainer.style.display = "none" ;
+			if(nodes[i].className === "Node SmallGrayPlus false") continue ;		
+			nodes[i].className = "Node SmallGrayMinus" ;
+		}
+	}	
+};
 eXo.faq.UIAnswersPortlet = new UIAnswersPortlet() ;

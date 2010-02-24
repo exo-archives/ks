@@ -25,7 +25,7 @@
 		%>
 			<div class="Node $iconClass">
 			 	<div class="Icon CategoryNormalIcon"><span></span></div>	
-				 	<div class="NodeLabel" onclick ='eXo.forum.UIForumPortlet.showTreeNode(this,"$isShow");'>
+				 	<div class="NodeLabel" onclick ='eXo.faq.UIAnswersPortlet.showTreeNode(this,"$isShow");'>
 				 		<div class="NodeSelected">
 				 			<a>$categoryName</a>
 				 		</div> 
