@@ -5478,7 +5478,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					queryString.append(") and ");
 					
 					// Select all forum that user can view
-				} else if(listForumIds != null && listCateIds.size() > 0){
+				} else if(listForumIds != null && listForumIds.size() > 0){
 						if(type.equals(Utils.FORUM)) searchBy = "fn:name()";
 						else searchBy = "@exo:path";
 						queryString.append("(");
