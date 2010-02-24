@@ -99,7 +99,7 @@ public class TestFAQEventQuery extends TestCase {
     
     queryObject.setAdmin(false);
     queryObject.setUserMembers(Arrays.asList("jack", "jerry"));
-    predicate += " and (not(@exo:userPrivate)  or @exo:userPrivate='jack' or @exo:moderators='jack' or @exo:userPrivate='jerry' or @exo:moderators='jerry')";
+    predicate += " and (not(@exo:userPrivate) or @exo:userPrivate='' or @exo:userPrivate='jack' or @exo:moderators='jack' or @exo:userPrivate='jerry' or @exo:moderators='jerry')";
     assertEquals(selector + predicate + "]", queryObject.getQuery());    
   }
   

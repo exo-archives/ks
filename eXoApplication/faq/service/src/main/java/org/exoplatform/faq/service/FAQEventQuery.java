@@ -415,9 +415,9 @@ public class FAQEventQuery {
     if(moderator != null && moderator.length() > 0) {
     	queryString.append(" and (jcr:contains(@exo:moderators, '").append(moderator).append("'))") ;
     }		  
-    
+
     if(!isAdmin) {
-    	queryString.append(" and (not(@exo:userPrivate) ");
+    	queryString.append(" and (not(@exo:userPrivate) or @exo:userPrivate=''");
       if(userMembers != null && !userMembers.isEmpty()) {
         for (String str : userMembers) {
       	  queryString.append(" or @exo:userPrivate='").append(str).append("' or @exo:moderators='").append(str).append("'");
