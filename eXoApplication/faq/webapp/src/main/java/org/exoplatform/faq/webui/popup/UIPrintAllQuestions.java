@@ -154,11 +154,12 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent{
 		return result;
 	}
 	
-	public void setCategoryId(String cateId, FAQService service, FAQSetting setting, boolean canEdit){
-		this.categoryId = cateId;
-		this.faqService_ = service;
-		this.faqSetting_ = setting;
-		canEditQuestion = this.faqSetting_.isAdmin();
+	public void setCategoryId(String cateId, FAQService service, FAQSetting setting, boolean canEdit) throws Exception{
+		categoryId = cateId;
+		faqService_ = service;
+		faqSetting_ = setting;
+		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
+		canEditQuestion = faqSetting_.isAdmin();
 		if(!canEditQuestion) canEditQuestion = canEdit;
 	}
 	
