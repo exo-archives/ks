@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.jcr.Value;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -37,7 +38,7 @@ import org.exoplatform.services.organization.User;
  */
 public class Utils {
 
-  public final static String TYPE_CATEGORY = "exo:forumCategory".intern();
+	public final static String TYPE_CATEGORY = "exo:forumCategory".intern();
 	public final static String TYPE_FORUM = "exo:forum".intern();
 	public final static String TYPE_TOPIC = "exo:topic".intern();
 	public final static String USER_PROFILES_TYPE = "exo:forumUserProfile".intern() ;
@@ -79,7 +80,7 @@ public class Utils {
 	 * @param s string input
 	 * @return the string with all character whose codepoint<31 removed
 	 */
-  public static String removeCharterStrange(String s) {
+	public static String removeCharterStrange(String s) {
 		if (s == null || s.length() <= 0)
 			return "";
 		int i=0;
@@ -94,17 +95,17 @@ public class Utils {
 	}
 	
 	static public class DatetimeComparatorDESC implements Comparator<Object> {
-    public int compare(Object o1, Object o2) throws ClassCastException {
-    	Date date1 = ((User) o1).getCreatedDate() ;
-      Date date2  = ((User) o2).getCreatedDate() ;
-      return date2.compareTo(date1) ;
-    }
-  }
+		public int compare(Object o1, Object o2) throws ClassCastException {
+			Date date1 = ((User) o1).getCreatedDate() ;
+			Date date2	= ((User) o2).getCreatedDate() ;
+			return date2.compareTo(date1) ;
+		}
+	}
 	
 	static public class DatetimeComparatorPostDESC implements Comparator<Post> {
 		public int compare(Post o1, Post o2) throws ClassCastException {
 			Date date1 = o2.getCreatedDate() ;
-			Date date2  = o1.getCreatedDate() ;
+			Date date2	= o1.getCreatedDate() ;
 			return date2.compareTo(date1) ;
 		}
 	}
@@ -120,22 +121,22 @@ public class Utils {
 			List<String> list = new ArrayList<String>();
 			list = Arrays.asList(b);
 			for (int i = 0; i < a.length; i++) {
-		    if(!list.contains(a[i])) {
-		    	return true;
-		    }
-	    }
+				if(!list.contains(a[i])) {
+					return true;
+				}
+			}
 		} else {
 			return true;
 		}
-	  return false;
-  }
+		return false;
+	}
 
 	/**
-   * Compare two lists and to verify there is a difference in content between two string lists. The elements may not appear in the same order in both lists.
-   * @param a first string list to compare
-   * @param b second string list to compare
-   * @return true if there is a difference in content or size between the two lists, false otherwise.
-   * @see #arraysHaveDifferentContent(String[], String[])
+	 * Compare two lists and to verify there is a difference in content between two string lists. The elements may not appear in the same order in both lists.
+	 * @param a first string list to compare
+	 * @param b second string list to compare
+	 * @return true if there is a difference in content or size between the two lists, false otherwise.
+	 * @see #arraysHaveDifferentContent(String[], String[])
 	 */
 	public static boolean listsHaveDifferentContent(List<String> a, List<String> b) {
 		if(a.size() == b.size()) {
@@ -163,8 +164,8 @@ public class Utils {
 		String str = map.toString().replace(" ", "").replace("{", "").replace("}", "");
 		str = str.replace(",", ";").replace("=", ",");
 		strs = str.split(";");
-	  return strs;
-  }
+		return strs;
+	}
 	
 	/**
 	 * Convert a String array to a map. key and values must be comma separated. For example : "color,blue" will create an entry "blue" with key "color" in the map.
@@ -179,9 +180,9 @@ public class Utils {
 			arr = strs[i].split(",");
 			if(arr.length == 2)
 				map.put(arr[0], arr[1]);
-    }
+		}
 		return map;
-  }
+	}
 	
 	/**
 	 * Create a JCR xpath condition that match a property against a list of values with an or condition. 
@@ -195,14 +196,14 @@ public class Utils {
 		if(!list.isEmpty()) {
 			int t = 0;
 			for (String string : list) {
-	      if(t == 0) builder.append("(not(").append(property).append(") or ").append(property).append("='").append(string).append("'");
-	      else builder.append(" or ").append(property).append("='").append(string).append("'");
-	      t = 1;
-      }
+				if(t == 0) builder.append("(not(").append(property).append(") or ").append(property).append("='").append(string).append("'");
+				else builder.append(" or ").append(property).append("='").append(string).append("'");
+				t = 1;
+			}
 			if(t == 1) builder.append(")");
 		}
-	  return builder.toString();
-  }
+		return builder.toString();
+	}
 	
 	/**
 	 * Note that
@@ -213,105 +214,125 @@ public class Utils {
 	public static boolean isListContentItemList(List<String> list, List<String> list1) {
 		if(list1.size() == 1 && list1.get(0).equals(" ")) return false;
 		for (String string : list1) {
-	    if(list.contains(string)) return true;
-    }
-	  return false;
-  }
+			if(list.contains(string)) return true;
+		}
+		return false;
+	}
 
 	/**
-	 * Transforms a List of strings into a string array and clear any  blank entry. 
+	 * Transforms a List of strings into a string array and clear any	blank entry. 
 	 * A blank entry is the 'space' value (aka " ").
 	 * @param list List of Strings to transform
 	 * @return String array cleared of blanks
 	 * @throws Exception
 	 */
-  public static String[] getStringsInList(List<String> list) throws Exception {
-    if (list.size() > 1) {
-      while (list.contains(" ")) {
-        list.remove(" ");
-      }
-    }
-    return list.toArray(new String[list.size()]);
+	public static String[] getStringsInList(List<String> list) throws Exception {
+		if (list.size() > 1) {
+			while (list.contains(" ")) {
+				list.remove(" ");
+			}
+		}
+		return list.toArray(new String[list.size()]);
+	}
+
+	/**
+	 * Extract the items two lists have in common.
+	 * @param pList first list
+	 * @param cList second list
+	 * @return a new list containing only the common elements between the two lists in input
+	 * @throws Exception
+	 */
+	public static List<String> extractSameItems(List<String>pList, List<String> cList) throws Exception {
+		List<String>list = new ArrayList<String>();
+		for (String string : pList) {
+			if(cList.contains(string)) list.add(string);
+		}
+		return list;
+	}
+
+	/**
+	 * Transforms a jcr Value array into a string array . 
+	 * Calls {@link Value#getString()} on each item.
+	 * @see javax.jcr.Value
+	 * @param values array of values to transform
+	 * @return string array for the Value array
+	 * @throws Exception
+	 */
+	public static String[] valuesToArray(Value[] values) throws Exception {
+		if (values.length < 1)
+			return new String[] {};
+		if (values.length == 1)
+			return new String[] { values[0].getString() };
+		String[] result = new String[values.length];
+		for (int i = 0; i < values.length; ++i) {
+			result[i] = values[i].getString();
+		}
+		return result;
+	}
+
+	/**
+	 * Transforms a jcr Value array into a string list . 
+	 * Calls {@link Value#getString()} on each item.
+	 * @see javax.jcr.Value
+	 * @param values array of values to transform
+	 * @return string list for the Value array
+	 * @throws Exception
+	 */
+	public static List<String> valuesToList(Value[] values) throws Exception {
+		List<String> list = new ArrayList<String>();
+		if (values.length < 1)
+			return list;
+		if (values.length == 1) {
+			list.add(values[0].getString());
+			return list;
+		}
+		for (int i = 0; i < values.length; ++i) {
+			list.add(values[i].getString());
+		}
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T>T[] arrayCopy(final T[] source) {
+		// null in, null out
+		if (source == null) {
+			return null;
+		}
+		// empty in, empty out
+		if (source.length == 0) {
+			
+			try {
+				return (T[]) Array.newInstance(source.getClass().getComponentType(), 0);
+			} catch (Exception e) {
+				return null;
+				// should never occur;
+			}
+		}
+		
+		// instanciate a new array based on first item
+		T[] dest = (T[]) Array.newInstance(source[0].getClass(), source.length);
+		System.arraycopy(source, 0, dest, 0, source.length);
+		return dest;
+	}
+	/**
+	 * encode a Link when save and get link in jcr. 
+	 * @param link
+	 * @return String is link
+	 * @throws Exception
+	 */
+	public static String encodeLink(String link) {
+		if(link != null && link.contains("/")) {
+			link = StringUtils.replace(link, "/", "47%");
+			link = StringUtils.replace(link, ":", "58%");
+		}
+	  return link;
   }
 
-  /**
-   * Extract the items two lists have in common.
-   * @param pList first list
-   * @param cList second list
-   * @return a new list containing only the common elements between the two lists in input
-   * @throws Exception
-   */
-  public static List<String> extractSameItems(List<String>pList, List<String> cList) throws Exception {
-  	List<String>list = new ArrayList<String>();
-  	for (String string : pList) {
-  		if(cList.contains(string)) list.add(string);
-  	}
-  	return list;
-  }
-
-  /**
-   * Transforms a jcr Value array into a string array . 
-   * Calls {@link Value#getString()} on each item.
-   * @see javax.jcr.Value
-   * @param values array of values to transform
-   * @return string array for the Value array
-   * @throws Exception
-   */
-  public static String[] valuesToArray(Value[] values) throws Exception {
-  	if (values.length < 1)
-  		return new String[] {};
-  	if (values.length == 1)
-  		return new String[] { values[0].getString() };
-  	String[] result = new String[values.length];
-  	for (int i = 0; i < values.length; ++i) {
-  		result[i] = values[i].getString();
-  	}
-  	return result;
-  }
-
-  /**
-   * Transforms a jcr Value array into a string list . 
-   * Calls {@link Value#getString()} on each item.
-   * @see javax.jcr.Value
-   * @param values array of values to transform
-   * @return string list for the Value array
-   * @throws Exception
-   */
-  public static List<String> valuesToList(Value[] values) throws Exception {
-  	List<String> list = new ArrayList<String>();
-  	if (values.length < 1)
-  		return list;
-  	if (values.length == 1) {
-  		list.add(values[0].getString());
-  		return list;
-  	}
-  	for (int i = 0; i < values.length; ++i) {
-  		list.add(values[i].getString());
-  	}
-  	return list;
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T>T[] arrayCopy(final T[] source) {
-    // null in, null out
-    if (source == null) {
-      return null;
-    }
-    // empty in, empty out
-    if (source.length == 0) {
-      
-      try {
-        return (T[]) Array.newInstance(source.getClass().getComponentType(), 0);
-      } catch (Exception e) {
-        return null;
-        // should never occur;
-      }
-    }
-    
-    // instanciate a new array based on first item
-    T[] dest = (T[]) Array.newInstance(source[0].getClass(), source.length);
-    System.arraycopy(source, 0, dest, 0, source.length);
-    return dest;
-  }
-
+	public static String uncodeLink(String link) {
+		if(link != null && !link.contains("/")) {
+			link = StringUtils.replace(link, "47%", "/");
+			link = StringUtils.replace(link, "58%", ":");
+		}
+		return link;
+	}
 }

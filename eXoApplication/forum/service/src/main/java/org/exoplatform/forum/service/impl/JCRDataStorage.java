@@ -16,15 +16,12 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.Writer;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,10 +56,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.commons.utils.ISO8601;
@@ -136,7 +129,6 @@ import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 
 
 /**
@@ -2019,7 +2011,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		topicNew.setViewCount(reader.l(EXO_VIEW_COUNT));
 		topicNew.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
 		topicNew.setIcon(reader.string(EXO_ICON));
-		topicNew.setLink(reader.string(EXO_LINK));
+		topicNew.setLink(Utils.uncodeLink(reader.string(EXO_LINK)));
 		topicNew.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
 		topicNew.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
 		topicNew.setIsClosed(reader.bool(EXO_IS_CLOSED));
@@ -2282,7 +2274,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				topicNode.setProperty(EXO_TAG_ID, topic.getTagId());
 				topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, true);
 				topicNode.setProperty(EXO_IS_POLL, topic.getIsPoll());
-				topicNode.setProperty(EXO_LINK, topic.getLink());
+				topicNode.setProperty(EXO_LINK, Utils.encodeLink(topic.getLink()));
 				topicNode.setProperty(EXO_PATH, forumId);
 				// TODO: Thinking for update forum and user profile by node observation?
 				// setTopicCount for Forum and userProfile
@@ -2899,7 +2891,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		postNew.setMessage(reader.string(EXO_MESSAGE));
 		postNew.setRemoteAddr(reader.string(EXO_REMOTE_ADDR));
 		postNew.setIcon(reader.string(EXO_ICON));
-		postNew.setLink(reader.string(EXO_LINK));
+		postNew.setLink(Utils.uncodeLink(reader.string(EXO_LINK)));
 		postNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
 		postNew.setIsHidden(reader.bool(EXO_IS_HIDDEN));
 		postNew.setIsActiveByTopic(reader.bool(EXO_IS_ACTIVE_BY_TOPIC));
@@ -2947,7 +2939,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				postNode.setProperty(EXO_CREATED_DATE, calendar);
 				postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
 				postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, true);
-				postNode.setProperty(EXO_LINK, post.getLink());
+				postNode.setProperty(EXO_LINK, Utils.encodeLink(post.getLink()));
 				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 					postNode.setProperty(EXO_IS_FIRST_POST, true);
 				} else {
