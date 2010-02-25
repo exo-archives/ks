@@ -5444,8 +5444,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			boolean isAnd = false;
 			String searchBy = null;
 			List<String> listOfUser = new ArrayList<String>();
-			List<String> categoryCanView = new ArrayList<String>();
-	    List<String> forumCanView = new ArrayList<String>();
+			
 
 			// If user isn't admin , get all membership of user
 			if(!isAdmin){
@@ -5455,10 +5454,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:userPrivate");
 				listCateIds = mapList.get(Utils.CATEGORY);
 				listForumIds = mapList.get(Utils.FORUM);
-        Map<String, List<String>> mapList1 = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:viewer");
-        categoryCanView = mapList1.get(Utils.CATEGORY);
-        forumCanView = mapList1.get(Utils.FORUM);
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
 			}
 			for (String type : types) {
 				StringBuffer queryString = new StringBuffer();
@@ -5483,7 +5478,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						else searchBy = "@exo:path";
 						queryString.append("(");
 						for(int i = 0; i < listForumIds.size(); i ++){
-							queryString.append(searchBy).append(" = '").append(listForumIds.get(i)).append("'");
+							queryString.append(searchBy).append("='").append(listForumIds.get(i)).append("'");
 							if(i < listForumIds.size() - 1) queryString.append(" or ");
 						}
 						queryString.append(") and ");
@@ -5550,6 +5545,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iter = result.getNodes();
+//				System.out.println("\n\n=======>iter: "+iter.getSize());
 				while (iter.hasNext()) {
 					Node nodeObj = iter.nextNode();
 					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
@@ -5559,9 +5555,16 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin, ""));
 				}
 			}
-//			System.out.println("\n\n=======>"+listSearchEvent.size());
-			if(!isAdmin) {
-				listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
+//			System.out.println("\n\n=======>listSearchEvent: "+listSearchEvent.size());
+			if(!isAdmin && listSearchEvent.size() > 0) {
+				List<String> categoryCanView = new ArrayList<String>();
+		    List<String> forumCanView = new ArrayList<String>();
+		    Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:viewer");
+        categoryCanView = mapList.get(Utils.CATEGORY);
+        forumCanView = mapList.get(Utils.FORUM);
+        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
+        if(categoryCanView.size() > 0 || forumCanView.size() > 0)
+        	listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
 			}
 		} catch (Exception e) {
 		  throw e;
@@ -5576,8 +5579,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	  List<ForumSearch> tempListSearchEvent = new ArrayList<ForumSearch>();
 	  String path = null;
 	  String []strs;
-//	  System.out.println("\n\ncategoryCanView: " + categoryCanView.toString());
-//	  System.out.println("\n\nforumCanView: " + forumCanView.toString());
 	  for (ForumSearch forumSearch : listSearchEvent) {
       path = forumSearch.getPath();
       if(!path.contains(Utils.TOPIC)){// search category or forum
@@ -5643,17 +5644,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			eventQuery.setPath(path);
 			String type = eventQuery.getType();
 			String queryString = null;
-	    List<String> categoryCanView = new ArrayList<String>();
-	    List<String> forumCanView = new ArrayList<String>();
+			List<String> listOfUser = eventQuery.getListOfUser();
 			if(eventQuery.getUserPermission() > 0){
-			  List<String> listOfUser = eventQuery.getListOfUser();
 				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:userPrivate");
 				listCateIds = mapList.get(Utils.CATEGORY);
 				listForumIds = mapList.get(Utils.FORUM);
-        Map<String, List<String>> mapList1 = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:viewer");
-        categoryCanView = mapList1.get(Utils.CATEGORY);
-        forumCanView = mapList1.get(Utils.FORUM);
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
 			}
 			if (type.equals(Utils.CATEGORY)){
 				queryString = eventQuery.getPathQuery(listCateIds);
@@ -5674,7 +5669,14 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				listSearchEvent.addAll(getSearchByAttachment(categoryHome, eventQuery.getPath(), eventQuery.getKeyValue(), listForumIds, eventQuery.getListOfUser(), isAdmin, type));
 			}
       if(eventQuery.getUserPermission()>0) {
-        listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
+      	List<String> categoryCanView = new ArrayList<String>();
+				List<String> forumCanView = new ArrayList<String>();
+				Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds, "@exo:viewer");
+				categoryCanView = mapList.get(Utils.CATEGORY);
+				forumCanView = mapList.get(Utils.FORUM);
+				forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
+        if(categoryCanView.size() > 0 || forumCanView.size() > 0)
+        	listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
       }
     } catch (Exception e) {
     }finally {
