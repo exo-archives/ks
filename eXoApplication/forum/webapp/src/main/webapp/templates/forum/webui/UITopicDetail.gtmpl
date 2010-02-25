@@ -983,7 +983,7 @@
 										 String urlFile = uicomponent.getFileSource(attachment) ;
 										 String titleFile = attachment.getName();
 							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
-								 		 double sizeNumber = attachment.getSize() ;
+								 		 long sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
