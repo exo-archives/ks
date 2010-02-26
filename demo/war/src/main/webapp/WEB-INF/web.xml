@@ -203,7 +203,7 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>RestServer</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>/rest-ksdemo/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

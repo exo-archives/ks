@@ -56,7 +56,7 @@
 
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>rest</web-resource-name>
+			<web-resource-name>rest-ksdemo</web-resource-name>
 			<url-pattern>/private/*</url-pattern>
 		</web-resource-collection>
 		<auth-constraint>
