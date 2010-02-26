@@ -27,7 +27,6 @@
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
 	
 %>
-
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="AnswerToolbar" style="float:left; width:100%;">
 		<div class="LeftBar">
@@ -96,17 +95,12 @@
 														<div class="UIRightPopupMenuContainer" style="margin:0px; padding:3px 0;">
 												
 													<%
-														String[] actionTollbar ;
-														actionTollbar = uicomponent.getMenuCateManager();
-														String linkAction = "" ;
-														String opacity ;
+														String[] actionTollbar = uicomponent.getMenuCateManager();
 														for(String action in actionTollbar) {
-															linkAction = uicomponent.event(action, cateId);
-															String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
+															if(action.equals("DeleteCategory") && uicomponent.isCategoryHome()) continue; 
 													%>
-																
-															<div onmousedown="$linkAction" class="MenuItem">
-																<a class="IconItem $action" href="javascript:void(0);">$itemLabelView</a>
+															<div onmousedown="<%=uicomponent.event(action, cateId);%>" class="MenuItem">
+																<a class="IconItem $action" href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action)%></a>
 															</div>
 													<%
 														}%>
@@ -123,22 +117,16 @@
 								<%
 								}
 								if(canEditQuestion) {
-									String[] actionTollbar ;
-									actionTollbar = uicomponent.getActionTollbar();
-									String linkAction = "" ;
-									String opacity ;
-									
+									String[] actionTollbar = uicomponent.getActionTollbar();
 									for(String action in actionTollbar) {
-										linkAction = uicomponent.event(action, cateId);
-										String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + action);
 								%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction" class="SeparatorLine">
+											<div onclick="<%=uicomponent.event(action, cateId);%>" class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
 															<div class="Icon $action">
-																<a href="javascript:void(0);">$itemLabelView</a>
+																<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action." + action);%></a>
 															</div>
 														</div>
 													</div>
@@ -148,16 +136,15 @@
 								<%
 									}
 								} else {
-									String linkAction =uicomponent.event("AddNewQuestion", cateId);
 									if(uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion()) {
 								%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
-											<div onclick="$linkAction" class="SeparatorLine">
+											<div onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" class="SeparatorLine">
 												<div class="LeftOverButton">
 													<div class="RightOverButton">
 														<div class="CenterOverButton">
 															<div class="Icon AddNewQuestion">
-																<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "AddQuestion")%></a>
+																<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.AddQuestion")%></a>
 															</div>
 														</div>
 													</div>
@@ -176,7 +163,7 @@
 												<div class="RightOverButton">
 													<div class="CenterOverButton">
 														<div class="Icon Setting">
-															<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Settings")%></a>
+															<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Settings")%></a>
 														</div>
 													</div>
 												</div>
@@ -191,7 +178,7 @@
 											<div class="RightOverButton">
 												<div class="CenterOverButton">
 													<div class="Icon Print">
-														<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action." + "Print")%></a>
+														<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
 													</div>
 												</div>
 											</div>
@@ -295,13 +282,13 @@
 																		if(canEditQuestion){
 																			linkView = uicomponent.event(viewAction, qId+"/true");
 																		} else {
-																			linkView = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend") + "');" ;
+																			linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
 																			lockFunction = "LockFunction" ;
 																		}
 																	} else {
 																		linkView = uicomponent.event(viewAction, qId);
 																	}
-																	String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);
+																	String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);
 															%>
 																	<div class="MenuItem $lockFunction">
 																		<a class="IconItem $iconView" href="$linkView">$itemLabelView</a>
@@ -311,7 +298,7 @@
 															 
 															<%if(uicomponent.currentUser_ != null) {
 																	if(!canEditQuestion && uicomponent.currentUser_.equals(question.getAuthor())){
-																		String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																		String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
 																		String linkView = uicomponent.event("EditQuestion", qId);
 																	%>	
 																		<div class="MenuItem">
@@ -488,7 +475,7 @@
 																						if(canEditQuestion) {
 																							link = uicomponent.event("SendQuestion",qId+"/true");
 																						} else {
-																							link = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend") + "');" ;
+																							link = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend") + "');" ;
 																							SendToFriend = "LockSendToFriend" ;
 																						}
 																					} else {
@@ -683,13 +670,13 @@
 																													if(canEditQuestion){
 																														linkView = uicomponent.event(viewAction, qId+"/true");
 																													} else {
-																														linkView = "javaScript:alert('" + _ctx.appRes(uicomponent.getName() + ".label.CanSendToFriend")+"');" ;
+																														linkView = "javaScript:alert('" + _ctx.appRes("UIQuestions.label.CanSendToFriend")+"');" ;
 																														lockFunction = "LockFunction" ;
 																													}
 																												} else {
 																													linkView = uicomponent.event(viewAction, qId);
 																												}
-																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action." + viewAction);																												
+																												String itemLabelView = _ctx.appRes("UIQuestions.action." + viewAction);																												
 																										%>
 																												<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem $lockFunction" style="cursor:pointer;">
 																													<a class="IconItem $iconView" href="javascript:void(0);">$itemLabelView</a>
@@ -698,7 +685,7 @@
 																											}
 																										%>																										
 																										<%if(!canEditQuestion && uicomponent.currentUser_ != null && uicomponent.currentUser_.equals(question.getAuthor())){
-																												String itemLabelView = _ctx.appRes(uicomponent.getName() + ".action.EditQuestion");
+																												String itemLabelView = _ctx.appRes("UIQuestions.action.EditQuestion");
 																												String linkView = uicomponent.event("EditQuestion", qId);																				
 																										%>
 																											<div onclick="javascript:void(0);" onmousedown="$linkView" class="MenuItem" style="cursor:pointer;">
@@ -738,7 +725,7 @@
 																								<td>
 																								<%
 																									if(uicomponent.canEditQuestion){
-																										 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action.AddAnswerQuestion"); 
+																										 String actionLabel = _ctx.appRes("UIQuestions.action.AddAnswerQuestion"); 
 																										 String link = uicomponent.event("ResponseQuestion", question.getPath());
 																								%>
 																										<div class="ActionButton LightBlueStyle">
@@ -761,7 +748,7 @@
 																												<div class="ButtonRight">
 																													<div class="ButtonMiddle ButtonMiddleIcon">
 																														<div class="Comment" style="padding-left:20px;">
-																															<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes(uicomponent.getName() + ".action.AddCommentQuestion")%></a>
+																															<a href="<%=uicomponent.event("CommentQuestion", question.getPath() + "/new")%>"><%=_ctx.appRes("UIQuestions.action.AddCommentQuestion")%></a>
 																														</div>
 																													</div>
 																												</div>
@@ -873,7 +860,7 @@
 																%>
 																	<div class="LabelBox" style="margin:10px 10px 0px 12px;">
 																		<div class="FalseIcon" style="padding-left:15px;">
-																			<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes(uicomponent.getName() + ".label." + "lostFile")%></a>
+																			<a style="color:red;" href="javaScript:void(0)"><%=_ctx.appRes("UIQuestions.label.lostFile")%></a>
 																		</div>
 																		<div style="clear:left;"><span></span></div>
 																	</div>
@@ -892,7 +879,7 @@
 													String relationContent = "" ;
 											%>
 												<div class="RelationContent">
-													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes(uicomponent.getName() + ".label." + "RelatedQuestion")%>:</div>
+													<div style="font-weight:bold; font-size:13px; margin:5px 0px 3px;"><%=_ctx.appRes("UIQuestions.label.RelatedQuestion")%>:</div>
 											<%
 													for(String relationId :questionRelation) {
 														relationContent = uicomponent.getQuestionRelationById(relationId).replaceAll("<p>", "").replaceAll("</p>", "");
@@ -1088,7 +1075,7 @@
 													} else { %>
 													<div align="center" style="width:100%;">
 														<div class="NotResponse" style="margin:auto; width:300px; padding-left:20px; font-weight:bold; text-align:left;">
-															<%=_ctx.appRes(uicomponent.getName() + ".label." + "QuestionNotYetAnswered")%>
+															<%=_ctx.appRes("UIQuestions.label.QuestionNotYetAnswered")%>
 														</div>
 													</div>
 												<%}%>
@@ -1235,7 +1222,7 @@
 								<div class="ButtonLeft">
 									<div class="ButtonRight">
 										<div class="ButtonMiddle">
-											<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.Print")%></a>
+											<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.Print")%></a>
 										</div>
 									</div>
 								</div>
@@ -1244,7 +1231,7 @@
 								<div class="ButtonLeft">
 									<div class="ButtonRight">
 										<div class="ButtonMiddle">
-											<a href="javascript:void(0);"><%=_ctx.appRes(uicomponent.getName() + ".action.ClosePrintQuestion")%></a>
+											<a href="javascript:void(0);"><%=_ctx.appRes("UIQuestions.action.ClosePrintQuestion")%></a>
 										</div>
 									</div>
 								</div>

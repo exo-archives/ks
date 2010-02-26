@@ -164,6 +164,10 @@ public class UIQuestions extends UIContainer {
 		if(FAQUtils.isFieldEmpty(getId())) setId("UIQuestions");
 	}
 	
+	private boolean isCategoryHome() {
+		return (categoryId_ == null || categoryId_.equals(Utils.CATEGORY_HOME)) ? true:false;
+	}
+	
 	public String getRSSLink(){
 		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
