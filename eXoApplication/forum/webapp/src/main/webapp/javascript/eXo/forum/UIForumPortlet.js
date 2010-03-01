@@ -210,18 +210,25 @@ UIForumPortlet.prototype.visibleAction = function(id) {
 	var DOMUtil = eXo.core.DOMUtil;
 	var addCategory = DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
 	var addForum = DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
+	var isIE = document.all?true:false;
 	if(document.getElementById("UICategories")){
 		addCategory.className = "Icon AddCategory";
 		addForum.className = "Icon AddForum";
 	} else if(document.getElementById("UICategory")){
 		addCategory.className = "Icon AddCategory DisableAction";
 		addForum.className = "Icon AddForum";
-		addCategory.childNodes[1].href = "javascript:void(0);";
+		if(isIE)addCategory.firstChild.href = "javascript:void(0);";
+		else addCategory.childNodes[1].href = "javascript:void(0);";
 	} else {
 		addCategory.className = "Icon AddCategory DisableAction";
 		addForum.className = "Icon AddForum DisableAction";
-		addCategory.childNodes[1].href = "javascript:void(0);";
-		addForum.childNodes[1].href = "javascript:void(0);";
+		if(isIE){
+			addCategory.firstChild.href = "javascript:void(0);";
+			addForum.firstChild.href = "javascript:void(0);";		
+		}else{
+			addCategory.childNodes[1].href = "javascript:void(0);";
+			addForum.childNodes[1].href = "javascript:void(0);";
+		}
 	}
 };
 
