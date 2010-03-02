@@ -906,7 +906,7 @@
 														</div>
 														<div class="MiddleLeftRightClickPopupMenu">
 															<div class="MiddleRightRightClickPopupMenu">
-																<div class="UIRightPopupMenuContainer" style="width:140px; min-width:140px;">
+																<div class="UIRightPopupMenuContainer" style="width:165px; min-width:164px;">
 																	<div class="LineMenu"><span></span></div>
 																		<div title="$title1" class="MenuItem" onclick="$link2">	 
 																			<div class="ItemIcon">
