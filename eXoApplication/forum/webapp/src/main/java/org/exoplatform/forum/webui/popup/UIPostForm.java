@@ -289,7 +289,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 			if(userProfile.getUserRole() > 1 || (userProfile.getUserRole() == 1 && !ForumServiceUtils.hasPermission(forum.getModerators(), userProfile.getUserId()))) {
 				if(!topic.getIsActive() || !topic.getIsActiveByForum()) return false;
 				String[] canCreadPost = topic.getCanPost();
-				if(canCreadPost != null && canCreadPost.length > 0 && !canCreadPost[0].equals(" ")){
+				if(!ForumUtils.isArrayEmpty(canCreadPost)){
 					return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
 				}
 			}

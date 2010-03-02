@@ -201,7 +201,7 @@ public class ForumUtils {
 				str.replaceAll(",", ";") ;
 				return str.trim().split(";") ;
 			}
-		} else return new String[] {} ;
+		} else return new String[] {""} ;
 	}
 	
 	public static String unSplitForForum (String[] str) throws Exception {
@@ -459,6 +459,7 @@ public class ForumUtils {
 		String []strs = splitForForum(s);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < strs.length; i++) {
+			if(isEmpty(strs[i])) continue;
 			if(i > 0) builder.append(",<br/>");
 	    builder.append("<span title='").append(strs[i]).append("'>").append(getSubString(strs[i], 15)).append("</span>");
     }

@@ -391,13 +391,23 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		/**
 		 * set permission for create new thread
 		 */
-		String[] strings = this.forum.getCreateTopicRole();
-		boolean canCreateTopic = this.isMod;
-		if(!canCreateTopic){ 
-			if(isIPBaned(getIPRemoter())) canCreateTopic = false;
-			else {
-				if(strings == null || strings.length == 0 || (strings.length == 1 && strings[0].equals(" "))) canCreateTopic = true;
-				else canCreateTopic = ForumServiceUtils.hasPermission(strings, userName);
+		boolean canCreateTopic = true;
+		boolean isCheck = true;
+		List<String> ipBaneds = forum.getBanIP();
+		if(ipBaneds != null && ipBaneds.contains(getIPRemoter()) || userProfile.getIsBanned()) {
+			canCreateTopic = false;
+			isCheck = false;
+		}
+		if(!this.isMod && isCheck){
+			String[] strings = this.forum.getCreateTopicRole() ;
+			if(!ForumUtils.isArrayEmpty(strings)){
+				canCreateTopic = ForumServiceUtils.hasPermission(strings, userName) ;
+			}
+			if(canCreateTopic){
+				strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
+				if(!ForumUtils.isArrayEmpty(strings)){
+					canCreateTopic = ForumServiceUtils.hasPermission(strings, userName) ;
+				}
 			}
 		}
 		return canCreateTopic;
@@ -1434,6 +1444,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
   private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
+  	System.out.println("\n\n=========>  " + userProfile.getUserId());
     this.topic = (Topic) getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
     if (topic.getIsClosed() || topic.getIsLock())
       return false;
@@ -1446,7 +1457,8 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
       if (!topic.getIsActive() || !topic.getIsActiveByForum())
         return false;
       String[] canCreadPost = topic.getCanPost();
-      if (canCreadPost != null && canCreadPost.length > 0 && !canCreadPost[0].equals(" ")) {
+      if (!ForumUtils.isArrayEmpty(canCreadPost)) {
+      	System.out.println("\n\n=========>  " + canCreadPost.length);
         return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
       }
     }
