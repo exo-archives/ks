@@ -255,26 +255,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-//hard code selectedNode of forum portlet
-	private String getLinkDiscuss(String topicId) throws Exception {
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String link = portalContext.getRequest().getRequestURL().toString();
-		try {
-			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-			String portalName = "/" + Util.getUIPortal().getName() ;
-			if(link.indexOf(portalName) > 0) {
-	      if(link.indexOf(portalName + "/" + selectedNode) < 0){
-	      	link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-	      }                 
-	    }
-			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
-			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-		return link;
-	}
-	
 	private void updateDiscussForum() throws Exception{
 		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
@@ -285,7 +265,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				if(topic != null) {
 					String []ids = topic.getPath().split("/");
 					int t = ids.length;
-					String linkForum = getLinkDiscuss(topicId);
+					String linkForum = FAQUtils.getLinkDiscuss(topicId);
 					Post post;
 					int l = question_.getAnswers().length;
 					for (int i = 0; i < l; ++i) {
@@ -301,7 +281,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 									question_.getAnswers()[i].setPostId(post.getId());
 									post.setMessage(question_.getAnswers()[i].getResponses());
 									post.setLink(linkForum);
-									post.setIsApproved(false);
+									post.setIsApproved(!topic.getIsModeratePost());
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								}else {
 									//post.setIsApproved(false);
@@ -315,7 +295,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 								post.setIcon("ViewIcon");
 								post.setMessage(question_.getAnswers()[i].getResponses());
 								post.setLink(linkForum);
-								post.setIsApproved(false);
+								post.setIsApproved(!topic.getIsModeratePost());
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								question_.getAnswers()[i].setPostId(post.getId());
 							}

@@ -158,8 +158,6 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 			try{								
 				//Create link by Vu Duy Tu.
 	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
-	      
-				String linkForum = link.replaceAll("faq", "forum").replaceFirst(commentForm.getId(), "UIBreadcumbs").replaceFirst("ViewQuestion", "ChangePath");
 				link = link.replaceFirst("OBJECTID", commentForm.question_.getId());
 				commentForm.question_.setLink(link) ;
 				if(commentForm.comment != null) {
@@ -177,7 +175,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 					if(topic != null) {
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
-						linkForum = linkForum.replaceFirst("OBJECTID", topicId);
+						String linkForum = FAQUtils.getLinkDiscuss(topicId);
 						if(commentForm.isAddNew) {
 							String remoteAddr = "";
 							try {
@@ -190,7 +188,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 							post.setName("Re: " + commentForm.question_.getQuestion());
 							post.setMessage(comment);
 							post.setLink(linkForum);
-							post.setIsApproved(false);
+							post.setIsApproved(!topic.getIsModeratePost());
 							post.setRemoteAddr(remoteAddr);
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
@@ -221,7 +219,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 									}else{
 										post.setModifiedBy(commentForm.currentUser_);
 									}
-									post.setIsApproved(false);
+									post.setIsApproved(!topic.getIsModeratePost());
 									post.setMessage(comment);
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
 	              } catch (Exception e) {

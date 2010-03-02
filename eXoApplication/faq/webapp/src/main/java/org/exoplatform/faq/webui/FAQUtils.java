@@ -481,6 +481,25 @@ public class FAQUtils {
 		link = url + link;
 	  return link;
   }
+
+	public static String getLinkDiscuss(String topicId) throws Exception {
+		PortalRequestContext portalContext = Util.getPortalRequestContext();
+		String link = portalContext.getRequest().getRequestURL().toString();
+		try {
+			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
+			String portalName = "/" + Util.getUIPortal().getName() ;
+			if(link.indexOf(portalName) > 0) {
+	      if(link.indexOf(portalName + "/" + selectedNode) < 0){
+	      	link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
+	      }                 
+	    }
+			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
+			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+		return link;
+	}
 	
 	public static int getLimitUploadSize(){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();

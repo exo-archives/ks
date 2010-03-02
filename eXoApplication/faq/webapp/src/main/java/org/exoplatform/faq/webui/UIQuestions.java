@@ -172,26 +172,6 @@ public class UIQuestions extends UIContainer {
 		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
 	}
 	
-	//hard code selectedNode of forum portlet
-	private String getLinkDiscuss(String topicId) throws Exception {
-		PortalRequestContext portalContext = Util.getPortalRequestContext();
-		String link = portalContext.getRequest().getRequestURL().toString();
-		try {
-			String selectedNode = Util.getUIPortal().getSelectedNode().getUri() ;
-			String portalName = "/" + Util.getUIPortal().getName() ;
-			if(link.indexOf(portalName) > 0) {
-	      if(link.indexOf(portalName + "/" + selectedNode) < 0){
-	      	link = link.replaceFirst(portalName, portalName + "/" + selectedNode) ;
-	      }                 
-	    }
-			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
-			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
-    } catch (Exception e) {
-    	e.printStackTrace();
-    }
-		return link;
-	}
-
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
@@ -1241,7 +1221,7 @@ public class UIQuestions extends UIContainer {
 				Topic topic = new Topic();
 				String topicId = topic.getId() ;
 				uiForm.discussId = topicId;
-				String link = uiForm.getLinkDiscuss(topicId); 
+				String link = FAQUtils.getLinkDiscuss(topicId); 
 				link = link.replaceFirst("private", "public");
 				Question question = uiForm.faqService_.getQuestionById(questionId);
 				String userName = question.getAuthor();
