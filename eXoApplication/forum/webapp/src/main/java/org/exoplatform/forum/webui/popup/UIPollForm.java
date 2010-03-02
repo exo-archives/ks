@@ -120,6 +120,7 @@ public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 			multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
 			multiVoteCheckInput.setEnable(false);
 			this.isUpdate = isUpdate ;
+			setDefaulFall();
 		}
 	}
 	
@@ -136,11 +137,8 @@ public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 		this.initMultiValuesField(list);
 	}
 	
-	public void activate() throws Exception {
-	}
-	
-	public void deActivate() throws Exception {
-	}
+	public void activate() throws Exception {}
+	public void deActivate() throws Exception {}
 	
 	static	public class SaveActionListener extends EventListener<UIPollForm> {
 		@SuppressWarnings("unchecked")
