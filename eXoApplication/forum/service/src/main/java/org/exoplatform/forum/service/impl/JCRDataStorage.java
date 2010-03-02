@@ -5551,10 +5551,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			if(!isAdmin && listSearchEvent.size() > 0) {
 				List<String> categoryCanView = new ArrayList<String>();
 		    List<String> forumCanView = new ArrayList<String>();
-		    Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, listForumIds,"@exo:viewer");
+		    Map<String, List<String>> mapList = getCategoryViewer(categoryHome, listOfUser, listCateIds, new ArrayList<String>(),"@exo:viewer");
         categoryCanView = mapList.get(Utils.CATEGORY);
-        forumCanView = mapList.get(Utils.FORUM);
-        forumCanView.addAll(getForumUserCanView(categoryHome, listOfUser, listForumIds));
+//        forumCanView = mapList.get(Utils.FORUM);
+        forumCanView = getForumUserCanView(categoryHome, listOfUser, listForumIds);
         if(categoryCanView.size() > 0 || forumCanView.size() > 0)
         	listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
 			}
@@ -5586,7 +5586,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	  return tempListSearchEvent;
 	}
 	
-	private List<String> getForumUserCanView(Node categoryHome,List<String> listOfUser,List<String> listForumIds) throws Exception {
+	private List<String> getForumUserCanView(Node categoryHome, List<String> listOfUser, List<String> listForumIds) throws Exception {
     List<String> listForum = new ArrayList<String>();
 	  QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
     StringBuilder queryString = new StringBuilder();
@@ -5597,13 +5597,12 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
     int i = 0;
     // where exo:viewer =  'user' -- who belong to the list
     for (String user : listOfUser) {
-      if(i==0) queryString.append("[(@exo:viewer=' ') or (@exo:viewer='') or (@exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
+      if(i==0) queryString.append("[(not(@exo:viewer) or @exo:viewer='' or @exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
       else queryString.append(" or (@exo:viewer='").append(user).append("')").append(" or (@exo:moderators='").append(user).append("')");
       i = 1;
     }
     
     if(i==1) queryString.append("]");
-
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     NodeIterator iter = result.getNodes();
@@ -5822,7 +5821,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         Node catNode = iter.nextNode();
         cateId = catNode.getName();
         if(listCateIds != null && !listCateIds.isEmpty()) {
-//        	System.out.println("\n\n CO CHAY DAY KO \n\n");
       		if(listCateIds.contains(cateId)) {
       			listCateId.add(cateId);
       		}
@@ -5846,7 +5844,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
           }
         }
       }
-//			System.out.println("\n\n===> listCateId:" + listCateId.toString());
 			mapList.put(Utils.FORUM, listForumId);
 			mapList.put(Utils.CATEGORY, listCateId);
 		} else if(iter.getSize() == 0) {

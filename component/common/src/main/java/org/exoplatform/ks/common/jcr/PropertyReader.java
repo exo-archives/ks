@@ -131,8 +131,10 @@ public class PropertyReader {
 	 String[] valuesToArray(Value[] Val) throws Exception {
 	    if (Val.length < 1)
 	      return new String[] {};
-	    if (Val.length == 1)
-	      return new String[] { Val[0].getString() };
+	    if (Val.length == 1){
+	    	if(Val[0].getString().length() == 0) return new String[] {};
+	    	else return new String[] { Val[0].getString() };
+	    }
 	    String[] Str = new String[Val.length];
 	    for (int i = 0; i < Val.length; ++i) {
 	      Str[i] = Val[i].getString();
@@ -145,6 +147,7 @@ public class PropertyReader {
 	    if (values.length < 1)
 	      return list;
 	    if (values.length == 1) {
+	    	if(values[0].getString().length() == 0) return list;
 	      list.add(values[0].getString());
 	      return list;
 	    }

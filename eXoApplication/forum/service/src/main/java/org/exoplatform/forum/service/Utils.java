@@ -258,17 +258,20 @@ public class Utils {
 	 * @return string array for the Value array
 	 * @throws Exception
 	 */
-	public static String[] valuesToArray(Value[] values) throws Exception {
-		if (values.length < 1)
-			return new String[] {};
-		if (values.length == 1)
-			return new String[] { values[0].getString() };
-		String[] result = new String[values.length];
-		for (int i = 0; i < values.length; ++i) {
-			result[i] = values[i].getString();
-		}
-		return result;
-	}
+	
+	public static String[] valuesToArray(Value[] Val) throws Exception {
+    if (Val.length < 1)
+      return new String[] {};
+    if (Val.length == 1){
+    	if(Val[0].getString().length() == 0) return new String[] {};
+    	else return new String[] { Val[0].getString() };
+    }
+    String[] result = new String[Val.length];
+    for (int i = 0; i < Val.length; ++i) {
+      result[i] = Val[i].getString();
+    }
+    return result;
+  }
 
 	/**
 	 * Transforms a jcr Value array into a string list . 
@@ -278,19 +281,21 @@ public class Utils {
 	 * @return string list for the Value array
 	 * @throws Exception
 	 */
+	
 	public static List<String> valuesToList(Value[] values) throws Exception {
-		List<String> list = new ArrayList<String>();
-		if (values.length < 1)
-			return list;
-		if (values.length == 1) {
-			list.add(values[0].getString());
-			return list;
-		}
-		for (int i = 0; i < values.length; ++i) {
-			list.add(values[i].getString());
-		}
-		return list;
-	}
+    List<String> list = new ArrayList<String>();
+    if (values.length < 1)
+      return list;
+    if (values.length == 1) {
+    	if(values[0].getString().length() == 0) return list;
+      list.add(values[0].getString());
+      return list;
+    }
+    for (int i = 0; i < values.length; ++i) {
+      list.add(values[i].getString());
+    }
+    return list;
+  }
 
 	@SuppressWarnings("unchecked")
 	public static <T>T[] arrayCopy(final T[] source) {

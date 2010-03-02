@@ -216,7 +216,7 @@ public class ForumPageList extends JCRPageList {
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
 		if(postNode.hasProperty("exo:isActiveByTopic")) postNew.setIsActiveByTopic(postNode.getProperty("exo:isActiveByTopic").getBoolean()) ;
-		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(ValuesToArray(postNode.getProperty("exo:userPrivate").getValues())) ;
+		if(postNode.hasProperty("exo:userPrivate")) postNew.setUserPrivate(Utils.valuesToArray(postNode.getProperty("exo:userPrivate").getValues())) ;
 		if(postNode.hasProperty("exo:numberAttach")) {
 			long numberAttach = postNode.getProperty("exo:numberAttach").getLong();
 			postNew.setNumberAttach(numberAttach) ;
@@ -279,14 +279,14 @@ public class ForumPageList extends JCRPageList {
 		topicNew.setIsWaiting(topicNode.getProperty("exo:isWaiting").getBoolean()) ;
 		topicNew.setIsActive(topicNode.getProperty("exo:isActive").getBoolean()) ;
 		topicNew.setIsActiveByForum(topicNode.getProperty("exo:isActiveByForum").getBoolean()) ;
-		if(topicNode.hasProperty("exo:canView"))topicNew.setCanView(ValuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
-		if(topicNode.hasProperty("exo:canPost"))topicNew.setCanPost(ValuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
+		if(topicNode.hasProperty("exo:canView"))topicNew.setCanView(Utils.valuesToArray(topicNode.getProperty("exo:canView").getValues())) ;
+		if(topicNode.hasProperty("exo:canPost"))topicNew.setCanPost(Utils.valuesToArray(topicNode.getProperty("exo:canPost").getValues())) ;
 		if(topicNode.hasProperty("exo:isPoll"))topicNew.setIsPoll(topicNode.getProperty("exo:isPoll").getBoolean()) ;
-		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(ValuesToArray(topicNode.getProperty("exo:userVoteRating").getValues())) ;
-		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(ValuesToArray(topicNode.getProperty("exo:tagId").getValues())) ;
+		if(topicNode.hasProperty("exo:userVoteRating")) topicNew.setUserVoteRating(Utils.valuesToArray(topicNode.getProperty("exo:userVoteRating").getValues())) ;
+		if(topicNode.hasProperty("exo:tagId")) topicNew.setTagId(Utils.valuesToArray(topicNode.getProperty("exo:tagId").getValues())) ;
 		if(topicNode.hasProperty("exo:voteRating")) topicNew.setVoteRating(topicNode.getProperty("exo:voteRating").getDouble()) ;
 		if (topicNode.isNodeType("exo:forumWatching") && topicNode.hasProperty("exo:emailWatching")) {
-			topicNew.setEmailNotification(ValuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
+			topicNew.setEmailNotification(Utils.valuesToArray(topicNode.getProperty("exo:emailWatching").getValues()));
 		}
 		String idFirstPost = topicNode.getName().replaceFirst(Utils.TOPIC, Utils.POST) ;
 		if(topicNode.hasNode(idFirstPost)) {
@@ -337,9 +337,9 @@ public class ForumPageList extends JCRPageList {
 		userProfile.setSignature(profileNode.getProperty("exo:signature").getString());
 		userProfile.setTotalPost(profileNode.getProperty("exo:totalPost").getLong());
 		userProfile.setTotalTopic(profileNode.getProperty("exo:totalTopic").getLong());
-		userProfile.setModerateForums(ValuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
+		userProfile.setModerateForums(Utils.valuesToArray(profileNode.getProperty("exo:moderateForums").getValues()));
 		try{
-			userProfile.setModerateCategory(ValuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
+			userProfile.setModerateCategory(Utils.valuesToArray(profileNode.getProperty("exo:moderateCategory").getValues()));
 		}catch(Exception e) {
 			userProfile.setModerateCategory(new String[]{});
 		}
@@ -361,7 +361,7 @@ public class ForumPageList extends JCRPageList {
 		if(profileNode.hasProperty("exo:banUntil"))userProfile.setBanUntil(profileNode.getProperty("exo:banUntil").getLong());
 		if(profileNode.hasProperty("exo:banReason"))userProfile.setBanReason(profileNode.getProperty("exo:banReason").getString());
 		if(profileNode.hasProperty("exo:banCounter"))userProfile.setBanCounter(Integer.parseInt(profileNode.getProperty("exo:banCounter").getString()));
-		if(profileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(ValuesToArray(profileNode.getProperty("exo:banReasonSummary").getValues()));
+		if(profileNode.hasProperty("exo:banReasonSummary"))userProfile.setBanReasonSummary(Utils.valuesToArray(profileNode.getProperty("exo:banReasonSummary").getValues()));
 		if(profileNode.hasProperty("exo:createdDateBan"))userProfile.setCreatedDateBan(profileNode.getProperty("exo:createdDateBan").getDate().getTime());
 		return userProfile;
 	}
@@ -379,18 +379,6 @@ public class ForumPageList extends JCRPageList {
 		return message;
 	}
 	
-	private String [] ValuesToArray(Value[] Val) throws Exception {
-		if(Val.length == 1)
-			return new String[]{Val[0].getString()};
-		String[] Str = new String[Val.length];
-		for(int i = 0; i < Val.length; ++i) {
-			Str[i] = Val[i].getString();
-		}
-		return Str;
-	}
-	
-
-
   @Override
   protected void populateCurrentPageList(int page, List list) throws Exception{
     int pageSize = getPageSize();

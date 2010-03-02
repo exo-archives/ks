@@ -239,10 +239,11 @@ public class ForumServiceUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	private static List<String> getFromCache(String[] userGroupMembership) throws Exception{
+		if (userGroupMembership == null || userGroupMembership.length == 0
+				|| (userGroupMembership.length == 1 && userGroupMembership[0].length() == 0)) return null;
 		ExoCache cache = getCache();
-		if (userGroupMembership == null) return null;
 		Serializable cacheKey = getCacheKey(userGroupMembership);
-		return  (List<String>) cache.get(cacheKey);
+		return (List<String>) cache.get(cacheKey);
 	}
 
 	private static Serializable getCacheKey(String[] userGroupMembership) {

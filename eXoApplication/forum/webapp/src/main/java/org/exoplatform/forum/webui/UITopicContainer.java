@@ -281,33 +281,22 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		this.canAddNewThread = true ;
 		moderators = ForumServiceUtils.getUserPermission(forum.getModerators()) ;
 		String userId = userProfile.getUserId() ;
+		isModerator = (userProfile.getUserRole()==0||(!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId)))?true:false;
+		boolean isCheck = true;
 		List<String> ipBaneds = forum.getBanIP();
-		isModerator = false ;
-		if(userProfile.getUserRole() == 0 || (!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId))) isModerator = true;
-		if(ipBaneds != null && ipBaneds.size() > 0) {
-			if(!ipBaneds.contains(getIPRemoter())) {
-				String[] strings = this.forum.getCreateTopicRole() ;
-				if(strings != null && strings.length > 0 && !strings[0].equals(" ")){
+		if(ipBaneds != null && ipBaneds.contains(getIPRemoter()) || userProfile.getIsBanned()) {
+			canAddNewThread = false;
+			isCheck = false;
+		}
+		if(!isModerator && isCheck){
+			String[] strings = this.forum.getCreateTopicRole() ;
+			if(!ForumUtils.isArrayEmpty(strings)){
+				canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
+			}
+			if(canAddNewThread){
+				strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
+				if(!ForumUtils.isArrayEmpty(strings)){
 					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-				}
-				if(!canAddNewThread || strings == null || strings.length == 0 || strings[0].equals(" ")){
-					strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
-					if(strings != null && strings.length > 0 && !strings[0].equals(" ")){
-						canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-					}
-				}
-			} else canAddNewThread = false;
-		} else {
-			if(!isModerator) {
-				String[] strings = this.forum.getCreateTopicRole() ;
-				if(strings != null && strings.length > 0){
-					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-				}
-				if(!canAddNewThread || strings == null || strings.length == 0 || strings[0].equals(" ")){
-					strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
-					if(strings != null && strings.length > 0 && !strings[0].equals(" ")){
-						canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-					}
 				}
 			}
 		}
