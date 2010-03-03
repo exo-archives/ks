@@ -5454,16 +5454,16 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				queryString.append("[");
 				
 				// if search in category and list category that user can view not null
-				if(type.equals(Utils.CATEGORY) && listCateIds != null && listCateIds.size() > 0){
-					queryString.append("(");
-					
-					//select all category have name in list user can view
-					for(int i = 0; i < listCateIds.size(); i ++){
-						queryString.append("fn:name() = '").append(listCateIds.get(i)).append("'");
-						if(i < listCateIds.size() - 1) queryString.append(" or ");
+				if(type.equals(Utils.CATEGORY)) {
+					if(listCateIds != null && listCateIds.size() > 0){
+						queryString.append("(");
+						//select all category have name in list user can view
+						for(int i = 0; i < listCateIds.size(); i ++){
+							queryString.append("fn:name() = '").append(listCateIds.get(i)).append("'");
+							if(i < listCateIds.size() - 1) queryString.append(" or ");
+						}
+						queryString.append(") and ");
 					}
-					queryString.append(") and ");
-					
 					// Select all forum that user can view
 				} else if(listForumIds != null && listForumIds.size() > 0){
 						if(type.equals(Utils.FORUM)) searchBy = "fn:name()";
@@ -5509,7 +5509,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 								queryString.append(builder);
 							}
 							queryString.append(")");
-							listOfUser.add(" ");
+//							listOfUser.add(" ");
 							String s = Utils.propertyMatchAny("@exo:canView", listOfUser);
 							if(s != null && s.length() > 0) {
 								if (isAnd) queryString.append(" and ");
@@ -5533,11 +5533,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					}
 				}
 				queryString.append("]");
-//				System.out.println("\n\n=======>"+queryString.toString());
+				System.out.println("\n\n=======>"+queryString.toString());
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iter = result.getNodes();
-//				System.out.println("\n\n=======>iter: "+iter.getSize());
+				System.out.println("\n\n=======>iter: "+iter.getSize());
 				while (iter.hasNext()) {
 					Node nodeObj = iter.nextNode();
 					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
@@ -5547,7 +5547,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin, ""));
 				}
 			}
-//			System.out.println("\n\n=======>listSearchEvent: "+listSearchEvent.size());
+			System.out.println("\n\n=======>listSearchEvent: "+listSearchEvent.size());
 			if(!isAdmin && listSearchEvent.size() > 0) {
 				List<String> categoryCanView = new ArrayList<String>();
 		    List<String> forumCanView = new ArrayList<String>();
@@ -5555,6 +5555,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         categoryCanView = mapList.get(Utils.CATEGORY);
 //        forumCanView = mapList.get(Utils.FORUM);
         forumCanView = getForumUserCanView(categoryHome, listOfUser, listForumIds);
+        System.out.println("\n\n=======>forumCanView: "+forumCanView.toString() + "\n categoryCanView: " + categoryCanView.toString());
         if(categoryCanView.size() > 0 || forumCanView.size() > 0)
         	listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
 			}
@@ -5803,14 +5804,14 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
       i = 1;
     }
 		if(i==1) queryString.append("]");
-//		System.out.println("\n\nqueryString " + queryString.toString());
+		System.out.println("\n\nqueryString " + queryString.toString());
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		NodeIterator iter1 = null;
 		
 		// Check if the result is not all 
-//		System.out.println("\n\nqueryString " + iter.getSize());
+		System.out.println("\n\nqueryString " + iter.getSize());
 		if(iter.getSize() > 0 && iter.getSize() != categoryHome.getNodes().getSize()) {
 			String forumId, cateId;
 			List<String> listForumId = new ArrayList<String>();
