@@ -32,9 +32,9 @@
 					if(i == moderators.size()) {
 				%>
 						<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a>
-				<%}else {%> 
+				<%	} else {%> 
 					<span>&nbsp;</span><a href="javaScript:void(0)" onclick="eXo.webui.UIPopupSelectCategory.show(this.parentNode, event);">${userView}</a><span>,</span>
-				<%}%>
+				<%	}%>
 				
 						<div style="position:relative;">
 							<div class="UIPopupCategory" style="display:none; left:2px; top:2px; ">
@@ -99,11 +99,11 @@
 				<%
 				 ++i;
 				}	
-				%>
-				<div style="clear:left;"><span></span></div>
-				<%if(!isMod){%>
-				<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
-				<% } %>
+					if(!isMod){%>
+					<div><%=_ctx.appRes("UIForumPortlet.label.NotModerator");%></div>
+				<%	} else {%>
+					<div style="clear:left;"><span></span></div>
+				<%	}	%>
 				</div>
 			</div>
 		</div>
