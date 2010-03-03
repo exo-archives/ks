@@ -255,7 +255,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 		listRelationQuestion.clear() ;
 	}
 
-	private void updateDiscussForum() throws Exception{
+	private Answer[] updateDiscussForum(Answer[] answers) throws Exception{
 		// Vu Duy Tu Save post Discuss Forum. Mai Ha removed to this function
 		if(faqSetting_.getIsDiscussForum()) {
 			String topicId = question_.getTopicIdDiscuss();
@@ -267,45 +267,46 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					int t = ids.length;
 					String linkForum = FAQUtils.getLinkDiscuss(topicId);
 					Post post;
-					int l = question_.getAnswers().length;
+					int l = answers.length;
 					for (int i = 0; i < l; ++i) {
-						String postId = question_.getAnswers()[i].getPostId();
+						String postId = answers[i].getPostId();
 						try {
 							if(postId != null && postId.length() > 0){
 								post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
 								if(post == null) {
 									post = new Post();
-									post.setOwner(question_.getAnswers()[i].getResponseBy());
+									post.setOwner(answers[i].getResponseBy());
 									post.setName("Re: " + question_.getQuestion());
 									post.setIcon("ViewIcon");
-									question_.getAnswers()[i].setPostId(post.getId());
-									post.setMessage(question_.getAnswers()[i].getResponses());
+									answers[i].setPostId(post.getId());
+									post.setMessage(answers[i].getResponses());
 									post.setLink(linkForum);
 									post.setIsApproved(!topic.getIsModeratePost());
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								}else {
 									//post.setIsApproved(false);
-									post.setMessage(question_.getAnswers()[i].getResponses());
+									post.setMessage(answers[i].getResponses());
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, false, "");
 								}
 							} else {
 								post = new Post();
-								post.setOwner(question_.getAnswers()[i].getResponseBy());
+								post.setOwner(answers[i].getResponseBy());
 								post.setName("Re: " + question_.getQuestion());
 								post.setIcon("ViewIcon");
-								post.setMessage(question_.getAnswers()[i].getResponses());
+								post.setMessage(answers[i].getResponses());
 								post.setLink(linkForum);
 								post.setIsApproved(!topic.getIsModeratePost());
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
-								question_.getAnswers()[i].setPostId(post.getId());
+								answers[i].setPostId(post.getId());
 							}
 						} catch (Exception e) {
-							log.error("Can not discuss question into forum, exception: " + e.getMessage());
+							log.error("Can not discuss question into forum, exception: ", e);
 						}
 	        }
 				}
 			}
 		}
+		return answers;
 	}
 
 		static public class SaveActionListener extends EventListener<UIResponseForm> {
@@ -355,7 +356,6 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				//link
 				UIAnswersPortlet portlet = responseForm.getAncestorOfType(UIAnswersPortlet.class) ;
 				UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
-				//TODO: review link
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
 				link = link.replaceFirst("OBJECTID", question.getPath());
@@ -369,10 +369,14 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					FAQUtils.getEmailSetting(responseForm.faqSetting_, false, false);
 					//save answers and question
 					Answer[] answers = responseForm.mapAnswers.values().toArray(new Answer[]{}) ;
+					try {
+						// author: Vu Duy Tu. Make discuss forum
+						answers = responseForm.updateDiscussForum(answers);
+          } catch (Exception e) {
+          	responseForm.log.error("Can not discuss question into forum, exception: ", e);
+          }
 					responseForm.getFAQService().saveAnswer(question.getPath(), answers) ;
 					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), question.getRelations()) ;
-					// author: Vu Duy Tu. Make discuss forum
-					responseForm.updateDiscussForum();
 				} catch (PathNotFoundException e) {
 					responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
 					responseForm.warning("UIQuestions.msg.question-id-deleted") ;

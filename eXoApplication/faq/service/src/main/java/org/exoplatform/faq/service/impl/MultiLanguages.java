@@ -288,6 +288,7 @@ public class MultiLanguages {
 			if(commentNode.hasProperty("exo:commentBy")) comment.setCommentBy((commentNode.getProperty("exo:commentBy").getValue().getString())) ;
 			if(commentNode.hasProperty("exo:fullName")) comment.setFullName((commentNode.getProperty("exo:fullName").getValue().getString())) ;
 			if(commentNode.hasProperty("exo:dateComment")) comment.setDateComment((commentNode.getProperty("exo:dateComment").getValue().getDate().getTime())) ;
+			if(commentNode.hasProperty("exo:postId")) comment.setPostId(commentNode.getProperty("exo:postId").getString()) ;
   		return comment;
   	} catch (Exception e){
   		return null;
@@ -315,6 +316,7 @@ public class MultiLanguages {
       if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong()) ;
       if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers((answerNode.getProperty("exo:approveResponses").getValue().getBoolean())) ;
       if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers((answerNode.getProperty("exo:activateResponses").getValue().getBoolean())) ;
+      if(answerNode.hasProperty("exo:postId")) answer.setPostId(answerNode.getProperty("exo:postId").getString()) ;
       answer.setLanguage(answerNode.getProperty("exo:responseLanguage").getValue().getString()) ;
       return answer;
   	} catch (Exception e){
@@ -369,6 +371,9 @@ public class MultiLanguages {
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
+    if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+  		answerNode.setProperty("exo:postId", answer.getPostId());
+  	}
     if(questionNode.isNew()){
     	questionNode.getSession().save();
     } else {
@@ -436,6 +441,9 @@ public class MultiLanguages {
 	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
 	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
 	  	answerNode.setProperty("exo:responseLanguage", language) ;
+	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+	  		answerNode.setProperty("exo:postId", answer.getPostId());
+	  	}
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}
@@ -476,7 +484,10 @@ public class MultiLanguages {
   	commentNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString());
   	commentNode.setProperty("exo:questionId", questionNode.getName());
   	commentNode.setProperty("exo:commentLanguage", lang);
-  	
+  	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
+  		System.out.println("\n\n =========>comment.getPostId(): " + comment.getPostId());
+  		commentNode.setProperty("exo:postId", comment.getPostId());
+  	}
   	if(commentNode.isNew()) {
   		java.util.Calendar calendar = null ;
   		calendar = GregorianCalendar.getInstance() ;

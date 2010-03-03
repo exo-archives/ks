@@ -123,6 +123,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 		if(commentId.indexOf("new") < 0) {
 			isAddNew = true;
 			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
+			System.out.println("\n\n------------------>cm: " + comment.getPostId());
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
 	}
@@ -147,8 +148,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 			UIAnswersPortlet portlet = commentForm.getAncestorOfType(UIAnswersPortlet.class) ;
       UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
       UIQuestions questions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
-      ValidatorDataInput validatorDataInput = new ValidatorDataInput();
-      if(comment == null || comment.trim().length() == 0 || !validatorDataInput.fckContentIsNotEmpty(comment)){
+      if(comment == null || comment.trim().length() == 0 || !ValidatorDataInput.fckContentIsNotEmpty(comment)){
 				warning("UICommentForm.msg.comment-is-null") ;
         return;
 			}
@@ -176,7 +176,8 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
 						String linkForum = FAQUtils.getLinkDiscuss(topicId);
-						if(commentForm.isAddNew) {
+						String postId = commentForm.comment.getPostId();
+						if(postId == null || postId.length() == 0) {
 							String remoteAddr = "";
 							try {
 								HttpServletRequest request = event.getRequestContext().getRequest() ;
@@ -197,35 +198,32 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	            }
 							commentForm.comment.setPostId(post.getId());
 						} else {
-							String postId = commentForm.comment.getPostId();
-							if(postId != null && postId.length() > 0) {
-								try {
-									Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
-									boolean isNew = false;
-									if(post == null){
-										String remoteAddr = "";
-										try {
-											HttpServletRequest request = event.getRequestContext().getRequest() ;
-											remoteAddr = request.getRemoteAddr();
-			              } catch (Exception e) {}
-										post = new Post();
-										isNew = true;
-										post.setOwner(commentForm.currentUser_);
-										post.setIcon("ViewIcon");
-										post.setName("Re: " + commentForm.question_.getQuestion());
-										commentForm.comment.setPostId(post.getId());
-										post.setLink(linkForum);
-										post.setRemoteAddr(remoteAddr);
-									}else{
-										post.setModifiedBy(commentForm.currentUser_);
-									}
-									post.setIsApproved(!topic.getIsModeratePost());
-									post.setMessage(comment);
-									forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
-	              } catch (Exception e) {
-		              e.printStackTrace();
-	              }
-							}
+							try {
+								Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
+								boolean isNew = false;
+								if(post == null){
+									String remoteAddr = "";
+									try {
+										HttpServletRequest request = event.getRequestContext().getRequest() ;
+										remoteAddr = request.getRemoteAddr();
+		              } catch (Exception e) {}
+									post = new Post();
+									isNew = true;
+									post.setOwner(commentForm.currentUser_);
+									post.setIcon("ViewIcon");
+									post.setName("Re: " + commentForm.question_.getQuestion());
+									commentForm.comment.setPostId(post.getId());
+									post.setLink(linkForum);
+									post.setRemoteAddr(remoteAddr);
+								}else{
+									post.setModifiedBy(commentForm.currentUser_);
+								}
+								post.setIsApproved(!topic.getIsModeratePost());
+								post.setMessage(comment);
+								forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
+              } catch (Exception e) {
+	              e.printStackTrace();
+              }
 						}
 					}
 				}

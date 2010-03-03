@@ -17,17 +17,13 @@
 
 package org.exoplatform.faq.service.impl;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -51,12 +47,6 @@ import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
@@ -87,7 +77,6 @@ import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
@@ -101,7 +90,6 @@ import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.scheduler.JobInfo;
 import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.exoplatform.services.scheduler.PeriodInfo;
-import org.w3c.dom.Document;
 
 /**
  * Created by The eXo Platform SARL
@@ -809,7 +797,10 @@ public class JCRDataStorage implements DataStorage {
     	} else {
     		commentNode = commentHome.getNode(comment.getId());
     	}
+    	
+    	System.out.println("\n\n =========>save comment: " + comment.getComments());
     	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
+    		System.out.println("\n\n =========>comment.getPostId(): " + comment.getPostId());
     		commentNode.setProperty("exo:postId", comment.getPostId());
     	}
     	commentNode.setProperty("exo:comments", comment.getComments()) ;
