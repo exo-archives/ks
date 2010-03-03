@@ -319,25 +319,4 @@ public class Utils {
 		System.arraycopy(source, 0, dest, 0, source.length);
 		return dest;
 	}
-	/**
-	 * encode a Link when save and get link in jcr. 
-	 * @param link
-	 * @return String is link
-	 * @throws Exception
-	 */
-	public static String encodeLink(String link) {
-		if(link != null && link.contains("/")) {
-			link = StringUtils.replace(link, "/", "47%");
-			link = StringUtils.replace(link, ":", "58%");
-		}
-	  return link;
-  }
-
-	public static String uncodeLink(String link) {
-		if(link != null && !link.contains("/")) {
-			link = StringUtils.replace(link, "47%", "/");
-			link = StringUtils.replace(link, "58%", ":");
-		}
-		return link;
-	}
 }

@@ -212,7 +212,7 @@ public class ForumPageList extends JCRPageList {
 		if(postNode.hasProperty("exo:message")) postNew.setMessage(postNode.getProperty("exo:message").getString()) ;
 		if(postNode.hasProperty("exo:remoteAddr")) postNew.setRemoteAddr(postNode.getProperty("exo:remoteAddr").getString()) ;
 		if(postNode.hasProperty("exo:icon")) postNew.setIcon(postNode.getProperty("exo:icon").getString()) ;
-		if(postNode.hasProperty("exo:link")) postNew.setLink(Utils.uncodeLink(postNode.getProperty("exo:link").getString()));
+		if(postNode.hasProperty("exo:link")) postNew.setLink(postNode.getProperty("exo:link").getString());
 		if(postNode.hasProperty("exo:isApproved")) postNew.setIsApproved(postNode.getProperty("exo:isApproved").getBoolean()) ;
 		if(postNode.hasProperty("exo:isHidden")) postNew.setIsHidden(postNode.getProperty("exo:isHidden").getBoolean()) ;
 		if(postNode.hasProperty("exo:isActiveByTopic")) postNew.setIsActiveByTopic(postNode.getProperty("exo:isActiveByTopic").getBoolean()) ;
@@ -268,7 +268,7 @@ public class ForumPageList extends JCRPageList {
 		topicNew.setViewCount(topicNode.getProperty("exo:viewCount").getLong()) ;
 		if(topicNode.hasProperty("exo:numberAttachments")) topicNew.setNumberAttachment(topicNode.getProperty("exo:numberAttachments").getLong()) ;
 		topicNew.setIcon(topicNode.getProperty("exo:icon").getString()) ;
-		topicNew.setLink(Utils.uncodeLink(topicNode.getProperty("exo:link").getString()));
+		topicNew.setLink(topicNode.getProperty("exo:link").getString());
 		if(topicNode.hasProperty("exo:isNotifyWhenAddPost"))topicNew.setIsNotifyWhenAddPost(topicNode.getProperty("exo:isNotifyWhenAddPost").getString()) ;
 		topicNew.setIsModeratePost(topicNode.getProperty("exo:isModeratePost").getBoolean()) ;
 		topicNew.setIsClosed(topicNode.getProperty("exo:isClosed").getBoolean()) ;

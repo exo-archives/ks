@@ -261,15 +261,4 @@ public class TestUtils extends TestCase {
     assertNotSame("a new array should have been created", source, actual);
     assertContains(actual, "foo", "bar", "zed"); // should contain all elements
   }
-  
-  public void testCodeLink() {
-  	String link = "http://domain.com/test/id12412";
-  	link = Utils.encodeLink(link);
-  	assertEquals("http58%47%47%domain.com47%test47%id12412", link);
-  	
-	  link = Utils.uncodeLink(link);
-	  assertEquals("http://domain.com/test/id12412", link);
-  }
-  
-
 }

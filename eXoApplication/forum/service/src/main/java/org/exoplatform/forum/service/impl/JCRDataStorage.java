@@ -2011,7 +2011,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		topicNew.setViewCount(reader.l(EXO_VIEW_COUNT));
 		topicNew.setNumberAttachment(reader.l(EXO_NUMBER_ATTACHMENTS));
 		topicNew.setIcon(reader.string(EXO_ICON));
-		topicNew.setLink(Utils.uncodeLink(reader.string(EXO_LINK)));
+		topicNew.setLink(reader.string(EXO_LINK));
 		topicNew.setIsNotifyWhenAddPost(reader.string(EXO_IS_NOTIFY_WHEN_ADD_POST, null));
 		topicNew.setIsModeratePost(reader.bool(EXO_IS_MODERATE_POST));
 		topicNew.setIsClosed(reader.bool(EXO_IS_CLOSED));
@@ -2274,7 +2274,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				topicNode.setProperty(EXO_TAG_ID, topic.getTagId());
 				topicNode.setProperty(EXO_IS_ACTIVE_BY_FORUM, true);
 				topicNode.setProperty(EXO_IS_POLL, topic.getIsPoll());
-				topicNode.setProperty(EXO_LINK, Utils.encodeLink(topic.getLink()));
+				topicNode.setProperty(EXO_LINK, topic.getLink());
 				topicNode.setProperty(EXO_PATH, forumId);
 				// TODO: Thinking for update forum and user profile by node observation?
 				// setTopicCount for Forum and userProfile
@@ -2891,7 +2891,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		postNew.setMessage(reader.string(EXO_MESSAGE));
 		postNew.setRemoteAddr(reader.string(EXO_REMOTE_ADDR));
 		postNew.setIcon(reader.string(EXO_ICON));
-		postNew.setLink(Utils.uncodeLink(reader.string(EXO_LINK)));
+		postNew.setLink(reader.string(EXO_LINK));
 		postNew.setIsApproved(reader.bool(EXO_IS_APPROVED));
 		postNew.setIsHidden(reader.bool(EXO_IS_HIDDEN));
 		postNew.setIsActiveByTopic(reader.bool(EXO_IS_ACTIVE_BY_TOPIC));
@@ -2939,7 +2939,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				postNode.setProperty(EXO_CREATED_DATE, calendar);
 				postNode.setProperty(EXO_USER_PRIVATE, post.getUserPrivate());
 				postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, true);
-				postNode.setProperty(EXO_LINK, Utils.encodeLink(post.getLink()));
+				postNode.setProperty(EXO_LINK, post.getLink());
 				if (topicId.replaceFirst(Utils.TOPIC, Utils.POST).equals(post.getId())) {
 					postNode.setProperty(EXO_IS_FIRST_POST, true);
 				} else {
@@ -5533,11 +5533,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					}
 				}
 				queryString.append("]");
-				System.out.println("\n\n=======>"+queryString.toString());
+//				System.out.println("\n\n=======>"+queryString.toString());
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iter = result.getNodes();
-				System.out.println("\n\n=======>iter: "+iter.getSize());
+//				System.out.println("\n\n=======>iter: "+iter.getSize());
 				while (iter.hasNext()) {
 					Node nodeObj = iter.nextNode();
 					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
@@ -5547,7 +5547,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					listSearchEvent.addAll(getSearchByAttachment(categoryHome, pathQuery, textQuery, listForumIds, listOfUser, isAdmin, ""));
 				}
 			}
-			System.out.println("\n\n=======>listSearchEvent: "+listSearchEvent.size());
+//			System.out.println("\n\n=======>listSearchEvent: "+listSearchEvent.size());
 			if(!isAdmin && listSearchEvent.size() > 0) {
 				List<String> categoryCanView = new ArrayList<String>();
 		    List<String> forumCanView = new ArrayList<String>();
@@ -5555,7 +5555,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         categoryCanView = mapList.get(Utils.CATEGORY);
 //        forumCanView = mapList.get(Utils.FORUM);
         forumCanView = getForumUserCanView(categoryHome, listOfUser, listForumIds);
-        System.out.println("\n\n=======>forumCanView: "+forumCanView.toString() + "\n categoryCanView: " + categoryCanView.toString());
+//        System.out.println("\n\n=======>forumCanView: "+forumCanView.toString() + "\n categoryCanView: " + categoryCanView.toString());
         if(categoryCanView.size() > 0 || forumCanView.size() > 0)
         	listSearchEvent = removeItemInList(listSearchEvent,forumCanView,categoryCanView);
 			}
@@ -5804,14 +5804,14 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
       i = 1;
     }
 		if(i==1) queryString.append("]");
-		System.out.println("\n\nqueryString " + queryString.toString());
+//		System.out.println("\n\nqueryString " + queryString.toString());
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();
 		NodeIterator iter1 = null;
 		
 		// Check if the result is not all 
-		System.out.println("\n\nqueryString " + iter.getSize());
+//		System.out.println("\n\nqueryString " + iter.getSize());
 		if(iter.getSize() > 0 && iter.getSize() != categoryHome.getNodes().getSize()) {
 			String forumId, cateId;
 			List<String> listForumId = new ArrayList<String>();
