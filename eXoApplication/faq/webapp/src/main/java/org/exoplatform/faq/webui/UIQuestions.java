@@ -1256,8 +1256,9 @@ public class UIQuestions extends UIContainer {
 				topic.setIcon("IconsView");
 				topic.setIsModeratePost(true);
 				topic.setLink(link);
-				topic.setIsWaiting(true);
 				topic.setRemoteAddr(remoteAddr);
+				topic.setIsApproved(!forum.getIsModerateTopic());
+				topic.setCanView(new String[]{""});
 				forumService.saveTopic(categoryId, forumId, topic, true, false, "");
 				uiForm.faqService_.saveTopicIdDiscussQuestion(questionId, topicId);
 				Post post = new Post();

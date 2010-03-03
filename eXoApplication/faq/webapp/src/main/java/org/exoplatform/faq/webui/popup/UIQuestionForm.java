@@ -526,7 +526,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 									topic.setModifiedBy(FAQUtils.getCurrentUser());
 									topic.setTopicName(question.getQuestion());
 									topic.setDescription(question.getDetail());
-									topic.setIsWaiting(true);
+									topic.setIsApproved(!forumService.getForum(ids[t - 3], ids[t - 2]).getIsModerateTopic());
 									forumService.saveTopic(ids[t - 3], ids[t - 2], topic, false, false, "");
 								}
 	            } catch (Exception e) {
