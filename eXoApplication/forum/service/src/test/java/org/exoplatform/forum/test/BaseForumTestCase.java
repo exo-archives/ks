@@ -51,23 +51,23 @@ public class BaseForumTestCase extends BasicTestCase {
   public BaseForumTestCase() throws Exception {    
   }
   
+   
   public void setUp() throws Exception {
     startSystemSession();
   }
   
-  public void tearDown() throws Exception {
-  	System.out.println(" ===============> teardown");
+  public void tearDown() throws Exception {  	
   }
-  protected void startSystemSession() {
+  protected void startSystemSession() throws Exception {
   	sProvider = sessionProviderService.getSystemSessionProvider(null) ;
   }
-  protected void startSessionAs(String user) {
+  protected void startSessionAs(String user) throws Exception{
     Identity identity = new Identity(user);
     ConversationState state = new ConversationState(identity);
     sessionProviderService.setSessionProvider(null, new SessionProvider(state));
     sProvider = sessionProviderService.getSessionProvider(null);
   }
-  protected void endSession() {
+  protected void endSession() throws Exception{
     sessionProviderService.removeSessionProvider(null);
     startSystemSession();
   }
@@ -105,7 +105,7 @@ public class BaseForumTestCase extends BasicTestCase {
       
       if (System.getProperty("java.security.auth.login.config") == null)
         System.setProperty("java.security.auth.login.config", loginConf);
-    }
+    }    
     catch (Exception e) {
     	e.printStackTrace();
       throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(),e);
@@ -119,7 +119,7 @@ public class BaseForumTestCase extends BasicTestCase {
     // Initialize datas
     Session session = repositoryService.getRepository(REPO_NAME).getSystemSession(COLLABORATION_WS);
     root_ = session.getRootNode();   
-    sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
+    sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;
     }
     catch (Exception e) {
       throw new RuntimeException("Failed to initialize JCR: " + e.getMessage(),e);

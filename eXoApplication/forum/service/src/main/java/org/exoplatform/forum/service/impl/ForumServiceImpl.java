@@ -16,12 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.forum.service.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -131,8 +129,8 @@ public class ForumServiceImpl implements ForumService, Startable {
   		storage_.initCategoryListener() ;
   		log.info("updating forum stats...");
   		updateForumStatistic(systemSession);  		
-  	}catch (Exception e) {
-  	}finally{
+  	}catch (Exception e) {}
+  	finally{
   		systemSession.close() ;
   	}
   	systemSession = SessionProvider.createSystemProvider() ;
@@ -248,20 +246,23 @@ public class ForumServiceImpl implements ForumService, Startable {
 		try{
 			ForumStatistic forumStatistic = getForumStatistic(SessionProvider.createSystemProvider()) ;
 			Node profileHome = storage_.getUserProfileHome(systemSession) ;
-			QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
-			StringBuilder pathQuery = new StringBuilder();
-			pathQuery.append("/jcr:root").append(profileHome.getPath())
-			.append("//element(*,exo:forumUserProfile)[ @exo:lastLoginDate ] order by @exo:joinedDate descending");
-			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();
-			if (iter.getSize() > 0) {
-				forumStatistic.setMembersCount(iter.getSize()) ;
-		  	Node node = iter.nextNode() ;
-		  	String id = node.getProperty("exo:userId").getString() ;
-		  	forumStatistic.setNewMembers(id) ;
-		  	saveForumStatistic(systemSession, forumStatistic) ;
+			if (profileHome.hasNodes()) {
+				QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
+				StringBuilder pathQuery = new StringBuilder();
+				pathQuery.append("/jcr:root").append(profileHome.getPath())
+				.append("//element(*,exo:forumUserProfile)[ @exo:lastLoginDate ] order by @exo:joinedDate descending");
+				Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				NodeIterator iter = result.getNodes();
+				if (iter.getSize() > 0) {
+					forumStatistic.setMembersCount(iter.getSize()) ;
+			  	Node node = iter.nextNode() ;
+			  	String id = node.getProperty("exo:userId").getString() ;
+			  	forumStatistic.setNewMembers(id) ;
+			  	saveForumStatistic(systemSession, forumStatistic) ;
+				}
 			}
+			
 		}catch(Exception e){
 			e.printStackTrace() ;
 		}finally {
@@ -275,14 +276,16 @@ public class ForumServiceImpl implements ForumService, Startable {
 		if(profileHome.getNodes().getSize() == 0) { // ONLY run when there is no user profile 
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			OrganizationService organizationService = (OrganizationService)container.getComponentInstanceOfType(OrganizationService.class) ;
-    	PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
-    	List<User> userList = new ArrayList<User>() ;
-    	for(int i = 1 ; i <= pageList.getAvailablePage(); i ++) {
-    		userList = pageList.getPage(i) ;
-    		for(User user: userList) {
-    			createUserProfile(sysSession, user) ;    			
-    		}
-    	}
+			if(organizationService != null) {				
+				PageList pageList = organizationService.getUserHandler().getUserPageList(10) ;
+	    	List<User> userList = new ArrayList<User>() ;
+	    	for(int i = 1 ; i <= pageList.getAvailablePage(); i ++) {
+	    		userList = pageList.getPage(i) ;
+	    		for(User user: userList) {
+	    			createUserProfile(sysSession, user) ;    			
+	    		}
+	    	}
+			}			
   	}
 	}
 	

@@ -1115,15 +1115,17 @@ public class JCRDataStorage {
 		      }
 	      }
 				categoryNode.save();
-      } catch (Exception e) {}
-			categoryNode.remove();
+      } catch (Exception e) {
+      	e.printStackTrace() ;
+      }
+      categoryNode.remove();
 			categoryHome.save() ;		
 			try {
 				addUpdateUserProfileJob(userPostMap);
 			}catch(Exception e){}			
 			return category;
-		} catch(Exception e) {
-			log.error("Failed to remover category " +categoryId);
+		} catch(Exception e) {			
+			log.error("Failed to remove category " +categoryId);
 			return null ;
 		}finally { sProvider.close() ;}		
 	}
