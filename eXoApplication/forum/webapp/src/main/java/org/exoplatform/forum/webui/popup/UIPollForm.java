@@ -103,11 +103,18 @@ public class UIPollForm extends UIForm implements UIPopupComponent {
 
 	@SuppressWarnings("unused")
 	private String getDateAfter() throws Exception {
-		String date = ForumUtils.getFormatDate("MM-dd-yyyy", new Date()) ;;
+		Date date = new Date();
 		if(poll != null && poll.getTimeOut() > 0) {
-			date = ForumUtils.getFormatDate("MM-dd-yyyy", poll.getModifiedDate()) ;
+			date = poll.getModifiedDate() ;
 		}
-		return date;
+		String format = "MM-dd-yyyy";
+		try {
+		format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
+	} catch (NullPointerException e) {
+    	ForumService forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+		format = forumService.getDefaultUserProfile(ForumSessionUtils.getCurrentUser(), null).getShortDateFormat();
+	} catch (Exception e) {}
+		return ForumUtils.getFormatDate(format, date);
 	}
 	
 	@SuppressWarnings("unchecked")
