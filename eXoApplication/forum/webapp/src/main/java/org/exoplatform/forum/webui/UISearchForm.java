@@ -381,7 +381,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			if(type.equals(Utils.CATEGORY)){
 				eventQuery.getPathQuery(forumPortlet.getInvisibleCategories());
 			} else {
-				eventQuery.getPathQuery(forumPortlet.getInvisibleForums());
+				eventQuery.getPathQuery(new ArrayList<String>(forumPortlet.getInvisibleForums()));
 			}
 			if(eventQuery.getIsEmpty()) {
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
@@ -391,7 +391,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			eventQuery.setRemain(remain) ;
 			List<ForumSearch> list = null ;
 			try {
-				list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), forumPortlet.getInvisibleForums());
+				list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
 			}catch (Exception e) {
 				e.printStackTrace();
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;

@@ -213,7 +213,6 @@ public class UICategories extends UIContainer	{
 		if(this.userProfile.getUserRole() > 0) strQuery = "(@exo:isClosed='false') or (exo:moderators='" + this.userProfile.getUserId() + "')";
 
 		forumList = forumService.getForumSummaries(categoryId, strQuery);
-
 	    
 		if(mapListForum.containsKey(categoryId)) {
 			mapListForum.remove(categoryId) ;

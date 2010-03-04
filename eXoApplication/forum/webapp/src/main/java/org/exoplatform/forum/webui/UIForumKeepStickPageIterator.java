@@ -122,7 +122,6 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
     	temp.add(1) ;
     	temp.add(1) ;
     	temp.add(1) ;
-    	log.error("PageList is null, exception: ", e);
     }
 		return temp ;
 	} 

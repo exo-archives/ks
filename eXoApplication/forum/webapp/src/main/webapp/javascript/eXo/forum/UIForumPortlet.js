@@ -209,6 +209,7 @@ UIForumPortlet.prototype.visibleAction = function(id) {
 	var parent = document.getElementById(id);
 	var DOMUtil = eXo.core.DOMUtil;
 	var addCategory = DOMUtil.findFirstDescendantByClass(parent, "div", "AddCategory") ;
+	if(!addCategory) return ;
 	var addForum = DOMUtil.findFirstDescendantByClass(parent, "div", "AddForum") ;
 	var isIE = document.all?true:false;
 	if(document.getElementById("UICategories")){
