@@ -22,7 +22,7 @@
 				<div class="ControlbarCotainer">
 					<table>
 						<tr>
-							<td style="width:85%;" class="ControlButtonContainer">
+							<td class="ControlButtonContainer">
 								<%String[] actions = [""];
 									if(isAdmin) { 
 										actions = ["AddCategory","AddForum","ManageModerator","Administrations","EditProfile","OpenBookMark"];
@@ -104,8 +104,8 @@
 				      	</div>
 								<div style="clear:both;"><span></span></div>
 							</td>
-							<td>
-								<div style="width:250px;">
+							<td style="width:235px;">
+								<div style="width:235px;">
 							<%
 								long numberOfNewMessage = uicomponent.getNewMessage();
 								if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
