@@ -20,18 +20,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
-import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Poll;
+import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
 import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -59,7 +57,7 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 			@EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIPollForm extends BaseUIForm implements UIPopupComponent {
+public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 	public static final String FIELD_QUESTION_INPUT = "Question" ;
 	final static public String FIELD_OPTIONS = "Option" ;
 	public static final String FIELD_TIMEOUT_INPUT = "TimeOut" ;
@@ -105,7 +103,13 @@ public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 		if(poll != null && poll.getTimeOut() > 0) {
 			date = poll.getModifiedDate() ;
 		}
-		return ForumUtils.getFormatDate("MM-dd-yyyy", date);
+		String format = "MM-dd-yyyy";
+		try {
+	    format = this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getShortDateFormat();
+    } catch (NullPointerException e) {
+	    format = getForumService().getDefaultUserProfile(UserHelper.getCurrentUser(), null).getShortDateFormat();
+    } catch (Exception e) {}
+		return ForumUtils.getFormatDate(format, date);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -266,14 +270,13 @@ public class UIPollForm extends BaseUIForm implements UIPopupComponent {
 				poll.setUserVote(new String[] {}) ;
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
-				ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 				try {
 					if(uiForm.isUpdate) {
 						poll.setId(uiForm.getId()) ;
 						if(newUser.length > 0) poll.setUserVote(newUser) ;
-						forumService.savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
+						uiForm.getForumService().savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
 					} else {
-						forumService.savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
+						uiForm.getForumService().savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
 					}
 				} catch (Exception e) {}
 				uiForm.isUpdate = false ;
