@@ -284,7 +284,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 									post.setIsApproved(!topic.getIsModeratePost());
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								}else {
-									//post.setIsApproved(false);
+									post.setIsApproved(!topic.getIsModeratePost());
 									post.setMessage(answers[i].getResponses());
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, false, "");
 								}
