@@ -485,7 +485,6 @@ public class MultiLanguages {
   	commentNode.setProperty("exo:questionId", questionNode.getName());
   	commentNode.setProperty("exo:commentLanguage", lang);
   	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
-  		System.out.println("\n\n =========>comment.getPostId(): " + comment.getPostId());
   		commentNode.setProperty("exo:postId", comment.getPostId());
   	}
   	if(commentNode.isNew()) {

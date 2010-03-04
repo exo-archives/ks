@@ -1232,7 +1232,6 @@ public class UIQuestions extends UIContainer {
         } catch (Exception e) {}
 				if(UserHelper.getUserByUserId(userName) == null) {
 					String temp = userName;
-					//Category category = faqService_.getCategoryById(question.getCategoryId(), sProvider);
 					String listMode[] = uiForm.faqService_.getModeratorsOf(question.getPath());
 					if(listMode != null && listMode.length > 0){
 						List <String> modes = FAQServiceUtils.getUserPermission(listMode);
@@ -1262,50 +1261,39 @@ public class UIQuestions extends UIContainer {
 				forumService.saveTopic(categoryId, forumId, topic, true, false, "");
 				uiForm.faqService_.saveTopicIdDiscussQuestion(questionId, topicId);
 				Post post = new Post();
-				JCRPageList pageList = uiForm.faqService_.getPageListAnswer(questionId, false);
-				List<Answer> listAnswer ;
-				if(pageList != null) {
-					listAnswer = pageList.getPageItem(0);
-				} else listAnswer = null;
-				if(listAnswer != null && listAnswer.size() > 0) {
-					Answer[] AllAnswer = new Answer[listAnswer.size()];;
-					int i = 0;
-					for (Answer answer : listAnswer) {
+				
+				Answer[] answers = question.getAnswers();
+				if(answers != null && answers.length > 0) {
+					for (int i = 0; i < answers.length; ++i) {
 		        post = new Post();
 		        post.setIcon("IconsView");
 		        post.setName("Re: " + question.getQuestion());
-		        post.setMessage(answer.getResponses());
-		        post.setOwner(answer.getResponseBy());
+		        post.setMessage(answers[i].getResponses());
+		        post.setOwner(answers[i].getResponseBy());
 		        post.setLink(link);
 		        post.setIsApproved(false);
 		        post.setRemoteAddr(remoteAddr);
 		        forumService.savePost(categoryId, forumId, topicId, post, true, "");
-		        answer.setPostId(post.getId());
-		        if(answer.getLanguage() == null) answer.setLanguage(question.getLanguage());
-		        AllAnswer[i] = answer;
-		        ++i;
+		        answers[i].setPostId(post.getId());
+		        answers[i].setNew(true);
+		        if(answers[i].getLanguage() == null) answers[i].setLanguage(question.getLanguage());
 	        }
-					if(AllAnswer != null && AllAnswer.length > 0) {
-					  uiForm.faqService_.saveAnswer(questionId, AllAnswer);
-					}
+					  uiForm.faqService_.saveAnswer(questionId, answers);
 				}
-				pageList = uiForm.faqService_.getPageListComment(questionId);
-				List<Comment> listComment ;
-				if(pageList != null) {
-					listComment = pageList.getPageItem(0);
-				} else listComment = new ArrayList<Comment>();
-				for (Comment comment : listComment) {
+				
+				Comment[]comments = question.getComments();
+				for (int i = 0; i < comments.length; ++i) {
 					post = new Post();
 					post.setIcon("IconsView");
 					post.setName("Re: " + question.getQuestion());
-					post.setMessage(comment.getComments());
-					post.setOwner(comment.getCommentBy());
+					post.setMessage(comments[i].getComments());
+					post.setOwner(comments[i].getCommentBy());
 					post.setLink(link);
 					post.setIsApproved(false);
 					post.setRemoteAddr(remoteAddr);
 					forumService.savePost(categoryId, forumId, topicId, post, true, "");
-					comment.setPostId(post.getId());
-					uiForm.faqService_.saveComment(questionId, comment, false);
+					comments[i].setPostId(post.getId());
+					uiForm.faqService_.saveComment(questionId, comments[i], false);
 				}
 				uiForm.updateCurrentQuestionList();
       } catch (Exception e) {

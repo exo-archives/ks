@@ -123,7 +123,6 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 		if(commentId.indexOf("new") < 0) {
 			isAddNew = true;
 			comment = faqService.getCommentById(question.getPath(), commentId, language) ;
-			System.out.println("\n\n------------------>cm: " + comment.getPostId());
 			((UIFormWYSIWYGInput)this.getChildById(COMMENT_CONTENT)).setValue(comment.getComments());
 		}
 	}

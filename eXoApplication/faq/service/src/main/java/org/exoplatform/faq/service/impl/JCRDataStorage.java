@@ -798,9 +798,7 @@ public class JCRDataStorage implements DataStorage {
     		commentNode = commentHome.getNode(comment.getId());
     	}
     	
-    	System.out.println("\n\n =========>save comment: " + comment.getComments());
     	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
-    		System.out.println("\n\n =========>comment.getPostId(): " + comment.getPostId());
     		commentNode.setProperty("exo:postId", comment.getPostId());
     	}
     	commentNode.setProperty("exo:comments", comment.getComments()) ;
