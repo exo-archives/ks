@@ -1921,7 +1921,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 		if(forumNode.hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && !value[0].toString().equals(" ")){
+			if(value.length > 0 && value[0].toString().trim().length() > 0){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
@@ -1929,7 +1929,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		}
 		if(forumNode.getParent().hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getParent().getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && !value[0].toString().equals(" ")){
+			if(value.length > 0 && value[0].toString().trim().length() > 0){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
