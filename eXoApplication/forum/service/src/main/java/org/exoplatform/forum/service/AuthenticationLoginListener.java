@@ -16,19 +16,10 @@
  */
 package org.exoplatform.forum.service;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.forum.service.conf.SendMessageInfo;
 import org.exoplatform.services.listener.Event;
 import org.exoplatform.services.listener.Listener;
-import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.scheduler.JobInfo;
-import org.exoplatform.services.scheduler.JobSchedulerService;
-import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.services.security.ConversationRegistry;
 import org.exoplatform.services.security.ConversationState;
 
@@ -48,23 +39,6 @@ public class AuthenticationLoginListener extends Listener<ConversationRegistry, 
 		ExoContainer container = ExoContainerContext.getCurrentContainer();
   	ForumService fservice = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
   	String userId = event.getData().getIdentity().getUserId() ;
-  	fservice.userLogin(userId) ;
-  	
-	}	
-	
-	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-		try {
-			Calendar cal = new GregorianCalendar();
-			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
-			String name = String.valueOf(cal.getTime().getTime());
-			Class clazz = Class.forName("org.exoplatform.forum.service.conf.SendMailJob");
-			JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", clazz);
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			//infoMap_.put(name, new SendMessageInfo(addresses, message));
-			schedulerService.addPeriodJob(info, periodInfo);
-		} catch (Exception e) {
-		}
+  	fservice.userLogin(userId) ;  	
 	}
-	
 }
