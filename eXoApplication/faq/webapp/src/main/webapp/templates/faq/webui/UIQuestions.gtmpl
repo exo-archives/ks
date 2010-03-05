@@ -883,7 +883,7 @@
 											<%
 													for(String relationId :questionRelation) {
 														relationContent = uicomponent.getQuestionRelationById(relationId).replaceAll("<p>", "").replaceAll("</p>", "");
-														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_);
+														linkRelaQues = uicomponent.event("ViewQuestion", relationId + "/language=" + uicomponent.language_+"/relation");
 														if(relationContent != null && relationContent.trim().length() > 0) {
 											%>
 															<div style="padding:0px 0px 5px 10px;">

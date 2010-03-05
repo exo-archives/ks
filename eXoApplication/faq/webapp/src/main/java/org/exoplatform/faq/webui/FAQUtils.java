@@ -250,8 +250,7 @@ public class FAQUtils {
 	}
 
 	public static boolean isFieldEmpty(String s) {
-		if (s == null || s.trim().length() == 0) return true ;
-		return false ;    
+		return (s == null || s.trim().length() <= 0)?true:false;
 	}
 
 	public static boolean isValidEmailAddresses(String addressList) throws Exception {

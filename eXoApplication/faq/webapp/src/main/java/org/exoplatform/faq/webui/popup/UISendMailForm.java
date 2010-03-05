@@ -127,7 +127,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 
 	public void setUpdateQuestion(String questionPath, String language) throws Exception {
 		Question question = FAQUtils.getFAQService().getQuestionById(questionPath) ;
-		if(language.equals("")) language = question.getLanguage() ;
+		if(language.length() <= 0) language = question.getLanguage() ;
 		String email = "" ;
 		String name = "" ;
 		String userName = FAQUtils.getCurrentUser() ;
@@ -148,14 +148,16 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 		for(QuestionLanguage questionLanguage2 : getFAQService().getQuestionLanguages(questionPath)) {
 			String quest2 = questionLanguage2.getDetail().replaceAll("\n", "<br>").replaceAll("'", "&#39;") ;
 			questionLanguage2.setDetail(quest2) ;
-			if(!isContainLanguageList(listQuestionLanguage, question.getLanguage()))
+			if(!isContainLanguageList(listQuestionLanguage, questionLanguage2.getLanguage()))
 				listQuestionLanguage.add(questionLanguage2) ;
 		}
 		questionChanged_ = question.getQuestion() ;
+
+		listLanguageToReponse.add(new SelectItemOption<String>(language, language)) ;
 		// set info for form
-		for(QuestionLanguage quesLanguage : listQuestionLanguage) {
-			listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
-		}
+//		for(QuestionLanguage quesLanguage : listQuestionLanguage) {
+//			listLanguageToReponse.add(new SelectItemOption<String>(quesLanguage.getLanguage(), quesLanguage.getLanguage())) ;
+//		}
 		
 		addChild(new UIFormStringInput(FILED_FROM_NAME,FILED_FROM_NAME, name)) ;
 		addChild(new UIFormStringInput(FILED_FROM, FILED_FROM, email)) ;
@@ -164,8 +166,11 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 		addChild(new UIFormStringInput(FILED_ADD_BCC, FILED_ADD_BCC, null)) ;
 		UIFormSelectBox questionLanguages = new UIFormSelectBox(FILED_QUESTION_LANGUAGE, FILED_QUESTION_LANGUAGE, listLanguageToReponse) ;
 		questionLanguages.setSelectedValues(new String[]{language}) ;
+		questionLanguages.setOptions(listLanguageToReponse);
 		questionLanguages.setOnChange("ChangeLanguage") ;
 		addChild(questionLanguages) ;
+//		question
+		
 		String contenQuestion = "" ;
 		StringBuffer stringBuffer = new StringBuffer();
 		for (QuestionLanguage questionLangua : listQuestionLanguage) {
@@ -184,13 +189,21 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 					stringBuffer.append("</p>");
 				}
 				if (!FAQUtils.isFieldEmpty(link_)) {
+					if(!language.equals(question.getLanguage())){
+						if(!link_.contains("language")){
+							link_ = link_ + "/language=" + language;
+						}
+					}
 					stringBuffer.append(getLabel("Link").replaceFirst("<link>", link_));
 				}
 				break;
 			}
 		}
+		
+		
 		addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
-		UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, stringBuffer.toString());
+		UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, "");
+		filedMessage.setValue(stringBuffer.toString());
 		filedMessage.setToolBarName("Basic");
 		addChild(filedMessage) ;
 	}
@@ -416,6 +429,10 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 						strBuilder.append(sendMailForm.getLabel("Response")).append("</b> ").append(answers[sendMailForm.posOfResponse].getResponses()).append("</p>");
 					}
 					if (!FAQUtils.isFieldEmpty(sendMailForm.link_)) {
+						String link_ = sendMailForm.link_;
+						if(!link_.contains("language")){
+							link_ = link_ + "/language=" + language;
+						}
 						strBuilder.append(sendMailForm.getLabel("Link").replaceFirst("<link>", sendMailForm.link_));
 					}
 					body.setValue(strBuilder.toString());

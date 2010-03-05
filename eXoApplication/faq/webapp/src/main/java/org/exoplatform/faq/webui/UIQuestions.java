@@ -706,9 +706,12 @@ public class UIQuestions extends UIContainer {
 				if(questionId.indexOf("/language=") > 0) {
 					String[] array = questionId.split("/language=") ;
 					questionId = array[0] ;
-					if(uiQuestions.viewingQuestionId_ != null || uiQuestions.viewingQuestionId_.length() > 0){ // click on relation
-						uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + "/language=" + uiQuestions.language_ ;
-						//language_ = "" ;
+					if(array[1].indexOf("/relation") > 0){ // click on relation
+						if(!FAQUtils.isFieldEmpty(uiQuestions.viewingQuestionId_)) {
+							uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + "/language=" + uiQuestions.language_ ;
+						} else {
+							uiQuestions.backPath_ = questionId + "/language=" + array[1].replaceFirst("/relation", "") ;
+						}
 					}else { //Click on back
 						uiQuestions.viewingQuestionId_ = questionId;
 						uiQuestions.language_ = array[1] ;
