@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.jcr.Value;
 
-import org.apache.commons.lang.StringUtils;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -260,17 +259,14 @@ public class Utils {
 	 */
 	
 	public static String[] valuesToArray(Value[] Val) throws Exception {
-    if (Val.length < 1)
-      return new String[] {};
-    if (Val.length == 1){
-    	if(Val[0].getString().length() == 0) return new String[] {};
-    	else return new String[] { Val[0].getString() };
-    }
-    String[] result = new String[Val.length];
+    if (Val.length < 1) return new String[] {};
+    List<String> list = new ArrayList<String>();
+    String s;
     for (int i = 0; i < Val.length; ++i) {
-      result[i] = Val[i].getString();
+    	 s = Val[i].getString();
+    	 if(s != null && s.trim().length() > 0) list.add(s);
     }
-    return result;
+    return list.toArray(new String[list.size()]);
   }
 
 	/**
@@ -284,15 +280,11 @@ public class Utils {
 	
 	public static List<String> valuesToList(Value[] values) throws Exception {
     List<String> list = new ArrayList<String>();
-    if (values.length < 1)
-      return list;
-    if (values.length == 1) {
-    	if(values[0].getString().length() == 0) return list;
-      list.add(values[0].getString());
-      return list;
-    }
+    if (values.length < 1) return list;
+    String s;
     for (int i = 0; i < values.length; ++i) {
-      list.add(values[i].getString());
+			s = values[i].getString();
+			if (s != null && s.trim().length() > 0) list.add(s);
     }
     return list;
   }
@@ -319,4 +311,13 @@ public class Utils {
 		System.arraycopy(source, 0, dest, 0, source.length);
 		return dest;
 	}
+	
+	/**
+	 * Check string is null or empty 
+	 * @param String s
+	 * @return boolean
+	 */
+	public static boolean isEmpty(String s) {
+		return (s == null || s.trim().length() <= 0)?true:false;
+  }
 }

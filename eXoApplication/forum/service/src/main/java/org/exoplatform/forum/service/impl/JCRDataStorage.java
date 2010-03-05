@@ -862,7 +862,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	        list = new ArrayList<String>();
 	        list.addAll(listTemp);
 	        if(isAdd) {
-		        if(list.isEmpty() || (list.size() == 1 && list.get(0).equals(" "))) {
+		        if(list.isEmpty() || (list.size() == 1 && Utils.isEmpty(list.get(0)))) {
 		        	list = new ArrayList<String>();
 		        	list.add(userId);
 		        } else if(!list.contains(userId)) {
@@ -878,7 +878,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	        	if(!list.isEmpty()) {
 	        		if(list.contains(userId)) {
 	        			list.remove(userId) ;
-	        			if(list.isEmpty()) list.add(" ");
+	        			if(list.isEmpty()) list.add("");
 			        	cateNode.setProperty(EXO_MODERATORS, Utils.getStringsInList(list));//
 			        	cateNode.setProperty(EXO_TEMP_MODERATORS, Utils.getStringsInList(listTemp));
 	        		}
@@ -987,7 +987,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         }
       }
 		}
-		if(!isNew && oldcategoryMod != null && oldcategoryMod.length > 0 && !oldcategoryMod[0].equals(" ")){
+		if(!isNew && oldcategoryMod != null && oldcategoryMod.length > 0 && !Utils.isEmpty(oldcategoryMod[0])){
 			if(Utils.arraysHaveDifferentContent(oldcategoryMod, category.getModerators())) {
 				List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldcategoryMod);
 				for(String oldUserId : oldmoderators) {
@@ -1027,7 +1027,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			      }
 		      }
 					catNode.save();
-					if(moderateList.isEmpty() || (moderateList.size() == 1 && moderateList.get(0).equals(" "))) {
+					if(moderateList.isEmpty() || (moderateList.size() == 1 && Utils.isEmpty(moderateList.get(0)))) {
 						if (userProfileNode.hasProperty(EXO_USER_ROLE)) {
 							long role = userProfileNode.getProperty(EXO_USER_ROLE).getLong();
 							if (role == 1) {
@@ -1063,7 +1063,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	    Node topicNode = iter.nextNode();
 	    list = Utils.valuesToList(topicNode.getProperty(property).getValues());
 	    list = removeAndAddNewInList(remov, addNew, list);
-	    if(list.isEmpty()) list.add(" ");
+	    if(list.isEmpty()) list.add("");
 	    topicNode.setProperty(property, Utils.getStringsInList(list));
     }
 	}
@@ -1073,7 +1073,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			if(present.contains(string)) present.remove(string);
     }
 		for (String string : addNew) {
-			if(!present.contains(string) && string.trim().length() > 0) present.add(string);
+			if(!present.contains(string) && !Utils.isEmpty(string)) present.add(string);
 		}
 		return present;
 	}
@@ -1164,7 +1164,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 
 			StringBuffer queryBuffer = new StringBuffer();
 			queryBuffer.append(JCR_ROOT).append(categoryPath).append("/element(*,exo:forum)");
-			if (strQuery != null && strQuery.trim().length() > 0) {
+			if (!Utils.isEmpty(strQuery)) {
 				queryBuffer.append("[").append(strQuery).append("]");
 			}
 			queryBuffer.append(" order by @exo:").append(orderBy).append(" ").append(orderType);
@@ -1250,7 +1250,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
   String[] updateModeratorInForum(Node node, String[] mods) throws Exception {    
     PropertyReader reader = new PropertyReader(node);
     Set<String> set = reader.set(EXO_MODERATORS);
-    if (set == null || set.contains(" ")) {
+    if (set == null || set.contains("")) {
       return mods;
     }
     set.addAll(Arrays.asList(mods));
@@ -1318,11 +1318,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			forumNode.setProperty(EXO_MODERATORS, strModerators);
 			// save list moderators in property categoryPrivate when list userPrivate of parent category not empty. 
 			if(isEditMod) {
-				if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
+				if (strModerators != null && strModerators.length > 0 && !Utils.isEmpty(strModerators[0])) {
 					if (catNode.hasProperty(EXO_USER_PRIVATE)) {
 						List<String> listPrivate = new ArrayList<String>();
 						listPrivate.addAll(Utils.valuesToList(catNode.getProperty(EXO_USER_PRIVATE).getValues()));
-						if (listPrivate.size() > 0 && !listPrivate.get(0).equals(" ")) {
+						if (listPrivate.size() > 0 && !Utils.isEmpty(listPrivate.get(0))) {
 							for (int i = 0; i < strModerators.length; i++) {
 								if (!listPrivate.contains(strModerators[i])) {
 									listPrivate.add(strModerators[i]);
@@ -1376,7 +1376,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						if (string2.indexOf(forum.getId()) > 0) {
 							hasMod = true;
 						}
-						if(!string2.equals(" ")){
+						if(!Utils.isEmpty(string2)){
 							list.add(string2);
 						}
 					}
@@ -1458,7 +1458,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				Node cateNode = forumNode.getParent();
 				if (isDelete) {
 					String[] cateMods = Utils.valuesToArray(cateNode.getProperty(EXO_MODERATORS).getValues());
-					if(cateMods != null && cateMods.length > 0 && !cateMods[0].equals(" ")) {
+					if(cateMods != null && cateMods.length > 0 && !Utils.isEmpty(cateMods[0])) {
 						List<String> moderators = ForumServiceUtils.getUserPermission(cateMods);
 						if(moderators.contains(userName)) continue;
 					}
@@ -1489,7 +1489,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					forumNode.setProperty(EXO_TEMP_MODERATORS, oldUserNamesModerate);
 					if (cateNode.hasProperty(EXO_USER_PRIVATE)) {
 						list = Utils.valuesToList(cateNode.getProperty(EXO_USER_PRIVATE).getValues());
-						if (!list.get(0).equals(" ") && !list.contains(userName)) {
+						if (!Utils.isEmpty(list.get(0)) && !list.contains(userName)) {
 							String[] strings = new String[list.size() + 1];
 							int i = 0;
 							for (String string : list) {
@@ -1534,7 +1534,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	    String lastTopicPath = "";
 	    if (forumNode.hasProperty(EXO_LAST_TOPIC_PATH)){
 	      lastTopicPath = forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString();
-	      if(lastTopicPath.trim().length() > 0){
+	      if(!Utils.isEmpty(lastTopicPath)){
 	        if(lastTopicPath.lastIndexOf("/") > 0){
 	          lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
 	        } else {
@@ -1562,7 +1562,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		String lastTopicPath = "";
 		if (forumNode.hasProperty(EXO_LAST_TOPIC_PATH)){
 			lastTopicPath = forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString();
-			if(lastTopicPath.trim().length() > 0){
+			if(!Utils.isEmpty(lastTopicPath)){
 				if(lastTopicPath.lastIndexOf("/") > 0){
 					lastTopicPath = forum.getPath() + lastTopicPath.substring(lastTopicPath.lastIndexOf("/"));
 				} else {
@@ -1638,11 +1638,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				forumNode.setProperty(EXO_PATH, newForumPath);
 				String[] strModerators = forum.getModerators();
 				forumNode.setProperty(EXO_MODERATORS, strModerators);
-				if (strModerators != null && strModerators.length > 0 && !strModerators[0].equals(" ")) {
+				if (strModerators != null && strModerators.length > 0 && !Utils.isEmpty(strModerators[0])) {
 					if (newCatNode.hasProperty(EXO_USER_PRIVATE)) {
 						List<String> listPrivate = new ArrayList<String>();
 						listPrivate.addAll(Utils.valuesToList(newCatNode.getProperty(EXO_USER_PRIVATE).getValues()));
-						if (!listPrivate.get(0).equals(" ")) {
+						if (!Utils.isEmpty(listPrivate.get(0))) {
 							for (int i = 0; i < strModerators.length; i++) {
 								if (!listPrivate.contains(strModerators[i])) {
 									listPrivate.add(strModerators[i]);
@@ -1789,7 +1789,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
     	stringBuffer.append("[").append(strQuery).append("]");
     }
     stringBuffer.append(" order by @exo:isSticky descending");
-    if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+    if (strOrderBy == null || Utils.isEmpty(strOrderBy)) {
     	if (orderBy != null) {
     		stringBuffer.append(", @exo:").append(orderBy).append(" ").append(orderType);
     		if (!orderBy.equals(SortField.LASTPOST)) {
@@ -1921,7 +1921,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 		if(forumNode.hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && value[0].toString().trim().length() > 0){
+			if(value.length > 0 && !Utils.isEmpty(value[0].toString())){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
@@ -1929,7 +1929,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		}
 		if(forumNode.getParent().hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getParent().getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && value[0].toString().trim().length() > 0){
+			if(value.length > 0 && !Utils.isEmpty(value[0].toString())){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
@@ -2142,7 +2142,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			if (!isMod)	stringBuffer.append(" and @exo:isClosed='false' and @exo:isWaiting='false' and @exo:isApproved='true' ").
 					append("and @exo:isActive='true' and @exo:isActiveByForum='true'");
 			stringBuffer.append("] order by @exo:isSticky descending");
-			if (strOrderBy != null && strOrderBy.trim().length() > 0) {
+			if (!Utils.isEmpty(strOrderBy)) {
 				stringBuffer.append(",@exo:").append(strOrderBy);
 			}
 			stringBuffer.append(",exo:createdDate ascending");
@@ -2533,7 +2533,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				}
 				if(node.hasProperty(EXO_NOTIFY_EMAIL_MOVED)) {
 					String str = node.getProperty(EXO_NOTIFY_EMAIL_MOVED).getString();
-					if(str != null && str.trim().length() > 0){
+					if(!Utils.isEmpty(str)){
 						mailContent = str;
 					}
 				}
@@ -2815,7 +2815,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				pathQuery.append("' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
 			else
 				pathQuery.append("' and @exo:isApproved='true' and @exo:isHidden='false' and @exo:isActiveByTopic='true' and ((@exo:userPrivate='").append(userId).append("') or (@exo:userPrivate='exoUserPri'))]");
-			if (strOrderBy != null && strOrderBy.trim().length() > 0) {
+			if (!Utils.isEmpty(strOrderBy)) {
 				pathQuery.append("order by @exo:").append(strOrderBy);
 				if(strOrderBy.indexOf("createdDate") < 0) {
 					pathQuery.append(",@exo:createdDate descending");
@@ -2857,7 +2857,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			StringBuilder builder = new StringBuilder();
 			builder.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:post)[@exo:remoteAddr='")
 							.append(ip).append("']");
-			if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+			if (!Utils.isEmpty(strOrderBy)) {
 					builder.append(" order by @exo:lastPostDate descending");
 			} else {
 				builder.append(" order by @exo:").append(strOrderBy);
@@ -3137,7 +3137,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 
 	private boolean hasProperty(Node node, String property) throws Exception {
-		if(node.hasProperty(property) && node.getProperty(property).getValues().length > 0 && node.getProperty(property).getValues()[0].getString().trim().length() > 0)
+		if(node.hasProperty(property) && node.getProperty(property).getValues().length > 0 && !Utils.isEmpty(node.getProperty(property).getValues()[0].getString()))
 			return true;
 		else return false;
 	}
@@ -3195,7 +3195,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						if(categoryNode.hasProperty(EXO_USER_PRIVATE))
 							listUser.addAll(Utils.valuesToList(categoryNode.getProperty(EXO_USER_PRIVATE).getValues()));
 		
-						if (!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
+						if (!listUser.isEmpty() && !Utils.isEmpty(listUser.get(0))) {
 							if(node.hasProperty(EXO_EMAIL_WATCHING)){
 								List<String> emails = Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues());
 								int i = 0;
@@ -3292,23 +3292,23 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							listUser.addAll(Arrays.asList(post.getUserPrivate()));
 						}
 						if((listUser.isEmpty() || listUser.size() == 1)){
-							if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")) {
+							if(!listCanViewInTopic.isEmpty() && !Utils.isEmpty(listCanViewInTopic.get(0))) {
 								listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty(EXO_POSTER).getValues()));
 								listCanViewInTopic.addAll(Utils.valuesToList(forumNode.getProperty(EXO_VIEWER).getValues()));
 							}
 							// set Category Private
 							if(categoryNode.hasProperty(EXO_USER_PRIVATE))
 								listUser.addAll(Utils.valuesToList(categoryNode.getProperty(EXO_USER_PRIVATE).getValues()));
-							if(!listUser.isEmpty() && !listUser.get(0).equals(" ")) {
-								if(!listCanViewInTopic.isEmpty() && !listCanViewInTopic.get(0).equals(" ")){
+							if(!listUser.isEmpty() && !Utils.isEmpty(listUser.get(0))) {
+								if(!listCanViewInTopic.isEmpty() && !Utils.isEmpty(listCanViewInTopic.get(0))){
 									listUser = Utils.extractSameItems(listUser, listCanViewInTopic);
-									if(listUser.isEmpty() || listUser.get(0).equals(" ")) isSend = false;
+									if(listUser.isEmpty() || Utils.isEmpty(listUser.get(0))) isSend = false;
 								}
 							} else listUser = listCanViewInTopic;
 						}
 					}
 					if (node.isNodeType(EXO_FORUM_WATCHING) && node.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !listUser.get(0).equals(" ")) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
 							List<String> emails = Utils.valuesToList(node.getProperty(EXO_EMAIL_WATCHING).getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(node.getProperty(EXO_USER_WATCHING).getValues())) {
@@ -3326,7 +3326,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					if(isApprovePost){
 						String ownerTopicEmail = "";
 						String owner = node.getProperty(EXO_OWNER).getString();
-						if(node.hasProperty(EXO_IS_NOTIFY_WHEN_ADD_POST) && node.getProperty(EXO_IS_NOTIFY_WHEN_ADD_POST).getString().trim().length() > 0){
+						if(node.hasProperty(EXO_IS_NOTIFY_WHEN_ADD_POST) && !Utils.isEmpty(node.getProperty(EXO_IS_NOTIFY_WHEN_ADD_POST).getString())){
 							try {
 								Node userOwner = userProfileHome.getNode(owner);
 								ownerTopicEmail =  userOwner.getProperty(EXO_EMAIL).getString();
@@ -3336,7 +3336,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						}
 						String []users = post.getUserPrivate();
 						if(users != null && users.length == 2) {
-							if (ownerTopicEmail.trim().length() > 0 && (users[0].equals(owner) || users[1].equals(owner))) { 
+							if (!Utils.isEmpty(ownerTopicEmail) && (users[0].equals(owner) || users[1].equals(owner))) { 
 								emailList.add(ownerTopicEmail);
 							}
 							owner = forumNode.getProperty(EXO_OWNER).getString();
@@ -3344,7 +3344,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 								emailListForum.addAll(Utils.valuesToList(forumNode.getProperty(EXO_NOTIFY_WHEN_ADD_POST).getValues()));
 							}
 						} else {
-							if (ownerTopicEmail.trim().length() > 0) { 
+							if (!Utils.isEmpty(ownerTopicEmail)) { 
 								emailList.add(ownerTopicEmail);
 							}
 							if (forumNode.hasProperty(EXO_NOTIFY_WHEN_ADD_POST)) {
@@ -3356,7 +3356,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					 * check is approved, is activate by topic and is not hidden before send mail
 					 */
 					if (forumNode.isNodeType(EXO_FORUM_WATCHING) && forumNode.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !listUser.get(0).equals(" ")) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
 							List<String> emails = Utils.valuesToList(forumNode.getProperty(EXO_EMAIL_WATCHING).getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(forumNode.getProperty(EXO_USER_WATCHING).getValues())) {
@@ -3372,7 +3372,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					
 					List<String>emailListCategory = new ArrayList<String>();
 					if (categoryNode.isNodeType(EXO_FORUM_WATCHING) && categoryNode.hasProperty(EXO_EMAIL_WATCHING) && isSend) {
-						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !listUser.get(0).equals(" ")) {
+						if (!listUser.isEmpty() && !listUser.get(0).equals(EXO_USER_PRI) && !Utils.isEmpty(listUser.get(0))) {
 							List<String> emails = Utils.valuesToList(categoryNode.getProperty(EXO_EMAIL_WATCHING).getValues());
 							int i = 0;
 							for (String user : Utils.valuesToList(categoryNode.getProperty(EXO_USER_WATCHING).getValues())) {
@@ -3794,7 +3794,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				}
 				if(node.hasProperty(EXO_NOTIFY_EMAIL_MOVED)) {
 					String str = node.getProperty(EXO_NOTIFY_EMAIL_MOVED).getString();
-					if(str != null && str.trim().length() > 0){
+					if(!Utils.isEmpty(str)){
 						mailContent = str;
 					}
 				}
@@ -4313,7 +4313,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				builder.append("[jcr:contains(@exo:tagId,'").append(userIdAndtagId).append("')]");
 			}
 			builder.append(" order by @exo:isSticky descending");
-			if (strOrderBy == null || strOrderBy.trim().length() <= 0) {
+			if (Utils.isEmpty(strOrderBy)) {
 					builder.append(", @exo:lastPostDate descending");
 			} else {
 				builder.append(", @exo:").append(strOrderBy);
@@ -5655,7 +5655,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				listSearchEvent.add(setPropertyForForumSearch(nodeObj, type));
 			}
 //		TODO: Query Attachment in post.
-			if((type.equals(Utils.POST) || type.equals(Utils.TOPIC)) && eventQuery.getKeyValue() != null && eventQuery.getKeyValue().trim().length() > 0) {
+			if((type.equals(Utils.POST) || type.equals(Utils.TOPIC)) && !Utils.isEmpty(eventQuery.getKeyValue())) {
 				boolean isAdmin = false;
 				if(eventQuery.getUserPermission() == 0) isAdmin = true;
 				listSearchEvent.addAll(getSearchByAttachment(categoryHome, eventQuery.getPath(), eventQuery.getKeyValue(), listForumIds, eventQuery.getListOfUser(), isAdmin, type));
@@ -5724,7 +5724,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						if(!Utils.isListContentItemList(listOfUser, list)){
 							// can view by topic
 							list = Utils.valuesToList(nodeObj.getParent().getProperty(EXO_CAN_VIEW).getValues());
-							if(!list.get(0).equals(" ")){
+							if(!Utils.isEmpty(list.get(0))){
 								if(!Utils.isListContentItemList(listOfUser, list)) isAdd = false;
 							}
 							if(isAdd) {
@@ -5928,7 +5928,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 
 	public void removeWatch(int watchType, String path, String values) throws Exception {
-		if(values == null || values.trim().length() == 0) return ;
+		if(Utils.isEmpty(values)) return ;
 		Node watchingNode = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
 		Node categoryHome = getCategoryHome(sProvider) ;
@@ -6061,7 +6061,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				else typeNode = Utils.TYPE_TOPIC;
 				for(String str : (path.replace(rootPath + "/", "")).split("/")){
 					rootPath += "/" + str;
-					if(pathName.trim().length() > 0) pathName += " > ";
+					if(!Utils.isEmpty(pathName)) pathName += " > ";
 					pathName += ((Node)categoryHome.getSession().getItem(rootPath)).getProperty(EXO_NAME).getString() ;
 				}
 				watch = new Watch();
@@ -6368,7 +6368,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			List<String> list = new ArrayList<String>();
 			ContinuationService continuation = getContinuationService() ;
 			for (String userId : userIds) {
-				if(userId.trim().length() == 0 || list.contains(userId)) continue;
+				if(Utils.isEmpty(userId) || list.contains(userId)) continue;
 				list.add(userId);
 				int job = getTotalJobWattingForModerator(sProvider, userId);
 				if(job >= 0) {
@@ -6539,7 +6539,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 
     if (!isExportAll) {
       if (categoryId != null) {
-        if (forumId == null || forumId.trim().length() < 1) {
+        if (Utils.isEmpty(forumId)) {
           listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
         } else {
           Node categoryHome = getCategoryHome(sessionProvider);
@@ -6791,7 +6791,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			if(!isUpdated) {
 				values.add(topicId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;				
 			}
-			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
+			if(values.size() == 2 && Utils.isEmpty(values.get(0))) values.remove(0) ;
 			profile.setProperty(EXO_READ_TOPIC, values.toArray(new String[values.size()])) ;
 			profile.save() ;
 		} catch (Exception e) {
@@ -6821,7 +6821,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			if(!isUpdated) {
 				values.add(forumId + ":" + getGreenwichMeanTime().getTimeInMillis()) ;				
 			}
-			if(values.size() == 2 && values.get(0).trim().length() < 1) values.remove(0) ;
+			if(values.size() == 2 && Utils.isEmpty(values.get(0))) values.remove(0) ;
 			profile.setProperty(EXO_READ_FORUM, values.toArray(new String[values.size()])) ;
 			profile.save() ;
 		} catch (Exception e) {

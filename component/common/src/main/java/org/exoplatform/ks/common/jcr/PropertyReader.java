@@ -17,9 +17,9 @@ import javax.jcr.Value;
  */
 public class PropertyReader {
 
-  Node node = null;
+	Node node = null;
 	public PropertyReader(Node node) {
-    this.node = node;
+		this.node = node;
 	}
 	
 	public Double d(String name) {
@@ -61,14 +61,14 @@ public class PropertyReader {
 		return date(name,null);
 	}
 	
-	 public Date date(String name, Date defaultValue) {
-	    try {
-	      return node.getProperty(name).getDate().getTime();
-	    }
-	    catch (Exception e) {
-	      return defaultValue;
-	    }
-	  }
+	public Date date(String name, Date defaultValue) {
+		try {
+			return node.getProperty(name).getDate().getTime();
+		}
+		catch (Exception e) {
+			return defaultValue;
+		}
+	}
 	
 	public Boolean bool(String name) {
 	 return bool(name, false);
@@ -103,7 +103,7 @@ public class PropertyReader {
 	
 	public List<String> list(String name, List<String>defaultValue) {
 		try {
-		  Value [] values = node.getProperty(name).getValues();
+			Value [] values = node.getProperty(name).getValues();
 			return valuesToList(values);
 		}
 		catch (Exception e) {
@@ -113,48 +113,41 @@ public class PropertyReader {
 	
 	
 	 public Set<String> set(String name) {
-	    return set(name, null);
-	  }
+			return set(name, null);
+		}
 	
-	  public Set<String> set(String name, Set<String>defaultValue) {
-	    try {
-	      Value [] values = node.getProperty(name).getValues();
-	      Set<String> result = new HashSet<String>();
-	      result.addAll(valuesToList(values));
-	      return result;
-	    }
-	    catch (Exception e) {
-	      return defaultValue;
-	    }
-	  }	 
+		public Set<String> set(String name, Set<String>defaultValue) {
+			try {
+				Value [] values = node.getProperty(name).getValues();
+				Set<String> result = new HashSet<String>();
+				result.addAll(valuesToList(values));
+				return result;
+			}
+			catch (Exception e) {
+				return defaultValue;
+			}
+		}	 
 	
-	 String[] valuesToArray(Value[] Val) throws Exception {
-	    if (Val.length < 1)
-	      return new String[] {};
-	    if (Val.length == 1){
-	    	if(Val[0].getString().length() == 0) return new String[] {};
-	    	else return new String[] { Val[0].getString() };
-	    }
-	    String[] Str = new String[Val.length];
-	    for (int i = 0; i < Val.length; ++i) {
-	      Str[i] = Val[i].getString();
-	    }
-	    return Str;
-	  }
+	private String[] valuesToArray(Value[] Val) throws Exception {
+		if (Val.length < 1) return new String[] {};
+		List<String> list = new ArrayList<String>();
+		String s;
+		for (int i = 0; i < Val.length; ++i) {
+			 s = Val[i].getString();
+			 if(s != null && s.trim().length() > 0) list.add(s);
+		}
+		return list.toArray(new String[list.size()]);
+	}
 
-	  List<String> valuesToList(Value[] values) throws Exception {
-	    List<String> list = new ArrayList<String>();
-	    if (values.length < 1)
-	      return list;
-	    if (values.length == 1) {
-	    	if(values[0].getString().length() == 0) return list;
-	      list.add(values[0].getString());
-	      return list;
-	    }
-	    for (int i = 0; i < values.length; ++i) {
-	      list.add(values[i].getString());
-	    }
-	    return list;
-	  }
+	private List<String> valuesToList(Value[] values) throws Exception {
+		List<String> list = new ArrayList<String>();
+		if (values.length < 1) return list;
+		String s;
+		for (int i = 0; i < values.length; ++i) {
+			s = values[i].getString();
+			if (s != null && s.trim().length() > 0) list.add(s);
+		}
+		return list;
+	}
 	
 }
