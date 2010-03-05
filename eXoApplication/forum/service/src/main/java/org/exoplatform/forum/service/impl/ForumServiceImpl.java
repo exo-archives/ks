@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jcr.Node;
@@ -56,6 +58,7 @@ import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -93,7 +96,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   ForumServiceManaged managed; // will be automatically set at @ManagedBy processing
   
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
-  
+  final Queue<UserLoginLogEntry> queue = new ConcurrentLinkedQueue<UserLoginLogEntry>();
   private String lastLogin_ = "";
   
   public ForumServiceImpl(NodeHierarchyCreator nodeHierarchyCreator, RepositoryService rService, InitParams params)throws Exception {
@@ -1057,32 +1060,49 @@ public class ForumServiceImpl implements ForumService, Startable {
     }finally{sysProvider.close() ;}
   }
   
+  public void updateLoggedinUsers() throws Exception {
+    UserLoginLogEntry loginEntry = queue.poll() ;
+    if(loginEntry == null) return ;
+    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+    int maxOnline = loginEntry.totalOnline ;
+    Calendar tempTime = loginEntry.loginTime ;
+    while(loginEntry != null) { 
+    	try{
+    		Node userProfile = storage_.getUserProfileHome(sysProvider).getNode(loginEntry.userName);
+    		userProfile.setProperty("exo:lastLoginDate", loginEntry.loginTime) ;
+      	userProfile.save() ;      	
+      	if(loginEntry.totalOnline > maxOnline) {
+      		maxOnline = loginEntry.totalOnline ;
+      		tempTime = loginEntry.loginTime ;
+      	}      	    		
+    	}catch(Exception e) {
+    		log.error("Can not log information for user '" + loginEntry.userName +"'") ;
+    	}
+    	loginEntry = queue.poll() ;
+    }
+    
+ // update most online users
+  	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
+  	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
+		if(array.length > 1) {
+  		if(maxOnline > Integer.parseInt(array[0].trim())) {
+  			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(maxOnline) + ", at " + tempTime.getTimeInMillis()) ;
+    		statisticNode.save() ;
+  		}
+  	}else {
+  		statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(maxOnline) + ", at " + tempTime.getTimeInMillis()) ;
+  		statisticNode.save() ;
+  	}
+    sysProvider.close() ;
+  }  
+  
   public void userLogin(String userId) throws Exception {
   	lastLogin_ = userId ;
     if(!onlineUserList_.contains(userId)) {
     	onlineUserList_.add(userId);
     }
-    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-    try {
-    	Node userProfileHome = storage_.getUserProfileHome(sysProvider); 
-    	userProfileHome.getNode(userId).setProperty("exo:lastLoginDate", storage_.getGreenwichMeanTime()) ;
-    	userProfileHome.save() ;
-    	// update most online users
-    	Node statisticNode = storage_.getStatisticHome(sysProvider).getNode(Utils.FORUM_STATISTIC) ;
-    	String[] array = statisticNode.getProperty("exo:mostUsersOnline").getString().split(",") ;
-  		if(array.length > 1) {
-    		int ol = onlineUserList_.size() ;
-    		if(ol > Integer.parseInt(array[0].trim())) {
-    			statisticNode.setProperty("exo:mostUsersOnline", String.valueOf(ol) + ", at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
-      		statisticNode.save() ;
-    		}
-    	}else {
-    		statisticNode.setProperty("exo:mostUsersOnline", "1, at " + storage_.getGreenwichMeanTime().getTimeInMillis()) ;
-    		statisticNode.save() ;
-    	}    	
-    }catch(Exception e) {
-    	e.printStackTrace() ;
-    }finally{sysProvider.close() ;}
+    UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), storage_.getGreenwichMeanTime()) ;
+    queue.add(loginEntry) ;
   }
 
   public void userLogout(String userId) throws Exception {
