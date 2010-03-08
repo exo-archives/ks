@@ -24,7 +24,7 @@ KSUtils.prototype.setMaskLayer = function(id) {
 				var newDiv = DOMUtil.findFirstDescendantByClass(closeButton, "div", "ClosePopup") ;
 				if(!newDiv) newDiv = document.createElement("div");
 				closeButton.appendChild(newDiv);
-				newDiv.style.width = "16px";
+				newDiv.style.width = "20px";
 				newDiv.style.height = "16px";
 				newDiv.className = "ClosePopup";
 				newDiv.innerHTML = '<span></span>' ;
