@@ -611,7 +611,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			uiForm.isEdit = true ;
 			UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
 			popupWindow.setWindowSize(760, 540) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
 		}
 	}
 	
@@ -621,7 +621,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			uiForm.isEdit = false ;
 			UIPopupWindow popupWindow = uiForm.getAncestorOfType(UIPopupWindow.class);
 			popupWindow.setWindowSize(760, 350) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupWindow.getParent()) ;
 		}
 	}
 	
