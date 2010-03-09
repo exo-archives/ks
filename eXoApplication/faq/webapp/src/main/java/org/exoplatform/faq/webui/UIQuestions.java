@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
@@ -60,8 +61,6 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -320,7 +319,9 @@ public class UIQuestions extends UIContainer {
 	
 	private Question getQuestionDetail() {
 		Question question = new Question();
-		question.setDetail(languageMap.get(language_).getDetail());
+		if(languageMap.containsKey(language_)) {
+			question.setDetail(languageMap.get(language_).getDetail());
+		}
 		return  question;
 	}
 	
@@ -419,13 +420,17 @@ public class UIQuestions extends UIContainer {
 	
 	//update current language of viewing question
 	public void updateCurrentLanguage() throws Exception {
-		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0)
-			languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
-		else languageMap.clear() ;
+		if(viewingQuestionId_ != null && viewingQuestionId_.length() > 0) {
+			try {
+				languageMap.put(language_, faqService_.getQuestionLanguageByLanguage(viewingQuestionId_, language_)) ;
+      } catch (Exception e) {}
+		} else languageMap.clear() ;
 	}
 
 	public void updateQuestionLanguageByLanguage(String questionPath, String language) throws Exception {
-		languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language)) ;
+		try {
+			languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language)) ;
+    } catch (Exception e) {}
 	}
 	
 	public void updateLanguageMap() throws Exception{
@@ -703,23 +708,28 @@ public class UIQuestions extends UIContainer {
 			uiQuestions.isSortAnswerUp = null;
 			String questionId = event.getRequestContext().getRequestParameter(OBJECTID);
 			try{
+				boolean isRelation = false;
 				if(questionId.indexOf("/language=") > 0) {
 					String[] array = questionId.split("/language=") ;
 					questionId = array[0] ;
 					if(array[1].indexOf("/relation") > 0){ // click on relation
+						isRelation = true;
 						if(!FAQUtils.isFieldEmpty(uiQuestions.viewingQuestionId_)) {
-							uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + "/language=" + uiQuestions.language_ ;
-						} else {
-							uiQuestions.backPath_ = questionId + "/language=" + array[1].replaceFirst("/relation", "") ;
+							uiQuestions.backPath_ = uiQuestions.viewingQuestionId_ + "/language=" + uiQuestions.language_+"/back" ;
 						}
-					}else { //Click on back
+					} else { //Click on back
 						uiQuestions.viewingQuestionId_ = questionId;
+						if(array[1].indexOf("/back") > 0){
+							isRelation = true;
+							array[1] = array[1].replaceFirst("/back", "");
+						}
 						uiQuestions.language_ = array[1] ;
 						uiQuestions.backPath_ = "" ;
 					}					
 				}
 				
 				Question question = uiQuestions.faqService_.getQuestionById(questionId) ;
+				
 				if(uiQuestions.checkQuestionToView(question, uiApplication, event)) return;
 				String categoryId = uiQuestions.faqService_.getCategoryPathOf(questionId);
 				FAQSetting faqSetting = uiQuestions.faqSetting_ ;
@@ -744,7 +754,12 @@ public class UIQuestions extends UIContainer {
 				}
 				uiQuestions.viewingQuestionId_ = questionId ;		
 				uiQuestions.updateCurrentQuestionList() ;
-				uiQuestions.updateCurrentLanguage() ;
+				try {
+					uiQuestions.updateQuestionLanguageByLanguage(questionId, uiQuestions.language_) ;
+        } catch (PathNotFoundException e) {
+        	uiQuestions.language_ = question.getLanguage();
+        }
+        if(isRelation)uiQuestions.updateLanguageMap();
 			} catch(Exception e) {
 				e.printStackTrace();				
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.question-id-deleted", null, ApplicationMessage.WARNING)) ;
