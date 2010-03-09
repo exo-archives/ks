@@ -18,7 +18,10 @@ package org.exoplatform.forum.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.jcr.NodeIterator;
@@ -47,6 +50,7 @@ import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.forum.service.conf.InitializeForumPlugin;
@@ -77,7 +81,7 @@ public class ForumServiceImpl implements ForumService, Startable {
   private ForumServiceManaged managementView; // will be automatically set at @ManagedBy processing
 
   final List<String> onlineUserList_ = new CopyOnWriteArrayList<String>();
-  
+  final Queue<UserLoginLogEntry> queue = new ConcurrentLinkedQueue<UserLoginLogEntry>();
   private String lastLogin_ = "";
   private ForumStatisticsService forumStatisticsService;
 
@@ -859,7 +863,46 @@ public class ForumServiceImpl implements ForumService, Startable {
   public int getJobWattingForModeratorByUser(String userId) throws Exception {
     return storage.getJobWattingForModeratorByUser(userId);
   }
-
+  
+  /**
+   * {@inheritDoc}
+   */  
+  public void updateLoggedinUsers() throws Exception {
+    UserLoginLogEntry loginEntry = queue.poll() ;
+    if(loginEntry == null) return ;
+    int maxOnline = loginEntry.totalOnline ;
+    Calendar timestamp = loginEntry.loginTime ;
+    while(loginEntry != null) {
+      try{
+        storage.updateLastLoginDate(loginEntry.userName);        
+        if(loginEntry.totalOnline > maxOnline) {
+          maxOnline = loginEntry.totalOnline ;
+          timestamp = loginEntry.loginTime ;
+        }               
+      }catch(Exception e) {
+        log.warn("Can not log information for user '" + loginEntry.userName +"'") ;
+      }
+      loginEntry = queue.poll() ;
+    }
+    
+    ForumStatistic stats = storage.getForumStatistic();
+    int mostOnline = 0;
+    String mostUsersOnline = stats.getMostUsersOnline();
+    if (mostUsersOnline != null && mostUsersOnline.length() > 0) {
+      String[] array = mostUsersOnline.split(","); // OMG responsible of this should loose a finger!
+      try {
+        mostOnline = Integer.parseInt(array[0].trim());
+      } catch (Exception e) {}
+    }
+    if (maxOnline > mostOnline) {
+      stats.setMostUsersOnline(maxOnline + ", at " + timestamp.getTimeInMillis());
+    } else {
+      stats.setMostUsersOnline("1, at " + timestamp.getTimeInMillis());
+    }
+    storage.saveForumStatistic(stats);  
+    
+  }
+  
   /**
    * {@inheritDoc}
    */
@@ -867,34 +910,12 @@ public class ForumServiceImpl implements ForumService, Startable {
 
 		// TODO: login and onlineUserlist shoudl be anaged by
 		// forumStatisticsService.memberIn();
-
-		lastLogin_ = userId;
+    lastLogin_ = userId;
 		if (!onlineUserList_.contains(userId)) {
 			onlineUserList_.add(userId);
-		}
-
-		storage.updateLastLoginDate(userId);
-
-		// update most online users
-
-		ForumStatistic stats = storage.getForumStatistic();
-		int mostOnline = 0;
-		String mostUsersOnline = stats.getMostUsersOnline();
-		if (mostUsersOnline != null && mostUsersOnline.length() > 0) {
-			String[] array = mostUsersOnline.split(","); // OMG responsible of this should loose a finger!
-			try {
-				mostOnline = Integer.parseInt(array[0].trim());
-			} catch (Exception e) {}
-		}
-		int ol = onlineUserList_.size();
-		if (ol > mostOnline) {
-			stats.setMostUsersOnline(ol + ", at " + storage.getGreenwichMeanTime().getTimeInMillis());
-		} else {
-			stats.setMostUsersOnline("1, at " + storage.getGreenwichMeanTime().getTimeInMillis());
-		}
-
-		storage.saveForumStatistic(stats);
-
+		}		
+		UserLoginLogEntry loginEntry = new UserLoginLogEntry(userId, onlineUserList_.size(), storage.getGreenwichMeanTime()) ;
+    queue.add(loginEntry) ;		
   }
 
   /**

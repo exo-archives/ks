@@ -733,4 +733,9 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
+  public void updateLoggedinUsers() throws Exception {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

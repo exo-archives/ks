@@ -961,4 +961,14 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   void removeMember(User user) throws Exception;
+  
+  /**
+   * <p>
+   * Update information of logged in users that records in a queue to statistic and profile
+   * </p>
+   * 
+   * @param
+   * @throws Exception
+   */
+  public void updateLoggedinUsers() throws Exception ;
 }

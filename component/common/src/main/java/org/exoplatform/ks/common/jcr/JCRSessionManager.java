@@ -83,8 +83,9 @@ public class JCRSessionManager implements SessionManager {
   public Session getSession(SessionProvider sessionProvider) {
     Session session = null;
     try {
-
      RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+     if(repositoryService == null) 
+       repositoryService = (RepositoryService) ExoContainerContext.getContainerByName("portal").getComponentInstanceOfType(RepositoryService.class);
      ManageableRepository repository = repositoryService.getRepository(repositoryName);
      session = sessionProvider.getSession(workspaceName, repository);
     } catch (Exception e) {

@@ -153,6 +153,7 @@ SearchTagName.prototype.searchTagName = function(keyword) {
 	if(userAndTopicId){
 		var url = restPath + '/ks/forum/filterTagNameForum/' + userAndTopicId + '/' + keyword + '/';
 		this.url_ = url;
+		alert(url) ;
 	  var handler = new AjaxHandler(this, this.SEARCH_IP_BAN);
 	  this.ajaxWrapper(handler, url, 'GET');
 	}

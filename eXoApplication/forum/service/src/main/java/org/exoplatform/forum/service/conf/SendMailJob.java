@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.conf;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.services.log.ExoLogger;
@@ -39,12 +40,15 @@ public class SendMailJob implements Job {
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-      MailService mailService = (MailService)PortalContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
-      ForumService forumService =(ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
-      JobSchedulerService schedulerService = (JobSchedulerService)PortalContainer.getInstance().getComponentInstanceOfType(JobSchedulerService.class) ;
+      MailService mailService = (MailService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(MailService.class) ;
+      System.out.println("PortalContainer.getInstance().getName() ==>" + ExoContainerContext.getCurrentContainer().getContext().getPortalContainerName());
+      ForumService forumService =(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
+      JobSchedulerService schedulerService = (JobSchedulerService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(JobSchedulerService.class) ;
 
       String name = context.getJobDetail().getName();
+      System.out.println("\n SendMailJob.name ==>" + name);
 	    SendMessageInfo messageInfo = forumService.getMessageInfo(name) ;
+	    System.out.println("\n\n ==> " + messageInfo);
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
 	    

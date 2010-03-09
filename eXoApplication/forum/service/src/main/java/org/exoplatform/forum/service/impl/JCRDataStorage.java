@@ -354,7 +354,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
   }	
 	
-	
 	private Node getAdminHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getAdministrationLocation();
     return sessionManager.getSession(sProvider).getRootNode().getNode(path);
@@ -6097,6 +6096,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 			infoMap.put(name, new SendMessageInfo(addresses, message));
+			System.out.println("\n name ==>" + name);
+			System.out.println("\n ExoContainerContext.getCurrentContainer() ==>" + ExoContainerContext.getCurrentContainer().getContext().getRealmName());
 			schedulerService.addPeriodJob(info, periodInfo);
 		} catch (Exception e) {
 		  log.error("Failed to send notification ", e);
@@ -6203,6 +6204,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
 		SendMessageInfo messageInfo = (SendMessageInfo)infoMap.get(name);
+		//System.out.println("\n\n messageInfo.zi ==>" + infoMap.size());
+		//System.out.println("\n\n messageInfo ==>" + messageInfo);
 		infoMap.remove(name);
 		return messageInfo;
 	}
