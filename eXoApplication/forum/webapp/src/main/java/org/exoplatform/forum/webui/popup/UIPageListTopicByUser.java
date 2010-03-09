@@ -106,10 +106,10 @@ public class UIPageListTopicByUser extends UIContainer{
 			if(this.userProfile.getUserRole() == 0) isMod = true;
 			pageList	= forumService.getPageTopicByUser(this.userName, isMod, strOrderBy) ;
 			forumPageIterator.updatePageList(pageList) ;
-			if(pageList != null)pageList.setPageSize(6) ;
+			if(pageList != null)pageList.setPageSize(5) ;
 			topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}catch (Exception e) {}
+		}catch (Exception e) { e.printStackTrace();}
 		return topics ;
 	}
 	
@@ -136,6 +136,8 @@ public class UIPageListTopicByUser extends UIContainer{
 			String categoryId = path[i-3];
 			String forumId = path[i-2] ;
 			uiForm.forumService.removeTopic(categoryId, forumId, topicId);
+			UIForumPageIterator forumPageIterator = uiForm.getChild(UIForumPageIterator.class) ;
+			forumPageIterator.setSelectPage((long)1);
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
 		}
 	}
