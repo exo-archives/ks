@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
@@ -826,6 +827,8 @@ public interface ForumService extends ForumServiceLegacy {
   int getJobWattingForModeratorByUser(String userId) throws Exception;
 
   SendMessageInfo getMessageInfo(String name) throws Exception;
+  
+  Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
   boolean isAdminRole(String userName) throws Exception;
 

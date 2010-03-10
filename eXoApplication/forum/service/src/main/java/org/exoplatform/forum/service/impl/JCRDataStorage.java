@@ -35,8 +35,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -89,6 +91,7 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
 import org.exoplatform.forum.service.TopicType;
+import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -148,7 +151,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
   private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
 	private Map<String, String> serverConfig = new HashMap<String, String>();
+	
 	private Map<String, Object>	infoMap	= new HashMap<String, Object>();
+	
+	final Queue<SendMessageInfo> pendingMessagesQueue = new ConcurrentLinkedQueue<SendMessageInfo>();
+	
 	private List<RoleRulesPlugin> rulesPlugins = new ArrayList<RoleRulesPlugin>() ;
 	private List<InitializeForumPlugin> defaultPlugins = new ArrayList<InitializeForumPlugin>() ;
 	private Map<String, EventListener> listeners = new HashMap<String, EventListener>();
@@ -6087,22 +6094,14 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-		try {
-			Calendar cal = new GregorianCalendar();
-			PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
-			String name = String.valueOf(cal.getTime().getTime());
-			Class clazz = Class.forName("org.exoplatform.forum.service.conf.SendMailJob");
-			JobInfo info = new JobInfo(name, KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
-			ExoContainer container = ExoContainerContext.getCurrentContainer();
-			JobSchedulerService schedulerService = (JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
-			infoMap.put(name, new SendMessageInfo(addresses, message));
-			System.out.println("\n name ==>" + name);
-			System.out.println("\n ExoContainerContext.getCurrentContainer() ==>" + ExoContainerContext.getCurrentContainer().getContext().getRealmName());
-			schedulerService.addPeriodJob(info, periodInfo);
-		} catch (Exception e) {
-		  log.error("Failed to send notification ", e);
-		}
+		pendingMessagesQueue.add(new SendMessageInfo(addresses, message)) ;		  
 	}
+	
+	public Iterator<SendMessageInfo> getPendingMessages() throws Exception {
+	  Iterator<SendMessageInfo> pending = pendingMessagesQueue.iterator() ;
+	  pendingMessagesQueue.clear() ;
+	  return pending;
+	}  
 	
 	public void updateForum(String path) throws Exception {
 		Map<String, Long> topicMap = new HashMap<String, Long>() ;
@@ -6204,8 +6203,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	public SendMessageInfo getMessageInfo(String name) throws Exception {
 		SendMessageInfo messageInfo = (SendMessageInfo)infoMap.get(name);
-		//System.out.println("\n\n messageInfo.zi ==>" + infoMap.size());
-		//System.out.println("\n\n messageInfo ==>" + messageInfo);
 		infoMap.remove(name);
 		return messageInfo;
 	}

@@ -19,6 +19,7 @@ package org.exoplatform.forum.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -309,6 +310,8 @@ public interface DataStorage {
   void updateForum(String path) throws Exception;
 
   SendMessageInfo getMessageInfo(String name) throws Exception;
+  
+  Iterator<SendMessageInfo> getPendingMessages() throws Exception;
 
   List<ForumSearch> getJobWattingForModerator(String[] paths) throws Exception;
 

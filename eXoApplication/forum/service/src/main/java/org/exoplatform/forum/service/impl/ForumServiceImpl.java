@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -961,6 +962,13 @@ public class ForumServiceImpl implements ForumService, Startable {
     return storage.getMessageInfo(name) ;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public Iterator<SendMessageInfo> getPendingMessages() throws Exception {
+    return storage.getPendingMessages() ;
+  }
+  
   /**
    * {@inheritDoc}
    */  
