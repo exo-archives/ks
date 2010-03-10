@@ -17,18 +17,18 @@
 package org.exoplatform.faq.service.notify;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
-import org.exoplatform.services.scheduler.JobInfo;
-import org.exoplatform.services.scheduler.JobSchedulerService;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
@@ -38,36 +38,42 @@ public class NotifyJob implements Job{
   public NotifyJob() throws Exception {}
   @SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
-	  try {
-      MailService mailService = (MailService)PortalContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
-      FAQService faqService =(FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
-      JobSchedulerService schedulerService = (JobSchedulerService)PortalContainer.getInstance().getComponentInstanceOfType(JobSchedulerService.class) ;
-	  	
-	    String name = context.getJobDetail().getName();
-      NotifyInfo messageInfo = faqService.getMessageInfo(name) ;
-	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
-	    Message message = messageInfo.getMessage() ;
-		  		  
-		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
-		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
-		  	List<String> sentMessages = new ArrayList<String>() ;
-		  	int countEmail = 0;
-		  	for(String address : emailAddresses) {
-		  		if(!sentMessages.contains(address)) {
-		  			message.setTo(address) ;
-			  		mailService.sendMessage(message) ;
-			  		sentMessages.add(address) ;
-			  		countEmail ++;
-		  		}
-		  	}
-		  	if (log_.isDebugEnabled()) {
-		  		log_.debug("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
-		  	}
-		  }
-		  schedulerService.removeJob(info) ;		  
-
-	  } catch (Exception e) {
-		  e.printStackTrace();			
-	  }
+    JobDataMap dataMap = context.getJobDetail().getJobDataMap() ;    
+    for(Object ct : dataMap.values()) { 
+      try{
+        MailService mailService = (MailService)ExoContainerContext.getContainerByName((String)ct).getComponentInstanceOfType(MailService.class) ;
+        if (mailService == null){
+          log_.warn("\nThere is no MailService for sending notification via email...") ;
+          continue ;
+        }
+        FAQService faqService =(FAQService)ExoContainerContext.getContainerByName((String)ct).getComponentInstanceOfType(FAQService.class) ;        
+        Iterator<NotifyInfo> iter = faqService.getPendingMessages() ;
+        int countEmail = 0;
+        while(iter.hasNext()) {
+          try {
+            NotifyInfo messageInfo = iter.next() ;
+            List<String> emailAddresses = messageInfo.getEmailAddresses() ;
+            Message message = messageInfo.getMessage() ;
+            if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
+              List<String> sentMessages = new ArrayList<String>() ;
+              for(String address : emailAddresses) {
+                if(!sentMessages.contains(address)) {
+                  message.setTo(address) ;
+                  mailService.sendMessage(message) ;
+                  sentMessages.add(address) ;
+                  countEmail ++;
+                }
+              }              
+            }
+          }catch(Exception e) {}
+        }
+        if (log_.isInfoEnabled() && countEmail > 0) {
+          log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+        }
+      }catch(Exception e) {
+        log_.warn("\n\n Unable send email notification at container '"+ ct + "' ") ;
+      }
+    }
+    
   }
 }

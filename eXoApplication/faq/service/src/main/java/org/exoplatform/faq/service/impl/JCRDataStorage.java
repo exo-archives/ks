@@ -28,9 +28,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -48,8 +51,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -87,9 +88,6 @@ import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.scheduler.JobInfo;
-import org.exoplatform.services.scheduler.JobSchedulerService;
-import org.exoplatform.services.scheduler.PeriodInfo;
 
 /**
  * Created by The eXo Platform SARL
@@ -105,6 +103,7 @@ public class JCRDataStorage implements DataStorage {
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
+	final Queue<NotifyInfo> pendingMessagesQueue = new ConcurrentLinkedQueue<NotifyInfo>();
 	private Map<String, FAQRSSEventListener> rssListenerMap_ = new HashMap<String, FAQRSSEventListener> () ;
 	private final String ADMIN_="ADMIN".intern();
 	private final String FAQ_RSS = "ks.rss";
@@ -2912,7 +2911,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	private void sendEmailNotification(List<String> addresses, Message message) throws Exception {
-		Calendar cal = new GregorianCalendar();
+		/*Calendar cal = new GregorianCalendar();
 		PeriodInfo periodInfo = new PeriodInfo(cal.getTime(), null, 1, 86400000);
 		String name = String.valueOf(cal.getTime().getTime()) ;
 		JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", Class.forName("org.exoplatform.faq.service.notify.NotifyJob"));
@@ -2920,9 +2919,16 @@ public class JCRDataStorage implements DataStorage {
 		JobSchedulerService schedulerService = 
 			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 		messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
-		schedulerService.addPeriodJob(info, periodInfo);
+		schedulerService.addPeriodJob(info, periodInfo);*/
+	  pendingMessagesQueue.add(new NotifyInfo(addresses, message)) ;
 	}
-
+	
+	public Iterator<NotifyInfo> getPendingMessages() throws Exception {
+    Iterator<NotifyInfo> pending = pendingMessagesQueue.iterator() ;
+    pendingMessagesQueue.clear() ;
+    return pending;
+  } 
+	
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#getMessageInfo(java.lang.String)
    */

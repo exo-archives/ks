@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -736,6 +737,11 @@ public class FakeForumService implements ForumService {
   public void updateLoggedinUsers() throws Exception {
     // TODO Auto-generated method stub
     
+  }
+
+  public Iterator<SendMessageInfo> getPendingMessages() throws Exception {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

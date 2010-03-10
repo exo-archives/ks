@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -65,6 +66,8 @@ public interface DataStorage {
   void saveTemplate(String str) throws Exception;
 
   void sendMessage(Message message) throws Exception;
+  
+  Iterator<NotifyInfo> getPendingMessages() throws Exception ;
 
   List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception;
 

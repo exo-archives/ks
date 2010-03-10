@@ -19,6 +19,7 @@ package org.exoplatform.faq.service.impl;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -798,6 +799,15 @@ public class FAQServiceImpl implements FAQService, Startable {
   	jcrData_.sendMessage(message) ;
   }
   
+  /**
+   * This function will send all the pending notification message 
+   * 
+   * @param  
+   * @throws Exception the exception
+   */
+  public Iterator<NotifyInfo> getPendingMessages() throws Exception{
+    return jcrData_.getPendingMessages() ;
+  }
   
 	
 	/**

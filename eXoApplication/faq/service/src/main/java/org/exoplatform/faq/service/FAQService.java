@@ -17,6 +17,7 @@
 package org.exoplatform.faq.service;
 
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -475,6 +476,7 @@ public interface FAQService extends FAQServiceLegacy{
    */
   public void sendMessage(Message message) throws Exception ;
   
+  public Iterator<NotifyInfo> getPendingMessages() throws Exception ;
     
   /**
    * Add language for question node, this function only use for Question node, 

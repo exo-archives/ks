@@ -67,8 +67,8 @@ public class SendMailJob implements Job {
             }
           }catch(Exception e) {}	          	          
         }
-        if (log_.isInfoEnabled()) {
-          log_.info("\n\nEmail notifications for Thread Save Question have been sent to " + countEmail + " addresses");
+        if (log_.isInfoEnabled() && countEmail > 0) {
+          log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
         }
       }catch(Exception e) {
         log_.warn("\n\n Unable send email notification at container '"+ ct + "' ") ;
