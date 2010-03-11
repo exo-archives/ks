@@ -24,7 +24,7 @@
   </issueManagement>
   <ciManagement>
     <system>hudson</system>
-    <url>http://builder.exoplatform.org/hudson/job/ks/</url>
+    <url>http://builder.exoplatform.org/hudson/job/ks-trunk-ci/</url>
   </ciManagement>
   <properties>
     <org.exoplatform.kernel.version>2.2.0-Beta05</org.exoplatform.kernel.version>
