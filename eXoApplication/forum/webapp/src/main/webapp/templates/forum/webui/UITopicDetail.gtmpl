@@ -990,7 +990,7 @@
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
-										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() + attachment.getPath() +"/";
+										   String attLink = uicomponent.getRestPath()+"/jcr/" +uicomponent.getRepository() + attachment.getPath() +"/";
 										%>
 											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
 						 					<div class="LabelBox">
@@ -1011,9 +1011,7 @@
 									%>
 										<div class="LabelBox">
 											<div class="AttachmentIcon ${typeFileIcon}Icon"><span></span></div>
-												<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">
-													$fileName
-												</a>
+												<a onclick="if(eXo.core.Browser.browserType == 'ie') {<%=uicomponent.event("DownloadAttach");%>; } ajaxRedirect('$urlFile'); return false;" href="javaScript: void(0)">$fileName</a>
 												<div style="clear:left;"><span><span/></div>
 												<div class="Size"><%=_ctx.appRes(uiformId + ".label.Size");%>: ${size}</div>
 										</div>

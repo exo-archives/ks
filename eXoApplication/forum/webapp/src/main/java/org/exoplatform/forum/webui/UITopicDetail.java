@@ -207,7 +207,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return RSS.getRSSLink("forum", pcontainer.getPortalContainerInfo().getContainerName(), cateId);
 	}
 	
-  private String getRestPath() throws Exception {
+	private String getRestPath() throws Exception {
 		try {
 			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
 	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
@@ -490,7 +490,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		try {
 			if(this.isEditTopic || this.topic == null) {
 				this.topic = getForumService().getTopic(categoryId, forumId, topicId, UserProfile.USER_GUEST) ;
-//				isCanPost = isCanPostReply();
 				this.isEditTopic = false ;
 			}
 			return this.topic ;
@@ -518,10 +517,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return true;
 	}
 	
-	public String getPortalName() {
-    PortalContainer pcontainer =  PortalContainer.getInstance() ;
-    return pcontainer.getPortalContainerInfo().getContainerName() ;  
-  }
   public String getRepository() throws Exception {
     RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
     return rService.getCurrentRepository().getConfiguration().getName() ;

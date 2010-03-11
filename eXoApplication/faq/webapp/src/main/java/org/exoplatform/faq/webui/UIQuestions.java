@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.rendering.RenderingException;
@@ -173,6 +174,16 @@ public class UIQuestions extends UIContainer {
 	public String getPortalName() {
 		PortalContainer pcontainer =  PortalContainer.getInstance() ;
 		return pcontainer.getPortalContainerInfo().getContainerName() ;  
+	}
+	
+	private String getRestPath() throws Exception {
+		try {
+			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
+	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+		return "";
 	}
 	
 	private boolean isDiscussForum() throws Exception{

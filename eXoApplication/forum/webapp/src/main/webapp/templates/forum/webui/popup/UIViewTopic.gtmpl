@@ -178,14 +178,14 @@
 										 String urlFile = uicomponent.getFileSource(attachment) ;
 										 String titleFile = attachment.getName();
 							 		 	 String fileName = ForumUtils.getSubString(titleFile, 30);
-								 		 double sizeNumber = attachment.getSize() ;
+								 		 long sizeNumber = attachment.getSize() ;
 								 		 String size = ForumUtils.getSizeFile(sizeNumber) ;
 								 		 String typeFile = attachment.mimeType ;
 								 		 String pathAtt = urlFile.replaceAll("&","(omu)");
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
-										   String attLink = "/"+uicomponent.getPortalName()+"/rest/jcr/" +uicomponent.getRepository() +attachment.getPath()  +"/";
+										   String attLink = uicomponent.getRestPath()+"/jcr/" +uicomponent.getRepository() +attachment.getPath()  +"/";
 										%>
 											<div class="Image"><img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" id="imgView${fileName}" src="$attLink" height="100px;" alt=""/></div> 
 						 					<div class="LabelBox">

@@ -102,10 +102,15 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
     return renderHelper.renderPost(post);
   }
 	
-	public String getPortalName() {
-    PortalContainer pcontainer =  PortalContainer.getInstance() ;
-    return pcontainer.getPortalContainerInfo().getContainerName() ;  
-  }
+	private String getRestPath() throws Exception {
+		try {
+			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
+	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+    } catch (Exception e) {
+    }
+		return "";
+	}
+	
   public String getRepository() throws Exception {
     RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
     return rService.getCurrentRepository().getConfiguration().getName() ;

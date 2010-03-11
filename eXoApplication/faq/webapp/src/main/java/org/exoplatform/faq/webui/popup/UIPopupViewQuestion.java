@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -97,11 +98,16 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
   	return question;
   }
   
-  public String getPortalName() {
-    PortalContainer pcontainer =  PortalContainer.getInstance() ;
-    return pcontainer.getPortalContainerInfo().getContainerName() ;  
-  }
-	
+  private String getRestPath() throws Exception {
+		try {
+			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
+	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+    } catch (Exception e) {
+	    log.error("Can not get portal name or rest context name, exception: ",e);
+    }
+		return "";
+	}
+  
 	public String getRepository() throws Exception {
     RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
     return rService.getCurrentRepository().getConfiguration().getName() ;
