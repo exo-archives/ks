@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -9,10 +9,6 @@
   <artifactId>exo.ks.eXoApplication.faq.webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS FAQ application</name>
-  <build>
-    <!-- see is we can remove this  -->
-    <finalName>faq</finalName>
-  </build>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -120,4 +116,8 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <build>
+    <!-- see is we can remove this  -->
+    <finalName>faq</finalName>
+  </build>
 </project>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -9,9 +9,6 @@
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
   <packaging>war</packaging>
   <name>eXo KS Forum application</name>
-  <build>
-    <finalName>forum</finalName>
-  </build>
   <dependencies>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
@@ -112,16 +109,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-       <groupId>org.mortbay.jetty</groupId>
-       <artifactId>cometd-bayeux</artifactId>
-       <version>${org.mortbay.jetty.cometd-bayeux.version}</version>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>cometd-bayeux</artifactId>
+      <version>${org.mortbay.jetty.cometd-bayeux.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-       <groupId>org.exoplatform.platform</groupId>
-       <artifactId>exo.platform.commons.comet.service</artifactId>
+      <groupId>org.exoplatform.platform</groupId>
+      <artifactId>exo.platform.commons.comet.service</artifactId>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.test-utils</artifactId>
@@ -133,4 +130,7 @@
       <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <finalName>forum</finalName>
+  </build>
 </project>

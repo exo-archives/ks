@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform.ks</groupId>
@@ -9,6 +9,59 @@
   <artifactId>exo.ks.packaging.assembly</artifactId>
   <packaging>pom</packaging>
   <name>eXo KS Packaging Assemblies</name>
+  <properties>
+    <gatein.working.dir>${basedir}/target</gatein.working.dir>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.tool</groupId>
+      <artifactId>exopackage</artifactId>
+      <version>1.1.0-Beta05</version>
+      <type>zip</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.kernel</groupId>
+      <artifactId>kernel.packaging.module</artifactId>
+      <version>${org.exoplatform.kernel.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.core</groupId>
+      <artifactId>core.packaging.module</artifactId>
+      <version>${org.exoplatform.core.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ws</groupId>
+      <artifactId>ws.packaging.module</artifactId>
+      <version>${org.exoplatform.ws.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.jcr</groupId>
+      <artifactId>jcr.packaging.module</artifactId>
+      <version>${org.exoplatform.jcr.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>portal.packaging.module</artifactId>
+      <version>${org.exoplatform.portal.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>ks.packaging.module</artifactId>
+      <version>${project.version}</version>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>portal.packaging.product</artifactId>
+      <version>${project.version}</version>
+      <type>js</type>
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <!-- needed for exobuild to call maven dependency:get -->
@@ -68,59 +121,6 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>org.exoplatform.tool</groupId>
-      <artifactId>exopackage</artifactId>
-      <version>1.1.0-Beta05</version>
-      <type>zip</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.kernel</groupId>
-      <artifactId>kernel.packaging.module</artifactId>
-      <version>${org.exoplatform.kernel.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.core</groupId>
-      <artifactId>core.packaging.module</artifactId>
-      <version>${org.exoplatform.core.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ws</groupId>
-      <artifactId>ws.packaging.module</artifactId>
-      <version>${org.exoplatform.ws.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.jcr</groupId>
-      <artifactId>jcr.packaging.module</artifactId>
-      <version>${org.exoplatform.jcr.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.portal</groupId>
-      <artifactId>portal.packaging.module</artifactId>
-      <version>${org.exoplatform.portal.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>ks.packaging.module</artifactId>
-      <version>${project.version}</version>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>portal.packaging.product</artifactId>
-      <version>${project.version}</version>
-      <type>js</type>
-    </dependency>
-  </dependencies>
-  <properties>
-    <gatein.working.dir>${basedir}/target</gatein.working.dir>
-  </properties>
   <profiles>
     <profile>
       <id>pkg-tomcat</id>
@@ -144,17 +144,17 @@
                   <rules>
                     <requireProperty>
                       <property>exo.projects.directory.dependencies</property>
-                      <message>"You must define the property exo.projects.directory.dependencies to give the path to the directory where you store your applications servers"</message>
+                      <message>&quot;You must define the property exo.projects.directory.dependencies to give the path to the directory where you store your applications servers&quot;</message>
                     </requireProperty>
                     <requireProperty>
                       <property>exo.projects.app.tomcat.version</property>
-                      <message>"You must define the property exo.projects.app.tomcat.version to give the name of the directory where is stored tomcat"</message>
+                      <message>&quot;You must define the property exo.projects.app.tomcat.version to give the name of the directory where is stored tomcat&quot;</message>
                     </requireProperty>
                     <requireFilesExist>
                       <files>
                         <file>${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}/</file>
                       </files>
-                      <message>"The following Tomcat directory doesn't exist : ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}"</message>
+                      <message>&quot;The following Tomcat directory doesn't exist : ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}&quot;</message>
                     </requireFilesExist>
                   </rules>
                   <fail>true</fail>
@@ -226,17 +226,17 @@
                   <rules>
                     <requireProperty>
                       <property>exo.projects.directory.dependencies</property>
-                      <message>"You must define the property exo.projects.directory.dependencies to give the path to the directory where you store your applications servers"</message>
+                      <message>&quot;You must define the property exo.projects.directory.dependencies to give the path to the directory where you store your applications servers&quot;</message>
                     </requireProperty>
                     <requireProperty>
                       <property>exo.projects.app.jboss.version</property>
-                      <message>"You must define the property exo.projects.app.jboss.version to give the name of the directory where is stored JBossAS"</message>
+                      <message>&quot;You must define the property exo.projects.app.jboss.version to give the name of the directory where is stored JBossAS&quot;</message>
                     </requireProperty>
                     <requireFilesExist>
                       <files>
                         <file>${exo.projects.directory.dependencies}/${exo.projects.app.jboss.version}/</file>
                       </files>
-                      <message>"The following JBossAS directory doesn't exist : ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}"</message>
+                      <message>&quot;The following JBossAS directory doesn't exist : ${exo.projects.directory.dependencies}/${exo.projects.app.tomcat.version}&quot;</message>
                     </requireFilesExist>
                   </rules>
                   <fail>true</fail>
