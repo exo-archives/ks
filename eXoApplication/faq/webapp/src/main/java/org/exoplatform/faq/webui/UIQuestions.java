@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
@@ -428,9 +427,7 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public void updateQuestionLanguageByLanguage(String questionPath, String language) throws Exception {
-		try {
-			languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language)) ;
-    } catch (Exception e) {}
+		languageMap.put(language, faqService_.getQuestionLanguageByLanguage(questionPath, language)) ;
 	}
 	
 	public void updateLanguageMap() throws Exception{
@@ -727,7 +724,6 @@ public class UIQuestions extends UIContainer {
 						uiQuestions.backPath_ = "" ;
 					}					
 				}
-				
 				Question question = uiQuestions.faqService_.getQuestionById(questionId) ;
 				
 				if(uiQuestions.checkQuestionToView(question, uiApplication, event)) return;
@@ -756,7 +752,7 @@ public class UIQuestions extends UIContainer {
 				uiQuestions.updateCurrentQuestionList() ;
 				try {
 					uiQuestions.updateQuestionLanguageByLanguage(questionId, uiQuestions.language_) ;
-        } catch (PathNotFoundException e) {
+        } catch (Exception e) {
         	uiQuestions.language_ = question.getLanguage();
         }
         if(isRelation)uiQuestions.updateLanguageMap();

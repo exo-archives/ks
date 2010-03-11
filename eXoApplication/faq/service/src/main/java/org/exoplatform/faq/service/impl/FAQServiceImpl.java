@@ -1164,7 +1164,6 @@ public class FAQServiceImpl implements FAQService, Startable {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       return MultiLanguages.getQuestionLanguageByLanguage(questionNode, language) ;
     } catch (Exception e) {
-    	System.out.println("\n\n --------> getQuestionLanguageByLanguage fall \n\n");
       throw e;
     }finally {sProvider.close() ;}
   }
