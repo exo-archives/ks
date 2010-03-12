@@ -157,7 +157,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 			try{								
 				//Create link by Vu Duy Tu.
 	      String link = FAQUtils.getLink(commentForm.getLink(), commentForm.getId(), "UICommentForm", "Cancel", "ViewQuestion", "OBJECTID");
-				link = link.replaceFirst("OBJECTID", commentForm.question_.getId());
+				link = link.replaceFirst("OBJECTID", commentForm.question_.getId()).replace("private", "public");
 				commentForm.question_.setLink(link) ;
 				if(commentForm.comment != null) {
 					commentForm.comment.setNew(false) ;

@@ -505,7 +505,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	      if(isNew){
 	      	StringBuilder qsId = new StringBuilder().append(question.getCategoryId()).append("/").append(org.exoplatform.faq.service.Utils.QUESTION_HOME)
 	      		.append("/").append(question.getId());
-		      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", qsId.toString().replace("private", "public"));
+		      String link = FAQUtils.getLink(questionForm.getLink(), questionForm.getId(), "UIQuestions", "Attachment", "ViewQuestion", qsId.toString()).replace("private", "public");
 		      question.setLink(link) ;
 	      }
 	      

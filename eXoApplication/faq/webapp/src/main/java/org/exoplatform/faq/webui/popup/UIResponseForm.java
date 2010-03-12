@@ -358,7 +358,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				UIQuestions uiQuestions = portlet.getChild(UIAnswersContainer.class).getChild(UIQuestions.class) ;
 				//Link Question to send mail 
 				String link = FAQUtils.getLink(responseForm.getLink(), responseForm.getId(), "UIQuestions", "AddRelation", "ViewQuestion", "OBJECTID");
-				link = link.replaceFirst("OBJECTID", question.getPath());
+				link = link.replaceFirst("OBJECTID", question.getPath()).replace("private", "public");
 				question.setLink(link) ;
 				
 				// set answer to question for discuss forum function  
