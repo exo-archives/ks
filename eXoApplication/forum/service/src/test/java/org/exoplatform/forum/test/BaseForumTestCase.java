@@ -51,7 +51,11 @@ public class BaseForumTestCase extends BasicTestCase {
   public BaseForumTestCase() throws Exception {    
   }
   
-   
+  public void testBaseTestCase() {
+  	assertNotNull(repositoryService) ;
+  	assertNotNull(container) ;
+  }
+  
   public void setUp() throws Exception {
     startSystemSession();
   }
@@ -96,6 +100,7 @@ public class BaseForumTestCase extends BasicTestCase {
       assertEquals(message, expected[i], actual[i]);
     }
   }
+  
   private static void initContainer() {
     try {
       String containerConf = BaseForumTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
