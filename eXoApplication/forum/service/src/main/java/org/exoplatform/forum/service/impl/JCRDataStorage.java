@@ -6098,7 +6098,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 	
 	public Iterator<SendMessageInfo> getPendingMessages() throws Exception {
-	  Iterator<SendMessageInfo> pending = pendingMessagesQueue.iterator() ;
+	  Iterator<SendMessageInfo> pending = new ArrayList<SendMessageInfo>(pendingMessagesQueue).iterator() ;
 	  pendingMessagesQueue.clear() ;
 	  return pending;
 	}  
