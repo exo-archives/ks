@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.io.FileUtils;
 import org.exoplatform.faq.service.Answer;
@@ -44,8 +47,10 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.service.impl.JCRDataStorage;
 import org.exoplatform.faq.test.FAQServiceTestCase;
 import org.exoplatform.ks.bbcode.api.BBCode;
+import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.mail.Message;
 
 /**
  * Created by The eXo Platform SARL
@@ -90,6 +95,8 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqSetting_.setSortQuestionByVote(true);
 		faqSetting_.setIsAdmin("TRUE");
 		faqSetting_.setEmailMoveQuestion("content email move question");
+		faqSetting_.setEmailSettingSubject("Send notify watched");
+		faqSetting_.setEmailSettingContent("Question content: &questionContent_ <br/>Response: &questionResponse_ <br/> link: &questionLink_");
 	}
 
 	public void testFAQService() throws Exception {
@@ -698,7 +705,7 @@ public class TestFAQService extends FAQServiceTestCase{
     	e.printStackTrace();
     }*/
 	}
-	
+
 	public void testUserAvatar()throws Exception{
 		//	Add new avatar for user:
 		faqService_.saveUserAvatar(USER_ROOT, createUserAvatar("rootAvatar"));
@@ -710,5 +717,26 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.setDefaultAvatar(USER_ROOT);
 		assertNull(faqService_.getUserAvatar(USER_ROOT));
 	}
-
+	
+	public void testGetPendingMessages() throws Exception {
+//	set data default
+		defaultData();
+		Question question = faqService_.getQuestionById(categoryId1 + "/" + Utils.QUESTION_HOME + "/" +questionId1);
+		question.setEmail("dttempmail@gmail.com");
+		question.setEmailsWatch(new String[]{"duytucntt@gmail.com, tu.duy@exoplatform.com"});
+		Answer answer = createAnswer(USER_ROOT, "Answer Content");
+		question.setAnswers(new Answer[]{answer});
+		question.setLink("http://domain.com/portal/public/classic");
+		faqSetting_.setDisplayMode("approved");
+		// save question for send email watched
+		faqService_.saveQuestion(question, false, faqSetting_);
+		Iterator<NotifyInfo> iterator = faqService_.getPendingMessages();
+		List<String>emails = new ArrayList<String>();
+		while (iterator.hasNext()) {
+			NotifyInfo notifyInfo = iterator.next();
+	    emails = notifyInfo.getEmailAddresses();
+    }
+		assertEquals(emails.toString(), "[dttempmail@gmail.com, duytucntt@gmail.com, tu.duy@exoplatform.com]");
+  }
+	
 }

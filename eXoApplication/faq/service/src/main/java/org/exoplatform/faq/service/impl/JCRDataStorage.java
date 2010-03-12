@@ -488,18 +488,25 @@ public class JCRDataStorage implements DataStorage {
 				for(String email: org.exoplatform.ks.common.Utils.ValuesToList(cate.getProperty("exo:emailWatching").getValues())) {
 					emailsList.add(email) ;
 				}
-			}			
-			for(String email: question.getEmailsWatch()) {
-				emailsList.add(email) ;				
+			}
+			if(question.getEmailsWatch() != null) {
+				for(String email: question.getEmailsWatch()) {
+					emailsList.add(email) ;				
+				}
 			}
 			if(emailsList != null && emailsList.size() > 0) {
 				Message message = new Message();
 				message.setMimeType(MIMETYPE_TEXTHTML) ;
 				message.setFrom(question.getAuthor() + "<email@gmail.com>");
 				message.setSubject(faqSetting.getEmailSettingSubject() + ": " + question.getQuestion());
-				message.setBody(faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
-																													 .replaceAll("&questionResponse_", question.getAnswers()[0].getResponses())
-																													 .replaceAll("&questionLink_", question.getLink()));
+				String body = faqSetting.getEmailSettingContent().replaceAll("&questionContent_", question.getDetail())
+											.replaceAll("&questionLink_", question.getLink());
+				if(question.getAnswers() != null && question.getAnswers().length > 0) {
+					body = body.replaceAll("&questionResponse_", question.getAnswers()[0].getResponses());
+				} else {
+					body = body.replaceAll("&questionResponse_", "");
+				}
+				message.setBody(body);
 				sendEmailNotification(emailsList, message) ;
 			}
 		} catch(Exception e) {
@@ -2924,7 +2931,7 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	public Iterator<NotifyInfo> getPendingMessages() throws Exception {
-    Iterator<NotifyInfo> pending = pendingMessagesQueue.iterator() ;
+		Iterator<NotifyInfo>pending = new ArrayList<NotifyInfo>(pendingMessagesQueue).iterator();
     pendingMessagesQueue.clear() ;
     return pending;
   } 
