@@ -45,18 +45,25 @@ public class ForumRSSEventListener implements EventListener{
 	public void onEvent(EventIterator evIter){		
 		try{
 		  ForumFeedGenerator process = new ForumFeedGenerator(locator);
-			String path = null;
+			String path = null, path_= "";;
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				path = ev.getPath();
+				if(path.indexOf("pruneSetting") > 0) continue;
 				if(ev.getType() == Event.NODE_ADDED){
 					process.itemAdded(ev.getPath());
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
 					process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
-				}else if(ev.getType() == Event.NODE_REMOVED) {		
-					process.itemRemoved(ev.getPath());
+				}else if(ev.getType() == Event.NODE_REMOVED) {	
+					if(path_.contains(path) || path_.length() == 0) {
+						path_ = path;
+					}
+//					process.itemRemoved(ev.getPath());
 				}
-				break ;								
+//				break ;		
+			}
+			if(path_.length() > 0) {
+				process.itemRemoved(path_);
 			}
 		}catch(Exception e) {
 			//e.printStackTrace() ;

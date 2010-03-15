@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2009 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -19,7 +19,6 @@ package org.exoplatform.ks.rss;
 import java.util.GregorianCalendar;
 
 import javax.jcr.Node;
-import javax.jcr.Session;
 
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.test.ConfigurationUnit;
@@ -31,14 +30,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice
- *         Lamarque</a>
+ * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
 @ConfiguredBy( {
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/rss-configuration.xml"),
-    @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/storage-configuration.xml") })
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/rss-configuration.xml"),
+  @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/storage-configuration.xml") })
 public class TestForumFeedGenerator extends AbstractJCRTestCase {
 
   ForumFeedGenerator generator = null;
@@ -49,7 +47,7 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
     generator = new ForumFeedGenerator(locator);
   }
 
-  //@Test
+  @Test
   public void testItemAdded() throws Exception {
     String path = feedFixture();
 
@@ -63,50 +61,62 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
     Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXmessage"));
     Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXtitle"));
     Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXauthor"));
-
-
   }
   
+  @Test
+  public void testItemUpdate() throws Exception {
+  	String path = feedFixture();
+
+  	Node postNode = getNode(path);
+  	postNode.setProperty("exo:message", "New message");
+  	postNode.save();
+  	
+  	generator.itemUpdated("/"+path);
+  	
+  	assertNodeExists(locator.getForumHomeLocation() + "/category001/"+RSS.RSS_NODE_NAME);
+  	assertNodeExists(locator.getForumHomeLocation() + "/category001/forum001/"+RSS.RSS_NODE_NAME);
+  	assertNodeExists(locator.getForumHomeLocation() + "/category001/forum001/topic001/"+RSS.RSS_NODE_NAME);
+  	
+  	Node categoryFeed = getNode(locator.getForumHomeLocation() + "/category001/"+RSS.RSS_NODE_NAME);
+  	Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("New message"));
+  	Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXtitle"));
+  	Assert.assertTrue(categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXauthor"));
+  }
   
-  //@Test
+  @Test
   public void testItemRemoved() throws Exception {
     String path = feedFixture();
-   
     generator.itemRemoved("/" + locator.getForumHomeLocation() + "/category001/forum001/topic001");
 
-    assertNodeExists(locator.getForumHomeLocation() + "category001/"+RSS.RSS_NODE_NAME);
-    assertNodeExists(locator.getForumHomeLocation() + "category001/forum001/"+RSS.RSS_NODE_NAME);
-    assertNodeExists(locator.getForumHomeLocation() + "category001/forum001/topic001/"+RSS.RSS_NODE_NAME);
+    assertNodeExists(locator.getForumHomeLocation() + "/category001/"+RSS.RSS_NODE_NAME);
+    assertNodeExists(locator.getForumHomeLocation() + "/category001/forum001/"+RSS.RSS_NODE_NAME);
+    assertNodeExists(locator.getForumHomeLocation() + "/category001/forum001/topic001/"+RSS.RSS_NODE_NAME);
     
-    Node categoryFeed = getNode("category001/"+RSS.RSS_NODE_NAME);
+    Node categoryFeed = getNode(locator.getForumHomeLocation() + "/category001/"+RSS.RSS_NODE_NAME);
     Assert.assertTrue(!categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXmessage"));
     Assert.assertTrue(!categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXtitle"));
     Assert.assertTrue(!categoryFeed.getProperty(RSS.CONTENT_PROPERTY).getString().contains("XXXauthor"));
-
-
   }
 
   private String feedFixture() throws Exception {
     String forumService = locator.getForumHomeLocation();
+    String path = forumService + "/category001";
+    // Add node
     addNode(forumService);
-    
-    addNode(forumService + "/category001", "exo:forumCategory");
-    Node category = getNode(forumService + "/category001");
+    Node category = addNode(path, "exo:forumCategory");
+    path += "/forum001";
+    Node forum = addNode(path, "exo:forum");
+    path += "/topic001";
+    Node topic = addNode(path, "exo:topic");
+    path += "/post001";
+    Node post = addNode(path, "exo:post");
+    // set some properties for nodes.
     category.setProperty("exo:id", "category001");
-    addNode(forumService + "/category001/forum001", "exo:forum");
-    
-    Node forum = getNode(forumService + "/category001/forum001");
+    category.save();
     forum.setProperty("exo:id", "forum001");
-    
-    addNode(forumService + "/category001/forum001/topic001", "exo:topic");
-    Node topic = getNode(forumService + "/category001/forum001/topic001");
+    forum.save();
     topic.setProperty("exo:id", "topic001");
-    
-    String path = forumService + "/category001/forum001/topic001/post001";
-    addNode(path, "exo:post");
-
-    Session session = getSession();
-    Node post = session.getRootNode().getNode(path);
+    topic.save();
     post.setProperty("exo:link", "http://test?objectId=post001");
     post.setProperty("exo:id", "post001");
     post.setProperty("exo:isFirstPost", false);
@@ -116,7 +126,6 @@ public class TestForumFeedGenerator extends AbstractJCRTestCase {
     post.setProperty("exo:name", "XXXtitle");
     post.setProperty("exo:createdDate", new GregorianCalendar());
     post.setProperty("exo:owner", "XXXauthor");
-    
     post.save();
     return path;
   }

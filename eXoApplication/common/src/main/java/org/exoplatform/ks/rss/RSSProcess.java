@@ -141,6 +141,7 @@ public abstract class RSSProcess {
                                  .getQueryManager();
     StringBuffer queryString = new StringBuffer("/jcr:root" + parentNode.getPath()
         + "//*[@exo:id='").append(objectId).append("']");
+    
     Query query = qm.createQuery(queryString.toString(), Query.XPATH);
     QueryResult result = query.execute();
     parentNode = result.getNodes().nextNode();

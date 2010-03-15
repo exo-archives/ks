@@ -26,7 +26,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -56,7 +56,7 @@ public class TestKSRSSServlet {
     resolver.setDefaultProvider(new FakeContentProvider("test"));
     servlet.setFeedResolver(resolver); 
    
-    servlet.onService(PortalContainer.getInstance(), request, response);
+    servlet.onService(ExoContainerContext.getCurrentContainer(), request, response);
 
     Mockito.verify(outputStream).write("test".getBytes());
 
@@ -82,7 +82,7 @@ public class TestKSRSSServlet {
     resolver.setDefaultProvider(new FakeContentProvider(null));
     servlet.setFeedResolver(resolver); // resolver will be taken directly
    
-    servlet.onService(PortalContainer.getInstance(), request, response);
+    servlet.onService(ExoContainerContext.getCurrentContainer(), request, response);
 
   }
   

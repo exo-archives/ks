@@ -49,7 +49,7 @@ public class TestRSS extends AbstractJCRTestCase {
 
   @Test
   public void testSaveFeed() throws Exception {
-    
+
     Node target = addNode("FeedTarget");
     RSS rss = new RSS(target);
     SyndFeed feed = RSS.createNewFeed("foo", new Date());

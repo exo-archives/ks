@@ -266,13 +266,20 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
       while(nodeIterator.hasNext()){
         postNode = nodeIterator.nextNode();
         if(postNode.isNodeType("exo:post")){
-          postUpdated(postNode.getPath(), linkItem, updated);
+        	try {
+        		postUpdated(postNode, linkItem, updated);
+          } catch (Exception e) {
+          	if(LOG.isDebugEnabled()) {
+          		LOG.debug("Failed to generate feed for post " + postNode.getPath(), e);
+          	}
+          }
         }
       }
     } catch (PathNotFoundException e) {
     } catch (RepositoryException e) {
     }
   }
+  
    protected void forumUpdated(String path, String linkItem, final boolean updated){
       try {
         Node forumNode = (Node)getCurrentSession().getItem(path);
@@ -289,92 +296,92 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
       }
     }
   
-  
+  private void postUpdated(Node postNode, String linkItem, final boolean updated) throws Exception {
+		boolean debug = LOG.isDebugEnabled();
+		Node topicNode = postNode.getParent();
+		String postName = postNode.getName();
+		PropertyReader post = new PropertyReader(postNode);
+		PropertyReader topic = new PropertyReader(topicNode);
+		boolean isFirstPost = post.bool("exo:isFirstPost");//postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean();
+		boolean notApproved = !post.bool("exo:isApproved");//(postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean());
+		boolean isPrivatePost = hasProperty(topicNode, "exo:userPrivate") && !"exoUserPri".equals(topic.strings("exo:userPrivate")[0]); //(postNode.hasProperty("exo:userPrivate") && !postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"));
+		boolean topicHasLimitedViewers = hasProperty(topicNode, "exo:canView"); //(topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0);
+		
+		if ((isFirstPost && notApproved) || isPrivatePost || topicHasLimitedViewers) {
+			if (debug) {
+				LOG.debug("Post" + postName +" was not added to feed because it is private or topic has restricted audience or it is approval pending");
+			}
+			return;
+		}
+		
+		Node forumNode = topicNode.getParent();
+		Node categoryNode = forumNode.getParent();
+		boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
+		boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+		
+		if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
+			if (debug) {
+				LOG.debug("Post" + postName +" was not added to feed because category or forum has restricted audience");
+			}
+			return;
+		}
+		
+		boolean inactive = !post.bool("exo:isActiveByTopic");//(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean());
+		boolean hidden = post.bool("exo:isHidden");//(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean());
+		
+		
+		if(notApproved || inactive || hidden) {
+			
+			if (updated) {
+				removePostFromParentFeeds(postNode, topicNode, forumNode, categoryNode);
+			}
+			if (debug) {
+				LOG.debug("Post" + postName +" was not added to feed because because it is hidden, inactive or not approved");
+			}
+			return;
+		}
+		
+		SyndContent description;
+		List<String> listContent = new ArrayList<String>();
+		String message = post.string("exo:message");
+		listContent.add(message);
+		description = new SyndContentImpl();
+		description.setType(RSS.PLAIN_TEXT);
+		description.setValue(message);
+		final String title = post.string("exo:name");
+		final Date created = post.date("exo:createdDate");
+		final String owner = post.string("exo:owner");
+		SyndEntry entry = RSS.createNewEntry(postName, title, linkItem, listContent, description,created , owner);
+		entry.setLink(linkItem + topicNode.getName());
+		
+		// save topic, forum and category feeds
+		for(Node node : new Node[]{topicNode, forumNode, categoryNode}) {
+			PropertyReader reader = new PropertyReader(node);
+			String desc = reader.string("exo:description", " ");
+			
+			RSS data = new RSS(node);
+			if (data.feedExists()) {
+				SyndFeed feed = null;
+				if (updated) {
+					feed = data.removeEntry(postName);
+				}
+				feed = data.addEntry(entry);
+				feed.setDescription(reader.string("exo:description", " "));  
+				data.saveFeed(feed, FORUM_RSS_TYPE);
+			} else {
+				SyndFeed feed   = RSS.createNewFeed(title, created);
+				feed.setLink(linkItem + node.getName());
+				feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
+				feed.setDescription(desc);  
+				data.saveFeed(feed, FORUM_RSS_TYPE);
+			}
+		}
+  }
+
   protected void postUpdated(String path, String linkItem, final boolean updated){
     try{
-      boolean debug = LOG.isDebugEnabled();
-      Node postNode = (Node)getCurrentSession().getItem(path);
-      Node topicNode = postNode.getParent();
-      String postName = postNode.getName();
-      PropertyReader post = new PropertyReader(postNode);
-      PropertyReader topic = new PropertyReader(topicNode);
-      boolean isFirstPost = post.bool("exo:isFirstPost");//postNode.hasProperty("exo:isFirstPost") && postNode.getProperty("exo:isFirstPost").getBoolean();
-      boolean notApproved = !post.bool("exo:isApproved");//(postNode.hasProperty("exo:isApproved") && !postNode.getProperty("exo:isApproved").getBoolean());
-      boolean isPrivatePost = hasProperty(topicNode, "exo:userPrivate") && !"exoUserPri".equals(topic.strings("exo:userPrivate")[0]); //(postNode.hasProperty("exo:userPrivate") && !postNode.getProperty("exo:userPrivate").getValues()[0].getString().equals("exoUserPri"));
-      boolean topicHasLimitedViewers = hasProperty(topicNode, "exo:canView"); //(topicNode.hasProperty("exo:canView") && topicNode.getProperty("exo:canView").getValues()[0].getString().trim().length() > 0);
-      
-      if ((isFirstPost && notApproved) || isPrivatePost || topicHasLimitedViewers) {
-        if (debug) {
-          LOG.debug("Post" + postName +" was not added to feed because it is private or topic has restricted audience or it is approval pending");
-        }
-        return;
-      }
-      
-      Node forumNode = topicNode.getParent();
-      Node categoryNode = forumNode.getParent();
-      boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
-      boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
-      
-      if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
-        if (debug) {
-          LOG.debug("Post" + postName +" was not added to feed because category or forum has restricted audience");
-        }
-        return;
-      }
-        
-      
-      boolean inactive = !post.bool("exo:isActiveByTopic");//(postNode.hasProperty("exo:isActiveByTopic") && !postNode.getProperty("exo:isActiveByTopic").getBoolean());
-      boolean hidden = post.bool("exo:isHidden");//(postNode.hasProperty("exo:isHidden") && postNode.getProperty("exo:isHidden").getBoolean());
-      
-      
-      if(notApproved || inactive || hidden) {
-        
-        if (updated) {
-          removePostFromParentFeeds(postNode, topicNode, forumNode, categoryNode);
-        }
-        if (debug) {
-          LOG.debug("Post" + postName +" was not added to feed because because it is hidden, inactive or not approved");
-        }
-        return;
-      }
-      
-      SyndContent description;
-      List<String> listContent = new ArrayList<String>();
-      String message = post.string("exo:message");
-      listContent.add(message);
-      description = new SyndContentImpl();
-      description.setType(RSS.PLAIN_TEXT);
-      description.setValue(message);
-      final String title = post.string("exo:name");
-      final Date created = post.date("exo:createdDate");
-      final String owner = post.string("exo:owner");
-      SyndEntry entry = RSS.createNewEntry(postName, title, linkItem, listContent, description,created , owner);
-      entry.setLink(linkItem + topicNode.getName());
-      
-      // save topic, forum and category feeds
-      for(Node node : new Node[]{topicNode, forumNode, categoryNode}) {
-        PropertyReader reader = new PropertyReader(node);
-        String desc = reader.string("exo:description", " ");
-        
-        RSS data = new RSS(node);
-        if (data.feedExists()) {
-          SyndFeed feed = null;
-          if (updated) {
-            feed = data.removeEntry(postName);
-          }
-          feed = data.addEntry(entry);
-          feed.setDescription(reader.string("exo:description", " "));  
-          data.saveFeed(feed, FORUM_RSS_TYPE);
-        } else {
-          SyndFeed feed   = RSS.createNewFeed(title, created);
-          feed.setLink(linkItem + node.getName());
-          feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
-          feed.setDescription(desc);  
-          data.saveFeed(feed, FORUM_RSS_TYPE);
-        }
-
-
-      }
+    	Node postNode = (Node)getCurrentSession().getItem(path);
+    	postUpdated(postNode, linkItem, updated);
     }catch(Exception e){
       LOG.error("Failed to generate feed for post" + path, e);
     }

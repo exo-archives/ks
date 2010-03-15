@@ -101,7 +101,7 @@ public class RSS {
   }
 
   private Node getFeedNode() throws Exception {
-  	System.out.println("\n\n itemNode: " + itemNode.getPath());
+//  	System.out.println("\n\n itemNode: " + itemNode.getPath());
     try {
       return itemNode.getNode(RSS_NODE_NAME);
     } catch (Exception e) {
