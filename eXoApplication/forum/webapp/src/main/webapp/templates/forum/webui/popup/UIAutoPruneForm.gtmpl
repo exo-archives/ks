@@ -29,7 +29,7 @@
 						for(pruneSetting  in pruneSettings) {
 							String categoryName = pruneSetting.getCategoryName();
 							String forumName = pruneSetting.getForumName();
-							String pruneId = pruneSetting.getId();
+							String pruneId = uicomponent.getForumIdOfPrune(pruneSetting);
 							String lastRun = "";
 							if(pruneSetting.getLastRunDate() != null){
 								lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;

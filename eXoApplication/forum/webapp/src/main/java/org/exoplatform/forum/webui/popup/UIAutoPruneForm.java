@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -64,9 +65,9 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
 			UIFormCheckBoxInput<Boolean>isActiveBBcode;
 			for (PruneSetting pruneSetting : getForumService().getAllPruneSetting()) {
 				listPruneSetting.add(pruneSetting);
-				isActiveBBcode = getUIFormCheckBoxInput(pruneSetting.getId());
+				isActiveBBcode = getUIFormCheckBoxInput(getForumIdOfPrune(pruneSetting));
 				if(isActiveBBcode == null){
-					isActiveBBcode = new UIFormCheckBoxInput<Boolean>(pruneSetting.getId(), pruneSetting.getId(), false); 
+					isActiveBBcode = new UIFormCheckBoxInput<Boolean>(getForumIdOfPrune(pruneSetting), getForumIdOfPrune(pruneSetting), false); 
 					addUIFormInput(isActiveBBcode);
 				}
 	    	isActiveBBcode.setChecked(pruneSetting.isActive());
@@ -77,9 +78,14 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
 		return listPruneSetting;
 	}
 	
-	private PruneSetting getPruneSetting(String pruneId) throws Exception {
+  private String getForumIdOfPrune(PruneSetting pruneSetting) {
+  	String id = pruneSetting.getForumPath();
+  	return (ForumUtils.isEmpty(id))?"" : id.substring(id.lastIndexOf("/"));
+  }
+  
+	private PruneSetting getPruneSetting(String forumId) throws Exception {
 		for (PruneSetting prune : listPruneSetting) {
-	    if(prune.getId().equals(pruneId)) return prune;
+	    if(prune.getForumPath().indexOf(forumId) > 0) return prune;
     }
 		return new PruneSetting();
 	}
