@@ -642,51 +642,45 @@ public class JCRDataStorage {
 			for(InitializeForumPlugin pln : defaultPlugins_) {
 				categories = pln.getForumInitialData().getCategories();
 				for(CategoryData categoryData : categories) {
-					String categoryId = "";
 					Category category = new Category();
 					category.setCategoryName(categoryData.getName());
 					category.setDescription(categoryData.getDescription());
 					category.setOwner(categoryData.getOwner());
 					this.saveCategory(category, true);
-					categoryId = category.getId() ;
 					List<ForumData> forums = categoryData.getForums();
-					String forumId = "";
 					for (ForumData forumData : forums) {
 						Forum forum = new Forum();
 						forum.setForumName(forumData.getName());
 						forum.setDescription(forumData.getDescription());
 						forum.setOwner(forumData.getOwner());
-						this.saveForum(categoryId, forum, true);
-						forumId = forum.getId();
-					}
-					ForumData forum = forums.get(0) ;
-					List<TopicData> topics = forum.getTopics();
-					String topicId = "";
-					String ct = "";
-					for (TopicData topicData : topics) {
-						Topic topic = new Topic();
-						topic.setTopicName(topicData.getName());
-						ct = topicData.getContent();
-						ct = StringUtils.replace(ct, "\\n","<br/>");
-						ct = Utils.removeCharterStrange(ct);
-						topic.setDescription(ct);
-						topic.setOwner(topicData.getOwner());
-						topic.setIcon(topicData.getIcon());
-						this.saveTopic(categoryId, forumId, topic, true, false, "");
-						topicId = topic.getId();
-					}
-					TopicData topic = topics.get(0) ;
-					List<PostData> posts = topic.getPosts();
-					for (PostData postData : posts) {
-						Post post = new Post();
-						post.setName(postData.getName());
-						ct = postData.getContent();
-						ct = StringUtils.replace(ct, "\\n","<br/>");
-						ct = Utils.removeCharterStrange(ct);
-						post.setMessage(ct);
-						post.setOwner(postData.getOwner());
-						post.setIcon(postData.getIcon());
-						this.savePost(categoryId, forumId, topicId, post, true, "");
+						this.saveForum(category.getId(), forum, true);
+
+						List<TopicData> topics = forumData.getTopics();
+						String ct = "";
+						for (TopicData topicData : topics) {
+							Topic topic = new Topic();
+							topic.setTopicName(topicData.getName());
+							ct = topicData.getContent();
+							ct = StringUtils.replace(ct, "\\n", "<br/>");
+							ct = Utils.removeCharterStrange(ct);
+							topic.setDescription(ct);
+							topic.setOwner(topicData.getOwner());
+							topic.setIcon(topicData.getIcon());
+							this.saveTopic(category.getId(), forum.getId(), topic, true, false, "");
+
+							List<PostData> posts = topicData.getPosts();
+							for (PostData postData : posts) {
+								Post post = new Post();
+								post.setName(postData.getName());
+								ct = postData.getContent();
+								ct = StringUtils.replace(ct, "\\n", "<br/>");
+								ct = Utils.removeCharterStrange(ct);
+								post.setMessage(ct);
+								post.setOwner(postData.getOwner());
+								post.setIcon(postData.getIcon());
+								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, "");
+							}
+						}
 					}
 				}
 			}
