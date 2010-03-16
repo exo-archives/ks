@@ -429,11 +429,10 @@
 																							String linkView = uicomponent.event("ChangeLanguage", quesLanguage);
 																							String color = "";
 																							if(quesLanguage.equals(uicomponent.language_)){
-																								linkView = "javaScript:void(0)";
-																								color = "#914ab6";
+																								continue;
 																							}
 																					%>
-																							<a style="line-height:20px;color:$color;" href="$linkView">$quesLanguage</a>
+																							<a style="line-height:20px;color:#914ab6;" href="$linkView">$quesLanguage</a>
 																					<%	if(countLanguage < listQuestLanguage.length){%>
 																								 |
 																						<%} else {%>
