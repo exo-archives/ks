@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.exoplatform.commons.utils.ListAccess;
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.commons.utils.PageList;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -397,6 +398,21 @@ public class SimpleMockOrganizationService implements OrganizationService {
     public void addUserEventListener(UserEventListener listener) {
       // TODO Auto-generated method stub
 
+    }
+
+    public ListAccess<User> findAllUsers() throws Exception {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public ListAccess<User> findUsersByGroupId(String groupId) throws Exception {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public ListAccess<User> findUsersByQuery(Query query) throws Exception {
+      // TODO Auto-generated method stub
+      return null;
     }
   
 	  

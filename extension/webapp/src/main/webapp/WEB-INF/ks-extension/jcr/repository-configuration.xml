@@ -1,24 +1,24 @@
 <repository-service default-repository="repository">
   <repositories>
-    <repository name="repository" system-workspace="system" default-workspace="portal-system">
+    <repository name="repository" system-workspace="system" default-workspace="knowledge">
       <security-domain>gatein-domain</security-domain>
       <access-control>optional</access-control>
       <authentication-policy>org.exoplatform.services.jcr.impl.core.access.JAASAuthenticator</authentication-policy>
       <workspaces>
         <workspace name="knowledge">
-          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.JDBCWorkspaceDataContainer">
+          <container class="org.exoplatform.services.jcr.impl.storage.jdbc.optimisation.CQJDBCWorkspaceDataContainer">
             <properties>
-              <property name="source-name" value="jdbcexo${container.name.suffix}"/>
-              <property name="dialect" value="hsqldb"/>
+              <property name="source-name" value="${gatein.jcr.datasource.name}${container.name.suffix}"/>
+              <property name="dialect" value="${gatein.jcr.datasource.dialect}"/>
               <property name="multi-db" value="false"/>
               <property name="update-storage" value="true"/>
               <property name="max-buffer-size" value="204800"/>
-              <property name="swap-directory" value="../temp/swap/knowledge${container.name.suffix}"/>
+              <property name="swap-directory" value="${gatein.jcr.data.dir}/swap/knowledge${container.name.suffix}"/>
             </properties>
             <value-storages>
-              <value-storage id="system" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
+              <value-storage id="knowledge" class="org.exoplatform.services.jcr.impl.storage.value.fs.TreeFileValueStorage">
                 <properties>
-                  <property name="path" value="../temp/values/knowledge${container.name.suffix}"/>
+                  <property name="path" value="${gatein.jcr.storage.data.dir}/knowledge${container.name.suffix}"/>
                 </properties>
                 <filters>
                   <filter property-type="Binary"/>
@@ -29,18 +29,26 @@
           <initializer class="org.exoplatform.services.jcr.impl.core.ScratchWorkspaceInitializer">
             <properties>
               <property name="root-nodetype" value="nt:unstructured"/>
-              <property name="root-permissions" value="*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove"/>
+              <property name="root-permissions" value="any read;*:/platform/administrators read;*:/platform/administrators add_node;*:/platform/administrators set_property;*:/platform/administrators remove"/>
             </properties>
           </initializer>
-          <cache enabled="true">
+          <cache enabled="true" class="org.exoplatform.services.jcr.impl.dataflow.persistent.jbosscache.JBossCacheWorkspaceStorageCache">
             <properties>
-              <property name="max-size" value="20000"/>
-              <property name="live-time" value="30000"/>
+              <property name="jbosscache-configuration" value="conf/jcr/jbosscache/${gatein.jcr.config.type}/config.xml" />
+              <property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+              <property name="jgroups-multiplexer-stack" value="true" />
+              <property name="jbosscache-cluster-name" value="jcr-${container.name.suffix}-knowledge" />
             </properties>
           </cache>
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
-              <property name="index-dir" value="../temp/jcrlucenedb/knowledge${container.name.suffix}"/>
+              <property name="index-dir" value="${gatein.jcr.index.data.dir}/knowledge${container.name.suffix}"/>
+              <property name="changesfilter-class" value="${gatein.jcr.index.changefilterclass}" />
+              <property name="jbosscache-configuration" value="conf/jcr/jbosscache/cluster/indexer-config.xml" />
+              <property name="jgroups-configuration" value="jar:/conf/jcr/jbosscache/cluster/udp-mux.xml" />
+              <property name="jgroups-multiplexer-stack" value="true" />
+              <property name="jbosscache-cluster-name" value="jcrindexer-${container.name.suffix}-knowledge" />
+              <property name="max-volatile-time" value="60" />
             </properties>
           </query-handler>
           <lock-manager>

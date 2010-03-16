@@ -117,8 +117,8 @@ public class TestSimpleMockOrganizationService extends TestCase {
 		a.addMemberships("user1", "member:/platform/users", "*:/platform/administrators");
 		a.addMemberships("user2", "admin:/foo", "admin:/bar", "member:/baz");
 		a.addMemberships("user1", "*:/foo", "admin:/bar", "member:/baz");
-		AssertUtils.assertContains(userHandler.findUsersByGroup("/foo").getAll(), users("user1", "user2"));
-		AssertUtils.assertNotContains(userHandler.findUsersByGroup("/platform/administrators").getAll(), users("user2"));
+		AssertUtils.assertContains(userHandler.findUsersByGroup("/foo").getAll(), user("user1"));
+		AssertUtils.assertNotContains(userHandler.findUsersByGroup("/platform/administrators").getAll(), user("user2"));
 	}
 	
 	public void testMembershipHandler() throws Exception {

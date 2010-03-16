@@ -37,6 +37,10 @@ public class MockWebUIRequestContext extends WebuiRequestContext {
     return null;
   }
 
+  public String getPortalContextPath(){
+    return null ;
+  }
+  
   @Override
   public String getRequestContextPath() {
     
