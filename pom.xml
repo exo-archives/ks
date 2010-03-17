@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
@@ -8,15 +8,15 @@
   </parent>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks</artifactId>
-  <version>2.0.0-Beta01-SNAPSHOT</version>
+  <version>2.0.0-Beta01</version>
   <packaging>pom</packaging>
   <name>eXo Knowledge Suite</name>
   <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
   <url>http://wiki.exoplatform.org/xwiki/bin/view/KS/</url>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/trunk</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/trunk</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta01</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta01</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/tags/2.0.0-Beta01</url>
   </scm>
   <issueManagement>
     <system>jira</system>
