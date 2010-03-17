@@ -42,7 +42,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <excludes>../GATEIN-README.txt,**/conf/jaas.conf,**/Catalina/localhost/rest-ksdemo.xml,**/Catalina/localhost/ksdemo.xml</excludes>
+              <excludes>**/GATEIN-README.txt,**/Release_notes.txt,**/conf/jaas.conf,**/Catalina/localhost/rest-ksdemo.xml,**/Catalina/localhost/ksdemo.xml</excludes>
               <includes>**</includes>
             </configuration>
           </execution>
