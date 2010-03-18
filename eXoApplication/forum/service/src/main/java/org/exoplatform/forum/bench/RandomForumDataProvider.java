@@ -11,6 +11,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.idgenerator.IDGeneratorService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -26,6 +27,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	private int maxForums = 5;
 	private int maxTopics = 20;
 	private int maxPosts = 20;
+	private String fistCategoryId = Utils.CATEGORY + "randomId412849127491";
 	private boolean randomize = false;
 	private ForumService forumService;
 
@@ -83,7 +85,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		try {
 			// init marker
 			Category init = newCategory(null);
-			init.setId("forumdataloader");
+			init.setId(fistCategoryId);
 			result.add(init);
 			Category previous = init;
 
@@ -154,7 +156,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 
 	public boolean isInitialized() {
 		try {
-			Category initialized = forumService.getCategory("forumdataloader");
+			Category initialized = forumService.getCategory(fistCategoryId);
 			return (initialized != null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
