@@ -27,7 +27,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 	private int maxForums = 5;
 	private int maxTopics = 20;
 	private int maxPosts = 20;
-	private String categoryId = "";
+	private String fistCategoryId = Utils.CATEGORY + "randomId5r2938751205das";
 	private boolean randomize = false;
 	private ForumService forumService;
 
@@ -92,9 +92,9 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		try {
 			// init marker
 			Category init = newCategory(null);
+			init.setId(fistCategoryId);
 			result.add(init);
 			Category previous = init;
-			categoryId = init.getId();
 			for (int i = 0; i < (getMaxCategory()); i++) {
 				Category category = newCategory(previous);
 				result.add(category);
@@ -163,7 +163,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 
 	public boolean isInitialized() {
 		try {
-			Category initialized = forumService.getCategory(categoryId);
+			Category initialized = forumService.getCategory(fistCategoryId);
 			return (initialized != null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
