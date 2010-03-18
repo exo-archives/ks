@@ -2315,7 +2315,7 @@
 
 /* Fix KS-2244*/
 .UIAnswersPortlet .ResizeButton {
-	background:url("/eXoResources/skin/DefaultSkin/webui/component/UIPopup/UIPopupWindow/background/ResizeBtn.gif") no-repeat scroll left top transparent;
+	background:url('background/ResizeBtn.gif') no-repeat scroll left top;
 	bottom:2px;
 	height:23px;
 	right:6px;
