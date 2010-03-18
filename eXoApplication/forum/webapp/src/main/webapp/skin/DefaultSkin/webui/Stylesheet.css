@@ -629,3 +629,12 @@
 	position: absolute; 
 	*position: relative;
 }
+
+/* Fix KS-2244*/
+.UIForumPortlet .ResizeButton {
+	background:url('background/ResizeBtn.gif') no-repeat scroll left top;
+	bottom:2px;
+	height:23px;
+	right:6px;
+	width:18px;
+}
