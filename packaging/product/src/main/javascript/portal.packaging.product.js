@@ -59,8 +59,8 @@ function getProduct(version) {
   product.addDependencies(ks.demo.rest);
   
   product.addServerPatch("tomcat", ks.server.tomcat.patch) ;
-  product.addServerPatch("jboss",  portal.server.jboss.patch) ;
-  product.addServerPatch("jbossear",  portal.server.jbossear.patch) ;
+  //product.addServerPatch("jboss",  ks.server.jboss.patch) ;
+  product.addServerPatch("jbossear",  ks.server.jboss.patchear) ;
 
   /* cleanup duplicated lib */
   product.removeDependency(new Project("commons-httpclient", "commons-httpclient", "jar", "3.0"));
