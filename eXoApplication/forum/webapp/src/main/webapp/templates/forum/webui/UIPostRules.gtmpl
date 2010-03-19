@@ -4,20 +4,19 @@
 	UserProfile userProfile = uicomponent.getUserProfile();
 	boolean isBan = userProfile.getIsBanned() ;
 	boolean isNotLogin= ForumSessionUtils.isAnonim();
-	String canCreatThread = "";
-	String canPost = "";
 	String you = _ctx.appRes("UIPostRules.label.You") ;
 	String can = _ctx.appRes("UIPostRules.label.can") ;
-	String not = _ctx.appRes("UIPostRules.label.not") ;
+	String canNot = _ctx.appRes("UIPostRules.label.canNot") ;
+	String canCreatThread = can, canPost = can;
 	if(isBan || isNotLogin) {
-		canCreatThread = not;
-		canPost = not;
+		canCreatThread = canNot
+		canPost = canNot
 	} else{
 		if(!uicomponent.isCanCreateNewThread()) {
-			canCreatThread = not;
+			canCreatThread = canNot
 		}
 		if(!uicomponent.isCanAddPost()){
-			canPost = not;
+			canPost = canNot
 		}
 	}
 %>
@@ -36,10 +35,10 @@
 		</div>
 		<div class="ContentContainer">
 			<div class="ForumList">
-				<div class="text">$you <span class="BoldTitle">$can $canCreatThread</span> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></div>
-				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></div>
-				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></div>
-				<div class="text">$you <span class="BoldTitle">$can $canPost</span> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$canCreatThread</span> <%=_ctx.appRes("UIPostRules.label.postNewThread") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.postReplies") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.postAttachments") ;%></div>
+				<div class="text">$you <span class="BoldTitle">$canPost</span> <%=_ctx.appRes("UIPostRules.label.editYourPosts") ;%></div>
 			</div>
 		</div>
 	</div>
