@@ -26,6 +26,22 @@
     <type>org.exoplatform.forum.service.ws.ForumWebservice</type>
   </component>
 
+   <!--component>
+    <key>org.exoplatform.forum.bench.ForumDataInitializer</key>
+    <type>org.exoplatform.forum.bench.ForumDataInitializer</type>
+  </component> 
+  
+<component>
+    <key>org.exoplatform.forum.bench.ForumDataProvider</key>
+    <type>org.exoplatform.forum.bench.RandomForumDataProvider</type>
+    <init-params>
+    <value-param><name>maxCategories</name><value>3</value></value-param>
+    <value-param><name>maxForums</name><value>4</value></value-param>
+    <value-param><name>maxTopics</name><value>20</value></value-param>
+    <value-param><name>maxPosts</name><value>10</value></value-param>	
+    <value-param><name>randomize</name><value>true</value></value-param>
+    </init-params>
+  </component -->
 
 
 
