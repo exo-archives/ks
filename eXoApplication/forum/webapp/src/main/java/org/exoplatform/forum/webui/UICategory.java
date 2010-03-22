@@ -150,6 +150,10 @@ public class UICategory extends BaseForumForm	{
 		this.category = category;
 	}
 	
+	public String getCategoryId() {
+	  return this.categoryId;
+  }
+	
 	private Category getCategory() throws Exception{
 		if(this.isEditCategory || this.category == null) {
 			try {

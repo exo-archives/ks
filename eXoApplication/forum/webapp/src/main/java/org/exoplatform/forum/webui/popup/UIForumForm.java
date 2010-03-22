@@ -265,7 +265,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 	}
 	
 	public void setCategoryValue(String categoryId, boolean isEditable) throws Exception {
-		if(!isEditable) getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId) ;
+		if(!ForumUtils.isEmpty(categoryId)) getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setValue(categoryId) ;
 		getUIFormSelectBox(FIELD_CATEGORY_SELECTBOX).setEnable(isEditable) ;
 		isCategoriesUpdate = isEditable;
 		this.categoryId = categoryId;
