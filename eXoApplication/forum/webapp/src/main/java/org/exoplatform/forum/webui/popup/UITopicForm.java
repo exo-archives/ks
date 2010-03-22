@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -628,10 +627,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 							try {
 								String remoteAddr = "";
 				      	if(forumPortlet.isEnableIPLogging()) {
-				      		try {
-				      			HttpServletRequest request = event.getRequestContext().getRequest();
-				      			remoteAddr = request.getRemoteAddr();
-			            } catch (Exception e) {}
+				      		remoteAddr = ForumUtils.getIPRemoter();
 				      	}
 								topicNew.setRemoteAddr(remoteAddr);
 								uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());

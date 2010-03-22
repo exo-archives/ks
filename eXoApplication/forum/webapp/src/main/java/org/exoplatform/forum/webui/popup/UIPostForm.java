@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.ForumTransformHTML;
@@ -345,13 +344,6 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 	      	message = message.replaceAll("<script", "&lt;script").replaceAll("<link", "&lt;link").replaceAll("</script>", "&lt;/script>");
 	      	message = StringUtils.replace(message, "'", "&apos;");
 	      	message = ForumTransformHTML.fixAddBBcodeAction(message);
-	      	String remoteAddr = "";
-	      	if(forumPortlet.isEnableIPLogging()) {
-	      		try {
-	      			HttpServletRequest request = event.getRequestContext().getRequest();
-	      			remoteAddr = request.getRemoteAddr();
-            } catch (Exception e) {}
-	      	}
 	      	checksms = checksms.replaceAll("&nbsp;", " ") ;
 	      	t = checksms.length() ;
 	      	postTitle = postTitle.trim();
@@ -405,7 +397,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 	      		try {
 	      			if(!ForumUtils.isEmpty(uiForm.postId)) {
 	      				if(uiForm.isQuote || uiForm.isMP) {
-	      					post.setRemoteAddr(remoteAddr) ;
+	      					post.setRemoteAddr(ForumUtils.getIPRemoter()) ;
 	      					try {
 	      						uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 	      						isNew = true;
@@ -426,7 +418,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 	      					topicDetail.setIdPostView(uiForm.postId);
 	      				}
 	      			} else {
-	      				post.setRemoteAddr(remoteAddr) ;
+	      				post.setRemoteAddr(ForumUtils.getIPRemoter()) ;
 	      				try {
 	      					uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 	      					isNew = true;

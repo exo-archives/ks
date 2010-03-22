@@ -81,7 +81,6 @@
 		uicomponent.setLink(urlTopic);
 		isNotLogin = uicomponent.isNotLogin() ;
 		if(isNotLogin){
-			//linkGest = ForumSessionUtils.getBreadcumbUrl(urlTopic, uicomponent.id, "ViewThreadByUser", topic.getId()+"/false").replaceFirst("/public/", "/private/");
 			linkGest = ForumUtils.createdForumLink(ForumUtils.TOPIC, topic.getId()+"/false").replaceFirst("/public/", "/private/");
 		}	
 	}
@@ -897,7 +896,7 @@
 										<% /*Begin Popup Menu*/ %>
 										<div style="position:relative;">
 											<div class="UIPopupCategory SearchPopup" style="display:none;">
-												<div class="UIRightClickPopupMenu" style="display:block; left:-40px;">
+												<div class="UIRightClickPopupMenu" style="display:block; left:-60px;">
 													<div class="UIContextMenuContainer">
 														<div class="TopLeftRightClickPopupMenu">
 															<div class="TopRightRightClickPopupMenu">
@@ -908,10 +907,9 @@
 															<div class="MiddleRightRightClickPopupMenu">
 																<div class="UIRightPopupMenuContainer" style="width:165px; min-width:164px;">
 																	<div class="LineMenu"><span></span></div>
-																		<div title="$title1" class="MenuItem" onclick="$link2">	 
-																			<div class="ItemIcon">
-																				<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
-																			</div>
+																	<div title="$title1" class="MenuItem" onclick="$link2">	 
+																		<div class="ItemIcon">
+																			<a href="javascript:void(0);"><%=_ctx.appRes("UITopicDetail.label.BanIPThisForum")%></a>
 																		</div>
 																	</div>
 																	<% 

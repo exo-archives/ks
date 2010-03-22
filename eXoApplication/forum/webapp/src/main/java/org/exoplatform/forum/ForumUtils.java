@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.exoplatform.forum.service.Post;
@@ -347,6 +348,15 @@ public class ForumUtils {
 		ResourceBundle res = context.getApplicationResourceBundle() ;
 		return res.getString("UINotificationForm.label.notifyEmailContentDefault");
 	}
+	
+	public static String getIPRemoter() {
+		String remoteAddr = "";
+		try {
+			PortalRequestContext context = Util.getPortalRequestContext();
+			remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
+    } catch (Exception e) { e.printStackTrace();}
+    return remoteAddr;
+  }
 	
 	public static boolean enableIPLogging(){
 		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;

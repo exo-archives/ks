@@ -51,7 +51,6 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -375,10 +374,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 	
 	private String getIPRemoter() throws Exception {
 		if(enableIPLogging) {
-			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-			// TODO FIXME on GateIn
-			//PortletRequestImp request = context.getRequest() ;
-			//return request.getRemoteAddr();
+			return ForumUtils.getIPRemoter();
 		}
 		return "";
 	}

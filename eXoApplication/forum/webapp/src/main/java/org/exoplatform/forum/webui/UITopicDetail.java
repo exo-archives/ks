@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
@@ -71,7 +70,6 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
-import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -445,13 +443,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 	private String getIPRemoter() throws Exception {
 		if(enableIPLogging) {
-			try {
-				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-				HttpServletRequest request = context.getRequest();
-				return request.getRemoteAddr();
-	    } catch (Exception e) {
-	      log.warn("Failed to extract IP: "+ e.getMessage(), e);
-	    }
+			return ForumUtils.getIPRemoter();
 		}
 		return "";
 	}
@@ -1528,13 +1520,12 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	  				//
 	  				UIForumPortlet forumPortlet = topicDetail.getAncestorOfType(UIForumPortlet.class);
 	  				String userName = topicDetail.userProfile.getUserId() ;
-	  				String remoteAddr = topicDetail.getIPRemoter();
 	  				Topic topic = topicDetail.topic ;
 	  				Post post = new Post() ;
 	  				post.setName("Re: " + topic.getTopicName()) ;
 	  				post.setMessage(buffer.toString()) ;
 	  				post.setOwner(userName) ;
-	  				post.setRemoteAddr(remoteAddr) ;
+	  				post.setRemoteAddr(topicDetail.getIPRemoter()) ;
 	  				post.setIcon(topic.getIcon());
 	  				post.setIsHidden(isOffend) ;
 	  				post.setIsApproved(!hasTopicMod) ;

@@ -61,6 +61,8 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
@@ -1252,8 +1254,8 @@ public class UIQuestions extends UIContainer {
 				String userName = question.getAuthor();
 				String remoteAddr = "";
 				try {
-					HttpServletRequest request = event.getRequestContext().getRequest() ;
-					remoteAddr = request.getRemoteAddr();
+					PortalRequestContext context = Util.getPortalRequestContext();
+					remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
         } catch (Exception e) {}
 				if(UserHelper.getUserByUserId(userName) == null) {
 					String temp = userName;

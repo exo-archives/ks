@@ -387,13 +387,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 		try{
 			if(enableBanIP) {
-				String remoteAddr = "";
-				try {
-					WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-					HttpServletRequest request = context.getRequest() ;
-					remoteAddr = request.getRemoteAddr();
-        } catch (Exception e) {}
-        userProfile = forumService.getDefaultUserProfile(userId, remoteAddr) ;
+        userProfile = forumService.getDefaultUserProfile(userId, ForumUtils.getIPRemoter()) ;
 			}else {
 				userProfile = forumService.getDefaultUserProfile(userId, null) ;
 			}

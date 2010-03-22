@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.jcr.PathNotFoundException;
 import javax.portlet.ActionResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.exoplatform.container.ExoContainerContext;
@@ -37,8 +36,6 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
-import org.exoplatform.web.application.RequestContext;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIApplication;
@@ -94,15 +91,6 @@ public class UIQuickReplyForm extends UIForm {
     }
   }
 	
-	private String getIPRemoter() throws Exception {
-		try {
-			WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-			HttpServletRequest request = context.getRequest();
-			return request.getRemoteAddr();
-    } catch (Exception e) {}
-		return "";
-	}
-	
 	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
 			UIQuickReplyForm quickReply = event.getSource() ;
@@ -143,7 +131,7 @@ public class UIQuickReplyForm extends UIForm {
 						buffer.append(c) ;
 					}
 				} 
-				String remoteAddr = quickReply.getIPRemoter();
+				String remoteAddr = ForumUtils.getIPRemoter();
 				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
 				// set link
 //				String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");				

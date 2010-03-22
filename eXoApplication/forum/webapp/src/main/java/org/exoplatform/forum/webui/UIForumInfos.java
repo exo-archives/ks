@@ -18,16 +18,12 @@ package org.exoplatform.forum.webui;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
-import org.exoplatform.web.application.RequestContext;
-import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -51,11 +47,7 @@ public class UIForumInfos extends UIContainer	{
 	
 	private String getIPRemoter() throws Exception {
 		if(enableIPLogging) {
-			try {
-				WebuiRequestContext	context =	RequestContext.getCurrentInstance() ;
-				HttpServletRequest request = context.getRequest();
-				return request.getRemoteAddr();
-	    } catch (Exception e) {}
+			return ForumUtils.getIPRemoter();
 		}
 		return "";
 	}

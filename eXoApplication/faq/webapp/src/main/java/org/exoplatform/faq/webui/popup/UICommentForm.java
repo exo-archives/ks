@@ -36,6 +36,8 @@ import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -172,16 +174,16 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 					Topic topic = (Topic)forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
 					if(topic != null) {
+						String remoteAddr = "";
+						try {
+							PortalRequestContext context = Util.getPortalRequestContext();
+							remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
+						} catch (Exception e) {}
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
 						String linkForum = FAQUtils.getLinkDiscuss(topicId);
 						String postId = commentForm.comment.getPostId();
 						if(postId == null || postId.length() == 0) {
-							String remoteAddr = "";
-							try {
-								HttpServletRequest request = event.getRequestContext().getRequest() ;
-								remoteAddr = request.getRemoteAddr();
-              } catch (Exception e) {}
 							Post post = new Post();
 							post.setOwner(commentForm.currentUser_);
 							post.setIcon("ViewIcon");
@@ -201,11 +203,6 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 								Post post = forumService.getPost(ids[t-3], ids[t-2], topicId, postId);
 								boolean isNew = false;
 								if(post == null){
-									String remoteAddr = "";
-									try {
-										HttpServletRequest request = event.getRequestContext().getRequest() ;
-										remoteAddr = request.getRemoteAddr();
-		              } catch (Exception e) {}
 									post = new Post();
 									isNew = true;
 									post.setOwner(commentForm.currentUser_);

@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.ExoContainerContext;
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.forum.ForumSessionUtils;
 import org.exoplatform.forum.rendering.RenderHelper;

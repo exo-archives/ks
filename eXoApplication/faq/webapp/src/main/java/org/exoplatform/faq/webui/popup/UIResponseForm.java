@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
@@ -268,6 +269,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					String linkForum = FAQUtils.getLinkDiscuss(topicId);
 					Post post;
 					int l = answers.length;
+					String remoteAddr = "";
+					try {
+						PortalRequestContext context = Util.getPortalRequestContext();
+						remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
+	        } catch (Exception e) {}
 					for (int i = 0; i < l; ++i) {
 						String postId = answers[i].getPostId();
 						try {
@@ -282,6 +288,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 									post.setMessage(answers[i].getResponses());
 									post.setLink(linkForum);
 									post.setIsApproved(!topic.getIsModeratePost());
+									post.setRemoteAddr(remoteAddr);
 									forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								}else {
 									post.setIsApproved(!topic.getIsModeratePost());
@@ -296,6 +303,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 								post.setMessage(answers[i].getResponses());
 								post.setLink(linkForum);
 								post.setIsApproved(!topic.getIsModeratePost());
+								post.setRemoteAddr(remoteAddr);
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 								answers[i].setPostId(post.getId());
 							}
