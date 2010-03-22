@@ -182,7 +182,12 @@ public class UIForumActionBar extends UIContainer	{
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIForumForm forumForm = popupContainer.addChild(UIForumForm.class, null, null) ;
 				forumForm.initForm();
-				forumForm.setCategoryValue("", true) ;
+				UICategory category = forumPortlet.findFirstComponentOfType(UICategory.class);
+		 	 	if(category != null && category.isRendered()) {
+		 	 		forumForm.setCategoryValue(category.getCategoryId(), true) ;
+		 	 	} else {
+		 	 		forumForm.setCategoryValue("", true) ;
+				}
 				forumForm.setForumUpdate(false) ;
 				forumForm.setActionBar(true);
 				popupContainer.setId("AddNewForumForm") ;
