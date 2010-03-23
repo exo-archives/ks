@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Value;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -38,6 +39,8 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.w3c.dom.Document;
@@ -153,6 +156,18 @@ public class Utils {
     transformer.transform(source, result) ;
     return file ;
   }
+  
+  public static String getRemoteIP() {
+		String remoteAddr = "";
+		try {
+			PortalRequestContext context = Util.getPortalRequestContext();
+			remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
+    } catch (Exception e) { 
+    	log.error("Can not get remote IP", e);
+    }
+    return remoteAddr;
+  }
+	
   
   public static String convertCodeHTML(String s) {
   	if (s == null || s.length() <= 0)

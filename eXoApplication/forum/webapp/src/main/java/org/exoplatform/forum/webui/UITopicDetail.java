@@ -392,7 +392,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		boolean canCreateTopic = true;
 		boolean isCheck = true;
 		List<String> ipBaneds = forum.getBanIP();
-		if(ipBaneds != null && ipBaneds.contains(getIPRemoter()) || userProfile.getIsBanned()) {
+		if(ipBaneds != null && ipBaneds.contains(getRemoteIP()) || userProfile.getIsBanned()) {
 			canCreateTopic = false;
 			isCheck = false;
 		}
@@ -424,7 +424,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		if(forum.getIsClosed() || forum.getIsLock() || topic.getIsClosed() || topic.getIsLock()) return false;
 		if(userProfile.getIsBanned()) return false;
 		if(isMod) return true;
-		if(isIPBaned(getIPRemoter())) return false;
+		if(isIPBaned(getRemoteIP())) return false;
 		if(!topic.getIsActive() || !topic.getIsActiveByForum() || topic.getIsWaiting()) return false;
 		try {
 			List<String> listUser = new ArrayList<String>() ;
@@ -441,9 +441,9 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return true ;
 	}
 	
-	private String getIPRemoter() throws Exception {
+	private String getRemoteIP() throws Exception {
 		if(enableIPLogging) {
-			return ForumUtils.getIPRemoter();
+			return org.exoplatform.ks.common.Utils.getRemoteIP();
 		}
 		return "";
 	}
@@ -1525,7 +1525,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	  				post.setName("Re: " + topic.getTopicName()) ;
 	  				post.setMessage(buffer.toString()) ;
 	  				post.setOwner(userName) ;
-	  				post.setRemoteAddr(topicDetail.getIPRemoter()) ;
+	  				post.setRemoteAddr(topicDetail.getRemoteIP()) ;
 	  				post.setIcon(topic.getIcon());
 	  				post.setIsHidden(isOffend) ;
 	  				post.setIsApproved(!hasTopicMod) ;

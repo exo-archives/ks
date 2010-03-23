@@ -1252,11 +1252,7 @@ public class UIQuestions extends UIContainer {
 				link = link.replaceFirst("private", "public");
 				Question question = uiForm.faqService_.getQuestionById(questionId);
 				String userName = question.getAuthor();
-				String remoteAddr = "";
-				try {
-					PortalRequestContext context = Util.getPortalRequestContext();
-					remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
-        } catch (Exception e) {}
+				String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
 				if(UserHelper.getUserByUserId(userName) == null) {
 					String temp = userName;
 					String listMode[] = uiForm.faqService_.getModeratorsOf(question.getPath());

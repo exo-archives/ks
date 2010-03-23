@@ -269,11 +269,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					String linkForum = FAQUtils.getLinkDiscuss(topicId);
 					Post post;
 					int l = answers.length;
-					String remoteAddr = "";
-					try {
-						PortalRequestContext context = Util.getPortalRequestContext();
-						remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
-	        } catch (Exception e) {}
+					String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
 					for (int i = 0; i < l; ++i) {
 						String postId = answers[i].getPostId();
 						try {

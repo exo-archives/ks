@@ -627,7 +627,7 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 							try {
 								String remoteAddr = "";
 				      	if(forumPortlet.isEnableIPLogging()) {
-				      		remoteAddr = ForumUtils.getIPRemoter();
+				      		remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
 				      	}
 								topicNew.setRemoteAddr(remoteAddr);
 								uiForm.getForumService().saveTopic(uiForm.categoryId, uiForm.forumId, topicNew, true, false, ForumUtils.getDefaultMail());

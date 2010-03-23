@@ -283,7 +283,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		isModerator = (userProfile.getUserRole()==0||(!userProfile.getIsBanned() && !moderators.isEmpty() && moderators.contains(userId)))?true:false;
 		boolean isCheck = true;
 		List<String> ipBaneds = forum.getBanIP();
-		if(ipBaneds != null && ipBaneds.contains(getIPRemoter()) || userProfile.getIsBanned()) {
+		if(ipBaneds != null && ipBaneds.contains(getRemoteIP()) || userProfile.getIsBanned()) {
 			canAddNewThread = false;
 			isCheck = false;
 		}
@@ -372,9 +372,9 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 
 	}
 	
-	private String getIPRemoter() throws Exception {
+	private String getRemoteIP() throws Exception {
 		if(enableIPLogging) {
-			return ForumUtils.getIPRemoter();
+			return org.exoplatform.ks.common.Utils.getRemoteIP();
 		}
 		return "";
 	}

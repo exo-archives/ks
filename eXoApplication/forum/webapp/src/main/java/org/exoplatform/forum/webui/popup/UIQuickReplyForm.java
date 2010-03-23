@@ -34,6 +34,7 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -131,7 +132,7 @@ public class UIQuickReplyForm extends UIForm {
 						buffer.append(c) ;
 					}
 				} 
-				String remoteAddr = ForumUtils.getIPRemoter();
+				String remoteAddr = Utils.getRemoteIP();
 				UserProfile userProfile = forumService.getDefaultUserProfile(quickReply.userName, remoteAddr);
 				// set link
 //				String link = ForumSessionUtils.getBreadcumbUrl(quickReply.getLink(), quickReply.getId(), "QuickReply", quickReply.topicId).replaceFirst("private", "public");				

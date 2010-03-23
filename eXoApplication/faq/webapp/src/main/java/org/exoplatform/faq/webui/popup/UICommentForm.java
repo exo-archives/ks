@@ -174,11 +174,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 					ForumService forumService = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
 					Topic topic = (Topic)forumService.getObjectNameById(topicId, org.exoplatform.forum.service.Utils.TOPIC);
 					if(topic != null) {
-						String remoteAddr = "";
-						try {
-							PortalRequestContext context = Util.getPortalRequestContext();
-							remoteAddr = ((HttpServletRequest)context.getRequest()).getRemoteAddr() ;
-						} catch (Exception e) {}
+						String remoteAddr = org.exoplatform.ks.common.Utils.getRemoteIP();
 						String []ids = topic.getPath().split("/");
 						int t = ids.length;
 						String linkForum = FAQUtils.getLinkDiscuss(topicId);

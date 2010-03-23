@@ -387,7 +387,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		}
 		try{
 			if(enableBanIP) {
-        userProfile = forumService.getDefaultUserProfile(userId, ForumUtils.getIPRemoter()) ;
+        userProfile = forumService.getDefaultUserProfile(userId, org.exoplatform.ks.common.Utils.getRemoteIP()) ;
 			}else {
 				userProfile = forumService.getDefaultUserProfile(userId, null) ;
 			}

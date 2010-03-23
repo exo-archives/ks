@@ -24,6 +24,7 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -45,9 +46,9 @@ public class UIForumInfos extends UIContainer	{
 		addChild(UIForumModerator.class, null, null);
 	}
 	
-	private String getIPRemoter() throws Exception {
+	private String getRemoteIP() throws Exception {
 		if(enableIPLogging) {
-			return ForumUtils.getIPRemoter();
+			return Utils.getRemoteIP();
 		}
 		return "";
 	}
@@ -68,7 +69,7 @@ public class UIForumInfos extends UIContainer	{
 			if(!isLock && userProfile.getUserRole()!=0) {
 				if(!moderators.contains(userProfile.getUserId())) {
 					List<String> ipBaneds = forum.getBanIP();
-					if(ipBaneds.contains(getIPRemoter())) isLock =  true;
+					if(ipBaneds.contains(getRemoteIP())) isLock =  true;
 					if(!isLock){
 						String []listUser = forum.getCreateTopicRole() ;
 						if(!ForumUtils.isArrayEmpty(listUser))

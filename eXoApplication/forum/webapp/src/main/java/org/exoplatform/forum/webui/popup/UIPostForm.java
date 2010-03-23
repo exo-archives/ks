@@ -397,7 +397,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 	      		try {
 	      			if(!ForumUtils.isEmpty(uiForm.postId)) {
 	      				if(uiForm.isQuote || uiForm.isMP) {
-	      					post.setRemoteAddr(ForumUtils.getIPRemoter()) ;
+	      					post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
 	      					try {
 	      						uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 	      						isNew = true;
@@ -418,7 +418,7 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 	      					topicDetail.setIdPostView(uiForm.postId);
 	      				}
 	      			} else {
-	      				post.setRemoteAddr(ForumUtils.getIPRemoter()) ;
+	      				post.setRemoteAddr(org.exoplatform.ks.common.Utils.getRemoteIP()) ;
 	      				try {
 	      					uiForm.getForumService().savePost(uiForm.categoryId, uiForm.forumId, uiForm.topicId, post, true, ForumUtils.getDefaultMail()) ;
 	      					isNew = true;
