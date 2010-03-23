@@ -66,8 +66,7 @@
 }
 
 .UITopicForm .HorizontalLayout .ThreadPermission .UIFormGrid {
-	width: 100px;
-	*width: 420px;
+	width: 500px;
 }
 
 .UITopicForm .ThreadPermission input {
