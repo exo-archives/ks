@@ -104,22 +104,28 @@
 				      	</div>
 								<div style="clear:both;"><span></span></div>
 							</td>
-							<td style="width:235px;">
-								<div style="width:235px;">
-							<%
+							<% 
 								long numberOfNewMessage = uicomponent.getNewMessage();
+								String priMessage="", pending="";
+								int total = 0;
+							%>
+							<td style="width:245px;" id="tdWidth">
+								<div style="width:245px;" id="divWidth">
+							<%
 								if(!UserHelper.isAnonim() && numberOfNewMessage >= 0){
-									String newMessage = _ctx.appRes("UIBreadcumbs.label.PrivateMessages") ; 
+									priMessage=_ctx.appRes("UIBreadcumbs.label.PrivateMessages"); 
+									String newMessage;
 									if(numberOfNewMessage > 0) {
-										newMessage = "<b>"+newMessage+"(" + uicomponent.getNewMessage() + ") </b>";
+										newMessage = "<b>"+priMessage+"(" + numberOfNewMessage + ") </b>";
 									} else {
-										newMessage = newMessage + "&nbsp;" ;
+										newMessage = priMessage + " " ;
 									}
 									if(userProfile.getUserRole() <= 1) {
-										int total = uicomponent.getTotalJobWattingForModerator();
+										total = uicomponent.getTotalJobWattingForModerator();
+										pending = _ctx.appRes("UIBreadcumbs.label.Pending");
 								%>
 									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
-										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>"><%=_ctx.appRes("UIBreadcumbs.label.Pending");%>:(<b>$total</b>)</a>
+										<a id="PendingJob" href="<%=uicomponent.event("Moderation");%>">$pending:(<b>$total</b>)</a>
 									</div>
 								<%}%>
 									<div class="SeparatorLineForum" style="float:right;width:auto; padding:0px 5px;">
@@ -127,6 +133,14 @@
 											 <span>$newMessage</span>
 										</a>
 									</div>
+									<% 
+										int lengths = (String.valueOf(numberOfNewMessage)+ priMessage+pending+String.valueOf(total)).length(); 
+									%>
+									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
+									<script type="text/javascript">
+										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = (l*9) + "px"; document.getElementById('divWidth').style.width = (l*9) + "px";}
+										setWitdh();
+									</script>
 								<% } %>
 									<div style="clear:right;"><span></span></div>
 								</div>
