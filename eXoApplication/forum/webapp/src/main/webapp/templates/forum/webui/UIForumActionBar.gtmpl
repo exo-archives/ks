@@ -138,7 +138,7 @@
 									%>
 									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
 									<script type="text/javascript">
-										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = (l*9) + "px"; document.getElementById('divWidth').style.width = (l*9) + "px";}
+										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*9.15)+4) + "px"; document.getElementById('divWidth').style.width = ((l*9.15)+4) + "px";}
 										setWitdh();
 									</script>
 								<% } %>
