@@ -3,8 +3,8 @@
 	import org.exoplatform.forum.service.JCRPageList ;
 	 
 	List totals = uicomponent.getInfoPage() ; 
-	long pageSelected = uicomponent.getPageSelected() ;
-	long max_page = totals.get(3) ;
+	int pageSelected = uicomponent.getPageSelected() ;
+	int max_page = totals.get(3) ;
 	String selected = "" + pageSelected ;
 %>
 <div class="UIForumPageIterator" id="$uicomponent.id">

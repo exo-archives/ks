@@ -79,7 +79,7 @@ public class UIListInBoxPrivateMessage extends UIContainer{
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		forumPageIterator.updatePageList(pageList) ;
 		pageList.setPageSize(10) ;
-		long page = forumPageIterator.getPageSelected() ;
+		int page = forumPageIterator.getPageSelected() ;
 		this.listInbox = pageList.getPage(page) ;
 		if(pageList.getAvailable() > 10){
 			isRenderIterator = true;

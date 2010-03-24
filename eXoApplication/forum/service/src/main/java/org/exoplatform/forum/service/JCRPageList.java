@@ -57,32 +57,39 @@ abstract public class JCRPageList<E> extends PageList<E>{
 		return currentListPage_	;
 	}
 	
-	public List<E> getPage(long page) throws Exception	 {
-	  List<E> result = super.getPage((int)page);
-		this.pageSelected = (int) page;
+	public List<E> getPage(int page) throws Exception	 {
+		checkAndSetPage(page);
+	  List<E> result = super.getPage(page);
+		this.pageSelected = page;
 		return result;
 	}
 
+	public void checkAndSetPage(int page) throws Exception {
+     if (page > availablePage_) page = availablePage_-1;
+     if (page < 1) page = 1;
+     currentPage_ = page;
+  }
+	
 	public List<E> getpage(String valueSearch) throws Exception {
 		populateCurrentPage(valueSearch) ;
 		return currentListPage_ ;
 	}
 	
-	public List<E> getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, list, false, false) ;
+	public List<E> getPageSearch(int page, List<ForumSearch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, list, false, false) ;
 		return currentListPage_ ;
 	}
 
-	public List<E> getPageWatch(long page, List<Watch> list) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, list, true, false) ;
+	public List<E> getPageWatch(int page, List<Watch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, list, true, false) ;
 		return currentListPage_ ;
 	}
 	
-	public List<E> getPageUser(long page) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, new CopyOnWriteArrayList<E>(), true, true) ;
+	public List<E> getPageUser(int page) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(page, new CopyOnWriteArrayList<E>(), true, true) ;
 		return currentListPage_ ;
 	}
 

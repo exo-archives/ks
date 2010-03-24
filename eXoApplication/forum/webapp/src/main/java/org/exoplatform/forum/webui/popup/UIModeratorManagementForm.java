@@ -179,7 +179,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	private void setListUserProfile() throws Exception {
 		if(valueSearch == null || valueSearch.trim().length() < 1){
 			UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
-			long page = pageIterator.getPageSelected() ;
+			int page = pageIterator.getPageSelected() ;
 			this.userProfiles = this.userPageList.getPage(page) ;
 			pageIterator.setSelectPage(userPageList.getCurrentPage());
 		} else {
@@ -195,7 +195,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 		} else {
 			try {
 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
-				long page = pageIterator.getPageSelected() ;
+				int page = pageIterator.getPageSelected() ;
 				this.userProfiles = new ArrayList<UserProfile>();
 				for(Object obj : this.userPageList.getPageUser(page)){
 					if(obj instanceof User)
