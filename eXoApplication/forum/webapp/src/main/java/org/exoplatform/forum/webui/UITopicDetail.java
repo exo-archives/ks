@@ -509,9 +509,14 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return true;
 	}
 	
-  public String getRepository() throws Exception {
-    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
-    return rService.getCurrentRepository().getConfiguration().getName() ;
+  public String getImageUrl(String imagePath) throws Exception {
+  	String url = "";
+  	try {
+  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
+    } catch (Exception e) {
+    	e.printStackTrace();
+    }
+    return url ;
   }
 
   public String getFileSource(ForumAttachment attachment) throws Exception {

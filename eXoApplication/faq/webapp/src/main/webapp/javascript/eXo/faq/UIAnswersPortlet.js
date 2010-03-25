@@ -194,7 +194,7 @@ UIAnswersPortlet.prototype.showPicture = function(src) {
 	  containerNode.setAttribute('title', 'Click to close') ;
 	  containerNode.setAttribute('style', 'text-align:center; top:10px;') ;
 	  containerNode.setAttribute('align', 'center') ;
-	  containerNode.onclick = eXo.forum.UIForumPortlet.hidePicture ;
+	  containerNode.onclick = eXo.faq.UIAnswersPortlet.hidePicture ;
 		this.showFullScreen(imageNode,containerNode);
 	  var maskNode = eXo.core.UIMaskLayer.createMask('UIPortalApplication', containerNode, 30, 'CENTER') ;
 	  containerNode.style.top = "10px";

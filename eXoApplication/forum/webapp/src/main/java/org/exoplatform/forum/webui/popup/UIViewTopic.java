@@ -177,18 +177,16 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		return contact ;
 	}
 	
-	private String getRestPath() throws Exception {
-		try {
-			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+	public String getImageUrl(String imagePath) throws Exception {
+  	String url = "";
+  	try {
+  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
+    	e.printStackTrace();
     }
-		return "";
-	}
-  public String getRepository() throws Exception {
-    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
-    return rService.getCurrentRepository().getConfiguration().getName() ;
+    return url ;
   }
+	
 	@SuppressWarnings("unused")
 	private String getFileSource(ForumAttachment attachment) throws Exception {
 		DownloadService dservice = getApplicationComponent(DownloadService.class) ;

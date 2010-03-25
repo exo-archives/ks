@@ -98,19 +98,14 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
   	return question;
   }
   
-  private String getRestPath() throws Exception {
-		try {
-			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+  public String getImageUrl(String imagePath) throws Exception {
+  	String url = "";
+  	try {
+  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-	    log.error("Can not get portal name or rest context name, exception: ",e);
+    	e.printStackTrace();
     }
-		return "";
-	}
-  
-	public String getRepository() throws Exception {
-    RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
-    return rService.getCurrentRepository().getConfiguration().getName() ;
+    return url ;
   }
   
   public String getQuestionRelationById(String questionId) {

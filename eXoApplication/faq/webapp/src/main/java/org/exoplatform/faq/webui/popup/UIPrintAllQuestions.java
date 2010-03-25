@@ -117,20 +117,15 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent{
 		return null;
 	}*/
 
-	public String getRepository() throws Exception {
-		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
-		return rService.getCurrentRepository().getConfiguration().getName() ;
-	}
-
-	private String getRestPath() throws Exception {
-		try {
-			ExoContainerContext exoContext = (ExoContainerContext)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ExoContainerContext.class);
-	    return "/"+exoContext.getPortalContainerName()+"/"+exoContext.getRestContextName();
+	public String getImageUrl(String imagePath) throws Exception {
+  	String url = "";
+  	try {
+  		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-	    log.error("Can not get portal name or rest context name, exception: ",e);
+    	e.printStackTrace();
     }
-		return "";
-	}
+    return url ;
+  }
 	
 	private String getAvatarUrl(String userId){
 		try{

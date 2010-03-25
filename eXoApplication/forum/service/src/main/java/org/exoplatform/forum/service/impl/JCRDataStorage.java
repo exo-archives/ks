@@ -5686,7 +5686,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		StringBuilder strQuery = new StringBuilder();
 		strQuery.append(JCR_ROOT).append(path).append("//element(*,nt:resource) [");
 		strQuery.append("(jcr:contains(., '").append(key).append("*'))]") ;
-//		System.out.println("\n\n---------> strQuery:" + strQuery.toString());
+		System.out.println("\n\n---------> strQuery:" + strQuery.toString());
 		Query query = qm.createQuery(strQuery.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes();

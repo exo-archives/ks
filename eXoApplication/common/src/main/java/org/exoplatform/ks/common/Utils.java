@@ -35,12 +35,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.w3c.dom.Document;
@@ -168,6 +170,21 @@ public class Utils {
     return remoteAddr;
   }
 	
+  public static String getImageUrl(String imagePath) throws Exception {
+  	StringBuilder url = new StringBuilder() ;
+  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+    try {
+    	ExoContainerContext exoContext = (ExoContainerContext)container.getComponentInstanceOfType(ExoContainerContext.class);
+    	url.append("/").append(exoContext.getRestContextName());
+    } catch (Exception e) {
+    	log.error("Can not get portal name or rest context name, exception: ",e);
+    	return "";
+    }
+    RepositoryService rService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class) ;
+    url.append("/jcr/").append(rService.getCurrentRepository().getConfiguration().getName())
+    .append(imagePath).append("/");
+    return url.toString();
+  }
   
   public static String convertCodeHTML(String s) {
   	if (s == null || s.length() <= 0)

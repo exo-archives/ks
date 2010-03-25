@@ -75,7 +75,7 @@
 								%>
 										<div class="AttachmentBox">
 										<% if(typeFile.indexOf("image") >= 0) {
-										  String attLink = uicomponent.getRestPath()+"/jcr/" +uicomponent.getRepository() +attachment.getPath() +"/";
+										  String attLink = uicomponent.getImageUrl(attachment.getPath());
 										%>
 											<div class="Image">
 												<img onclick="eXo.forum.UIForumPortlet.showPicture('$attLink');" class="AttachImage" src="$attLink" height="100px;" alt=""/>
