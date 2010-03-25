@@ -33,7 +33,7 @@
     <org.exoplatform.jcr.version>1.12.0-GA</org.exoplatform.jcr.version>
     <org.exoplatform.portal.version>3.0.0-GA</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <org.exoplatform.platform.version>3.0.0-Alpha02</org.exoplatform.platform.version>
+    <org.exoplatform.platform.version>3.0.0-Alpha03-SNAPSHOT</org.exoplatform.platform.version>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
@@ -166,6 +166,11 @@
         <version>${org.exoplatform.portal.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.exoplatform.portal</groupId>
+        <artifactId>exo.portal.component.test.core</artifactId>
+        <version>${org.exoplatform.portal.version}</version>
+      </dependency>        
+      <dependency>
         <groupId>org.exoplatform.tool</groupId>
         <artifactId>exo.tool.framework.junit</artifactId>
         <version>${exo.tool.framework.junit.version}</version>
@@ -261,6 +266,11 @@
         <artifactId>commons-collections</artifactId>
         <version>${commons-collections.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.exoplatform.platform</groupId>
+        <artifactId>exo.platform.commons.testing</artifactId>
+        <version>${org.exoplatform.platform.version}</version>
+      </dependency>      
     </dependencies>
   </dependencyManagement>
   <profiles>
@@ -294,7 +304,6 @@
     </profile>
   </profiles>
   <modules>
-    <module>test-utils</module>
     <module>component</module>
     <module>web</module>
     <module>eXoApplication</module>

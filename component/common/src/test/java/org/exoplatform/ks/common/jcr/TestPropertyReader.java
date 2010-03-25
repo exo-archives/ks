@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.el.PropertyNotFoundException;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.Value;
@@ -17,6 +17,7 @@ import javax.jcr.Value;
 import junit.framework.TestCase;
 
 import org.exoplatform.ks.common.jcr.PropertyReader;
+import org.jboss.util.property.PropertyException;
 
 
 /*
@@ -93,7 +94,7 @@ public class TestPropertyReader extends TestCase {
     assertEquals(expected, actual);
 
  // test default value
-    when(prop.getLong()).thenThrow(new PropertyNotFoundException());
+    when(prop.getLong()).thenThrow(new PropertyException());
     expected = 123L;
     actual = reader.l("long", expected);
     assertEquals(expected, actual);
@@ -108,7 +109,7 @@ public class TestPropertyReader extends TestCase {
     assertContains(actual, expected);
     
     // test default value
-    when(prop.getValues()).thenThrow(new PropertyNotFoundException());
+    when(prop.getValues()).thenThrow(new PropertyException());
     actual = reader.list("list", Arrays.asList(new String[] { "1", "2", "3" }));
     assertContains(actual, "1","2","3");
   }
@@ -122,7 +123,7 @@ public class TestPropertyReader extends TestCase {
     String actual = reader.string("string");
     assertEquals(actual,expected);
     
-    when(prop.getString()).thenThrow(new PropertyNotFoundException());
+    when(prop.getString()).thenThrow(new PropertyException());
     expected = "bar";
     actual = reader.string("string", expected);
     assertEquals(actual,expected);
@@ -138,7 +139,7 @@ public class TestPropertyReader extends TestCase {
     assertContains(actual, expected);
     
     // test default value
-    when(prop.getValues()).thenThrow(new PropertyNotFoundException());
+    when(prop.getValues()).thenThrow(new PropertyException());
     actual = reader.strings("strings", new String[] { "1", "2", "3" });
     assertContains(actual, "1","2","3");
   }
