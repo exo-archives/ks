@@ -1994,7 +1994,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}	
 	
 
-	private Topic getTopicNode(Node topicNode) throws Exception {
+	public Topic getTopicNode(Node topicNode) throws Exception {
 		if (topicNode == null) return null;
 		Topic topicNew = new Topic();
 		PropertyReader reader = new PropertyReader(topicNode);
@@ -2879,7 +2879,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		} finally { sProvider.close() ;}		
 	}
 
-	protected Post getPost(Node postNode) throws Exception {
+	public Post getPost(Node postNode) throws Exception {
 		Post postNew = new Post();
 		PropertyReader reader = new PropertyReader(postNode);
 		postNew.setId(postNode.getName());
