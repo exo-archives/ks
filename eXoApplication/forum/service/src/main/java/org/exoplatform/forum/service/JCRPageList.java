@@ -59,9 +59,9 @@ abstract public class JCRPageList<E> extends PageList<E>{
 	
 	public List<E> getPage(int page) throws Exception	 {
 		checkAndSetPage(page);
-	  List<E> result = super.getPage(page);
-		this.pageSelected = page;
-		return result;
+		populateCurrentPage(currentPage_);
+		pageSelected = currentPage_;
+    return currentListPage_;
 	}
 
 	public void checkAndSetPage(int page) throws Exception {
