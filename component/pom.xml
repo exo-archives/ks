@@ -13,7 +13,5 @@
     <module>common</module>
     <module>rendering</module>
     <module>bbcode</module>
-    <module>discussion</module>
-    <module>discussion-providers</module>
   </modules>
 </project>
