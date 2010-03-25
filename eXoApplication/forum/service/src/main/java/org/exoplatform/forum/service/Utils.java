@@ -211,7 +211,7 @@ public class Utils {
 	 * @return
 	 */
 	public static boolean isListContentItemList(List<String> list, List<String> list1) {
-		if(list1.size() == 1 && list1.get(0).equals(" ")) return false;
+		if(list1 == null  || (list1.size() == 1 && isEmpty(list1.get(0)))) return false;
 		for (String string : list1) {
 			if(list.contains(string)) return true;
 		}

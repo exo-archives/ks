@@ -5682,68 +5682,71 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 
 	private List<ForumSearch> getSearchByAttachment(Node categoryHome, String path, String key, List<String> listForumIds, List<String> listOfUser, boolean isAdmin, String type) throws Exception {
 		List<ForumSearch> listSearchEvent = new ArrayList<ForumSearch>();
-		QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-		StringBuilder strQuery = new StringBuilder();
-		strQuery.append(JCR_ROOT).append(path).append("//element(*,nt:resource) [");
-		strQuery.append("(jcr:contains(., '").append(key).append("*'))]") ;
-		System.out.println("\n\n---------> strQuery:" + strQuery.toString());
-		Query query = qm.createQuery(strQuery.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes();
-		boolean isAdd = true;
-
-		String type_ = type;
-		while (iter.hasNext()) {
-			Node nodeObj = iter.nextNode().getParent().getParent();
-			if(nodeObj.isNodeType(EXO_POST)) {
-				if(type == null || type.length() == 0){
-					if(nodeObj.getProperty(EXO_IS_FIRST_POST).getBoolean()) {
-						type_ = Utils.TOPIC;
-					}else{
-						type_ = Utils.POST;
+		try {
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuilder strQuery = new StringBuilder();
+			strQuery.append(JCR_ROOT).append(path).append("//element(*,nt:resource) [");
+			strQuery.append("(jcr:contains(., '").append(key).append("*'))]") ;
+			Query query = qm.createQuery(strQuery.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			boolean isAdd = true;
+	
+			String type_ = type;
+			while (iter.hasNext()) {
+				Node nodeObj = iter.nextNode().getParent().getParent();
+				if(nodeObj.isNodeType(EXO_POST)) {
+					if(type == null || type.length() == 0){
+						if(nodeObj.getProperty(EXO_IS_FIRST_POST).getBoolean()) {
+							type_ = Utils.TOPIC;
+						}else{
+							type_ = Utils.POST;
+						}
+					} else {
+						if(nodeObj.getProperty(EXO_IS_FIRST_POST).getBoolean()) {
+							if(!type.equals(Utils.TOPIC)) continue;
+						}else {
+							if(type.equals(Utils.TOPIC)) continue;
+						}
 					}
-				} else {
-					if(nodeObj.getProperty(EXO_IS_FIRST_POST).getBoolean()) {
-						if(!type.equals(Utils.TOPIC)) continue;
-					}else {
-						if(type.equals(Utils.TOPIC)) continue;
+					//check scoping, private by category.
+					if(!isAdmin && !listForumIds.isEmpty()){
+						String path_ = nodeObj.getPath() ;
+						path_ = path_.substring(path_.lastIndexOf(Utils.FORUM), path_.lastIndexOf("/"+Utils.TOPIC));
+						if(listForumIds.contains(path_))isAdd =  true;
+						else isAdd = false;
 					}
-				}
-				//check scoping, private by category.
-				if(!isAdmin && !listForumIds.isEmpty()){
-					String path_ = nodeObj.getPath() ;
-					path_ = path_.substring(path_.lastIndexOf(Utils.FORUM), path_.lastIndexOf("/"+Utils.TOPIC));
-					if(listForumIds.contains(path_))isAdd =  true;
-					else isAdd = false;
-				}
-				if(isAdd){
-					// check post private
-				   List<String> list = Utils.valuesToList(nodeObj.getProperty(EXO_USER_PRIVATE).getValues());
-					if(!list.get(0).equals(EXO_USER_PRI) && !Utils.isListContentItemList(listOfUser, list)) isAdd = false;
-					// not is admin
-					if(isAdd && !isAdmin){
-						// not is moderator
-						list = Utils.valuesToList(nodeObj.getParent().getParent().getProperty(EXO_MODERATORS).getValues());
-						if(!Utils.isListContentItemList(listOfUser, list)){
-							// can view by topic
-							list = Utils.valuesToList(nodeObj.getParent().getProperty(EXO_CAN_VIEW).getValues());
-							if(!Utils.isEmpty(list.get(0))){
-								if(!Utils.isListContentItemList(listOfUser, list)) isAdd = false;
-							}
-							if(isAdd) {
-								// check by post
-								Post post = getPost(nodeObj);
-								if(!post.getIsActiveByTopic() || !post.getIsApproved() || post.getIsHidden()) isAdd = false;
+					if(isAdd){
+						// check post private
+					   List<String> list = Utils.valuesToList(nodeObj.getProperty(EXO_USER_PRIVATE).getValues());
+						if(!list.get(0).equals(EXO_USER_PRI) && !Utils.isListContentItemList(listOfUser, list)) isAdd = false;
+						// not is admin
+						if(isAdd && !isAdmin){
+							// not is moderator
+							list = Utils.valuesToList(nodeObj.getParent().getParent().getProperty(EXO_MODERATORS).getValues());
+							if(!Utils.isListContentItemList(listOfUser, list)){
+								// can view by topic
+								list = Utils.valuesToList(nodeObj.getParent().getProperty(EXO_CAN_VIEW).getValues());
+								if(list != null && list.size() > 0 && !Utils.isEmpty(list.get(0))){
+									if(!Utils.isListContentItemList(listOfUser, list)) isAdd = false;
+								}
+								if(isAdd) {
+									// check by post
+									Post post = getPost(nodeObj);
+									if(!post.getIsActiveByTopic() || !post.getIsApproved() || post.getIsHidden()) isAdd = false;
+								}
 							}
 						}
 					}
-				}
-				if(isAdd){
-					if(type_.equals(Utils.TOPIC)) nodeObj = nodeObj.getParent();
-					listSearchEvent.add(setPropertyForForumSearch(nodeObj, type_));
+					if(isAdd){
+						if(type_.equals(Utils.TOPIC)) nodeObj = nodeObj.getParent();
+						listSearchEvent.add(setPropertyForForumSearch(nodeObj, type_));
+					}
 				}
 			}
-		}
+		} catch (Exception e) {
+	    log.error("Search by attachment is fall ",e);
+    }
 		return listSearchEvent;
 	}
 	
