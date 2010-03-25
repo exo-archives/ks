@@ -14,40 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ks.discussion.core;
+package org.exoplatform.ks.discussion.spi;
 
-import java.util.Map;
-
-import org.chromattic.api.annotations.MappedBy;
-import org.chromattic.api.annotations.OneToMany;
-import org.chromattic.api.annotations.OneToOne;
-import org.chromattic.api.annotations.PrimaryType;
-import org.exoplatform.ks.discussion.api.Channel;
-
+import org.exoplatform.ks.discussion.api.Discussion;
+import org.exoplatform.ks.discussion.api.Message;
 
 /**
+ * A discussion provider 
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
  * @version $Revision$
  */
-@PrimaryType(name="discussion:workspace")
-public abstract class Workspace { 
+public interface DiscussionProvider {
 
-  /**
-   * Get the default discussion channel
-   * @return
-   */
-  @OneToOne
-  @MappedBy(Channel.DEFAULT_CHANNEL)
-  abstract Channel getDefaultChannel();
+  String getServedChannel();
   
-  /**
-   * Get the map of discussion channels
-   * @return
-   */
-  @OneToMany
-  abstract Map<String, Channel> getChannels();
-  
-  
+  Discussion startDiscussion(Message startMessage);
 
+  Message reply(String messageId, Message reply);
+
+  Message findMessage(String messageId);
+
+  Discussion findDiscussion(String discussionId);
   
 }

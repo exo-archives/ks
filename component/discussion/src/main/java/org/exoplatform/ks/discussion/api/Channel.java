@@ -23,6 +23,8 @@ package org.exoplatform.ks.discussion.api;
  */
 public interface Channel {
 
+  public static final String DEFAULT_CHANNEL = "default";
+  
   /**
    * The channel ID
    * @return

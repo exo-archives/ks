@@ -74,7 +74,7 @@ public abstract class MessageImpl implements Message {
    * @param source source message to read
    * @throws IllegalStateException if this is transient
    */
-  public void read(Message source) {
+  public void copy(Message source) {
     setAuthor(source.getAuthor());
     setBody(source.getBody());
     setTitle(source.getTitle());

@@ -22,15 +22,11 @@ import java.util.List;
 
 import org.chromattic.api.ChromatticBuilder;
 import org.chromattic.apt.InstrumentorImpl;
-import org.exoplatform.ks.discussion.api.Channel;
-import org.exoplatform.ks.discussion.api.Discussion;
 import org.exoplatform.ks.discussion.api.Message;
 import org.exoplatform.ks.test.ConfigurationUnit;
 import org.exoplatform.ks.test.ConfiguredBy;
 import org.exoplatform.ks.test.ContainerScope;
 import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author <a href="mailto:patrice.lamarque@exoplatform.com">Patrice Lamarque</a>
@@ -38,7 +34,7 @@ import org.testng.annotations.Test;
  */
 @ConfiguredBy({@ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/jcr/jcr-configuration.xml"),
   @ConfigurationUnit(scope = ContainerScope.PORTAL, path = "conf/portal/discussion-configuration.xml")})
-public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
+public class TestDefaultDiscussionProvider extends AbstractJCRTestCase {
 
   
 
@@ -101,19 +97,14 @@ public class TestDiscussionServiceImpl extends AbstractJCRTestCase {
     
   }*/
   
-  class TestDiscussionService extends DiscussionServiceImpl {
-    
-    public TestDiscussionService() {
-      super();
-      builder.setOption(ChromatticBuilder.INSTRUMENTOR_CLASSNAME, InstrumentorImpl.class.getName());
-      
-      // we redefine
-      builder.setOption(ChromatticBuilder.SESSION_LIFECYCLE_CLASSNAME, TestSessionLifeCycle.class.getName()); 
-      
-    }
-    
-  }
+  private DefaultDiscussionProvider provider;
   
+  protected void afterContainerStart() {
+    provider = new DefaultDiscussionProvider();
+    provider.getChromatticBuilder().setOption(ChromatticBuilder.INSTRUMENTOR_CLASSNAME, InstrumentorImpl.class.getName());
+    provider.getChromatticBuilder().setOption(ChromatticBuilder.SESSION_LIFECYCLE_CLASSNAME, TestSessionLifeCycle.class.getName()); 
+  }
+
   
   
   public class TestMessage implements Message {

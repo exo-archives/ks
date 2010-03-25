@@ -32,35 +32,38 @@ public interface DiscussionService {
   
   /**
    * Creates a new discussion into the given channel
-   * @param channelId channel where the discussion will be added.
+   * @param channel channel where the discussion will be added.
    * @param message initial message of the discussion
    * @return the newly created discussion
    */
-  Discussion startDiscussion(String channelId, Message message);
+  Discussion startDiscussion(String channel, Message message);
   
   
   /**
    * Find a discussion by id
+   * @param channel channel where the discussion will be searched
    * @param discussionId identifier of the discussion
    * @return the discussion or null if not found
    */
-  Discussion findDiscussion(String discussionId);
+  Discussion findDiscussion(String channel, String discussionId);
   
   
   /**
    * Find a message by id
+   * @param channel channel where the message will be searched
    * @param messageId identifier of the message to find
    * @return the message or null if not found
    */
-  Message findMessage(String messageId);
+  Message findMessage(String channel, String messageId);
   
   /**
    * Adds a reply message. 
+   * @param channel channel where the message will be searched
    * @param messageId if of the message to be replied to
    * @param reply message to add as child reply
    * @return the reply message created
    */
-  Message reply(String messageId, Message reply);
+  Message reply(String channel, String messageId, Message reply);
   
   
 }

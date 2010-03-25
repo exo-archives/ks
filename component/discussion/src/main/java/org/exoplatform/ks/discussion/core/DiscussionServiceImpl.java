@@ -16,19 +16,14 @@
  */
 package org.exoplatform.ks.discussion.core;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.chromattic.api.BuilderException;
-import org.chromattic.api.Chromattic;
-import org.chromattic.api.ChromatticBuilder;
-import org.chromattic.api.ChromatticSession;
-import org.chromattic.apt.InstrumentorImpl;
 import org.exoplatform.ks.discussion.api.Channel;
 import org.exoplatform.ks.discussion.api.Discussion;
-import org.exoplatform.ks.discussion.api.DiscussionException;
 import org.exoplatform.ks.discussion.api.DiscussionService;
 import org.exoplatform.ks.discussion.api.Message;
-import org.exoplatform.ks.discussion.api.ObjectNotFoundException;
+import org.exoplatform.ks.discussion.spi.DiscussionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -39,180 +34,76 @@ import org.exoplatform.services.log.Log;
  */
 public class DiscussionServiceImpl implements DiscussionService {
 
-  private static final Log  LOG = ExoLogger.getLogger(DiscussionServiceImpl.class);
+  private static final Log                LOG = ExoLogger.getLogger(DiscussionServiceImpl.class);
 
-  private Workspace         workspace;
+  private Map<String, DiscussionProvider> providersByChannel;
 
-  private ChromatticSession session;
-
-  protected Chromattic        chromattic;
-
-  protected ChromatticBuilder builder;
-  
   public DiscussionServiceImpl() {
-    builder = ChromatticBuilder.create();
+    providersByChannel = new HashMap<String, DiscussionProvider>();
   }
 
-  /**
-   * Get the discussion workspace. That is : the parent node of all channels.
-   * @return
-   */
-  Workspace getWorkspace() {
-    Chromattic chromattic = getChromattic();
-    session = chromattic.openSession();
-    if (workspace == null) {
-      workspace = session.findByPath(Workspace.class, "discussion:workspace");
-      if (workspace == null) {
-        workspace = session.insert(Workspace.class, "discussion:workspace");
-      }
-    }
-    return workspace;
-  }
-  
-
-
-  protected Chromattic getChromattic() {
-    if (chromattic == null) {
-      builder.setOption(ChromatticBuilder.INSTRUMENTOR_CLASSNAME, InstrumentorImpl.class.getName());
-      builder.add(Workspace.class);
-      builder.add(ChannelImpl.class);
-      builder.add(DiscussionImpl.class);
-      builder.add(MessageImpl.class);
-
-      // unfortunately builder.build() does not use an unchecked exception, I'm
-      // working around that here
-      // TODO : Should be fixed in next chromattic version
-      try {
-        chromattic = builder.build();
-      } catch (Exception e) {
-        throw new BuilderException(e.getMessage());
-      }
-    }
-
-    return chromattic;
+  public void registerProvider(String channel, DiscussionProvider provider) {
+    LOG.info("registering discussion provider " + provider.getClass() + " for channel " + channel);
+    providersByChannel.put(channel, provider);
   }
 
   /**
    * {@inheritDoc}
    */
   public Discussion startDiscussion(Message startMessage) {
-    Channel target = getWorkspace().getDefaultChannel();
-    return startDiscussion(target.getId(), startMessage);
+    return startDiscussion(Channel.DEFAULT_CHANNEL, startMessage);
   }
 
   /**
    * {@inheritDoc}
    */
-    public Discussion startDiscussion(String channelId, Message message) {
+  public Discussion startDiscussion(String channel, Message message) {
     if (message == null) {
       throw new IllegalArgumentException("An initial message is mandatory to start a discussion");
     }
-    
-    // find Channel
-    ChannelImpl channel = findChannelById(channelId);
-  
-    // create the discussion in the channel
-    String discussionName = generateChildName(channel);
-    DiscussionImpl discussion = session.insert(channel, DiscussionImpl.class, discussionName);
-    
-    // create the start message
-    MessageImpl startMessage = (MessageImpl) discussion.getStartMessage();
-    startMessage.read(message);
-    session.save();
-    return discussion;
+    DiscussionProvider provider = getProvider(channel);
+    return provider.startDiscussion(message);
   }
-
-  private ChannelImpl findChannelById(String channelId) {
-    ChannelImpl channel = session.findById(ChannelImpl.class, channelId);
-    if (channel == null) {
-      throw new ObjectNotFoundException(channelId);
-    }
-    return channel;
-  }
-
 
   /**
    * {@inheritDoc}
    */
-  public Discussion findDiscussion(String discussionId) {
-    Discussion discussion = session.findById(Discussion.class, discussionId);
-    return discussion;
+  public Discussion findDiscussion(String channel, String discussionId) {
+    DiscussionProvider provider = getProvider(channel);
+    return provider.findDiscussion(discussionId);
   }
-  
+
   /**
    * {@inheritDoc}
    */
-  public Message findMessage(String messageId) {
-    Message message = session.findById(Message.class, messageId);
-    return message;
+  public Message findMessage(String channel, String messageId) {
+    DiscussionProvider provider = getProvider(channel);
+    return provider.findMessage(messageId);
   }
-  
+
   /**
-   * load a message by id
-   * @param messageId
+   * {@inheritDoc}
+   */
+  public Message reply(String channel, String messageId, Message reply) {
+    DiscussionProvider provider = getProvider(channel);
+    return provider.reply(messageId, reply);
+  }
+
+  /**
+   * Get the discussion provider for a channel. If no provider is assi
+   * 
+   * @param channel
    * @return
-   * @throws ObjectNotFoundException if te message was not found
    */
-  private MessageImpl findMessageById(String messageId) {
-    MessageImpl message = session.findById(MessageImpl.class, messageId);
-    if (message == null) {
-      throw new ObjectNotFoundException(messageId);
+  private DiscussionProvider getProvider(String channel) {
+    DiscussionProvider provider = this.providersByChannel.get(channel);
+    if (provider == null) {
+      LOG.info("Could not find a discussion provider for channel " + channel
+          + ". using the default provider");
+      provider = new DefaultDiscussionProvider();
+      this.providersByChannel.put(channel, provider);
     }
-    return message;
-  }
-  
-
-  /**
-   * {@inheritDoc}
-   */
-  public Message reply(String messageId, Message reply) {
-      
-    MessageImpl parentMessage = findMessageById(messageId);
-
-    String name = generateChildName(parentMessage);
-    MessageImpl addedReply = session.insert(parentMessage, MessageImpl.class, name);
-    addedReply.read(reply);
-    
-    if (reply.getTimestamp() == null) addedReply.setTimestamp(new Date());
-    if (reply.getTitle() == null) addedReply.setTitle(parentMessage.getTitle());
-    if (reply.getBody() == null || reply.getBody().length() <= 0) {
-      throw new IllegalArgumentException("a message cannot have an empty body");
-    }
-    parentMessage.getReplies().add(addedReply);
-    session.save();
-    return addedReply;
-  }
-
-
-  
-  
-  /**
-   * Generate a valid child node name. The name is based on the current timestamp.
-   * For the extremely rare cases where the name would already exist, 100 consecutive attempts
-   * are made to find a name in the same way.
-   * @param <T> must be a Chromattic managed type
-   * @param parent parent node where a child name should be generated
-   * @return name of the child node
-   * @throws DiscussionException when the name already exists after 100 attempts
-   * @see System#currentTimeMillis()
-   */
-  private <T>String generateChildName(T parent) {
-    String name = String.valueOf(System.currentTimeMillis());
-    Object discussion = session.findByPath(parent, parent.getClass(), name);
-    String path = session.getPath(parent);
-    byte max = 100;
-    while (discussion != null) {
-      LOG.warn("Child node name '" + name + "' already exists in " + path
-          + ". Trying to generate a new one.");
-      name = String.valueOf(System.currentTimeMillis());
-      discussion = session.findByPath(parent, parent.getClass(), name);
-
-      if (--max == 0) {
-        throw new DiscussionException("Failed to generate an available child node name in "
-            + path + "after 100 attempts.");
-      }
-    }
-    return name;
+    return provider;
   }
 
 }
