@@ -751,6 +751,10 @@ UIForumPortlet.prototype.loadScroll = function(e) {
 		
     uiNav.scrollManagerLoaded = true;
     uiNav.initScroll() ;
+    var lastButton = document.getElementById('OpenBookMarkSp');
+    if(lastButton && lastButton.style.display=="none"){
+    	document.getElementById('OpenBookMark').style.display = "none";
+    }
   }
 } ;
 

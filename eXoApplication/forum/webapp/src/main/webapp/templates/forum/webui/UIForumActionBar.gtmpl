@@ -36,7 +36,7 @@
 										} else isAdm = false;
 								%>
 
-									<div class="DefaultStyle ControlButton ForumBar" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
+									<div class="DefaultStyle ControlButton ForumBar" id="$action" onmouseover="eXo.forum.UIForumPortlet.OverButton(this);" onmouseout="eXo.forum.UIForumPortlet.OverButton(this);">
 										<%if(isAdm){%>
 										<div onclick="eXo.forum.UIForumPortlet.showPopup(this, event);">	
 										<%}%>
@@ -95,7 +95,7 @@
 										</div>	
 										<%}%>
 									</div>
-									<div class="SeparatorLineForum ControlButton"><span></span></div>
+									<div class="SeparatorLineForum ControlButton" id="${action}Sp"><span></span></div>
 								<% }%>
 								<div class="ScrollButtons" style="width:35px;">
 				      		<div title="Previous">
@@ -138,7 +138,7 @@
 									%>
 									<div id="lengthStr" style="display:none; float:right;">$lengths</div>
 									<script type="text/javascript">
-										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*9.15)+4) + "px"; document.getElementById('divWidth').style.width = ((l*9.15)+4) + "px";}
+										function setWitdh(){ var l = (document.getElementById('lengthStr').innerHTML)*1+1; document.getElementById('tdWidth').style.width = ((l*6.5)+60) + "px"; document.getElementById('divWidth').style.width = ((l*6.5)+60) + "px";}
 										setWitdh();
 									</script>
 								<% } %>
