@@ -61,8 +61,8 @@
   </component>  
 
   <!-- Send Email -->
-
-   <component>
+ 
+   <!-- component>
     <key>org.exoplatform.services.mail.MailService</key>
     <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
       <init-params>
@@ -80,7 +80,7 @@
           <property name="mail.smtp.socketFactory.fallback" value="false" />
         </properties-param>
       </init-params>
-  </component>
+  </component -->
   
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
