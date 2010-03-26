@@ -166,8 +166,12 @@ public class TestUtils extends TestCase {
 
   public void testIsListContentItemList() {
     List<String> list = Arrays.asList(" ");
-    List<String> list1 = Arrays.asList(" ");
+    List<String> list1 = null;
     boolean actual = Utils.isListContentItemList(list, list1);
+    assertFalse(actual);
+    
+    list1 = Arrays.asList(" ");
+    actual = Utils.isListContentItemList(list, list1);
     assertFalse(actual);
     
     list = Arrays.asList("bar", "zed");
