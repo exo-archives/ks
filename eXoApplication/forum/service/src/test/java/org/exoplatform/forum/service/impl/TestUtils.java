@@ -149,18 +149,15 @@ public class TestUtils extends TestCase {
    
    list = Arrays.asList("foo");
    actual = Utils.propertyMatchAny("prop", list);
-   System.out.println("\n=====>: " + actual);
-//   assertEquals("(not(prop) or prop='foo')", actual);
+   assertEquals("(not(prop) or prop='' or prop='foo')", actual);
    
    list = Arrays.asList("foo", "bar");
    actual = Utils.propertyMatchAny("prop", list);
-   System.out.println("\n=====>: " + actual);
-//   assertEquals("(not(prop) or prop='foo' or prop='bar')", actual);
+   assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar')", actual);
    
    list = Arrays.asList("foo", "bar", "zed");
    actual = Utils.propertyMatchAny("prop", list);
-   System.out.println("\n=====>: " + actual);
-//   assertEquals("(not(prop) or prop='foo' or prop='bar' or prop='zed')", actual);
+   assertEquals("(not(prop) or prop='' or prop='foo' or prop='bar' or prop='zed')", actual);
    
   }
 
@@ -178,6 +175,11 @@ public class TestUtils extends TestCase {
     list1 = Arrays.asList("foo");
     actual = Utils.isListContentItemList(list, list1);
     assertFalse(actual);
+
+    list = Arrays.asList("bar", "zed", "dog");
+    list1 = Arrays.asList("foo", "dog");
+    actual = Utils.isListContentItemList(list, list1);
+    assertFalse(!actual);
     
   }
 
