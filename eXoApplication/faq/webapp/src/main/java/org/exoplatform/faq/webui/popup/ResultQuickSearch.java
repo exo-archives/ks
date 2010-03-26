@@ -133,7 +133,7 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent{
 				uiQuestions.setDefaultLanguage() ; 
 				uiQuestions.viewingQuestionId_ = id ;
 				uiQuestions.updateCurrentQuestionList() ;
-				uiQuestions.updateCurrentLanguage() ;
+				uiQuestions.updateLanguageMap() ;
 				
 				UIBreadcumbs breadcumbs = answerPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;
 				breadcumbs.setUpdataPath(categoryId) ;
