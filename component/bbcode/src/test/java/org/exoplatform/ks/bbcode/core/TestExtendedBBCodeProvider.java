@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ks.bbcode.core;
 
-import static org.exoplatform.ks.test.AssertUtils.assertContains;
-import static org.exoplatform.ks.test.AssertUtils.assertEmpty;
+import static org.exoplatform.commons.testing.AssertUtils.assertContains;
+import static org.exoplatform.commons.testing.AssertUtils.assertEmpty;
 import junit.framework.TestCase;
 
 import org.exoplatform.ks.bbcode.api.BBCode;

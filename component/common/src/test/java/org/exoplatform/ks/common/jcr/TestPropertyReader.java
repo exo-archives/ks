@@ -1,5 +1,5 @@
 package org.exoplatform.ks.common.jcr;
-import static org.exoplatform.ks.test.AssertUtils.assertContains;
+import static org.exoplatform.commons.testing.AssertUtils.assertContains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

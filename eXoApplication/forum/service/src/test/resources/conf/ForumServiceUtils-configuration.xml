@@ -10,7 +10,7 @@
   
   <component>
       <key>org.exoplatform.services.organization.OrganizationService</key>
-     <type>org.exoplatform.ks.test.mock.SimpleMockOrganizationService</type>
+     <type>org.exoplatform.commons.testing.mock.SimpleMockOrganizationService</type>
   </component>  
   
   <component>

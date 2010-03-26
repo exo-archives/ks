@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.jcr.Node;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.jcr.AbstractJCRTestCase;
 import org.exoplatform.component.test.ConfigurationUnit;
 import org.exoplatform.component.test.ConfiguredBy;
 import org.exoplatform.component.test.ContainerScope;
@@ -32,8 +34,6 @@ import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.spi.BBCodeData;
 import org.exoplatform.ks.bbcode.spi.BBCodePlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
-import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
