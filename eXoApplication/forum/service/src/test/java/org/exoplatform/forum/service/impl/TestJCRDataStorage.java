@@ -17,10 +17,10 @@
 package org.exoplatform.forum.service.impl;
 
 
-import static org.exoplatform.ks.test.AssertUtils.assertContains;
-import static org.exoplatform.ks.test.mock.JCRMockUtils.mockNode;
-import static org.exoplatform.ks.test.mock.JCRMockUtils.stubNullProperty;
-import static org.exoplatform.ks.test.mock.JCRMockUtils.stubProperty;
+import static org.exoplatform.commons.testing.AssertUtils.assertContains;
+import static org.exoplatform.commons.testing.mock.JCRMockUtils.mockNode;
+import static org.exoplatform.commons.testing.mock.JCRMockUtils.stubNullProperty;
+import static org.exoplatform.commons.testing.mock.JCRMockUtils.stubProperty;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -45,6 +45,12 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventListenerIterator;
 import javax.jcr.observation.ObservationManager;
 
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.KernelUtils;
+import org.exoplatform.commons.testing.jcr.AbstractJCRTestCase;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.EmailNotifyPlugin;
@@ -56,12 +62,6 @@ import org.exoplatform.ks.common.jcr.JCRTask;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
 import org.exoplatform.ks.rss.ForumRSSEventListener;
-import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.ConfigurationUnit;
-import org.exoplatform.ks.test.ConfiguredBy;
-import org.exoplatform.ks.test.ContainerScope;
-import org.exoplatform.ks.test.KernelUtils;
-import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

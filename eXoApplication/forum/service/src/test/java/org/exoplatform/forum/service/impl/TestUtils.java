@@ -16,10 +16,10 @@
  */
 package org.exoplatform.forum.service.impl;
 
-import static org.exoplatform.ks.test.AssertUtils.assertContains;
-import static org.exoplatform.ks.test.AssertUtils.assertEmpty;
-import static org.exoplatform.ks.test.AssertUtils.assertNotContains;
-import static org.exoplatform.ks.test.mock.JCRMockUtils.stubValue;
+import static org.exoplatform.commons.testing.AssertUtils.assertContains;
+import static org.exoplatform.commons.testing.AssertUtils.assertEmpty;
+import static org.exoplatform.commons.testing.AssertUtils.assertNotContains;
+import static org.exoplatform.commons.testing.mock.JCRMockUtils.stubValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,14 +1,18 @@
 package org.exoplatform.forum.service;
 
-import java.util.List;
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertTrue;
 
-import org.exoplatform.ks.test.AbstractExoContainerTestCase;
-import org.exoplatform.ks.test.AssertUtils;
-import org.exoplatform.ks.test.ConfigurationUnit;
-import org.exoplatform.ks.test.ConfiguredBy;
-import org.exoplatform.ks.test.ContainerScope;
-import org.exoplatform.ks.test.mock.SimpleMockOrganizationService;
+import java.util.List;
+
+import org.exoplatform.commons.testing.AbstractExoContainerTestCase;
+import org.exoplatform.commons.testing.AssertUtils;
+import org.exoplatform.commons.testing.mock.SimpleMockOrganizationService;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
 import org.exoplatform.services.organization.auth.OrganizationAuthenticatorImpl;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityRegistry;

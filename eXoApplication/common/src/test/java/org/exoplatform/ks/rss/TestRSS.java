@@ -27,10 +27,11 @@ import java.util.List;
 
 import javax.jcr.Node;
 
-import org.exoplatform.ks.test.ConfigurationUnit;
-import org.exoplatform.ks.test.ConfiguredBy;
-import org.exoplatform.ks.test.ContainerScope;
-import org.exoplatform.ks.test.jcr.AbstractJCRTestCase;
+import org.exoplatform.commons.testing.jcr.AbstractJCRTestCase;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
+import org.exoplatform.ks.rss.RSS;
 import org.testng.annotations.Test;
 
 import com.sun.syndication.feed.synd.SyndContentImpl;

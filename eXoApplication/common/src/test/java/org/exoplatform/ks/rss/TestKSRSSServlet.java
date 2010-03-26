@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.ks.rss.FeedContentProvider;
+import org.exoplatform.ks.rss.FeedResolver;
+import org.exoplatform.ks.rss.KSRSSServlet;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 

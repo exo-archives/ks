@@ -16,7 +16,7 @@
  */
 package org.exoplatform.forum.service;
 
-import static org.exoplatform.ks.test.AssertUtils.*;
+import static org.exoplatform.commons.testing.AssertUtils.*;
 
 import junit.framework.TestCase;
 

@@ -16,11 +16,11 @@
  ***************************************************************************/
 package org.exoplatform.forum.webui;
 
+import org.exoplatform.commons.testing.webui.AbstractUIComponentTestCase;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
-import org.exoplatform.ks.test.webui.AbstractUIComponentTestCase;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;

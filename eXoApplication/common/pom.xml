@@ -86,10 +86,9 @@
       <artifactId>quartz</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.exoplatform.ks</groupId>
-      <artifactId>exo.ks.test-utils</artifactId>
-      <version>${project.version}</version>
+		<dependency>
+      <groupId>org.exoplatform.platform</groupId>
+      <artifactId>exo.platform.commons.testing</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
