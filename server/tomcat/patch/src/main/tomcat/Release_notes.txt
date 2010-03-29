@@ -1,35 +1,106 @@
+====
+    Copyright (C) 2010 eXo Platform SAS.
+    
+    This is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation; either version 2.1 of
+    the License, or (at your option) any later version.
+    
+    This software is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+    
+    You should have received a copy of the GNU Lesser General Public
+    License along with this software; if not, write to the Free
+    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+====
 
-eXo KS 2.0-Beta01 Release Notes 
+=================================================
+    Release Notes - exo-ks - Version 2.0.0 Beta02
+=================================================
 
-1 Notable changes
+===============
+1 Introduction
+===============
 
-* General
-** Upgrade to use portal Gatein 3.0.0-GA
-** Feature improvement and Bugs fixed
+** eXo Knowledge  Suite provides a rich, Web 2.0 browser-based interface with comprehensive
+forum, frequency answer and question 
 
-2 API Changes 
+*eXo FAQ
 
-KS does not maintain a public API.
+*eXo FORUM 
 
-3 Dependencies Changes
- * Gatein 3.0.0-GA
- * Kernel 2.2.0-GA
- * Core 2.3.0-GA
- * JCR 1.12.0-GA
- * WS 2.1.0-GA
- * Platform 3.0.0-Alpha02 
+=============
+2 What's new?
+=============
 
 
+    * General
+          o Upgraded to GateIn 3.0 GA and dependencies http://www.jboss.org/gatein/
+          o 
+          
+          
+    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes            
+          
+=========
+3 INSTALL
+=========
+
+Find the latest install guide here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Install+Guide
+
+- System Requirements
+        Web Browser: IE6, IE7, FF2, FF3 (recommended)
+        JVM: version 1.6.0_0 or higher
+        Application Server : tomcat-6.0 and up 
+        Building Tools: Maven 2.2.1 and up
+        
+
+- Knowledge suite quick start guide
+  
+    +) tomcat: this is main tomcat server include Collaboration web applications and all dependencies.     
+    
+
+Need to set the JAVA_HOME variable for run Knowledge suite's servers.
++) How to start Knowledge sute:
+   * First thing first you need to give all script files the executable permission if you are in unix family environment.
+   Use command: "chmod +x *.sh" (without quote) to have execute permission on these files.
+   
+   * NOTE for cygwin's user: the JAVA_HOME must be in MS Windows format like: "C:\Program Files\JDK 1.6"
+    Example use: export JAVA_HOME=`cygpath -w "$JAVA_HOME"`; to convert unix like format to MS Windows format.
+   
+   
+   
+   * Start tomcat server
+   
+     +) On the Windows platform
+       Open a DOS prompt command, go to tomcat/bin and type the command:
+        "gatein.bat run" for production
+        "gatein-dev.bat run" for development 
+
+
+     +) On Unix/Linux/cygwin
+       Open a terminal, go to tomcat/bin and type the command:
+         "./gatein.sh run" for production
+         "./gatein-dev.sh run" for development
+
+===========================  
 4 Other resources and links
+===========================
+
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta01]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta02]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
 * [Company site>http://www.exoplatform.com]
 
+====================
+5 Detailed Changelog
+==================== 
 
-5 Detailed Changelog 
+- Version 2.0.0-Beta02
 
 - Version 2.0.0-Beta01
 
