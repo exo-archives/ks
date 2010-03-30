@@ -40,16 +40,16 @@ forum, frequency answer and question
 
     * General
           o Upgraded to GateIn 3.0 GA and dependencies http://www.jboss.org/gatein/
-          o 
+          o Fix bugs 
           
           
-    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes            
+    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-Beta02+Release+Notes            
           
 =========
 3 INSTALL
 =========
 
-Find the latest install guide here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Install+Guide
+Find the latest install guide here : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2_0+Quick+Install+Guide
 
 - System Requirements
         Web Browser: IE6, IE7, FF2, FF3 (recommended)
@@ -92,6 +92,32 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ====================
 5 Detailed Changelog 
 ====================
+- Version 2.0.0-Beta02
+* Bug
+    * [KS-2236] - Exception throws in console when deleting category and question in Answers 
+    * [KS-2243] - Added answers in question disappears after discuss question
+    * [KS-2291] - Question with multi-language disappears when open its from Search result
+    * [KS-2292] - Posts by user disappears after delete post in special case.
+    * [KS-2295] - Private message: show code error when delete message in special case
+    * [KS-2296] - Private message: Break UI when inbox has more 9 messages
+    * [KS-2297] - IE7: Set align in a line for icons in Permission tab. see file attach
+    * [KS-2305] - French label problem on forum
+    * [KS-2311] - Tomcat KS 2.0 Beta01 doesn't start on linux
+    * [KS-2312] - JBoss KS 2.0 Beta01 doesn't start on linux
+
+** Improvement
+    * [KS-2244] - Forun : the discussion windows must be resized 
+
+** Task
+    * [KS-2000] - JBoss packaging via -Ppkg-jbossas
+    * [KS-2300] - Move test-utils into platform/commons/testing
+    * [KS-2322] - Using plaform/commos/testing instead of ks.test-utils for KS.
+
+** Sub-task
+    * [KS-2302] - Can not view image attached in Answers and Forum application.
+    * [KS-2303] - In public mode: result of quick search is incorrect & throw exception in console
+    * [KS-2307] - Ban IP don't work
+    * [KS-2313] - Update testcase for Beta02
 
 - Version 2.0.0-Beta01
 

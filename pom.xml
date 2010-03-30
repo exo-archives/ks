@@ -33,7 +33,7 @@
     <org.exoplatform.jcr.version>1.12.0-GA</org.exoplatform.jcr.version>
     <org.exoplatform.portal.version>3.0.0-GA</org.exoplatform.portal.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
-    <org.exoplatform.platform.version>3.0.0-Alpha03-SNAPSHOT</org.exoplatform.platform.version>
+    <org.exoplatform.platform.version>3.0.0-Alpha03</org.exoplatform.platform.version>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
