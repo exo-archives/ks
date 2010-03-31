@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.conf;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.scheduler.JobInfo;
@@ -36,13 +37,13 @@ public class UpdateDataJob implements Job {
 	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	ExoContainer container = ExoContainerContext.getCurrentContainer();	    
-	    ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
+	  	ExoContainer exoContainer = Utils.getExoContainer(context);
+			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
 	    String name = context.getJobDetail().getName();
 	    JobDataMap jdatamap = context.getJobDetail().getJobDataMap() ;
 	    String path = jdatamap.getString("path") ;
 	    forumService.updateForum(path) ;
-	    JobSchedulerService schedulerService = (JobSchedulerService)container.getComponentInstanceOfType(JobSchedulerService.class) ;
+	    JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
 		  if (log_.isDebugEnabled()) {
 	  		log_.debug("\n\nForum statistic updated");

@@ -21,7 +21,6 @@ import java.util.GregorianCalendar;
 
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -36,13 +35,11 @@ public class RecountActiveUserJob implements Job{
 	
 	public RecountActiveUserJob() throws Exception {}
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 		try{
-			ExoContainer exoContainer = ExoContainerContext.getCurrentContainer() ;
-	    Object obj = exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    if(obj != null) {
-	    	ForumService forumService = (ForumService)obj ;
+			ExoContainer exoContainer = org.exoplatform.ks.common.Utils.getExoContainer(context);
+			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
+	    if(forumService != null) {
 	    	JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
 		    String lastPost = jdatamap.getString("lastPost") ;
 		    if(lastPost != null && lastPost.length() > 0) {

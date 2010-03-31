@@ -32,15 +32,9 @@
     <component-plugin>
       <name>LoginJob</name>
       <set-method>addPeriodJob</set-method>
-      <type>org.exoplatform.forum.service.conf.LoginPeriodJob</type>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
       <description>update logged in user information to forum service</description>
       <init-params>
-      	<values-param>
-          <name>containers</name>
-          <description>The containers that this job will be working on</description>
-          <value>portal</value>
-          <value>ksdemo</value>
-        </values-param>   
         <properties-param>
           <name>job.info</name>
           <description>save the monitor data  periodically</description>

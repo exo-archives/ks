@@ -37,6 +37,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.rendering.MarkupRenderingService;
 import org.exoplatform.ks.rendering.api.Renderer;
 import org.exoplatform.ks.rendering.core.SupportedSyntaxes;
@@ -45,6 +46,7 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.quartz.JobExecutionContext;
 import org.w3c.dom.Document;
 
 
@@ -221,5 +223,13 @@ public class Utils {
     return type.cast(ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(type));
   }
   
-
+  public static ExoContainer getExoContainer(JobExecutionContext context) {
+    if(context == null) return null;
+    String portalName = context.getJobDetail().getGroup();
+    if(portalName == null) {
+    	portalName = PortalContainer.getCurrentPortalContainerName();
+    }
+    if(portalName.indexOf(":") > 0) portalName = portalName.substring(0, portalName.indexOf(":"));
+    return ExoContainerContext.getContainerByName(portalName);
+  }
 }

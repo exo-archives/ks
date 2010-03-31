@@ -17,8 +17,8 @@
 package org.exoplatform.forum.service.user;
 
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.Job;
@@ -29,13 +29,13 @@ public class AutoPruneJob implements Job{
   private static Log log_ = ExoLogger.getLogger("job.RecordsJob");
   
   public AutoPruneJob() throws Exception {}
-  @SuppressWarnings("deprecation")
+
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	ExoContainer container = ExoContainerContext.getCurrentContainer();
+	  	ExoContainer container = Utils.getExoContainer(context);
 	  	String desc = context.getJobDetail().getDescription();
 	  	ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-	  	//System.out.println("\n\n >>>>>> AutoPrune Job");
+	  	System.out.println("\n\n >>>>>> AutoPrune Job");
 	  	forumService.runPrune(desc) ;
 	  	if (log_.isDebugEnabled()) {
 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");

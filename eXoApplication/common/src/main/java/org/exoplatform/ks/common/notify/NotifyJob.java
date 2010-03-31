@@ -20,10 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.services.log.Log;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.RootContainer;
 import org.exoplatform.ks.common.Common;
 import org.exoplatform.ks.common.NotifyInfo;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
@@ -46,19 +49,16 @@ public class NotifyJob implements Job {
 	
 	private static Log log_ = ExoLogger.getLogger(NotifyJob.class);
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
 	  try {
-	  	RootContainer rootContainer = RootContainer.getInstance() ;
-	    PortalContainer portalContainer = rootContainer.getPortalContainer(PortalContainer.getCurrentPortalContainerName()) ;
-	    
-	    MailService mailService = (MailService)portalContainer.getComponentInstanceOfType(MailService.class) ;
+	    ExoContainer exoContainer = Utils.getExoContainer(context);
+	    MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
 	    String name = context.getJobDetail().getName();
 	    Common common = new Common() ;
 	    NotifyInfo messageInfo = common.getMessageInfo(name) ;
 	    List<String> emailAddresses = messageInfo.getEmailAddresses() ;
 	    Message message = messageInfo.getMessage() ;
-		  JobSchedulerService schedulerService = (JobSchedulerService)portalContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
+		  JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-faq", context.getJobDetail().getJobClass());
 		  if(message != null && emailAddresses != null && emailAddresses.size() > 0) {
 		  	List<String> sentMessages = new ArrayList<String>() ;

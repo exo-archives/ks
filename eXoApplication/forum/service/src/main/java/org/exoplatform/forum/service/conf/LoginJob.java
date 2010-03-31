@@ -17,30 +17,25 @@
 package org.exoplatform.forum.service.conf;
 
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.Job;
-import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 public class LoginJob implements Job {
 	private static Log log_ = ExoLogger.getLogger(LoginJob.class);
-  public LoginJob() throws Exception {}		
+  public LoginJob() throws Exception {}
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
-    for(Object ct : jdatamap.values()) {
-      try{
-        ForumService forumService = (ForumService)ExoContainerContext.getContainerByName((String)ct).getComponentInstanceOfType(ForumService.class) ;
-        forumService.updateLoggedinUsers() ;
-      }catch(Exception e) {
-        log_.warn("Period login job can not execute in '"+ ct +"' container ...");
-      }	      
-    }
+    try{
+      ForumService forumService = (ForumService)Utils.getExoContainer(context).getComponentInstanceOfType(ForumService.class) ;
+      forumService.updateLoggedinUsers() ;
+    }catch(Exception e) {
+      log_.warn("Period login job can not execute ...");
+    }	      
     if (log_.isDebugEnabled()) {
   		log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
   	}

@@ -26,6 +26,7 @@ import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.quartz.Job;
@@ -40,10 +41,9 @@ public class DeactiveJob implements Job{
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
 		try{
-			ExoContainer exoContainer = ExoContainerContext.getCurrentContainer() ;
-	    Object obj = exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    if(obj != null) {
-	    	ForumService forumService = (ForumService)obj ;
+			ExoContainer exoContainer = Utils.getExoContainer(context);
+			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
+	    if(forumService != null) {
 	    	JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
 		    String inactiveDays = jdatamap.getString("inactiveDays") ;
 		    String forumName = jdatamap.getString("forumName") ;
