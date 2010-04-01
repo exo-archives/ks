@@ -859,9 +859,15 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 	var i = nodes.length;
 	while(i--){
 		if((nodes[i].className == container.className) || !nodes[i].className) continue;
-		width += nodes[i].offsetWidth;
+			if(nodes[i].className == "UIForumPageIterator"){
+			var right = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","RightPageIteratorBlock");
+			var left = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","LeftPageIteratorBlock");
+			width += eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(left) + eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(right);
+			continue;
+		}
+		width += eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(nodes[i]);
 	}
-	width = container.parentNode.offsetWidth - width -1;
+	width = eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(container.parentNode) - width - 15;
 	container.style.width = width + "px";
 };
 
