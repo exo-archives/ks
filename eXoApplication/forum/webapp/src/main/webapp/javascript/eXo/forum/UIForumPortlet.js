@@ -1002,7 +1002,7 @@ eXo.forum.CheckBox = {
 			var len = checkboxes.length ;
 			for(var i = 1 ; i < len ; i ++) {
 				checkboxes[i].onclick = this.check ;
-				if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
+				//if(checkboxes[i].getAttribute("checked") != "checked")checkboxes[i].checked = false;
 				eXo.ks.CheckBox.checkItem(checkboxes[i]);
 			}
 		}
