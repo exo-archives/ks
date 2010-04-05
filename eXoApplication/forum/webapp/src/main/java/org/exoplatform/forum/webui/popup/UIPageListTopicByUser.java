@@ -30,6 +30,8 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.forum.webui.UICategories;
+import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
@@ -136,9 +138,7 @@ public class UIPageListTopicByUser extends UIContainer{
 			String categoryId = path[i-3];
 			String forumId = path[i-2] ;
 			uiForm.forumService.removeTopic(categoryId, forumId, topicId);
-			UIForumPageIterator forumPageIterator = uiForm.getChild(UIForumPageIterator.class) ;
-			forumPageIterator.setSelectPage((long)1);
-			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class)) ;
 		}
 	}
 	

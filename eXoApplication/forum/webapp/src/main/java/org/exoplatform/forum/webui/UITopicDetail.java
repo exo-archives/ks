@@ -332,9 +332,10 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		*/  
   	isMod = (userProfile.getUserRole() == UserProfile.ADMIN)
         		||(ForumServiceUtils.hasPermission(forum.getModerators(), userName));
-    canCreateTopic = getCanCreateTopic();
-    isCanPost = isCanPostReply();
-    
+  	if(topic != null){
+	    canCreateTopic = getCanCreateTopic();
+	    isCanPost = isCanPostReply();
+  	}
     try {
     	PortletRequestContext pcontext = (PortletRequestContext) WebuiRequestContext.getCurrentInstance();
     	ActionResponse actionRes = (ActionResponse) pcontext.getResponse();

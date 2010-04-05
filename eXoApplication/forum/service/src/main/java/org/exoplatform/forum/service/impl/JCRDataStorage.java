@@ -2488,6 +2488,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				getTotalJobWatting(userIdsp);
 			}
 			try {
+				queryLastTopic(sProvider, forumNode.getPath());
+      } catch (Exception e) {
+      	e.printStackTrace();
+      }
+			try {
 				calculateLastRead(sProvider, null, forumId, topicId);
       } catch (Exception e) {}
       try {
