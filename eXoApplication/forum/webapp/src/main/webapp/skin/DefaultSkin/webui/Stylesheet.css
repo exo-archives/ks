@@ -222,11 +222,7 @@
 	position:absolute;
 	top:auto;
 	width:auto;
-	z-index:100;
-}
-
-.UIForumPortlet .ForumToolbar .UIRightClickPopupMenu {
-
+	z-index:4;
 }
 
 .UIForumPortlet .ForumToolbar .UIRightClickPopupMenu .LineMenu {
