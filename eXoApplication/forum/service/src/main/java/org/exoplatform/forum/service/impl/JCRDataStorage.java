@@ -694,7 +694,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							topic.setDescription(ct);
 							topic.setOwner(topicData.getOwner());
 							topic.setIcon(topicData.getIcon());
-							this.saveTopic(category.getId(), forum.getId(), topic, true, false, "");
+							this.saveTopic(category.getId(), forum.getId(), topic, true, false, " ");
 
 							List<PostData> posts = topicData.getPosts();
 							for (PostData postData : posts) {
@@ -706,7 +706,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 								post.setMessage(ct);
 								post.setOwner(postData.getOwner());
 								post.setIcon(postData.getIcon());
-								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, "");
+								this.savePost(category.getId(), forum.getId(), topic.getId(), post, true, " ");
 							}
 						}
 					}
@@ -3104,28 +3104,32 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 									topicNode.setProperty(EXO_LAST_POST_BY, post.getOwner());
 								} 
 								if(post.getIsHidden()) sendAlertJob = true;
-							}else if(!sendAlertJob) sendAlertJob = true;
+							}else sendAlertJob = true;
 						}
 					} else {
 						postNode.setProperty(EXO_IS_ACTIVE_BY_TOPIC, false);
 						sendAlertJob = true;
 					}
 				}
-				if(isNew && defaultEmailContent.length() == 0) sendAlertJob = false; // initDefaulDate
+				if(isNew && defaultEmailContent.length() == 1) sendAlertJob = false; // initDefaulDate
 			} else {
 				if(post.getIsApproved() && !post.getIsHidden())sendAlertJob = false;
 				long temp = topicNode.getProperty(EXO_NUMBER_ATTACHMENTS).getLong() - postNode.getProperty(EXO_NUMBER_ATTACH).getLong();
 				topicNode.setProperty(EXO_NUMBER_ATTACHMENTS, (temp + numberAttach));
 			}
 			postNode.setProperty(EXO_NUMBER_ATTACH, numberAttach);
-			if(isNew) {
-				forumNode.getSession().save();
-			} else {
-				forumNode.save();
-			}
+			try {
+				if(isNew) {
+					forumNode.getSession().save();
+				} else {
+					forumNode.save();
+				}
+      } catch (Exception e) {
+      	forumNode.save();
+      }
 			try {
 				if(!isFistPost && isNew) {
-					sendNotification(topicNode, null, post, defaultEmailContent, true);
+					sendNotification(topicNode, null, post, defaultEmailContent.trim(), true);
 				}
 			} catch (Exception e) {
 			}
