@@ -1,9 +1,9 @@
 ==============================================
-    Release Notes - exo-ks - Version 1.2
+    Release Notes - exo-ks - Version 1.2.3
 ==============================================
 
 ===============
- Introduction
+1 Introduction
 ===============
 eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.
 
@@ -15,37 +15,21 @@ KS is made up of three applications:
 
 
 =============
- What's new?
+2 What's new?
 =============
-exo Knowledge Suite 1.2 features several noteworthy changes:
 
     * General
-          o Upgraded to Portal 2.5.3
-          o The FAQ portlet has been renamed eXo Answers. FAQ is now the name of a new portlet that allows to publish Q/A produced in Answers
-          o Screen name : user can now choose the name he is identified by
-          o Search in attachments
+          o Upgraded to Portal 2.5.8 and dependencies 
+          o Fix bugs
     * Forum
-          o RSS Feeds
-          o My Subscription to manage your watches by email or RSS
-          o New tags management (new UI and tag suggestions)
-          o Custom BBCodes
-          o Auto-Prune Management UI
-          o Topic Types
-          o Panels made optional
-          o Forum Panel-portlets for free layout
-          o Remember UI layout
+          o Resize discussion window 
     * Answers
-          o Category Stats pane
-          o Restricted audience on category
-          o Category Scoping
-          o Plugin to load initial data
+          o  
     * FAQ
-          o Expose FAQs by category
-          o Fully edit the html template for rendering
-          o Sub Category browsing
+          o Switch language 
 
 =========
- INSTALL
+3 INSTALL
 =========
 
 Follow the KS Quick Install Guide : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+Quick+Install+Guide
@@ -79,7 +63,7 @@ INFO: Server startup in 15359 ms
 
 
 ===========
- RESOURCES
+4 RESOURCES
 ===========
 
      Company site        http://www.exoplatform.com
@@ -89,13 +73,92 @@ INFO: Server startup in 15359 ms
 
 
 ===========
- CHANGELOG
+5 CHANGELOG
 ===========
+- Version 1.2.3
+
+** Bug
+    * [KS-1971] - the forum service doesn't take into account user profile modifications 
+    * [KS-2077] - Deleted forum message should not appear in "last posts" column
+    * [KS-2219] - Cannot open the forums created by the random initializer
+    * [KS-2220] - Scoping of Edit Mode tab does not work well in special cases
+    * [KS-2227] - Forum : "ban IP" style issue (152087)
+    * [KS-2239] - Forum AuthenticationLogin/Logout listeners generate too much JCR operations/ Many cl*.tmp files generated
+    * [KS-2245] - Forum : poll expiration not well localized
+    * [KS-2285] - Can not click any action in Forum in special case
+    * [KS-2289] - Problem with creating default data in ks-plugins-configuration.xml
+    * [KS-2305] - French label problem on forum
+    * [KS-2347] - Cannot add a new forum
 
 
- Version 1.2 Final
+** Improvement
+    * [KS-1975] - FAQ - Language switch
+    * [KS-2206] - Build, quality and automation improvements
+    * [KS-2244] - Forum : the discussion windows must be resized 
+
+** Task
+    * [KS-2238] - Forum :Spelling - please correct the expression
+    * [KS-2246] - FAQ : incorrect label submit new question dialog
 
 
+- Version 1.2.2
+
+Release Notes - exo-ks - Version ks-1.2.2
+
+** Bug
+    * [KS-1946] - Can't save an FAQ question while focus is in FCK Editor
+    * [KS-1980] - Wrong number of pages(zero) when using ldap-configuration
+    * [KS-1986] - Starts in Rate box are hidden. See file attach
+    * [KS-1994] - Change label in Add category form
+    * [KS-2011] - RSS feed: Don't get content of category/forum/topic which is default data.
+    * [KS-2016] - The name of days are not translated
+    * [KS-2024] - IE7: Show error message when discuss question to forum. See file attach
+    * [KS-2031] - Redirection to classic portal is hard-coded
+    * [KS-2034] - Signature could not be saved in Settings
+    * [KS-2035] - Add watch function is not updated with new email address of root
+    * [KS-2112] - Unknown error when Preview a quick post
+    * [KS-2113] - Can NOT create topic in Forum
+    * [KS-2114] - Small Icon display error in Posts by User form
+    * [KS-2117] - Answers - Invalid title in Search Result forum
+    * [KS-2118] - Answers: RSS Feed is not ok with created category and question
+    * [KS-2119] - Invalid display of some item is Answer popup menu
+    * [KS-2120] - Invalid RSS Feed
+    * [KS-2121] - Signature is not saved and displayed
+    * [KS-2122] - Rate this topic, star in Rate form is not displayed
+    * [KS-2125] - Discussion function does not work well
+    * [KS-2129] - IE7 Attach File form is invalid
+    * [KS-2130] - Can NOT add Forum Category in special case
+
+** Improvement
+    * [KS-1660] - Error UI in list tag pane. See file attach
+    * [KS-1941] - Make "Post Reply" clickable even for guest users
+    * [KS-1942] - Make import/export labels clearer
+    * [KS-1944] - Make error messages clearer
+    * [KS-1945] - sort user list alphabetically
+    * [KS-2003] - Add icon for "Untag" item in menu. See file attach
+
+** Task
+    * [KS-1734] - Avoid expensive calls to getAll()
+    * [KS-1895] - Do not use ajax by default
+    * [KS-1947] - Version on 1.2.x should contain-SNAPSHOT
+    * [KS-2126] - Upgrade KS branch 1.2.2-SNAPSHOT to use portal 2.5.7-SNAPSHOT
+    * [KS-2131] - Cleanup the build process to be able to deploy on eXo Nexus with the release plugin for 1.2.x
+    * [KS-2156] - Release KS 1.2.2
+
+
+** Sub-task
+    * [KS-1965] - [DEV] Fix call getAll() when searching user profiles
+    * [KS-1998] - Fix bug when import forum but the data is data of category , forum still allow import.
+    * [KS-2132] - Build - Cleanup the profile with properties, remove the reporting and emma config, add parent pom v6
+    * [KS-2134] - eXoApplication\blog\service\ is not compiled in 1.2.x -- should we keep that module ?
+    * [KS-2135] - eXoApplication\wiki\service\ is not compiled  in 1.2.x -- should we keep that module ?
+    * [KS-2137] - Build - Integrate module.js in the project to be used by exopackage and maven-exobuild-plugin
+    * [KS-2144] - Use Kernel, Core, JCR, PC, Portal, WebOS SNAPSHOTs
+    * [KS-2151] - Can not show attached image & exception in console when view a question
+
+
+
+- Version 1.2 Final
 ** Bug
     * [KS-1104] - export/import the forum content doesn't work
     * [KS-1108] - rename permlink in permalink
@@ -109,12 +172,12 @@ INFO: Server startup in 15359 ms
     * [KS-1311] - Sign in button is displayed in two lies
     * [KS-1316] - IE6: Error in case long link added
     * [KS-1336] - Ban automatically release is not updated ontime
-    * [KS-1355] - IE7: Remove horizonal bar on some forms
+    * [KS-1355] - IE7: Remove horizontal bar on some forms
     * [KS-1358] - Rename the node type exo:userProfile to avoid conflict with the one defined into the JCR
     * [KS-1359] - Can't view quote in preview form
     * [KS-1360] - Add topic with post notification and then edit the topic, the check bos post notification is not ticked
     * [KS-1362] - Should check both "post reply" and "Message" in case having censor word
-    * [KS-1363] - UI bug in privew private post form
+    * [KS-1363] - UI bug in preview private post form
     * [KS-1364] - MAC, FF3: Sign In link is dropped down
     * [KS-1366] - still create topic for forum although the forum is locked or closed in special case
     * [KS-1367] - [FQA] has problem when delete the catagory before click [save] button of importing category for FQA 
@@ -261,19 +324,19 @@ INFO: Server startup in 15359 ms
     * [KS-1748] - Editing question isn't updated after saved
     * [KS-1753] - Forum- THe Button "Go to" (Aller in FR) dosn't work for the first choice ("Acceuil")
     * [KS-1761] - FAQ- Unknown error when edit a question that no longer exists in Manage Questions form
-    * [KS-1763] - Can not add multi language for question when edit.
+    * [KS-1763] - Can not add multiple language for question when edit.
     * [KS-1766] - In IE 7: Error UI in Poll porlet. see file attach
     * [KS-1770] - Imported Category & Question aren't displayed in special case.
     * [KS-1771] - Watched email is still displayed in Manager watch form although deleted.
     * [KS-1772] - Show message "This faq category no longer exists" when edit Root category
     * [KS-1773] - [KS-FAQ] UI error in the Search Result form
-    * [KS-1777] - Forum - Advance search - "Clear filelds" button doesn't work in webos
+    * [KS-1777] - Forum - Advance search - "Clear fields" button doesn't work in webos
     * [KS-1792] - JCR session leaks
     * [KS-1795] - Bug unknown error when view topic in special case.
     * [KS-1810] - Manage Question form: Show all question existing into pending question list.
     * [KS-1812] - Category isn't viewed property although selected to open from Watch manager form.
     * [KS-1813] - Loosing author when promoting comment as answer
-    * [KS-1814] - A normal user can still search a desactivated question
+    * [KS-1814] - A normal user can still search a de-activated  question
     * [KS-1816] - Add category: Get the number order of category is incorrect after add new question.
     * [KS-1829] - Question list does not refresh
     * [KS-1830] - Exception when guest click on Answer portlet the first time with empty database
@@ -382,9 +445,7 @@ INFO: Server startup in 15359 ms
     * [KS-1834] - Plugin to load default Data in FAQ
 
 
-Version 1.2 RC1
-
-
+- Version 1.2 RC1
 ** Bug
     * [KS-1602] - Forum : some French translations for the wordings of the forum
     * [KS-1753] - Forum- THe Button "Go to" (Aller in FR) dosn't work for the first choice ("Acceuil")
