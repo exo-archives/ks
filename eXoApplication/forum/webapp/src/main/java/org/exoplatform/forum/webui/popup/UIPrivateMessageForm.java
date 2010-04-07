@@ -170,7 +170,7 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 
 			String erroUser = UserHelper.checkValueUser(sendTo) ;
 			if(!ForumUtils.isEmpty(erroUser)) {
-				messageForm.warning("NameValidator.msg.erroUser-input", new String[]{messageForm.getLabel(FIELD_SENDTO_TEXTAREA)}) ;
+				messageForm.warning("NameValidator.msg.erroUser-input", new String[]{messageForm.getLabel(FIELD_SENDTO_TEXTAREA), erroUser}) ;
 				return ;
 			}
 			UIFormStringInput stringInput = MessageTab.getUIStringInput(FIELD_MAILTITLE_INPUT);
