@@ -14,10 +14,10 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program; if not, see <http://www.gnu.org/licenses/>.
+    along with this program; if not, see <http://www.gnu.org/licenses />.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.exoplatform</groupId>
@@ -26,7 +26,7 @@
   </parent>
   <groupId>org.exoplatform.ks</groupId>
   <artifactId>ks-parent</artifactId>
-  <version>1.2.3-SNAPSHOT</version>
+  <version>1.2.3</version>
   <packaging>pom</packaging>
   <name>eXo Knowledge Suite</name>
   <description>eXo Knowledge Suite (KS) is a suite of collaborative applications oriented to knowledge management. It not only holds on-line discussions and posts user generated content but also answers the most frequently asked questions about sites/services.</description>
@@ -36,9 +36,9 @@
     <url>http://www.exoplatform.com</url>
   </organization>
   <scm>
-    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</connection>
-    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/branches/1.2.x</developerConnection>
-    <url>http://fisheye.exoplatform.org/browse/projects/ks/branches/1.2.x</url>
+    <connection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2.3</connection>
+    <developerConnection>scm:svn:http://svn.exoplatform.org/projects/ks/tags/1.2.3</developerConnection>
+    <url>http://fisheye.exoplatform.org/browse/projects/ks/tags/1.2.3</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -119,9 +119,9 @@
               <tasks>
                 <copy failonerror="false" todir="${basedir}/target/${project.build.finalName}/WEB-INF/classes">
                   <fileset dir="${basedir}/src/main/webapp/WEB-INF/classes">
-                    <include name="**/*_en.properties"/>
+                    <include name="**/*_en.properties" />
                   </fileset>
-                  <globmapper from="*_en.properties" to="*.properties"/>
+                  <globmapper from="*_en.properties" to="*.properties" />
                 </copy>
               </tasks>
             </configuration>
