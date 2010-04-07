@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks-parent</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.eXoApplication.faq.service</artifactId>
   <name>eXo KS FAQ service</name>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>rome</groupId>
