@@ -14,6 +14,10 @@
     <type>org.exoplatform.faq.service.impl.JCRDataStorage</type>
   </component>   
   
+  <component>
+    <type>org.exoplatform.faq.service.ws.FAQWebservice</type>
+  </component>
+  
   <!--external-component-plugins>
 	  <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>      
 	  <component-plugin> 
