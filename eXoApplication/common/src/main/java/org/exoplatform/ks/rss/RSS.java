@@ -32,6 +32,7 @@ import javax.jcr.version.VersionException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.w3c.dom.Document;
@@ -67,12 +68,12 @@ public class RSS {
 	}
 	
 	public static String getRSSLink(String appType, String portalName, String objectId){
-		return "/" + appType + "/rss/" + appType + "/" + objectId;   
+		return "/" + PortalContainer.getInstance().getRestContextName() + "/ks/" + appType + "/rss/" + objectId;   
 	}
 	
 	
-	public static String getUserRSSLink(String userId) {
-	  return "/forum/rss/"+userId;
+	public static String getUserRSSLink(String apptype, String userId) {
+	  return "/" + PortalContainer.getInstance().getRestContextName() +  "/ks/" + apptype + "/rss/user/"+userId;
   }
 	
 	public String getFileName() {

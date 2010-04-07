@@ -35,6 +35,7 @@ import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
+import org.exoplatform.forum.service.ws.ForumWebservice;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UICategoryContainer;
 import org.exoplatform.forum.webui.UIFormSelectBoxForum;
@@ -292,7 +293,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = portalContext.getRequest().getRequestURL().toString();
 		url = url.substring(0, url.indexOf("/", 8)) ;
-		rssLink = url + RSS.getUserRSSLink(userProfile.getUserId());
+		rssLink = url + RSS.getUserRSSLink(ForumWebservice.APP_TYPE, userProfile.getUserId());
 		formStringInput.setValue(rssLink);
 		formStringInput.setEditable(false);
 		
