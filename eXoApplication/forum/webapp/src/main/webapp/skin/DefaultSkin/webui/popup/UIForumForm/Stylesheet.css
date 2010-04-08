@@ -59,3 +59,9 @@
 .UIForumForm .ForumPermission .UIAction {
 	padding: 0px 0px 5px 0px;
 }
+
+/********KS-2315*********/
+
+.UIFormForum  .UIFormInput .UIFormUploadInput .UploadIframe iframe{
+	width: auto;
+}
