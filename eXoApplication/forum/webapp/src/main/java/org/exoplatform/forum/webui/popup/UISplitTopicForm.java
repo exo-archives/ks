@@ -169,18 +169,17 @@ public class UISplitTopicForm extends UIForumKeepStickPageIterator implements UI
 						event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 						uiForm.warning("UISplitTopicForm.msg.forum-deleted") ;
 					}		
+					UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+					forumPortlet.cancelAction() ;
+					UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
+					event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 				}else {
 					uiForm.warning("UITopicDetail.msg.notCheckPost") ;
 				}
 			} else {
 				uiForm.getIdSelected();
 				uiForm.warning("NameValidator.msg.ShortText", new String[]{ uiForm.getLabel(FIELD_SPLITTHREAD_INPUT) }) ;
-				return;
 			}
-			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
-			forumPortlet.cancelAction() ;
-			UITopicDetail topicDetail = forumPortlet.findFirstComponentOfType(UITopicDetail.class) ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(topicDetail) ;
 		}
 	}
 
