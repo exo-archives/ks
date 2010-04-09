@@ -1921,10 +1921,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 
 	private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
+		System.out.println("\n\n ----------->queryLastTopic " + forumPath);
 		Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 		if(forumNode.hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && !Utils.isEmpty(value[0].toString())){
+			if(value.length > 0 && !Utils.isEmpty(value[0].getString())){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
@@ -1932,7 +1933,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		}
 		if(forumNode.getParent().hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getParent().getProperty(EXO_VIEWER).getValues();
-			if(value.length > 0 && !Utils.isEmpty(value[0].toString())){
+			if(value.length > 0 && !Utils.isEmpty(value[0].getString())){
 				forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
 				forumNode.save();
 				return null;
@@ -2237,8 +2238,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 						postCount = postCount + (topicNode.getProperty(EXO_POST_COUNT).getLong()+1);
 					}
 				}
-				if (type != 2 && type != 4 && type < 7) {
-					queryLastTopic(sProvider, topicPath.substring(0, topicPath.lastIndexOf("/")));
+				if (type != 2 && type != 4 && type != 7 && 
+						forumNode.hasProperty(EXO_LAST_TOPIC_PATH) && (forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topicNode.getName()) ||
+						Utils.isEmpty(forumNode.getProperty(EXO_LAST_TOPIC_PATH).getString()))) {
+					queryLastTopic(sProvider, forumNode.getPath());
 				}
 			} catch (PathNotFoundException e) {
 			}
