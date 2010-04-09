@@ -1921,7 +1921,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 
 	private Node queryLastTopic(SessionProvider sProvider, String forumPath) throws Exception {
 		Node forumHomeNode = getForumHomeNode(sProvider);
-		System.out.println("\n\n ----------->queryLastTopic " + forumPath);
 		Node forumNode = (Node) forumHomeNode.getSession().getItem(forumPath);
 		if(forumNode.hasProperty(EXO_VIEWER)){
 			Value []value = forumNode.getProperty(EXO_VIEWER).getValues();
