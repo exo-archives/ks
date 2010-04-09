@@ -7108,6 +7108,12 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
 				topic.setProperty(EXO_IS_ACTIVE, false) ;
+				try {
+					Node forumN = topic.getParent();
+					if(forumN.hasProperty(EXO_LAST_TOPIC_PATH) && forumN.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topic.getName()))
+						queryLastTopic(sProvider, forumN.getPath());
+        } catch (Exception e) {
+        }
 			}
 		//update last run for prune setting
 			Node setting = forumNode.getNode(pSetting.getId()) ;
