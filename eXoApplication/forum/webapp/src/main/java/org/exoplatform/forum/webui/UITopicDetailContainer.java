@@ -30,20 +30,22 @@ import org.exoplatform.webui.core.UIContainer;
 		template =	"app:/templates/forum/webui/UITopicDetailContainer.gtmpl" 
 )
 public class UITopicDetailContainer extends UIContainer	{
-	private boolean isRender = false ;
+	private boolean isRender = true ;
 	public UITopicDetailContainer() throws Exception {
 		addChild(UITopicPoll.class, null, null).setRendered(isRender) ;
 		addChild(UITopicDetail.class, null, null) ;
 	}
 	
 	public void setRederPoll(boolean isRender) throws Exception {
-	 this.isRender = isRender ;
+		this.isRender = isRender ;
 	}
 	
 	@SuppressWarnings("unused")
   private boolean getRenderPoll(boolean isShow) throws Exception {
 		try {
-			if(isShow) return	this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
+			boolean isRdByDeff = this.getAncestorOfType(UIForumPortlet.class).isShowPoll();
+			if(isShow && isRender && isRdByDeff) return true;	
+			else return false;
     } catch (Exception e) {
     }
 		return isShow;

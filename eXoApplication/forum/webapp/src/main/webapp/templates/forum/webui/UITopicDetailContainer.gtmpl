@@ -9,11 +9,13 @@
 		List children = uicomponent.getChildren() ;
 		UITopicDetail uiTopicDetail = uicomponent.getChild(UITopicDetail.class) ;
 		Topic topic = uiTopicDetail.getTopic() ;
+		UITopicPoll uiTopicPoll = uicomponent.getChild(UITopicPoll.class) ;
 		if(topic != null) {
-			UITopicPoll uiTopicPoll = uicomponent.getChild(UITopicPoll.class) ;
 			boolean isPoll = topic.getIsPoll() ;
 			uiTopicPoll.setRendered(uicomponent.getRenderPoll(isPoll)) ;
 			if(isPoll) uiTopicPoll.setForum(uiTopicDetail.getForum()) ;
+		} else {
+			uiTopicPoll.setRendered(false) ;
 		}
 		for(component in children) {
 			if(component.isRendered()){

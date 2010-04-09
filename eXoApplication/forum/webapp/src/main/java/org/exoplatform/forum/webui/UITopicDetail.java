@@ -718,6 +718,12 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		}
 		return "";
 	}
+	
+	private void renderPoll() throws Exception {
+		UITopicDetailContainer container = this.getParent();
+		container.setRederPoll(false);
+		((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(container) ;      
+	}
 
   private void refreshPortlet() throws Exception {
     UIForumPortlet forumPortlet = getAncestorOfType(UIForumPortlet.class) ;

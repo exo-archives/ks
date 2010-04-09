@@ -1109,6 +1109,7 @@
 			String idLastPost = uicomponent.getIdPostView() ;
 			jsmanager.addJavascript("setTimeout('eXo.forum.UIForumPortlet.goLastPost(\""+idLastPost+"\")', 700);");
 		 } else {
+		 uicomponent.renderPoll();
 		 if(canEdit){
 		%>
 		<div class="ContentNotPost"><%=_ctx.appRes("UITopicDetail.label.TopicDeleted");%></div>
@@ -1250,7 +1251,9 @@
  		</table> 
 	</div>
 <% } %>
-	<% } else { %>
+	<% } else { 
+		uicomponent.renderPoll();
+	%>
 	<div class="EmptyContent">
 		<span><%=_ctx.appRes("UIForumPortlet.msg.topicEmpty");%></span>
 	</div>
