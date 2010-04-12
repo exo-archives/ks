@@ -393,6 +393,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			if(!ForumUtils.isEmpty(erroUser)) {
 				String[] args = new String[]{ uiForm.getLabel(FIELD_MODERATOR_MULTIVALUE), erroUser };
 				uiForm.warning("NameValidator.msg.erroUser-input", args) ;
+				uiForm.isDoubleClickSubmit = false;
 				return ;
 			}
 			erroUser = UserHelper.checkValueUser(topicable) ;
