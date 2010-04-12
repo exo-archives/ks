@@ -401,6 +401,7 @@ public class UIForumForm extends UIForm implements UIPopupComponent, UISelector 
 				Object[] args = { uiForm.getLabel(FIELD_MODERATOR_MULTIVALUE), erroUser };
 				uiApp.addMessage(new ApplicationMessage("NameValidator.msg.erroUser-input", args, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+				uiForm.isDoubleClickSubmit = false;
 				return ;
 			}
 			erroUser = ForumSessionUtils.checkValueUser(topicable) ;
