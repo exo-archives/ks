@@ -1335,12 +1335,18 @@ public class UIQuestions extends UIContainer {
 				Category cate = uiQuestions.faqService_.getCategoryById(categoryId) ;
 				if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
 				  uiQuestions.faqService_.removeCategory(categoryId) ;
-					uiQuestions.updateCurrentQuestionList();		
+					uiQuestions.updateCurrentQuestionList();
+					System.out.println("\n\n----------> cate.getPath(): " + cate.getPath());
+					if(categoryId.indexOf("/") > 0) categoryId = categoryId.substring(0, categoryId.lastIndexOf("/"));
+					else categoryId = Utils.CATEGORY_HOME;
+					UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;						
+					breadcumbs.setUpdataPath(categoryId);
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				}
 			} catch (Exception e) {
+				System.out.println("\n\n----------> excoption");
 				FAQUtils.findCateExist(uiQuestions.faqService_, uiQuestions.getAncestorOfType(UIAnswersContainer.class));
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

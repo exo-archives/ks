@@ -2026,7 +2026,7 @@ public class JCRDataStorage implements DataStorage {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
 		}catch (Exception e) {
-		  e.printStackTrace();
+		  throw e;
 		}finally {sProvider.close();}		
 		return catList ;
 	}

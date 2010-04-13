@@ -139,29 +139,6 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     	mapQuestion_.put(cat.getCategory().getId(), new ArrayList<Question>()) ;
     }
     
-    /*Cate cate ;    
-    for(Category category : faqService.getSubCategories(path, faqSetting_, false, userPrivates)) {
-    	cate = new Cate();
-      cate.setCategory(category) ;
-      cate.setDeft(0) ;
-      listCate.add(cate) ;      
-    }
-    Cate parentCate ;
-    Cate childCate ;
-    while (!listCate.isEmpty()) {
-      parentCate = new Cate() ;
-      parentCate = listCate.get(0);
-      listCate.remove(0);
-      this.listCategory_.add(parentCate) ;
-      mapQuestion_.put(parentCate.getCategory().getId(), new ArrayList<Question>()) ;
-      int i = 0;
-      for(Category category : faqService.getSubCategories(parentCate.getCategory().getPath(), faqSetting_, false, userPrivates)){
-        childCate = new Cate() ;
-        childCate.setCategory(category) ;
-        childCate.setDeft(parentCate.getDeft() + 1) ;
-        listCate.add(i ++, childCate) ;
-      }
-    }*/
   }
   
   private List<Question> getQuestions(String cateId) { return mapQuestion_.get(cateId) ; }
