@@ -862,13 +862,24 @@ UIForumPortlet.prototype.setTagContainerWidth = function(container){
 			if(nodes[i].className == "UIForumPageIterator"){
 			var right = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","RightPageIteratorBlock");
 			var left = eXo.core.DOMUtil.findFirstDescendantByClass(nodes[i],"div","LeftPageIteratorBlock");
-			width += eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(left) + eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(right);
+			width += getWidth(left,"div") + getWidth(right,"a");
 			continue;
 		}
 		width += eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(nodes[i]);
 	}
 	width = eXo.forum.UIForumPortlet.tagScrollMgr.getElementSpace(container.parentNode) - width - 15;
 	container.style.width = width + "px";
+	//Private method to get real width of the element by html tag name
+	function getWidth(obj,tag){
+		if(!obj) return 0;
+		var children = eXo.core.DOMUtil.findDescendantsByTagName(obj,tag);
+		var w = 0;
+		var i = children.length;
+		while(i--){
+			w += children[i].offsetWidth;
+		}
+		return w;
+	};
 };
 
 UIForumPortlet.prototype.executeLink = function(evt) {
@@ -923,6 +934,7 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	else uiContextMenu.classNames.push("ActionLink");
 	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
+	document.onclick = eXo.core.DOMUtil.cleanUpHiddenElements;
 };
 
 UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
