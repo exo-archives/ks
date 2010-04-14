@@ -134,7 +134,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
   			}
   			if(importSuccess){
   				service.updateDataImported();
-  				importForm.warning("UIImportForm.msg.import-successful");
+  				importForm.info("UIImportForm.msg.import-successful");
   			}
   			isUdateForm = true;
 			} catch(PathNotFoundException pnf){

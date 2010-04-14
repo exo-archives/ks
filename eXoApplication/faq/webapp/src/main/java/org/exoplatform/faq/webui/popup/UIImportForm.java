@@ -77,7 +77,7 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 					if(!service.importData(importForm.categoryId_, uploadInput.getUploadDataAsStream(), isZip)){
 						importForm.warning("UIImportForm.msg.import-fail");
 					} else {
-						importForm.warning("UIImportForm.msg.import-successful");
+						importForm.info("UIImportForm.msg.import-successful");
 					}
 				} catch (AccessDeniedException ace) {
 					importForm.warning("UIImportForm.msg.access-denied");
