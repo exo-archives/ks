@@ -571,6 +571,13 @@ public class FAQEventQuery {
     	isAnswerCommentLevelSearch = false ;
     	isQuestionLevelSearch = false ;
     	isAdd = true ;
+    } else if(text != null){
+    	if(isAdd){
+    		queryString.append(" and (exo:language='").append(language).append("')") ;  				
+    	}else {
+    		queryString.append("(exo:language='").append(language).append("')") ;  				
+    		isAdd = true ;
+    	} 
     }
     
     if(!searchCategoryScoping.toString().equals("()")) {
@@ -585,7 +592,6 @@ public class FAQEventQuery {
     
     queryString.append("]") ;  		
     
-
     return queryString;
   }
 

@@ -312,13 +312,12 @@ public class UIAdvancedSearchForm extends BaseUIFAQForm implements UIPopupCompon
 				advancedSearch.warning("UIAdvancedSearchForm.msg.failure") ;
 				return ;
 			}
-			
 			/**
 			 * Create query string from data inputed
 			 */
 			FAQEventQuery eventQuery = new FAQEventQuery() ;
 			eventQuery.setType(type) ;
-			eventQuery.setText(text) ;
+			eventQuery.setText(FAQUtils.isFieldEmpty(text)?"":text) ;
 			eventQuery.setName(categoryName) ;
 			eventQuery.setIsModeQuestion(modeQuestion) ;
 			eventQuery.setModerator(moderator) ;

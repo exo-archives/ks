@@ -126,7 +126,6 @@ public class TestFAQEventQuery extends TestCase {
 		eventQuery.setToDate(calendar) ;
 		predicate += " and (@exo:createdDate <= xs:dateTime('"+ISO8601.format(calendar)+"'))";
 		assertEquals(selector + predicate + "))]", eventQuery.getQuery());
-		
 		eventQuery.setLanguage("English");
 		eventQuery.setResponse("response") ;
 		predicate += ") or ( exo:responseLanguage='English' and jcr:contains(@exo:responses,'response'))";
@@ -136,6 +135,11 @@ public class TestFAQEventQuery extends TestCase {
 		predicate += " or ( exo:commentLanguage='English' and jcr:contains(@exo:comments,'comment'))";
 		assertEquals(selector + predicate + ")]", eventQuery.getQuery());
 		
+		String tempPredicate = predicate;
+		eventQuery.setText("") ;
+		tempPredicate += ") and (exo:language='English')";
+		assertEquals(selector + tempPredicate + "]", eventQuery.getQuery());
+		
 		eventQuery.setText("text") ;
 		predicate += ") or (  jcr:contains(., 'text') and (  exo:language='English' or exo:commentLanguage='English' or exo:responseLanguage='English')";
 		assertEquals(selector + predicate + " ) ]", eventQuery.getQuery());
@@ -144,7 +148,7 @@ public class TestFAQEventQuery extends TestCase {
 		predicate += " )  and (exo:categoryId='categoryId1' or exo:categoryId='categoryId2')";
 		assertEquals(selector + predicate + "]", eventQuery.getQuery());
 		eventQuery.setUserId("root") ;
-		eventQuery.setAdmin(true);  
+		eventQuery.setAdmin(true);
   }
 
 }
