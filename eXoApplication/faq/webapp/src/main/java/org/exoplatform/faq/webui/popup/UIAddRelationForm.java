@@ -115,8 +115,8 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
     
     for(Question question : listQuestion) {
     	mapQuestion_.get(question.getCategoryId()).add(question);    	
-    	if(quesIdsSelect.contains(question.getPath())) {
-        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false).setChecked(true) ;        
+    	if(quesIdsSelect.contains(question.getId())) {
+        checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), true).setChecked(true) ;        
       } else {
         checkQuestion = new UIFormCheckBoxInput<Boolean>(question.getId(), question.getId(), false) ;
       }
@@ -149,12 +149,14 @@ public class UIAddRelationForm extends BaseUIForm implements UIPopupComponent {
       UIResponseForm responseForm = addRelationForm.getAncestorOfType(UIAnswersPortlet.class).
       															findFirstComponentOfType(UIResponseForm.class) ;
       List<String> listQuestionPath = new ArrayList<String>() ;
+      List<String> listQuestionId = new ArrayList<String>() ;
       for(Question question : addRelationForm.listQuestion) {
         if(addRelationForm.getUIFormCheckBoxInput(question.getId()).isChecked()) {
           listQuestionPath.add(question.getPath()) ;
+          listQuestionId.add(question.getId()) ;
         }
       }
-      responseForm.setListIdQuesRela(listQuestionPath) ;
+      responseForm.setListIdQuesRela(listQuestionId) ;
       List<String> contents = getFAQService().getQuestionContents(listQuestionPath) ;
       responseForm.setListRelationQuestion(contents) ;
       event.getRequestContext().addUIComponentToUpdateByAjax(responseForm) ;

@@ -974,6 +974,7 @@ public class JCRDataStorage implements DataStorage {
 	@SuppressWarnings("static-access")
 	private void saveQuestion(Node questionNode, Question question, boolean isNew, SessionProvider sProvider, FAQSetting faqSetting) throws Exception {
 		//boolean isMoveQuestion = false;		
+		questionNode.setProperty("exo:id", questionNode.getName()) ;
 		questionNode.setProperty("exo:name", question.getDetail()) ;
 		questionNode.setProperty("exo:author", question.getAuthor()) ;
 		questionNode.setProperty("exo:email", question.getEmail()) ;
@@ -991,7 +992,8 @@ public class JCRDataStorage implements DataStorage {
 		questionNode.setProperty("exo:categoryId", catId) ;
 		questionNode.setProperty("exo:isActivated", question.isActivated()) ;
 		questionNode.setProperty("exo:isApproved", question.isApproved()) ;
-		questionNode.setProperty("exo:relatives", question.getRelations()) ;
+//		TODO: not need to save
+//		questionNode.setProperty("exo:relatives", question.getRelations()) ;
 		questionNode.setProperty("exo:usersVote", question.getUsersVote()) ;
 		questionNode.setProperty("exo:markVote", question.getMarkVote()) ;
 		List<FileAttachment> listFileAtt = question.getAttachMent() ;
@@ -1178,14 +1180,7 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionById(java.lang.String)
    */
 	public Question getQuestionById(String questionId) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		try{
-			//Node questionHome = getQuestionHome(sProvider, null) ;
-			return getQuestion(getFAQServiceHome(sProvider).getNode(questionId)) ;
-		}catch (Exception e) {
-			e.printStackTrace() ;
-		}finally {sProvider.close() ;}
-		return null ;
+		return getQuestion(getQuestionNodeById(questionId));
 	}
 
 	private List<String> getViewableCategoryIds(SessionProvider sessionProvider) throws Exception{
@@ -1463,7 +1458,6 @@ public class JCRDataStorage implements DataStorage {
 			}
 			queryString.append(")]");				
 			queryString.append(" order by @exo:createdDate ascending");
-			System.out.println("getQuestionsByListCatetory ==>" + queryString.toString());
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			QuestionPageList pageList = null;
@@ -3186,17 +3180,12 @@ public class JCRDataStorage implements DataStorage {
    * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
    */
 	public List<String> getQuestionContents(List<String> paths) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> contents = new ArrayList<String>() ;
-		try{
-			Node faqHome = getFAQServiceHome(sProvider) ;
-			for(String path : paths) {
-				try{
-					contents.add(faqHome.getNode(path).getProperty("exo:title").getString()) ;
-				}catch (Exception e) {}
-			}
-		}catch(Exception e) {			
-		}finally { sProvider.close() ;}
+		for(String path : paths) {
+			try{
+				contents.add(getQuestionNodeById(path).getProperty("exo:title").getString()) ;
+			}catch (Exception e) {}
+		}
 		return contents ;
 	}
 	
@@ -3207,9 +3196,21 @@ public class JCRDataStorage implements DataStorage {
 	public Node getQuestionNodeById(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			return getFAQServiceHome(sProvider).getNode(path) ;
-		}catch(Exception e) {			
-		}finally{sProvider.close() ;}
+			Node serviceHome = getFAQServiceHome(sProvider) ;
+			try {
+				return serviceHome.getNode(path) ;
+      } catch (PathNotFoundException e) {
+      	StringBuffer queryString = new StringBuffer("/jcr:root").append(serviceHome.getPath()). 
+      	append("//element(*,exo:faqQuestion)[fn:name()='").append(path).append("']");
+      	QueryManager qm = serviceHome.getSession().getWorkspace().getQueryManager();
+      	Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+      	QueryResult result = query.execute();		
+      	NodeIterator iter = result.getNodes() ;
+      	if(iter.getSize() > 0)
+      		return iter.nextNode();
+      }
+		}catch (Exception e) {
+		}finally {sProvider.close() ;}
 		return null ;
 	}
 	

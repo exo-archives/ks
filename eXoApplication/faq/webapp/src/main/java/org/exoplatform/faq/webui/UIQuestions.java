@@ -23,9 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
 import org.exoplatform.faq.rendering.RenderingException;
@@ -61,9 +58,6 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -457,9 +451,11 @@ public class UIQuestions extends UIContainer {
 		try {
 			List<String> ids = new ArrayList<String>() ;
 			ids.add(questionId) ;
-			return faqService_.getQuestionContents(ids).get(0);			
+			ids = faqService_.getQuestionContents(ids);
+			if(ids != null && ids.size() > 0)
+				return ids.get(0);			
 		} catch (Exception e) {
-			//e.printStackTrace();			
+			e.printStackTrace();			
 		}
 		return "" ;
 	}
@@ -733,6 +729,10 @@ public class UIQuestions extends UIContainer {
 					}					
 				}
 				Question question = uiQuestions.faqService_.getQuestionById(questionId) ;
+				if(questionId.indexOf("/") < 0) {
+					questionId = question.getPath();
+					uiQuestions.viewingQuestionId_ = questionId;
+				}
 				
 				if(uiQuestions.checkQuestionToView(question, uiApplication, event)) return;
 				String categoryId = uiQuestions.faqService_.getCategoryPathOf(questionId);

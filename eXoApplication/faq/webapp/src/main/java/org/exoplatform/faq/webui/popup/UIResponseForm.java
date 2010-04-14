@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.rendering.RenderHelper;
@@ -43,8 +42,6 @@ import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
-import org.exoplatform.portal.application.PortalRequestContext;
-import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -228,9 +225,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 	}
 
 	public void setListIdQuesRela(List<String> listId) {
-		if(!listQuestIdRela.isEmpty()) {
-			listQuestIdRela.clear() ;
-		}
+		listQuestIdRela = new ArrayList<String>();
 		listQuestIdRela.addAll(listId) ;
 	}
 
@@ -354,7 +349,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				
 				// set relateion of question:
 				Question question = responseForm.getQuestion();
-				question.setRelations(responseForm.getListIdQuesRela().toArray(new String[]{})) ;
+				question.setRelations(responseForm.listQuestIdRela.toArray(new String[responseForm.listQuestIdRela.size()])) ;
 				
 
 				//link
@@ -380,7 +375,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
           	responseForm.log.error("Can not discuss question into forum, exception: ", e);
           }
 					responseForm.getFAQService().saveAnswer(question.getPath(), answers) ;
-					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), question.getRelations()) ;
+					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), 
+							responseForm.listQuestIdRela.toArray(new String[responseForm.listQuestIdRela.size()])) ;
 				} catch (PathNotFoundException e) {
 					responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
 					responseForm.warning("UIQuestions.msg.question-id-deleted") ;
@@ -440,7 +436,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 				UIPopupContainer popupContainer = response.getAncestorOfType(UIPopupContainer.class);
 				UIAddRelationForm addRelationForm = response.openPopup(popupContainer, UIAddRelationForm.class, 500, 0) ;
 				addRelationForm.setQuestionId(response.questionId_) ;
-				addRelationForm.setRelationed(response.getListIdQuesRela()) ;
+				addRelationForm.setRelationed(response.listQuestIdRela) ;
 			}
 		}
 
