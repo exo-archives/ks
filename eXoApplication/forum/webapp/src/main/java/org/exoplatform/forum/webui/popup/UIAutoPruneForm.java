@@ -116,8 +116,8 @@ public class UIAutoPruneForm extends BaseForumForm implements UIPopupComponent{
 			} else {
 				pruneSetting.setActive(isActive);
 				uiForm.getForumService().savePruneSetting(pruneSetting);
-				refresh();
 			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm.getAncestorOfType(UIForumPortlet.class));
 		}
 	}
 	

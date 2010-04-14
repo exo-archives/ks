@@ -19,6 +19,7 @@ package org.exoplatform.forum.webui.popup;
 
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.webui.BaseForumForm;
+import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -77,6 +78,7 @@ public class UIRunPruneForm  extends BaseForumForm implements UIPopupComponent {
 			UIRunPruneForm uiform = event.getSource();
 			uiform.getForumService().runPrune(uiform.pruneSetting) ;
 			uiform.cancelChildPopupAction();
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiform.getAncestorOfType(UIForumPortlet.class));
 		}
 	}
 }

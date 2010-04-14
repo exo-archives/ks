@@ -251,9 +251,6 @@ public class UICategories extends UIContainer	{
 			if(topicId.indexOf("/") >= 0) topicId = topicId.substring(topicPath.lastIndexOf("/")+1);
 			topic = maptopicLast.get(topicId) ;
 			if(topic == null) {
-				if(topicPath.indexOf("ForumService") < 0){
-					topicPath = forumService.getForumHomePath() + "/" + topicPath;
-				}
 				try {
 					topic = forumService.getTopicSummary(topicPath) ;
 			  } catch (Exception e) {

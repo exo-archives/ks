@@ -1860,13 +1860,13 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		Topic topic = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {			
-			Node forumHomeNode = getForumHomeNode(sProvider);
+			Node cateHomeNode = getCategoryHome(sProvider);
 			if (topicPath == null || topicPath.length() <= 0)
 				return null;
-			if (topicPath.indexOf(forumHomeNode.getName()) < 0)
-				topicPath = forumHomeNode.getPath() + "/" + topicPath;
+			if (topicPath.indexOf(cateHomeNode.getName()) < 0)
+				topicPath = cateHomeNode.getPath() + "/" + topicPath;
 		
-			Node topicNode = (Node) forumHomeNode.getSession().getItem(topicPath);
+			Node topicNode = (Node) cateHomeNode.getSession().getItem(topicPath);
 			topic = getTopicNodeSummary(topicNode);
 			if (topic == null && isLastPost) {
 				if (topicPath != null && topicPath.length() > 0) {
@@ -7013,11 +7013,13 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	public PruneSetting getPruneSetting(String forumPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		PruneSetting pruneSetting;
+		PruneSetting pruneSetting = new PruneSetting();
 		try {
 			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
 			pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
-    } finally { sProvider.close() ;}
+    } catch (Exception e) {
+			e.printStackTrace();
+		} finally { sProvider.close() ;}
 		return pruneSetting;
 	}
 	
@@ -7110,10 +7112,12 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
 				topic.setProperty(EXO_IS_ACTIVE, false) ;
+				topic.save();
 				try {
 					Node forumN = topic.getParent();
-					if(forumN.hasProperty(EXO_LAST_TOPIC_PATH) && forumN.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topic.getName()))
+					if(forumN.hasProperty(EXO_LAST_TOPIC_PATH) && forumN.getProperty(EXO_LAST_TOPIC_PATH).getString().equals(topic.getName())){
 						queryLastTopic(sProvider, forumN.getPath());
+					}
         } catch (Exception e) {
         }
 			}
