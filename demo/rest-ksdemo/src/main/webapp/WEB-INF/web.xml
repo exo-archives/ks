@@ -69,7 +69,7 @@
 
 	<login-config>
 		<auth-method>BASIC</auth-method>
-		<realm-name>gatein-domain</realm-name>
+		<realm-name>gatein-domain-ksdemo</realm-name>
 	</login-config>
 
 	<security-role>

@@ -42,7 +42,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-              <excludes>**/GATEIN-README.txt,**/Release_notes.txt</excludes>
+              <excludes>**/GATEIN-README.txt,**/Release_notes.txt, *.*/conf/login-config.xml</excludes>
               <includes>**</includes>
             </configuration>
           </execution>
