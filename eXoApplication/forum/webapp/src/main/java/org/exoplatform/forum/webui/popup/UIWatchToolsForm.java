@@ -75,23 +75,25 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 	public void setIsTopic(boolean isTopic) {this.isTopic = isTopic;}
 	
 	public String[] getEmails() throws Exception {
-		emails = getListEmail().toArray(new String[]{});
+	  emails = getListEmail().toArray(new String[]{});
 		return emails;
 	}
-	public void setEmails(String[] emails) {
-		listEmail.clear();
-		listEmail.addAll(Arrays.asList(emails));
-		pageList = new ForumPageList(6, listEmail.size());
-		pageList.setPageSize(6);
-		pageIterator = this.getChild(UIForumPageIterator.class);
-		pageIterator.updatePageList(pageList);
-		try {
-			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
+	@SuppressWarnings("deprecation")
+	public void setEmails(String[] emails) {
+    listEmail.clear();
+    listEmail.addAll(Arrays.asList(emails));
+    pageList = new ForumPageList(6, listEmail.size());
+    pageList.setPageSize(6);
+    pageIterator = this.getChild(UIForumPageIterator.class);
+    pageIterator.updatePageList(pageList);
+    try {
+      if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }  
+	}
+
 	@SuppressWarnings("unchecked")
   public List<String> getListEmail() throws Exception {
 		int pageSelect = pageIterator.getPageSelected() ;
@@ -108,7 +110,22 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 		}
 		return list ;
 	}
-	
+
+	public void setUnWatchEmail(String[] emails, String unwatchEmail){
+	  if(emails.length == 1) setEmails(emails);
+	  else if(emails.length>1){
+	    List<String> temp = new ArrayList<String>();
+	    int i = 0;
+	    for(String em : emails){
+	      if(!em.equals(unwatchEmail)){
+	        temp.add(em);
+	      } 
+	    }
+	   String[] tempEmails =  (String[]) temp.toArray(new String[0]);
+	    setEmails(tempEmails);
+	  }
+	}
+
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
 	

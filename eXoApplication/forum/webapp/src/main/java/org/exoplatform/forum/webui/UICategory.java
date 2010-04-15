@@ -94,6 +94,11 @@ public class UICategory extends BaseForumForm	{
 	private List<Forum> forums = new ArrayList<Forum>() ;
 	private List<Watch> listWatches = new ArrayList<Watch>();
 	private Map<String, Topic> MaptopicLast =new HashMap<String, Topic>(); 
+	
+	static public boolean isUnWatch = false;
+	
+	public static String unwatchEmail = "";
+	
 	public UICategory() throws Exception {
 		addUIFormInput( new UIFormStringInput(ForumUtils.SEARCHFORM_ID, null)) ;
 		setActions(new String[]{"EditCategory","ExportCategory","ImportForum","DeleteCategory", "WatchOption","AddForum","EditForum","SetLocked",
@@ -165,6 +170,16 @@ public class UICategory extends BaseForumForm	{
 		}
 		return category ;
 	}
+
+	 private Category refreshCategory() throws Exception{
+      try {
+        this.category = getForumService().getCategory(this.categoryId);
+      }catch (Exception e) {
+        e.printStackTrace();
+      }
+	    return category ;
+	  }
+
 	
 	private boolean isShowForum(String id) {
 		List<String> list = new ArrayList<String>();
@@ -656,6 +671,7 @@ public class UICategory extends BaseForumForm	{
 				uiCategory.isEditCategory = true;
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
+				isUnWatch = false;
 				info("UIAddWatchingForm.msg.successfully") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 			} catch (Exception e) {
@@ -665,13 +681,15 @@ public class UICategory extends BaseForumForm	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiCategory) ;
 		}
 	}
-
+	
 	static public class UnWatchActionListener extends BaseEventListener<UICategory> {
 		public void onEvent(Event<UICategory> event, UICategory uiCategory, final String path) throws Exception {
 			try {
+			  unwatchEmail = uiCategory.getEmailWatching(path);
 				uiCategory.getForumService().removeWatch(1, path,uiCategory.userProfile.getUserId()+"/"+uiCategory.getEmailWatching(path)) ;
 				UIForumPortlet forumPortlet = uiCategory.getAncestorOfType(UIForumPortlet.class) ;
 				forumPortlet.updateWatchinh();
+				isUnWatch = true;
 				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -735,10 +753,15 @@ public class UICategory extends BaseForumForm	{
 	
 	static public class WatchOptionActionListener extends BaseEventListener<UICategory> {
 		public void onEvent(Event<UICategory> event, UICategory uiCategory, final String objectId) throws Exception {
-			Category category = uiCategory.category ;
-			UIWatchToolsForm watchToolsForm = uiCategory.openPopup(UIWatchToolsForm.class, 500, 365) ;
-			watchToolsForm.setPath(category.getPath());
-			watchToolsForm.setEmails(category.getEmailNotification()) ;
+		  Category category;
+			if(UICategory.isUnWatch){
+			   category = uiCategory.refreshCategory() ;
+			}else {
+			  category = uiCategory.category ;
+			}
+			 UIWatchToolsForm watchToolsForm = uiCategory.openPopup(UIWatchToolsForm.class, 500, 365) ;
+       watchToolsForm.setPath(category.getPath());
+       watchToolsForm.setEmails(category.getEmailNotification());
 		}
 	}
 	
