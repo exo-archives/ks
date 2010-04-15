@@ -261,22 +261,76 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
   protected void topicUpdated(String path, String linkItem, final boolean updated){
     try {
       Node topicNode = (Node)getCurrentSession().getItem(path);
+      Node forumNode = topicNode.getParent();
+      Node categoryNode = forumNode.getParent();
+      boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
+      boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+      boolean debug = LOG.isDebugEnabled();
+      String topicName = topicNode.getName() ;
+      if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
+        if (debug) {
+          LOG.debug("Post" + topicName +" was not added to feed because category or forum has restricted audience");
+        }
+        return;
+      }      
+      
+      PropertyReader topic = new PropertyReader(topicNode);
+      SyndContent description;
+      List<String> listContent = new ArrayList<String>();
+      String message = topic.string("exo:description");
+      listContent.add(message);
+      description = new SyndContentImpl();
+      description.setType(RSS.PLAIN_TEXT);
+      description.setValue(message);
+      final String title = topic.string("exo:name");
+      final Date created = topic.date("exo:createdDate");
+      final String owner = topic.string("exo:owner");
+      SyndEntry entry = RSS.createNewEntry(topicName, title, linkItem, listContent, description,created , owner);
+      entry.setLink(linkItem + topicNode.getName());
+      
+      // save topic, forum and category feeds
+      for(Node node : new Node[]{forumNode, categoryNode}) {
+        PropertyReader reader = new PropertyReader(node);
+        String desc = reader.string("exo:description", " ");
+        
+        RSS data = new RSS(node);
+        if (data.feedExists()) {
+          SyndFeed feed = null;
+          if (updated) {
+            feed = data.removeEntry(topicName);
+          }
+          feed = data.addEntry(entry);
+          feed.setDescription(reader.string("exo:description", " "));  
+          data.saveFeed(feed, FORUM_RSS_TYPE);
+        } else {          
+          SyndFeed feed = RSS.createNewFeed(node.getProperty("exo:name").getString(), node.getProperty("exo:createdDate").getDate().getTime());
+          feed.setLink(linkItem + node.getName());
+          entry = RSS.createNewEntry(topicName, title, linkItem, listContent, description,created , owner);
+          feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
+          feed.setDescription(desc);  
+          data.saveFeed(feed, FORUM_RSS_TYPE);       
+        }
+        byte[] b = new byte[1024] ;
+        node.getNode(FORUM_RSS_TYPE).getProperty("exo:content").getStream().read(b) ;
+      }
+      
+      //update posts in topic
       NodeIterator nodeIterator = topicNode.getNodes();
       Node postNode = null;
       while(nodeIterator.hasNext()){
         postNode = nodeIterator.nextNode();
         if(postNode.isNodeType("exo:post")){
-        	try {
-        		postUpdated(postNode, linkItem, updated);
+          try {
+            postUpdated(postNode, linkItem, updated);
           } catch (Exception e) {
-          	if(LOG.isDebugEnabled()) {
-          		LOG.debug("Failed to generate feed for post " + postNode.getPath(), e);
-          	}
+            if(LOG.isDebugEnabled()) {
+              LOG.debug("Failed to generate feed for post " + postNode.getPath(), e);
+            }
           }
         }
       }
     } catch (PathNotFoundException e) {
-    } catch (RepositoryException e) {
+    } catch (Exception e) {
     }
   }
   

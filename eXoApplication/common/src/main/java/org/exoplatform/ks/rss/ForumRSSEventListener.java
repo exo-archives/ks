@@ -53,7 +53,9 @@ public class ForumRSSEventListener implements EventListener{
 				if(ev.getType() == Event.NODE_ADDED){
 					process.itemAdded(ev.getPath());
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
+					if(path.indexOf("exo:message") > 0 || path.indexOf("exo:name") > 0 ) {
+					  process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
+					}				  
 				}else if(ev.getType() == Event.NODE_REMOVED) {	
 					if(path_.contains(path) || path_.length() == 0) {
 						path_ = path;
