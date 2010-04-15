@@ -653,3 +653,4 @@ eXo.ks.UIContextMenu = {
 		return false;
 	}
 };
+document.onclick = eXo.core.DOMUtil.cleanUpHiddenElements;

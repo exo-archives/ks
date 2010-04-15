@@ -939,7 +939,6 @@ UIForumPortlet.prototype.initContextMenu = function(id){
 	else uiContextMenu.classNames.push("ActionLink");
 	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
-	document.onclick = eXo.core.DOMUtil.cleanUpHiddenElements;
 };
 
 UIForumPortlet.prototype.showBBCodeHelp = function(id, isIn){
