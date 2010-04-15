@@ -5,8 +5,8 @@
 %>
 <div class="UIAutoPruneForm UIBBCodeManagerForm">
 	<% uiform.begin() %>
-	<div class="AutoPruneContainer">
-		<div id="AutoPruneContainer" style="padding:0px 16px 0px 1px;">
+	<div class="AutoPruneContainer"  id="AutoPruneContainer">
+		<div style="padding:0px 16px 0px 1px;">
 			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 				<thead>
 					<tr>
@@ -30,7 +30,7 @@
 							String categoryName = pruneSetting.getCategoryName();
 							String forumName = pruneSetting.getForumName();
 							String pruneId = uicomponent.getForumIdOfPrune(pruneSetting);
-							String lastRun = "";
+							String lastRun = "&nbsp;";
 							if(pruneSetting.getLastRunDate() != null){
 								lastRun = ForumUtils.getFormatDate("dd-MM-yyyy HH:mm", pruneSetting.getLastRunDate()) + " GMT+0" ;
 							}
@@ -61,7 +61,7 @@
 						<td style="width:120px; text-align:center"><b>$categoryName</b></td>
 						<td style="width:120px; text-align:center"> </td>
 						<td width="40px"> </td>
-						<td> </td>
+						<td>&nbsp;</td>
 						<td width="60px"> </td>
 					</tr>
 							<% if(classCssInbox.equals("whileRow")) 
@@ -94,7 +94,7 @@
 			</table>
 		</div>
 	</div>
-	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid');") ; %>
+	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('AutoPruneContainer', 'TableContent','UIGrid');") ; %>
 	<div class="UIAction"> 
 		<table class="ActionContainer">
 			<tr>

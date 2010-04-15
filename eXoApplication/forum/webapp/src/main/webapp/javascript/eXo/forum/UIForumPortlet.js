@@ -910,7 +910,8 @@ UIForumPortlet.prototype.addLink = function(cpId, clazzAction) {
 	}
 };
 
-UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
+UIForumPortlet.prototype.setAutoScrollTable = function(idroot, idParent, idChild){
+	var rootEl = document.getElementById(idroot);
 	var grid = document.getElementById(idChild);
 	var tableContent = document.getElementById(idParent);
 	var isIE = document.all?true:false;
@@ -924,6 +925,10 @@ UIForumPortlet.prototype.setAutoScrollTable = function(idParent, idChild){
 	} else {
 		tableContent.style.padding = "1px";
 		tableContent.style.width = "100%";
+		if(isIE){
+			rootEl.style.width = "96%";
+			rootEl.style.margin = "auto";
+		}
 	}
 };
 

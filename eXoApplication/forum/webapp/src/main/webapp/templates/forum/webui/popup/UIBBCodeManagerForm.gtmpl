@@ -3,8 +3,8 @@
 	import org.exoplatform.forum.ForumUtils;
 	List bbcodes = uiform.getListBBcode();
 %>
-<div class="UIBBCodeManagerForm">
-	<% uiform.begin() %>	
+<div class="UIBBCodeManagerForm" style=".width: 95%; margin:auto;">
+	<% uiform.begin() %>
 	<div style="padding:0px 16px 0px 1px;">
 		<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 			<thead>

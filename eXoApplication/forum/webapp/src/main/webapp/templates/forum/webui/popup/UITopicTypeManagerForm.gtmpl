@@ -4,8 +4,8 @@
 %>
 <div class="UITopicTypeManagerForm UIBBCodeManagerForm">
 	<% uiform.begin() %>
-	<div class="AutoPruneContainer">
-		<div id="AutoPruneContainer" style="padding:0px 16px 0px 1px;">
+	<div class="AutoPruneContainer" id="TopicTypeManagerForm">
+		<div style="padding:0px 16px 0px 1px;">
 			<table cellspacing="0" cellpadding="0" border="0" class="UIGrid">
 				<thead>
 					<tr>
@@ -47,7 +47,7 @@
 				</tbody>
 			</table>
 		</div>
-	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TableContent','UIGrid');") ; %>
+	<% jsManager.addJavascript("eXo.forum.UIForumPortlet.setAutoScrollTable('TopicTypeManagerForm', 'TableContent','UIGrid');") ; %>
 		<div class="UIAction"> 
 			<table class="ActionContainer">
 				<tr>
