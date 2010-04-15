@@ -164,7 +164,8 @@ public class UIQuestions extends UIContainer {
 	}
 	
 	public String getRSSLink(){
-		return RSS.getRSSLink("faq", getPortalName(), categoryId_);
+	  String catepath = categoryId_.replace("/", "_");
+		return RSS.getRSSLink("faq", getPortalName(), catepath);
 	}
 	
 	public String getPortalName() {

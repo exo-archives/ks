@@ -5,6 +5,7 @@ package org.exoplatform.faq.service.ws;
 import java.io.InputStream;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,7 +34,7 @@ public class FAQWebservice implements ResourceContainer {
   final public static String APP_TYPE = "faq".intern();
   public FAQWebservice() {}
 
-
+  //TODO improve late about {resourceid:*}/
   @GET
   @Path("rss/{resourceid}")
   @Produces(MediaType.TEXT_XML)
@@ -45,6 +46,7 @@ public class FAQWebservice implements ResourceContainer {
       ExoContainer container = ExoContainerContext.getCurrentContainer();
       FeedResolver feedResolver = (FeedResolver) container.getComponentInstanceOfType(FeedResolver.class);
       FeedContentProvider provider = feedResolver.resolve(APP_TYPE);
+      resourceid = resourceid.replace("_", "/");
       InputStream is = provider.getFeedContent(resourceid);
       return Response.ok(is, MediaType.TEXT_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
