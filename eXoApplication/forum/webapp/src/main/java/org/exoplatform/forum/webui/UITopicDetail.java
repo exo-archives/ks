@@ -1443,7 +1443,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
   private boolean checkForumHasAddTopic(UserProfile userProfile) throws Exception {
-  	System.out.println("\n\n=========>  " + userProfile.getUserId());
     this.topic = (Topic) getForumService().getObjectNameById(this.topicId, Utils.TOPIC);
     if (topic.getIsClosed() || topic.getIsLock())
       return false;
@@ -1457,7 +1456,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
         return false;
       String[] canCreadPost = topic.getCanPost();
       if (!ForumUtils.isArrayEmpty(canCreadPost)) {
-      	System.out.println("\n\n=========>  " + canCreadPost.length);
         return ForumServiceUtils.hasPermission(canCreadPost, userProfile.getUserId());
       }
     }

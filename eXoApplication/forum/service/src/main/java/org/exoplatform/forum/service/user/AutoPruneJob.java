@@ -41,7 +41,8 @@ public class AutoPruneJob implements Job{
 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
 	  	}
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	    log_.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
+		 // e.printStackTrace();			
 	  }
   }
 }

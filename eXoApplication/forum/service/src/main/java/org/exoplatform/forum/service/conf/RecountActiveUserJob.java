@@ -19,6 +19,8 @@ package org.exoplatform.forum.service.conf;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.jcr.RepositoryException;
+
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.forum.service.ForumService;
@@ -62,8 +64,14 @@ public class RecountActiveUserJob implements Job{
 	    }	    
 		}catch(NumberFormatException nfe) {
   		nfe.printStackTrace() ;
-  	}catch(Exception e) {
-  		e.printStackTrace() ;
-		}	  
+  	}catch(RepositoryException e) {
+  	  if (log_.isDebugEnabled()) {
+        log_.debug("\n\n Job run so quick " + e.getMessage());
+      }
+		} catch (Exception e) {
+		  if (log_.isDebugEnabled()) {
+        log_.debug("\n\n The have exception " + e.getMessage());
+      }
+    }
   }
 }
