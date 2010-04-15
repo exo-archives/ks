@@ -19,6 +19,7 @@ package org.exoplatform.ks.common.jcr;
 import javax.jcr.Session;
 
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -33,7 +34,7 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 public class JCRSessionManager implements SessionManager {
 
   /** . */
-  private static final ThreadLocal<Session> currentSession = new ThreadLocal<Session>();
+  private ThreadLocal<Session> currentSession = new ThreadLocal<Session>();
   
   
   String workspaceName = "portal-system";
@@ -70,28 +71,18 @@ public class JCRSessionManager implements SessionManager {
    */
   public Session getCurrentSession()
   {
-     return currentSession.get();
+     return openOrReuseSession();
   }
   
-  public static Session currentSession() {
-    return currentSession.get();
+  public Session currentSession() {
+    return getCurrentSession();
   }
   
   /* (non-Javadoc)
    * @see org.exoplatform.ks.common.jcr.SessionManager#getSession(org.exoplatform.services.jcr.ext.common.SessionProvider)
    */
   public Session getSession(SessionProvider sessionProvider) {
-    Session session = null;
-    try {
-     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
-     if(repositoryService == null) 
-       repositoryService = (RepositoryService) ExoContainerContext.getContainerByName("portal").getComponentInstanceOfType(RepositoryService.class);
-     ManageableRepository repository = repositoryService.getRepository(repositoryName);
-     session = sessionProvider.getSession(workspaceName, repository);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    return session;
+    return openOrReuseSession();
   }
 
   /**
@@ -106,12 +97,9 @@ public class JCRSessionManager implements SessionManager {
      if (session == null)
      {
        session = createSession();
-        currentSession.set(session);
+        //currentSession.set(session);
      }
-     else
-     {
-        throw new IllegalStateException("A session is already opened.");
-     }
+     
      return session;
   }
   
@@ -121,7 +109,7 @@ public class JCRSessionManager implements SessionManager {
      if (session == null)
      {
        session = createSession();
-        currentSession.set(session);
+        //currentSession.set(session);
      }
      return session;
   }
@@ -131,13 +119,18 @@ public class JCRSessionManager implements SessionManager {
    * @see org.exoplatform.ks.common.jcr.SessionManager#createSession()
    */
   public Session createSession() {
-    Session session = null;
+    Session session = currentSession.get();
+    if(session == null)
     try {
-
-     RepositoryService repositoryService = (RepositoryService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+     //TODO need to be change here we use 2 portal but on same repository and workspace 
+      
+     RepositoryService repositoryService = (RepositoryService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(RepositoryService.class);
+    if(repositoryService == null) repositoryService = (RepositoryService) ExoContainerContext.getContainerByName(PortalContainer.getCurrentPortalContainerName()).getComponentInstanceOfType(RepositoryService.class);
      ManageableRepository repository = repositoryService.getRepository(repositoryName);
-     session = repository.getSystemSession(workspaceName);
+     session = SessionProvider.createSystemProvider().getSession(workspaceName, repository);
+     currentSession.set(session);
     } catch (Exception e) {
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
     return session;
@@ -190,7 +183,7 @@ public class JCRSessionManager implements SessionManager {
    */
   public <T>T executeAndSave(JCRTask<T> jcrTask) {
     try {
-      openOrReuseSession();
+      //openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -204,7 +197,7 @@ public class JCRSessionManager implements SessionManager {
    */
   public <T>T execute(JCRTask<T> jcrTask) {
     try {
-      openOrReuseSession();
+      //openOrReuseSession();
       return jcrTask.execute(getCurrentSession());
     } catch (Exception e) {
       throw new RuntimeException(e);

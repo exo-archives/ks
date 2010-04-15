@@ -23,12 +23,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Session;
-import javax.jcr.Value;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.exoplatform.ks.common.jcr.JCRSessionManager;
 import org.exoplatform.ks.common.jcr.SessionManager;
 
 /**
@@ -186,7 +184,7 @@ public class ForumPageList extends JCRPageList {
 	
 	private NodeIterator setQuery(boolean isQuery, String value) throws Exception {
 		NodeIterator iter ;
-		Session session = JCRSessionManager.currentSession();
+		Session session = sessionManager.getCurrentSession();
 		if(isQuery) {
 			QueryManager qm = session.getWorkspace().getQueryManager() ;
 			Query query = qm.createQuery(value, Query.XPATH);
