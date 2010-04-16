@@ -18,7 +18,7 @@
 ====
 
 =================================================
-    Release Notes - exo-ks - Version 2.0.0 Beta02
+    Release Notes - exo-ks - Version 2.0.0 RC01
 =================================================
 
 ===============
@@ -28,10 +28,10 @@
 ** eXo Knowledge  Suite provides a rich, Web 2.0 browser-based interface with comprehensive
 forum, frequency answer and question 
 
-*eXo FAQ
-
-*eXo FORUM 
-
+    * Forum : A full featured message boards application that holds on-line discussions and posts user generated content.
+    * Answers : A questions/answers application to help finding solutions
+    * FAQ : An Answers-based application to publish questions/answers in public FAQs
+    
 =============
 2 What's new?
 =============
@@ -42,7 +42,7 @@ forum, frequency answer and question
           o Fix some major bug
           
           
-    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-Beta02+Release+Notes
+    * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes
           
 =========
 3 INSTALL
@@ -69,7 +69,7 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
    
    * NOTE for cygwin's user: the JAVA_HOME must be in MS Windows format like: "C:\Program Files\JDK 1.6"
     Example use: export JAVA_HOME=`cygpath -w "$JAVA_HOME"`; to convert unix like format to MS Windows format.
-   
+    Make sure you set JAVA_OPTS="-Xshare:auto -Xms256m -Xmx1024m -XX:MaxPermSize=256M "
    
    
    * Start tomcat server
@@ -85,20 +85,59 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
          "./gatein.sh run" for production
          "./gatein-dev.sh run" for development
 
+==============
+4 Known issues 
+==============
+ * http://jira.exoplatform.org/browse/KS-2311
+   (this may fix by this http://jira.exoplatform.org/browse/EXP-24 or follow my introduction on KS-2311)
+ * http://jira.exoplatform.org/browse/KS-2259 
+ (this depends on https://jira.jboss.org/jira/browse/GTNPORTAL-1020, update to next version of GateIn)
+ 
 ===========================  
-4 Other resources and links
+5 Other resources and links
 ===========================
 
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-Beta02]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-RC01]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
 * [Company site>http://www.exoplatform.com]
 
 ====================
-5 Detailed Changelog
+6 Detailed Changelog
 ==================== 
+- Version 2.0.0-RC1
+  http://jira.exoplatform.org/secure/ReleaseNote.jspa?version=11378&styleName=Text&projectId=10150&Create=Create
+** Bug
+    * [KS-2203] - Show code error in Rss feed content of forum 
+    * [KS-2212] - Don't show questions when get RSS of Answer porlet
+    * [KS-2217] - Some bugs with Setting and active prune
+    * [KS-2240] - Alert message is shown below Add tag textbox. see file attach
+    * [KS-2242] - Show pending index is incorrect in special case. see file attach
+    * [KS-2266] - Remove text which unavailable in alert message. see file attach
+    * [KS-2269] - Show message "This file has been lost" although this file is existing in attachment
+    * [KS-2274] - Split topic pop up is closed after alert message appears
+    * [KS-2276] - Category is still displayed although deleted  in special case.
+    * [KS-2278] - IE 7: Remove scroll bar at right & bottom of Topic type form
+    * [KS-2280] - IE7: Don't keep ticking on check box after next/previous page.
+    * [KS-2298] - IE7: List  tag is empty when there are 2 pages post in topic
+    * [KS-2299] - Added poll in topic is still displayed although without view topic right.
+    * [KS-2315] - IE7: Upload icon isn't displayed. See file attach
+    * [KS-2318] - IE7: Error JS when add post reply in special case
+    * [KS-2319] - IE7: show message error when setting forum in a special case
+    * [KS-2320] - Bug unknown error when view topic in special case 
+    * [KS-2334] - Edit mode: Forum is still unchecked although it's showing in special case
+    * [KS-2337] - watch category: Email is still listed in watches form although unwatched 
+    * [KS-2339] - Attached file in question is lost in special case
+    * [KS-2340] - Relate question disappears after move it to a destination category
+    * [KS-2345] - Have problem with add post reply in default topic
+    * [KS-2347] - Cannot add a new forum
+    * [KS-2352] - Error when view topic and throw exception
+
+** Improvement
+    * [KS-2309] - In category drop down list: should focus to category which opening.
+    * [KS-2338] - Need to change from warning message to info message
 
 - Version 2.0.0-Beta02
 * Bug
