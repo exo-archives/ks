@@ -26,6 +26,7 @@
 							  </tr>
 							
 						<%} else if(field.getName().equals( uicomponent.ALL_LANGUAGES)){
+							if(!uicomponent.isRenderSelectLang) continue;
 								String link = uicomponent.event("DeleteLanguage", "delete question");
 						%>
 								<tr>

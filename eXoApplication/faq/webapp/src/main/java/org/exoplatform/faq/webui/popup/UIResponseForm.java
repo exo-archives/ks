@@ -82,6 +82,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 	private String questionDetail = new String();
 	private String questionContent = new String();
 
+	
 	// form input :
 	private UIFormSelectBox questionLanguages_ ;
 	private UIFormWYSIWYGInput inputResponseQuestion_ ; 
@@ -131,6 +132,7 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
   	listLanguageToReponse.clear() ;
   	listLanguageToReponse.add(new SelectItemOption<String>(answer.getLanguage() + " (default) ", answer.getLanguage()));
   	questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
+  	questionLanguages_.setValue(answer.getLanguage());
   	questionLanguages_.setSelectedValues(new String[]{answer.getLanguage()}) ;
   	getUIFormCheckBoxInput(SHOW_ANSWER).setChecked(answer.getActivateAnswers()) ;
   	getUIFormCheckBoxInput(IS_APPROVED).setChecked(answer.getApprovedAnswers()) ;
@@ -179,11 +181,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 		
 		checkShowAnswer_.setChecked(question_.isActivated()) ;
 		isApproved_.setChecked(isAnswerApproved) ;
-		
 		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
+		questionLanguages_.setValue(currentLanguage);
 		questionLanguages_.setSelectedValues(new String[]{currentLanguage}) ;
 		questionLanguages_.setOnChange("ChangeLanguage") ;
-
+		questionLanguages_.setRendered((listLanguageToReponse.size() <= 1)?false:true);
 		addChild(inputResponseQuestion_) ;
 		addChild(questionLanguages_) ;
 		addChild(isApproved_) ;

@@ -119,6 +119,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
   private boolean isChildOfManager = false ;
   private boolean isModerate = false;
   private boolean isAddCheckBox = false;
+  private boolean isRenderSelectLang = false;
   private FAQSetting faqSetting_ ;
   public void activate() throws Exception { }
   public void deActivate() throws Exception { }
@@ -147,7 +148,9 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	private void setListSystemLanguages() throws Exception{
 		listSystemLanguages.clear();
 		List<String> languages = FAQUtils.getAllLanguages(this) ;
-    for(String lang : languages) {      
+		if(languages.size() <= 1) isRenderSelectLang = false;
+		else isRenderSelectLang = true;
+    for(String lang : languages) {
       if(lang.equals(defaultLanguage_))
       	listSystemLanguages.add(new SelectItemOption<String>(lang + " (default) ", lang)) ;
       else
@@ -166,7 +169,10 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
     inputEmailAddress = new UIFormStringInput(EMAIL_ADDRESS, EMAIL_ADDRESS, email_) ;
     inputQuestionContent = new UIFormStringInput(QUESTION_CONTENT, QUESTION_CONTENT, null);
     selectLanguage = new UIFormSelectBox(ALL_LANGUAGES, ALL_LANGUAGES, listSystemLanguages);
-    if(defaultLanguage_ != null || defaultLanguage_.trim().length() > 0) selectLanguage.setSelectedValues(new String[]{defaultLanguage_});
+    if(!FAQUtils.isFieldEmpty(defaultLanguage_)) {
+    	selectLanguage.setValue(defaultLanguage_);
+    	selectLanguage.setSelectedValues(new String[]{defaultLanguage_});
+    }
     selectLanguage.setOnChange("SelectLanguage");
     inputIsApproved = (new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)) ;
     inputIsActivated = (new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)) ;
@@ -421,6 +427,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	        return ;
 	      }
 	      String language = questionForm.selectLanguage.getValue() ;
+	      language = FAQUtils.isFieldEmpty(language)?questionForm.defaultLanguage_:language;
 	      //Duy Tu: Check require question content not empty.
 	      if(FAQUtils.isFieldEmpty(questionContent)) {
 	      	if(language.equals(questionForm.defaultLanguage_)){
