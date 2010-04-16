@@ -19,7 +19,7 @@
 ====
 
 =================================================
-    Release Notes - exo-ks - Version 2.0.0 RC01
+    Release Notes - exo-ks - Version 2.0.0 CR01
 =================================================
 
 ===============
@@ -101,7 +101,7 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ====================
 6 Detailed Changelog 
 ====================
-- Version 2.0.0-RC01
+- Version 2.0.0-CR01
   http://jira.exoplatform.org/secure/ReleaseNote.jspa?version=11378&styleName=Text&projectId=10150&Create=Create
 ** Bug
      
