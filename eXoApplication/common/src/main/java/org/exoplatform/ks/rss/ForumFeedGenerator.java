@@ -304,14 +304,11 @@ public final class ForumFeedGenerator extends RSSProcess implements FeedContentP
           data.saveFeed(feed, FORUM_RSS_TYPE);
         } else {          
           SyndFeed feed = RSS.createNewFeed(node.getProperty("exo:name").getString(), node.getProperty("exo:createdDate").getDate().getTime());
-          feed.setLink(linkItem + node.getName());
-          entry = RSS.createNewEntry(topicName, title, linkItem, listContent, description,created , owner);
+          feed.setLink(linkItem + node.getName());          
           feed.setEntries(Arrays.asList(new SyndEntry[]{entry}));
           feed.setDescription(desc);  
           data.saveFeed(feed, FORUM_RSS_TYPE);       
-        }
-        byte[] b = new byte[1024] ;
-        node.getNode(FORUM_RSS_TYPE).getProperty("exo:content").getStream().read(b) ;
+        }        
       }
       
       //update posts in topic
