@@ -182,6 +182,7 @@ public class UICategory extends BaseForumForm	{
 
 	
 	private boolean isShowForum(String id) {
+	  if(this.getAncestorOfType(UIForumPortlet.class).getInvisibleCategories().isEmpty()) return true;
 		List<String> list = new ArrayList<String>();
 		list.addAll(this.getAncestorOfType(UIForumPortlet.class).getInvisibleForums());
 		return (list.contains(id))?true:false;
