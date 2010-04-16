@@ -13,6 +13,10 @@
 	padding: 15px 10px;
 }
 
+.UIForumPortlet .UINotificationForm .WorkingArea .UIHorizontalTabs{
+	width: 100%;
+}
+
 .UINotificationForm .InputContent{
   float: left;
 }
