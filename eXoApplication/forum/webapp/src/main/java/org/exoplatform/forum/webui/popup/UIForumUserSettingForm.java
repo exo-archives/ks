@@ -142,7 +142,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		try {
 			this.userProfile = getForumService().getUserSettingProfile(UserHelper.getCurrentUser()) ;
 		} catch (Exception e) {			
-			e.printStackTrace() ;
+			log.error("Get userProfile setting fall for user: " + UserHelper.getCurrentUser(),e);
 		}
 		
 		List<SelectItemOption<String>> list ;
@@ -315,7 +315,7 @@ public class UIForumUserSettingForm extends BaseForumForm implements UIPopupComp
 		try {
 			if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Get infoPage is fall", e);
 		}
 	}
 	

@@ -143,7 +143,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 				bbcodes.add(uiForm.bbcode);
 				uiForm.bbCodeService.save(bbcodes);
       } catch (Exception e) {
-	      e.printStackTrace();
+      	uiForm.log.error("Can not save BBCode has name: " + uiForm.bbcode.getTagName(), e);
       }
       uiForm.cancelChildPopupAction();
 			try {
@@ -152,7 +152,7 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 				codeManagerForm.loadBBCodes() ;codeManagerForm.initCheckBoxActiveBBCode();
 				event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm) ;
       } catch (Exception e) {
-      	e.printStackTrace();
+      	uiForm.log.error("Can not update from: UIBBCodeManagerForm");
       }
 		}
 	}

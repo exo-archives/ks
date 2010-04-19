@@ -414,7 +414,9 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
 			}
 			textArea.setValue(values);
-    } catch (Exception e) {e.printStackTrace();}
+    } catch (Exception e) {
+    	log.debug("Set Value into field " + field + " is fall.", e);
+    }
 	}
 	
   static  public class AddActionListener extends EventListener<UIUserSelector> {

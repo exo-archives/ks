@@ -808,7 +808,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			try {
 				uiForm.getForumService().saveUserProfile(userProfile, true, true) ;
 			} catch (Exception e) {
-				e.printStackTrace() ;
+				uiForm.log.error("Save UserProfile for user: " + userProfile.getUserId() + " is fall", e);
 			} 
 			if(userProfile.getUserId().equals(UserHelper.getCurrentUser())) {
 				forumPortlet.updateUserProfileInfo() ;

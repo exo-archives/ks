@@ -113,7 +113,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 			list_ = forumService.getJobWattingForModerator(getPath()) ;
 		} catch (Exception e) {
 			list_ = new ArrayList<ForumSearch>();
-			e.printStackTrace();
+			log.error("Get Job Watting for Moderator is fall ", e);
 		}
 		pageList = new ForumPageList(10, list_.size());
 		pageList.setPageSize(10);
