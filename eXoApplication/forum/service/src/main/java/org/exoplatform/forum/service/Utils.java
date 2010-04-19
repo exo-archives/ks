@@ -264,7 +264,7 @@ public class Utils {
     String s;
     for (int i = 0; i < Val.length; ++i) {
     	 s = Val[i].getString();
-    	 if(s != null && s.trim().length() > 0) list.add(s);
+    	 if(!isEmpty(s)) list.add(s);
     }
     return list.toArray(new String[list.size()]);
   }
@@ -284,7 +284,7 @@ public class Utils {
     String s;
     for (int i = 0; i < values.length; ++i) {
 			s = values[i].getString();
-			if (s != null && s.trim().length() > 0) list.add(s);
+			if (!isEmpty(s)) list.add(s);
     }
     return list;
   }

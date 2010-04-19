@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.jcr.Value;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 
 /**
@@ -108,23 +107,52 @@ public class Utils {
   }
 	
 	/**
-	 * This method return value[] to list String
-	 * @param values
-	 * @return list string
+	 * Transforms a jcr Value array into a string array . 
+	 * Calls {@link Value#getString()} on each item.
+	 * @see javax.jcr.Value
+	 * @param values array of values to transform
+	 * @return string array for the Value array
 	 * @throws Exception
 	 */
-	static public List<String> ValuesToList(Value[] values) throws Exception {
-		List<String> list = new ArrayList<String>() ;
-		if(values.length < 1) return list ;
-		if(values.length == 1) {
-			list.add(values[0].getString()) ;
-			return list ;
+	
+	public static String[] valuesToArray(Value[] Val) throws Exception {
+    if (Val.length < 1) return new String[] {};
+    List<String> list = new ArrayList<String>();
+    String s;
+    for (int i = 0; i < Val.length; ++i) {
+    	 s = Val[i].getString();
+    	 if(s != null && s.trim().length() > 0) list.add(s);
+    }
+    return list.toArray(new String[list.size()]);
+  }
+
+	/**
+	 * Transforms a jcr Value array into a string list . 
+	 * Calls {@link Value#getString()} on each item.
+	 * @see javax.jcr.Value
+	 * @param values array of values to transform
+	 * @return string list for the Value array
+	 * @throws Exception
+	 */
+	
+	public static List<String> valuesToList(Value[] values) throws Exception {
+    List<String> list = new ArrayList<String>();
+    if (values.length < 1) return list;
+    String s;
+    for (int i = 0; i < values.length; ++i) {
+			s = values[i].getString();
+			if (s != null && s.trim().length() > 0) list.add(s);
+    }
+    return list;
+  }
+	
+	static public boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
+		for(String str : listPlugin){
+			if(listOfUser.contains(str)) return true;
 		}
-		for(int i = 0; i < values.length; ++i) {
-			list.add(values[i].getString() );
-		}
-		return list;
+		return false;
 	}
+	
 	
 	static public class NameComparator implements Comparator<Object> {
     public int compare(Object o1, Object o2) throws ClassCastException {

@@ -170,13 +170,6 @@ public class JCRDataStorage implements DataStorage {
 		return listOfUser;
 	}
 	
-	private boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
-		for(String str : listPlugin){
-			if(listOfUser.contains(str)) return true;
-		}
-		return false;
-	}
-	
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#isAdminRole(java.lang.String)
    */
@@ -188,9 +181,9 @@ public class JCRDataStorage implements DataStorage {
 				List<String> list = new ArrayList<String>();
 				list.addAll(rulesPlugins_.get(i).getRules(this.ADMIN_));				
 				if(cateHomeNode.hasProperty("exo:moderators")) 
-					list.addAll(ValuesToList(cateHomeNode.getProperty("exo:moderators").getValues())) ;
+					list.addAll(Utils.valuesToList(cateHomeNode.getProperty("exo:moderators").getValues())) ;
 				if(list.contains(userName)) return true;
-				return this.hasPermission(list, getAllGroupAndMembershipOfUser(userName));
+				if(Utils.hasPermission(list, getAllGroupAndMembershipOfUser(userName))) return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -663,7 +656,7 @@ public class JCRDataStorage implements DataStorage {
 		if(answerNode.hasProperty("exo:responseBy")) answer.setResponseBy((answerNode.getProperty("exo:responseBy").getValue().getString())) ;		
 		if(answerNode.hasProperty("exo:fullName")) answer.setFullName((answerNode.getProperty("exo:fullName").getValue().getString())) ;		
 		if(answerNode.hasProperty("exo:dateResponse")) answer.setDateResponse((answerNode.getProperty("exo:dateResponse").getValue().getDate().getTime())) ;
-		if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(ValuesToArray(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
+		if(answerNode.hasProperty("exo:usersVoteAnswer")) answer.setUsersVoteAnswer(Utils.valuesToArray(answerNode.getProperty("exo:usersVoteAnswer").getValues())) ;
 		if(answerNode.hasProperty("exo:MarkVotes")) answer.setMarkVotes(answerNode.getProperty("exo:MarkVotes").getValue().getLong()) ;
 		if(answerNode.hasProperty("exo:approveResponses")) answer.setApprovedAnswers(answerNode.getProperty("exo:approveResponses").getValue().getBoolean()) ;
 		if(answerNode.hasProperty("exo:activateResponses")) answer.setActivateAnswers(answerNode.getProperty("exo:activateResponses").getValue().getBoolean()) ;
@@ -1133,12 +1126,12 @@ public class JCRDataStorage implements DataStorage {
 		question.setCategoryId(catePath.substring(catePath.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;*/
 		if(questionNode.hasProperty("exo:isActivated")) question.setActivated(questionNode.getProperty("exo:isActivated").getBoolean()) ;
 		if(questionNode.hasProperty("exo:isApproved")) question.setApproved(questionNode.getProperty("exo:isApproved").getBoolean()) ;
-		if(questionNode.hasProperty("exo:relatives")) question.setRelations(ValuesToArray(questionNode.getProperty("exo:relatives").getValues())) ;		
-		if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(ValuesToArray(questionNode.getProperty("exo:nameAttachs").getValues())) ;		
-		if(questionNode.hasProperty("exo:usersVote")) question.setUsersVote(ValuesToArray(questionNode.getProperty("exo:usersVote").getValues())) ;		
+		if(questionNode.hasProperty("exo:relatives")) question.setRelations(Utils.valuesToArray(questionNode.getProperty("exo:relatives").getValues())) ;		
+		if(questionNode.hasProperty("exo:nameAttachs")) question.setNameAttachs(Utils.valuesToArray(questionNode.getProperty("exo:nameAttachs").getValues())) ;		
+		if(questionNode.hasProperty("exo:usersVote")) question.setUsersVote(Utils.valuesToArray(questionNode.getProperty("exo:usersVote").getValues())) ;		
 		if(questionNode.hasProperty("exo:markVote")) question.setMarkVote(questionNode.getProperty("exo:markVote").getValue().getDouble()) ;
-		if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToArray(questionNode.getProperty("exo:emailWatching").getValues())) ;
-		if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToArray(questionNode.getProperty("exo:userWatching").getValues())) ;
+		if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(Utils.valuesToArray(questionNode.getProperty("exo:emailWatching").getValues())) ;
+		if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(Utils.valuesToArray(questionNode.getProperty("exo:userWatching").getValues())) ;
 		if(questionNode.hasProperty("exo:topicIdDiscuss")) question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString()) ;
 		String path = questionNode.getPath() ;
 		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
@@ -1215,7 +1208,7 @@ public class JCRDataStorage implements DataStorage {
 				if(usermemberships.size() > 0) {
 					Node cat = iter.nextNode() ;
 					try {
-						String[] audiences = ValuesToArray(cat.getProperty("exo:userPrivate").getValues()) ;
+						String[] audiences = Utils.valuesToArray(cat.getProperty("exo:userPrivate").getValues()) ;
 						isAudience = false ;
 						for(String id : usermemberships) {							
 							for(String audien : audiences) {
@@ -1620,7 +1613,7 @@ public class JCRDataStorage implements DataStorage {
 		Set<String> set = new HashSet<String>();
 		while(!node.getName().equals(Utils.CATEGORY_HOME)) {
 	    if(node.isNodeType("exo:faqWatching")){
-	    	set.addAll(ValuesToList(node.getProperty("exo:emailWatching").getValues()));
+	    	set.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
 	    }
 			node = node.getParent();
     }
@@ -1852,8 +1845,8 @@ public class JCRDataStorage implements DataStorage {
 		if(categoryNode.hasProperty("exo:name")) category.setName(categoryNode.getProperty("exo:name").getString()) ;
 		if(categoryNode.hasProperty("exo:description")) category.setDescription(categoryNode.getProperty("exo:description").getString()) ;
 		if(categoryNode.hasProperty("exo:createdDate")) category.setCreatedDate(categoryNode.getProperty("exo:createdDate").getDate().getTime()) ;
-		if(categoryNode.hasProperty("exo:moderators")) category.setModerators(ValuesToArray(categoryNode.getProperty("exo:moderators").getValues())) ;
-		if(categoryNode.hasProperty("exo:userPrivate")) category.setUserPrivate(ValuesToArray(categoryNode.getProperty("exo:userPrivate").getValues())) ;
+		if(categoryNode.hasProperty("exo:moderators")) category.setModerators(Utils.valuesToArray(categoryNode.getProperty("exo:moderators").getValues())) ;
+		if(categoryNode.hasProperty("exo:userPrivate")) category.setUserPrivate(Utils.valuesToArray(categoryNode.getProperty("exo:userPrivate").getValues())) ;
 		if(categoryNode.hasProperty("exo:isModerateQuestions")) category.setModerateQuestions(categoryNode.getProperty("exo:isModerateQuestions").getBoolean()) ;
 		if(categoryNode.hasProperty("exo:isModerateAnswers")) category.setModerateAnswers(categoryNode.getProperty("exo:isModerateAnswers").getBoolean()) ;
 		if(categoryNode.hasProperty("exo:viewAuthorInfor")) category.setViewAuthorInfor(categoryNode.getProperty("exo:viewAuthorInfor").getBoolean()) ;
@@ -2098,26 +2091,6 @@ public class JCRDataStorage implements DataStorage {
 		}finally { sProvider.close() ;}		
 	}
 	
-	private String [] ValuesToArray(Value[] Val) throws Exception {
-		if(Val.length < 1) return new String[]{} ;
-		if(Val.length == 1) return new String[]{Val[0].getString()} ;
-		String[] Str = new String[Val.length] ;
-		for(int i = 0; i < Val.length; ++i) {
-			Str[i] = Val[i].getString() ;
-		}
-		return Str;
-	}
-	
-	private List<String> ValuesToList(Value[] values) throws Exception {
-		List<String> list = new ArrayList<String>();
-		if (values.length < 1)
-			return list;
-		for (int i = 0; i < values.length; ++i) {
-			list.add(values[i].getString());
-		}
-		return list;
-	}
-	
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#addWatchCategory(java.lang.String, org.exoplatform.faq.service.Watch)
    */
@@ -2180,8 +2153,8 @@ public class JCRDataStorage implements DataStorage {
 			Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
 	  	String[] userWatch = null;
 			String[] emails = null;
-	  	if(category.hasProperty("exo:emailWatching")) emails = ValuesToArray(category.getProperty("exo:emailWatching").getValues());
-	  	if(category.hasProperty("exo:userWatching")) userWatch = ValuesToArray(category.getProperty("exo:userWatching").getValues());
+	  	if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
+	  	if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
 	  	if(userWatch != null && userWatch.length > 0) {
 	  		Watch watch = new Watch();
 		  	for(int i = 0; i < userWatch.length; i ++){
@@ -2254,8 +2227,8 @@ public class JCRDataStorage implements DataStorage {
 			Node category = getFAQServiceHome(sProvider).getNode(questionId) ;
 	  	String[] userWatch = null;
 			String[] emails = null;
-	  	if(category.hasProperty("exo:emailWatching")) emails = ValuesToArray(category.getProperty("exo:emailWatching").getValues());
-	  	if(category.hasProperty("exo:userWatching")) userWatch = ValuesToArray(category.getProperty("exo:userWatching").getValues());
+	  	if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
+	  	if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
 	  	if(userWatch != null && userWatch.length > 0) {
 	  		Watch watch = new Watch();
 		  	for(int i = 0; i < userWatch.length; i ++){
@@ -3141,7 +3114,7 @@ public class JCRDataStorage implements DataStorage {
 			List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
 			Node node = getFAQServiceHome(sProvider).getNode(categoryPath) ;
 			if(!node.hasProperty("exo:moderators")) return false ;
-			 List<String> values = ValuesToList(node.getProperty("exo:moderators").getValues()) ;
+			 List<String> values = Utils.valuesToList(node.getProperty("exo:moderators").getValues()) ;
 			 Category cat = new Category() ;
 			 cat.setModerators(values.toArray(new String[]{})) ;
 			 List<String> mods = cat.getModeratorsCategory() ;
@@ -3222,9 +3195,9 @@ public class JCRDataStorage implements DataStorage {
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(path) ;
 			if(node.isNodeType("exo:faqQuestion")) {
-				return ValuesToArray(node.getParent().getParent().getProperty("exo:moderators").getValues()) ;
+				return Utils.valuesToArray(node.getParent().getParent().getProperty("exo:moderators").getValues()) ;
 			}else if(node.isNodeType("exo:faqCategory")){
-				return ValuesToArray(node.getProperty("exo:moderators").getValues()) ;
+				return Utils.valuesToArray(node.getProperty("exo:moderators").getValues()) ;
 			}
 		}catch(Exception e) {			
 		}finally { sProvider.close() ;}
