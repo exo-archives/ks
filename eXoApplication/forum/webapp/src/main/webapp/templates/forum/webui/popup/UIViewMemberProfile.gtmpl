@@ -16,9 +16,13 @@
 	boolean isCity = false;
 	String birthDay = contact.getBirthday() ;
 	if(birthDay == null)birthDay = "";
-	if(contact.getCity() != null ) location = contact.getCity() ;
-	if(contact. getCountry() != null) location = location + ", " + contact.getCountry() ;
-	
+	if(contact != null) {
+		if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
+		if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
+			if(isCity)location = location + ", ";
+			location = location + contact.getCountry() ;
+		}
+	}
 	String shortDateFormat = userProfileLogin.getShortDateFormat() ;
 	
 	fullName = uiform.getScreenName(userName);

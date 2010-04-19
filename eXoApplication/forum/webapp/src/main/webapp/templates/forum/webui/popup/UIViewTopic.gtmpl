@@ -46,10 +46,12 @@
 			String avatarUrl = uiform.getAvatarUrl(owner) ;
 			String location = "" ;
 			boolean isCity = false;
-			if(contact.getCity() != null) {isCity = true; location = contact.getCity();}
-			if(contact.getCountry() != null) {
-				if(isCity)location = location + ", ";
-				location = location + contact.getCountry() ;
+			if(contact != null) {
+				if(contact.getCity() != null && contact.getCity().trim().length() > 0) {isCity = true; location = contact.getCity();}
+				if(contact.getCountry() != null && contact.getCountry().trim().length() > 0) {
+					if(isCity)location = location + ", ";
+					location = location + contact.getCountry() ;
+				}
 			}
 			UserProfile userInfo = uicomponent.getUserInfo(owner) ;
 			screenName = userInfo.getScreenName();
