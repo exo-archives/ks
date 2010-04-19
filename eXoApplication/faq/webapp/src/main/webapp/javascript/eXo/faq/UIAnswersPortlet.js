@@ -652,9 +652,11 @@ UIAnswersPortlet.prototype.setSelectboxOnchange = function(fid) {
 	if(!eXo.core.Browser.isFF()) return;
 	var form = document.getElementById(fid);
 	var select = eXo.core.DOMUtil.findFirstDescendantByClass(form,"select","selectbox");
-	var onchange = select.getAttribute("onchange");
-	onchange = onchange.replace("javascript:","javascript:eXo.faq.UIAnswersPortlet.setDisableSelectbox(this);");
-	select.setAttribute("onchange",onchange);
+	if(select){
+		var onchange = select.getAttribute("onchange");
+		onchange = onchange.replace("javascript:","javascript:eXo.faq.UIAnswersPortlet.setDisableSelectbox(this);");
+		select.setAttribute("onchange",onchange);
+	}
 } ;
 
 UIAnswersPortlet.prototype.setDisableSelectbox = function(selectbox) {
