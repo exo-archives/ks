@@ -267,4 +267,54 @@ public class TestUtils extends TestCase {
     assertNotSame("a new array should have been created", source, actual);
     assertContains(actual, "foo", "bar", "zed"); // should contain all elements
   }
+  
+  public void testGetPathQuery() throws Exception {
+  	// test for value is empty and true or false.
+  	String actual = Utils.getPathQuery("", "", "").toString();
+  	String expected = "";
+  	assertEquals(expected, actual.trim());
+  	actual = Utils.getPathQuery("true", "", "").toString();
+  	expected = "[(@exo:isApproved='true')]";
+  	assertEquals(expected, actual);
+
+  	actual = Utils.getPathQuery("", "true", "").toString();
+  	expected = "[@exo:isHidden='true']";
+  	assertEquals(expected, actual);
+  	
+  	actual = Utils.getPathQuery("", "", "User").toString();
+  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri'))]";
+  	assertEquals(expected, actual);
+
+  	actual = Utils.getPathQuery("", "true", "User").toString();
+  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isHidden='true')]";
+  	assertEquals(expected, actual);
+
+  	actual = Utils.getPathQuery("true", "", "User").toString();
+  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
+  	assertEquals(expected, actual);
+
+  	actual = Utils.getPathQuery("true", "true", "").toString();
+  	expected = "[(@exo:isApproved='true')]";
+  	assertEquals(expected, actual);
+  	
+  	actual = Utils.getPathQuery("true", "true", "User").toString();
+  	expected = "[((@exo:userPrivate='User') or (@exo:userPrivate='exoUserPri')) and (@exo:isApproved='true')]";
+  	assertEquals(expected, actual);
+  }
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

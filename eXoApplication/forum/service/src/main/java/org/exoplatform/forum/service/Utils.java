@@ -320,4 +320,45 @@ public class Utils {
 	public static boolean isEmpty(String s) {
 		return (s == null || s.trim().length() <= 0)?true:false;
   }
+	
+	/**
+	 * get Xpath query when get list post. 
+	 * @param String isApproved
+	 * @param String isHidden
+	 * @param String userLogin
+	 * @return StringBuilder
+	 */
+	public static StringBuilder getPathQuery(String isApproved, String isHidden, String userLogin) throws Exception {
+		StringBuilder strBuilder = new StringBuilder();
+		boolean isAnd = false;
+		if (userLogin != null && userLogin.length() > 0) {
+			isAnd = true;
+			strBuilder.append("[((@exo:userPrivate='").append(userLogin).append("') or (@exo:userPrivate='exoUserPri'))");
+		}
+		if (isApproved != null && isApproved.length() > 0) {
+			if (isAnd) {
+				strBuilder.append(" and (@exo:isApproved='").append(isApproved).append("')");
+			} else {
+				strBuilder.append("[(@exo:isApproved='").append(isApproved).append("')");
+			}
+			if (isHidden.equals("false")) {
+				strBuilder.append(" and (@exo:isHidden='false')");
+			}
+			strBuilder.append("]");
+		} else {
+			if (!isEmpty(isHidden)) {
+				if (isAnd) {
+					strBuilder.append(" and (@exo:isHidden='"+isHidden+"')]");
+				} else {
+					strBuilder.append("[@exo:isHidden='"+isHidden+"']");
+				}
+			} else {
+				if (isAnd) {
+					strBuilder.append("]");
+				}
+			}
+		}
+		return strBuilder;
+	}
+	
 }

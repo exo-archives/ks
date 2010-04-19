@@ -2697,7 +2697,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				Calendar cal = postNode.getProperty(EXO_CREATED_DATE).getDate();
 				StringBuilder builder = new StringBuilder();
 				builder.append(JCR_ROOT).append(postNode.getParent().getPath()).append("/element(*,exo:post)");
-				StringBuilder strBd = getPathQuery(isApproved, isHidden, userLogin);
+				StringBuilder strBd = Utils.getPathQuery(isApproved, isHidden, userLogin);
 				if(strBd.length() > 0) builder.append(strBd.toString().replace("]", "")).append(" and ");
 				else builder.append("[");
 				builder.append("(@exo:createdDate <= xs:dateTime('").append(ISO8601.format(cal)).append("'))]");
@@ -2728,7 +2728,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node topicNode = getCategoryHome(sProvider).getNode(topicPath);
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-			stringBuffer.append(getPathQuery(null, "", EXO_USER_PRI).toString().replaceAll(']'+"", ""))
+			stringBuffer.append(Utils.getPathQuery(null, "", EXO_USER_PRI).toString().replaceAll(']'+"", ""))
 									.append(" and exo:isFirstPost='false'] order by @exo:createdDate ascending");
 			QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
@@ -2747,7 +2747,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node topicNode = getCategoryHome(sProvider).getNode(categoryId + "/" + forumId +"/" + topicId);
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-			stringBuffer.append(getPathQuery(isApproved, isHidden, userLogin));
+			stringBuffer.append(Utils.getPathQuery(isApproved, isHidden, userLogin));
 			stringBuffer.append(" order by @exo:createdDate ascending");
 			JCRPageList pagelist = new ForumPageList(null, 10, stringBuffer.toString(), true);
 			return pagelist;				
@@ -2756,44 +2756,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		} finally { sProvider.close() ;}
 	}
 
-	private StringBuilder getPathQuery (String isApproved, String isHidden, String userLogin) throws Exception {
-		StringBuilder strBuilder = new StringBuilder();
-		boolean isAnd = false;
-		if (userLogin != null && userLogin.length() > 0) {
-			isAnd = true;
-			strBuilder.append("[((@exo:userPrivate='").append(userLogin).append("') or (@exo:userPrivate='exoUserPri'))");
-		}
-		if (isApproved != null && isApproved.length() > 0) {
-			if (isAnd) {
-				strBuilder.append(" and (@exo:isApproved='").append(isApproved).append("')");
-			} else {
-				strBuilder.append("[(@exo:isApproved='").append(isApproved).append("')");
-			}
-			if (isHidden.equals("false")) {
-				strBuilder.append(" and (@exo:isHidden='false')");
-			}
-			strBuilder.append("]");
-		} else {
-			if (isHidden.equals("true")) {
-				if (isAnd) {
-					strBuilder.append(" and (@exo:isHidden='true')]");
-				} else {
-					strBuilder.append("[@exo:isHidden='true']");
-				}
-			} else if (isHidden.equals("false")) {
-				if (isAnd) {
-					strBuilder.append(" and (@exo:isHidden='false')]");
-				} else {
-					strBuilder.append("[@exo:isHidden='false']");
-				}
-			} else {
-				if (isAnd) {
-					strBuilder.append("]");
-				}
-			}
-		}
-		return strBuilder;
-	}
+	
 
 	public long getAvailablePost(String categoryId, String forumId, String topicId, String isApproved, String isHidden, String userLogin) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ; 
@@ -2803,7 +2766,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node topicNode = getCategoryHome(sProvider).getNode(strBuilder.toString());
 			strBuilder = new StringBuilder();
 			strBuilder.append(JCR_ROOT).append(topicNode.getPath()).append("//element(*,exo:post)");
-			strBuilder.append(getPathQuery(isApproved, isHidden, userLogin));
+			strBuilder.append(Utils.getPathQuery(isApproved, isHidden, userLogin));
 			QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(strBuilder.toString(), Query.XPATH);
 			QueryResult result = query.execute();
@@ -4525,9 +4488,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
   }
 	
 	private boolean isBanIp(String ip) throws Exception {
-		List<String> banList = getBanList() ;
-		if(banList.contains(ip)) return true ;
-		return false ;
+		return (getBanList().contains(ip))? true:false ;
 	}
 	
 	public UserProfile getUserSettingProfile(String userName) throws Exception {
