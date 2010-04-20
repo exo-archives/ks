@@ -63,7 +63,9 @@ public class UIFAQPortlet extends UIPortletApplication{
     		if(getChild(UIFAQSettingForm.class) == null) {
     			addChild(UIFAQSettingForm.class, null, null) ;
     		}
-    	} catch (Exception e) { e.printStackTrace();}
+    	} catch (Exception e) { 
+    	  log.error("Child must exist:", e);
+    	  }
     }
     super.processRender(app, context) ;
   }

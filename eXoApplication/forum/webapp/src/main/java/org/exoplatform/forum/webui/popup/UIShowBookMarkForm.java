@@ -71,7 +71,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 		try{
 			bookMarks = forumService.getBookmarks( this.getAncestorOfType(UIForumPortlet.class).getUserProfile().getUserId());
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Getting book mark fail: ", e);
 		}
 		pageList = new ForumPageList(6, bookMarks.size());
 		pageList.setPageSize(6);
@@ -83,7 +83,7 @@ public class UIShowBookMarkForm extends BaseUIForm implements UIPopupComponent{
 		try {
 			if(pageList.getAvailablePage() <= 1) pageIterator.setRendered(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("\nCould not render a UIComponent: " + e.getMessage() + "\n" + e.getCause());
 		}
 		return list ;
 	} 

@@ -230,7 +230,7 @@ public class UIBreadcumbs extends UIContainer {
 					}
 				}
       } catch (Exception e) {
-      	e.printStackTrace();
+        log.error("\nThe "+ id + " must exist: "+  e.getMessage(), e);
       }
 		}else	if(id.indexOf(Utils.CATEGORY) == 0) {
 			try {
@@ -239,7 +239,6 @@ public class UIBreadcumbs extends UIContainer {
 					isPrivate = true;
 				}
       } catch (Exception e) {
-      	e.printStackTrace();
       }
 		}else if(id.indexOf(Utils.FORUM) == 0){
       try {
@@ -254,7 +253,6 @@ public class UIBreadcumbs extends UIContainer {
 					}
 				}
 			}catch(Exception e) {
-				e.printStackTrace();
 			}
 		}
 		return isPrivate;

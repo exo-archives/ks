@@ -41,6 +41,8 @@ import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -73,6 +75,8 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private int pageSelect ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	RenderHelper renderHelper = new RenderHelper();
+	
+	private static Log log = ExoLogger.getLogger(UIViewTopic.class);
 	public UIViewTopic() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "ViewTopicPageIterator") ;
@@ -128,7 +132,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 					mapUserProfile.put(profile.getUserId(), profile) ;
 				}
 			}catch(Exception e) {
-				e.printStackTrace() ;
+				//logged
 			}
 		}
 	}
@@ -182,7 +186,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
   	try {
   		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.warn(imagePath + " must exist: " +e.getCause());
     }
     return url ;
   }
@@ -220,7 +224,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				uiForm.forumService.modifyTopic(topics, 3);
 				uiForm.forumService.modifyTopic(topics, 5);
 			}catch(Exception e) {
-				e.printStackTrace() ;
+			  uiForm.log.debug("\nModify topic fail: " + e.getMessage() + "\n" + e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -246,7 +250,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 				int l = path.length ;
 	      uiForm.forumService.removeTopic(path[l-3], path[l-2], topic.getId());
       } catch (Exception e) {
-	      e.printStackTrace();
+        uiForm.log.debug("Removing " + topic.getId() + " topic fail: " + e.getCause());
       }
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {

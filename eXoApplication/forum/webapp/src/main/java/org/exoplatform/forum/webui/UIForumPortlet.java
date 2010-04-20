@@ -266,7 +266,7 @@ public class UIForumPortlet extends UIPortletApplication {
 			invisibleCategories.addAll(getListInValus(portletPref.getValue("invisibleCategories", ""))) ;
 			invisibleForums.addAll(getListInValus(portletPref.getValue("invisibleForums", ""))) ;
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to load preference: " + e.getCause());
 		}
 		if(invisibleCategories.size() == 1 && invisibleCategories.get(0).equals(" ")) invisibleCategories.clear();
 	}
@@ -383,7 +383,7 @@ public class UIForumPortlet extends UIPortletApplication {
 		try {
 			userId = UserHelper.getCurrentUser() ;
 		} catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("user is unknown: " + e.getCause());
 		}
 		try{
 			if(enableBanIP) {
@@ -680,7 +680,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim())) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
 			}catch(Exception e) {
-				e.printStackTrace() ;
+			  log.error("Fail to set user profile: \n" + e.getCause());
 			}
 			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
 			CommonContact contact = forumPortlet.getPersonalContact(userId.trim());

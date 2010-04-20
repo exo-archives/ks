@@ -36,6 +36,8 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -93,7 +95,9 @@ public class UIQuickReplyForm extends UIForm {
   }
 	
 	static public class QuickReplyActionListener extends EventListener<UIQuickReplyForm> {
+	  
 		public void execute(Event<UIQuickReplyForm> event) throws Exception {
+		  Log log = ExoLogger.getLogger(QuickReplyActionListener.class); 
 			UIQuickReplyForm quickReply = event.getSource() ;
 			ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			ForumAdministration forumAdministration = forumService.getForumAdministration() ;
@@ -178,7 +182,7 @@ public class UIQuickReplyForm extends UIForm {
 						param.setTopicId(topic.getId());
 						actionRes.setEvent(new QName("ReLoadPortletEvent"), param) ;
 	        } catch (Exception e) {
-		        e.printStackTrace();
+	          log.debug("\nSetting Topic fail: " + e.getMessage() + "\n" + e.getCause());
 	        }
 				}
 				event.getRequestContext().addUIComponentToUpdateByAjax(quickReply) ;

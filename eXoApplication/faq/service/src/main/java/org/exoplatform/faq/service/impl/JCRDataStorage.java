@@ -124,7 +124,7 @@ public class JCRDataStorage implements DataStorage {
 		try{
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		}catch(Exception e) {
-		  e.printStackTrace() ;
+		  log.error("\nFail to add plugin\n ", e);
 		}
 		
 	}
@@ -138,7 +138,7 @@ public class JCRDataStorage implements DataStorage {
 				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to add role plugin\n", e);
 		}
 	}
 	
@@ -186,7 +186,7 @@ public class JCRDataStorage implements DataStorage {
 				if(Utils.hasPermission(list, getAllGroupAndMembershipOfUser(userName))) return true;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.debug("Check user whether is admin: ", e);
 		} finally { sProvider.close() ;}
 		return false ;
 	}
@@ -202,7 +202,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			list =	FAQServiceUtils.getUserPermission(list.toArray(new String[]{}));
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to get all FAQ admin: ", e);
 		}
 		return list;
 	}
@@ -223,7 +223,6 @@ public class JCRDataStorage implements DataStorage {
 			if(userSettingNode.hasProperty("exo:sortQuestionByVote")) faqSetting.setSortQuestionByVote(userSettingNode.getProperty("exo:sortQuestionByVote").getValue().getBoolean());
 		}catch (Exception e) {
 			saveFAQSetting(faqSetting, userName);
-//			e.printStackTrace() ;
 		}finally { sProvider.close() ;}		
 	}
 																																																																																																																																																																																																																																																																																
@@ -292,7 +291,7 @@ public class JCRDataStorage implements DataStorage {
 			if(avatarNode.isNew()) ksAvatarHomeNode.getSession().save();
 			else ksAvatarHomeNode.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to save user avatar: ", e);
 		}finally {sProvider.close() ;}		
 	}
 	
@@ -311,7 +310,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to set default avatar: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -330,7 +329,7 @@ public class JCRDataStorage implements DataStorage {
 			QueryResult result = query.execute();
 			return result.getNodes() ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get question iterator: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}	
@@ -347,7 +346,7 @@ public class JCRDataStorage implements DataStorage {
 					                         path, true, null, null, false) ;
 			rssListenerMap_.put(path, questionRSS) ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to listen when add RSS: ", e);
 		}
 	}
 	
@@ -379,7 +378,7 @@ public class JCRDataStorage implements DataStorage {
     try {
       Node faqServiceHome = getFAQServiceHome(sProvider) ;
       if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
-        log.debug("root category is already created");
+        log.error("root category is already created");
         return false;
       }      
       Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
@@ -452,7 +451,7 @@ public class JCRDataStorage implements DataStorage {
 				templateHome.save();
 			}
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.error("Fail to save template: ", e);
     } finally {
     	sProvider.close();
     }
@@ -503,7 +502,7 @@ public class JCRDataStorage implements DataStorage {
 				sendEmailNotification(emailsList, message) ;
 			}
 		} catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to send a notify for question watcher: ", e);
 		}
 	}
 	private void sendNotifyForCategoryWatcher (Question question, FAQSetting faqSetting, boolean isNew) {
@@ -541,7 +540,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		} catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to send a nofify for category watcher: ",e);
 		}
 	}
 	
@@ -568,7 +567,7 @@ public class JCRDataStorage implements DataStorage {
     	Node questionNode = getFAQServiceHome(sProvider).getNode(questionId) ;
     	try {
     		listQuestionLanguage.add(getQuestionLanguage(questionNode)) ;
-      }catch (Exception e){ e.printStackTrace() ;}
+      }catch (Exception e){log.debug("Adding a question node fail: ", e);}
       if(questionNode.hasNode(Utils.LANGUAGE_HOME)) {
         Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
         NodeIterator nodeIterator = languageNode.getNodes() ;
@@ -579,7 +578,7 @@ public class JCRDataStorage implements DataStorage {
         }
       }
     }catch (Exception e){
-    	e.printStackTrace() ;
+      log.error("Fail to get question language: ", e);
     } finally { sProvider.close() ;}    
     return listQuestionLanguage ;
   }
@@ -609,7 +608,7 @@ public class JCRDataStorage implements DataStorage {
 			answerNode.remove();
 			questionNode.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to delete a answer: ", e);
 		}finally {sProvider.close() ;}
 	}
 	
@@ -624,7 +623,7 @@ public class JCRDataStorage implements DataStorage {
 			commnetNode.remove();
 			questionNode.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("fail to delete a commnent: ", e);
 		}finally { sProvider.close() ;}
 	}
 	
@@ -644,7 +643,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			return answers.toArray(new Answer[]{});
 		} catch (Exception e){
-			e.printStackTrace() ;
+		  log.error("Fail to get answer: ", e);
 		}
 		return new Answer[]{};
 	}
@@ -731,7 +730,7 @@ public class JCRDataStorage implements DataStorage {
     	}
     	quesNode.save() ;
     }catch (Exception e) {
-    	e.printStackTrace() ;
+      log.error("fail to save answer: ", e);
     }finally { sProvider.close() ;}
   }
   
@@ -767,7 +766,7 @@ public class JCRDataStorage implements DataStorage {
 	  	answerNode.setProperty("exo:questionId", questionId) ;
 	  	answerNode.setProperty("exo:categoryId", categoryId) ;	  	    	  	
   	}catch (Exception e) {
-  		e.printStackTrace() ;
+  	  log.error("Fail to save Answer: ", e);
   	}
   }
   
@@ -809,7 +808,7 @@ public class JCRDataStorage implements DataStorage {
     	if(commentNode.isNew()) quesNode.getSession().save();
     	else quesNode.save();
   	}catch(Exception e) {
-  		e.printStackTrace() ;
+  	  log.error("Fail to save comment: ", e);
   	}finally { sProvider.close() ;}
   }
   
@@ -842,7 +841,7 @@ public class JCRDataStorage implements DataStorage {
     	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
     	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
   	}catch (Exception e) {
-  		e.printStackTrace() ;
+  	  log.error("Fail to save answer question language: ", e);
   	}finally { sProvider.close() ;}  	
   }
   
@@ -873,7 +872,6 @@ public class JCRDataStorage implements DataStorage {
     	if(commentNode.isNew()) quesNode.getSession().save();
     	else quesNode.save();
   	}catch (Exception e) {
-  		e.printStackTrace() ;
   	}finally { sProvider.close() ;}
   	
   }*/
@@ -905,8 +903,8 @@ public class JCRDataStorage implements DataStorage {
 			}
 			return comments;
 		} catch (Exception e){
-			e.printStackTrace();
-			return new Comment[]{};
+		  log.error("Fail to get comment: ", e);
+		 return new Comment[]{};
 		}
 	}
 	
@@ -1010,7 +1008,7 @@ public class JCRDataStorage implements DataStorage {
 						nodeContent.setProperty("jcr:data", att.getInputStream());
 						nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 					} catch (Exception e) {
-						e.printStackTrace() ;
+					  log.error("Fail to save question: ", e);
 					}
 				}
 			}
@@ -1088,7 +1086,7 @@ public class JCRDataStorage implements DataStorage {
 			questionNode.remove();
 			questionHome.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail ro remove question: ",e);
 		} finally { sProvider.close() ;}
 	}
 		
@@ -1106,8 +1104,8 @@ public class JCRDataStorage implements DataStorage {
 			if(commentNode.hasProperty("exo:postId")) comment.setPostId(commentNode.getProperty("exo:postId").getString()) ;
 			return comment;
 		} catch (Exception e){
-			e.printStackTrace();
-			return null;
+		  log.error("Fail to get comment through id: ", e);
+	   return null;
 		}
 	}
 
@@ -1158,7 +1156,7 @@ public class JCRDataStorage implements DataStorage {
 					else attachment.setSize(0) ;
 				} catch (Exception e) {
 					attachment.setSize(0) ;
-					e.printStackTrace() ;
+					log.error("Fail to get question: ", e);
 				}
 				listFile.add(attachment);
 			}
@@ -1226,7 +1224,7 @@ public class JCRDataStorage implements DataStorage {
 				}				
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get restricte category: ", e);
 		}finally{ sessionProvider.close() ;}		
 		return categoryList;
 	}
@@ -1252,7 +1250,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get all questions: ", e);
 		} finally { sProvider.close() ;}
 		return null ;
 	}
@@ -1284,7 +1282,7 @@ public class JCRDataStorage implements DataStorage {
 			pageList.setNotYetAnswered(true);
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Get question not yet answer fail: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -1321,7 +1319,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Get pedding question through category fail: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
@@ -1382,7 +1380,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.debug("Getting question through category fail: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -1426,7 +1424,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;		
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.debug("getting all question through category fail: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -1458,7 +1456,7 @@ public class JCRDataStorage implements DataStorage {
 			pageList.setNotYetAnswered(isNotYetAnswer);
 			return pageList ;
 		} catch ( Exception e) {
-			e.printStackTrace() ;
+		  log.debug("Getting questions through list of category fail: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -1488,7 +1486,7 @@ public class JCRDataStorage implements DataStorage {
 				questions.add(getQuickQuestion(iter.nextNode())) ;
 			}
 		} catch ( Exception e) {
-			e.printStackTrace() ;
+		  log.debug("Getting quick questions through list of category: ", e);
 		}finally { sProvider.close() ;}
 		return questions ;
 	}
@@ -1525,7 +1523,7 @@ public class JCRDataStorage implements DataStorage {
 				pathName = "home" + pathName ;
 			}
 		}catch( Exception e) {
-			e.printStackTrace() ;
+		  log.debug("Getting category path of the question: ", e);
 		}finally { sProvider.close() ;}		
 		return path;
 	}
@@ -1572,11 +1570,10 @@ public class JCRDataStorage implements DataStorage {
 					
 
 				}catch(ItemNotFoundException ex){
-					ex.printStackTrace() ;
 				}
 			}			
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to remove question: ", e);
 		}finally { sProvider.close() ;}
 		
 	} 
@@ -1631,7 +1628,7 @@ public class JCRDataStorage implements DataStorage {
 				iter.nextNode().setProperty("exo:categoryId", catId) ;
 			}			
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("updating comments fail: ", e);
 		}
 	}
 	
@@ -1646,7 +1643,7 @@ public class JCRDataStorage implements DataStorage {
 				iter.nextNode().setProperty("exo:categoryId", catId) ;
 			}			
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Updating answers fail: ", e);
 		}
 	}
 	
@@ -1665,7 +1662,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			faqHome.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Changing status category view fail: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -1718,7 +1715,7 @@ public class JCRDataStorage implements DataStorage {
 			try {
 				updateModeratorForChildCategories (categoryNode, moderators) ;
 			}catch (Exception e){
-				e.printStackTrace() ;
+				log.debug("Updating moderator for child category fail: ", e);
 			}
 		}
 		if(categoryNode.isNew()) categoryNode.getSession().save() ;
@@ -1786,7 +1783,7 @@ public class JCRDataStorage implements DataStorage {
 			saveCategory(newCategory, cat, isAddNew, sProvider) ;
 			resetIndex(newCategory, cat.getIndex()) ;			
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to save category: ", e);
 		}finally { sProvider.close() ;}
 		
 	}
@@ -1916,12 +1913,12 @@ public class JCRDataStorage implements DataStorage {
 				try{
 					listCateId.add(cate.getName() + cate.getProperty("exo:name").getString()) ;
 				}catch(Exception e) {
-					e.printStackTrace() ;
+				    log.debug("Getting property of " + cate + " node fail: ", e);
 				}				
 			}
 			return listCateId ;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get list of CateID through Moderator: ", e);
 		}finally { sProvider.close() ;}
 		return null ;		
 	}
@@ -1944,7 +1941,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			return catList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Getting all category fail: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 		
@@ -1976,7 +1973,7 @@ public class JCRDataStorage implements DataStorage {
 			Node faqHome = getFAQServiceHome (sProvider) ;
 			return faqHome.getNode(categoryId) ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Getting node fail: ", e);
 		} finally {sProvider.close() ;} 
 		return null ;
 	}
@@ -2064,7 +2061,7 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get category info: ", e);
 		}finally {sProvider.close() ;}				
 		return cateInfo ;
 	}
@@ -2118,7 +2115,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 			watchingNode.save() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to add watch category: " , e);
 		} finally {sProvider.close() ;} 
 	}
 	
@@ -2138,7 +2135,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
 			return pageList;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get list of mail watch: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
@@ -2166,7 +2163,7 @@ public class JCRDataStorage implements DataStorage {
 	  	}
 	  	return listWatches;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get watch through category: ",e);
 		}finally {sProvider.close() ;}
 		return listWatches ;
 	}
@@ -2180,7 +2177,6 @@ public class JCRDataStorage implements DataStorage {
 			Node cat = getFAQServiceHome(sProvider).getNode(categoryPath) ;
 			if( cat.getProperty("exo:userWatching").getValues().length > 0) return true ;
 		}catch(Exception e) {
-			//e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false ;
 	}
@@ -2212,7 +2208,7 @@ public class JCRDataStorage implements DataStorage {
 			}			
 			//questionHome.save();
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to add a watch question: ", e );
 		}finally { sProvider.close () ;} 
 		
 	}
@@ -2240,7 +2236,7 @@ public class JCRDataStorage implements DataStorage {
 	  	}
 	  	return listWatches;
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get watch through question: ", e);
 		}finally {sProvider.close() ;}
 		return listWatches ;
 	}
@@ -2261,7 +2257,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch ( Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get watched category through user: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -2279,7 +2275,6 @@ public class JCRDataStorage implements DataStorage {
 				if (vl.getString().equals(userId)) return true ;
 			}
 		}catch(Exception e) {
-			//e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false;
 	}
@@ -2303,7 +2298,7 @@ public class JCRDataStorage implements DataStorage {
 				watchedSub.add(iter.nextNode().getName()) ;
 			}
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Getting watched sub category fail: ", e);
 		}
 		return watchedSub ;
 	}
@@ -2344,7 +2339,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get list of question watch: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
@@ -2412,7 +2407,7 @@ public class JCRDataStorage implements DataStorage {
 			question.setProperty("exo:userWatching", userMap.keySet().toArray(new String[]{})) ;
 			question.save() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Unwatching question fail: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -2736,8 +2731,8 @@ public class JCRDataStorage implements DataStorage {
 									isResult = false ;
 								}								
 							}catch(Exception e) { 
-								e.printStackTrace() ;
-								isResult = false ;
+							  log.debug(nodeObj + " node must exist: ", e);
+							  isResult = false ;
 							}
 						}						
 					} else if(nodeObj.isNodeType("exo:faqCategory")){
@@ -2834,7 +2829,6 @@ public class JCRDataStorage implements DataStorage {
 				}catch(Exception e) {}
 			}
 		} catch (Exception e) {
-			e.printStackTrace() ;
 		}
 		questionList.addAll(Arrays.asList(newMap.values().toArray(new Question[]{})));
 		return questionList ;
@@ -2853,7 +2847,7 @@ public class JCRDataStorage implements DataStorage {
 				category = category.getParent() ;
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to get category: ", e);
 		}finally { sProvider.close() ;}		
 		return breadcums;
 	}
@@ -2945,7 +2939,7 @@ public class JCRDataStorage implements DataStorage {
 			questionNode.setProperty("exo:topicIdDiscuss", topicId);
 			questionNode.save() ;
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to save topic discuss question: ", e);
 		}finally { sProvider.close() ;}
 	}
 	
@@ -3023,7 +3017,7 @@ public class JCRDataStorage implements DataStorage {
 				return true ;
 			}			
 		}catch(Exception e) {
-			log.warn("Failed to import data in category " + parentId + ": " + e.getMessage());
+			log.error("Failed to import data in category " + parentId, e);
 			//throw new RuntimeException("Failed to import data in category " + categoryId, e);
 		}finally{ sProvider.close() ;}	
 		return false ;
@@ -3069,7 +3063,6 @@ public class JCRDataStorage implements DataStorage {
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
 			return node.getProperty("exo:isModerateAnswers").getBoolean() ;
 		}catch(Exception e) {
-			//e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false ;
 	}
@@ -3084,7 +3077,6 @@ public class JCRDataStorage implements DataStorage {
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
 			return node.getProperty("exo:isModerateQuestions").getBoolean() ;
 		}catch(Exception e) {
-			//e.printStackTrace() ;
 		}finally { sProvider.close() ;}
 		return false ;
 	}
@@ -3122,7 +3114,7 @@ public class JCRDataStorage implements DataStorage {
 				 if(mods.contains(per)) return true ;
 			 }
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Cheking whether category moderator fail: ", e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
@@ -3142,7 +3134,7 @@ public class JCRDataStorage implements DataStorage {
 				}catch(Exception e){}
 			}			
 		}catch(Exception e) {
-			e.printStackTrace() ;			
+		  log.error("Cheking whether catagory is exist: ", e);
 		}finally{
 			sProvider.close() ;
 		}
@@ -3295,8 +3287,8 @@ public class JCRDataStorage implements DataStorage {
     				}
     			}
   			}catch(Exception e) {
-  	  		e.printStackTrace() ;
-  	  	}
+  			  log.error("Fail to get sub category info: ", e);
+  			}
   		}
   	}
   	return subList ;
@@ -3339,7 +3331,7 @@ public class JCRDataStorage implements DataStorage {
 			question.setProperty("exo:relatives", relatives) ;
 			question.save() ;
 		}catch (Exception e) {
-			e.printStackTrace() ;
+		  log.error("Fail to update question relatives: ", e);
 		}finally {sProvider.close() ;}
   }
   

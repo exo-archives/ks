@@ -191,7 +191,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 							try {
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, true, "");
 	            } catch (Exception e) {
-	              e.printStackTrace();
+	              event.getSource().log.debug("Saving post fail: ", e);
 	            }
 							commentForm.comment.setPostId(post.getId());
 						} else {
@@ -214,7 +214,7 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 								post.setMessage(comment);
 								forumService.savePost(ids[t-3], ids[t-2], topicId, post, isNew, "");
               } catch (Exception e) {
-	              e.printStackTrace();
+                event.getSource().log.debug("Saving post fail: ",e);
               }
 						}
 					}
@@ -234,8 +234,8 @@ public class UICommentForm extends BaseUIForm implements UIPopupComponent {
 	        }
 				} else {questions.updateQuestionLanguageByLanguage(commentForm.question_.getPath(), commentForm.languageSelected);}
 			} catch(Exception e){
-				e.printStackTrace();
-				warning("UIQuestions.msg.category-id-deleted") ;
+			  event.getSource().log.error("Fail to save action: ",e);
+			  warning("UIQuestions.msg.category-id-deleted") ;
 			}
       //questions.setDefaultLanguage() ;
       event.getRequestContext().addUIComponentToUpdateByAjax(questions) ;

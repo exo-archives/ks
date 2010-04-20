@@ -19,6 +19,8 @@ package org.exoplatform.forum.webui;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -37,6 +39,9 @@ public class UIForumDescription extends UIContainer	{
 	private String categoryId ;
   private Forum forum = null ;
   private boolean isForum = false;
+  
+  private Log log = ExoLogger.getLogger(UIForumDescription.class); 
+  
 	public UIForumDescription() throws Exception {		
 	}
 	
@@ -57,7 +62,7 @@ public class UIForumDescription extends UIContainer	{
 			try {
 				return forumService.getForum(categoryId, forumId);
 			}catch (Exception e) {
-				e.printStackTrace();
+			  log.debug(forumId + " must exist: " + e.getMessage() + "\n" +e.getCause());
 				return null;
 			}
     } else {

@@ -72,8 +72,8 @@ public class UIExportForm extends BaseUIForm implements UIPopupComponent{
         String downloadLink = dservice.getDownloadLink(dservice.addDownloadResource(dresource)) ;
         event.getRequestContext().getJavascriptManager().addJavascript("ajaxRedirect('" + downloadLink + "');");
 			} catch (Exception e){
-			  e.printStackTrace() ;
-				FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
+			  event.getSource().log.debug("Fail to export data: ", e);
+			  FAQUtils.findCateExist(service, portlet.findFirstComponentOfType(UIAnswersContainer.class));
 				exportForm.warning("UIQuestions.msg.admin-moderator-removed-action") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(portlet) ;
 			}

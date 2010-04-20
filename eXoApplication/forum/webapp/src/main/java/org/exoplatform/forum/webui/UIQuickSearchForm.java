@@ -89,7 +89,7 @@ public class UIQuickSearchForm extends BaseUIForm {
 					list = forumService.getQuickSearch(text, type, "", userProfile.getUserId(),
 															forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()), forumIdsOfModerator);
 				}catch (Exception e) {
-					e.printStackTrace();
+				  uiForm.log.warn("\nGetting quick search failure:\n " + e.getCause());
 					uiForm.warning("UIQuickSearchForm.msg.failure") ;
 					return ;
 				}

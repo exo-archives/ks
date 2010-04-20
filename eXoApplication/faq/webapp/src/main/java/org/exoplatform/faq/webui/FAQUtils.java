@@ -33,6 +33,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.record.formula.functions.Exec;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
@@ -43,6 +44,8 @@ import org.exoplatform.faq.service.JcrInputProperty;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.services.organization.UserProfile;
@@ -70,6 +73,9 @@ public class FAQUtils {
 		, ":", ">", "<", "~", "`", "]", "'", "/"} ;
 	public static String UPLOAD_FILE_SIZE = "uploadFileSizeLimitMB" ;
 
+	static private Log log = ExoLogger.getLogger(FAQUtils.class);
+	
+	
 	public static FAQService getFAQService() throws Exception {
 		return (FAQService)PortalContainer.getComponent(FAQService.class) ;
 	}
@@ -119,7 +125,7 @@ public class FAQUtils {
 				try {
 					breadcumbs.setUpdataPath(pathCate) ;
 				} catch (Exception exc) {
-					exc.printStackTrace();
+				  log.debug("Setting update path fail: "+ exc.getMessage(), exc);
 				}
 				if(pathCate.indexOf("/") > 0) {
 					questions.setCategoryId(pathCate.substring(pathCate.lastIndexOf("/") + 1)) ;
@@ -435,7 +441,7 @@ public class FAQUtils {
 			
 			portletPref.store();
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to save portlet preferences: ", e);
 		}
 	}
 	
@@ -495,7 +501,7 @@ public class FAQUtils {
 			link = link.substring(0, link.indexOf(selectedNode)+selectedNode.length());
 			link = link.replaceAll(selectedNode, "forum") + "/" + org.exoplatform.forum.service.Utils.TOPIC + "/" + topicId;
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.error("Fail to get link discuss: ",e);
     }
 		return link;
 	}

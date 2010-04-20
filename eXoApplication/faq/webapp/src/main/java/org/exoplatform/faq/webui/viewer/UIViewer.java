@@ -27,6 +27,8 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.resolver.ResourceResolver;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -53,6 +55,9 @@ public class UIViewer extends UIContainer {
 	private String path = Utils.CATEGORY_HOME;
 	private boolean useAjax = false;
 	private RenderHelper renderHelper = new RenderHelper();
+	
+	private Log log = ExoLogger.getLogger(UIViewer.class);
+	
 	public UIViewer() {
 		 fAqService = (FAQService)PortalContainer.getComponent(FAQService.class) ;
   }
@@ -89,7 +94,7 @@ public class UIViewer extends UIContainer {
 		try {
 			categoryInfo = this.fAqService.getCategoryInfo(this.path, list);
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.error("fail to get category info: ", e);
     }
 		return categoryInfo;
 	}

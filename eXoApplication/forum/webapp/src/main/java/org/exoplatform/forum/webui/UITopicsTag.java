@@ -345,7 +345,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 					info("UIAddWatchingForm.msg.successfully") ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 				} catch (Exception e) {
-					e.printStackTrace();
+				  event.getSource().log.warn("Adding watching topic fail. \nCaused by: " + e.getCause());
 					warning("UIAddWatchingForm.msg.fall") ;
 				}					
 			}
@@ -362,7 +362,7 @@ public class UITopicsTag extends UIForumKeepStickPageIterator {
 				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(topicTag) ;
 			} catch (Exception e) {
-				e.printStackTrace();
+			  event.getSource().log.warn("Fail to unwatch tag topic. Caused by: " + e.getCause());
 				warning("UIAddWatchingForm.msg.UnWatchfall") ;
 			}
 		}

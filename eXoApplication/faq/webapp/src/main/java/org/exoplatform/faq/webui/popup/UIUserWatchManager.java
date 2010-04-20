@@ -33,6 +33,8 @@ import org.exoplatform.faq.webui.UIBreadcumbs;
 import org.exoplatform.faq.webui.UICategories;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,6 +74,8 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 	private String LIST_CATES_WATCHED = "listCatesWatch";
 	private int tabSelect = 0;
 	private String emailAddress;
+	
+	static private Log log = ExoLogger.getLogger(UIWatchManager.class);
 	
 	//private String[] tabs = new String[]{"watchCategoryTab", "watchQuestionTab"};
 	private static FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
@@ -139,8 +143,8 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
 			}
   		return listCategories;
   	}catch (Exception e){
-  		e.printStackTrace();
-  		return null;
+  	  log.error("Fail to get list of category watch: ", e);
+  	  return null;
   	}
   }
   
@@ -167,7 +171,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
       }
   		return listQuestion_;
   	}catch (Exception e){
-  		e.printStackTrace();
+  	  log.error("fail to get list of question watch: " +e.getMessage(), e);
   	}
   	return null;
   }
@@ -178,7 +182,7 @@ public class UIUserWatchManager  extends UIFormTabPane implements UIPopupCompone
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Getting total page fail: ", e);
       return 1 ;
     }
   }

@@ -43,6 +43,8 @@ import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -75,6 +77,9 @@ public class UIPageListTopicByUser extends UIContainer{
 	private String userName = new String() ;
 	private boolean isUseAjax = true;
 	private List<Topic> topics = new ArrayList<Topic>(); 
+	
+	private Log log = ExoLogger.getLogger(UIPageListTopicByUser.class);
+	 
 	public UIPageListTopicByUser() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumPageIterator.class, null, "PageListTopicByUser") ;
@@ -111,7 +116,9 @@ public class UIPageListTopicByUser extends UIContainer{
 			if(pageList != null)pageList.setPageSize(5) ;
 			topics = pageList.getPage(forumPageIterator.getPageSelected()) ;
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
-		}catch (Exception e) { e.printStackTrace();}
+		}catch (Exception e) {
+		  log.trace("\nThe topic(s) must exist: " + e.getMessage() + "\n" + e.getCause());
+		}
 		return topics ;
 	}
 	

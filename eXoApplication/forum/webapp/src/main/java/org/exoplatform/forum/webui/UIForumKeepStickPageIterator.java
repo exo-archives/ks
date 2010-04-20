@@ -168,7 +168,7 @@ public class UIForumKeepStickPageIterator extends BaseForumForm {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+			  keepStickPageIter.log.warn("\nPage that reached is not exist: " + e.getMessage() + "\n" + e.getCause());
 			}
 			if(component instanceof UITopicDetail) {
 				UITopicDetail topicDetail = (UITopicDetail) component;

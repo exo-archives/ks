@@ -26,6 +26,8 @@ import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -52,6 +54,9 @@ import org.exoplatform.webui.form.UIForm;
 public class UISelectCategoryForumForm extends UIForm implements UIPopupComponent{
 	private List<Category> listcate = new ArrayList<Category>();
 	private ForumService forumService ;
+	
+	private Log log = ExoLogger.getLogger(UISelectCategoryForumForm.class);
+	
 	public UISelectCategoryForumForm() {
 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
   }
@@ -67,7 +72,7 @@ public class UISelectCategoryForumForm extends UIForm implements UIPopupComponen
 				String strQuery = "@exo:isClosed='false' and @exo:isLock='false'";
 				listForum = forumService.getForums(categoryId, strQuery);
 			} catch (Exception e) {
-				e.printStackTrace();
+			  log.error("Fail to get forums: ", e);
 			} 
 		}
 		return listForum;

@@ -215,7 +215,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				}
 			}
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.warn("\nThere is no icon for " + typeId +" type\n" + e.getCause());
 	    return new String[]{" "};
     }
 	}
@@ -614,7 +614,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+			  event.getSource().log.error("\nCould not open "+ uiTopicContainer.getTopic(temp[0])  +" topic\n", e);
 			}
 		}
 	}
@@ -937,7 +937,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 					return;
 				}
 			} catch (Exception e){
-				e.printStackTrace();
+			  event.getSource().log.error("Setting unlock a topic fail. \n Caused by: " + e.getCause());
 				return;
 			}
 			List<Topic> topics = new ArrayList<Topic>();
@@ -1081,7 +1081,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 						try{
 							uiTopicContainer.getForumService().removeTopic(uiTopicContainer.categoryId, uiTopicContainer.forumId, topic_.getId()) ;
 						}catch(Exception e){
-							e.printStackTrace();
+						  event.getSource().log.error("Removing " + topic_.getId() + " fail. \nCaused by: " + e.getCause());
 						}
 					}
 				} catch(Exception e) {
@@ -1207,7 +1207,7 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 				uiTopicContainer.listWatches = forumPortlet.getWatchinhByCurrentUser();
 				info("UIAddWatchingForm.msg.UnWatchSuccessfully") ;
 			} catch (Exception e) {
-				e.printStackTrace();
+			  event.getSource().log.warn("Unwatching, caused by: " + e.getCause());
 				warning("UIAddWatchingForm.msg.UnWatchfall") ;
 			}
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiTopicContainer) ;

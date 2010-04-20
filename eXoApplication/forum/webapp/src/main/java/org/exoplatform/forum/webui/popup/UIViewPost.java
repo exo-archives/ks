@@ -38,6 +38,8 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -73,6 +75,9 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 	private ForumService forumService;
 	private UserProfile userProfile;
 	RenderHelper renderHelper = new RenderHelper();
+	
+	private static Log log = ExoLogger.getLogger(UIViewPost.class); 
+	
 	public UIViewPost() {
 		forumService = (ForumService) ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class);
 	}
@@ -106,7 +111,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
   	try {
   		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.warn(imagePath + " is not exist: " + e.getMessage());
     }
     return url ;
   }
@@ -157,7 +162,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				uiForm.forumService.modifyPost(posts, 1);
 				uiForm.forumService.modifyPost(posts, 2);
 			}catch(Exception e) {
-				e.printStackTrace() ;
+			  UIViewPost.log.debug("\nModify post fail: " + e.getMessage() + "\n" + e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {
@@ -183,7 +188,7 @@ public class UIViewPost extends UIForm implements UIPopupComponent {
 				int l = path.length ;
 				uiForm.forumService.removePost(path[l-4], path[l-3], path[l-2], post.getId());
 			}catch(Exception e) {
-				e.printStackTrace() ;
+			  UIViewPost.log.debug("Removing " + post.getId() + " post fail: " +e.getCause());
 			}
 			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class) ;
 			if(popupContainer != null) {

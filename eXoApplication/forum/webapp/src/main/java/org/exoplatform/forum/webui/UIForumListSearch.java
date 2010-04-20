@@ -165,8 +165,7 @@ public class UIForumListSearch extends UIContainer {
 				forum = forumService.getForum(cateId, forumId) ;
 				topic = forumService.getTopic(cateId, forumId, topicId, userProfile.getUserId());
 				post = forumService.getPost(cateId , forumId, topicId, path) ;
-			} catch (Exception e) { 
-				e.printStackTrace();
+			} catch (Exception e) {
 			}
 			isRead = uiForm.canView(category, forum, topic, post, userProfile);
 			

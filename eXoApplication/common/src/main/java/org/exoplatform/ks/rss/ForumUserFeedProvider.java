@@ -78,7 +78,7 @@ public class ForumUserFeedProvider extends RSSProcess implements FeedContentProv
             mapEntries.put(syndEntry.getUri(), syndEntry);
           }
         } catch (Exception e) {
-          LOG.warn("Failed to get user subscription " + objectId + " : " + e.getMessage());
+          LOG.warn("Failed to get user subscription " + objectId,e);
         }
       }
       SyndFeed feed = RSS.createNewFeed("Forum subscriptions for " + userId, new Date());

@@ -91,8 +91,8 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
       System.setProperty("java.security.auth.login.config", loginConf);
     }
     catch (Exception e) {
-    	e.printStackTrace();
-      throw new RuntimeException("Failed to initialize standalone container: " + e.getMessage(),e);
+      log.error("Fail to init "+ container+" containner: ", e);
+      throw new RuntimeException("Failed to initialize standalone container: ",e);
     }
   }
 
@@ -106,7 +106,7 @@ public abstract class FAQServiceTestCase extends FAQTestCase {
     sessionProviderService = (SessionProviderService) container.getComponentInstanceOfType(SessionProviderService.class) ;   
     }
     catch (Exception e) {
-      throw new RuntimeException("Failed to initialize JCR: " + e.getMessage(),e);
+      throw new RuntimeException("Failed to initialize JCR: ",e);
     }
   }
   

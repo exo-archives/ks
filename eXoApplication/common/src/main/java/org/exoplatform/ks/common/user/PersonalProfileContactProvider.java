@@ -60,7 +60,7 @@ public class PersonalProfileContactProvider implements ContactProvider {
         contact.setWebSite(profile.getAttribute("user.home-info.online.uri"));
         
       } catch (Exception e) {
-        log.warn("Could not retrieve forum user profile for " + userId + ": " + e.getMessage());
+        log.error("Could not retrieve forum user profile for " + userId + ": ", e);
       }
       return contact;
   }

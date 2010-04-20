@@ -31,6 +31,8 @@ import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.Comment;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * MultiLanguages class allow question and category have multi language.
@@ -86,6 +88,7 @@ public class MultiLanguages {
   /** The Constant TEMP_NODE. */
   final static String TEMP_NODE = "temp" ;
   
+  static private Log log = ExoLogger.getLogger(MultiLanguages.class);
   /**
    * Class constructor, instantiates a new multi languages.
    * 
@@ -219,8 +222,8 @@ public class MultiLanguages {
 			}
 			return comments;
 		} catch (Exception e){
-			e.printStackTrace();
-			return new Comment[]{};
+		  
+		  return new Comment[]{};
 		}
 	}
   
@@ -251,7 +254,7 @@ public class MultiLanguages {
 			}
 			return answers.toArray(new Answer[]{});
 		} catch (Exception e){
-			e.printStackTrace() ;
+		  log.error("Fail to get answers: ", e);
 		}
 		return new Answer[]{};
 	}
@@ -535,7 +538,7 @@ public class MultiLanguages {
       }
       questionNode.getSession().save() ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Fail to remove language from a list of language: ", e);
     }
   }
   
@@ -546,7 +549,7 @@ public class MultiLanguages {
       languageNode.getNode(lang.getId()).remove() ;
       questionNode.save() ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("Fail to remove language from a question language: ", e);
     }
   }
   public static void voteAnswer(Node answerNode, String userName, boolean isUp) throws Exception {

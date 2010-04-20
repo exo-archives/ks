@@ -33,6 +33,8 @@ import org.exoplatform.forum.webui.popup.UISelector;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
@@ -294,6 +296,7 @@ public class UISearchForm extends UIForm implements UISelector {
 		@SuppressWarnings("unchecked")
     public void execute(Event<UISearchForm> event) throws Exception {
 			UISearchForm uiForm = event.getSource() ;
+			Log log = ExoLogger.getLogger(SearchActionListener.class);
 			String keyValue = uiForm.getUIStringInput(FIELD_SEARCHVALUE_INPUT).getValue() ;
 			if(!ForumUtils.isEmpty(keyValue)) {
 				String special = "\\,.?!`~/][)(;#@$%^&*<>-_+=|:\"'";
@@ -393,7 +396,7 @@ public class UISearchForm extends UIForm implements UISelector {
 			try {
 				list = uiForm.forumService.getAdvancedSearch(eventQuery, forumPortlet.getInvisibleCategories(), new ArrayList<String>(forumPortlet.getInvisibleForums()));
 			}catch (Exception e) {
-				e.printStackTrace();
+			  log.warn("\nGetting advance search fail:\n " + e.getCause());
 				UIApplication uiApp = uiForm.getAncestorOfType(UIApplication.class) ;
 				uiApp.addMessage(new ApplicationMessage("UIQuickSearchForm.msg.failure", null, ApplicationMessage.WARNING)) ;
 				return ;

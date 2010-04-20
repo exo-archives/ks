@@ -26,6 +26,8 @@ import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.ks.bbcode.api.BBCodeService;
 import org.exoplatform.ks.bbcode.core.BBCodeRenderer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -66,6 +68,9 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
 	private String example = "";
 	private List<BBCode>listBBCode = new ArrayList<BBCode>();
 	private BBCode bbcode = new BBCode();
+	
+	private static Log log = ExoLogger.getLogger(UIAddBBCodeForm.class);
+	
 	public UIAddBBCodeForm() throws Exception{
 		if(ForumUtils.isEmpty(this.getId())) this.setId("UIAddBBCodeForm");
 		bbCodeService = (BBCodeService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(BBCodeService.class) ;
@@ -147,9 +152,9 @@ public class UIAddBBCodeForm extends BaseForumForm implements UIPopupComponent {
       }
       uiForm.cancelChildPopupAction();
 			try {
-				UIBBCodeManagerForm codeManagerForm = uiForm.getAncestorOfType(UIForumPortlet.class)
-					.findFirstComponentOfType(UIBBCodeManagerForm.class);
-				codeManagerForm.loadBBCodes() ;codeManagerForm.initCheckBoxActiveBBCode();
+				UIBBCodeManagerForm codeManagerForm = uiForm.getAncestorOfType(UIForumPortlet.class).findFirstComponentOfType(UIBBCodeManagerForm.class);
+				codeManagerForm.loadBBCodes();
+				codeManagerForm.initCheckBoxActiveBBCode();
 				event.getRequestContext().addUIComponentToUpdateByAjax(codeManagerForm) ;
       } catch (Exception e) {
       	uiForm.log.error("Can not update from: UIBBCodeManagerForm");

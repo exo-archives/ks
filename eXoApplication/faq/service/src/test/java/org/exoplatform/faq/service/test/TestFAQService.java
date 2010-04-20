@@ -198,7 +198,7 @@ public class TestFAQService extends FAQServiceTestCase{
 			attachment.setInputStream(is);
 			attachment.setMimeType("");
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to create user avatar: ", e);
 		}
 		return attachment;
 	}
@@ -581,7 +581,7 @@ public class TestFAQService extends FAQServiceTestCase{
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(currentXMLBytes);
 			faqService_.importData(Utils.CATEGORY_HOME, byteArrayInputStream, false) ;
 		} catch (IOException e) {
-			e.printStackTrace();
+		  log.debug("Testing import data fail: ", e);
 		}
 //		After imported data, number questions is 5
 		assertEquals("Before import data, number question is not 5", faqService_.getAllQuestions().getAvailable(), 5);
@@ -702,7 +702,6 @@ public class TestFAQService extends FAQServiceTestCase{
     try {
     	faqService_.sendMessage(message) ;
     } catch(Exception e) {
-    	e.printStackTrace();
     }*/
 	}
 

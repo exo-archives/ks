@@ -74,7 +74,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent{
 		try {
 			currentUser_ = FAQUtils.getCurrentUser();
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.debug("Current user must exist: ", e);
 		}
 	}
 	
@@ -122,7 +122,7 @@ public class UIPrintAllQuestions extends BaseUIForm implements UIPopupComponent{
   	try {
   		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.debug("Image must exist: ", e);
     }
     return url ;
   }

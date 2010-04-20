@@ -25,6 +25,8 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 public class FAQRSSEventListener implements EventListener{
 
@@ -34,6 +36,9 @@ public class FAQRSSEventListener implements EventListener{
 	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
 																																						 "exo:userWatching"}));
 	private KSDataLocation locator;
+	
+	private Log log = ExoLogger.getLogger(FAQRSSEventListener.class);
+	
 	public FAQRSSEventListener(KSDataLocation dataLocator) throws Exception {
 		workspace_ = dataLocator.getWorkspace() ;
 		repository_ = dataLocator.getRepository(); ;
@@ -78,7 +83,7 @@ public class FAQRSSEventListener implements EventListener{
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  log.error("Init FAQ RSS fail: ", e);
 		}		
 	}  
 }

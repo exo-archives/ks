@@ -31,6 +31,8 @@ import org.exoplatform.forum.webui.UIForumPageIterator;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicContainer;
 import org.exoplatform.forum.webui.UITopicDetail;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -65,6 +67,9 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
   private JCRPageList pageList ;
 	UIForumPageIterator pageIterator ;
 	private List<String> listEmail = new ArrayList<String>();
+	
+	private Log log = ExoLogger.getLogger(UIWatchToolsForm.class);
+	
 	public UIWatchToolsForm() throws Exception {
 		pageIterator = addChild(UIForumPageIterator.class, null, WATCHTOOLS_ITERATOR);
 	}
@@ -90,7 +95,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
     try {
       if(pageIterator.getInfoPage().get(3) <= 1) pageIterator.setRendered(false);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error("\nA UIComponent could not rendered: ", e);
     }  
 	}
 

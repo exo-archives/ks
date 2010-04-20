@@ -358,7 +358,9 @@ public class UICategoryForm extends BaseUIFAQForm implements UIPopupComponent, U
         }
 				values = list.toString().replace('['+"", "").replace(']'+"", "").replaceAll(", ", ",");
 			}
-    } catch (Exception e) {e.printStackTrace();}
+    } catch (Exception e) {
+      log.error("Fail to get user selector: ", e);
+      }
     return values;
 	}
 	

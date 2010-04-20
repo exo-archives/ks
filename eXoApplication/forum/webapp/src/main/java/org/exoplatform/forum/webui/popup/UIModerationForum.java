@@ -43,6 +43,7 @@ import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
 import org.exoplatform.webui.event.Event.Phase;
+import org.htmlparser.beans.StringBean;
 /**
  * Created by The eXo Platform SAS
  * Author : Vu Duy Tu
@@ -113,7 +114,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 			list_ = forumService.getJobWattingForModerator(getPath()) ;
 		} catch (Exception e) {
 			list_ = new ArrayList<ForumSearch>();
-			log.error("Get Job Watting for Moderator is fall ", e);
+			log.error("list of forum search must not null: ",e);
 		}
 		pageList = new ForumPageList(10, list_.size());
 		pageList.setPageSize(10);
@@ -150,7 +151,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 					viewTopic.setActionForm(new String[] {"Approve", "DeleteTopic", "Close"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
-					moderationForum.log.warn("Failed to view topic: "+ e.getMessage(), e);
+					moderationForum.log.warn("Failed to view topic: ", e);
 				}
 			} else {
 				try {
@@ -161,7 +162,7 @@ public class UIModerationForum extends BaseUIForm implements UIPopupComponent {
 					viewPost.setActionForm(new String[] {"Approve", "DeletePost", "Close", "OpenTopicLink"});
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				} catch (Exception e) {
-					moderationForum.log.warn("Failed to view post: "+ e.getMessage(), e);
+					moderationForum.log.warn("Failed to view post: ", e);
 				}
 			}
 		}

@@ -103,7 +103,7 @@ public class UIPopupViewQuestion extends BaseUIForm implements UIPopupComponent 
   	try {
   		url = org.exoplatform.ks.common.Utils.getImageUrl(imagePath);
     } catch (Exception e) {
-    	e.printStackTrace();
+      log.debug("Getting image url fail: ", e);
     }
     return url ;
   }

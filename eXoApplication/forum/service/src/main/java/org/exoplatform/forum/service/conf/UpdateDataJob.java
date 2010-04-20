@@ -50,7 +50,7 @@ public class UpdateDataJob implements Job {
 	  	}
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	    log_.trace("\nStatistic Forum could not updated: " + "\n" + e.getCause());
 	  }
   }
 }

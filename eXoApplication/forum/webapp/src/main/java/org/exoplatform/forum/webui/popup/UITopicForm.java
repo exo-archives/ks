@@ -819,7 +819,9 @@ public class UITopicForm extends BaseForumForm implements UISelector {
 				values = ForumUtils.removeStringResemble(values.replaceAll(",,", ","));
 			}
 			textArea.setValue(values);
-    } catch (Exception e) {e.printStackTrace();}
+    } catch (Exception e) {
+      log.warn("Declare " + values + " for "+ field + "fail: " + e.getMessage() + "\n" + e.getCause());
+    }
 	}
 	
   static  public class AddActionListener extends EventListener<UIUserSelector> {

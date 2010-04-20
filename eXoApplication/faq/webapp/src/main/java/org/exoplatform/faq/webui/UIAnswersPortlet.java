@@ -77,7 +77,9 @@ public class UIAnswersPortlet extends UIPortletApplication {
 			    	}
 		    	}
     		}
-    	} catch (Exception e) { e.printStackTrace();}
+    	} catch (Exception e) {
+    	 log.error("\nFail to render a WebUIApplication\n", e); 
+    	}
     }
     
     super.processRender(app, context) ;

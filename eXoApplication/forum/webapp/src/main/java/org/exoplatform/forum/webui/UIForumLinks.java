@@ -221,7 +221,7 @@ public class UIForumLinks extends BaseUIForm {
 						event.getRequestContext().addUIComponentToUpdateByAjax(linkPortlet);
       		}
         } catch (Exception ex) {
-	        ex.printStackTrace();
+          uiForm.log.error("Rendering " + uiForm.getParent() + " uicomponent fail: " +ex.getMessage() + "\n" + ex.getCause());
         }
       }
 		}

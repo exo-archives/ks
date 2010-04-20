@@ -22,12 +22,14 @@ import javax.jcr.observation.EventListener;
 
 import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 public class CalculateModeratorEventListener implements EventListener{
 	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
-	
+	private Log log = ExoLogger.getLogger(CalculateModeratorEventListener.class);
 	public CalculateModeratorEventListener() throws Exception {
 	}
 	
@@ -67,7 +69,7 @@ public class CalculateModeratorEventListener implements EventListener{
 				}
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		  
 		}		
 	}
 }

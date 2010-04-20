@@ -49,7 +49,7 @@ public class UpdateUserProfileJob implements Job {
 	  	}		  
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
-		  e.printStackTrace();			
+	    log_.trace("User profile could not updated: " + "\n" + e.getCause());
 	  }
   }
 }

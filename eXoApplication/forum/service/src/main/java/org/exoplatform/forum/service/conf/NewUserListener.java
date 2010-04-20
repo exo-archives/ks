@@ -44,7 +44,7 @@ public class NewUserListener extends UserEventListener {
         getForumService().addMember(user, template);
 
       } catch (Exception e) {
-        log.warn("Error while adding new forum member: " + e.getMessage(), e);
+        log.warn("Error while adding new forum member: ", e);
       }
 
     } else {
@@ -52,7 +52,7 @@ public class NewUserListener extends UserEventListener {
       try {
         getForumService().updateUserProfile(user);
       } catch (Exception e) {
-        log.warn("Error while updating forum profile: " + e.getMessage(), e);
+        log.warn("Error while updating forum profile: ", e);
       }
     }
   }
@@ -75,7 +75,7 @@ public class NewUserListener extends UserEventListener {
     try {
       getForumService().removeMember(user);
     } catch (Exception e) {
-      log.warn("failed to remove member : " + e.getMessage(), e);
+      log.warn("failed to remove member : ", e);
     }
 
   }

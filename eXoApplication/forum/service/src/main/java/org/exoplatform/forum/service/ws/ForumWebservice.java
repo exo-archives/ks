@@ -19,8 +19,11 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Post;
+import org.exoplatform.forum.service.conf.UpdateUserProfileJob;
 import org.exoplatform.ks.rss.FeedContentProvider;
 import org.exoplatform.ks.rss.FeedResolver;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
 
@@ -37,6 +40,9 @@ public class ForumWebservice implements ResourceContainer {
   final public static String APP_TYPE = "forum".intern();
   private String strQuery ;
   private List<BanIP> ipsToJson = new ArrayList<BanIP>();
+  
+  private static Log log = ExoLogger.getLogger(ForumWebservice.class);
+  
   public ForumWebservice() {}
 
   @GET
@@ -155,7 +161,7 @@ public class ForumWebservice implements ResourceContainer {
       InputStream is = provider.getFeedContent(resourceid);
       return Response.ok(is, MediaType.TEXT_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
-      e.printStackTrace();
+      log.trace("\nView RSS fail: " +  e.getMessage() + "\n" + e.getCause());
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
     }
   }
@@ -174,7 +180,7 @@ public class ForumWebservice implements ResourceContainer {
       InputStream is = provider.getFeedContent(resourceid);
       return Response.ok(is, MediaType.TEXT_XML).cacheControl(cacheControl).build();
     } catch (Exception e) {
-      e.printStackTrace();
+      log.trace("\nGet UserRSS fail: ", e);
       return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
     }
   }

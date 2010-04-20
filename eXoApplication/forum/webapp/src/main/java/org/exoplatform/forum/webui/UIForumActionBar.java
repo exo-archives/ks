@@ -132,7 +132,7 @@ public class UIForumActionBar extends UIContainer	{
     	ContinuationService continuation = (ContinuationService) PortalContainer.getInstance().getComponentInstanceOfType(ContinuationService.class);
 	    return continuation.getUserToken(userProfile.getUserId());
     } catch (Exception e) {
-      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId() +": " + e.getMessage(), e);
+      log.error("Could not retrieve continuation token for user "+ userProfile.getUserId(), e);
     }
     return "";
   }

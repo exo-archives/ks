@@ -84,9 +84,9 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 		if(numberOfFile == numberExportFalse) return false;
 		else return true;
 	}
-
+	@SuppressWarnings({"deprecation"})
 	static public class SaveActionListener extends EventListener<UIImportForm> {
-    public void execute(Event<UIImportForm> event) throws Exception {
+  public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			
 			UIForumPortlet forumPortlet = importForm.getAncestorOfType(UIForumPortlet.class) ;

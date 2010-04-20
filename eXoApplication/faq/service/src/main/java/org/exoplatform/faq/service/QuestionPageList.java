@@ -29,6 +29,8 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import org.exoplatform.ks.common.jcr.SessionManager;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 /**
  * All questions and their properties, methods are getted from database
@@ -81,6 +83,7 @@ public class QuestionPageList extends JCRPageList {
   
   private SessionManager sessionManager;
   
+  private static Log log = ExoLogger.getLogger(QuestionPageList.class);
   /**
    * Sets the not yet answered. Set parameter is <code>true</code> if want get questions are not
    * yet answered opposite set is <code>false</code> or don't do (default value is <code>false</code>)
@@ -128,7 +131,7 @@ public class QuestionPageList extends JCRPageList {
       	}
       	if(languages != null && languages.trim().length() > 0) listQuestions_.add(getQuestion(questionNode).setLanguagesNotYetAnswered(languages));
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Fail to set total questions: ", e);
       }
   	}
   	setAvailablePage(listQuestions_.size()) ;
@@ -593,7 +596,6 @@ public class QuestionPageList extends JCRPageList {
           else attachment.setSize(0) ;
         } catch (Exception e) {
           attachment.setSize(0) ;
-          e.printStackTrace() ;
         }
         listFile.add(attachment);
       }
@@ -653,8 +655,8 @@ public class QuestionPageList extends JCRPageList {
 			}
 			return comments;
 		} catch (Exception e){
-			e.printStackTrace();
-			return new Comment[]{};
+		  log.error("Fail to get comments: ", e);
+		  return new Comment[]{};
 		}
 	}
 	

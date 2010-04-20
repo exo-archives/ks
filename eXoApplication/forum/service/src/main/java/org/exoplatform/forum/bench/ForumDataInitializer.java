@@ -34,7 +34,7 @@ public class ForumDataInitializer implements Startable {
 		try {
 			initCategories();
 		} catch (Exception e) {
-			log.error("Failed to init : " + e.getMessage(), e);
+			log.error("Failed to init : ", e);
 		}
 		log.info("Forum data loaded!");
 	}

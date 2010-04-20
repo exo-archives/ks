@@ -65,7 +65,6 @@ public class ForumSessionListener extends AbstractHttpSessionListener {
   	    fservice.userLogout(ConversationState.getCurrent().getIdentity().getUserId()) ;
   	  }
     } catch(Exception ex) {
-    	ex.printStackTrace() ;
       log.error("Error while destroying a portal session",ex);
     } finally {
       PortalContainer.setInstance(null) ;

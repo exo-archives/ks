@@ -102,7 +102,7 @@ public class UIWatchManager  extends BaseUIForm	implements UIPopupComponent{
     try {
       return pageIterator.getInfoPage().get(3) ;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.debug("Getting total page fail: ", e);
       return 1 ;
     }
   }
@@ -127,7 +127,6 @@ public class UIWatchManager  extends BaseUIForm	implements UIPopupComponent{
         }
       } else pageIterator.setSelectPage(pageSelected) ;
   	} catch (Exception e) {
-  		 e.printStackTrace();
   	}
   	check_ = false ;
   	return listWatchs_ ;

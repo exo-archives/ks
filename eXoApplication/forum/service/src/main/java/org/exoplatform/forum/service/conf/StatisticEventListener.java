@@ -24,6 +24,8 @@ import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 public class StatisticEventListener implements EventListener{
 	private String workspace_ ;
@@ -41,6 +43,8 @@ public class StatisticEventListener implements EventListener{
   
   public String getPath(){ return path_ ; }
   public void setPath(String path ){ path_  = path ; }
+  
+  private Log log = ExoLogger.getLogger(StatisticEventListener.class);
   
 	public void onEvent(EventIterator evIter){		
 		try{
@@ -70,7 +74,7 @@ public class StatisticEventListener implements EventListener{
 				forumService.updateStatisticCounts(topicCount, postCount) ;
 			}
 		}catch(Exception e) {
-			e.printStackTrace() ;
+		   log.error("\nThe StatisEvent could not listen: ",e); 
 		}		
 	}
   

@@ -144,8 +144,8 @@ public class ResultQuickSearch extends BaseUIForm implements UIPopupComponent{
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet.getChild(UIAnswersContainer.class));
 			} catch (Exception e) {
-				e.printStackTrace();
-				warning("UIQuestions.msg.question-id-deleted") ;
+			  event.getSource().log.error("Could listen a link question action: ", e);
+			  warning("UIQuestions.msg.question-id-deleted") ;
 			}
 		}
 	}

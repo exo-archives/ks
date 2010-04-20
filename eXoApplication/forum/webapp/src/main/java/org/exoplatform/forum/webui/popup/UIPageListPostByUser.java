@@ -42,6 +42,8 @@ import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.bbcode.core.ExtendedBBCodeProvider;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -72,6 +74,9 @@ public class UIPageListPostByUser extends UIContainer {
 	private String strOrderBy = "createdDate descending";
 	private boolean hasEnableIPLogging = true;
 	private List<Post> posts = new ArrayList<Post>() ;
+	
+	private Log log = ExoLogger.getLogger(UIPageListPostByUser.class);
+	
 	public UIPageListPostByUser() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		this.userName = null ;
@@ -114,7 +119,7 @@ public class UIPageListPostByUser extends UIContainer {
 			posts = pageList.getPage(forumPageIterator.getPageSelected());
 			forumPageIterator.setSelectPage(pageList.getCurrentPage());
 		}catch (Exception e) {
-			e.printStackTrace();
+		  log.trace("\nThe post must exist: " + e.getMessage()+ "\n" + e.getCause());
 		}
 		if(posts == null) posts = new ArrayList<Post>();
 		this.posts = posts ;

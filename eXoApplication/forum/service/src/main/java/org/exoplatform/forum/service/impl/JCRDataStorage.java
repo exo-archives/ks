@@ -1210,6 +1210,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node forumNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId);
 			return getForum(forumNode);			
 		} catch (Exception e) {
+		 log.error("\nCould not get " + forumId + " in " + categoryId  + " fail: "+ e.getCause());
 			return null;
 		} finally{ sProvider.close() ;}
 	}
@@ -1852,6 +1853,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node topicNode = getCategoryHome(sProvider).getNode(categoryId+"/"+forumId+"/"+topicId);
 			return getTopicNode(topicNode);
 		} catch (Exception e) {
+		  log.error("Getting Topic fail: " + e.getMessage() + "\n" + e.getCause());
 			return null;
 		}finally { sProvider.close() ;}
 	}
@@ -2492,7 +2494,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			try {
 				queryLastTopic(sProvider, forumNode.getPath());
       } catch (Exception e) {
-      	e.printStackTrace();
+        log.trace("\nThe last topic is null: " + e.getMessage()+ "\n" + e.getCause());
       }
 			try {
 				calculateLastRead(sProvider, null, forumId, topicId);
@@ -4700,6 +4702,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				profiles.add(userProfile) ;
 			}
 		} catch (Exception e) {
+		  log.trace("\nUser Name must exist: "+  e.getMessage() + "\n" + e.getCause());
 		}finally {sProvider.close() ;}		
 		return profiles ;		
 	}
@@ -6686,7 +6689,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         try{
           session.getWorkspace().copy(importTemp.getPath(),path );
         }catch (Exception e) {
-          //e.printStackTrace();
+          log.debug(path + " or " + importTemp.getPath() + " is not exist: " + e.getMessage() + "\n" + e.getCause());
         }
       }
     }
@@ -6979,8 +6982,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Node forumNode = (Node) getCategoryHome(sProvider).getSession().getItem(forumPath);
 			pruneSetting = getPruneSetting(forumNode.getNode(Utils.PRUNESETTING));
     } catch (Exception e) {
-			e.printStackTrace();
-		} finally { sProvider.close() ;}
+      log.debug("Getting PruneSetting fail: " + e.getMessage() + "\n" + e.getCause());
+    } finally { sProvider.close() ;}
 		return pruneSetting;
 	}
 	
@@ -7048,7 +7051,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			info = new JobInfo(pSetting.getId(), KNOWLEDGE_SUITE_FORUM_JOBS, clazz);
 			info.setDescription(pSetting.getForumPath()) ;
 			schedulerService.addPeriodJob(info, periodInfo);
-			log.debug("\n\n>>>>Activated " + info.getJobName());
+			log.debug("\n\nActivated " + info.getJobName());
 		}
 	}
 	
@@ -7069,7 +7072,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
-			//log.debug("======> Topics found:" + iter.getSize());
 			while(iter.hasNext()){
 				Node topic = iter.nextNode() ;
 				topic.setProperty(EXO_IS_ACTIVE, false) ;

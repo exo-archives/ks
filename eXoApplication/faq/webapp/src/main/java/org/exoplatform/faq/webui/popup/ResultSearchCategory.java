@@ -69,7 +69,7 @@ public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent
 		try {
 			listCategory_.addAll(pageList.getPageResultCategoriesSearch(pageSelected, FAQUtils.getCurrentUser()));
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to get list of category: ", e);
 		}
 		return listCategory_ ;
 	}
@@ -82,7 +82,7 @@ public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent
 			pageIterator = this.getChildById(LIST_RESULT_SEARCH);
 			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.error("Fail to set a list of category: ", e);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class ResultSearchCategory extends BaseUIForm implements UIPopupComponent
 		try {
 			return pageIterator.getInfoPage().get(3) ;
 		} catch (Exception e) {
-			e.printStackTrace();
+		  log.debug("getting total page fail: ", e);
 			return 1 ;
 		}
 	}
