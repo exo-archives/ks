@@ -16,6 +16,10 @@
  */
 package org.exoplatform.ks.rss;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -26,15 +30,11 @@ public class ForumRSSEventListener implements EventListener{
 	private String path_ ;
 	private String workspace_ ;
 	private String repository_ ; 
-//	private List<String> listPropertyNotGetEvent = Arrays.asList((new String[]{"exo:rssWatching", "ks.rss", "exo:emailWatching",
-//																																						 "exo:userWatching"}));
 	private KSDataLocation locator;
 	public ForumRSSEventListener(KSDataLocation dataLocator) throws Exception {
-		//RSSProcess process = new RSSProcess(this.nodeHierarchyCreator_);
-	   this.locator = dataLocator;
+		this.locator = dataLocator;
 		workspace_ = dataLocator.getWorkspace();
 		repository_ = dataLocator.getRepository();
-
 	}
 	
   public String getSrcWorkspace(){  return workspace_ ; }
@@ -52,24 +52,31 @@ public class ForumRSSEventListener implements EventListener{
 				if(path.indexOf("pruneSetting") > 0) continue;
 				if(ev.getType() == Event.NODE_ADDED){
 					process.itemAdded(ev.getPath());
+					break;
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-					if(path.indexOf("exo:message") > 0 || path.indexOf("exo:name") > 0 ) {
+					if(hasProperties(path)) {
 					  process.itemUpdated(path.substring(0, path.lastIndexOf("/")));
+					  break;
 					}				  
 				}else if(ev.getType() == Event.NODE_REMOVED) {	
 					if(path_.contains(path) || path_.length() == 0) {
 						path_ = path;
 					}
-//					process.itemRemoved(ev.getPath());
 				}
-//				break ;		
 			}
 			if(path_.length() > 0) {
 				process.itemRemoved(path_);
 			}
 		}catch(Exception e) {
-			//e.printStackTrace() ;
+			e.printStackTrace() ;
 		}		
-	}  
+	}
+	
+	private boolean hasProperties(String path) {
+		String property = path.substring(path.lastIndexOf("/")+1);
+		List<String> list = Arrays.asList((new String[]{"exo:message", "exo:name", "exo:isApproved", "exo:isActiveByTopic",
+				"exo:isHidden", "exo:isClosed", "exo:isLock", "exo:isWaiting", "exo:isActive", "exo:isActiveByForum"}));
+		return (list.contains(property))?true:false;
+	}
 }
 
