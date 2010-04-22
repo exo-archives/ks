@@ -450,10 +450,24 @@
 .UIForumPortlet .DisableMenuItem {
 	display:block;
 	white-space:nowrap;
-	cursor:none;
+	cursor:auto;
 	-moz-opacity:0.5;
-	*color:#b7b7b7;
-	_color:#b7b7b7;
+}
+
+.UIForumPortlet .DisableMenuItem:hover {
+	color: gray;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem .ItemIcon:hover {
+	color: gray;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .DisableMenuItem .ItemIcon:hover {
+	color: gray;
+}
+
+.UIForumPortlet .UIRightClickPopupMenu .UIRightPopupMenuContainer .DisableMenuItem:hover {
+	color: gray;
 }
 
 .UIForumPortlet .PageListPostHidden .UIAction {
