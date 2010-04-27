@@ -81,7 +81,7 @@ public class DeactiveJob implements Job{
 		}catch(NumberFormatException nfe) {
 		  log_.trace("\nThe DeactiveJob can not run, a number is not format: "  + nfe.getMessage() + "\n" + nfe.getCause());
   	}catch(Exception e) {
-  	  log_.error("\nThe DeactiveJob can not run: ",e);
+  	  if (log_.isDebugEnabled()) log_.debug(e.getMessage());
 		}	  
   }
 }
