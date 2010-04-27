@@ -1009,6 +1009,7 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 				UIPollForm  pollForm = topicDetail.openPopup(UIPollForm.class, 655, 455) ;
 				pollForm.setTopicPath(topic.getPath()) ;
 			} catch (Exception e) {
+			  e.printStackTrace();
 				warning("UIForumPortlet.msg.topicEmpty");
 				topicDetail.refreshPortlet();
 			}
