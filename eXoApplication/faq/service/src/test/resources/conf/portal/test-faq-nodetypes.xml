@@ -195,7 +195,10 @@
   		<propertyDefinition name="exo:nameAttachs" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
   			<valueConstraints/>
   		</propertyDefinition>
-      
+  		
+     	<propertyDefinition name="exo:link" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+			<valueConstraints/>
+		</propertyDefinition>
       <!--new properties-->
       <!--propertyDefinition name="exo:questionPath" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
   			<valueConstraints/>
