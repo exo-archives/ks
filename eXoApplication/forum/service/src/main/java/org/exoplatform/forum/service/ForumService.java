@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -974,4 +975,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   public void updateLoggedinUsers() throws Exception ;
+  
+  public InputStream createForumRss(String objectId, String link) throws Exception ;
+  public InputStream createUserRss(String userId, String link) throws Exception ;
 }

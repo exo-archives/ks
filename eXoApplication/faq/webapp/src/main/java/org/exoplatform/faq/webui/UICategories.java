@@ -212,7 +212,7 @@ public class UICategories extends UIContainer{
 	}
 	
 	public String getRSSLink(String cateId){
-	  cateId = cateId.replace("/", "_");
+		cateId = cateId.substring(cateId.lastIndexOf("/")+1);
 		return RSS.getRSSLink("faq", portalName, cateId);
 	}
 

@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -735,13 +736,19 @@ public class FakeForumService implements ForumService {
   }
 
   public void updateLoggedinUsers() throws Exception {
-    // TODO Auto-generated method stub
     
   }
 
   public Iterator<SendMessageInfo> getPendingMessages() throws Exception {
-    // TODO Auto-generated method stub
     return null;
   }
+
+	public InputStream createForumRss(String objectId, String link) throws Exception {
+		return null;
+	}
+
+	public InputStream createUserRss(String userId, String link) throws Exception {
+		return null;
+	}
 
 }

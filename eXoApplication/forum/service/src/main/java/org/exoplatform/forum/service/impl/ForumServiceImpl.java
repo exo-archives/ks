@@ -18,6 +18,7 @@ package org.exoplatform.forum.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -1326,6 +1327,14 @@ public class ForumServiceImpl implements ForumService, Startable {
 
   public void setJobSchedulerService(JobSchedulerService jobSchedulerService) {
     this.jobSchedulerService = jobSchedulerService;
+  }
+  
+  public InputStream createForumRss(String objectId, String link) throws Exception {
+  	return storage.createForumRss(objectId, link);
+  }
+
+  public InputStream createUserRss(String userId, String link) throws Exception {
+  	return storage.createUserRss(userId, link);
   }
 	
 }

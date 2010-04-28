@@ -660,6 +660,8 @@ public interface FAQService extends FAQServiceLegacy{
   public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception ;
 
   public boolean isModerateQuestion(String id) throws Exception  ;
+  
+  public InputStream createAnswerRSS(String cateId) throws Exception ;
 
 }
 

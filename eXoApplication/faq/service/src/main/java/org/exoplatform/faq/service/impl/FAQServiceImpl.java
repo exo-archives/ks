@@ -1314,6 +1314,9 @@ public class FAQServiceImpl implements FAQService, Startable {
   	jcrData_.updateQuestionRelatives(questionPath, relatives) ;
   }
   
+  public InputStream createAnswerRSS(String cateId) throws Exception {
+  	return jcrData_.createAnswerRSS(cateId);
+  }
 }
 
 

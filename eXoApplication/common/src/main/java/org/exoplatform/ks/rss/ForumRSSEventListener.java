@@ -43,7 +43,7 @@ public class ForumRSSEventListener implements EventListener{
   public void setPath(String path){  path_  = path ; }
   
 	public void onEvent(EventIterator evIter){		
-		try{
+		/*try{
 		  ForumFeedGenerator process = new ForumFeedGenerator(locator);
 			String path = null, path_= "";;
 			while(evIter.hasNext()) {
@@ -69,7 +69,7 @@ public class ForumRSSEventListener implements EventListener{
 			}
 		}catch(Exception e) {
 			e.printStackTrace() ;
-		}		
+		}	*/	
 	}
 	
 	private boolean hasProperties(String path) {

@@ -91,7 +91,6 @@ import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.TopicListAccess;
 import org.exoplatform.forum.service.TopicType;
-import org.exoplatform.forum.service.UserLoginLogEntry;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
@@ -131,7 +130,16 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
+import org.jdom.CDATA;
 import org.w3c.dom.Document;
+
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedOutput;
 
 
 /**
@@ -221,16 +229,18 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 	
 	public void addRSSEventListenner() throws Exception{
-		if(!isInitRssListener) return ;
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node categoryHome = getCategoryHome(sProvider) ;
-		try{
-			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
-			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(dataLocator) ;
-			observation.addEventListener(forumRSSListener, Event.NODE_ADDED + 
-					Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
-		}catch(Exception e){ log.error(e);} 
-		finally{ sProvider.close() ;}
+		return;
+//		
+//		if(!isInitRssListener) return ;s
+//		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+//		Node categoryHome = getCategoryHome(sProvider) ;
+//		try{
+//			ObservationManager observation = categoryHome.getSession().getWorkspace().getObservationManager() ;
+//			ForumRSSEventListener forumRSSListener = new ForumRSSEventListener(dataLocator) ;
+//			observation.addEventListener(forumRSSListener, Event.NODE_ADDED + 
+//					Event.NODE_REMOVED + Event.PROPERTY_CHANGED ,categoryHome.getPath(), true, null, null, false) ;
+//		}catch(Exception e){ log.error(e);} 
+//		finally{ sProvider.close() ;}
 	}
 	
 	public void addCalculateModeratorEventListenner() throws Exception{
@@ -5314,16 +5324,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 	
 	public Object getObjectNameById(String id, String type) throws Exception {
-		Object object;
+		Object object = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			Node categoryHome = getCategoryHome(sProvider);
-			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:").append(type).append(")[exo:id='").append(id).append("']");
-			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			Node node = result.getNodes().nextNode();
+			Node node = getNodeById(sProvider, id, type);
 			if(type.equals(Utils.CATEGORY)) {
 				Category category = getCategory(node);
 				object = category;
@@ -5338,9 +5342,26 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				object = post;
 			}
 		}catch (Exception e) {
-			return null ;
+			log.error("Can not get "+type+" by Id: " + id, e);
 		}finally{ sProvider.close() ;}
 		return object;
+	}
+	
+	private Node getNodeById(SessionProvider sProvider, String id, String type) {
+		try {
+			Node categoryHome = getCategoryHome(sProvider);
+			if(type.equals(Utils.CATEGORY)) return categoryHome.getNode(id);
+			
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(JCR_ROOT).append(categoryHome.getPath()).append("//element(*,exo:").append(type).append(")[exo:id='").append(id).append("']");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			return result.getNodes().nextNode();
+		}catch (Exception e) {
+			log.error("Can not get Node by Id: " + id, e);
+		}
+		return null;
 	}
 
 	public List<ForumLinkData> getAllLink(String strQueryCate, String strQueryForum) throws Exception {
@@ -5848,22 +5869,26 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 	
 	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception {
-		Node watchingNode = null;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node categoryHome = getCategoryHome(sProvider) ;
+		System.out.println("\n\n path1: " + path);
 		try {
-			if(watchType != -1) {
-				if (path.indexOf(categoryHome.getName()) < 0)
-					path = categoryHome.getPath() + "/" + path;
-				watchingNode = (Node) categoryHome.getSession().getItem(path);
-			}else{
+			Node categoryHome = getCategoryHome(sProvider) ;
+			if(watchType == -1) {
 				QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 				StringBuffer queryString = new StringBuffer();
 				queryString.append(JCR_ROOT).append(categoryHome.getPath()).append("//*[@exo:id='").append(path).append("']") ;
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
-				watchingNode = result.getNodes().nextNode() ;
+				NodeIterator iterator = result.getNodes();
+				System.out.println("\n\n iterator.size: " + iterator.getSize());
+				path = iterator.nextNode().getPath() ;
+				System.out.println("\n\n path2: " + path);
 			}
+			
+			if (path.indexOf(categoryHome.getName()) < 0)
+				path = categoryHome.getPath() + "/" + path;
+			Node watchingNode = (Node) categoryHome.getSession().getItem(path);
+			
 			// add watching for node
 			List<String> listUsers = new ArrayList<String>();
 			if (watchingNode.isNodeType(EXO_FORUM_WATCHING)) {
@@ -5881,7 +5906,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					}
 					watchingNode.setProperty(EXO_EMAIL_WATCHING, Utils.getStringsInList(listEmail));
 					watchingNode.setProperty(EXO_USER_WATCHING, Utils.getStringsInList(listUsers));
-				} else if(watchType == -1){
+				} else {
 						watchingNode.setProperty(EXO_RSS_WATCHING, getValueProperty(watchingNode, EXO_RSS_WATCHING, currentUser));
 				}
 			} else {
@@ -5892,9 +5917,13 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					}
 					watchingNode.setProperty(EXO_EMAIL_WATCHING, Utils.getStringsInList(values));
 					watchingNode.setProperty(EXO_USER_WATCHING, Utils.getStringsInList(listUsers));
-				} else if(watchType == -1){	// add RSS watching
-					listUsers.add(currentUser);
-					watchingNode.setProperty(EXO_RSS_WATCHING, Utils.getStringsInList(listUsers));
+					try {
+						watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {	// add RSS watching
+					watchingNode.setProperty(EXO_RSS_WATCHING, new String[]{currentUser});
 				}
 			}
 			if(watchingNode.isNew()) {
@@ -5904,7 +5933,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			}
 //			if(watchType == -1)addForumSubscription(sProvider, currentUser, watchingNode.getName());
 		} catch (Exception e) {
-			log.error(e);
+			log.error("Can not add Watch for user: " + currentUser,e);
 		}finally {sProvider.close() ;}
 	}
 
@@ -6013,8 +6042,9 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			String rootPath = categoryHome.getPath();
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer();
-			queryString.append(JCR_ROOT).append(rootPath).append("//element(*,exo:forumWatching)[(@exo:userWatching='").
-									append(userId).append("') or (@exo:rssWatching='").append(userId).append("')]");
+			queryString.append(JCR_ROOT).append(rootPath).append("//element(*,").append(EXO_FORUM_WATCHING).append(")[(@").append(EXO_USER_WATCHING)
+				.append("='").append(userId).append("') or (@").append(EXO_RSS_WATCHING).append("='").append(userId).append("')]");
+			
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iterator = result.getNodes();		
@@ -6057,8 +6087,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				} else {
 					watch.setIsAddWatchByEmail(false);
 				}
-				if(RSSUsers.contains(userId)) watch.setIsAddWatchByRSS(true);
-				else watch.setIsAddWatchByRSS(false);
+				watch.setIsAddWatchByRSS(RSSUsers.contains(userId));
 				listWatches.add(watch);
 			}
 			return listWatches;
@@ -7206,133 +7235,344 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		}
 	  return null;
   }
+	
+	
+	public InputStream createForumRss(String objectId, String link) throws Exception {
+		List<SyndEntry> entries = new ArrayList<SyndEntry>() ;
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node node_ = null;
+			if(objectId.indexOf(Utils.CATEGORY) == 0) {
+				node_ = getNodeById(sProvider, objectId, Utils.CATEGORY);
+				entries.addAll(categoryUpdated(node_));
+			} else if(objectId.indexOf(Utils.FORUM) == 0) {
+				node_ = getNodeById(sProvider, objectId, Utils.FORUM);
+				entries.addAll(forumUpdated(node_));
+			} else {
+				node_ = getNodeById(sProvider, objectId, Utils.TOPIC);
+				String link_ = node_.getProperty(EXO_LINK).getString();
+				link = Utils.isEmpty(link_)?link:link_;
+				entries.addAll(topicUpdated(node_));
+			}
+			SyndFeed feed = createNewFeed(node_, link);
+			feed.setEntries(entries);
+			SyndFeedOutput output = new SyndFeedOutput();
+			String s = output.outputString(feed);
+			s = StringUtils.replace(s,"&amp;","&");  
+			return new ByteArrayInputStream(s.getBytes());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally { sProvider.close() ;}
+		return null;
+	}
+	
+	private List<SyndEntry> categoryUpdated(Node cateNode) throws Exception{
+		List<SyndEntry> entries = new ArrayList<SyndEntry>() ;
+		NodeIterator iterator = cateNode.getNodes();
+		while (iterator.hasNext()) {
+			Node node = iterator.nextNode();
+			if(node.isNodeType(EXO_FORUM) && !node.getProperty(EXO_IS_CLOSED).getBoolean()) {
+				entries.addAll(forumUpdated(node));
+			}
+		}
+		return entries;
+	}
+
+	private List<SyndEntry> forumUpdated(Node forumNode) throws Exception{
+		List<SyndEntry> entries = new ArrayList<SyndEntry>() ;
+			try {
+				QueryManager qm = forumNode.getSession().getWorkspace().getQueryManager();
+				StringBuilder queryString = new StringBuilder().append(forumNode.getPath()).append("//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')]")
+					.append(" order by @exo:isSticky descending, @exo:lastPostDate descending");
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();
+				NodeIterator iter = result.getNodes();
+				while(iter.hasNext()){
+					entries.addAll(topicUpdated(iter.nextNode()));
+				}
+		 } catch (Exception e) {e.printStackTrace();
+		 }
+		 return entries;
+	 }
+	
+	private List<SyndEntry> topicUpdated(Node topicNode){
+		List<SyndEntry> entries = new ArrayList<SyndEntry>() ;
+		try {
+			Node forumNode = topicNode.getParent();
+			Node categoryNode = forumNode.getParent();
+			boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
+			boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+			String topicName = topicNode.getName() ;
+			if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
+					log.debug("Post" + topicName +" was not added to feed because category or forum has restricted audience");
+				return null;
+			}			
+			//update posts in topic
+			QueryManager qm = topicNode.getSession().getWorkspace().getQueryManager();			
+			StringBuffer stringBuffer = new StringBuffer().append(JCR_ROOT)
+				.append(topicNode.getPath()).append("//element(*,exo:post)")
+				.append(Utils.getPathQuery("true", "false", " "))
+				.append(" order by @exo:createdDate ascending");
+			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			Node postNode = null;
+			while(iter.hasNext()){
+				postNode = iter.nextNode();
+				try {
+					entries.add(postUpdated(postNode));
+				} catch (Exception e) {
+					log.debug("Failed to generate feed for post " + postNode.getPath(), e);
+				}
+			}
+			
+		} catch (Exception e) { e.printStackTrace();
+		}
+		return entries;
+	}
+	
+	private SyndEntry postUpdated(Node postNode) throws Exception {
+		Node topicNode = postNode.getParent();
+		String postName = postNode.getName();
+		PropertyReader post = new PropertyReader(postNode);
+		PropertyReader topic = new PropertyReader(topicNode);
+//		boolean isFirstPost = post.bool("exo:isFirstPost");
+		boolean notApproved = !post.bool("exo:isApproved");
+		boolean isPrivatePost = hasProperty(topicNode, "exo:userPrivate") && !"exoUserPri".equals(topic.strings("exo:userPrivate")[0]);
+		boolean topicHasLimitedViewers = hasProperty(topicNode, "exo:canView");
+		
+		if ((notApproved) || isPrivatePost || topicHasLimitedViewers) {
+				log.debug("Post" + postName +" was not added to feed because it is private or topic has restricted audience or it is approval pending");
+			return null;
+		}
+		
+		Node forumNode = topicNode.getParent();
+		Node categoryNode = forumNode.getParent();
+		boolean categoryHasRestrictedAudience = (hasProperty(categoryNode, "exo:viewer"));
+		boolean forumHasRestrictedAudience = (hasProperty(forumNode, "exo:viewer"));
+		
+		if (categoryHasRestrictedAudience || forumHasRestrictedAudience) {
+				log.debug("Post" + postName +" was not added to feed because category or forum has restricted audience");
+			return null;
+		}
+		
+	
+		List<String> listContent = new ArrayList<String>();
+		String message = post.string(EXO_MESSAGE);
+		listContent.add(message);
+		SyndContent description = new SyndContentImpl();
+		description.setType("text/plain");
+		description.setValue(message);
+		final String title = post.string(EXO_NAME);
+		final Date created = post.date(EXO_CREATED_DATE);
+		final String owner = post.string(EXO_OWNER);
+		
+		final String linkItem = post.string(EXO_LINK);
+		SyndEntry entry = createNewEntry(postName, title, linkItem, listContent, description, created , owner);
+
+		return entry;
+	}
+	
+	private SyndFeed createNewFeed(Node node, String link) throws Exception {
+		PropertyReader reader = new PropertyReader(node);
+		String desc = reader.string(EXO_DESCRIPTION, " ");
+		SyndFeed feed = new SyndFeedImpl();
+		feed.setFeedType("rss_2.0");
+    feed.setTitle(reader.string(EXO_NAME));
+    feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
+		feed.setLink(link);					
+		feed.setDescription(desc);	
+		feed.setEncoding("UTF-8");
+		return feed;
+	}
+	
+	private SyndEntry createNewEntry(String uri, String title, String link, List<String> listContent, SyndContent description, Date pubDate, String author){
+    SyndEntry entry = new SyndEntryImpl();
+    entry.setUri(uri);
+    entry.setTitle(title);
+    entry.setLink(link);
+    entry.setContributors(listContent);
+    entry.setDescription(description);
+    entry.setPublishedDate(pubDate);
+    entry.setAuthor(author);
+    return entry;
+	}
+	
+	public InputStream createUserRss(String userId, String link) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<SyndEntry> entries = new ArrayList<SyndEntry>();
+		try {
+			Node subscriptionNode = getUserProfileHome(sProvider).getNode(userId+"/"+Utils.FORUM_SUBSCRIOTION+userId);
+			PropertyReader reader = new PropertyReader(subscriptionNode);
+			List<String> cateIds = reader.list("exo:categoryIds", new ArrayList<String>());
+	    Node node;
+	    for (String id : cateIds) {
+	    	node = getNodeById(sProvider, id, Utils.CATEGORY);
+	    	entries.addAll(categoryUpdated(node));
+	    }
+	    List<String> forumIds = reader.list("exo:forumIds", new ArrayList<String>());
+	    for (String id : forumIds) {
+	    	node = getNodeById(sProvider, id, Utils.FORUM);
+	    	if(cateIds.contains(node.getParent().getName())) continue;
+	    	entries.addAll(forumUpdated(node));
+	    }
+	    List<String> topicIds = reader.list("exo:topicIds", new ArrayList<String>());
+	    for (String id : topicIds) {
+	    	node = getNodeById(sProvider, id, Utils.TOPIC);
+	    	if(forumIds.contains(node.getParent().getName())) continue;
+	    	entries.addAll(topicUpdated(node));
+	    }
+		} catch (Exception e) {
+			log.error("Can not create SyndEntry for user: " + userId, e);
+		}finally {sProvider.close();}
+		
+		try {
+			SyndFeed feed = new SyndFeedImpl();
+			feed.setFeedType("rss_2.0");
+	    feed.setTitle("Forum subscriptions for " + userId);
+	    feed.setPublishedDate(new Date());
+			feed.setLink(link);					
+			feed.setDescription(" ");	
+			feed.setEncoding("UTF-8");
+			feed.setEntries(entries);
+	    
+			SyndFeedOutput output = new SyndFeedOutput();
+			String s = output.outputString(feed);
+			s = StringUtils.replace(s,"&amp;","&");  
+			return new ByteArrayInputStream(s.getBytes());
+		} catch (Exception e) {
+			log.error("Can not create RSS for user: " + userId, e);
+			return new ByteArrayInputStream(("Can not create RSS for user: " + userId + "<br/>" + e).getBytes());
+		}
+	}
+	
+	
+	/**
+	* {@inheritDoc}
+	*/
+	public boolean populateUserProfile(User user, boolean isNew) throws Exception {
+		boolean added = false;
+		sessionManager.openSession();
+		try {
+			Node profile = null;
+			Node profileHome = getUserProfileHome();
+			final String userName = user.getUserName();
+			if (profileHome.hasNode(userName)) {
+				if (isNew) {
+					log.warn("Request to add user " + userName + " was ignroed because it already exists.");
+				}
+				profile = profileHome.getNode(userName);
+			 added = false;
+			} else {
+				profile = profileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
+				added = true;
+			}
+
+			Calendar cal = getGreenwichMeanTime();
+			profile.setProperty(EXO_USER_ID, userName);
+			profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
+			profile.setProperty(EXO_EMAIL, user.getEmail());
+			profile.setProperty(EXO_FULL_NAME, user.getFullName());
+			cal.setTime(user.getCreatedDate());
+			profile.setProperty(EXO_JOINED_DATE, cal);
+			if (isAdminRole(userName)) {
+				profile.setProperty(EXO_USER_TITLE, "Administrator");
+				profile.setProperty(EXO_USER_ROLE, UserProfile.ADMIN); // 
+			}
+			return added ;
+		} catch (Exception e) {
+			log.error("Error while populating user profile: " + e.getMessage());
+			throw e;
+		} finally {
+			sessionManager.closeSession(true);
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-  public boolean populateUserProfile(User user, boolean isNew) throws Exception {
-    boolean added = false;
-    sessionManager.openSession();
-    try {
-      Node profile = null;
-      Node profileHome = getUserProfileHome();
-      final String userName = user.getUserName();
-      if (profileHome.hasNode(userName)) {
-        if (isNew) {
-          log.warn("Request to add user " + userName + " was ignroed because it already exists.");
-        }
-        profile = profileHome.getNode(userName);
-       added = false;
-      } else {
-        profile = profileHome.addNode(userName, Utils.USER_PROFILES_TYPE);
-        added = true;
-      }
-
-      Calendar cal = getGreenwichMeanTime();
-      profile.setProperty(EXO_USER_ID, userName);
-      profile.setProperty(EXO_LAST_LOGIN_DATE, cal);
-      profile.setProperty(EXO_EMAIL, user.getEmail());
-      profile.setProperty(EXO_FULL_NAME, user.getFullName());
-      cal.setTime(user.getCreatedDate());
-      profile.setProperty(EXO_JOINED_DATE, cal);
-      if (isAdminRole(userName)) {
-        profile.setProperty(EXO_USER_TITLE, "Administrator");
-        profile.setProperty(EXO_USER_ROLE, UserProfile.ADMIN); // 
-      }
-      return added ;
-    } catch (Exception e) {
-      log.error("Error while populating user profile: " + e.getMessage());
-      throw e;
-    } finally {
-      sessionManager.closeSession(true);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void deleteUserProfile(User user) throws Exception {
-    sessionManager.openSession();
-    try {
-      Node profile = getUserProfileHome().getNode(user.getUserName());
-      profile.remove();
-    } catch (Exception e) {
-      log.error("Error while removing user profile: " + e.getMessage());
-      throw e;
-    } finally {
-      sessionManager.closeSession(true);
-    }
-  }
+	public void deleteUserProfile(User user) throws Exception {
+		sessionManager.openSession();
+		try {
+			Node profile = getUserProfileHome().getNode(user.getUserName());
+			profile.remove();
+		} catch (Exception e) {
+			log.error("Error while removing user profile: " + e.getMessage());
+			throw e;
+		} finally {
+			sessionManager.closeSession(true);
+		}
+	}
 
 
-  public List<InitializeForumPlugin> getDefaultPlugins() {
-    
-    return defaultPlugins;
-  }
+	public List<InitializeForumPlugin> getDefaultPlugins() {
+		
+		return defaultPlugins;
+	}
 
 
-  public List<RoleRulesPlugin> getRulesPlugins() {
-    
-    return rulesPlugins;
-  }
+	public List<RoleRulesPlugin> getRulesPlugins() {
+		
+		return rulesPlugins;
+	}
 
 
-  public void updateLastLoginDate(String userId) throws Exception {
-    SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
-    try {
-    
-    Node userProfileHome = getUserProfileHome(sysProvider); 
-    userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime()) ;
-    userProfileHome.save() ;
-    }finally{sysProvider.close() ;}
-  }
+	public void updateLastLoginDate(String userId) throws Exception {
+		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+		try {
+		
+		Node userProfileHome = getUserProfileHome(sysProvider); 
+		userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime()) ;
+		userProfileHome.save() ;
+		}finally{sysProvider.close() ;}
+	}
 
 
-  public List<Post> getNewPosts(int number) throws Exception {
-    List<Post> list = null ;
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    Node forumHomeNode = getForumHomeNode(sProvider) ;
-    QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
-    StringBuffer stringBuffer = new StringBuffer();
-    stringBuffer.append(JCR_ROOT).append(forumHomeNode.getPath()).append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending" );
-    Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    NodeIterator iter = result.getNodes();
-    int count = 0 ;
-    while(iter.hasNext() && count++ < number){
-      if(list == null) list = new ArrayList<Post>() ;
-      Post p = getPost(iter.nextNode())  ;
-      list.add(p) ;
-    }
-    return list;
-  }
+	public List<Post> getNewPosts(int number) throws Exception {
+		List<Post> list = null ;
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node forumHomeNode = getForumHomeNode(sProvider) ;
+		QueryManager qm = forumHomeNode.getSession().getWorkspace().getQueryManager();
+		StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append(JCR_ROOT).append(forumHomeNode.getPath()).append("//element(*,exo:post) [((@exo:isApproved='true') and (@exo:isHidden='false') and (@exo:isActiveByTopic='true') and (@exo:userPrivate='exoUserPri'))] order by @exo:createdDate descending" );
+		Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		int count = 0 ;
+		while(iter.hasNext() && count++ < number){
+			if(list == null) list = new ArrayList<Post>() ;
+			Post p = getPost(iter.nextNode())	;
+			list.add(p) ;
+		}
+		return list;
+	}
 
 
-  public Map<String, String> getServerConfig() {
-    return serverConfig;
-  }
+	public Map<String, String> getServerConfig() {
+		return serverConfig;
+	}
 
 
 
-  public KSDataLocation getDataLocation() {
-    return dataLocator;
-  }
+	public KSDataLocation getDataLocation() {
+		return dataLocator;
+	}
 
-  public void setDataLocator(KSDataLocation dataLocator) {
-    this.dataLocator = dataLocator;
-    sessionManager = dataLocator.getSessionManager();
-    repository = dataLocator.getRepository();
-    workspace = dataLocator.getWorkspace();
-    log.info("JCR Data Storage for forum initialized to " + dataLocator);
-  }
+	public void setDataLocator(KSDataLocation dataLocator) {
+		this.dataLocator = dataLocator;
+		sessionManager = dataLocator.getSessionManager();
+		repository = dataLocator.getRepository();
+		workspace = dataLocator.getWorkspace();
+		log.info("JCR Data Storage for forum initialized to " + dataLocator);
+	}
 
-  public boolean isInitRssListener() {
-    return isInitRssListener;
-  }
+	public boolean isInitRssListener() {
+		return isInitRssListener;
+	}
 
-  public void setInitRssListener(boolean isInitRssListener) {
-    this.isInitRssListener = isInitRssListener;
-  }
+	public void setInitRssListener(boolean isInitRssListener) {
+		this.isInitRssListener = isInitRssListener;
+	}
 
 	
 	

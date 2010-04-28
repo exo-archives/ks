@@ -970,13 +970,13 @@
 		 	 	 	
 	<nodeType name="exo:forumWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
 		<propertyDefinitions>
-			<propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>
-			<propertyDefinition name="exo:userWatching" requiredType="String" autoCreated="false" mandatory="true" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:userWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>
-			<propertyDefinition name="exo:rssWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
+			<propertyDefinition name="exo:rssWatching"  requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
 				<valueConstraints/>
 			</propertyDefinition>				
 		</propertyDefinitions>

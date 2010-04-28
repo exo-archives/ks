@@ -18,6 +18,7 @@ package org.exoplatform.forum.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -415,6 +416,7 @@ public interface DataStorage {
   void mergeTopic(String srcTopicPath, String destTopicPath, String mailContent, String link) throws Exception;
 
   void updateUserProfileInfo(String name) throws Exception;
-
+  public InputStream createForumRss(String objectId, String link) throws Exception;
+  public InputStream createUserRss(String userId, String link) throws Exception;
 
 }

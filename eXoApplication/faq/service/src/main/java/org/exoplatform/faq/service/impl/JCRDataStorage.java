@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +52,7 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
+import org.apache.commons.lang.StringUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.container.component.ComponentPlugin;
@@ -79,6 +81,7 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -88,6 +91,14 @@ import org.exoplatform.services.mail.MailService;
 import org.exoplatform.services.mail.Message;
 import org.exoplatform.services.organization.Membership;
 import org.exoplatform.services.organization.OrganizationService;
+
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * Created by The eXo Platform SARL
@@ -987,6 +998,7 @@ public class JCRDataStorage implements DataStorage {
 //		questionNode.setProperty("exo:relatives", question.getRelations()) ;
 		questionNode.setProperty("exo:usersVote", question.getUsersVote()) ;
 		questionNode.setProperty("exo:markVote", question.getMarkVote()) ;
+		questionNode.setProperty("exo:link", question.getLink()) ;
 		List<FileAttachment> listFileAtt = question.getAttachMent() ;
 		
 		List<String> listNodeNames = new ArrayList<String>() ;
@@ -1131,6 +1143,7 @@ public class JCRDataStorage implements DataStorage {
 		if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(Utils.valuesToArray(questionNode.getProperty("exo:emailWatching").getValues())) ;
 		if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(Utils.valuesToArray(questionNode.getProperty("exo:userWatching").getValues())) ;
 		if(questionNode.hasProperty("exo:topicIdDiscuss")) question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString()) ;
+		if(questionNode.hasProperty("exo:link")) question.setLink(questionNode.getProperty("exo:link").getString()) ;
 		String path = questionNode.getPath() ;
 		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
 		
@@ -1860,7 +1873,7 @@ public class JCRDataStorage implements DataStorage {
 	public Category getCategoryById(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-				return getCategory(getFAQServiceHome(sProvider).getNode(categoryId)) ;
+				return getCategory(getCategoryNodeById(sProvider, categoryId)) ;
 		}catch (Exception e) {
 			log.debug("Category not found " + categoryId);
 		}finally { sProvider.close() ;}
@@ -1970,12 +1983,26 @@ public class JCRDataStorage implements DataStorage {
 	public Node getCategoryNodeById(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			Node faqHome = getFAQServiceHome (sProvider) ;
-			return faqHome.getNode(categoryId) ;
+			return getCategoryNodeById(sProvider, categoryId);
 		}catch (Exception e) {
 		  log.error("Getting node fail: ", e);
 		} finally {sProvider.close() ;} 
 		return null ;
+	}
+
+	private Node getCategoryNodeById(SessionProvider sProvider, String categoryId) throws Exception {
+		try {
+			Node faqHome = getFAQServiceHome (sProvider) ;
+			return faqHome.getNode(categoryId) ;
+		}catch (PathNotFoundException e) {
+			Node categoryHome = getCategoryHome(sProvider, null) ;
+			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()).append("//element(*,exo:faqCategory)").
+				append("[fn:name()='").append(categoryId).append("']") ;
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			return result.getNodes().nextNode();
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -3334,6 +3361,154 @@ public class JCRDataStorage implements DataStorage {
 		  log.error("Fail to update question relatives: ", e);
 		}finally {sProvider.close() ;}
   }
+  
+  
+  
+  
+  public InputStream createAnswerRSS(String cateId) throws Exception {
+  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try{
+			Node cateNode = getCategoryNodeById(sProvider, cateId);
+			
+			StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
+			append("//element(*,exo:faqQuestion)[");
+			List<String> list = getListCategoryIdPublic(sProvider, cateNode);
+			boolean isOr = false;
+			for (String id : list) {
+				if(isOr){
+					queryString.append(" or (@exo:categoryId='").append(id).append("')");
+				} else {
+					queryString.append("(@exo:categoryId='").append(id).append("')");
+					isOr = true;
+				}
+			}
+			queryString.append("]");
+			
+			QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes() ;
+			Node nodeQs;
+			List<SyndEntry> entries = new ArrayList<SyndEntry>();
+	  	while (iter.hasNext()) {
+	  		nodeQs = iter.nextNode();
+	  		if(nodeQs.getParent().getParent().isNodeType("exo:faqCategory")) {
+	  			entries.add(createQuestionEntry(sProvider, nodeQs));
+	  		}
+			}
+	  	
+	  	SyndFeed feed = createNewFeed(cateNode, "http://www.exoplatform.com");
+  		feed.setEntries(entries);
+  		
+  		
+  		SyndFeedOutput output = new SyndFeedOutput();
+			String s = output.outputString(feed);
+			s = StringUtils.replace(s,"&amp;","&");  
+			return new ByteArrayInputStream(s.getBytes());
+		}catch (Exception e) {
+		  log.error(" fall: ", e);
+		}finally {sProvider.close() ;}
+		return null;
+	}
+  
+  private List<String> getListCategoryIdPublic(SessionProvider sProvider, Node cateNode) throws Exception {
+  	List<String> list = new ArrayList<String>();
+  	
+  	StringBuilder queryString = new StringBuilder();
+  	queryString.append("//element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate='')]") ;
+  	
+  	QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes() ;
+  	while (iter.hasNext()) {
+  		list.add(iter.nextNode().getName());
+		}
+  	return list;
+  }
+  
+  private SyndEntry createQuestionEntry(SessionProvider sProvider, Node questionNode) throws Exception  {
+    // Create new entry
+    List<String> listContent = new ArrayList<String>();
+    StringBuffer content = new StringBuffer();
+    if (questionNode.hasNode(Utils.ANSWER_HOME) && questionNode.getNode(Utils.ANSWER_HOME).hasNodes()) {
+      for (String answer : getStrAnswers(questionNode))
+        content.append(" <b><u>Answer:</u></b> ").append(answer).append(". ");
+    }
+    if (questionNode.hasNode(Utils.COMMENT_HOME) && questionNode.getNode(Utils.COMMENT_HOME).hasNodes()) {
+      for (String comment : getComments(questionNode))
+        content.append(" <b><u>Comment:</u></b> ").append(comment).append(". ");
+    }
+    listContent.add(content.toString());
+    SyndEntry entry = createNewEntry(questionNode, listContent);
+    return entry;
+  }
+  
+  private List<String> getStrAnswers(Node questionNode) throws Exception{
+    List<String> listAnswers = new ArrayList<String>();
+    try{
+      NodeIterator nodeIterator = questionNode.getNode(Utils.ANSWER_HOME).getNodes();
+      Node answerNode = null;
+      while(nodeIterator.hasNext()){
+        answerNode = nodeIterator.nextNode();
+        if(answerNode.hasProperty("exo:responses") && answerNode.getProperty("exo:approveResponses").getBoolean() &&
+            answerNode.getProperty("exo:activateResponses").getBoolean()) 
+          listAnswers.add((answerNode.getProperty("exo:responses").getValue().getString())) ;
+      }
+    } catch (Exception e){
+      log.error("Failed to get answers for " + questionNode.getName(), e);
+    }
+    return listAnswers;
+  }
+
+  private List<String> getComments(Node questionNode) throws Exception{
+    List<String> listComment = new ArrayList<String>();
+    try{
+      NodeIterator nodeIterator = questionNode.getNode(Utils.COMMENT_HOME).getNodes();
+      Node commentNode = null;
+      while(nodeIterator.hasNext()){
+        commentNode = nodeIterator.nextNode();
+        if(commentNode.hasProperty("exo:comments")) 
+          listComment.add((commentNode.getProperty("exo:comments").getValue().getString())) ;
+      }
+    } catch (Exception e){
+      log.error("Failed to get comments for " + questionNode.getName(), e);
+    }
+    return listComment;
+  }
+  
+  private SyndFeed createNewFeed(Node node, String link) throws Exception {
+		PropertyReader reader = new PropertyReader(node);
+		String desc = reader.string("exo:description", " ");
+		SyndFeed feed = new SyndFeedImpl();
+		feed.setFeedType("rss_2.0");
+    feed.setTitle(reader.string("exo:name", "Root"));
+    feed.setPublishedDate(reader.date("exo:createdDate", new Date()));
+		feed.setLink(link);					
+		feed.setDescription(desc);	
+		feed.setEncoding("UTF-8");
+		return feed;
+	}
+	
+	private SyndEntry createNewEntry(Node questionNode, List<String> listContent) throws Exception{
+		PropertyReader question = new PropertyReader(questionNode);
+    SyndContent description = new SyndContentImpl();
+    description.setType("text/plain");
+    description.setValue(question.string("exo:name", "") + "<br/>" + question.string("exo:title", "")); 
+		SyndEntry entry = new SyndEntryImpl();
+    entry.setUri(questionNode.getName());
+    entry.setTitle(question.string("exo:title"));
+    entry.setLink(question.string("exo:link", "http://www.exoplatform.com"));
+    entry.setContributors(listContent);
+    entry.setDescription(description);
+    entry.setPublishedDate(question.date("exo:createdDate", new Date()));
+    entry.setAuthor(question.string("exo:author"));
+    return entry;
+	}
+  
+  
+  
+  
   
   
   protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {

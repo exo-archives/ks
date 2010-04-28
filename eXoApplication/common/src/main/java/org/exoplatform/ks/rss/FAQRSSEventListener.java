@@ -51,7 +51,7 @@ public class FAQRSSEventListener implements EventListener{
   public void setPath(String path){  path_  = path ; }
   
 	public void onEvent(EventIterator evIter){		
-		try{
+	/*	try{
 		  AnswersFeedGenerator process = new AnswersFeedGenerator(locator);
 			String path = null;
 			String path_= "";
@@ -84,7 +84,7 @@ public class FAQRSSEventListener implements EventListener{
 			}
 		}catch(Exception e) {
 		  log.error("Init FAQ RSS fail: ", e);
-		}		
+		}	*/	
 	}  
 }
 
