@@ -272,7 +272,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
 			CalculateModeratorEventListener moderatorListener = new CalculateModeratorEventListener() ;
 			moderatorListener.setPath(path) ;
-			observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED + Event.PROPERTY_CHANGED + Event.PROPERTY_REMOVED,
+			observation.addEventListener(moderatorListener, Event.PROPERTY_ADDED & Event.PROPERTY_CHANGED & Event.PROPERTY_REMOVED,
 					                         path, false, null, null, false) ;		
 		}catch(Exception e) {
 			log.error(e);
@@ -289,7 +289,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			String repoName = ((RepositoryImpl)categoryHome.getSession().getRepository()).getName() ;
 			if(!listeners.containsKey(categoryHome.getPath())) {
 				CategoryEventListener categoryListener = new CategoryEventListener(wsName, repoName) ;
-				observation.addEventListener(categoryListener, Event.NODE_ADDED + Event.NODE_REMOVED ,categoryHome.getPath(), false, null, null, false) ;
+				observation.addEventListener(categoryListener, Event.NODE_ADDED & Event.NODE_REMOVED ,categoryHome.getPath(), false, null, null, false) ;
 				listeners.put(categoryHome.getPath(), categoryListener) ;
 			}
 			NodeIterator iter = categoryHome.getNodes();
@@ -298,7 +298,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				//if(catNode.isNodeType("exo:forumCategory")) {
 					if (!listeners.containsKey(catNode.getPath())) {
 						StatisticEventListener sListener = new StatisticEventListener(wsName, repoName) ;
-						observation.addEventListener(sListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+						observation.addEventListener(sListener, Event.NODE_ADDED & Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
 						listeners.put(catNode.getPath(), sListener) ;						
 					}
 				//}
@@ -1102,7 +1102,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				RepositoryImpl repo = (RepositoryImpl)catNode.getSession().getRepository() ;
 				ObservationManager observation = catNode.getSession().getWorkspace().getObservationManager() ;
 				StatisticEventListener statisticEventListener = new StatisticEventListener(wsName, repo.getName()) ;
-				observation.addEventListener(statisticEventListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+				observation.addEventListener(statisticEventListener, Event.NODE_ADDED & Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
 				listeners.put(catNode.getPath(), statisticEventListener); 
 			}
 		}catch(Exception e) {

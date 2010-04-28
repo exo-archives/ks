@@ -353,7 +353,7 @@ public class JCRDataStorage implements DataStorage {
 			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
 			FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
 			questionRSS.setPath(path) ;
-			observation.addEventListener(questionRSS, Event.NODE_ADDED + Event.PROPERTY_CHANGED + Event.NODE_REMOVED,
+			observation.addEventListener(questionRSS, Event.NODE_ADDED & Event.PROPERTY_CHANGED & Event.NODE_REMOVED,
 					                         path, true, null, null, false) ;
 			rssListenerMap_.put(path, questionRSS) ;
 		}catch(Exception e) {
