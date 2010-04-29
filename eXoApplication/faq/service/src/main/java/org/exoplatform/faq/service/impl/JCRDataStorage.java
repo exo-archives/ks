@@ -647,7 +647,8 @@ public class JCRDataStorage implements DataStorage {
 			String language = questionNode.getProperty("exo:language").getString() ;
 			while(nodeIterator.hasNext()){
 				try{
-					ans = getAnswerByNode(nodeIterator.nextNode());
+					Node node = nodeIterator.nextNode();
+					ans = getAnswerByNode(node);
 					ans.setLanguage(language) ;
 					answers.add(ans);
 				}catch(Exception e){}				
@@ -3403,7 +3404,10 @@ public class JCRDataStorage implements DataStorage {
   		
   		SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
-			s = StringUtils.replace(s,"&amp;","&");  
+			s = StringUtils.replace(s,"&amp;","&");
+			s = StringUtils.replace(s,"ST[CDATA[","<![CDATA[");
+			s = StringUtils.replace(s,"END]]","]]>");
+			
 			return new ByteArrayInputStream(s.getBytes());
 		}catch (Exception e) {
 		  log.error(" fall: ", e);
@@ -3431,14 +3435,11 @@ public class JCRDataStorage implements DataStorage {
     // Create new entry
     List<String> listContent = new ArrayList<String>();
     StringBuffer content = new StringBuffer();
-    if (questionNode.hasNode(Utils.ANSWER_HOME) && questionNode.getNode(Utils.ANSWER_HOME).hasNodes()) {
       for (String answer : getStrAnswers(questionNode))
-        content.append(" <b><u>Answer:</u></b> ").append(answer).append(". ");
-    }
-    if (questionNode.hasNode(Utils.COMMENT_HOME) && questionNode.getNode(Utils.COMMENT_HOME).hasNodes()) {
+        content.append(answer);
       for (String comment : getComments(questionNode))
-        content.append(" <b><u>Comment:</u></b> ").append(comment).append(". ");
-    }
+        content.append(comment);
+      
     listContent.add(content.toString());
     SyndEntry entry = createNewEntry(questionNode, listContent);
     return entry;
@@ -3447,16 +3448,21 @@ public class JCRDataStorage implements DataStorage {
   private List<String> getStrAnswers(Node questionNode) throws Exception{
     List<String> listAnswers = new ArrayList<String>();
     try{
-      NodeIterator nodeIterator = questionNode.getNode(Utils.ANSWER_HOME).getNodes();
+    	Node answerHome = questionNode.getNode(Utils.ANSWER_HOME);
+			QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
+						append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')]").append("order by @exo:dateResponse ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+      NodeIterator nodeIterator = result.getNodes();
       Node answerNode = null;
       while(nodeIterator.hasNext()){
         answerNode = nodeIterator.nextNode();
-        if(answerNode.hasProperty("exo:responses") && answerNode.getProperty("exo:approveResponses").getBoolean() &&
-            answerNode.getProperty("exo:activateResponses").getBoolean()) 
-          listAnswers.add((answerNode.getProperty("exo:responses").getValue().getString())) ;
+        if(answerNode.hasProperty("exo:responses"))
+        	listAnswers.add("<b><u>Answer:</u></b> "+(answerNode.getProperty("exo:responses").getValue().getString())+"<br/>") ;
       }
     } catch (Exception e){
-      log.error("Failed to get answers for " + questionNode.getName(), e);
+      log.error("Failed to get answers for " + questionNode.getName());
     }
     return listAnswers;
   }
@@ -3464,15 +3470,21 @@ public class JCRDataStorage implements DataStorage {
   private List<String> getComments(Node questionNode) throws Exception{
     List<String> listComment = new ArrayList<String>();
     try{
-      NodeIterator nodeIterator = questionNode.getNode(Utils.COMMENT_HOME).getNodes();
+    	Node commentHome = questionNode.getNode(Utils.COMMENT_HOME);
+			QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
+						append("//element(*,exo:comment)").append(" order by @exo:dateComment ascending");
+			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+      NodeIterator nodeIterator = result.getNodes();
       Node commentNode = null;
       while(nodeIterator.hasNext()){
         commentNode = nodeIterator.nextNode();
         if(commentNode.hasProperty("exo:comments")) 
-          listComment.add((commentNode.getProperty("exo:comments").getValue().getString())) ;
+          listComment.add("<b><u>Comment:</u></b>"+(commentNode.getProperty("exo:comments").getValue().getString())+"<br/>") ;
       }
     } catch (Exception e){
-      log.error("Failed to get comments for " + questionNode.getName(), e);
+      log.error("Failed to get comments for " + questionNode.getName());
     }
     return listComment;
   }
@@ -3484,8 +3496,8 @@ public class JCRDataStorage implements DataStorage {
 		feed.setFeedType("rss_2.0");
     feed.setTitle(reader.string("exo:name", "Root"));
     feed.setPublishedDate(reader.date("exo:createdDate", new Date()));
-		feed.setLink(link);					
-		feed.setDescription(desc);	
+		feed.setLink("ST[CDATA["+link+"END]]");					
+		feed.setDescription("ST[CDATA["+desc+"END]]");	
 		feed.setEncoding("UTF-8");
 		return feed;
 	}
@@ -3494,11 +3506,11 @@ public class JCRDataStorage implements DataStorage {
 		PropertyReader question = new PropertyReader(questionNode);
     SyndContent description = new SyndContentImpl();
     description.setType("text/plain");
-    description.setValue(question.string("exo:name", "") + "<br/>" + question.string("exo:title", "")); 
+    description.setValue("ST[CDATA["+question.string("exo:title", "") + "<br/>" + (listContent.isEmpty()?"":listContent.get(0)) +"END]]"); 
 		SyndEntry entry = new SyndEntryImpl();
     entry.setUri(questionNode.getName());
     entry.setTitle(question.string("exo:title"));
-    entry.setLink(question.string("exo:link", "http://www.exoplatform.com"));
+    entry.setLink("ST[CDATA["+question.string("exo:link", "http://www.exoplatform.com")+"END]]");
     entry.setContributors(listContent);
     entry.setDescription(description);
     entry.setPublishedDate(question.date("exo:createdDate", new Date()));

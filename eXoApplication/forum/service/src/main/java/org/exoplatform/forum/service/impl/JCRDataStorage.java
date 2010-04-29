@@ -7258,7 +7258,9 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			feed.setEntries(entries);
 			SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
-			s = StringUtils.replace(s,"&amp;","&");  
+			s = StringUtils.replace(s,"&amp;","&");
+			s = StringUtils.replace(s,"ST[CDATA[","<![CDATA[");
+			s = StringUtils.replace(s,"END]]","]]>");
 			return new ByteArrayInputStream(s.getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -7362,7 +7364,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		listContent.add(message);
 		SyndContent description = new SyndContentImpl();
 		description.setType("text/plain");
-		description.setValue(message);
+		description.setValue("ST[CDATA["+message+"END]]");
 		final String title = post.string(EXO_NAME);
 		final Date created = post.date(EXO_CREATED_DATE);
 		final String owner = post.string(EXO_OWNER);
@@ -7381,7 +7383,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
     feed.setTitle(reader.string(EXO_NAME));
     feed.setPublishedDate(reader.date(EXO_CREATED_DATE, new Date()));
 		feed.setLink(link);					
-		feed.setDescription(desc);	
+		feed.setDescription("ST[CDATA["+desc+"END]]");	
 		feed.setEncoding("UTF-8");
 		return feed;
 	}
