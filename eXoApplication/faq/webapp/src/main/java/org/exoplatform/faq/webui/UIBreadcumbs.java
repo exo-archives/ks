@@ -51,6 +51,10 @@ public class UIBreadcumbs extends UIContainer {
 		addChild(UIQuickSearch.class, null, QUICK_SEARCH) ;
 	}
 
+	public void setRenderSearch(boolean isRenderSearch) {
+		getChild(UIQuickSearch.class).setRendered(isRenderSearch);
+	}
+	
 	public void setUpdataPath(String path) throws Exception {
 		if(path != null && path.trim().length() > 0  && !path.equals(Utils.CATEGORY_HOME) ) {
 			String temp[] = path.split("/") ;

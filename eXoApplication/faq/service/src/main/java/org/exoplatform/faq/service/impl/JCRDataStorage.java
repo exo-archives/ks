@@ -2014,8 +2014,14 @@ public class JCRDataStorage implements DataStorage {
 		List<Category> catList = new ArrayList<Category>() ;
 		try {			
 			Node parentCategory ;			
-			if(categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) parentCategory = getCategoryHome(sProvider, null) ;
-			else parentCategory = getFAQServiceHome(sProvider).getNode(categoryId) ;
+			if(categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) {
+				parentCategory = getCategoryHome(sProvider, null) ;
+				if(!faqSetting.isAdmin()){
+					PropertyReader reader = new PropertyReader(parentCategory);
+					List<String> userPrivates = reader.list("exo:userPrivate", new ArrayList<String>());
+					if(!userPrivates.isEmpty() && !Utils.hasPermission(limitedUsers, userPrivates)) return catList;
+				}
+			} else parentCategory = getFAQServiceHome(sProvider).getNode(categoryId) ;
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath());
 			if(faqSetting.isAdmin()) 
 				queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");				

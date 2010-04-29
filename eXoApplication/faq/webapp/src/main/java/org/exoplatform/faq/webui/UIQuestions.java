@@ -18,6 +18,7 @@ package org.exoplatform.faq.webui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -143,8 +144,8 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionQues_ = new String[]{"CommentQuestion", "SendQuestion"} ;
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
+	private boolean isViewRootCate = true;
 	public boolean viewAuthorInfor = false;
-
 	private RenderHelper renderHelper = new RenderHelper();
 	
 	public UIAnswersPageIterator pageIterator = null ;
@@ -161,6 +162,10 @@ public class UIQuestions extends UIContainer {
 	
 	private boolean isCategoryHome() {
 		return (categoryId_ == null || categoryId_.equals(Utils.CATEGORY_HOME)) ? true:false;
+	}
+	
+	public boolean isViewRootCate() {
+		return isViewRootCate;
 	}
 	
 	public String getRSSLink(){
@@ -190,28 +195,36 @@ public class UIQuestions extends UIContainer {
 	}
 
 	public void setListObject() throws Exception{
-		//this.isChangeLanguage = false;
 		try {
+			List<String> propetyOfUser = new ArrayList<String>();
+			Category category = faqService_.getCategoryById(this.categoryId_);
 			if(currentUser_ != null && currentUser_.trim().length() > 0){
 				faqSetting_.setCurrentUser(currentUser_);
+				faqSetting_.setCanEdit(false);
 				if(faqSetting_.getIsAdmin().equals("TRUE")){
 					faqSetting_.setCanEdit(true);
-				} else if(categoryId_ != null && categoryId_.trim().length() > 0 ){
-					try{
-						if(Arrays.asList(faqService_.getCategoryById(this.categoryId_).getModerators()).contains(currentUser_))
-							faqSetting_.setCanEdit(true);
-					}catch(Exception e) {}					
 				} else {
-					faqSetting_.setCanEdit(false);
+					try{
+						propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
+						faqSetting_.setCanEdit(Utils.hasPermission(propetyOfUser, Arrays.asList(category.getModerators())));
+					}catch(Exception e) {}					
 				}
+			}
+			if(!faqSetting_.isCanEdit() && category.getUserPrivate() != null && category.getUserPrivate().length > 0 
+					&& category.getUserPrivate()[0].trim().length() > 0) {
+				isViewRootCate = Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));
 			}
 			String objectId = null;
 			if(pageList != null) objectId = pageList.getObjectId();
-			pageList = faqService_.getQuestionsByCatetory(this.categoryId_, this.faqSetting_);
-			pageList.setPageSize(10);
-			if(objectId != null && objectId.trim().length() > 0) pageList.setObjectId(objectId);
-			pageIterator = this.getChildById(OBJECT_ITERATOR);
-			pageIterator.updatePageList(pageList);
+			if(isViewRootCate){
+				pageList = faqService_.getQuestionsByCatetory(this.categoryId_, this.faqSetting_);
+				pageList.setPageSize(10);
+				if(objectId != null && objectId.trim().length() > 0) pageList.setObjectId(objectId);
+				pageIterator = this.getChildById(OBJECT_ITERATOR);
+				pageIterator.updatePageList(pageList);
+			} else {
+				pageList = null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -285,14 +298,14 @@ public class UIQuestions extends UIContainer {
 
 	public void updateCurrentQuestionList() throws Exception  {
 		questionMap_.clear() ;
-		pageSelect = pageIterator.getPageSelected() ;
-		//listQuestion_ = new ArrayList<Question>();
-		//listQuestion_.addAll(this.pageList.getPage(pageSelect, null));
-		for(Question question : pageList.getPage(pageSelect, null)){
-			questionMap_.put(question.getId(), question) ;			
+		if(pageList != null) {
+			pageSelect = pageIterator.getPageSelected() ;
+			for(Question question : pageList.getPage(pageSelect, null)){
+				questionMap_.put(question.getId(), question) ;			
+			}
+			pageSelect = this.pageList.getCurrentPage();
+			pageIterator.setSelectPage(pageSelect) ;
 		}
-		pageSelect = this.pageList.getCurrentPage();
-		pageIterator.setSelectPage(pageSelect) ;
 	}
 
 	public void setFAQSetting(FAQSetting setting){
@@ -366,10 +379,7 @@ public class UIQuestions extends UIContainer {
 	private Question[] getListQuestion(){
 		try{
 			updateCurrentQuestionList() ;
-			
-		}catch(Exception e) {
-			e.printStackTrace() ;
-		}		
+		}catch(Exception e) {e.printStackTrace();}		
 		return questionMap_.values().toArray(new Question[]{}) ;
 	}
 

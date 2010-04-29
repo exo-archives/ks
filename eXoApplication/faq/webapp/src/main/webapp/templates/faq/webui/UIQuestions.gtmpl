@@ -25,7 +25,7 @@
 	String cateId = uicomponent.getCategoryId();
 	uicomponent.setIsModerators(); //reset permission
 	boolean canEditQuestion = uicomponent.getCanEditQuestion();
-	
+	boolean isViewRootCate = uicomponent.isViewRootCate;
 %>
 <div class="UIQuestions" id="$uicomponent.id" oncontextmenu="return false">
 	<div class="AnswerToolbar" style="float:left; width:100%;">
@@ -52,7 +52,7 @@
 									</div>
 									
 									<%
-									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
+									if(uicomponent.faqSetting_.isEnableAutomaticRSS() && isViewRootCate){
 									 	String linkRss = uicomponent.getRSSLink() ;
 									%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
@@ -136,7 +136,7 @@
 								<%
 									}
 								} else {
-									if(uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion()) {
+									if(isViewRootCate && (uicomponent.currentUser_ != null || uicomponent.currentUser_ == null && uicomponent.faqSetting_.isEnableAnonymousSubmitQuestion())) {
 								%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
 											<div onclick="<%=uicomponent.event("AddNewQuestion", cateId);%>" class="SeparatorLine">
@@ -173,6 +173,7 @@
 								<% } %>
 								<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
 									<!--<div onclick="eXo.faq.UIAnswersPortlet.printAll(this)">-->
+								<% if(isViewRootCate) { %>
 									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>" class="SeparatorLine">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -184,6 +185,7 @@
 											</div>
 										</div>
 									</div>
+								<% } %>
 								</div>
 								<div class="ScrollButtons" style="width:35px;_width:50px;">
 									<div title="Previous">

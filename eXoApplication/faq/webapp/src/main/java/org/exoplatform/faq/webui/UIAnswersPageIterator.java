@@ -41,7 +41,7 @@ import org.exoplatform.webui.event.EventListener;
  )
 
 public class UIAnswersPageIterator extends UIContainer {
-  private JCRPageList pageList ;
+  private JCRPageList pageList = null;
   private long page = 1 ;
   private int endTabPage = 0;
   private int beginTabPage = 0;
@@ -57,7 +57,8 @@ public class UIAnswersPageIterator extends UIContainer {
   
   @SuppressWarnings("unused")
   private List<String> getTotalpage() throws  Exception {
-    int max_Page = (int)pageList.getAvailablePage() ;
+  	int max_Page = 1;
+  	if(pageList != null )max_Page = (int)pageList.getAvailablePage() ;
     if(this.page > max_Page) this.page = max_Page ;
     long page = this.page ;
     if(page <= 3) {
