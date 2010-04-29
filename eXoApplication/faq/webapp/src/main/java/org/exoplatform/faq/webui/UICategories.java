@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.ItemExistsException;
 import javax.jcr.PathNotFoundException;
 
 import org.exoplatform.container.PortalContainer;
@@ -653,7 +654,7 @@ public class UICategories extends UIContainer{
 					popupAction.activate(popupContainer, 600, 400) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 			} catch (Exception e) {
-				e.printStackTrace() ;
+				//e.printStackTrace() ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
@@ -682,8 +683,12 @@ public class UICategories extends UIContainer{
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;					
 					//return;
 				}
-			}catch (Exception e) {
-				e.printStackTrace();
+			} catch (ItemExistsException e) {
+			  UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
+        uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.already-in-destination", null, ApplicationMessage.WARNING)) ;
+        event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;
+      } catch (Exception e) {
+				//e.printStackTrace();
 				UIApplication uiApplication = uiCategories.getAncestorOfType(UIApplication.class) ;
 				uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.category-id-deleted", null, ApplicationMessage.WARNING)) ;
 				event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

@@ -499,8 +499,9 @@ public class UIQuestions extends UIContainer {
 	static  public class AddCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			//String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIAnswersPortlet uiPortlet = question.getAncestorOfType(UIAnswersPortlet.class);
+			String categoryId = question.getCategoryId();
 			UIPopupAction uiPopupAction = uiPortlet.getChild(UIPopupAction.class) ; 
 			UIApplication uiApplication = question.getAncestorOfType(UIApplication.class) ;
 			UIPopupContainer uiPopupContainer = uiPopupAction.createUIComponent(UIPopupContainer.class, null, null) ;
@@ -680,8 +681,9 @@ public class UIQuestions extends UIContainer {
 	static  public class ImportActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions questions = event.getSource() ;
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			//String categoryId = event.getRequestContext().getRequestParameter(OBJECTID) ;
 			UIAnswersPortlet portlet = questions.getAncestorOfType(UIAnswersPortlet.class) ;
+			String categoryId = questions.getCategoryId();
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			popupContainer.setId("FAQImportForm") ;
@@ -1339,9 +1341,10 @@ public class UIQuestions extends UIContainer {
 	static	public class DeleteCategoryActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions uiQuestions = event.getSource() ; 			
-			String categoryId = event.getRequestContext().getRequestParameter(OBJECTID);
+			String categoryId = uiQuestions.getCategoryId(); //event.getRequestContext().getRequestParameter(OBJECTID);
 			UIAnswersPortlet uiPortlet = uiQuestions.getAncestorOfType(UIAnswersPortlet.class);
 			UIApplication uiApplication = uiQuestions.getAncestorOfType(UIApplication.class) ;
+			UICategories categories = uiPortlet.findFirstComponentOfType(UICategories.class);
 			try {
 				Category cate = uiQuestions.faqService_.getCategoryById(categoryId) ;
 				if(uiQuestions.faqSetting_.isAdmin() || cate.getModeratorsCategory().contains(FAQUtils.getCurrentUser())) {
@@ -1351,6 +1354,8 @@ public class UIQuestions extends UIContainer {
 					else categoryId = Utils.CATEGORY_HOME;
 					UIBreadcumbs breadcumbs = uiPortlet.findFirstComponentOfType(UIBreadcumbs.class) ;						
 					breadcumbs.setUpdataPath(categoryId);
+					categories.setPathCategory(categoryId);
+					uiQuestions.setCategoryId(categoryId);
 				} else {
 					uiApplication.addMessage(new ApplicationMessage("UIQuestions.msg.admin-moderator-removed-action", null, ApplicationMessage.WARNING)) ;
 					event.getRequestContext().addUIComponentToUpdateByAjax(uiApplication.getUIPopupMessages()) ;

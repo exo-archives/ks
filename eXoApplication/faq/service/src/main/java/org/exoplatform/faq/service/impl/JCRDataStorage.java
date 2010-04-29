@@ -40,6 +40,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -2117,9 +2118,12 @@ public class JCRDataStorage implements DataStorage {
 			destNode.save() ;
 			//resetIndex(category, index)
 			// Should be update moderators for moving category
-		}catch (Exception e){ 
+		}catch (ItemExistsException e){ 
 			throw e ;
-		}finally { sProvider.close() ;}		
+		} catch (Exception e) {
+      if(log.isDebugEnabled()) log.debug(e.getMessage());
+    }
+		finally { sProvider.close() ;}		
 	}
 	
 	/* (non-Javadoc)
