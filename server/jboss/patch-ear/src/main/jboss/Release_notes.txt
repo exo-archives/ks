@@ -19,7 +19,7 @@
 ====
 
 =================================================
-    Release Notes - exo-ks - Version 2.0.0 CR01
+    Release Notes - exo-ks - Version 2.0.0 CR02
 =================================================
 
 ===============
@@ -40,8 +40,8 @@ forum, frequency answer and question
 
     * General
           o Upgraded to GateIn 3.0 GA and dependencies http://www.jboss.org/gatein/
-          o Fix rss
-          o 
+          o Fix RSS generate problem
+          o Session manager
           
           
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes           
@@ -83,9 +83,7 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ==============
 4 Known issues 
 ==============
- * http://jira.exoplatform.org/browse/KS-2312
-   (this depend on http://jira.exoplatform.org/browse/EXP-23 or follow my introduction on KS-2312)
- * http://jira.exoplatform.org/browse/KS-2259 
+  * http://jira.exoplatform.org/browse/KS-2259 
  (this depends on https://jira.jboss.org/jira/browse/GTNPORTAL-1020, update to next version of GateIn)
 
 ===========================  
@@ -101,6 +99,29 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ====================
 6 Detailed Changelog 
 ====================
+- Version 2.0.0-CR02 
+
+** Bug
+    * [KS-2195] - RSS from forum and faq generate is not true.
+    * [KS-2304] - Category is appear again after deleted
+    * [KS-2312] - JBoss KS 2.0 Beta01 doesn't start on linux
+    * [KS-2371] - Checking session manager problem
+    * [KS-2381] - Can't add a poll
+    * [KS-2383] - Don't show second question of category  in RSS's content
+    * [KS-2389] - Don't show object (category/forum/topic) which got RSS feed in My subscription tab
+    * [KS-2393] - In /ksdemo: default data isn't displayed in both Forum & Answer
+    * [KS-2394] - sometimes can not add category/forum/topic after do some actions in Forum
+    * [KS-2396] - Can not add new Category after deleting Category by the main menu on the action bar
+    * [KS-2401] - Answers portlet stays in french when I change language to English
+    * [KS-2402] - FAQ - Still possible to create a question at the root
+    * [KS-2404] - Some functions are not executed after add category with special character for Restricted Audience field
+    * [KS-2410] - Edit question is invalid in special case
+    * [KS-2421] - FAQ- Problem of moderate questions 
+
+** Task
+    * [KS-1936] - Manage e.printStacktrace() and replace by logging system for Forum and FAQ
+    * [KS-2378] - NPE stacktrace at startup
+
 - Version 2.0.0-CR01
   http://jira.exoplatform.org/secure/ReleaseNote.jspa?version=11378&styleName=Text&projectId=10150&Create=Create
 ** Bug
