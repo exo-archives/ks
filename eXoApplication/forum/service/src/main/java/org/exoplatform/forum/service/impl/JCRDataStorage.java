@@ -1758,7 +1758,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
       	}
       }
       String topicQuery = buildTopicQuery(xpathConditions, strOrderBy, forumPath);
-//      System.out.println("\n\n topicQuery: " + topicQuery);
       TopicListAccess topicListAccess = new TopicListAccess(sessionManager, topicQuery);
       return new LazyPageList<Topic>(topicListAccess, pageSize);
     } catch (Exception e) {
@@ -5870,7 +5869,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	public void addWatch(int watchType, String path, List<String> values, String currentUser) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		System.out.println("\n\n path1: " + path);
 		try {
 			Node categoryHome = getCategoryHome(sProvider) ;
 			if(watchType == -1) {
@@ -5880,9 +5878,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
 				NodeIterator iterator = result.getNodes();
-				System.out.println("\n\n iterator.size: " + iterator.getSize());
 				path = iterator.nextNode().getPath() ;
-				System.out.println("\n\n path2: " + path);
 			}
 			
 			if (path.indexOf(categoryHome.getName()) < 0)
@@ -7259,6 +7255,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
 			s = StringUtils.replace(s,"&amp;","&");
+			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 			s = StringUtils.replace(s,"ST[CDATA[","<![CDATA[");
 			s = StringUtils.replace(s,"END]]","]]>");
 			return new ByteArrayInputStream(s.getBytes());
@@ -7284,7 +7281,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		List<SyndEntry> entries = new ArrayList<SyndEntry>() ;
 			try {
 				QueryManager qm = forumNode.getSession().getWorkspace().getQueryManager();
-				StringBuilder queryString = new StringBuilder().append(forumNode.getPath()).append("//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')]")
+				StringBuilder queryString = new StringBuilder(JCR_ROOT).append(forumNode.getPath()).append("//element(*,exo:topic)[@exo:isWaiting='false' and @exo:isActive='true' and @exo:isClosed='false' and (not(@exo:canView) or @exo:canView='' or @exo:canView=' ')]")
 					.append(" order by @exo:isSticky descending, @exo:lastPostDate descending");
 				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 				QueryResult result = query.execute();
@@ -7440,7 +7437,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	    
 			SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
-			s = StringUtils.replace(s,"&amp;","&");  
+			s = StringUtils.replace(s,"&amp;","&"); 
+			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+			s = StringUtils.replace(s,"ST[CDATA[","<![CDATA[");
+			s = StringUtils.replace(s,"END]]","]]>");
 			return new ByteArrayInputStream(s.getBytes());
 		} catch (Exception e) {
 			log.error("Can not create RSS for user: " + userId, e);
