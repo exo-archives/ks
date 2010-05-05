@@ -481,7 +481,7 @@ public class UIQuestionForm extends UIForm implements UIPopupComponent  {
 	      	if(questionForm.isAddCheckBox){
 		        question_.setApproved(questionForm.getUIFormCheckBoxInput(IS_APPROVED).isChecked()) ;
 		        question_.setActivated(questionForm.getUIFormCheckBoxInput(IS_ACTIVATED).isChecked()) ;
-	      	} else{
+	      	} else if(isNew){
 	      		question_.setApproved(true) ;
 	      	}
 	      }
