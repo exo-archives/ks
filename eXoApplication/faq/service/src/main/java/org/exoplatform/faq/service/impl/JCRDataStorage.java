@@ -346,38 +346,40 @@ public class JCRDataStorage implements DataStorage {
 		return null ;
 	}	
 	
+//	TODO: remove RSS Listener
 	protected void addRSSListener(Node node) throws Exception{
-		try{
-			if(!isInitRssListener_)return;
-			if(rssListenerMap_.containsKey(node.getPath())) return ;
-			String path = node.getPath() ;
-			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
-			FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
-			questionRSS.setPath(path) ;
-			observation.addEventListener(questionRSS, Event.NODE_ADDED & Event.PROPERTY_CHANGED & Event.NODE_REMOVED,
-					                         path, true, null, null, false) ;
-			rssListenerMap_.put(path, questionRSS) ;
-		}catch(Exception e) {
-		  log.error("Fail to listen when add RSS: ", e);
-		}
+//		try{
+//			if(!isInitRssListener_)return;
+//			if(rssListenerMap_.containsKey(node.getPath())) return ;
+//			String path = node.getPath() ;
+//			ObservationManager observation = node.getSession().getWorkspace().getObservationManager() ;
+//			FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
+//			questionRSS.setPath(path) ;
+//			observation.addEventListener(questionRSS, Event.NODE_ADDED & Event.PROPERTY_CHANGED & Event.NODE_REMOVED,
+//					                         path, true, null, null, false) ;
+//			rssListenerMap_.put(path, questionRSS) ;
+//		}catch(Exception e) {
+//		  log.error("Fail to listen when add RSS: ", e);
+//		}
 	}
 	
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#reInitRSSEvenListener()
    */
+//	remove
 	public void reInitRSSEvenListener() throws Exception{
-		if(!isInitRssListener_)return;
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node faqHome = getFAQServiceHome(sProvider) ;
-		QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
-		StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()).append("//element(*,exo:faqQuestionHome)") ;
-		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-		QueryResult result = query.execute();
-		NodeIterator iter = result.getNodes() ;
-		rssListenerMap_.clear() ;
-		while(iter.hasNext()) {
-			addRSSListener(iter.nextNode()) ;			
-		}		
+//		if(!isInitRssListener_)return;
+//		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+//		Node faqHome = getFAQServiceHome(sProvider) ;
+//		QueryManager qm = faqHome.getSession().getWorkspace().getQueryManager();
+//		StringBuffer queryString = new StringBuffer("/jcr:root").append(faqHome.getPath()).append("//element(*,exo:faqQuestionHome)") ;
+//		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+//		QueryResult result = query.execute();
+//		NodeIterator iter = result.getNodes() ;
+//		rssListenerMap_.clear() ;
+//		while(iter.hasNext()) {
+//			addRSSListener(iter.nextNode()) ;			
+//		}		
 	}
 	
 
@@ -3380,10 +3382,15 @@ public class JCRDataStorage implements DataStorage {
   	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node cateNode = getCategoryNodeById(sProvider, cateId);
+			List<SyndEntry> entries = new ArrayList<SyndEntry>();
+			
 			
 			StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
 			append("//element(*,exo:faqQuestion)[");
 			List<String> list = getListCategoryIdPublic(sProvider, cateNode);
+			if(cateNode.hasProperty("exo:userPrivate") && Utils.valuesToList(cateNode.getProperty("exo:userPrivate").getValues()).isEmpty()){
+				if(!list.isEmpty())list.add(cateNode.getName());
+			}
 			boolean isOr = false;
 			for (String id : list) {
 				if(isOr){
@@ -3400,7 +3407,7 @@ public class JCRDataStorage implements DataStorage {
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes() ;
 			Node nodeQs;
-			List<SyndEntry> entries = new ArrayList<SyndEntry>();
+			
 	  	while (iter.hasNext()) {
 	  		nodeQs = iter.nextNode();
 	  		if(nodeQs.getParent().getParent().isNodeType("exo:faqCategory")) {
@@ -3415,6 +3422,7 @@ public class JCRDataStorage implements DataStorage {
   		SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
 			s = StringUtils.replace(s,"&amp;","&");
+			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 			s = StringUtils.replace(s,"ST[CDATA[","<![CDATA[");
 			s = StringUtils.replace(s,"END]]","]]>");
 			
@@ -3428,8 +3436,8 @@ public class JCRDataStorage implements DataStorage {
   private List<String> getListCategoryIdPublic(SessionProvider sProvider, Node cateNode) throws Exception {
   	List<String> list = new ArrayList<String>();
   	
-  	StringBuilder queryString = new StringBuilder();
-  	queryString.append("//element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate='')]") ;
+  	StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
+		append("//element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate='')]") ;
   	
   	QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
