@@ -109,6 +109,7 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setIsWaiting(reader.bool("exo:isWaiting"));
     topicNew.setIsActive(reader.bool("exo:isActive"));
     topicNew.setVoteRating(reader.d("exo:voteRating"));
+    topicNew.setUserVoteRating(reader.strings("exo:userVoteRating"));
     topicNew.setCreatedDate(reader.date("exo:createdDate"));
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
