@@ -130,12 +130,7 @@ public class PropertyReader {
 	
 	private String[] valuesToArray(Value[] Val) throws Exception {
 		if (Val.length < 1) return new String[] {};
-		List<String> list = new ArrayList<String>();
-		String s;
-		for (int i = 0; i < Val.length; ++i) {
-			 s = Val[i].getString();
-			 if(s != null && s.trim().length() > 0) list.add(s);
-		}
+		List<String> list = valuesToList(Val);
 		return list.toArray(new String[list.size()]);
 	}
 
