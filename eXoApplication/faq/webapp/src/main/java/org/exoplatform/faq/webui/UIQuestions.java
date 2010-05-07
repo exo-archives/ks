@@ -147,6 +147,7 @@ public class UIQuestions extends UIContainer {
 	public boolean viewAuthorInfor = false;
 	private boolean isGetSv = true;
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+	private boolean isGetQuestion = true;
 	
 	public UIAnswersPageIterator pageIterator = null ;
 	public long pageSelect = 0;
@@ -194,30 +195,34 @@ public class UIQuestions extends UIContainer {
 		RepositoryService rService = getApplicationComponent(RepositoryService.class) ;    
 		return rService.getCurrentRepository().getConfiguration().getName() ;
 	}
+	
+	public boolean isGetQuestion() {
+		return isGetQuestion;
+	}
+	
+	public void setGetQuestion() {
+		try {
+			boolean b = (boolean)((UIAnswersContainer)getParent()).isRenderCategory(categoryId_);
+			if(b != isGetQuestion) {
+				isGetQuestion = b;
+				setListObject();
+			}
+		} catch (Exception e) {}
+	}
 
 	public void setListObject(){
-		//this.isChangeLanguage = false;
 		try {
-			if(currentUser_ != null && currentUser_.trim().length() > 0){
-				faqSetting_.setCurrentUser(currentUser_);
-				if(faqSetting_.getIsAdmin().equals("TRUE")){
-					faqSetting_.setCanEdit(true);
-				} else if(categoryId_ != null && categoryId_.trim().length() > 0 ){
-					try{
-						if(Arrays.asList(faqService_.getCategoryById(this.categoryId_).getModerators()).contains(currentUser_))
-							faqSetting_.setCanEdit(true);
-					}catch(Exception e) {}					
-				} else {
-					faqSetting_.setCanEdit(false);
-				}
+			if(isGetQuestion) {
+				String objectId = null;
+				if(pageList != null) objectId = pageList.getObjectId();
+				pageList = faqService_.getQuestionsByCatetory(this.categoryId_, this.faqSetting_);
+				pageList.setPageSize(10);
+				if(objectId != null && objectId.trim().length() > 0) pageList.setObjectId(objectId);
+				pageIterator = this.getChildById(OBJECT_ITERATOR);
+				pageIterator.updatePageList(pageList);
+			} else {
+				pageList = null;
 			}
-			String objectId = null;
-			if(pageList != null) objectId = pageList.getObjectId();
-			pageList = faqService_.getQuestionsByCatetory(this.categoryId_, this.faqSetting_);
-			pageList.setPageSize(10);
-			if(objectId != null && objectId.trim().length() > 0) pageList.setObjectId(objectId);
-			pageIterator = this.getChildById(OBJECT_ITERATOR);
-			pageIterator.updatePageList(pageList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -292,13 +297,13 @@ public class UIQuestions extends UIContainer {
 	public void updateCurrentQuestionList() throws Exception  {
 		questionMap_.clear() ;
 		pageSelect = pageIterator.getPageSelected() ;
-		//listQuestion_ = new ArrayList<Question>();
-		//listQuestion_.addAll(this.pageList.getPage(pageSelect, null));
-		for(Question question : pageList.getPage(pageSelect, null)){
-			questionMap_.put(question.getId(), question) ;			
+		if(pageList != null) {
+			for(Question question : pageList.getPage(pageSelect, null)){
+				questionMap_.put(question.getId(), question) ;			
+			}
+			pageSelect = this.pageList.getCurrentPage();
+			pageIterator.setSelectPage(pageSelect) ;
 		}
-		pageSelect = this.pageList.getCurrentPage();
-		pageIterator.setSelectPage(pageSelect) ;
 	}
 
 	public void setFAQSetting(FAQSetting setting){
@@ -408,6 +413,7 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
+		setGetQuestion();
 		setListObject();
 	}
 	

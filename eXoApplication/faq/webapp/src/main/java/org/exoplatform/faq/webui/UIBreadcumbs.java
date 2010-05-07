@@ -72,7 +72,6 @@ public class UIBreadcumbs extends UIContainer {
 		currentPath_ = path ;
 	}
 
-	@SuppressWarnings("unused")
 	public String getPath(int index) {
 		return this.pathList_.get(index) ;
 	}
@@ -85,11 +84,10 @@ public class UIBreadcumbs extends UIContainer {
 		return breadcumbs_.size() ;
 	}
 
-	@SuppressWarnings("unused")
 	public List<String> getBreadcumbs() throws Exception {
 		return breadcumbs_ ;
 	}
-
+	
 	static public class ChangePathActionListener extends EventListener<UIBreadcumbs> {
 		@SuppressWarnings("static-access")
     public void execute(Event<UIBreadcumbs> event) throws Exception {
@@ -118,6 +116,5 @@ public class UIBreadcumbs extends UIContainer {
 			event.getRequestContext().addUIComponentToUpdateByAjax(answerPortlet) ;
 		}
 	}
-
 
 }

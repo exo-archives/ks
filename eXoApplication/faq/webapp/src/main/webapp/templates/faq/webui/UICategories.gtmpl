@@ -41,11 +41,12 @@
 		</div>
 		<div class="AnswersContainer" style="height:auto; padding:0px 0px 5px 10px; margin-bottom:5px; line-height:18px;_width:182px;">
 			<%
-			long[] cateInfo = uicomponent.getCategoryInfo() ;
-			long numberOfSubCate = cateInfo[0] ;
-			long numberOfQuestion = cateInfo[1] ;
-			long questionNotAnswer = cateInfo[2] ;
-			long questionNotApproved = cateInfo[3] ;
+			if(uicomponent.isShowInfo()){
+				long[] cateInfo = uicomponent.getCategoryInfo() ;
+				long numberOfSubCate = cateInfo[0] ;
+				long numberOfQuestion = cateInfo[1] ;
+				long questionNotAnswer = cateInfo[2] ;
+				long questionNotApproved = cateInfo[3] ;
 			%>
 			<!-- <div style="margin-top:2px;">$numberOfSubCate <%= _ctx.appRes("UICategories.label.SubCategories"); %></div> -->
 			<a id="uicategoriesCateInfors0" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[0]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(0);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_QUESTIONS)%>">$numberOfQuestion <%= _ctx.appRes("UICategories.title.Questions"); %></a><br/>
@@ -53,7 +54,9 @@
 			<%
 			if(uicomponent.isModerator){%>
 				<a id="uicategoriesCateInfors2" style="margin-top:4px;cursor:pointer;font-weight:<%=uicomponent.font_weight[2]%>;" onclick="javaScript:eXo.faq.UIAnswersPortlet.selectCateInfor(2);<%=uicomponent.event("FilterQuestions", uicomponent.FILTER_PENDING_QUESTIONS)%>">$questionNotApproved <%= _ctx.appRes("UICategories.label.QuestionsNotApproved"); %></a><br/>
-			<%}%>
+			<%}
+			}
+			%>
 		</div>
 	</div>
 	

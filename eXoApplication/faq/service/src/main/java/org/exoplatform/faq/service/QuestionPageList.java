@@ -723,13 +723,14 @@ public class QuestionPageList extends JCRPageList {
    * @throws Exception  if an valueFormat or Repository exception occur
    */
   private String [] ValuesToStrings(Value[] Val) throws Exception {
-  	if(Val.length == 1)
-  		return new String[]{Val[0].getString()};
-		String[] Str = new String[Val.length];
-		for(int i = 0; i < Val.length; ++i) {
-		  Str[i] = Val[i].getString();
+  	if (Val.length < 1) return new String[] {};
+  	List<String> list = new ArrayList<String>();
+		String s;
+		for (int i = 0; i < Val.length; ++i) {
+			s = Val[i].getString();
+			if (s != null && s.trim().length() > 0) list.add(s);
 		}
-		return Str;
+		return list.toArray(new String[list.size()]);
   }
   
   private long [] ValuesToLong(Value[] Val) throws Exception {

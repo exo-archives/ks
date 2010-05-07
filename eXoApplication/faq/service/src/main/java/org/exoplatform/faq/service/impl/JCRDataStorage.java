@@ -79,6 +79,7 @@ import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.bbcode.InitBBCodePlugin;
 import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
+import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -2166,6 +2167,12 @@ public class JCRDataStorage {
 			Node parentCategory ;			
 			if(categoryId == null || categoryId.equals(Utils.CATEGORY_HOME)) parentCategory = getCategoryHome(sProvider, null) ;
 			else parentCategory = getFAQServiceHome(sProvider).getNode(categoryId) ;
+			if(!faqSetting.isAdmin()){
+				PropertyReader reader = new PropertyReader(parentCategory);
+				List<String> userPrivates = reader.list("exo:userPrivate", new ArrayList<String>());
+				if(!userPrivates.isEmpty() && !hasPermission(limitedUsers, userPrivates)) return catList;
+			}
+			
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath());
 			if(faqSetting.isAdmin()) 
 				queryString.append("/element(*,exo:faqCategory) [@exo:isView='true'] order by @exo:index ascending");				
@@ -2259,21 +2266,18 @@ public class JCRDataStorage {
 	}
 	
 	private String [] ValuesToArray(Value[] Val) throws Exception {
-		if(Val.length < 1) return new String[]{} ;
-		if(Val.length == 1) return new String[]{Val[0].getString()} ;
-		String[] Str = new String[Val.length] ;
-		for(int i = 0; i < Val.length; ++i) {
-			Str[i] = Val[i].getString() ;
-		}
-		return Str;
+		if (Val.length < 1) return new String[] {};
+		List<String> list = ValuesToList(Val);
+		return list.toArray(new String[list.size()]);
 	}
 	
 	private List<String> ValuesToList(Value[] values) throws Exception {
 		List<String> list = new ArrayList<String>();
-		if (values.length < 1)
-			return list;
+		if (values.length < 1) return list;
+		String s;
 		for (int i = 0; i < values.length; ++i) {
-			list.add(values[i].getString());
+			s = values[i].getString();
+			if (s != null && s.trim().length() > 0) list.add(s);
 		}
 		return list;
 	}

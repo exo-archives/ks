@@ -115,6 +115,11 @@ public class UICategories extends UIContainer{
 	}
 
 	@SuppressWarnings("unused")
+	private boolean isShowInfo() {
+		return ((UIAnswersContainer)getParent()).getRenderChild();
+	}
+	
+	@SuppressWarnings("unused")
 	private long[] getCategoryInfo() {
 		long[] result = new long[]{0, 0, 0, 0} ;
 		try {

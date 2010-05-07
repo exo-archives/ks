@@ -102,28 +102,19 @@ public class PropertyReader {
 	
 	
 	 String[] valuesToArray(Value[] Val) throws Exception {
-	    if (Val.length < 1)
-	      return new String[] {};
-	    if (Val.length == 1)
-	      return new String[] { Val[0].getString() };
-	    String[] Str = new String[Val.length];
-	    for (int i = 0; i < Val.length; ++i) {
-	      Str[i] = Val[i].getString();
-	    }
-	    return Str;
-	  }
+		 if (Val.length < 1) return new String[] {};
+			List<String> list = valuesToList(Val);
+			return list.toArray(new String[list.size()]);
+	 }
 
 	  List<String> valuesToList(Value[] values) throws Exception {
-	    List<String> list = new ArrayList<String>();
-	    if (values.length < 1)
-	      return list;
-	    if (values.length == 1) {
-	      list.add(values[0].getString());
-	      return list;
-	    }
-	    for (int i = 0; i < values.length; ++i) {
-	      list.add(values[i].getString());
-	    }
+	  	List<String> list = new ArrayList<String>();
+			if (values.length < 1) return list;
+			String s;
+			for (int i = 0; i < values.length; ++i) {
+				s = values[i].getString();
+				if (s != null && s.trim().length() > 0) list.add(s);
+			}
 	    return list;
 	  }
 	
