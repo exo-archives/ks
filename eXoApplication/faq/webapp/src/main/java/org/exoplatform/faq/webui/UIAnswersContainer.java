@@ -16,10 +16,19 @@
  */
 package org.exoplatform.faq.webui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
+import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.core.UIContainer;
 
@@ -36,39 +45,80 @@ import org.exoplatform.webui.core.UIContainer;
 public class UIAnswersContainer extends UIContainer  {
 	private FAQSetting faqSetting_ = null;
 	private String currentUser_;
+	private FAQService faqService_;
+	private boolean isRenderChild = true;
+	private boolean hasPermission = true;
   public UIAnswersContainer() throws Exception {
-  	FAQService faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	faqService_ = (FAQService)PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class) ;
+  	UIBreadcumbs uiBreadcumbs = addChild(UIBreadcumbs.class, null, null) ;
+  	UIQuestions uiQuestions = addChild(UIQuestions.class, null, null) ;    
+  	UICategories uiCategories = addChild(UICategories.class, null, null) ;
+
   	currentUser_ = FAQUtils.getCurrentUser() ;
   	faqSetting_ = new FAQSetting();
-		FAQUtils.getPorletPreference(faqSetting_);
-		faqSetting_.setCurrentUser(currentUser_);
-		if(!FAQUtils.isFieldEmpty(currentUser_)){
-			if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
-			else faqSetting_.setIsAdmin("FALSE");
-			faqService_.getUserSetting(currentUser_, faqSetting_);
-		} else {
-			faqSetting_.setIsAdmin("FALSE");
-		}
+  	FAQUtils.getPorletPreference(faqSetting_);
+  	faqSetting_.setCurrentUser(currentUser_);
+  	if(!FAQUtils.isFieldEmpty(currentUser_)){
+  		if(faqService_.isAdminRole(currentUser_)) faqSetting_.setIsAdmin("TRUE");
+  		else faqSetting_.setIsAdmin("FALSE");
+  		faqService_.getUserSetting(currentUser_, faqSetting_);
+  	} else {
+  		faqSetting_.setIsAdmin("FALSE");
+  	}
+  	isRenderChild = isRenderCategory(Utils.CATEGORY_HOME);
+  	hasPermission = isRenderChild;
+  	uiBreadcumbs.setUpdataPath(Utils.CATEGORY_HOME) ;
+  	uiQuestions.setFAQService(faqService_);
+  	uiQuestions.setFAQSetting(faqSetting_);
+  	uiQuestions.setCategoryId(Utils.CATEGORY_HOME);
+  	uiBreadcumbs.setRenderSearch(uiQuestions.isViewRootCate());
   	
-		UIBreadcumbs uiBreadcumbs = addChild(UIBreadcumbs.class, null, null).setRendered(true) ;
-		uiBreadcumbs.setUpdataPath(Utils.CATEGORY_HOME) ;
-    UIQuestions uiQuestions = addChild(UIQuestions.class, null, null).setRendered(true) ;    
-    uiQuestions.setFAQService(faqService_);
-    uiQuestions.setFAQSetting(faqSetting_);
-    uiQuestions.setCategoryId(Utils.CATEGORY_HOME);
-    uiBreadcumbs.setRenderSearch(uiQuestions.isViewRootCate());
-
-    //uiQuestions.updateCurrentQuestionList() ;
-    //uiQuestions.viewAuthorInfor = faqService_.isViewAuthorInfo(null);
-    //if(uiQuestions.getCategoryId() == null) uiQuestions.setCategories(Utils.CATEGORY_HOME) ;
-    
-    UICategories uiCategories = addChild(UICategories.class, null, null).setRendered(true);
-    uiCategories.setFAQSetting(faqSetting_);
-    uiCategories.setFAQService(faqService_);
-    if(uiCategories.getCategoryPath() == null) uiCategories.setPathCategory(Utils.CATEGORY_HOME) ;
+  	uiCategories.setFAQSetting(faqSetting_);
+  	uiCategories.setFAQService(faqService_);
+  	if(uiCategories.getCategoryPath() == null) uiCategories.setPathCategory(Utils.CATEGORY_HOME) ;
   } 
+
+  public void setViewRootCate() {
+			PortalRequestContext portalContext = Util.getPortalRequestContext();
+			String isAjax = portalContext.getRequestParameter("ajaxRequest");
+			if(isAjax != null && Boolean.parseBoolean(isAjax)) return;
+		try {
+			UIQuestions questions = getChild(UIQuestions.class);
+			questions.setViewRootCate();
+			boolean b = questions.isViewRootCate();
+			if(b != hasPermission) {
+				hasPermission = b;
+			}
+			if(Utils.CATEGORY_HOME.equals(questions.getCategoryId())) isRenderChild = hasPermission;
+		} catch (Exception e) {}
+	}
+  
+  public boolean isRenderCategory(String categoryId) throws Exception {
+  	try {
+  		List<String> propetyOfUser = new ArrayList<String>();
+  		Category category = faqService_.getCategoryById(categoryId);
+  		if(currentUser_ != null && currentUser_.trim().length() > 0){
+  			faqSetting_.setCurrentUser(currentUser_);
+  			faqSetting_.setCanEdit(false);
+  			if(faqSetting_.getIsAdmin() != null && faqSetting_.getIsAdmin().equals("TRUE")){
+  				faqSetting_.setCanEdit(true);
+  			} else {
+					propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
+					faqSetting_.setCanEdit(Utils.hasPermission(propetyOfUser, Arrays.asList(category.getModerators())));
+  			}
+  		}
+  		if(!faqSetting_.isCanEdit() && category.getUserPrivate() != null && category.getUserPrivate().length > 0 
+  				&& category.getUserPrivate()[0].trim().length() > 0) {
+  			return Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));
+  		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
   
   public FAQSetting getFAQSetting(){return faqSetting_;}
+  public boolean getRenderChild(){return hasPermission;}
   
   public void updateIsRender(boolean isRender) throws Exception {
   	getChild(UICategories.class).setRendered(isRender) ;

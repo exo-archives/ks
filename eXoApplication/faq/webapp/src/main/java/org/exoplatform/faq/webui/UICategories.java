@@ -115,6 +115,10 @@ public class UICategories extends UIContainer{
 		this.faqSetting_ = faqSetting;
 	}
 
+	private boolean isShowInfo() {
+		return ((UIAnswersContainer)getParent()).getRenderChild();
+	}
+	
 	private long[] getCategoryInfo() {
 		long[] result = new long[]{0, 0, 0, 0} ;
 		try {

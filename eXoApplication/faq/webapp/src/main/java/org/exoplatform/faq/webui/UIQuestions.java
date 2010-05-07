@@ -59,6 +59,8 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.organization.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -168,6 +170,16 @@ public class UIQuestions extends UIContainer {
 		return isViewRootCate;
 	}
 	
+	public void setViewRootCate() {
+		try {
+			boolean b = (boolean)((UIAnswersContainer)getParent()).isRenderCategory(categoryId_);
+			if(b != isViewRootCate) {
+				isViewRootCate = b;
+				setListObject();
+			}
+		} catch (Exception e) {}
+	}
+	
 	public String getRSSLink(){
 		String catepath = categoryId_.substring(categoryId_.lastIndexOf("/")+1);
 		return RSS.getRSSLink("faq", getPortalName(), catepath);
@@ -196,24 +208,6 @@ public class UIQuestions extends UIContainer {
 
 	public void setListObject() throws Exception{
 		try {
-			List<String> propetyOfUser = new ArrayList<String>();
-			Category category = faqService_.getCategoryById(this.categoryId_);
-			if(currentUser_ != null && currentUser_.trim().length() > 0){
-				faqSetting_.setCurrentUser(currentUser_);
-				faqSetting_.setCanEdit(false);
-				if(faqSetting_.getIsAdmin().equals("TRUE")){
-					faqSetting_.setCanEdit(true);
-				} else {
-					try{
-						propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
-						faqSetting_.setCanEdit(Utils.hasPermission(propetyOfUser, Arrays.asList(category.getModerators())));
-					}catch(Exception e) {}					
-				}
-			}
-			if(!faqSetting_.isCanEdit() && category.getUserPrivate() != null && category.getUserPrivate().length > 0 
-					&& category.getUserPrivate()[0].trim().length() > 0) {
-				isViewRootCate = Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));
-			}
 			String objectId = null;
 			if(pageList != null) objectId = pageList.getObjectId();
 			if(isViewRootCate){
@@ -414,6 +408,7 @@ public class UIQuestions extends UIContainer {
 	public void setCategoryId(String categoryId)  throws Exception {
 		viewAuthorInfor = faqService_.isViewAuthorInfo(categoryId);
 		this.categoryId_ = categoryId ;
+		setViewRootCate();
 		setListObject();
 	}
 	

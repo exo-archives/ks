@@ -19,7 +19,6 @@
 	jsmanager.addJavascript("eXo.faq.UIAnswersPortlet.checkCustomView('" + _ctx.appRes("UIQuestions.label.HileLeftPanels") + "', '" + _ctx.appRes("UIQuestions.label.ShowLeftPanels") + "');");
 	jsmanager.addCustomizedOnLoadScript('eXo.faq.UIAnswersPortlet.loadActionScroll();');
 	
-	
 	String url = uicomponent.url("Setting", "OBJECTID");
 	uicomponent.setLink(url);
 	String cateId = uicomponent.getCategoryId();
@@ -52,7 +51,7 @@
 									</div>
 									
 									<%
-									if(uicomponent.faqSetting_.isEnableAutomaticRSS() && isViewRootCate){
+									if(uicomponent.faqSetting_.isEnableAutomaticRSS()){
 									 	String linkRss = uicomponent.getRSSLink() ;
 									%>
 										<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	class="DefaultStyle FAQBar ControlButton">
@@ -173,7 +172,6 @@
 								<% } %>
 								<div onmouseout="eXo.faq.UIAnswersPortlet.OverButton(this)" onmouseover="eXo.faq.UIAnswersPortlet.OverButton(this)"	 class="DefaultStyle FAQBar ControlButton">
 									<!--<div onclick="eXo.faq.UIAnswersPortlet.printAll(this)">-->
-								<% if(isViewRootCate) { %>
 									<div onclick="<%=uicomponent.event("PrintAllQuestion")%>" class="SeparatorLine">
 										<div class="LeftOverButton">
 											<div class="RightOverButton">
@@ -185,7 +183,6 @@
 											</div>
 										</div>
 									</div>
-								<% } %>
 								</div>
 								<div class="ScrollButtons" style="width:35px;_width:50px;">
 									<div title="Previous">

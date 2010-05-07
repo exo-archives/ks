@@ -1,4 +1,6 @@
-<div id="<%=uicomponent.getId()%>">
+<% uicomponent.setViewRootCate(); %>
+<div id="${uicomponent.id}">
+	<% if(uicomponent.isRenderChild) { %>
 	<%List children = uicomponent.getChildren() ;%>
 	<table style="table-layout:fixed; width:99%;">
 		<tr>
@@ -9,5 +11,7 @@
 			</td>
 		</tr>
 	</table>
+	<%} else {%>
+	<div style="font-size:20px; text-align:center; width:90%;"><%=_ctx.appRes("UIAnswersContainer.label.NotPermission")%></div>
+	<%} %>
 </div>
-
