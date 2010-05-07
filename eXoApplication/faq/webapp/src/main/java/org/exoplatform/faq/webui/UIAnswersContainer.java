@@ -102,17 +102,18 @@ public class UIAnswersContainer extends UIContainer  {
   			faqSetting_.setCanEdit(false);
   			if(faqSetting_.getIsAdmin() != null && faqSetting_.getIsAdmin().equals("TRUE")){
   				faqSetting_.setCanEdit(true);
-  			} else {
+  			} else if(category.getModerators() != null && category.getModerators().length > 0 
+    				&& category.getModerators()[0].trim().length() > 0){
 					propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
 					faqSetting_.setCanEdit(Utils.hasPermission(propetyOfUser, Arrays.asList(category.getModerators())));
   			}
   		}
   		if(!faqSetting_.isCanEdit() && category.getUserPrivate() != null && category.getUserPrivate().length > 0 
   				&& category.getUserPrivate()[0].trim().length() > 0) {
+  			if(propetyOfUser.isEmpty()) propetyOfUser = UserHelper.getAllGroupAndMembershipOfUser(currentUser_);
   			return Utils.hasPermission(propetyOfUser, Arrays.asList(category.getUserPrivate()));
   		}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return true;
 	}

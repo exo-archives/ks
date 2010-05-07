@@ -3389,7 +3389,8 @@ public class JCRDataStorage implements DataStorage {
 			StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
 			append("//element(*,exo:faqQuestion)[");
 			List<String> list = getListCategoryIdPublic(sProvider, cateNode);
-			if(cateNode.hasProperty("exo:userPrivate") && Utils.valuesToList(cateNode.getProperty("exo:userPrivate").getValues()).isEmpty()){
+			PropertyReader reader = new PropertyReader(cateNode);
+			if(reader.list("exo:userPrivate", new ArrayList<String>()).isEmpty()){
 				if(!list.isEmpty())list.add(cateNode.getName());
 			}
 			boolean isOr = false;
