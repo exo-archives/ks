@@ -60,28 +60,6 @@
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>  
 
-  <!-- Send Email -->
- 
-   <!-- component>
-    <key>org.exoplatform.services.mail.MailService</key>
-    <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
-      <init-params>
-        <properties-param>
-          <name>config</name>
-          <property name="mail.smtp.auth.username" value="exoservice@gmail.com" />
-          <property name="mail.smtp.auth.password" value="exoadmin" />
-          <property name="mail.smtp.host" value="smtp.gmail.com" />
-          <property name="mail.smtp.port" value="465" />
-          <property name="mail.smtp.starttls.enable" value="true" />
-          <property name="mail.smtp.auth" value="true" />
-          <property name="mail.smtp.debug" value="false" />
-          <property name="mail.smtp.socketFactory.port" value="465" />
-          <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" />
-          <property name="mail.smtp.socketFactory.fallback" value="false" />
-        </properties-param>
-      </init-params>
-  </component -->
-  
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
     <component-plugin>
@@ -148,58 +126,6 @@
       </init-params>
     </component-plugin>
   </external-component-plugins>  
-
-
-  
-  <!--
-    <component> <type>org.exoplatform.upload.UploadService</type>
-    <init-params> <value-param> <name>upload.limit.size</name>
-    <description>Maximum size of the file to upload in MB</description>
-    <value>20</value> </value-param> </init-params> </component>
-  -->
-
-  <!-- Forum plugins -->
-
-  <!--
-    <component-plugin> <name>default.data</name>
-    <set-method>addInitialDataPlugin</set-method>
-    <type>org.exoplatform.forum.service.conf.InitializeForumPlugin</type>
-    <description>description</description> <init-params> <object-param>
-    <name>livedemo.default.configuration</name> <description>initial
-    data for live demo</description> <object
-    type="org.exoplatform.forum.service.conf.ForumInitialData"> <field
-    name="categories"> <collection type="java.util.ArrayList"> <value>
-    <object type="org.exoplatform.forum.service.conf.CategoryData">
-    <field name="owner"> <string>root</string> </field> <field
-    name="name"> <string>Knowledge Suite</string> </field> <field
-    name="description"> <string>All about eXo KS</string> </field>
-    <field name="forums"> <collection type="java.util.ArrayList">
-    <value> <object type="org.exoplatform.forum.service.conf.ForumData">
-    <field name="owner"><string>root</string></field> <field
-    name="name"><string>Live demo</string></field> <field
-    name="description"><string>Questions about this
-    demo</string></field> <field name="topics"> <collection
-    type="java.util.ArrayList"> <value> <object
-    type="org.exoplatform.forum.service.conf.TopicData"> <field
-    name="name"><string>Demo data policy</string></field> <field
-    name="icon"><string>Shield</string></field> <field
-    name="owner"><string>root</string></field> <field
-    name="content"><string> Welcome to eXo Knowledge Suite live
-    demo!\n\n\n We hope you enjoy discovering eXo Forum and FAQ
-    applications features. You don't need to be logged in to see the
-    applications in action. But the power of KS lies in the rich set of
-    admin/moderation features.\n\n We didn't want you to miss them so,
-    when you [b][url="/portal/public/classic/register"]create a demo
-    account[/url][/b], you will be granted full permissions. Anybody can
-    become an administrator or a moderator and play in the sandbox!\n As
-    a consequence, the data for this forum (including the accounts) is
-    not meant to stay.\n\n [b][center]WE MAY RESET FORUMS AND FAQS
-    ANYTIME[/center][/b]\n\n Enjoy and don't forget to send feedback at
-    [email]ks@exoplatform.com[/email]</string></field> </object>
-    </value> </collection> </field> </object> </value> </collection>
-    </field> </object> </value> </collection> </field> </object>
-    </object-param> </init-params> </component-plugin>
-  -->
 
 
 </configuration>
