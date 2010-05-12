@@ -1348,7 +1348,6 @@ public class JCRDataStorage implements DataStorage {
 	public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
 		SessionProvider sProvider =	SessionProvider.createSystemProvider() ;
 		try {
-			StringBuffer queryString = null;
 			String id ;
 			Node categoryNode ;
 			if(categoryId == null || Utils.CATEGORY_HOME.equals(categoryId)) {
@@ -1363,21 +1362,19 @@ public class JCRDataStorage implements DataStorage {
 			QueryManager qm = categoryNode.getSession().getWorkspace().getQueryManager();
 			//if(categoryId == null || categoryId.trim().length() < 1) categoryId = "null";
 			String userId = faqSetting.getCurrentUser();
-			if(faqSetting.getDisplayMode().equals("approved") || !faqSetting.isCanEdit()) {
-				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
-													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')");
-				if(userId != null && userId.length() > 0){
-					queryString.append(" and (@exo:isActivated='true') and ((@exo:isApproved='true') or (@exo:author='").append(userId).append("'))").append("]");
-				}else{
-					queryString.append(" and (@exo:isActivated='true') and (@exo:isApproved='true')").append("]");
-				}
+			StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
+			append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("') and (@exo:isActivated='true')");
+			if(!faqSetting.isCanEdit()) {
+				queryString.append(" and (@exo:isApproved='true'");
+				if(userId != null && userId.length() > 0 && faqSetting.getDisplayMode().equals("both")){
+					queryString.append(" or @exo:author='").append(userId).append("')");
+				}else{ queryString.append(")");}
 			} else {
-				queryString = new StringBuffer("/jcr:root").append(categoryNode.getPath()).append("/").append(Utils.QUESTION_HOME). 
-													append("/element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).append("')").
-													append(" and (@exo:isActivated='true')").append("]");
+				if(faqSetting.getDisplayMode().equals("approved")){
+					queryString.append(" and (@exo:isApproved='true')");
+				}
 			}
-			
-			queryString.append("order by ");
+			queryString.append("] order by ");
 			
 			if(faqSetting.isSortQuestionByVote()){
 				queryString.append("@exo:markVote descending, ");
