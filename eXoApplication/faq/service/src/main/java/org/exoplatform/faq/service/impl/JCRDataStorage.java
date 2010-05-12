@@ -47,6 +47,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Session;
 import javax.jcr.Value;
+import javax.jcr.Workspace;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
@@ -3033,6 +3034,7 @@ public class JCRDataStorage implements DataStorage {
 				ZipInputStream zipStream = new ZipInputStream(inputStream) ;
 				ZipEntry entry ;
 				Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
+				Session session = categoryNode.getSession();
 				while((entry = zipStream.getNextEntry()) != null) {
 					ByteArrayOutputStream out= new ByteArrayOutputStream();
 					int available = -1;
@@ -3044,24 +3046,60 @@ public class JCRDataStorage implements DataStorage {
 					zipStream.closeEntry();
 					out.close();
 					InputStream input = new ByteArrayInputStream(out.toByteArray());
-					Session session = categoryNode.getSession();
 					session.importXML(categoryNode.getPath(), input, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 					session.save();
 				}
+				calculateImportRootCategory(categoryNode);
 				zipStream.close();
-				return true ;
 			} else { // import from xml
 				Node categoryNode = getFAQServiceHome(sProvider).getNode(parentId);			
 				Session session = categoryNode.getSession();
 				session.importXML(categoryNode.getPath(), inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				session.save();
-				return true ;
 			}			
 		}catch(Exception e) {
 			log.error("Failed to import data in category " + parentId, e);
-			//throw new RuntimeException("Failed to import data in category " + categoryId, e);
+			return false ;
 		}finally{ sProvider.close() ;}	
-		return false ;
+		return true ;
+	}
+	//
+	
+	private void calculateImportRootCategory(Node categoryRootNode) throws Exception {
+		try {
+			NodeIterator iterator0 = categoryRootNode.getNodes();
+			int i = 0;
+			while (iterator0.hasNext()) {
+				if(iterator0.nextNode().isNodeType("exo:faqCategory")){ i = i + 1;}
+			}
+			Node categoryNode = categoryRootNode.getNode(Utils.CATEGORY_HOME);
+			NodeIterator iterator = categoryNode.getNodes();
+			String rootPath = categoryRootNode.getPath();
+			Session session = categoryRootNode.getSession();
+			Workspace workspace = session.getWorkspace();
+			while (iterator.hasNext()) {
+				Node node = iterator.nextNode();
+				try {
+					if(node.isNodeType("exo:faqCategory")){
+						node.setProperty("exo:index", i);
+						i = i + 1;
+						workspace.move(node.getPath(), rootPath+"/"+node.getName());
+					} else if(node.isNodeType("exo:faqQuestionHome")){
+						if(categoryRootNode.hasNode(Utils.QUESTION_HOME)){
+							NodeIterator iter = node.getNodes();
+							while (iter.hasNext()) {
+								Node node_ = iter.nextNode();
+								workspace.move(node_.getPath(), rootPath+"/"+Utils.QUESTION_HOME+"/"+node_.getName());
+							}
+						} else {
+							workspace.move(node.getPath(), rootPath+"/"+node.getName());
+						}
+					}
+				} catch (Exception e) {}
+			}
+			categoryNode.remove();
+			session.save();
+		} catch (Exception e) {}
 	}
 	
 	/* (non-Javadoc)
