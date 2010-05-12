@@ -2347,11 +2347,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					isGetLastTopic = true;
 				}
 			}
-			if(isNew && strs != null && strs.length > 0) {
-				topicNode.setProperty(EXO_CAN_VIEW, strs);
-			} else if(!isNew && (strs == null || strs.length == 0)){
-				topicNode.setProperty(EXO_CAN_VIEW, new String[]{" "});
-			}
+			if(strs == null) strs = new String[]{""};
+			topicNode.setProperty(EXO_CAN_VIEW, strs);
 			strs = topic.getCanPost();
 			if(strs == null) strs = new String []{""};
 			topicNode.setProperty(EXO_CAN_POST, strs);
