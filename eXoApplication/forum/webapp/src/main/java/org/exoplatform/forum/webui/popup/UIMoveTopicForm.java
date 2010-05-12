@@ -134,7 +134,7 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 	@SuppressWarnings("unused")
 	private List<Forum> getForums(String categoryId) throws Exception {
 		List<Forum> forums = new ArrayList<Forum>() ;
-		for(Forum forum : this.forumService.getForums(categoryId, "")) {
+		for(Forum forum : this.forumService.getForumSummaries(categoryId, "")) {
 			if(forum.getId().equalsIgnoreCase(this.forumId)) {
 				if(pathTopic.indexOf(categoryId) >= 0)	continue ;
 			}
@@ -146,6 +146,10 @@ public class UIMoveTopicForm extends BaseUIForm implements UIPopupComponent {
 					}
 				}
 			}
+			// TODO KS-2469
+			if(forum.getCreateTopicRole().length > 0 && !ForumUtils.isStringInStrings(forum.getCreateTopicRole(), this.userProfile.getUserId())){
+        continue ;
+      }
 			forums.add(forum) ;
 		}
 		return forums ;
