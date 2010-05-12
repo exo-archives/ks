@@ -730,7 +730,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
     UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
     categoryContainer.updateIsRender(true) ;
     forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-    forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE) ;
     forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
      ((WebuiRequestContext) WebuiRequestContext.getCurrentInstance()).addUIComponentToUpdateByAjax(forumPortlet) ;      
   }
@@ -844,7 +843,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	
 	static public class SearchFormActionListener extends BaseEventListener<UITopicDetail> {
 		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-			
 			String path = topicDetail.topic.getPath() ;
 			UIFormStringInput formStringInput = topicDetail.getUIStringInput(ForumUtils.SEARCHFORM_ID) ;
 			String text = formStringInput.getValue() ;
