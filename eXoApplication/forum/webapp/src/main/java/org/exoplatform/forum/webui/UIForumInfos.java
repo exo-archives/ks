@@ -72,9 +72,11 @@ public class UIForumInfos extends UIContainer	{
 					if(ipBaneds.contains(getRemoteIP())) isLock =  true;
 					if(!isLock){
 						String []listUser = forum.getCreateTopicRole() ;
-						if(!ForumUtils.isArrayEmpty(listUser))
+						boolean isEmpty = false;
+						if(!ForumUtils.isArrayEmpty(listUser)){
 							isLock = !ForumServiceUtils.hasPermission(listUser, userProfile.getUserId()) ;
-						if(!isLock){
+						} else isEmpty = true;
+						if(isEmpty || isLock){
 							ForumService forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 							listUser = forumService.getPermissionTopicByCategory(forum.getCategoryId(), "createTopicRole");
 							if(!ForumUtils.isArrayEmpty(listUser)){

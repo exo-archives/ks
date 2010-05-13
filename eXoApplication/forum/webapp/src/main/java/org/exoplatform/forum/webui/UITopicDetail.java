@@ -399,10 +399,11 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		}
 		if(!this.isMod && isCheck){
 			String[] strings = this.forum.getCreateTopicRole() ;
+			boolean isEmpty = false;
 			if(!ForumUtils.isArrayEmpty(strings)){
 				canCreateTopic = ForumServiceUtils.hasPermission(strings, userName) ;
 			}
-			if(canCreateTopic){
+			if(isEmpty || !canCreateTopic){
 				strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
 				if(!ForumUtils.isArrayEmpty(strings)){
 					canCreateTopic = ForumServiceUtils.hasPermission(strings, userName) ;

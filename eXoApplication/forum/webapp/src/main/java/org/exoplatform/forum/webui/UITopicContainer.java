@@ -289,10 +289,12 @@ public class UITopicContainer extends UIForumKeepStickPageIterator {
 		}
 		if(!isModerator && isCheck){
 			String[] strings = this.forum.getCreateTopicRole() ;
+			boolean isEmpty = false;
 			if(!ForumUtils.isArrayEmpty(strings)){
 				canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
-			}
-			if(canAddNewThread){
+			} else isEmpty = true;
+			
+			if(isEmpty || !canAddNewThread){
 				strings = getForumService().getPermissionTopicByCategory(categoryId, "createTopicRole");
 				if(!ForumUtils.isArrayEmpty(strings)){
 					canAddNewThread = ForumServiceUtils.hasPermission(strings, userId) ;
