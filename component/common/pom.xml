@@ -49,5 +49,11 @@
       <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-common-core</artifactId>
+      <version>${org.jboss.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>

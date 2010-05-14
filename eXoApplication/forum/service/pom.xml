@@ -172,6 +172,20 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+      <groupId>jtidy</groupId>
+      <artifactId>jtidy</artifactId>
+      <version>${jtidy.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.portal</groupId>
+      <artifactId>exo.portal.component.common</artifactId>
+      <scope>test</scope>
+    </dependency>
     
   </dependencies>
 </project>
