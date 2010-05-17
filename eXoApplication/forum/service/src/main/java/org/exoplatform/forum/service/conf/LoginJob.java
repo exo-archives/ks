@@ -17,6 +17,8 @@
 package org.exoplatform.forum.service.conf;
 
 
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -30,12 +32,17 @@ public class LoginJob implements Job {
   public LoginJob() throws Exception {}
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
     try{
-      ForumService forumService = (ForumService)Utils.getExoContainer(context).getComponentInstanceOfType(ForumService.class) ;
+    	ExoContainer exoContainer = Utils.getExoContainer(context);
+    	ExoContainerContext.setCurrentContainer(exoContainer);
+      ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
       forumService.updateLoggedinUsers() ;
     }catch(Exception e) {
       log_.warn("Period login job can not execute ...");
-    }	      
+    }finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
+    }     
     if (log_.isDebugEnabled()) {
   		log_.info("\n\nForum Statistic has been updated for logged in user by a period login job");
   	}
