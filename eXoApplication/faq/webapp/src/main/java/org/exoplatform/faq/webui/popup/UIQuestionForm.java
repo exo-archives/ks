@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.Node;
+
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.FileAttachment;
@@ -35,12 +37,14 @@ import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.faq.webui.UIQuestions;
 import org.exoplatform.faq.webui.ValidatorDataInput;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.ForumServiceUtils;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -174,8 +178,8 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
     	selectLanguage.setSelectedValues(new String[]{defaultLanguage_});
     }
     selectLanguage.setOnChange("SelectLanguage");
-    inputIsApproved = (new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false)) ;
-    inputIsActivated = (new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false)) ;
+    inputIsApproved = new UIFormCheckBoxInput<Boolean>(IS_APPROVED, IS_APPROVED, false) ;
+    inputIsActivated = new UIFormCheckBoxInput<Boolean>(IS_ACTIVATED, IS_ACTIVATED, false) ;
     inputAttachcment = new UIFormInputWithActions(ATTACHMENTS) ;
     inputAttachcment.addUIFormInput( new UIFormInputInfo(FILE_ATTACHMENTS, FILE_ATTACHMENTS, null) ) ;
     try{
@@ -224,20 +228,17 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
       }
     }
   }
-  
+
   private boolean getIsModerator() throws Exception{
   	try {
-  		if(isMode || faqSetting_.isAdmin()) {
+  		if(faqSetting_.isAdmin() || isMode) {
   			isMode = true;
-  		} else if(question_ != null && getFAQService().isCategoryModerator(question_.getPath(), FAQUtils.getCurrentUser())){
-  			isMode = true;
-  		}
-  		return isMode ;
+  		} else isMode =getFAQService().isCategoryModerator(categoryId_, FAQUtils.getCurrentUser());
     } catch (Exception e) {e.printStackTrace();}
-    return false;
+    return isMode;
 	}
-  
   public void setIsChildOfManager(boolean isChild) {
+  
     isChildOfManager = isChild ;
     this.removeChildById(AUTHOR);
     this.removeChildById(EMAIL_ADDRESS);
@@ -254,7 +255,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
   public void setQuestion(Question question) throws Exception{
   	List<QuestionLanguage> questionLanguages = new ArrayList<QuestionLanguage>();
     questionId_ = question.getPath() ;
-    categoryId_ = "" ;
+    categoryId_ = question.getCategoryId() ;
     try {
       question_ = question ;
       defaultLanguage_ = question_.getLanguage() ;

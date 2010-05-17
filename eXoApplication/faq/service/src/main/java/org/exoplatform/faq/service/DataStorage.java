@@ -208,7 +208,7 @@ public interface DataStorage {
 
   boolean isViewAuthorInfo(String id) throws Exception;
 
-  boolean isCategoryModerator(String categoryPath, String user) throws Exception;
+  boolean isCategoryModerator(String categoryId, String user) throws Exception;
 
   boolean isCategoryExist(String name, String path);
 
@@ -224,5 +224,4 @@ public interface DataStorage {
   CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception;
 
   void updateQuestionRelatives(String questionPath, String[] relatives) throws Exception;
-
 }

@@ -3176,23 +3176,22 @@ public class JCRDataStorage implements DataStorage {
 	/* (non-Javadoc)
    * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryModerator(java.lang.String, java.lang.String)
    */
-	public boolean isCategoryModerator(String categoryPath, String user) throws Exception {
+	public boolean isCategoryModerator(String categoryId, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		boolean isCalMod = false;
 		try{
 			List<String> userGroups = UserHelper.getAllGroupAndMembershipOfUser(user);
-			Node node = getFAQServiceHome(sProvider).getNode(categoryPath) ;
-			if(!node.hasProperty("exo:moderators")) return false ;
-			 List<String> values = Utils.valuesToList(node.getProperty("exo:moderators").getValues()) ;
-			 Category cat = new Category() ;
-			 cat.setModerators(values.toArray(new String[]{})) ;
-			 List<String> mods = cat.getModeratorsCategory() ;
-			 for(String per : userGroups){
-				 if(mods.contains(per)) return true ;
-			 }
+			Node node = getCategoryNodeById(sProvider, categoryId);
+			
+			PropertyReader reader = new PropertyReader(node);
+			List<String> values = reader.list("exo:moderators", new ArrayList<String>()) ;
+			if(!values.isEmpty())
+			  isCalMod =  Utils.hasPermission(userGroups, values);
 		}catch(Exception e) {
-		  log.error("Cheking whether category moderator fail: ", e);
+		  log.error("Cheking whether category moderator fail: ", e); 
 		}finally { sProvider.close() ;}
-		return false ;
+		
+		return isCalMod ;
 	}
 	
 	/* (non-Javadoc)
@@ -3572,11 +3571,6 @@ public class JCRDataStorage implements DataStorage {
     entry.setAuthor(question.string("exo:author"));
     return entry;
 	}
-  
-  
-  
-  
-  
   
   protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
     String path = dataLocator.getFaqHomeLocation();

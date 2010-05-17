@@ -1124,8 +1124,8 @@ public class FAQServiceImpl implements FAQService, Startable {
 		return jcrData_.getListMailInWatch(categoryId) ;
 	}
 	
-	public boolean isCategoryModerator(String categoryPath, String user) throws Exception {
-		return jcrData_.isCategoryModerator(categoryPath, user) ;
+	public boolean isCategoryModerator(String categoryId, String user) throws Exception {
+		return jcrData_.isCategoryModerator(categoryId, user) ;
 	}
 	
 	public void addLanguage(String questionPath, QuestionLanguage language) throws Exception{

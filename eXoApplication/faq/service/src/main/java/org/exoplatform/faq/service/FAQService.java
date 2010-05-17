@@ -604,7 +604,7 @@ public interface FAQService extends FAQServiceLegacy{
 	
 	public QuestionPageList getListMailInWatch(String categoryId) throws Exception ;
 	
-	public boolean isCategoryModerator(String categoryPath, String user) throws Exception  ;
+	public boolean isCategoryModerator(String categoryId, String user) throws Exception  ;
 	
 	//Multi language apis
 	public void addLanguage(String questionPath, QuestionLanguage language) throws Exception ;
