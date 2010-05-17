@@ -59,7 +59,8 @@
     <org.exoplatform.jcr.version>1.10.8-SNAPSHOT</org.exoplatform.jcr.version>
     <org.exoplatform.portletcontainer.version>2.0.10-SNAPSHOT</org.exoplatform.portletcontainer.version>
     <org.exoplatform.portal.version>2.5.9-SNAPSHOT</org.exoplatform.portal.version>
-    <org.exoplatform.exopackage.version>1.2.2</org.exoplatform.exopackage.version>
+    <org.exoplatform.exopackage.version>1.2.3-SNAPSHOT</org.exoplatform.exopackage.version>
+    <org.exoplatform.exobuild.version>1.2.2-SNAPSHOT</org.exoplatform.exobuild.version>
   </properties>
   <build>
     <resources>
