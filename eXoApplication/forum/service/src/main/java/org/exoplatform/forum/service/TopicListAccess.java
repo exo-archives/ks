@@ -114,6 +114,9 @@ public class TopicListAccess extends JCRListAccess<Topic> {
     topicNew.setModifiedBy(reader.string("exo:modifiedBy"));
     topicNew.setModifiedDate(reader.date("exo:modifiedDate"));
     topicNew.setTagId(reader.strings("exo:tagId"));
+    // TODO KS-2458
+    topicNew.setCanView(reader.strings("exo:canView", new String[]{}));
+    topicNew.setCanPost(reader.strings("exo:canPost", new String[]{}));
     return topicNew;
   }
   
