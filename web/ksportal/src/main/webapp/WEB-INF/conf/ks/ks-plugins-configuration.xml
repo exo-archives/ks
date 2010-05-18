@@ -6,8 +6,10 @@
 		<key>org.exoplatform.forum.service.user.ContactProvider</key>
 		<type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
 	</componen-->	 
-	
+	<!--  
+	relay it from portal config
 	<component>
+		
 		<key>org.exoplatform.services.mail.MailService</key>
 		<type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
 			<init-params>
@@ -26,7 +28,7 @@
 				</properties-param>
 			</init-params>
 	</component>
-
+-->
   <component>
    <type>org.exoplatform.upload.UploadService</type>
      <init-params>
