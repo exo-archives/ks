@@ -50,6 +50,12 @@ public class StatisticEventListener implements EventListener{
 		try{
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
 			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
+			/*System.out.println("\n\n onEvent Add or remove post or topic\n\n");
+			try {
+				System.out.println("\n\n----> " + forumService.getCategories().get(0).getCategoryName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}*/
 			long topicCount = 0;
 			long postCount = 0 ;
 			while(evIter.hasNext()) {

@@ -298,7 +298,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				//if(catNode.isNodeType("exo:forumCategory")) {
 					if (!listeners.containsKey(catNode.getPath())) {
 						StatisticEventListener sListener = new StatisticEventListener(wsName, repoName) ;
-						observation.addEventListener(sListener, Event.NODE_ADDED & Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
+						observation.addEventListener(sListener, Event.NODE_ADDED + Event.NODE_REMOVED ,catNode.getPath(), true, null, null, false) ;
 						listeners.put(catNode.getPath(), sListener) ;						
 					}
 				//}
@@ -6400,20 +6400,24 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		return null ;
 	}
 
-	public void evaluateActiveUsers(String query) throws Exception {
+	public void evaluateActiveUsers(String strQuery) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			String path = getUserProfileHome(sProvider).getPath() ;
 			StringBuilder stringBuilder = new StringBuilder();
-			if(query == null || query.length() == 0) {
+			if(strQuery == null || strQuery.length() == 0) {
 				Calendar calendar = GregorianCalendar.getInstance() ;
 				calendar.setTimeInMillis(calendar.getTimeInMillis() - 864000000) ;
 				stringBuilder.append(JCR_ROOT).append(path).append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")[")
 				.append("@exo:lastPostDate >= xs:dateTime('").append(ISO8601.format(calendar)).append("')]") ;
 			} else {
-				stringBuilder.append(JCR_ROOT).append(path).append(query);
+				stringBuilder.append(JCR_ROOT).append(path).append(strQuery);
 			}
-			NodeIterator iter = search(stringBuilder.toString()) ;
+			QueryManager qm = getForumHomeNode(sProvider).getSession().getWorkspace().getQueryManager() ;			
+			Query query = qm.createQuery(stringBuilder.toString(), Query.XPATH);
+			QueryResult result = query.execute();
+			NodeIterator iter = result.getNodes();
+			
 			Node statisticHome = getStatisticHome(sProvider);
 			if(statisticHome.hasNode(Locations.FORUM_STATISTIC)) {
 				statisticHome.getNode(Locations.FORUM_STATISTIC).setProperty(EXO_ACTIVE_USERS, iter.getSize());

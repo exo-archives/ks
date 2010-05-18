@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -37,8 +38,8 @@ public class SendMailJob implements Job {
 		
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
-		ExoContainer exoContainer = Utils.getExoContainer(context);
     try {
+    	ExoContainer exoContainer = Utils.getExoContainer(context);
       MailService mailService = (MailService)exoContainer.getComponentInstanceOfType(MailService.class) ;
       ForumService forumService =(ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
       int countEmail = 0;

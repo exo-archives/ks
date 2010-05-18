@@ -17,6 +17,7 @@
 package org.exoplatform.forum.service.user;
 
 import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -31,18 +32,20 @@ public class AutoPruneJob implements Job{
   public AutoPruneJob() throws Exception {}
 
   public void execute(JobExecutionContext context) throws JobExecutionException {
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 	  try {
 	  	ExoContainer container = Utils.getExoContainer(context);
 	  	String desc = context.getJobDetail().getDescription();
 	  	ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class) ;
-	  	System.out.println("\n\n >>>>>> AutoPrune Job");
+	  	ExoContainerContext.setCurrentContainer(container);
 	  	forumService.runPrune(desc) ;
 	  	if (log_.isDebugEnabled()) {
 	  		log_.debug("\n\nAuto prune has worked on " + desc + " forum");
 	  	}
 	  } catch (Exception e) {
 	    log_.debug("\n\n >>>>>> AutoPrune Job error" + e.getMessage());
-		 // e.printStackTrace();			
-	  }
+	  }finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
+    }
   }
 }

@@ -23,6 +23,7 @@ import javax.jcr.RepositoryException;
 
 import org.exoplatform.commons.utils.ISO8601;
 import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -38,10 +39,12 @@ public class RecountActiveUserJob implements Job{
 	public RecountActiveUserJob() throws Exception {}
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 		try{
 			ExoContainer exoContainer = org.exoplatform.ks.common.Utils.getExoContainer(context);
 			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    if(forumService != null) {
+	    ExoContainerContext.setCurrentContainer(exoContainer);
+			if(forumService != null) {
 	    	JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
 		    String lastPost = jdatamap.getString("lastPost") ;
 		    if(lastPost != null && lastPost.length() > 0) {
@@ -72,6 +75,8 @@ public class RecountActiveUserJob implements Job{
 		  if (log_.isDebugEnabled()) {
         log_.debug("\n\n The have exception " + e.getMessage());
       }
+    }finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
     }
   }
 }

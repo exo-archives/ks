@@ -40,9 +40,11 @@ public class DeactiveJob implements Job{
 	public DeactiveJob() throws Exception {}
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 		try{
 			ExoContainer exoContainer = Utils.getExoContainer(context);
 			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
+			ExoContainerContext.setCurrentContainer(exoContainer);
 	    if(forumService != null) {
 	    	JobDataMap jdatamap = context.getJobDetail().getJobDataMap();
 		    String inactiveDays = jdatamap.getString("inactiveDays") ;
@@ -82,6 +84,8 @@ public class DeactiveJob implements Job{
 		  log_.trace("\nThe DeactiveJob can not run, a number is not format: "  + nfe.getMessage() + "\n" + nfe.getCause());
   	}catch(Exception e) {
   	  if (log_.isDebugEnabled()) log_.debug(e.getMessage());
-		}	  
+		} finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
+    }
   }
 }

@@ -33,15 +33,14 @@ public class UpdateUserProfileJob implements Job {
   public UpdateUserProfileJob() throws Exception {}
 		
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 	  try {
 	  	ExoContainer exoContainer = Utils.getExoContainer(context);
 			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    String name = context.getJobDetail().getName();
-	    
+			ExoContainerContext.setCurrentContainer(exoContainer);
+			String name = context.getJobDetail().getName();
 		  JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
-		  		  
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
 		  forumService.updateUserProfileInfo(name) ;
 		  if (log_.isDebugEnabled()) {
@@ -50,6 +49,8 @@ public class UpdateUserProfileJob implements Job {
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
 	    log_.trace("User profile could not updated: " + "\n" + e.getCause());
-	  }
+	  }finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
+    }
   }
 }

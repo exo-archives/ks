@@ -34,14 +34,17 @@ public class UpdateDataJob implements Job {
   public UpdateDataJob() throws Exception {}
 		
 	
-	@SuppressWarnings("deprecation")
   public void execute(JobExecutionContext context) throws JobExecutionException {
+//  	System.out.println("\n\n==========>   UpdateDataJob  ");
+  	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 	  try {
 	  	ExoContainer exoContainer = Utils.getExoContainer(context);
 			ForumService forumService = (ForumService)exoContainer.getComponentInstanceOfType(ForumService.class) ;
-	    String name = context.getJobDetail().getName();
+			ExoContainerContext.setCurrentContainer(exoContainer);
+			String name = context.getJobDetail().getName();
 	    JobDataMap jdatamap = context.getJobDetail().getJobDataMap() ;
 	    String path = jdatamap.getString("path") ;
+	    if(path == null) path = "";
 	    forumService.updateForum(path) ;
 	    JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());
@@ -51,6 +54,8 @@ public class UpdateDataJob implements Job {
 		  schedulerService.removeJob(info) ;
 	  } catch (Exception e) {
 	    log_.trace("\nStatistic Forum could not updated: " + "\n" + e.getCause());
-	  }
+	  }finally {
+    	ExoContainerContext.setCurrentContainer(oldContainer);
+    }
   }
 }
