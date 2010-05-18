@@ -30,6 +30,7 @@
   <properties>
     <product>ks</product>
     <deploy>tomcat</deploy>
+	<exo.working.dir>${basedir}/target</exo.working.dir>
   </properties>
   <dependencies>
     <dependency>
