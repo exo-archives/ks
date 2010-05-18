@@ -3380,6 +3380,7 @@ public class JCRDataStorage implements DataStorage {
 				questionInfo = new QuestionInfo() ;
 				try{
 					questionInfo.setQuestion(question.getProperty("exo:title").getString()) ;
+					questionInfo.setDetail(question.getProperty("exo:name").getString());
 					questionInfo.setId(question.getName()) ;
 					if(question.hasNode(Utils.ANSWER_HOME)) {
 						List<String> answers = new ArrayList<String> () ;

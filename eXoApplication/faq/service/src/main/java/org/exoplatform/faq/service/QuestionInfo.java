@@ -28,6 +28,7 @@ import java.util.List;
 public class QuestionInfo {
 	private String id;
 	private String question;
+	private String detail;
 	private List<String> answers = new ArrayList<String>();
 	
 	public QuestionInfo() {}
@@ -52,4 +53,13 @@ public class QuestionInfo {
 	public void setAnswers(List<String> answers) {
   	this.answers = answers;
   }
+
+  public String getDetail() {
+    return detail;
+  }
+
+  public void setDetail(String detail) {
+    this.detail = detail;
+  }
+	
 }

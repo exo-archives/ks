@@ -170,9 +170,14 @@
 			question_ = question_.replaceAll("<br/>", " ");
 			question_ = uicomponent.render(question_);
 			String id_ = questionCate.getId();
+			String questionDetail_ = uicomponent.render(questionCate.getDetail());
 	%>
 		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
-	<% } %>
+		<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+						<span class="TextStyle">$questionDetail_</span>
+	<% } 
+		}
+	%>
 	</div>
 	
 	<div class="FAQViewerContainer">
@@ -210,9 +215,13 @@
 						String question =	questionInfo.getQuestion();
 						question = uicomponent.render(question);
 						String id = questionInfo.getId();
+						String questionDetail_ = uicomponent.render(questionInfo.getDetail());
 				%>
 				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
-				<% } %>
+				<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+						<span class="TextStyle">$questionDetail_</span>
+				<%	} 
+				} %>
 		</ol>
 		<% } %>
 	</div>
