@@ -96,7 +96,7 @@ public class PropertyReader {
 			return valuesToList(node.getProperty(name).getValues());
 		}
 		catch (Exception e) {
-			return null;
+			return defaultValue;
 		}
 	}
 	
