@@ -516,6 +516,7 @@ UIAnswersPortlet.prototype.initContextMenu = function(id){
 		uiContextMenu.classNames.push("FAQCategory");
 		uiContextMenu.classNames.push("QuestionContainer");
 	}
+	eXo.webui.UIRightClickPopupMenu.disableContextMenu(cont);
 	uiContextMenu.setContainer(cont);
 	uiContextMenu.setup();
 };
