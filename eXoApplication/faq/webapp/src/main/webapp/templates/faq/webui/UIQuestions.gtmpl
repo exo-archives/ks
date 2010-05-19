@@ -647,11 +647,11 @@
 																		<div class="LeftQuestionContainer" style="width:99%;">
 																			<div class="$questionIcon">
 																				
-																				<div onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)">
+																				<div >
 																					
 																					<!-- question content -->
 																					<div class="ViewQuestionNotApproved">
-																						<a href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion; cursor:pointer">
+																						<a href="<%=uicomponent.event("CloseQuestion")%>" style="color:$colorViewQuestion; cursor:pointer" onmousedown="eXo.webui.UIRightClickPopupMenu.clickRightMouse(event, this, 'UIPopupQuestion$questionIndex', '', null, null)" onmenucontext="return false;">
 																							<span class="QuestionName" style="line-height:20px;">$questionContent</span>
 																						</a>
 																					</div>
