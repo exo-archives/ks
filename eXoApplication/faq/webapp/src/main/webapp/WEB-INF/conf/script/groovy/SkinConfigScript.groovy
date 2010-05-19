@@ -8,14 +8,14 @@ SkinService.addSkin(
 SkinService.addSkin(
     "faq/AnswersPortlet",
     "Mac",
-   "/" + ServletContextName + "/skin/MacSkin/webui/Stylesheet.css",
+   "/" + ServletContextName + "/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
     "faq/AnswersPortlet",
     "Vista",
-   "/" + ServletContextName + "/skin/VistaSkin/webui/Stylesheet.css",
+   "/" + ServletContextName + "/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
@@ -29,13 +29,13 @@ SkinService.addSkin(
 SkinService.addSkin(
     "faq/FAQPortlet",
     "Mac",
-   "/" + ServletContextName + "/skin/MacSkin/webui/Stylesheet.css",
+   "/" + ServletContextName + "/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
 
 SkinService.addSkin(
     "faq/FAQPortlet",
     "Vista",
-   "/" + ServletContextName + "/skin/VistaSkin/webui/Stylesheet.css",
+   "/" + ServletContextName + "/skin/DefaultSkin/webui/Stylesheet.css",
     ServletContext
 ) ;
