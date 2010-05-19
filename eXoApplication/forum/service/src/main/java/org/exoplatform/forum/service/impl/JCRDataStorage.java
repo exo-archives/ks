@@ -4489,6 +4489,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		try {
 			PropertyReader reader = new PropertyReader(userProfileHome.getNode(userName));
 			userName = reader.string(EXO_SCREEN_NAME, userName);
+		}catch (Exception e) {
 		} finally {
 			sProvider.close();
 		}
@@ -7507,23 +7508,36 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		}
 	}
 
-
-	public List<InitializeForumPlugin> getDefaultPlugins() {
-		
-		return defaultPlugins;
-	}
-
-
-	public List<RoleRulesPlugin> getRulesPlugins() {
-		
-		return rulesPlugins;
-	}
-
+	public String getLatestUser() throws Exception {
+	  System.out.println("\n\n =========> getLatestUser ");
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
+    try {
+      Node profileHome = getUserProfileHome(sProvider);
+      if (profileHome.hasNodes()) {
+        QueryManager qm = profileHome.getSession().getWorkspace().getQueryManager();
+        StringBuilder pathQuery = new StringBuilder();
+        pathQuery.append("/jcr:root")
+                 .append(profileHome.getPath())
+                 .append("//element(*,exo:forumUserProfile) order by @exo:joinedDate descending");
+        Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
+        QueryResult result = query.execute();
+        NodeIterator iter = result.getNodes();
+        if (iter.getSize() > 0) {
+          Node node = iter.nextNode();
+          return node.getName();
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      sProvider.close();
+    }
+    return "";
+  }
 
 	public void updateLastLoginDate(String userId) throws Exception {
 		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
 		try {
-		
 		Node userProfileHome = getUserProfileHome(sysProvider); 
 		userProfileHome.getNode(userId).setProperty(EXO_LAST_LOGIN_DATE, getGreenwichMeanTime()) ;
 		userProfileHome.save() ;
@@ -7550,7 +7564,14 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		return list;
 	}
 
+	public List<InitializeForumPlugin> getDefaultPlugins() {
+    return defaultPlugins;
+  }
 
+  public List<RoleRulesPlugin> getRulesPlugins() {
+    return rulesPlugins;
+  }
+  
 	public Map<String, String> getServerConfig() {
 		return serverConfig;
 	}

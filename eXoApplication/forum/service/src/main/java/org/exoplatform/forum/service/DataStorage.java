@@ -397,6 +397,8 @@ public interface DataStorage {
 
   void updateLastLoginDate(String userId) throws Exception;
 
+  String getLatestUser() throws Exception;
+  
   List<Post> getNewPosts(int number) throws Exception;
 
   Map<String, String> getServerConfig();

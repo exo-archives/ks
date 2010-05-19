@@ -47,6 +47,9 @@ public class ForumStatisticsServiceImpl implements ForumStatisticsService {
     ForumStatistic stats = dataStorage.getForumStatistic();
     long membersCount = stats.getMembersCount();
     stats.setMembersCount((membersCount<=0) ? 0 : membersCount -1);
+    if(userName.equals(stats.getNewMembers())) {
+      stats.setNewMembers(dataStorage.getLatestUser());
+    }
     dataStorage.saveForumStatistic(stats);
     if (log.isDebugEnabled()) log.debug(userName + " left forums. We have" + membersCount + " members now.");
   }
