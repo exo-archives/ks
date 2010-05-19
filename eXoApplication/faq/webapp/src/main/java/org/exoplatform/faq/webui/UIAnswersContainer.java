@@ -81,6 +81,7 @@ public class UIAnswersContainer extends UIContainer  {
 			PortalRequestContext portalContext = Util.getPortalRequestContext();
 			String isAjax = portalContext.getRequestParameter("ajaxRequest");
 			if(isAjax != null && Boolean.parseBoolean(isAjax)) return;
+			FAQUtils.getPorletPreference(faqSetting_);
 		try {
 			UIQuestions questions = getChild(UIQuestions.class);
 			questions.setViewRootCate();

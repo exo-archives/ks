@@ -175,8 +175,8 @@ public class UIQuestions extends UIContainer {
 			boolean b = (boolean)((UIAnswersContainer)getParent()).isRenderCategory(categoryId_);
 			if(b != isViewRootCate) {
 				isViewRootCate = b;
-				setListObject();
 			}
+			setListObject();
 		} catch (Exception e) {}
 	}
 	
@@ -201,9 +201,7 @@ public class UIQuestions extends UIContainer {
   }
 	
 	private boolean isDiscussForum() throws Exception{
-		FAQSetting faqSetting = new FAQSetting();
-		FAQUtils.getPorletPreference(faqSetting);
-		return faqSetting.getIsDiscussForum();
+		return faqSetting_.getIsDiscussForum();
 	}
 
 	public void setListObject() throws Exception{
