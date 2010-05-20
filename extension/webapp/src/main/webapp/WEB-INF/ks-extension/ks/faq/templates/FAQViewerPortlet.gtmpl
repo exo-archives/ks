@@ -170,12 +170,9 @@
 			question_ = question_.replaceAll("<br/>", " ");
 			question_ = uicomponent.render(question_);
 			String id_ = questionCate.getId();
-			String questionDetail_ = uicomponent.render(questionCate.getDetail());
 	%>
 		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
-		<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
-						<span class="TextStyle">$questionDetail_</span>
-	<% } 
+		<%
 		}
 	%>
 	</div>
@@ -215,12 +212,10 @@
 						String question =	questionInfo.getQuestion();
 						question = uicomponent.render(question);
 						String id = questionInfo.getId();
-						String questionDetail_ = uicomponent.render(questionInfo.getDetail());
+						
 				%>
-				<li><a class="FAQViewer" href="#${id}">$question</a> </li>
-				<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
-						<span class="TextStyle">$questionDetail_</span>
-				<%	} 
+				<li><a class="FAQViewer" href="#${id}">$question</a> </li>				
+				<% 
 				} %>
 		</ol>
 		<% } %>
@@ -264,9 +259,14 @@
 				question = uicomponent.render(question);
 				List answers = questionInfo.getAnswers();
 				String qsId = questionInfo.getId();
+				String questionDetail_ = uicomponent.render(questionInfo.getDetail());
 		%>
 		<div class="QuestionContent">
+			
 			<div class="FAQAnswerIcon"><a name="${qsId}">$question</a></div>
+			<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+						<div><span class="TextStyle">$questionDetail_</span></div>
+			<% } %>
 			<div class="Answer">
 				<ol>
 				<%for(answer in answers){ 
