@@ -3224,7 +3224,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
 							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
 						}else {
-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+							headerSubject = "["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
 						if(node.isNodeType(EXO_FORUM)){
@@ -3395,7 +3395,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
 							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
 						}else {
-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+							headerSubject = "["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", categoryName);
@@ -3434,7 +3434,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
 							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
 						}else {
-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+							headerSubject = "["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", forumNode.getProperty(EXO_NAME).getString());
@@ -3476,7 +3476,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							headerSubject = StringUtils.replace(headerSubject, "$FORUM", forumName);
 							headerSubject = StringUtils.replace(headerSubject, "$TOPIC", topicName);
 						}else {
-							headerSubject = "Email notify ["+catName+"]["+forumName+"]"+topicName;
+							headerSubject = "["+catName+"]["+forumName+"]"+topicName;
 						}
 						message.setSubject(headerSubject);
 						content_ = StringUtils.replace(content, "$OBJECT_NAME", topicName);
