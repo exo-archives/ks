@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks-parent</artifactId>
-    <version>1.2.4-SNAPSHOT</version>
+    <version>1.2.4</version>
   </parent>
   <artifactId>exo.ks.server.parent</artifactId>
   <packaging>pom</packaging>
