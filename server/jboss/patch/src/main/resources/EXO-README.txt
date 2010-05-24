@@ -1,5 +1,5 @@
 ==============================================
-    Release Notes - exo-ks - Version 1.2.3
+    Release Notes - exo-ks - Version 1.2.5
 ==============================================
 
 ===============
@@ -18,16 +18,12 @@ KS is made up of three applications:
 2 What's new?
 =============
 
-
-     * General
-          o Upgraded to Portal 2.5.8 and dependencies 
+    * General
           o Fix bugs
-    * Forum
-          o Resize discussion window 
-    * Answers
-          o  
-    * FAQ
-          o Switch language 
+          o Update to portal 2.5.9
+          o Update to kernel 2.0.11
+          o Update to core 2.1.9
+          o Update to jcr 1.10.8
 
 =========
 3 INSTALL
@@ -74,6 +70,19 @@ Launch instructions :
 ===========
 5 CHANGELOG
 ===========
+- Version 1.2.5
+
+- Version 1.2.4
+** Bug
+    * [KS-2402] - FAQ - Still possible to create a question at the root
+    * [KS-2410] - Edit question is invalid in special case
+    * [KS-2421] - FAQ- Problem of moderate questions 
+    * [KS-2424] - FAQ- Administrator VS moderator
+    * [KS-2437] - Remove the use of exoservice gmail Account from MPailService configuration
+    * [KS-2498] - All users can not see all categories although have view permission except user "Root"
+    * [KS-2500] - [Answers] IE7: show pop up window when right click on question that expanding
+    * [KS-2518] - KS error ui when change skin to vista or mac
+
 - Version 1.2.3
 
 ** Bug
