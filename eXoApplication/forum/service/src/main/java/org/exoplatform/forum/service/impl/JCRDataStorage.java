@@ -801,9 +801,9 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> presentPoster = new ArrayList<String>();
 		List<String> presentViewer = new ArrayList<String>();
+		Node catNode = null;
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
-			Node catNode;
 			if (isNew) {
 				catNode = categoryHome.addNode(category.getId(), EXO_FORUM_CATEGORY);
 				catNode.setProperty(EXO_ID, category.getId());
@@ -829,7 +829,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			catNode.setProperty(EXO_CREATE_TOPIC_ROLE, category.getCreateTopicRole());
 			catNode.setProperty(EXO_POSTER, category.getPoster());
 			catNode.setProperty(EXO_VIEWER, category.getViewer());
-			catNode.setProperty(EXO_MODERATORS, category.getModerators());
 			
 			List<String> listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getPoster()));
@@ -852,6 +851,13 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				setPermissionByCategory(catNode, list, listV, EXO_CAN_VIEW);
 			}
 			catNode.save();
+			try {
+				if((isNew && category.getModerators().length > 0) || !isNew) {
+//					System.out.println("\n\n --------------> " + isNew);
+					catNode.setProperty(EXO_MODERATORS, category.getModerators());
+					catNode.save();
+				}
+			} catch (Exception e) {}
 		}catch(Exception e) {
 			throw e;
 		}finally { sProvider.close() ;}
@@ -907,9 +913,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	
 	public void calculateModerator(String nodePath, boolean isNew) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+//		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-	    Node node = (Node)getCategoryHome(sProvider).getSession().getItem(nodePath);
+			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
+			Session session = manager.createSession();
+	    Node node = (Node)session.getItem(nodePath);
 	    String[] modTemp =  new String[]{};
 	    if(node.hasProperty(EXO_TEMP_MODERATORS)) {
 	    	modTemp = Utils.valuesToArray(node.getProperty(EXO_TEMP_MODERATORS).getValues());
@@ -919,8 +927,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		    category.setCategoryName(node.getProperty(EXO_NAME).getString());
 		    category.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
 		    if(isNew || Utils.arraysHaveDifferentContent(modTemp, category.getModerators())){
-			    updateModeratorInForums(sProvider, node, category.getModerators());
-			    updateUserProfileModInCategory(sProvider, node, modTemp, category, isNew);
+			    updateModeratorInForums(node, category.getModerators());
+			    updateUserProfileModInCategory(session, node, modTemp, category, isNew);
 		    }
 	    } else {
 	    	Forum forum = new Forum();
@@ -929,19 +937,18 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	    	forum.setModerators(Utils.valuesToArray(node.getProperty(EXO_MODERATORS).getValues()));
 	    	if(isNew || Utils.arraysHaveDifferentContent(modTemp, forum.getModerators())){
 		    	String categoryId = nodePath.substring(nodePath.indexOf(Utils.CATEGORY), nodePath.lastIndexOf("/"));
-		    	setModeratorForum(sProvider, forum.getModerators(), modTemp, forum, categoryId, isNew);
+		    	setModeratorForum(session, forum.getModerators(), modTemp, forum, categoryId, isNew);
 	    	}
 	    }
 	    node.setProperty(EXO_TEMP_MODERATORS, new String[]{});
 	    node.save();
+	    manager.closeSession();
     } catch (Exception e) {
     	log.debug("PathNotFoundException  cateogry node or forum node not found");
-    } finally {
-    	sProvider.close();
-    }
+    }// finally { sProvider.close();}
 	}
 	
-	private void updateModeratorInForums(SessionProvider sProvider, Node cateNode, String[] moderatorCat) throws Exception {
+	private void updateModeratorInForums(Node cateNode, String[] moderatorCat) throws Exception {
 		NodeIterator iter = cateNode.getNodes();
 		List<String> list;
 		String[] oldModeratoForums ;
@@ -972,8 +979,8 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		cateNode.save();
 	}
 	
-	private void updateUserProfileModInCategory(SessionProvider sProvider, Node catNode, String[] oldcategoryMod, Category category, boolean isNew) throws Exception {
-		Node userProfileHomeNode = getUserProfileHome(sProvider);
+	private void updateUserProfileModInCategory(Session session, Node catNode, String[] oldcategoryMod, Category category, boolean isNew) throws Exception {
+		Node userProfileHomeNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation());
 		Node userProfileNode;
 		String categoryId = category.getId(), cateName = category.getCategoryName();
 		List<String> moderators = ForumServiceUtils.getUserPermission(category.getModerators());
@@ -1060,7 +1067,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			userProfileHomeNode.save();
     } catch (Exception e) {
     	log.error(e);
-    	userProfileHomeNode.getSession().save();
+    	session.save();
     }
 	}
 	
@@ -1273,9 +1280,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	
 	public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node forumNode = null;
+		String[] strModerators = forum.getModerators();
 		try {
 			Node catNode = getCategoryHome(sProvider).getNode(categoryId);
-			Node forumNode;
 			boolean isNewModerateTopic = forum.getIsModerateTopic();
 			boolean isModerateTopic = isNewModerateTopic;
 			String[] oldMod =  new String[]{} ;
@@ -1322,14 +1330,12 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			forumNode.setProperty(EXO_VIEWER, forum.getViewer());
 			forumNode.setProperty(EXO_CREATE_TOPIC_ROLE, forum.getCreateTopicRole());
 			forumNode.setProperty(EXO_POSTER, forum.getPoster());
-			String[] strModerators = forum.getModerators();
 			// set from category
 			strModerators = updateModeratorInForum(catNode, strModerators);
 			boolean isEditMod = isNew;
 			if(!isNew && Utils.arraysHaveDifferentContent(oldMod, strModerators)){
 				isEditMod = true;
 			}
-			forumNode.setProperty(EXO_MODERATORS, strModerators);
 			// save list moderators in property categoryPrivate when list userPrivate of parent category not empty. 
 			if(isEditMod) {
 				if (strModerators != null && strModerators.length > 0 && !Utils.isEmpty(strModerators[0])) {
@@ -1348,6 +1354,11 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				}
 			}
 			catNode.save();
+			try {
+				forumNode.setProperty(EXO_MODERATORS, strModerators);
+				forumNode.save();
+			} catch (Exception e) {}
+			
 			StringBuilder id = new StringBuilder();
 			id.append(catNode.getProperty(EXO_CATEGORY_ORDER).getString()) ;
 			id.append(catNode.getProperty(EXO_CREATED_DATE).getDate().getTimeInMillis()) ;
@@ -1372,9 +1383,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			log.error(e);
 		}finally{ sProvider.close() ;}
 	}
+	
 	//TODO: View again
-	private void setModeratorForum(SessionProvider sProvider, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
-		Node userProfileHomeNode = getUserProfileHome(sProvider);
+	private void setModeratorForum(Session session, String[]strModerators, String[]oldModeratoForums, Forum forum, String categoryId, boolean isNew ) throws Exception {
+		Node userProfileHomeNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation());
 		Node userProfileNode;
 		
 		List<String> moderators = ForumServiceUtils.getUserPermission(strModerators);
@@ -1401,7 +1413,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 							userProfileNode.setProperty(EXO_USER_ROLE, 1);
 							userProfileNode.setProperty(EXO_USER_TITLE, Utils.MODERATOR);
 						}
-						getTotalJobWattingForModerator(sProvider, string);
+						getTotalJobWattingForModerator(session, string);
 					}
 				} catch (PathNotFoundException e) {
 					userProfileNode = userProfileHomeNode.addNode(string, Utils.USER_PROFILES_TYPE);
@@ -1414,7 +1426,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					} else {
 						userProfileNode.save();
 					}
-					getTotalJobWattingForModerator(sProvider, string);
+					getTotalJobWattingForModerator(session, string);
 				}
 			}
 		}
@@ -4823,7 +4835,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				userProfileHome.save();
 			}
 			if(role >=2 && newUserProfile.getUserRole() < 2 && !isAdminRole(userName)) {
-				getTotalJobWattingForModerator(sProvider, userName);
+				getTotalJobWattingForModerator(userProfileHome.getSession(), userName);
 			}
 		} finally { sProvider.close() ;}
 	}
@@ -6304,10 +6316,10 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 		return job;
 	}
 	
-	private int getTotalJobWattingForModerator(SessionProvider sProvider, String userId) throws Exception {
+	private int getTotalJobWattingForModerator(Session session, String userId) throws Exception {
 		int totalJob = 0;
 		try {
-			Node newProfileNode = getUserProfileHome(sProvider).getNode(userId);
+			Node newProfileNode = session.getRootNode().getNode(dataLocator.getUserProfilesLocation()).getNode(userId);
 			long t;// = 3;
 			if(isAdminRole(userId)) {
 				t = 0;
@@ -6315,7 +6327,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 				t = newProfileNode.getProperty(EXO_USER_ROLE).getLong();
 			}
 			if (t < 2) {
-				Node categoryHome = getCategoryHome(sProvider);
+				Node categoryHome = session.getRootNode().getNode(dataLocator.getForumCategoriesLocation());
 				String string = categoryHome.getPath();
 				QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 				StringBuffer stringBuffer = new StringBuffer();
@@ -6368,7 +6380,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			for (String userId : userIds) {
 				if(Utils.isEmpty(userId) || list.contains(userId)) continue;
 				list.add(userId);
-				int job = getTotalJobWattingForModerator(sProvider, userId);
+				int job = getTotalJobWattingForModerator(getForumHomeNode(sProvider).getSession(), userId);
 				if(job >= 0) {
 					cat.setCategoryName(String.valueOf(job));
 					JsonValue json = generatorImpl.createJsonObject(cat);
@@ -6967,25 +6979,28 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 	}
 	
 	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
-		SessionProvider sysProvider = SessionProvider.createSystemProvider() ;
+//	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-			//Node forumHomeNode = getForumHomeNode(sysProvider);
-			//Node forumStatisticNode;
-			Node forumStatisticNode = getStatisticHome(sysProvider).getNode(Locations.FORUM_STATISTIC);
+//			System.out.println("\n\n ========= rp " + repository + " wp: "  + workspace);
+			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
+			Node forumStatisticNode = manager.createSession().getRootNode().getNode(dataLocator.getForumStatisticsLocation());
+			PropertyReader reader = new PropertyReader(forumStatisticNode);
 			if(topicCount != 0) {				
-				long count = forumStatisticNode.getProperty(EXO_TOPIC_COUNT).getLong() + topicCount;
+				long count = reader.l(EXO_TOPIC_COUNT);
 				if(count < 0) count = 0 ;
-				forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count) ;
+				forumStatisticNode.setProperty(EXO_TOPIC_COUNT, count + topicCount) ;
 			}
 			if(postCount != 0){
-				long count = forumStatisticNode.getProperty(EXO_POST_COUNT).getLong() + postCount;
+				long count = reader.l(EXO_POST_COUNT);
 				if(count < 0) count = 0 ;
-				forumStatisticNode.setProperty(EXO_POST_COUNT, count) ;
+				forumStatisticNode.setProperty(EXO_POST_COUNT, count + postCount) ;
 			}
 			forumStatisticNode.save() ;
+			manager.closeSession();
 		}catch(Exception e) {
-			log.error(e);
-		}finally { sysProvider.close() ; }	
+//			e.printStackTrace();
+	//		log.error(e);
+		}
 	}
 
 	private PruneSetting getPruneSetting(Node prunNode) throws Exception {
