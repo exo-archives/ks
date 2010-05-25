@@ -52,6 +52,7 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
+import org.exoplatform.services.organization.OrganizationConfig.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -436,13 +437,13 @@ public class UIForumPortlet extends UIPortletApplication {
 	
 	public boolean checkCanView(Category cate, Forum forum, Topic topic) throws Exception {
 		String[] viewer = cate.getUserPrivate();
-		if(userProfile == null) updateUserProfileInfo();
 		String userId = userProfile.getUserId();
+		List<String> userBound = UserHelper.getAllGroupAndMembershipOfUser(userId);
+		
+		if(userProfile == null) updateUserProfileInfo();
 		if(userProfile.getUserRole() == 0) return true;
 		if(isArrayNotNull(viewer)) {
-			if(!isInArray(viewer, userId)) {
-				return false;
-			}
+			if(!Utils.hasPermission(Arrays.asList(viewer), userBound)) return false;
 		}
 		if(forum != null){
 			if(isArrayNotNull(forum.getModerators()) && isInArray(forum.getModerators(), userId)) {
@@ -551,7 +552,7 @@ public class UIForumPortlet extends UIPortletApplication {
 								  log.error(e);
 								}
 							} else {
-								uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission", new String[]{}, ApplicationMessage.WARNING)) ;
+								uiApp.addMessage(new ApplicationMessage("UIPostForm.msg.no-permission",null, ApplicationMessage.WARNING)) ;
 							}
 						}
 						if (!UserHelper.isAnonim()) {
@@ -559,7 +560,7 @@ public class UIForumPortlet extends UIPortletApplication {
 							this.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						}
 					} else {
-						uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{res.getString("UIForumPortlet.label.topic")}, ApplicationMessage.WARNING)) ;
+						uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission",  new String[]{topic.getTopicName(),"topic"}, ApplicationMessage.WARNING)) ;
 						this.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class) ;
 						categoryContainer.updateIsRender(true) ;
@@ -608,7 +609,7 @@ public class UIForumPortlet extends UIPortletApplication {
 					forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
 					forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page) ;
 				} else {
-					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", null, ApplicationMessage.WARNING)) ;
+					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{forum.getForumName(),"forum"}, ApplicationMessage.WARNING)) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
@@ -629,8 +630,8 @@ public class UIForumPortlet extends UIPortletApplication {
 					categoryContainer.getChild(UICategory.class).updateByLink(category) ;
 					categoryContainer.updateIsRender(false) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
-				} else {
-					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{res.getString("UIForumPortlet.label.category")}, ApplicationMessage.WARNING)) ;
+				} else { 
+					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(),"category"}, ApplicationMessage.WARNING)) ;//res.getString("UIForumPortlet.label.category")
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;

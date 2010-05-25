@@ -360,5 +360,11 @@ public class Utils {
 		}
 		return strBuilder;
 	}
-	
+
+	 static public boolean hasPermission(List<String> listOfGroupMembershipUser, List<String> listOfCanviewUsers){
+	    for(String str : listOfGroupMembershipUser){
+	      if(listOfCanviewUsers.contains(str)) return true;
+	    }
+	    return false;
+	  }
 }
