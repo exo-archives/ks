@@ -203,12 +203,8 @@
 		<div class="FAQContent">
 <!-- ===================================================== View question ======================================================	-->
 			<%
-				String[] questionActions = null ;
-				if(canEditQuestion) {
-					questionActions = uicomponent.getActionQuestion();
-				} else {
-					questionActions = uicomponent.getActionQuestionWithUser();
-				}
+				String[] questionActions = uicomponent.getActionQuestion();
+				
 				Question[] listQuestion = uicomponent.getListQuestion();
 				String questionContent = new String();
 				int questionIndex = 0 ;
@@ -722,26 +718,23 @@
 																						<table class="ActionContainer">
 																							<tr>
 																								<td>
-																								<%
-																									if(uicomponent.canEditQuestion){
-																										 String actionLabel = _ctx.appRes("UIQuestions.action.AddAnswerQuestion"); 
-																										 String link = uicomponent.event("ResponseQuestion", question.getPath());
-																								%>
+																									<%
+																										if(question.isApproved() || uicomponent.canEditQuestion){
+																									%>
 																										<div class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
 																													<div class="ButtonMiddle ButtonMiddleIcon">
 																														<div class="ResponseQuestion" style="padding-left:20px;">
-																															<a href="$link">$actionLabel</a>
+																															<a href="<%=uicomponent.event("ResponseQuestion", question.getPath());%>"><%=_ctx.appRes("UIQuestions.action.AddAnswerQuestion");%></a>
 																														</div>
 																													</div>
 																												</div>
 																											</div>
 																										</div>
-																								<%}%>
-																								<%
-																									if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
-																								%>
+																									<%}
+																										if((uicomponent.faqSetting_.isEnanbleVotesAndComments() && question.isApproved()) || uicomponent.canEditQuestion){
+																									%>
 																										<div  class="ActionButton LightBlueStyle">
 																											<div class="ButtonLeft">
 																												<div class="ButtonRight">
@@ -923,6 +916,7 @@
 													if(answers != null && answers.length > 0){
 														String actionAnswer = "";
 														int i = 0;
+														String owner = "";
 														for(Answer answer in answers) {
 															res = uicomponent.render(answer);
 															if(!uicomponent.canEditQuestion && (!answer.getApprovedAnswers() || !answer.getActivateAnswers())){
@@ -930,7 +924,8 @@
 															}
 															date = FAQUtils.getFormatDate(answer.getDateResponse());
 															responseBy = answer.getFullName();
-															String userProfile = uicomponent.event("ViewUserProfile", answer.getResponseBy());
+															owner = answer.getResponseBy();
+															String userProfile = uicomponent.event("ViewUserProfile", owner);
 														%>
 														<div class="ResponseItemContainer">
 															<table width="100%">
@@ -1014,7 +1009,7 @@
 																
 																		</td>
 																	
-																	<% if(uicomponent.canEditQuestion){%>
+																	<% if(uicomponent.canEditQuestion || owner.equals(uicomponent.currentUser_)){%>
 																		<td style="width:20px" class="DisablePrint">
 																			<a title="<%=_ctx.appRes("UIQuestions.action.EditAnswer")%>"  style="cursor:pointer;" href="<%=uicomponent.event("EditAnswer", answer.getId())%>">
 																				<div class="ItemIcon Edit" style="height:20px;width:16px;">
@@ -1022,6 +1017,7 @@
 																				</div>
 																			</a>
 																		</td>
+																		<%if(uicomponent.canEditQuestion) { %>
 																		<td style="width:20px;" class="DisablePrint">
 																		<%
 																			actionAnswer = uicomponent.event("ChangeStatusAnswer", answer.getId() + "/Approve");
@@ -1052,6 +1048,7 @@
 																				</a>
 																			<%}%>
 																		</td>
+																		<%} %>
 																		<td style="width:20px" class="DisablePrint">
 																				<a href="<%=uicomponent.event("DeleteAnswer", "" + answer.getId())%>" style="font-size:9px; color:blue; font-style:italic; cursor:pointer;" title="<%=_ctx.appRes("UIQuestionsInfo.title.DeleteAnswer")%>">
 																					<div class="DeleteAnswer"><span></span></div>

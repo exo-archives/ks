@@ -317,7 +317,8 @@ public class UIQuestionsInfo extends BaseUIFAQForm implements UIPopupComponent {
         boolean isModerateAnswer = questionsInfo.getFAQService().isModerateAnswer(question.getPath());
         UIResponseForm responseForm = questionManagerForm.getChildById(questionManagerForm.UI_RESPONSE_FORM) ;
         responseForm.setFAQSetting(questionsInfo.faqSetting_);
-        responseForm.updateChildOfQuestionManager(true) ;        
+        responseForm.updateChildOfQuestionManager(true) ; 
+        responseForm.setModertator(true);
         /*if(param.length == 1) responseForm.setQuestionId(question, null, isModerateAnswer) ;
         else*/ 
         responseForm.setQuestionId(question, language, isModerateAnswer) ;

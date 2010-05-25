@@ -143,8 +143,9 @@ public class UIQuestions extends UIContainer {
 	private String[] userActionsCate_ = new String[]{"AddNewQuestion", "Watch"} ;
 	private String[] moderatorActionQues_ = new String[]{"CommentQuestion", "ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
 	private String[] moderatorActionQues2_ = new String[]{"ResponseQuestion", "EditQuestion", "DeleteQuestion", "MoveQuestion", "SendQuestion"} ;
-	private String[] userActionQues_ = new String[]{"CommentQuestion", "SendQuestion"} ;
+	private String[] userActionQues_ = new String[]{"CommentQuestion", "ResponseQuestion", "SendQuestion"} ;
 	private String[] userActionQues2_ = new String[]{"SendQuestion"} ;
+	private String[] userActionQues3_ = new String[]{"ResponseQuestion", "SendQuestion"} ;
 	private String[] sizes_ = new String[]{"bytes", "KB", "MB"};
 	private boolean isViewRootCate = true;
 	public boolean viewAuthorInfor = false;
@@ -276,16 +277,9 @@ public class UIQuestions extends UIContainer {
 
 
 	private String[] getActionQuestion(){
-		if(canEditQuestion) {
-			if(!faqSetting_.isEnanbleVotesAndComments()) return moderatorActionQues2_;
-			else return moderatorActionQues_;
-		} else {
-			if(!faqSetting_.isEnanbleVotesAndComments()) return userActionQues2_;
-			else{
-				if(currentUser_ == null || currentUser_.trim().length() < 1) return userActionQues2_;
-				return userActionQues_;
-			}
-		}
+		return (canEditQuestion)?((faqSetting_.isEnanbleVotesAndComments())?moderatorActionQues_:moderatorActionQues2_):
+			((FAQUtils.isFieldEmpty(currentUser_))?userActionQues2_:
+				((faqSetting_.isEnanbleVotesAndComments())?userActionQues_:userActionQues3_));
 	}
 
 	public void updateCurrentQuestionList() throws Exception  {
@@ -308,10 +302,10 @@ public class UIQuestions extends UIContainer {
 		faqService_ = service;
 	}
 
-	private String[] getActionQuestionWithUser(){
-		if(!faqSetting_.isEnanbleVotesAndComments() || (currentUser_ == null || currentUser_.trim().length() < 1)) return userActionQues2_ ;
-		return userActionQues_ ;
-	}
+//	private String[] getActionQuestionWithUser(){
+//		if(!faqSetting_.isEnanbleVotesAndComments() || (currentUser_ == null || currentUser_.trim().length() < 1)) return userActionQues2_ ;
+//		return userActionQues_ ;
+//	}
 	
 	public void setLanguageView(String language){
 		this.language_ = language;
@@ -820,6 +814,7 @@ public class UIQuestions extends UIContainer {
 				UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 				UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 				UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
+				responseForm.setModertator(uiForm.canEditQuestion);
 				if(questionId.equals(uiForm.viewingQuestionId_)){ // response for viewing question or not
 					responseForm.setQuestionId(question, uiForm.language_, isAnswerApproved) ;
 				} else {
@@ -862,6 +857,7 @@ public class UIQuestions extends UIContainer {
 			UIPopupAction popupAction = portlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIResponseForm responseForm = popupContainer.addChild(UIResponseForm.class, null, null) ;
+			responseForm.setModertator(uiQuestions.canEditQuestion);
 			responseForm.setAnswerInfor(question, answer, uiQuestions.language_) ;
 			responseForm.setFAQSetting(uiQuestions.faqSetting_);
 			popupContainer.setId("FAQResponseQuestion") ;

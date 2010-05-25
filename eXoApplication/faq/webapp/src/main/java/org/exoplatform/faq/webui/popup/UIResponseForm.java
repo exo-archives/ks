@@ -81,7 +81,11 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 
 	private String questionDetail = new String();
 	private String questionContent = new String();
-
+	private boolean isModerator = true;
+	
+	public void setModertator(boolean isMod) {
+		this.isModerator = isMod;
+	}
 	
 	// form input :
 	private UIFormSelectBox questionLanguages_ ;
@@ -180,7 +184,10 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 		}
 		
 		checkShowAnswer_.setChecked(question_.isActivated()) ;
+		checkShowAnswer_.setRendered(isModerator);
 		isApproved_.setChecked(isAnswerApproved) ;
+		isApproved_.setRendered(isModerator);
+		
 		questionLanguages_ = new UIFormSelectBox(QUESTION_LANGUAGE, QUESTION_LANGUAGE, listLanguageToReponse) ;
 		questionLanguages_.setValue(currentLanguage);
 		questionLanguages_.setSelectedValues(new String[]{currentLanguage}) ;
@@ -379,6 +386,8 @@ public class UIResponseForm extends BaseUIFAQForm implements UIPopupComponent {
 					responseForm.getFAQService().saveAnswer(question.getPath(), answers) ;
 					responseForm.getFAQService().updateQuestionRelatives(question.getPath(), 
 							responseForm.listQuestIdRela.toArray(new String[responseForm.listQuestIdRela.size()])) ;
+					if(!responseForm.isModerator && !responseForm.isAnswerApproved)
+						responseForm.info("UIResponseForm.msg.pending-for-moderation");
 				} catch (PathNotFoundException e) {
 					responseForm.log.error("Can not save Question, this question is deleted, exception: " + e.getMessage());
 					responseForm.warning("UIQuestions.msg.question-id-deleted") ;

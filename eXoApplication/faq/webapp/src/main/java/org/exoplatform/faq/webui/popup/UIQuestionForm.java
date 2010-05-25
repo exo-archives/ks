@@ -567,6 +567,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
 	        UIResponseForm responseForm = questionManagerForm.getChild(UIResponseForm.class) ;
 	        if(questionManagerForm.isResponseQuestion && questionForm.getQuestionId().equals(responseForm.questionId_)) {
 	          responseForm.updateChildOfQuestionManager(true) ;
+	          responseForm.setModertator(true);
 	          responseForm.setQuestionId(question, "", !questionForm.getFAQService().isModerateAnswer(question.getPath())) ;
 	        }
 	        questionManagerForm.isEditQuestion = false ;

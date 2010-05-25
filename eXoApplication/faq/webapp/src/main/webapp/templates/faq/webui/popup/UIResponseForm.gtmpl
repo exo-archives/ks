@@ -63,6 +63,7 @@
 						</tr>
 					<%}
 					}
+					if(uicomponent.isModerator) {
 					%>
 						<tr>
 							<td style="text-align:right"><%=_ctx.appRes(uicomponent.getName() + ".label." + "Relation")%>  :&nbsp;</td>
@@ -87,6 +88,7 @@
 								</div>
 							</td>
 						</tr>
+					<%} %>
 					</tbody>
 				</table>
 			</div>
