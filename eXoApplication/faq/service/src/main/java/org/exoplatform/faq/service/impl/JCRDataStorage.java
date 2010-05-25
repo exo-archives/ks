@@ -3419,11 +3419,11 @@ public class JCRDataStorage implements DataStorage {
 		try{
 			Node cateNode = getCategoryNodeById(sProvider, cateId);
 			List<SyndEntry> entries = new ArrayList<SyndEntry>();
-			
-			
 			StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
-			append("//element(*,exo:faqQuestion)[");
+			append("//element(*,exo:faqQuestion)");
 			List<String> list = getListCategoryIdPublic(sProvider, cateNode);
+			//TODO KS-2532
+			if (!list.isEmpty()) queryString.append("[");
 			PropertyReader reader = new PropertyReader(cateNode);
 			if(reader.list("exo:userPrivate", new ArrayList<String>()).isEmpty()){
 				if(!list.isEmpty())list.add(cateNode.getName());
@@ -3437,7 +3437,8 @@ public class JCRDataStorage implements DataStorage {
 					isOr = true;
 				}
 			}
-			queryString.append("]");
+			//TODO KS-2532
+      if (!list.isEmpty()) queryString.append("]");
 			
 			QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
