@@ -227,14 +227,19 @@
 			question_ = uicomponent.render(question_);
 			String id_ = questionCate.getId();
 			List answers_ = questionCate.getAnswers();
+			String questionDetail_ = uicomponent.render(questionCate.getDetail());
+			
 	%>
 		<div class="FAQAnswerIcon"><a name="$id_">$question_</a></div>
+		<% if (questionDetail_ != null && !questionDetail_.trim().isEmpty()) { %>
+						<div><span class="TextStyle">$questionDetail_</span></div>
+			<% } %>
 		<div class="Answer" style="margin:3px 0px;">
 			<ol>
 			<%for(answer in answers_){ 
 					answer = uicomponent.render(answer);
 			%>
-				<li><span class="TextStyle">${answer}</span></li>
+				<li><div class="TextStyle">${answer}</div></li>
 			<%} %>
 			</ol>
 		</div>
@@ -272,7 +277,7 @@
 				<%for(answer in answers){ 
 						answer = uicomponent.render(answer);
 				%>
-					<li><span class="TextStyle">${answer}</span></li>
+					<li><div class="TextStyle">${answer}</div></li>
 				<%} %>
 				</ol>
 			</div>
