@@ -186,7 +186,7 @@
 }
 
 .FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ{
-	margin-left: 20px;
+	margin-left: 25px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink{
