@@ -23,6 +23,9 @@
 						<!-- The name of the realm -->
 						<field name="realmName"><string>gatein-domain-ksdemo</string></field>						
 						<!-- All the dependencies of the portal container ordered by loading priority -->
+                        <field name="externalSettingsPath">
+                          <string>ksdemo.properties</string>
+                        </field>            
 						<field name="dependencies">
 							<collection type="java.util.ArrayList">
 								<value>
