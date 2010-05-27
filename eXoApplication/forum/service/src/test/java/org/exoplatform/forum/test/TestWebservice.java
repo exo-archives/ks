@@ -23,7 +23,6 @@ import javax.ws.rs.ext.RuntimeDelegate;
 import org.exoplatform.common.http.HTTPStatus;
 import org.exoplatform.forum.service.AbstractResourceTest;
 import org.exoplatform.forum.service.ws.ForumWebservice;
-import org.exoplatform.services.organization.UserHandler;
 import org.exoplatform.services.rest.impl.ContainerResponse;
 import org.exoplatform.services.rest.impl.MultivaluedMapImpl;
 import org.exoplatform.services.rest.impl.RuntimeDelegateImpl;
@@ -33,7 +32,6 @@ import org.exoplatform.services.rest.tools.ByteArrayContainerResponseWriter;
  * Created by The eXo Platform SARL Author : Volodymyr Krasnikov
  * volodymyr.krasnikov@exoplatform.com.ua
  */
-
 public class TestWebservice extends AbstractResourceTest {
 
   ForumWebservice forurumWebservice;
@@ -68,11 +66,11 @@ public class TestWebservice extends AbstractResourceTest {
      
     response = service("GET", "http", baseURI, h, null, writer);
     
-    //assertNotNull(response);
-    //assertEquals(HTTPStatus.OK, response.getStatus());
+//    assertNotNull(response);
+//    assertEquals(HTTPStatus.OK, response.getStatus());
     
     response = service("GET", "http", baseURI, h, null, writer);
-     
+//     
      
     
 

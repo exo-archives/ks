@@ -4,11 +4,19 @@
  **************************************************************************/
 package org.exoplatform.forum.test;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.Session;
 
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
+import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.StandaloneContainer;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
@@ -26,12 +34,12 @@ import org.exoplatform.test.BasicTestCase;
  *          hung.nguyen@exoplatform.com 					
  * july 3, 2007  
  */
-public abstract class ForumServiceTestCase extends BasicTestCase {
-  
-	protected static Log          log = ExoLogger.getLogger("sample.services.test");  
+public abstract class ForumServiceTestCase extends AbstractExoContainerTestCase {
+   
+  protected static Log          log = ExoLogger.getLogger("sample.services.test");  
 
   protected static RepositoryService   repositoryService;
-  protected static StandaloneContainer container;
+  protected static ExoContainer container;
   
   protected final static String REPO_NAME = "repository".intern();
   protected final static String SYSTEM_WS = "system".intern();
@@ -59,7 +67,7 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
 
   }
   protected void startSystemSession() {
-  	sProvider = sessionProviderService.getSystemSessionProvider(null) ;
+    sProvider = sessionProviderService.getSystemSessionProvider(null) ;
   }
   protected void startSessionAs(String user) {
     Identity identity = new Identity(user);
@@ -98,9 +106,32 @@ public abstract class ForumServiceTestCase extends BasicTestCase {
   }
   private static void initContainer() {
     try {
-      String containerConf = ForumServiceTestCase.class.getResource("/conf/portal/test-configuration.xml").toString();
+   // Must clear the top container first otherwise it's not going to work well
+      // it's a big ugly but I don't want to change anything in the ExoContainerContext class for now
+      // and this is for unit testing
+      Field topContainerField = ExoContainerContext.class.getDeclaredField("topContainer");
+      topContainerField.setAccessible(true);
+      topContainerField.set(null, null);
+
+      // Same remark than above
+      Field singletonField = RootContainer.class.getDeclaredField("singleton_");
+      singletonField.setAccessible(true);
+      singletonField.set(null, null);
+      
+      // needed otherwise, we cannot call this method twice in the same thread
+      Field bootingField = RootContainer.class.getDeclaredField("booting");
+      bootingField.setAccessible(true);
+      bootingField.set(null, false);
+      RootContainer.setInstance(null);
+      
+      PortalContainer.setInstance(null);
+      
+      ExoContainerContext.setCurrentContainer(null);
+      
+      String containerConf = ForumServiceTestCase.class.getClassLoader().getResource("conf/portal/test-configuration.xml").toString();
       StandaloneContainer.addConfigurationURL(containerConf);
       container = StandaloneContainer.getInstance();      
+      
       String loginConf = Thread.currentThread().getContextClassLoader().getResource("conf/portal/login.conf").toString();
       
       if (System.getProperty("java.security.auth.login.config") == null)

@@ -17,10 +17,17 @@
 
 package org.exoplatform.forum.service;
 
+import java.lang.reflect.Field;
+
 import org.exoplatform.commons.chromattic.ChromatticManager;
-import org.exoplatform.component.test.*;
+import org.exoplatform.component.test.ConfigurationUnit;
+import org.exoplatform.component.test.ConfiguredBy;
+import org.exoplatform.component.test.ContainerScope;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.RootContainer;
 import org.exoplatform.container.component.ComponentRequestLifecycle;
+import org.exoplatform.forum.test.AbstractKernelTest;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.rest.impl.ApplicationContextImpl;
 import org.exoplatform.services.rest.impl.ProviderBinder;
@@ -40,8 +47,6 @@ import org.exoplatform.services.rest.impl.ResourceBinder;
   })
 public abstract class BaseTest extends AbstractKernelTest {
 
-  protected PortalContainer container;
-  
   protected ProviderBinder providers;
 
   protected ResourceBinder     binder;
@@ -53,6 +58,25 @@ public abstract class BaseTest extends AbstractKernelTest {
   protected ChromatticManager chromatticManager;
 
   public void setUp() throws Exception {
+    Field topContainerField = ExoContainerContext.class.getDeclaredField("topContainer");
+    topContainerField.setAccessible(true);
+    topContainerField.set(null, null);
+
+    // Same remark than above
+    Field singletonField = RootContainer.class.getDeclaredField("singleton_");
+    singletonField.setAccessible(true);
+    singletonField.set(null, null);
+    
+    // needed otherwise, we cannot call this method twice in the same thread
+    Field bootingField = RootContainer.class.getDeclaredField("booting");
+    bootingField.setAccessible(true);
+    bootingField.set(null, false);
+    RootContainer.setInstance(null);
+    
+    ExoContainerContext.setCurrentContainer(null);
+    
+    PortalContainer.setInstance(null);
+    
     container = PortalContainer.getInstance();
     chromatticManager = (ChromatticManager)container.getComponentInstanceOfType(ChromatticManager.class);
     orgService = (OrganizationService) container.getComponentInstanceOfType(OrganizationService.class);
