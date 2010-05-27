@@ -38,25 +38,25 @@
 
 .UIFAQPortlet .FAQViewerContainer {
 	margin-bottom: 20px;
+	font-size: 12px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerContainerQuest{
-	background-color:#F8F8F8;
-	padding:0px 24px 24px 24px;
+	padding-bottom: 10px;
 }
 
-.UIFAQPortlet .FAQViewerContainer .FAQViewerContainerQuest ol{
+.UIFAQPortlet ol{
 	list-style-type:none;
 	margin:0;
-	padding:0;
+	padding: 0px 0px 15px 0px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon{
-	padding-top: 24px;
+	font-size: 11px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a{
-	color: #ff6603;
+	color: #464646;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon .FAQLableNormal {
@@ -82,9 +82,14 @@
 	text-decoration: underline;
 }
 
+.UIFAQPortlet ol li a:hover{
+	color: #ff6603;
+	text-decoration: underline;
+}
+
 .UIFAQPortlet .FAQAnswerbar {
-	border-bottom:1px dotted red;
-	margin:4px 25px 0px;
+	border-bottom:1px dotted #898989;
+	margin:4px 25px 20px;
 	padding-bottom:10px;
 	font-size: 18px;
 }
@@ -104,10 +109,10 @@
 .UIFAQPortlet .FAQAnswerContainer .QuestionContent .TextDetailStyle{
 	background-color: #f8f8f8;
 	padding-left: 16px;
-	padding-bottom:5px;
+	padding-bottom:10px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .QuestionContent .TextDetailStyle p{
+.UIFAQPortlet .QuestionContent .TextDetailStyle p{
 	margin: 0px;
 }
 
@@ -116,13 +121,13 @@
 }
 
 .UIFAQPortlet .FAQAnswerContainer ol{
-	margin: 4px 0px 0px 0px;
+	margin: 10px 0px 0px 0px;
 	padding: 0px 0px 0px 16px;
 	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswer.gif') no-repeat left 2px;
 	list-style-type:none;
 }
 
-.UIFAQPortlet .FAQAnswerContainer ol li ul{
+.UIFAQPortlet ul{
 	margin: 0px;
 	padding: 0px;
 }
@@ -145,7 +150,8 @@
 	padding-left: 16px;
 	font-weight: bold;
 	background-color: #f8f8f8;
-	line-height: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .FAQAnswerIcon a{
@@ -160,17 +166,32 @@
 }
 
 .UIFAQPortlet .FAQViewerQuestionContent {
-	
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQContainerQuest{
+	background-color:#F8F8F8;
+	padding:0px 24px 0px 24px;
 }
 
 .UIFAQPortlet p {
-	margin: 3px 0px;
+	margin: 1px 0px;
+}
+
+.UIFAQPortlet h {
+	margin: 1px 0px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .TitleActionLink{
 	font-size: 18px;
 }
 
+.FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ{
+	margin-left: 20px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink{
+	color: #FF6603;
+}
 
 </style>
 <div class="FAQViewerContainer" id="$uicomponent.id">
@@ -226,61 +247,65 @@
 				}%>
 			</div>
 		<%}%>	
-	<div class="FAQViewerQuestionContent">
-	<%for(questionCate in questionCates) { 
-			String question_ =	questionCate.getQuestion();
-			question_ = question_.replaceAll("<br/>", " ");
-			question_ = uicomponent.render(question_);
-			String id_ = questionCate.getId();
-	%>
-		<div class="FAQViewerIcon"><a href="#${id_}" name="name${id_}">$question_</a></div>
-		<%
-		}
-	%>
-	</div>
 	
-	<div class="FAQViewerContainerQuest">
+	<div style="padding: 15px 0 0; background:#F8F8F8">
+		<%for(questionCate in questionCates) { 
+				String question_ =	questionCate.getQuestion();
+				question_ = question_.replaceAll("<br/>", " ");
+				question_ = uicomponent.render(question_);
+				String id_ = questionCate.getId();
+		%>
+		<ol class="FAQViewerQuestionContent">	
+			<li class="FAQViewerIcon"><a class="ActionLinkFAQ" href="#${id_}" name="name${id_}">$question_</a></li>
+		</ol>	
+		<%	}	%>
+		
 		<% 
 		for(categoryInfo in subCategoryInfos){ 
 			String categoryName = categoryInfo.getName();
 			List questionInfos = categoryInfo.getQuestionInfos();
 			List subCategories = categoryInfo.getSubCateInfos();
 		%>
-		<div class="FAQViewerIcon">
-			<span>
-				<a class="TitleActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>"><font color="black">$categoryName</font></a>
-			</span>
-			<%if(!subCategories.isEmpty()) {%>
-				<span style="color:#ff6603;">[</span>
-			<%} 
-				int j = 0;
-				for(subCategory in subCategories) { 
-					String subCateName = subCategory.getName();
-					String subPath = subCategory.getPath();
-			%>
-				<a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
-			<%	if(j != (subCategories.size-1)) {%>
-				<span style="color:#ff6603;"> | </span>
-			<%	}
-					++j;
-				} 
-				if(!subCategories.isEmpty()) {
-			%>
-				<span style="color:#ff6603;">]</span>
-			<% } %>
-		</div>
-			<ol>
-				<%for(questionInfo in questionInfos) { 
-						String question =	questionInfo.getQuestion();
-						question = uicomponent.render(question);
-						String id = questionInfo.getId();
-						
-				%>
-				<li><a class="FAQViewer" href="#${id}">$question</a> </li>				
-				<% 
-				} %>
-		</ol>
+		
+			<div class="FAQContainerQuest">
+				<div class="FAQViewerIcon">
+					<span>
+						<a class="TitleActionLink" href="<%=uicomponent.url("ChangePath", categoryInfo.getPath());%>" actions="<%=uicomponent.event("ChangePath", categoryInfo.getPath());%>" name="<%=categoryInfo.getId();%>">$categoryName</a>
+					</span>
+					<%if(!subCategories.isEmpty()) {%>
+						<span style="color:#ff6603;">[</span>
+					<%} 
+						int j = 0;
+						for(subCategory in subCategories) { 
+							String subCateName = subCategory.getName();
+							String subPath = subCategory.getPath();
+					%>
+						<a class="ActionLink" href="<%=uicomponent.url("ChangePath", subPath)%>" actions="<%=uicomponent.event("ChangePath", subPath)%>">$subCateName</a>
+					<%	if(j != (subCategories.size-1)) {%>
+						<span style="color:#ff6603;"> | </span>
+					<%	}
+							++j;
+						} 
+						if(!subCategories.isEmpty()) {
+					%>
+						<span style="color:#ff6603;">]</span>
+					<% } %>
+				</div>
+				<ol>
+					<%for(questionInfo in questionInfos) { 
+							String question =	questionInfo.getQuestion();
+							question = uicomponent.render(question);
+							String id = questionInfo.getId();
+							
+					%>
+					<li><a class="FAQViewer" href="#${id}">$question</a></li>				
+					<% 
+					} %>
+				</ol>
+			</div>
+		
 		<% } %>
+		
 	</div>
 	
 	<div class="FAQAnswerContainer FAQViewerQuestionContent" style="padding:4px 0px 0px 0px;">
