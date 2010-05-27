@@ -112,7 +112,6 @@ import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.common.jcr.KSDataLocation.Locations;
-import org.exoplatform.ks.rss.ForumRSSEventListener;
 import org.exoplatform.management.annotations.Managed;
 import org.exoplatform.management.annotations.ManagedDescription;
 import org.exoplatform.management.jmx.annotations.NameTemplate;
@@ -130,7 +129,6 @@ import org.exoplatform.services.scheduler.PeriodInfo;
 import org.exoplatform.ws.frameworks.cometd.ContinuationService;
 import org.exoplatform.ws.frameworks.json.impl.JsonGeneratorImpl;
 import org.exoplatform.ws.frameworks.json.value.JsonValue;
-import org.jdom.CDATA;
 import org.w3c.dom.Document;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -828,8 +826,32 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			
 			catNode.setProperty(EXO_CREATE_TOPIC_ROLE, category.getCreateTopicRole());
 			catNode.setProperty(EXO_POSTER, category.getPoster());
-			catNode.setProperty(EXO_VIEWER, category.getViewer());
 			
+			boolean isUpdateLastTopic = false;
+      if (!isNew) {
+        String[] catViewers = new PropertyReader(catNode).strings(EXO_VIEWER, new String[] { "" });
+        String[] newViewers = category.getViewer();
+        if (Utils.arraysHaveDifferentContent(catViewers, newViewers)) { // if admin change viewers setting.
+          catNode.setProperty(EXO_VIEWER, newViewers);
+          if (newViewers.length > 0 && !Utils.isEmpty(newViewers[0])) { 
+            // if new viewers are limited, last topic of every forum in the category will be disappear.
+            NodeIterator iter = catNode.getNodes();
+            while (iter.hasNext()) {
+              Node node = iter.nextNode();
+              if (node.isNodeType(EXO_FORUM)) {
+                node.setProperty(EXO_LAST_TOPIC_PATH, "");
+              }
+            }
+          } else { // public topic
+            // this case occurs when admin change viewers setting from limited to public. We need to
+            // update last topic path of all of forums.
+            isUpdateLastTopic = true; 
+          }
+        }
+
+      }
+			
+			/*
 			List<String> listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getPoster()));
 			if(!isNew && Utils.listsHaveDifferentContent(presentPoster, listV)){
@@ -840,6 +862,7 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
         }
 				setPermissionByCategory(catNode, list, listV, EXO_CAN_POST);
 			}
+			
 			listV = new ArrayList<String>();
 			listV.addAll(Arrays.asList(category.getViewer()));
 			if(!isNew && Utils.listsHaveDifferentContent(presentViewer, listV)){
@@ -849,15 +872,25 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					else list.add(string);
 				}
 				setPermissionByCategory(catNode, list, listV, EXO_CAN_VIEW);
-			}
+			}*/
+      
 			catNode.save();
 			try {
 				if((isNew && category.getModerators().length > 0) || !isNew) {
-//					System.out.println("\n\n --------------> " + isNew);
 					catNode.setProperty(EXO_MODERATORS, category.getModerators());
 					catNode.save();
 				}
 			} catch (Exception e) {}
+			
+			if(isUpdateLastTopic) {
+			  NodeIterator iter = catNode.getNodes();
+        while (iter.hasNext()) {
+          Node node = iter.nextNode();
+          if (node.isNodeType(EXO_FORUM)) {
+            queryLastTopic(sProvider, node.getPath());
+          }
+        }
+			}
 		}catch(Exception e) {
 			throw e;
 		}finally { sProvider.close() ;}
@@ -1327,7 +1360,6 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 			forumNode.setProperty(EXO_IS_CLOSED, forum.getIsClosed());
 			forumNode.setProperty(EXO_IS_LOCK, forum.getIsLock());
 
-			forumNode.setProperty(EXO_VIEWER, forum.getViewer());
 			forumNode.setProperty(EXO_CREATE_TOPIC_ROLE, forum.getCreateTopicRole());
 			forumNode.setProperty(EXO_POSTER, forum.getPoster());
 			// set from category
@@ -1353,11 +1385,34 @@ public class JCRDataStorage implements  DataStorage, ForumNodeTypes {
 					}
 				}
 			}
+			boolean needUpdateLastTopic = false;
+      if (!isNew) {
+        String[] newViewers = forum.getViewer();
+        String[] forumViewers = new PropertyReader(forumNode).strings(EXO_VIEWER,
+                                                                      new String[] { "" });
+        if (Utils.arraysHaveDifferentContent(forumViewers, newViewers)) {
+          // if admin change post viewers setting
+          forumNode.setProperty(EXO_VIEWER, newViewers);
+          if (newViewers.length > 0 && !Utils.isEmpty(newViewers[0])) { 
+            //if new viewers are limited, we need to disable last topic path.
+            forumNode.setProperty(EXO_LAST_TOPIC_PATH, "");
+          } else { // if forum is public for everyone. We need to update last
+                   // topic path.           
+              needUpdateLastTopic = true;
+          }
+        }
+
+      }
 			catNode.save();
+			
 			try {
 				forumNode.setProperty(EXO_MODERATORS, strModerators);
 				forumNode.save();
 			} catch (Exception e) {}
+			
+			if (needUpdateLastTopic) {
+			  queryLastTopic(sProvider, forumNode.getPath());			  
+			}
 			
 			StringBuilder id = new StringBuilder();
 			id.append(catNode.getProperty(EXO_CATEGORY_ORDER).getString()) ;
