@@ -48,6 +48,7 @@ public class Utils {
 	public final static String NT_UNSTRUCTURED = "nt:unstructured".intern() ;
 	
 	public final static String FORUMADMINISTRATION = "forumAdministration".intern() ;
+	public static final String USER_PROFILE_DELETED = "userProfileDeleted".intern() ;
 	public final static String CATEGORY = "forumCategory".intern() ;
 	public final static String FORUM = "forum".intern() ;
 	public final static String TOPIC = "topic".intern() ;
@@ -64,6 +65,7 @@ public class Utils {
 	public static final String MODERATOR = "Moderator".intern() ;
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "Guest".intern() ;
+	public static final String DELETED = "_deleted".intern() ;
 	
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 

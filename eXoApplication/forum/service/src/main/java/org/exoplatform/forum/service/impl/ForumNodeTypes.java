@@ -230,7 +230,9 @@ public interface ForumNodeTypes {
   public static final String EXO_IS_AUTO_WATCH_MY_TOPICS    = "exo:isAutoWatchMyTopics";
 
   public static final String EXO_IS_AUTO_WATCH_TOPIC_I_POST = "exo:isAutoWatchTopicIPost";
-
+  
+  public static final String EXO_USER_DELETED               = "exo:userDeleted";
+  
   public static final String EXO_SCREEN_NAME                = "exo:screenName";
 
   public static final String EXO_FIRST_NAME                 = "exo:firstName";

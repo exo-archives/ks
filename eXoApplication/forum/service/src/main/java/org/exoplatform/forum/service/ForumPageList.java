@@ -108,7 +108,7 @@ public class ForumPageList extends JCRPageList {
 				currentNode = iter_.nextNode() ;
 				if(currentNode.isNodeType("exo:post")) {
 					currentListPage_.add(getPost(currentNode)) ;
-				}else if(currentNode.isNodeType("exo:topic")) {
+				}else if(currentNode.isNodeType(Utils.TYPE_TOPIC)) {
 					currentListPage_.add(getTopic(currentNode)) ;
 				}else if(currentNode.isNodeType(Utils.USER_PROFILES_TYPE)) {
 					currentListPage_.add(getUserProfile(currentNode)) ;
@@ -149,9 +149,13 @@ public class ForumPageList extends JCRPageList {
 		this.pageSelected = page;
 		iter_.skip((page-1) * pageSize ) ;
 		currentListPage_ = new ArrayList<Object>() ;
+		Node currentNode;
 		for(int i = 0; i < pageSize; i ++) {
 			if(iter_.hasNext()){
-				currentListPage_.add(getUserProfile(iter_.nextNode())) ;
+				currentNode = iter_.nextNode();
+				if(currentNode.isNodeType(Utils.USER_PROFILES_TYPE)) {
+					currentListPage_.add(getUserProfile(currentNode)) ;
+				}
 			}else {
 				break ;
 			}

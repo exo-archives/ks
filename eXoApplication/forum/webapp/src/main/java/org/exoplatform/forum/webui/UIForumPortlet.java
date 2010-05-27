@@ -52,7 +52,6 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.services.organization.OrganizationConfig.User;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -681,7 +680,7 @@ public class UIForumPortlet extends UIPortletApplication {
 				UserProfile selectProfile = forumPortlet.forumService.getUserInformations(forumPortlet.forumService.getQuickProfile(userId.trim())) ;
 				viewUserProfile.setUserProfile(selectProfile) ;
 			}catch(Exception e) {
-			  log.error("Fail to set user profile: \n" + e.getCause());
+			  log.error("Fail to set user profile: \n",e);
 			}
 			viewUserProfile.setUserProfileLogin(forumPortlet.userProfile) ;
 			CommonContact contact = forumPortlet.getPersonalContact(userId.trim());
@@ -699,6 +698,11 @@ public class UIForumPortlet extends UIPortletApplication {
 				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsBannedCanNotSendMail", args, ApplicationMessage.WARNING)) ;
 			}
 			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+			int t = userId.indexOf(Utils.DELETED);
+			if(t > 0) {
+				String[] args = new String[] { userId.substring(0, t)} ;
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", args, ApplicationMessage.WARNING)) ;
+			}
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
 			UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
 			UIPrivateMessageForm messageForm = popupContainer.addChild(UIPrivateMessageForm.class, null, null) ;

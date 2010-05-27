@@ -385,7 +385,9 @@ public interface DataStorage {
    * @return true if the user profile was added
    */
   public boolean populateUserProfile(User user, boolean isNew) throws Exception;;
-  public void deleteUserProfile(User user) throws Exception;
+  public boolean deleteUserProfile(String userId) throws Exception ;
+
+  public void calculateDeletedUser(String userName) throws Exception ;
 
   void initDefaultData() throws Exception;
 
@@ -420,5 +422,4 @@ public interface DataStorage {
   void updateUserProfileInfo(String name) throws Exception;
   public InputStream createForumRss(String objectId, String link) throws Exception;
   public InputStream createUserRss(String userId, String link) throws Exception;
-
 }

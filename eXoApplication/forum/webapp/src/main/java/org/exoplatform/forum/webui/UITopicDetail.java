@@ -480,6 +480,10 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return isMod;
 	}
 	
+	private String getScreenName(String userName) throws Exception {
+		return (userName.contains(Utils.DELETED))?"<s>"+userName.substring(0, userName.indexOf(Utils.DELETED))+"</s>":userName;
+	}
+	 
 	private Topic getTopic() throws Exception {
 		try {
 			if(this.isEditTopic || this.topic == null) {
@@ -541,9 +545,6 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 			contact = ForumSessionUtils.getPersonalContact(userId) ;
 			mapContact.put(userId, contact) ;
 			listContactsGotten.add(userId);
-		}
-		if(contact == null) {
-			contact = new CommonContact() ;
 		}
 		return contact ;
 	}

@@ -684,7 +684,7 @@
 					}
 				}
 				UserProfile userInfo = uicomponent.getUserInfo(owner) ;
-				screenName = userInfo.getScreenName();
+				screenName = uicomponent.getScreenName(userInfo.getScreenName());
 				String classIconPost = post.getIcon() ;
 				if(ForumUtils.isEmpty(classIconPost)) 
 					classIconPost = "NormalTopicIcon" ;
@@ -761,7 +761,7 @@
 																	<%
 																		String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 																		for(viewAction in menuViewInfos) {
-																		  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
+																		  if(userProfile.getUserRole() >= 3 && userInfo.getUserRole() >= 3 && viewAction.equals("PrivateMessage")) continue;
 																			String linkView = uicomponent.event(viewAction, owner) ;
 																			String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
@@ -814,7 +814,7 @@
 																	<div class="UIRightPopupMenuContainer">
 																		<%
 																			for(viewAction in menuViewInfos) {
-																			  if(userProfile.getUserRole() == 3 && viewAction.equals("PrivateMessage")) continue;
+																			  if(userProfile.getUserRole() >= 3 && viewAction.equals("PrivateMessage")) continue;
 																				String linkView = uicomponent.event(viewAction, owner) ;
 																				String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;

@@ -72,6 +72,7 @@ public class NewUserListener extends UserEventListener {
 
   @Override
   public void postDelete(User user) throws Exception {
+  	System.out.println("\n\n ---------------> remove User ");
     try {
       getForumService().removeMember(user);
     } catch (Exception e) {

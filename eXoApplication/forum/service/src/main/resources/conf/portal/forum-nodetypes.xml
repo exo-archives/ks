@@ -13,15 +13,15 @@
 	
 	<nodeType name="exo:forumRSS" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
-	 		<supertype>nt:base</supertype>
-	 	</supertypes>
+				<supertype>nt:base</supertype>
+			</supertypes>
 		<propertyDefinitions>
 			<propertyDefinition name="exo:content" requiredType="Binary" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
 	</nodeType>
-	 
+		
 	<nodeType name="exo:poll" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
@@ -67,19 +67,19 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
- 	 	</nodeType> 
+				</nodeType> 
 
 	<nodeType name="exo:forumAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-	 	<supertypes>
-	 		<supertype>nt:file</supertype>
-	 	</supertypes>
+			<supertypes>
+				<supertype>nt:file</supertype>
+			</supertypes>
 	</nodeType>
 	
 	<nodeType name="exo:forumResource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-	 	<supertypes>
-	 		<supertype>nt:resource</supertype>
-	 	</supertypes>
-	 	<propertyDefinitions>
+			<supertypes>
+				<supertype>nt:resource</supertype>
+			</supertypes>
+			<propertyDefinitions>
 			<propertyDefinition name="exo:fileName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 			<valueConstraints/>
 			</propertyDefinition>	
@@ -153,8 +153,8 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>
- 	</nodeType> 
- 	 
+		</nodeType> 
+			
 	<nodeType name="exo:topic" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
@@ -261,7 +261,7 @@
 				<requiredPrimaryType>exo:post</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
-		 
+			
 			<childNodeDefinition name="*" defaultPrimaryType="exo:poll" autoCreated="false" mandatory="false" onParentVersion="VERSION" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 				<requiredPrimaryType>exo:poll</requiredPrimaryType>
@@ -304,7 +304,7 @@
 			<supertype>nt:base</supertype>
 		</supertypes>
 		<propertyDefinitions>
-		 	<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition> 
 			<propertyDefinition name="exo:owner" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
@@ -315,7 +315,7 @@
 			</propertyDefinition>
 			<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition> 		
+			</propertyDefinition>			
 			<propertyDefinition name="exo:forumOrder" requiredType="Integer" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
@@ -410,12 +410,12 @@
 			<supertype>nt:base</supertype>
 		</supertypes>
 		<propertyDefinitions> 
-	 		<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<propertyDefinition name="exo:id" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition> 		
+			</propertyDefinition>			
 			<propertyDefinition name="exo:owner" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition> 		
+			</propertyDefinition>			
 			<propertyDefinition name="exo:path" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
@@ -427,7 +427,7 @@
 			</propertyDefinition>
 			<propertyDefinition name="exo:name" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition> 		
+			</propertyDefinition>			
 			<propertyDefinition name="exo:modifiedDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
@@ -513,7 +513,7 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
-	</nodeType> 	 	 	
+	</nodeType>						
 
 	<nodeType name="exo:tagHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -595,7 +595,7 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
-	</nodeType> 	 	 	
+	</nodeType>						
 
 <!--  bbcode nodetypes moves to bbcode-nodetypes.xml -->
 <!-- 
@@ -607,7 +607,7 @@
 		<propertyDefinitions> 
 			<propertyDefinition name="exo:tagName" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
-			</propertyDefinition> 		
+			</propertyDefinition>			
 			<propertyDefinition name="exo:replacement" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
@@ -902,7 +902,7 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
-	</nodeType> 	 	 	
+	</nodeType>						
 
 	<nodeType name="exo:statisticHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -915,7 +915,7 @@
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>
-	</nodeType> 	 	 	
+	</nodeType>						
 
 	<nodeType name="exo:administration" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -953,7 +953,7 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
-	</nodeType> 	 	 	
+	</nodeType>						
 	
 	<nodeType name="exo:administrationHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
@@ -967,7 +967,7 @@
 			</childNodeDefinition>
 		</childNodeDefinitions>
 	</nodeType>
-		 	 	 	
+								
 	<nodeType name="exo:forumWatching" isMixin="true" hasOrderableChildNodes="false" primaryItemName="">
 		<propertyDefinitions>
 			<propertyDefinition name="exo:emailWatching" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true">
@@ -982,7 +982,20 @@
 		</propertyDefinitions>
 	</nodeType>
 	
-	<!--nodeType name="exo:userProfiles" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	<nodeType name="exo:userDeleted" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+		<supertypes>
+			<supertype>nt:base</supertype>
+		</supertypes> 
+		<childNodeDefinitions>
+			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
+				<requiredPrimaryTypes>
+					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
+				</requiredPrimaryTypes>
+			</childNodeDefinition>
+		</childNodeDefinitions>
+	</nodeType>
+	
+	<nodeType name="exo:userProfileHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
 		</supertypes> 
@@ -992,17 +1005,9 @@
 					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
-		</childNodeDefinitions>
-	</nodeType-->
-	
-	<nodeType name="exo:userProfileHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
-	 <supertypes>
-		<supertype>nt:base</supertype>
-	 </supertypes> 
-	 <childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:forumUserProfile" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
-					<requiredPrimaryType>exo:forumUserProfile</requiredPrimaryType>
+					<requiredPrimaryType>exo:userDeleted</requiredPrimaryType>
 				</requiredPrimaryTypes>
 			</childNodeDefinition>
 		</childNodeDefinitions>
@@ -1021,9 +1026,9 @@
 	
 	<nodeType name="exo:banIPHome" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
-		  <supertype>nt:base</supertype>
-	  </supertypes>
-	  <childNodeDefinitions>
+			 <supertype>nt:base</supertype>
+		 </supertypes>
+		 <childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:banIP" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 					<requiredPrimaryType>exo:banIP</requiredPrimaryType>
@@ -1034,8 +1039,8 @@
 		
 	<nodeType name="exo:forumSystem" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
-		  <supertype>nt:base</supertype>
-	  </supertypes>
+			 <supertype>nt:base</supertype>
+		 </supertypes>
 		<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:administrationHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
@@ -1062,8 +1067,8 @@
 	
 	<nodeType name="exo:forumData" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
-		  <supertype>nt:unstructured</supertype>
-	  </supertypes>
+			 <supertype>nt:unstructured</supertype>
+		 </supertypes>
 		<childNodeDefinitions>
 			<childNodeDefinition name="*" defaultPrimaryType="exo:tagHome" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
@@ -1088,7 +1093,7 @@
 			<supertype>nt:unstructured</supertype>
 		</supertypes> 
 		<childNodeDefinitions>
-	  	<childNodeDefinition name="*" defaultPrimaryType="exo:forumData" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+				<childNodeDefinition name="*" defaultPrimaryType="exo:forumData" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="false">
 				<requiredPrimaryTypes>
 					<requiredPrimaryType>exo:forumData</requiredPrimaryType>
 				</requiredPrimaryTypes>

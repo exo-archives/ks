@@ -231,13 +231,15 @@ public class ForumServiceImpl implements ForumService, Startable {
     }
   }
 
-
+  public void calculateDeletedUser(String userName) throws Exception {
+  	storage.calculateDeletedUser(userName);
+  }
   /**
    * {@inheritDoc}
    */
   public void removeMember(User user) throws Exception {
-    storage.deleteUserProfile(user);
-    forumStatisticsService.removeMember(user.getUserName());
+  	if(storage.deleteUserProfile(user.getUserName()))
+  		forumStatisticsService.removeMember(user.getUserName());
   }
 	
 	

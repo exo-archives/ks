@@ -975,6 +975,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @throws Exception
    */
   public void updateLoggedinUsers() throws Exception ;
+  public void calculateDeletedUser(String userName) throws Exception ;
   
   public InputStream createForumRss(String objectId, String link) throws Exception ;
   public InputStream createUserRss(String userId, String link) throws Exception ;
