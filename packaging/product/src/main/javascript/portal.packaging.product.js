@@ -32,9 +32,9 @@ function getProduct(version) {
   //product.addDependencies(portal.sample.extension) ; // CHANGED for KS, we don't want a rogue sample
   
   // Portal extension starter required by KS etension
-  portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
-  portal.starter.deployName = "starter";
-  product.addDependencies(portal.starter);
+  //portal.starter = new Project("org.exoplatform.portal", "exo.portal.starter.war", "war", portal.version);
+  //portal.starter.deployName = "starter";
+  //product.addDependencies(portal.starter);
   
   portal.fck = new Project("org.exoplatform.platform", "exo.platform.web.fck", "war", "${org.exoplatform.platform.version}");
   portal.fck.deployName = "fck";
