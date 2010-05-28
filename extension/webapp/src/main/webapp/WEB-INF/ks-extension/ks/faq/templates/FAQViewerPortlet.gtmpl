@@ -11,7 +11,7 @@
 <style type="text/css">
 .UIFAQPortlet {
 	margin:4px 0;
-         padding:5px;
+    padding:5px;
 	background: white;
 
 }
@@ -106,13 +106,12 @@
 	margin:1px 0px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer .QuestionContent .TextDetailStyle{
+.UIFAQPortlet .FAQViewerContainer .FAQViewerQuestionContent .TextDetailStyle{
 	background-color: #f8f8f8;
-	padding-left: 16px;
-	padding-bottom:10px;
+	padding: 0px 16px 10px 16px;
 }
 
-.UIFAQPortlet .QuestionContent .TextDetailStyle p{
+.UIFAQPortlet .FAQViewerContainer .FAQViewerQuestionContent .TextDetailStyle p{
 	margin: 0px;
 }
 
@@ -120,7 +119,7 @@
 	padding-top: 6px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer ol{
+.UIFAQPortlet .FAQAnswerContainer ol li{
 	margin: 10px 0px 0px 0px;
 	padding: 0px 0px 0px 16px;
 	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswer.gif') no-repeat left 2px;
@@ -187,10 +186,21 @@
 
 .FAQViewerContainer .FAQViewerIcon .ActionLinkFAQ{
 	margin-left: 25px;
+	background: url('/faq/skin/DefaultSkin/webui/background/IconFAQViewer.gif') no-repeat left 4px;
+	padding-left: 16px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a.ActionLink{
 	color: #FF6603;
+}
+
+.UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle{
+	background-color:#F8F8F8;
+	padding: 0px 16px 10px 16px;
+}
+
+.UIFAQPortlet .FAQViewerContainer .QuestionContent .TextDetailStyle p{
+	margin: 0px;
 }
 
 </style>
