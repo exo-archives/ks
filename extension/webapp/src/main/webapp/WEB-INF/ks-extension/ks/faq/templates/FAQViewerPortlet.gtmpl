@@ -11,9 +11,41 @@
 <style type="text/css">
 .UIFAQPortlet {
 	margin:4px 0;
-    padding:5px;
+	padding:5px;
 	background: white;
 
+}
+
+.UIFAQPortlet hr {
+	border-color:#CCCCCC;
+	border-style:solid;
+	border-width:1px 0 0;
+	clear:both;
+	height:0;
+}
+
+.UIFAQPortlet h1 {
+	font-size:25px;
+}
+
+.UIFAQPortlet h2 {
+	font-size:23px;
+}
+
+.UIFAQPortlet h3 {
+	font-size:21px;
+}
+
+.UIFAQPortlet h4 {
+	font-size:19px;
+}
+
+.UIFAQPortlet h5 {
+	font-size:17px;
+}
+
+.UIFAQPortlet h6 {
+	font-size:15px;
 }
 
 .UIFAQPortlet .FAQViewerBar {
@@ -248,17 +280,17 @@
 				%>
 					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
 						<%} else { %>
-					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+					<span style="vertical-align: middle;"><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
 						<%} %>
 				<%} else { %>
-					<span title="$pathName"><b>$viewName</b></span>
+					<span style="vertical-align: bottom;" title="$pathName"><b>$viewName</b></span>
 				<%}
 				++i;
 				}%>
 			</div>
 		<%}%>	
 	
-	<div style="padding: 15px 0 0; background:#F8F8F8">
+	<div style="padding: 15px 0 0; background:#F8F8F8; margin-bottom: 15px;">
 		<%for(questionCate in questionCates) { 
 				String question_ =	questionCate.getQuestion();
 				question_ = question_.replaceAll("<br/>", " ");
