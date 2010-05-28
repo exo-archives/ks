@@ -30,12 +30,14 @@
               </value-storage>
             </value-storages>
           </container>
+          <!-- 
          <cache enabled="false">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
           </properties>
          </cache>
+          -->
          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
           <properties>
             <property name="indexDir" value="../temp/jcrlucenedb/index/system"/>
@@ -74,12 +76,14 @@
               </value-storage>
             </value-storages>
           </container>
+          <!-- 
          <cache enabled="false">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
           </properties>
          </cache>
+          -->
          <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
           <properties>
             <property name="indexDir" value="../temp/jcrlucenedb/index/knowledge"/>

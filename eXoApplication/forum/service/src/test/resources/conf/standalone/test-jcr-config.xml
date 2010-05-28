@@ -55,12 +55,14 @@
                 </value-storage-->
             </value-storages>
           </container>
-          <cache enabled="true">
+          <!-- 
+          <cache enabled="false">
             <properties>
               <property name="maxSize" value="500" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+          -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/index" />
@@ -107,12 +109,14 @@
                 </value-storage-->
             </value-storages>
           </container>
-          <cache enabled="true">
+          <!-- 
+          <cache enabled="false">
             <properties>
               <property name="maxSize" value="10000" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+          -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/index" />
@@ -151,12 +155,14 @@
                 </value-storage-->
             </value-storages>
           </container>
-          <cache enabled="true">
+          <!-- 
+          <cache enabled="false">
             <properties>
               <property name="maxSize" value="10000" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+          -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/index" />
@@ -220,12 +226,14 @@
                 </value-storage-->
             </value-storages>
           </container>
+          <!-- 
           <cache enabled="true">
             <properties>
               <property name="maxSize" value="500" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+           -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/indextck" />
@@ -272,12 +280,14 @@
                 </value-storage-->
             </value-storages>
           </container>
+          <!-- 
           <cache enabled="true">
             <properties>
               <property name="maxSize" value="10000" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+           -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/indextck" />
@@ -316,12 +326,14 @@
                 </value-storage-->
             </value-storages>
           </container>
+          <!-- 
           <cache enabled="true">
             <properties>
               <property name="maxSize" value="10000" />
               <property name="liveTime" value="300" />
             </properties>
           </cache>
+           -->
           <query-handler class="org.exoplatform.services.jcr.impl.core.query.lucene.SearchIndex">
             <properties>
               <property name="indexDir" value="target/temp/indextck" />
