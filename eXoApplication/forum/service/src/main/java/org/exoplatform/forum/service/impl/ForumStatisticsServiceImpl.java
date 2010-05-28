@@ -36,7 +36,6 @@ public class ForumStatisticsServiceImpl implements ForumStatisticsService {
   }
   
   public void addMember(String userName) throws Exception {
-  	System.out.println("\n\n setMembersCount: " + userName);
     ForumStatistic stats = dataStorage.getForumStatistic();
     stats.setNewMembers(userName);
     stats.setMembersCount(stats.getMembersCount()+1);
