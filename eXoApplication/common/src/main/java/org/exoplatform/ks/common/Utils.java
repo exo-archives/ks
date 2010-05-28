@@ -46,6 +46,7 @@ import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.quartz.JobExecutionContext;
 import org.w3c.dom.Document;
 
@@ -231,5 +232,11 @@ public class Utils {
     }
     if(portalName.indexOf(":") > 0) portalName = portalName.substring(0, portalName.indexOf(":"));
     return ExoContainerContext.getContainerByName(portalName);
+  }
+  
+  public static FCKEditorConfig getFCKConfig(){
+	  FCKEditorConfig fckconfig = new FCKEditorConfig();
+	  fckconfig.put("CustomConfigurationsPath", "/ksResources/fckconfig/fckconfig.js");
+	  return fckconfig;
   }
 }

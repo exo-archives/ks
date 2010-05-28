@@ -23,6 +23,8 @@ import java.util.List;
 import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
+import org.exoplatform.container.ExoContainer;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Forum;
@@ -53,6 +55,7 @@ import org.exoplatform.webui.form.UIFormInputIconSelector;
 import org.exoplatform.webui.form.UIFormInputInfo;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.MandatoryValidator;
+import org.exoplatform.webui.form.wysiwyg.FCKEditorConfig;
 import org.exoplatform.webui.form.wysiwyg.UIFormWYSIWYGInput;
 
 /**
@@ -111,7 +114,8 @@ public class UIPostForm extends BaseForumForm implements UIPopupComponent {
 		UIForumInputWithActions threadContent = new UIForumInputWithActions(FIELD_THREADCONTEN_TAB) ;
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MESSAGECONTENT, FIELD_MESSAGECONTENT, "") ;
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
-		formWYSIWYGInput.setToolBarName("Basic");
+		formWYSIWYGInput.setToolBarName("Basic");		
+		formWYSIWYGInput.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 		threadContent.addChild(postTitle) ;
 		threadContent.addChild(editReason) ;
 		threadContent.addChild(formWYSIWYGInput) ;

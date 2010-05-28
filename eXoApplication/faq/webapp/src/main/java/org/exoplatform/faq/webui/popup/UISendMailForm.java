@@ -31,6 +31,7 @@ import org.exoplatform.faq.webui.BaseUIFAQForm;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -204,6 +205,7 @@ public class UISendMailForm extends BaseUIFAQForm implements UIPopupComponent	{
 		addChild(new UIFormStringInput(FILED_SUBJECT, FILED_SUBJECT, this.getLabel("change-title") + " "+ contenQuestion.replaceAll("<br>", " "))) ;
 		UIFormWYSIWYGInput filedMessage = new UIFormWYSIWYGInput(FILED_MESSAGE, FILED_MESSAGE, "");
 		filedMessage.setValue(stringBuffer.toString());
+		filedMessage.setFCKConfig(Utils.getFCKConfig());
 		filedMessage.setToolBarName("Basic");
 		addChild(filedMessage) ;
 	}

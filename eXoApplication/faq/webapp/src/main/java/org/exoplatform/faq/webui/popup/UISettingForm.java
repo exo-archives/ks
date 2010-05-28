@@ -167,12 +167,14 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 			
 			FAQUtils.getEmailSetting(faqSetting_, true, true);
 			UIFormWYSIWYGInput emailDefaultAdd = new UIFormWYSIWYGInput(EMAIL_DEFAULT_ADD_QUESTION, EMAIL_DEFAULT_ADD_QUESTION, "");
+			emailDefaultAdd.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 			emailDefaultAdd.setToolBarName("Basic");
 			emailDefaultAdd.setValue(faqSetting_.getEmailSettingContent());
 			EmailAddNewQuestion.addUIFormInput(emailDefaultAdd);
 
 			FAQUtils.getEmailSetting(faqSetting_, false, true);
 			UIFormWYSIWYGInput emailDefaultEdit = new UIFormWYSIWYGInput(EMAIL_DEFAULT_EDIT_QUESTION, EMAIL_DEFAULT_EDIT_QUESTION, "");
+			emailDefaultEdit.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 			emailDefaultEdit.setToolBarName("Basic");
 			emailDefaultEdit.setValue(faqSetting_.getEmailSettingContent());
 			EmailEditQuestion.addUIFormInput(emailDefaultEdit);
@@ -183,6 +185,7 @@ public class UISettingForm extends BaseUIForm implements UIPopupComponent	{
 			}
 			
 			UIFormWYSIWYGInput emailDefaultMove = new UIFormWYSIWYGInput(EMAIL_MOVE_QUESTION, EMAIL_MOVE_QUESTION, "");
+			emailDefaultMove.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
 			emailDefaultMove.setToolBarName("Basic");
 			emailDefaultMove.setValue(defEmailMove);
 			EmailMoveQuestion.addUIFormInput(emailDefaultMove);

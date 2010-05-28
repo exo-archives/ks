@@ -189,6 +189,7 @@ public class UIQuestionForm extends BaseUIFAQForm implements UIPopupComponent  {
     }
     
     inputQuestionDetail = new UIFormWYSIWYGInput(QUESTION_DETAIL, QUESTION_DETAIL, "") ;
+    inputQuestionDetail.setFCKConfig(org.exoplatform.ks.common.Utils.getFCKConfig());
     inputQuestionDetail.setToolBarName("Basic");
     if(!questionContents_.isEmpty()){
       String input = questionContents_.get(0) ;

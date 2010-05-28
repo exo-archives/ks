@@ -28,6 +28,7 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.Utils;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
@@ -82,6 +83,7 @@ public class UIPrivateMessageForm extends BaseUIForm implements UIPopupComponent
 		UIFormWYSIWYGInput formWYSIWYGInput = new UIFormWYSIWYGInput(FIELD_MAILMESSAGE_INPUT, FIELD_MAILMESSAGE_INPUT, "");
 		formWYSIWYGInput.addValidator(MandatoryValidator.class);
 		formWYSIWYGInput.setToolBarName("Basic");
+		formWYSIWYGInput.setFCKConfig(Utils.getFCKConfig());
 		UIFormInputWithActions sendMessageTab = new UIFormInputWithActions(FIELD_SENDMESSAGE_TAB);
 		sendMessageTab.addUIFormInput(SendTo);
 		sendMessageTab.addUIFormInput(MailTitle);
