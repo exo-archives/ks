@@ -33,11 +33,11 @@ public class DeletedUserCalculateEventListener implements EventListener{
 	public DeletedUserCalculateEventListener() throws Exception {
 	}
 	
-  public String getSrcWorkspace(){  return workspace_ ; }
-  public String getRepository(){ return repository_ ; }
-  public String getPath(){ return path_ ; }
-  public void setPath(String path){path_ = path ; }
-  
+	public String getSrcWorkspace(){	return workspace_ ; }
+	public String getRepository(){ return repository_ ; }
+	public String getPath(){ return path_ ; }
+	public void setPath(String path){path_ = path ; }
+	
 	public void onEvent(EventIterator evIter){
 		try{
 			ExoContainer container = ExoContainerContext.getCurrentContainer();
@@ -47,11 +47,12 @@ public class DeletedUserCalculateEventListener implements EventListener{
 				if(ev.getType() == Event.NODE_ADDED){
 					String userName = ev.getPath().substring(ev.getPath().lastIndexOf("/")+1) ;
 					forumService.calculateDeletedUser(userName);
+					break;
 				}
 			}
 		}catch(Exception e) {
-		  e.printStackTrace();
-		}		
+			log.error("Add event for calculateDeletedUser is fall", e);
+		}
 	}
 }
 
