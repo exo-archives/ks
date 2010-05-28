@@ -30,7 +30,7 @@
               </value-storage>
             </value-storages>
           </container>
-         <cache enabled="true">
+         <cache enabled="false">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
@@ -74,7 +74,7 @@
               </value-storage>
             </value-storages>
           </container>
-         <cache enabled="true">
+         <cache enabled="false">
           <properties>
             <property name="maxSize" value="20000"/>
             <property name="liveTime" value="30000"/>
