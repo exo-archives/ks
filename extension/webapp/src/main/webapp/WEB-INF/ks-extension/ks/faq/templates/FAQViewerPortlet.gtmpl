@@ -52,7 +52,7 @@
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon{
-	font-size: 11px;
+	font-size: 12px;
 }
 
 .UIFAQPortlet .FAQViewerContainer .FAQViewerIcon a{
