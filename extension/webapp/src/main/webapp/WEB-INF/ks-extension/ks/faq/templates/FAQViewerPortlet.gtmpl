@@ -43,7 +43,6 @@
 .UIFAQPortlet h5 {
 	font-size:17px;
 }
-
 .UIFAQPortlet h6 {
 	font-size:15px;
 }
@@ -77,7 +76,7 @@
 	padding-bottom: 10px;
 }
 
-.UIFAQPortlet ol{
+.UIFAQPortlet ul{
 	list-style-type:none;
 	margin:0;
 	padding: 0px 0px 15px 0px;
@@ -109,12 +108,12 @@
 	padding-left: 16px;
 }
 
-.UIFAQPortlet .FAQViewerContainer ol li a:hover{
+.UIFAQPortlet .FAQViewerContainer ul li a:hover{
 	color: #ff6603;
 	text-decoration: underline;
 }
 
-.UIFAQPortlet ol li a:hover{
+.UIFAQPortlet ul li a:hover{
 	color: #ff6603;
 	text-decoration: underline;
 }
@@ -131,7 +130,7 @@
 }
 
 .UIFAQPortlet .FAQAnswerContainer .Answer{
-	padding-left: 20px;
+	padding-left: 16px;
 }
 
 .UIFAQPortlet .FAQAnswerContainer .TextStyle{
@@ -151,26 +150,21 @@
 	padding-top: 6px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer ol li{
+.UIFAQPortlet .FAQAnswerContainer ul li{
 	margin: 10px 0px 0px 0px;
 	padding: 0px 0px 0px 16px;
 	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswer.gif') no-repeat left 2px;
 	list-style-type:none;
 }
 
-.UIFAQPortlet ul{
-	margin: 0px;
-	padding: 0px;
-}
-
-.UIFAQPortlet .FAQAnswerContainer ol .TextStyle ul li{
+.UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li{
 	list-style-type:none;
 	line-height: 20px;
 	padding: 0px 0px 0px 20px;
 	background: url('/faq/skin/DefaultSkin/webui/background/ArrowAnswerDetail.gif') no-repeat left 4px;
 }
 
-.UIFAQPortlet .FAQAnswerContainer ol .TextStyle ul li ul li{
+.UIFAQPortlet .FAQAnswerContainer ul .TextStyle ul li ul li{
 	list-style-type: disc;
 	background: none;
 	padding: 0px;
@@ -280,7 +274,7 @@
 				%>
 					<span><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName"><b>$viewName</b></a></span>
 						<%} else { %>
-					<span style="vertical-align: middle;"><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
+					<span style="vertical-align: bottom;"><a class="ActionLink" href="$url" actions="<%=uicomponent.event("ChangePath", link);%>" title="$pathName">$viewName</a> >> </span>
 						<%} %>
 				<%} else { %>
 					<span style="vertical-align: bottom;" title="$pathName"><b>$viewName</b></span>
@@ -297,9 +291,9 @@
 				question_ = uicomponent.render(question_);
 				String id_ = questionCate.getId();
 		%>
-		<ol class="FAQViewerQuestionContent">	
+		<ul class="FAQViewerQuestionContent">	
 			<li class="FAQViewerIcon"><a class="ActionLinkFAQ" href="#${id_}" name="name${id_}">$question_</a></li>
-		</ol>	
+		</ul>	
 		<%	}	%>
 		
 		<% 
@@ -333,7 +327,7 @@
 						<span style="color:#ff6603;">]</span>
 					<% } %>
 				</div>
-				<ol>
+				<ul>
 					<%for(questionInfo in questionInfos) { 
 							String question =	questionInfo.getQuestion();
 							question = uicomponent.render(question);
@@ -343,7 +337,7 @@
 					<li><a class="FAQViewer" href="#${id}">$question</a></li>				
 					<% 
 					} %>
-				</ol>
+				</ul>
 			</div>
 		
 		<% } %>
@@ -364,13 +358,13 @@
 						<div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
 			<% } %>
 		<div class="Answer" style="margin:3px 0px;">
-			<ol>
+			<ul>
 			<%for(answer in answers_){ 
 					answer = uicomponent.render(answer);
 			%>
 				<li><div class="TextStyle">${answer}</div></li>
 			<%} %>
-			</ol>
+			</ul>
 		</div>
 		<div style="height:18px;">
 			<a class="BackTopIcon" href="#name${id_}"> </a>
@@ -402,13 +396,13 @@
 						<div class="TextDetailStyle"><span class="TextStyle">$questionDetail_</span></div>
 			<% } %>
 			<div class="Answer">
-				<ol>
+				<ul>
 				<%for(answer in answers){ 
 						answer = uicomponent.render(answer);
 				%>
 					<li><div class="TextStyle">${answer}</div></li>
 				<%} %>
-				</ol>
+				</ul>
 			</div>
 		</div>
 		<%} %>
