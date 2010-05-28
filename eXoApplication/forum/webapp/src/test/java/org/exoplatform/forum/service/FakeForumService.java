@@ -751,4 +751,10 @@ public class FakeForumService implements ForumService {
 		return null;
 	}
 
+  @Override
+  public void calculateDeletedUser(String userName) throws Exception {
+    // TODO Auto-generated method stub
+    
+  }
+
 }
