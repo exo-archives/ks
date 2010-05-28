@@ -31,7 +31,7 @@
     <node>
       <uri>tour</uri>
       <name>tour</name>
-      <label>Take a tour</label>
+      <label>Tour</label>
       <page-reference>portal::classic::tour</page-reference>
     </node>    
   </page-nodes>

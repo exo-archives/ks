@@ -23,7 +23,7 @@
 									<div class="HomeBackground">
 										<div class="HomeImageRight">
 											<div class="HomeImageLeft">
-												<div class="Label1">eXo Knowledge 2.0</div>
+												<div class="Label1"><%=_ctx.appRes("home.title") %></div>
 											</div>
 										</div>
 									</div>
@@ -40,18 +40,18 @@
 																<div class="TryNowIcon">
 																	<div class="ForumIcon">
 																		<div class="ForumLabel">
-																			<div class="Title"><a href="$forumuri">Forum</a></div>
-																			<div class="Label">Open discussion</div>
-																			<div class="Label">for your portal</div>
+																			<div class="Title"><a href="$forumuri"><%=_ctx.appRes("home.forum") %></a></div>
+																			<div class="Label"><%=_ctx.appRes("home.forum.subtitle1") %></div>
+																			<div class="Label"><%=_ctx.appRes("home.forum.subtitle2") %></div>
 																		</div>
 																	</div>
 																</div>
 																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon">Unlimited categories and forums</div>
-																	<div class="CheckIcon">Thread permissions, quick reply, preview...</div>
-																	<div class="CheckIcon">Private messages, bookmarks, watch...</div>
-																	<div class="CheckIcon">Advanced moderation : lock, close, approve...</div>
-																	<div class="CheckIcon">Full administration : bans, auto-prune,... </div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature1") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature2") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature3") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature4") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.forum.feature5") %> </div>
 																</div>
 																	<div style="clear: left;"><span></span></div>
 															</div>
@@ -71,18 +71,18 @@
 																<div class="TryNowIcon">
 																	<div class="AnswersIcon">
 																		<div class="FAQLabel">
-																			<div class="Title"><a href="$answersuri">Answers</a></div>
-																			<div class="Label">Key questions meet</div>
-																			<div class="Label">their answers</div>
+																			<div class="Title"><a href="$answersuri"><%=_ctx.appRes("home.answers")%></a></div>
+																			<div class="Label"><%=_ctx.appRes("home.answers.subtitle1") %></div>
+																			<div class="Label"><%=_ctx.appRes("home.answers.subtitle2") %></div>
 																		</div>
 																	</div>
 																</div>
 																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon">Organize in categories</div>
-																	<div class="CheckIcon">Multiple answers, comments</div>
-																	<div class="CheckIcon">Multi-language Q/A</div>
-																	<div class="CheckIcon">Moderation</div>
-																	<div class="CheckIcon">RSS and email Watch</div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature1") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature2") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature3") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature4") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.answers.feature5") %></div>
 																</div>
 																<div style="clear: left;"><span></span></div>
 															</div>
@@ -102,15 +102,15 @@
 																<div class="TryNowIcon">
 																	<div class="FAQIcon">
 																		<div class="FAQLabel">
-																			<div class="Title"><a href="$faquri">FAQ</a></div>
-																			<div class="Label">Publish knowledge</div>
-																			<div class="Label">in FAQs</div>
+																			<div class="Title"><a href="$faquri"><%=_ctx.appRes("home.faq") %></a></div>
+																			<div class="Label"><%=_ctx.appRes("home.faq.subtitle1") %></div>
+																			<div class="Label"><%=_ctx.appRes("home.faq.subtitle2") %></div>
 																		</div>
 																	</div>
 																</div>
 																<div style="margin:0px 0px 0px 0px;">
-																	<div class="CheckIcon">Publish categories from Answers</div>
-																	<div class="CheckIcon">Fully customizable template</div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.faq.feature1") %></div>
+																	<div class="CheckIcon"><%=_ctx.appRes("home.faq.feature2") %></div>
 																	<div class="CheckIcon"></div>
 																	<div class="CheckIcon"></div>
 																	<div class="CheckIcon"></div>
