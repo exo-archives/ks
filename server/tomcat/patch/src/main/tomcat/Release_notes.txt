@@ -1,24 +1,22 @@
-====
-    Copyright (C) 2010 eXo Platform SAS.
-    
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
-    
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
-    
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
-====
-
+/**
+ * Copyright (C) 2003-20010 eXo Platform SAS.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see<http://www.gnu.org/licenses/>.
+ **/
+ 
 =================================================
-    Release Notes - exo-ks - Version 2.0.0 CR02
+    Release Notes eXo Knowledge Suite Version 2.0.0
 =================================================
 
 ===============
@@ -38,10 +36,12 @@ forum, frequency answer and question
 
 
     * General
-          o Upgraded to GateIn 3.0 GA and dependencies http://www.jboss.org/gatein/
-          o Fix RSS generate problem
-          o Session manager
-          
+        o Fix bug list here: http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-0+Release+Notes#HVersion200
+		o Some improvement for admin tool bar, information message
+		o Update jcr 1.12.0-CP01 to fix concurrent save data problem 
+		o Improve UI form FAQ
+		o Authenticated user now can post answers
+		o Root category can add restricted user            
           
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes
           
@@ -85,12 +85,25 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
        Open a terminal, go to tomcat/bin and type the command:
          "./gatein.sh run" for production
          "./gatein-dev.sh run" for development
+         
++) Edit the file $TOMCAT_HOME/gatein/conf/configuration.properties and configure mail  if you want to enable mail notifications.
+Similarly, if you want to use the ksdemo, you need to edit $TOMCAT_HOME/gatein/conf/portal/ksdemo/ksdemo.properties
+
+To enable mail notifications, quickly you can use your own gmail account for example :
+
+# EMail
+gatein.email.smtp.username=*youracount@server.com*
+gatein.email.smtp.password=*yourpassword*
+gatein.email.smtp.host=smtp.gmail.com
+gatein.email.smtp.port=465
+gatein.email.smtp.starttls.enable=true
+gatein.email.smtp.auth=true
+gatein.email.smtp.socketFactory.port=465
+gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 
 ==============
 4 Known issues 
 ==============
- * http://jira.exoplatform.org/browse/KS-2311
-   (this may fix by this http://jira.exoplatform.org/browse/EXP-24 or follow my introduction on KS-2311)
  * http://jira.exoplatform.org/browse/KS-2259 
  (this depends on https://jira.jboss.org/jira/browse/GTNPORTAL-1020, update to next version of GateIn)
  
@@ -99,7 +112,7 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ===========================
 
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0-RC01]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
@@ -108,6 +121,75 @@ Need to set the JAVA_HOME variable for run Knowledge suite's servers.
 ====================
 6 Detailed Changelog
 ==================== 
+- Version 2.0.0
+
+
+** Bug
+    * [KS-701] - Post with special format can ruin the font style of the forum 
+    * [KS-1880] - Backport Translation and formatting patch
+    * [KS-1933] - [BFPME-475] i18n labels
+    * [KS-2096] - deletion of a user isn't fully propagated throughout the system
+    * [KS-2195] - RSS from forum and faq generate is not true.
+    * [KS-2259] - javascript errors on first drop of Forum app
+    * [KS-2277] - In IE 7: Border is broken in Notification form. see file attach
+    * [KS-2311] - Tomcat KS 2.0 Beta01 doesn't start on linux
+    * [KS-2317] - IE 7: Forum's description pane disappears after move scroll bar of browser to bottom.
+    * [KS-2361] - Error  when import "Root" category
+    * [KS-2386] - Don't show first topic of Forum when get RSS of Category
+    * [KS-2395] - deleted topic is restored 
+    * [KS-2401] - Answers portlet stays in french when I change language to English
+    * [KS-2402] - FAQ - Still possible to create a question at the root
+    * [KS-2424] - FAQ- Administrator VS moderator
+    * [KS-2437] - Remove the use of exoservice gmail Account from MPailService configuration
+    * [KS-2441] - Don't  show topic/post when get RSS of category&Forum
+    * [KS-2442] - Don't show question when get RSS of root category
+    * [KS-2443] - Still can rate for topic although topic rated
+    * [KS-2458] - [Post reply] button is still visible although this user does not have permission to reply topic
+    * [KS-2459] -  There is no way to back to Forum home after search into a specific topic
+    * [KS-2460] - Can not edit topic with limitation of viewers
+    * [KS-2461] - Answer - Still show unapprove question when user is owner of this question
+    * [KS-2463] - Don't show date/time when check number of Most Users online
+    * [KS-2465] - Show message error JS  when click add category after removed user "demo"
+    * [KS-2466] - Answer - Can not sort category/question by created date/alphabet
+    * [KS-2467] - Always show total active members is 1 although there are some user are active in forum on different browsers
+    * [KS-2469] -  User is still able to move the topic to the forum which this user does not have right to add topic
+    * [KS-2471] -  User is still able to move topic to closed and locked forum which user is not the moderator of the destination forum
+    * [KS-2472] - User is still able to move topic to the Forum which belongs to the Category that user has been restricted view permission
+    * [KS-2475] - Can't search by Answer
+    * [KS-2478] - Category's moderator don't see the approve and actvicate options when editing a question in this category
+    * [KS-2502] -  Displaying Total topic/post is "0" although there are some posts
+    * [KS-2522] - Forum: some translation in French
+    * [KS-2528] - French translation encoding is F**ed
+    * [KS-2532] - [Answer] show error when get RSS of a category that without sub-categories
+    * [KS-2535] - User is still able view post although without view permission in special case
+
+** Feedback
+    * [KS-2510] - Create topic is too slow
+    * [KS-2525] - "Email notify" prefixes email notifications
+
+** Improvement
+    * [KS-1242] - Create Shorter Permlinks
+    * [KS-1659] - quotes in preview pane are not displayed
+    * [KS-1694] - Variables for notification subject
+    * [KS-1728] - Click on user name to display menu
+    * [KS-1882] - Translate label (on Forum)
+    * [KS-1885] - Change the message related to the Moderation (on Forum)
+    * [KS-1890] - Correcting esthetical, spelling and translating some words
+    * [KS-2005] - Display  sort order 
+    * [KS-2346] - Allow to display question details in FAQ portlet
+    * [KS-2527] - Anyone can answer by default
+
+** New Feature
+    * [KS-1956] - Configurable JCR data  location 
+    * [KS-2218] - New Administration Menu
+
+** Task
+    * [KS-2398] - Fix missing dependencies
+    * [KS-2524] - remove source button in FCK Editor
+    * [KS-2526] - Polish demo homepage
+    * [KS-2551] - Use the new logos
+    * [KS-2552] - remove redhat mention in footer
+
 - Version 2.0.0-CR2
 
 ** Bug
