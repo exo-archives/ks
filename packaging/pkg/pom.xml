@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0-GA</version>
   </parent>
   <artifactId>exo.ks.packaging.assembly</artifactId>
   <packaging>pom</packaging>
@@ -311,6 +311,7 @@
         </plugins>
       </build>
     </profile>
+    <!-- 
     <profile>
       <id>arc-jbossas</id>
       <build>
@@ -335,5 +336,6 @@
         </plugins>
       </build>
     </profile>
+    -->
   </profiles>
 </project>
