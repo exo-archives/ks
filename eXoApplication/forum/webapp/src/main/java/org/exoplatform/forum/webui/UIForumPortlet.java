@@ -630,7 +630,7 @@ public class UIForumPortlet extends UIPortletApplication {
 					categoryContainer.updateIsRender(false) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 				} else { 
-					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(),"category"}, ApplicationMessage.WARNING)) ;//res.getString("UIForumPortlet.label.category")
+					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(),"category"}, ApplicationMessage.WARNING)) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
