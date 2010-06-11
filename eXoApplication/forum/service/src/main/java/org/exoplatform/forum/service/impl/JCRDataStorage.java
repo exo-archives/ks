@@ -4271,7 +4271,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				try {
 					Node node = (Node)iter.nextNode();
 					str = node.getProperty(EXO_NAME).getString();
-					str = str + "	<font color=\"Salmon\">(" + node.getProperty(EXO_USE_COUNT).getString() + ")</font>";
+					str = str + Utils.SPACE + "<font color=\"Salmon\">(" + node.getProperty(EXO_USE_COUNT).getString() + ")</font>";
 					tagNames.add(str);
 					if(tagNames.size() == 5) break;
 				}catch(Exception e) {}				
@@ -4327,7 +4327,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				try {
 					Node node = (Node)iter.nextNode();
 					str = node.getProperty(EXO_NAME).getString();
-					str = str + "	<font color=\"Salmon\">(" + node.getProperty(EXO_USE_COUNT).getString() + ")</font>";
+					str = str + Utils.SPACE + "<font color=\"Salmon\">(" + node.getProperty(EXO_USE_COUNT).getString() + ")</font>";
 					tagNames.add(str);
 					if(tagNames.size() == 5) break;
 				}catch(Exception e) {}				

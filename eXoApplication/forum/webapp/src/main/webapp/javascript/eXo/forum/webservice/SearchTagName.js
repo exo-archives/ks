@@ -130,9 +130,9 @@ SearchTagName.prototype.searchIpBanWrapper = function(event) {
 SearchTagName.prototype.setValueInput = function(elm) {
 	elm.className = "TagNameItem Selected";
 	var str = String(this.searchTagNameNode.value);
-	str = str.substring(0, str.lastIndexOf(' '));
+	str = str.substring(0, str.lastIndexOf(" "));
 	var value = String(elm.innerHTML);
-	value = value.substring(0, value.indexOf(' '));
+	value = value.substring(0, value.indexOf(" "));
 	if(str.length == 0) str = value ;
 	else str = str + " " + value;
 	this.searchTagNameNode.value = str;

@@ -66,6 +66,8 @@ public class Utils {
 	public static final String USER = "User".intern() ;
 	public static final String GUEST = "Guest".intern() ;
 	public static final String DELETED = "_deleted".intern() ;
+
+	public static final String SPACE = " ".intern() ;
 	
 	public static final String ADMIN_ROLE = "ADMIN".intern() ;
 
