@@ -70,12 +70,14 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.rss.RSS;
 import org.exoplatform.services.jcr.RepositoryService;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
+import org.exoplatform.webui.exception.MessageException;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.UIFormTextAreaInput;
@@ -480,8 +482,10 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 		return isMod;
 	}
 	
-	private String getScreenName(String userName) throws Exception {
-		return (userName.contains(Utils.DELETED))?"<s>"+userName.substring(0, userName.indexOf(Utils.DELETED))+"</s>":userName;
+	private String getScreenName(String userName, String screenName) throws Exception {
+		return (userName.contains(Utils.DELETED)) ? "<s>"
+				+ ((screenName.contains(Utils.DELETED)) ? 
+						screenName.substring(0, screenName.indexOf(Utils.DELETED)) : screenName) + "</s>" : screenName;
 	}
 	 
 	private Topic getTopic() throws Exception {
@@ -1415,12 +1419,15 @@ public class UITopicDetail extends  UIForumKeepStickPageIterator {
 	}
 	
 	static public class PrivateMessageActionListener extends BaseEventListener<UITopicDetail> {
-		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String objectId) throws Exception {
-			
+		public void onEvent(Event<UITopicDetail> event, UITopicDetail topicDetail, final String userId) throws Exception {
 			if(topicDetail.userProfile.getIsBanned()){
 			  throwWarning("UITopicDetail.msg.userIsBannedCanNotSendMail");
 			}
-			String userId = event.getRequestContext().getRequestParameter(OBJECTID) ;			
+			int t = userId.indexOf(Utils.DELETED);
+			if(t > 0) {
+				String[] args = new String[] { userId.substring(0, t)} ;
+				throw new MessageException(new ApplicationMessage("UITopicDetail.msg.userIsDeleted", args, ApplicationMessage.WARNING)) ;
+			}
 			UIPrivateMessageForm messageForm = topicDetail.openPopup(UIPrivateMessageForm.class, 650, 480);
 	    messageForm.setFullMessage(false);
 	    messageForm.setUserProfile(topicDetail.userProfile);

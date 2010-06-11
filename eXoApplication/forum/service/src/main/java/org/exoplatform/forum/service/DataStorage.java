@@ -70,6 +70,8 @@ public interface DataStorage {
 
   void addCalculateModeratorEventListenner() throws Exception;
 
+  void addDeletedUserCalculateListener() throws Exception;
+  
   void initCategoryListener();
 
   boolean isAdminRole(String userName) throws Exception;

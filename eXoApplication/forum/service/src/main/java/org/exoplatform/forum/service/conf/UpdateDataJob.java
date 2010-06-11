@@ -35,7 +35,6 @@ public class UpdateDataJob implements Job {
 		
 	
   public void execute(JobExecutionContext context) throws JobExecutionException {
-//  	System.out.println("\n\n==========>   UpdateDataJob  ");
   	ExoContainer oldContainer = ExoContainerContext.getCurrentContainer();
 	  try {
 	  	ExoContainer exoContainer = Utils.getExoContainer(context);

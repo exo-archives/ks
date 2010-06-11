@@ -2,6 +2,7 @@
 	import org.exoplatform.forum.service.UserProfile ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.ks.common.user.CommonContact;
+	import org.exoplatform.forum.service.Utils;
 %>
 <div class="UIViewMemberProfile">
 <% uiform.begin() %>
@@ -48,6 +49,7 @@
 		 userSmile = "OnlineIcon";
 		 titleSmile = "Online";
 	}
+	userName = (userName.contains(Utils.DELETED))?userName.substring(0, userName.indexOf(Utils.DELETED)):userName;
 %>
 	<div class="ViewMemberProfileContainer">
 		<div class="TitleBar">

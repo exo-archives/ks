@@ -46,21 +46,18 @@ public class CalculateModeratorEventListener implements EventListener{
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.PROPERTY_ADDED){
-//					System.out.println("\n\nEvent.PROPERTY_ADDED : "+ ev.getPath()) ;
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, true);
 					}
 					// exo:moderators
 				}else if(ev.getType() == Event.PROPERTY_CHANGED) {
-//					System.out.println("\n\nEvent.PROPERTY_CHANGED : "+ ev.getPath());
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, false);
 					}
 					// exo:moderators, tempModerators
 				}else if(ev.getType() == Event.PROPERTY_REMOVED) {
-//					System.out.println("\n\n ==> Event.PROPERTY_REMOVED : " + ev.getPath());
 					String evPath = ev.getPath();
 					if(evPath.substring(evPath.lastIndexOf("/")+1).equals("exo:moderators")) {
 						forumService.calculateModerator(path_, false);

@@ -44,7 +44,7 @@ public class DeletedUserCalculateEventListener implements EventListener{
 			ForumService forumService = (ForumService)container.getComponentInstanceOfType(ForumService.class);
 			while(evIter.hasNext()) {
 				Event ev = evIter.nextEvent() ;
-				if(ev.getType() == Event.NODE_ADDED){
+				if(ev.getType() == Event.NODE_ADDED || ev.getType() == Event.NODE_REMOVED){
 					String userName = ev.getPath().substring(ev.getPath().lastIndexOf("/")+1) ;
 					forumService.calculateDeletedUser(userName);
 					break;

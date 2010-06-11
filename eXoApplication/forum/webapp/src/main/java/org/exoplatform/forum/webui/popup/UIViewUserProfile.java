@@ -81,7 +81,7 @@ public class UIViewUserProfile extends BaseUIForm implements UIPopupComponent {
 	}
 	
   private String getScreenName(String userName) throws Exception {
-		return forumService.getScreenName(userName);
+		return forumService.getScreenName(userName); 
 	}
 	
 	public void setUserProfile(UserProfile userProfile) {

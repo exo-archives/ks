@@ -660,20 +660,17 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 						removeModerateForum.add(string) ;
 					}
 				}
-//				System.out.println("\n\nnewModeratorsForum " + newModeratorsForum.toString());
 				if(!newModeratorsForum.isEmpty())
 					uiForm.getForumService().saveModerateOfForums(newModeratorsForum, userProfile.getUserId(), false);
 				isSetGetNewListForum = true ;
 			}
-//			System.out.println("\n\n oldModerateForum " + oldModerateForum.toString());
 			if(!removeModerateForum.isEmpty()) {
-//				System.out.println("\n\nremoveModerateForum " + removeModerateForum.toString());
 				uiForm.getForumService().saveModerateOfForums(removeModerateForum, userProfile.getUserId(), true);
 				isSetGetNewListForum = true ;
 			}
 			
 			uiForm.getForumService().saveUserModerator(userProfile.getUserId(), uiForm.listModerate, false);
-			//=============================================
+
 			List<String> moderateCates = new ArrayList<String>() ;
 			moderateCates.addAll(uiForm.listModCate) ;
 			List<String> newModeratorsCate = new ArrayList<String> ();
@@ -703,7 +700,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 				uiForm.getForumService().saveModOfCategory(removeModerateCate, userProfile.getUserId(), false);
 				isSetGetNewListForum = true ;
 			}
-			//==========================
+
 			if(userRole > 1) {
 				uiForm.listModerate = uiForm.getForumService().getUserModerator(userProfile.getUserId(), false);
 				if(uiForm.listModerate.size() >= 1 && !uiForm.listModerate.get(0).equals(" ")) userRole = 1;
@@ -787,8 +784,6 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			userProfile.setUserRole(userRole) ;
 			userProfile.setSignature(signature);
 			userProfile.setIsDisplaySignature(isDisplaySignature);
-//			System.out.println("\n\nmoderateForums: " + uiForm.listModerate.toString());
-//			userProfile.setModerateForums(uiForm.listModerate.toArray(new String[]{}));
 			userProfile.setModerateCategory(moderateCates.toArray(new String[]{}));
 			userProfile.setIsDisplayAvatar(isDisplayAvatar);
 			

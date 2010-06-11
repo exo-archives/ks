@@ -175,6 +175,14 @@ public class ForumServiceImpl implements ForumService, Startable {
   	  log.error("Error while initializing Prune schedulers: "+ e.getMessage());
   	}
 
+  	// init deleted user listeners
+  	try{
+  		log.info("initializing deleted user listener...");
+  		storage.addDeletedUserCalculateListener() ;
+  	} catch (Exception e){
+  		log.error("Error while initializing Prune schedulers: "+ e.getMessage());
+  	}
+
 //  TODO: JUnit test is fall.
   	// management views
   	try {

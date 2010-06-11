@@ -278,6 +278,18 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		}
 	}
 
+	public void addDeletedUserCalculateListener() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		Node profileHome = getUserProfileHome(sProvider) ;
+		try{
+			if(profileHome.hasNode(Utils.USER_PROFILE_DELETED)) {
+				deletedUserCalculateListener(profileHome.getNode(Utils.USER_PROFILE_DELETED));
+			}
+		}catch(Exception e){ } 
+		finally{ sProvider.close() ;}
+		
+	}
+	
 	protected void deletedUserCalculateListener(Node node) throws Exception{
 		try{
 			String path = node.getPath();
@@ -4571,16 +4583,20 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	
 	
 	public String getScreenName(String userName) throws Exception {
-		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		String userTemp = userName;
 		try {
 			Node userProfile = getUserProfileNode(getUserProfileHome(sProvider), userName);
 			PropertyReader reader = new PropertyReader(userProfile);
 			userName = reader.string(EXO_SCREEN_NAME, userName);
-		}catch (Exception e) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			sProvider.close();
 		}
-		return (userName.contains(Utils.DELETED))?"<s>"+userName.substring(0, userName.indexOf(Utils.DELETED))+"</s>":userName;
+		return (userTemp.contains(Utils.DELETED)) ? "<s>"
+				+ ((userName.contains(Utils.DELETED)) ? 
+						userName.substring(0, userName.indexOf(Utils.DELETED)) : userName) + "</s>" : userName;
 	}
 	
 	private boolean isBanIp(String ip) throws Exception {
@@ -4614,6 +4630,16 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			userProfile.setMaxPostInPage(profileNode.getProperty(EXO_MAX_POST).getLong());
 			userProfile.setMaxTopicInPage(profileNode.getProperty(EXO_MAX_TOPIC).getLong());
 			userProfile.setIsShowForumJump(profileNode.getProperty(EXO_IS_SHOW_FORUM_JUMP).getBoolean());
+		} catch (Exception e) {
+			userProfile.setUserId(userName);
+			userProfile.setUserTitle(Utils.USER);
+			userProfile.setUserRole((long)2);
+			// default Administration
+			if(isAdminRole(userName)) {
+				userProfile.setUserRole((long) 0);
+				userProfile.setUserTitle(Utils.ADMIN);
+				saveUserProfile(userProfile, false, false);
+			}
 		}finally{ sProvider.close() ;}
 		return userProfile ;
 	}
@@ -4724,10 +4750,10 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		try {
 			return profileHome.getNode(userName);
 		} catch (PathNotFoundException e) {
-			if(userName.indexOf(Utils.DELETED) < 0) userName = userName + Utils.DELETED;
 			return profileHome.getNode(Utils.USER_PROFILE_DELETED).getNode(userName);
-		} catch (Exception e){}
-		return null;
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 	
 	public UserProfile getUserInfo(String userName) throws Exception {
@@ -7062,9 +7088,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	}
 	
 	public void updateStatisticCounts(long topicCount, long postCount) throws Exception {
-//	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
-//			System.out.println("\n\n ========= rp " + repository + " wp: "	+ workspace);
 			JCRSessionManager manager = new JCRSessionManager(repository, workspace);
 			Node forumStatisticNode = manager.createSession().getRootNode().getNode(dataLocator.getForumStatisticsLocation());
 			PropertyReader reader = new PropertyReader(forumStatisticNode);
@@ -7081,8 +7105,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			forumStatisticNode.save() ;
 			manager.closeSession();
 		}catch(Exception e) {
-//			e.printStackTrace();
-	//		log.error(e);
+			log.error(e);
 		}
 	}
 
@@ -7671,6 +7694,14 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				deletedUserCalculateListener(profileDeleted);
 			}
 			session.getWorkspace().move(profile.getPath(), profileDeleted.getPath()+"/" + id);
+			try {
+				Node avatarHome = session.getRootNode().getNode(dataLocator.getAvatarsLocation());
+				if(avatarHome.hasNode(userId)) {
+					avatarHome.getNode(userId).remove();
+				}
+			} catch (Exception e) {
+				log.info("User deleted has not avatar !!!");
+			}
 			session.save();
 		} catch (PathNotFoundException e) {
 			return false;
@@ -7683,7 +7714,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	public void calculateDeletedUser(String userName) throws Exception	{
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		String tempUserName = userName;
-		userName = userName.substring(0, userName.indexOf(Utils.DELETED));
+		userName = tempUserName.substring(0, tempUserName.indexOf(Utils.DELETED));
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
@@ -7698,7 +7729,6 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			StringBuilder pathQuery = new StringBuilder();
 			pathQuery.append("/jcr:root").append(categoryHome.getPath())
 							 .append("//*[").append(builder).append("]");
-			
 			Query query = qm.createQuery(pathQuery.toString(), Query.XPATH);
 			QueryResult result = query.execute();
 			NodeIterator iter = result.getNodes();
