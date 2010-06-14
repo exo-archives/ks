@@ -438,7 +438,6 @@ public class UIForumPortlet extends UIPortletApplication {
 		String[] viewer = cate.getUserPrivate();
 		String userId = userProfile.getUserId();
 		List<String> userBound = UserHelper.getAllGroupAndMembershipOfUser(userId);
-		
 		if(userProfile == null) updateUserProfileInfo();
 		if(userProfile.getUserRole() == 0) return true;
 		if(isArrayNotNull(viewer)) {

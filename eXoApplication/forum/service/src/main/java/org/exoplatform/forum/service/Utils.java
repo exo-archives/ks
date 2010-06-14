@@ -366,20 +366,17 @@ public class Utils {
 	}
 
 	static public boolean hasPermission(List<String> listOfCanviewrs, List<String> listOfBoundUsers){
-	  String permUserMember = "";
+	  List<String> tem = new ArrayList<String>();
     for(String str : listOfCanviewrs){
       if(listOfBoundUsers.contains(str)) return true;
-
-      for(String userprofile : listOfBoundUsers){
-        if(userprofile.contains(":/")) permUserMember = userprofile.substring(userprofile.indexOf(":/"), userprofile.length()); 
-        if(permUserMember.length() > 0){    
-          if(str.contains("*")){
-            String userMs = str.substring(str.indexOf(":/"),str.length());
-            if(userMs.length() >= permUserMember.length()){ if(userMs.contains(permUserMember)) return true;}
-            else{ if(permUserMember.contains(userMs)) return true;}
-           }
-        }
+      if(str.contains("*")){
+        str = str.substring(str.indexOf("/"), str.length());
+        tem.add(str);
+        if(listOfBoundUsers.contains(str)) return true;
       }
+    }
+    for(String s : listOfBoundUsers){
+     if(tem.contains(s)) return true; 
     }
     return false;
   }

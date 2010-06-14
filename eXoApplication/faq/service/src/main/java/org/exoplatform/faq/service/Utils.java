@@ -147,9 +147,20 @@ public class Utils {
   }
 	
 	static public boolean hasPermission(List<String> listPlugin, List<String> listOfUser){
-		for(String str : listPlugin){
-			if(listOfUser.contains(str)) return true;
+	  List<String> tem = new ArrayList<String>();
+		for(String str : listOfUser){
+			if(listPlugin.contains(str)) return true;
+			if(str.contains("*")){
+			  str = str.substring(str.indexOf("/"), str.length());
+			  tem.add(str);
+			  if(listPlugin.contains(str)) return true;
+			}
 		}
+		
+		for(String s : listPlugin){
+		  if(tem.contains(s)) return true;
+		}
+		
 		return false;
 	}
 	
