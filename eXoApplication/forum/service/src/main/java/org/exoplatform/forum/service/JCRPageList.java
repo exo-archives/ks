@@ -77,26 +77,26 @@ abstract public class JCRPageList<E> extends PageList<E>{
 	
 	public List<E> getPageSearch(int page, List<ForumSearch> list) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, false, false) ;
+		populateCurrentPageSearch(currentPage_, list, false, false) ;
 		return currentListPage_ ;
 	}
 
 	public List<E> getPageWatch(int page, List<Watch> list) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, list, true, false) ;
+		populateCurrentPageSearch(currentPage_, list, true, false) ;
 		return currentListPage_ ;
 	}
 	
 	public List<E> getPageUser(int page) throws Exception	 {
 		checkAndSetPage(page) ;
-		populateCurrentPageSearch(page, new CopyOnWriteArrayList<E>(), true, true) ;
+		populateCurrentPageSearch(currentPage_, new CopyOnWriteArrayList<E>(), true, true) ;
 		return currentListPage_ ;
 	}
 
 
 	public List<E> getPageList(long page, List<String> list) throws Exception	 {
 		checkAndSetPage((int) page) ;
-		populateCurrentPageList((int) page, list) ;
+		populateCurrentPageList(currentPage_, list) ;
 		return currentListPage_ ;
 	}
 

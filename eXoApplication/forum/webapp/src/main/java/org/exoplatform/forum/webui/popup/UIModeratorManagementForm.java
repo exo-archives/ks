@@ -135,9 +135,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	private String userAvartarUrl = null;
 	private String keyWord = "";
 	private boolean isViewSearchUser = false;
+	private UIForumPageIterator pageIterator = null;
 	
 	public UIModeratorManagementForm() throws Exception {
-		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
+		pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
 		addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
 		ResourceBundle res = context.getApplicationResourceBundle() ;
@@ -158,7 +159,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	public void setPageListUserProfile() throws Exception {
 		userPageList = this.getForumService().getPageListUserProfile() ;
 		userPageList.setPageSize(5);
-		this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;		
+		this.pageIterator.updatePageList(this.userPageList) ;		
 	}
 	
 	private boolean isAdmin(String userId) throws Exception {
@@ -178,13 +179,12 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 	
 	private void setListUserProfile() throws Exception {
 		if(valueSearch == null || valueSearch.trim().length() < 1){
-			UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
 			int page = pageIterator.getPageSelected() ;
 			this.userProfiles = this.userPageList.getPage(page) ;
 			pageIterator.setSelectPage(userPageList.getCurrentPage());
 		} else {
 			this.userProfiles = this.userPageList.getpage(this.valueSearch);
-			this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
+			pageIterator.setSelectPage(this.userPageList.getCurrentPage());
 			valueSearch = null;
 		}
 	}
@@ -194,10 +194,10 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			this.setListUserProfile();
 		} else {
 			try {
-				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
 				int page = pageIterator.getPageSelected() ;
 				this.userProfiles = new ArrayList<UserProfile>();
-				for(Object obj : this.userPageList.getPageUser(page)){
+				List list = this.userPageList.getPageUser(page);
+				for(Object obj : list){
 					if(obj instanceof User)
 						this.userProfiles.add(getForumService().getUserProfileManagement(((User)obj).getUserName()));
 					else if(obj instanceof UserProfile)
@@ -581,7 +581,8 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 			
 			this.userPageList = new ForumPageList(results);
 			this.userPageList.setPageSize(5);
-			this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;	
+			pageIterator.updatePageList(this.userPageList) ;
+			pageIterator.setSelectPage(1);
 			this.isViewSearchUser = true;
 		} catch (Exception e) {
 			this.isViewSearchUser = false;
