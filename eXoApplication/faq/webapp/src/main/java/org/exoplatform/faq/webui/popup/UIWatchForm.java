@@ -16,9 +16,10 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui.popup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.faq.webui.FAQUtils;
 import org.exoplatform.faq.webui.UIAnswersPortlet;
@@ -29,7 +30,7 @@ import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
-import org.exoplatform.webui.form.UIFormMultiValueInputSet;
+import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
 import org.exoplatform.webui.form.UIFormStringInput;
 
 @ComponentConfig(
@@ -50,7 +51,9 @@ public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
 	
 	public UIWatchForm() throws Exception {
 		userName = new UIFormStringInput(USER_NAME, USER_NAME, null) ;
-		emailAddress = new UIFormMultiValueInputSet(EMAIL_ADDRESS, EMAIL_ADDRESS );
+		emailAddress = createUIComponent(UIFormMultiValueInputSet.class, null, null) ;
+		emailAddress.setId(EMAIL_ADDRESS) ;
+		emailAddress.setName(EMAIL_ADDRESS) ;
 		emailAddress.setType(UIFormStringInput.class) ;
   	addUIFormInput(userName);
 		addUIFormInput(emailAddress);
@@ -64,20 +67,21 @@ public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
   public void setCategoryID(String s) { categoryId_ = s ; }
   
   protected void setWatch(Watch watch) throws Exception {
-  	UIFormMultiValueInputSet emails = (UIFormMultiValueInputSet)getChildById(EMAIL_ADDRESS) ;
-  	String[] values = watch.getEmails().split(",") ;
-  	emails.setValue(Arrays.asList(values)) ;
+  	String[] values = FAQUtils.splitForFAQ(watch.getEmails());
+  	emailAddress.setValue(new ArrayList<String>(Arrays.asList(values))) ;
   	UIFormStringInput user = getChildById(USER_NAME) ;
   	user.setValue(watch.getUser()) ;  	
   }
   
 	static public class SaveActionListener extends EventListener<UIWatchForm> {
-    public void execute(Event<UIWatchForm> event) throws Exception {
+    @SuppressWarnings("unchecked")
+		public void execute(Event<UIWatchForm> event) throws Exception {
 			UIWatchForm uiWatchForm = event.getSource() ;
       String name = uiWatchForm.getUIStringInput(USER_NAME).getValue() ;
       String listEmail = "";
-			for (Object obj : uiWatchForm.emailAddress.getValue()) {
-				listEmail += String.valueOf(obj).trim() + "," ;
+      List<String> values = (List<String>) uiWatchForm.emailAddress.getValue();
+			for (String str : values) {
+				listEmail += str.trim() + "," ;
       }
 			if (FAQUtils.isFieldEmpty(name)) {
 				uiWatchForm.warning("UIWatchForm.msg.name-field-empty") ;
@@ -91,12 +95,11 @@ public class UIWatchForm extends BaseUIForm	implements UIPopupComponent{
         return ;
       }
       String categoryId = uiWatchForm.getCategoryID() ;
-      FAQService faqService =	FAQUtils.getFAQService() ;
-	      
+      
     	Watch watch = new Watch() ;
     	watch.setUser(name) ;
     	watch.setEmails(listEmail);
-  		faqService.addWatchCategory(categoryId , watch) ;
+    	FAQUtils.getFAQService().addWatchCategory(categoryId , watch) ;
   		UIAnswersPortlet watchContainer = uiWatchForm.getAncestorOfType(UIAnswersPortlet.class);
   		UIWatchManager watchManager = watchContainer.findFirstComponentOfType(UIWatchManager.class) ;
       watchManager.setCategoryID(categoryId);
