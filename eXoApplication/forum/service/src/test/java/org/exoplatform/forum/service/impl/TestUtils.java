@@ -302,6 +302,35 @@ public class TestUtils extends TestCase {
   	assertEquals(expected, actual);
   }
   
+  public void testHasPermission(){
+    List<String> l1 = Arrays.asList(" ");
+    List<String> l2 = null;
+    
+    boolean condition = Utils.hasPermission(l1, l2);
+    assertFalse(condition);
+    
+    condition = Utils.hasPermission(l2, l1);
+    assertFalse(condition);
+    
+    condition = Utils.hasPermission(l2, l2);
+    assertFalse(condition);
+    
+    l1 = Arrays.asList("g1", "g2");
+    l2 = Arrays.asList("g3");
+    condition = Utils.hasPermission(l1, l2); 
+    assertFalse(condition);
+    
+    condition = Utils.hasPermission(l2, l1); 
+    assertFalse(condition);
+    
+    l1 = Arrays.asList("g1", "g2", "g3");
+    l2 = Arrays.asList("g1", "g4");
+    condition = Utils.hasPermission(l1, l2); 
+    assertTrue(condition);
+    
+    condition = Utils.hasPermission(l2, l1); 
+    assertTrue(condition);
+  }
 }
 
 

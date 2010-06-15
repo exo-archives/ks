@@ -365,7 +365,14 @@ public class Utils {
 		return strBuilder;
 	}
 
+	/**
+	 * Checking a user who whether contained Users/MemberShip/Group ? 
+	 * @param listOfCanviewrs
+	 * @param listOfBoundUsers
+	 * @return boolean
+	 */
 	static public boolean hasPermission(List<String> listOfCanviewrs, List<String> listOfBoundUsers){
+	  if(listOfBoundUsers == null || listOfCanviewrs == null) return false;
 	  List<String> tem = new ArrayList<String>();
     for(String str : listOfCanviewrs){
       if(listOfBoundUsers.contains(str)) return true;
