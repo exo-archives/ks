@@ -38,9 +38,11 @@ import org.exoplatform.forum.webui.popup.UIMoveForumForm;
 import org.exoplatform.forum.webui.popup.UIWatchToolsForm;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIComponent;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
@@ -558,23 +560,32 @@ public class UICategory extends BaseForumForm	{
 				} else {
 					forum = uiCategory.getForum(id[1]);
 				}
-				forumPortlet.updateIsRendered(ForumUtils.FORUM);
-				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-				uiForumContainer.setIsRenderChild(false) ;
-				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-				uiTopicDetail.setUpdateForum(forum) ;
-				uiTopicDetail.setTopicFromCate(id[0] ,id[1], topic, 0) ;
-				if(id[id.length-1].indexOf(Utils.POST) == 0){
-					uiTopicDetail.setIdPostView(id[id.length-1]) ;
-					uiTopicDetail.setLastPostId(id[id.length-1]);
+				Category category = uiCategory.getCategory();
+				if(forumPortlet.checkCanView(category, forum, topic)) {
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+					UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+					uiForumContainer.setIsRenderChild(false) ;
+					UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+					uiTopicDetail.setUpdateForum(forum) ;
+					uiTopicDetail.setTopicFromCate(id[0] ,id[1], topic, 0) ;
+					if(id[id.length-1].indexOf(Utils.POST) == 0){
+						uiTopicDetail.setIdPostView(id[id.length-1]) ;
+						uiTopicDetail.setLastPostId(id[id.length-1]);
+					} else {
+						uiTopicDetail.setIdPostView("lastpost") ;
+					}
+					uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
+					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
+					event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 				} else {
-					uiTopicDetail.setIdPostView("lastpost") ;
+					uiCategory.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
+					uiCategory.getForumService().saveLastPostIdRead(uiCategory.userProfile.getUserId(), uiCategory.userProfile.getLastReadPostOfForum(),
+							uiCategory.userProfile.getLastReadPostOfTopic());
+					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",  new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
+					context.addUIComponentToUpdateByAjax(uiCategory) ;
 				}
-				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
-				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
-				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
 			context.addUIComponentToUpdateByAjax(forumPortlet) ;
 		}

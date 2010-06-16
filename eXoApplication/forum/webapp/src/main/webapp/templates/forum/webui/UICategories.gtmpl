@@ -182,8 +182,6 @@
 											if(topicNewPost.getIsClosed()) {
 												if(isAdmin || ForumUtils.isStringInList(forumModerators, userLogin)) {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-													//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
-													//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
 													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 												} else {
 													titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsClose"),topicNewPostTitle) ;
@@ -192,16 +190,12 @@
 												if(forum.getIsModerateTopic()) {
 													if(isAdmin || topicNewPost.getIsApproved() || ForumUtils.isStringInList(forumModerators, userLogin)){
 														openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-														//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
-														//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
 														urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 													} else {
 														titleTopic = ForumUtils.getLabel(_ctx.appRes("UICategory.label.ThisThreadIsUnApproved"),topicNewPostTitle) ;
 													}
 												} else {
 													openLinkLastPost = uicomponent.event("OpenLastTopicLink", topicPath) ;
-													//urlLastPost = uicomponent.url("OpenLastTopicLink", topicNewPost.getId()) ;
-													//urlLastPost = ForumSessionUtils.getBreadcumbUrl(urlLastPost, componentId, "OpenLastTopicLink", "");
 													urlLastPost = ForumUtils.createdForumLink(ForumUtils.TOPIC, topicNewPost.getId());
 												}
 											}
@@ -230,8 +224,6 @@
 										if(ForumUtils.isEmpty(forumDescription)) {
 											lineHeight = "line-height:28px;";
 										}
-										//url = uicomponent.url("OpenForumLink", forumId);
-										//url = ForumSessionUtils.getBreadcumbUrl(url, componentId, "OpenForumLink", "");
 										url = ForumUtils.createdForumLink(ForumUtils.FORUM, forumId);
 								%>
 										<tr class="$classRow" oncontextmenu="return false;">

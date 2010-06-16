@@ -558,7 +558,7 @@ public class UIForumPortlet extends UIPortletApplication {
 							this.getUserProfile().setLastTimeAccessTopic(topic.getId(), ForumUtils.getInstanceTempCalendar().getTimeInMillis()) ;
 						}
 					} else {
-						uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission",  new String[]{topic.getTopicName(),"topic"}, ApplicationMessage.WARNING)) ;
+						uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission",  new String[]{topic.getTopicName(), res.getString("UIForumPortlet.label.topic").toLowerCase()}, ApplicationMessage.WARNING)) ;
 						this.updateIsRendered(ForumUtils.CATEGORIES);
 						UICategoryContainer categoryContainer = this.getChild(UICategoryContainer.class) ;
 						categoryContainer.updateIsRender(true) ;
@@ -607,7 +607,7 @@ public class UIForumPortlet extends UIPortletApplication {
 					forumContainer.getChild(UIForumDescription.class).setForum(forum) ;
 					forumContainer.getChild(UITopicContainer.class).setUpdateForum(cateId, forum, page) ;
 				} else {
-					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{forum.getForumName(),"forum"}, ApplicationMessage.WARNING)) ;
+					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{forum.getForumName(), res.getString("UIForumPortlet.label.forum").toLowerCase()}, ApplicationMessage.WARNING)) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
@@ -629,7 +629,7 @@ public class UIForumPortlet extends UIPortletApplication {
 					categoryContainer.updateIsRender(false) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 				} else { 
-					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(),"category"}, ApplicationMessage.WARNING)) ;
+					uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(), res.getString("UIForumPortlet.label.category").toLowerCase()}, ApplicationMessage.WARNING)) ;
 					this.updateIsRendered(ForumUtils.CATEGORIES);
 					categoryContainer.updateIsRender(true) ;
 					categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;

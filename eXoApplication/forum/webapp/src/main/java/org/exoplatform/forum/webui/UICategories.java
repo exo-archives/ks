@@ -398,25 +398,34 @@ public class UICategories extends UIContainer	{
 				} else {
 					forum = categories.getForumById(id[0], id[1]);
 				}
-				forumPortlet.updateIsRendered(ForumUtils.FORUM);
-				UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
-				UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
-				uiForumContainer.setIsRenderChild(false) ;
-				UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
-				uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
-				uiTopicDetail.setUpdateForum(forum) ;
-				uiTopicDetail.setTopicFromCate(id[0], id[1], topic, 0) ;
-				if(id[id.length-1].indexOf(Utils.POST) == 0){
-					uiTopicDetail.setIdPostView(id[id.length-1]) ;
-					uiTopicDetail.setLastPostId(id[id.length-1]);
+				Category category = categories.getCategory(id[0]);
+				if(forumPortlet.checkCanView(category, forum, topic)) {
+					forumPortlet.updateIsRendered(ForumUtils.FORUM);
+					UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+					UITopicDetailContainer uiTopicDetailContainer = uiForumContainer.getChild(UITopicDetailContainer.class) ;
+					uiForumContainer.setIsRenderChild(false) ;
+					UITopicDetail uiTopicDetail = uiTopicDetailContainer.getChild(UITopicDetail.class) ;
+					uiForumContainer.getChild(UIForumDescription.class).setForum(forum);
+					uiTopicDetail.setUpdateForum(forum) ;
+					uiTopicDetail.setTopicFromCate(id[0], id[1], topic, 0) ;
+					if(id[id.length-1].indexOf(Utils.POST) == 0){
+						uiTopicDetail.setIdPostView(id[id.length-1]) ;
+						uiTopicDetail.setLastPostId(id[id.length-1]);
+					} else {
+						uiTopicDetail.setIdPostView("lastpost") ;
+					}
+					uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
+					forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
+					categories.maptopicLast.clear() ;
+					context.addUIComponentToUpdateByAjax(forumPortlet) ;
 				} else {
-					uiTopicDetail.setIdPostView("lastpost") ;
+					categories.userProfile.addLastPostIdReadOfForum(forum.getId(), "");
+					categories.forumService.saveLastPostIdRead(categories.userProfile.getUserId(), categories.userProfile.getLastReadPostOfForum(),
+							categories.userProfile.getLastReadPostOfTopic());
+					((UIApplication)forumPortlet).addMessage(new ApplicationMessage("UIForumPortlet.msg.do-not-permission",  new String[]{"this","topic"}, ApplicationMessage.WARNING)) ;
+					context.addUIComponentToUpdateByAjax(categories) ;
 				}
-				uiTopicDetailContainer.getChild(UITopicPoll.class).updateFormPoll(id[0], id[1], topic.getId()) ;
-				forumPortlet.getChild(UIForumLinks.class).setValueOption((id[0]+"/"+id[1] + " "));
-				categories.maptopicLast.clear() ;
 			}
-			context.addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
