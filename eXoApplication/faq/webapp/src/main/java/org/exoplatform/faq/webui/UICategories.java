@@ -122,7 +122,10 @@ public class UICategories extends UIContainer{
 	private long[] getCategoryInfo() {
 		long[] result = new long[]{0, 0, 0, 0} ;
 		try {
+			boolean canEdit = faqSetting_.isCanEdit();
+			faqSetting_.setCanEdit(isModerator);
 			result = faqService_.getCategoryInfo(categoryId_, faqSetting_) ;
+			faqSetting_.setCanEdit(canEdit);
 		} catch (Exception e) {
 			e.printStackTrace() ;
 		}
@@ -614,9 +617,12 @@ public class UICategories extends UIContainer{
 			UIQuestions questions = container.findFirstComponentOfType(UIQuestions.class);
 			int pos = 0;
 			if(typeFilter.equals(uiCategories.FILTER_OPEN_QUESTIONS)){
-				boolean mode = false ;
-				if( uiCategories.faqSetting_.getDisplayMode().equals("Approved")) mode = true ;
-				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(uiCategories.categoryId_, mode);
+				boolean isApproved = uiCategories.faqSetting_.getDisplayMode().equals("Approved");
+				String categoryId = uiCategories.categoryId_;
+				if(!uiCategories.isModerator && !isApproved){
+					categoryId = categoryId + " (@exo:author='" + uiCategories.faqSetting_.getCurrentUser() + "')";
+				}
+				questions.pageList = uiCategories.faqService_.getQuestionsNotYetAnswer(categoryId, isApproved);
 				pos = 1;
 			} else if (typeFilter.equals(uiCategories.FILTER_PENDING_QUESTIONS)){
 				questions.pageList = uiCategories.faqService_.getPendingQuestionsByCategory(uiCategories.categoryId_, uiCategories.faqSetting_);
