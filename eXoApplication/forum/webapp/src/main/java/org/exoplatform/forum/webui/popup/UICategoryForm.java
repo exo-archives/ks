@@ -37,6 +37,7 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.ks.common.webui.UIUserSelect;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
@@ -365,15 +366,15 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			String param = objects[1];
 			UIForumPortlet forumPortlet = categoryForm.getAncestorOfType(UIForumPortlet.class);
 			UIPopupAction popupAction1 = forumPortlet.getChild(UIPopupAction.class);
-			org.exoplatform.webui.core.UIPopupContainer popupContainer1 = popupAction1.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
-			if(popupContainer1 != null){
-				UIPopupWindow popupWindow = popupContainer1.findFirstComponentOfType(UIPopupWindow.class);
+			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
+			if(popupContainer != null){
+				UIPopupWindow popupWindow = popupContainer.findFirstComponentOfType(UIPopupWindow.class);
 				popupWindow.setShow(false);
 				popupWindow.setUIComponent(null);
-				popupAction1.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
+				popupAction1.removeChild(UIPopupContainer.class);
 				event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
 			}
-			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
+			
 			UIGroupSelector uiGroupSelector = null ;
 			if(type.equals("1")){
 				uiGroupSelector = openPopup(popupContainer, UIGroupSelector.class, "UIMemberShipSelector", 600, 0) ;
@@ -419,16 +420,15 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
     }
 	}
 	
-  static  public class AddActionListener extends EventListener<UIUserSelector> {
-  	public void execute(Event<UIUserSelector> event) throws Exception {
-  		UIUserSelector uiUserSelector = event.getSource() ;
+  static  public class AddActionListener extends EventListener<UIUserSelect> {
+  	public void execute(Event<UIUserSelect> event) throws Exception {
+  		UIUserSelect uiUserSelector = event.getSource() ;
   		String values = uiUserSelector.getSelectedUsers();
   		UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
   		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
   		UICategoryForm categoryForm = popupAction.findFirstComponentOfType(UICategoryForm.class);
   		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
-  		org.exoplatform.webui.core.UIPopupContainer uiContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
-  		String id = uiContainer.getId();
+  		String id = uiUserSelector.getPermisionType();
   		if(id.indexOf(FIELD_USERPRIVATE_MULTIVALUE) > 0){
   			UIFormInputWithActions catPermission = categoryForm.getChildById(CATEGORY_DETAIL_TAB);
   			categoryForm.setValueField(catPermission, FIELD_USERPRIVATE_MULTIVALUE, values);
@@ -443,7 +443,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
   		}
   		uiPoupPopupWindow.setUIComponent(null);
 			uiPoupPopupWindow.setShow(false);
-			popupAction.removeChildById(id);
+			popupAction.removeChild(UIPopupContainer.class);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
   	}
   }
@@ -453,27 +453,26 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			UICategoryForm categoryForm = event.getSource() ;
 			String id = "PopupContainer"+event.getRequestContext().getRequestParameter(OBJECTID).replace("0,", "")	;
 			UIForumPortlet forumPortlet = categoryForm.getAncestorOfType(UIForumPortlet.class) ;
-			UIPopupContainer popupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
-			UIGroupSelector uiGroupSelector = popupContainer.findFirstComponentOfType(UIGroupSelector.class) ;
+			UIPopupContainer uiPopupContainer = categoryForm.getAncestorOfType(UIPopupContainer.class) ;
+			UIGroupSelector uiGroupSelector = uiPopupContainer.findFirstComponentOfType(UIGroupSelector.class) ;
 			if(uiGroupSelector != null){
-				UIPopupWindow popupWindow = popupContainer.findFirstComponentOfType(UIPopupWindow.class);
+				UIPopupWindow popupWindow = uiPopupContainer.findFirstComponentOfType(UIPopupWindow.class);
 				popupWindow.setUIComponent(null);
 				popupWindow.setShow(false);
-				event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiPopupContainer);
 			}
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
-			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
-			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
-			uiPopupContainer.setId(id);
 			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UICategoryUserPopupWindow");
 			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UICategoryUserPopupWindow", "UICategoryUserPopupWindow") ;
-			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
+			UIUserSelect uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelect.class, null, null);
 			uiUserSelector.setShowSearch(true);
 			uiUserSelector.setShowSearchUser(true);
 			uiUserSelector.setShowSearchGroup(false);
 			uiPopupWindow.setUIComponent(uiUserSelector);
 			uiPopupWindow.setShow(true);
 			uiPopupWindow.setWindowSize(740, 400);
+			uiUserSelector.setId("User Selector");
+      uiUserSelector.setPermisionType(id);
 			uiPopupContainer.setRendered(true);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
 		}
