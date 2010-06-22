@@ -4475,7 +4475,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			QueryManager qm = userProfileHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(JCR_ROOT).append(userProfileHome.getPath())
-			.append("//element(*,").append(Utils.USER_PROFILES_TYPE).append(")")
+			.append("/element(*,").append(Utils.USER_PROFILES_TYPE).append(")")
 			.append("[(jcr:contains(., '").append(userSearch).append("'))]");
 			Query query = qm.createQuery(stringBuffer.toString(), Query.XPATH);
 			QueryResult result = query.execute();
@@ -7715,11 +7715,17 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		String tempUserName = userName;
 		userName = tempUserName.substring(0, tempUserName.indexOf(Utils.DELETED));
+		
+		/*
+		 * watchingNode.setProperty(EXO_EMAIL_WATCHING, Utils.getStringsInList(newValues));
+					watchingNode.setProperty(EXO_USER_WATCHING, Utils.getStringsInList(listNewUsers));
+					watchingNode.setProperty(EXO_RSS_WATCHING, Utils.getStringsInList(userRSS));
+		 */
 		try {
 			Node categoryHome = getCategoryHome(sProvider);
 			QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
 			String[] strs = new String []{EXO_OWNER, EXO_MODIFIED_BY, EXO_LAST_POST_BY, 
-					EXO_USER_PRIVATE, EXO_MODERATORS, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW};
+					EXO_USER_PRIVATE, EXO_MODERATORS, EXO_POSTER, EXO_VIEWER, EXO_CAN_POST, EXO_CAN_VIEW, EXO_USER_WATCHING, EXO_RSS_WATCHING};
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0; i < strs.length; i++) {
 				if(i > 0) builder.append(" or ");
@@ -7744,8 +7750,19 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 								node.setProperty(strs[i], tempUserName);
 							}
 						} else {
-							list = new PropertyReader(node).list(strs[i], new ArrayList<String>());
+							PropertyReader reader = new PropertyReader(node);
+							list = reader.list(strs[i], new ArrayList<String>());
 							if (list.contains(userName)) {
+								if(strs[i].equals(EXO_USER_WATCHING)) {
+									try {
+										int t = list.indexOf(userName);
+										List<String> list2 = reader.list(EXO_EMAIL_WATCHING, new ArrayList<String>());
+										list2.remove(t);
+										node.setProperty(EXO_EMAIL_WATCHING, list2.toArray(new String[list2.size()]));
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
 								list.remove(userName);
 								node.setProperty(strs[i], list.toArray(new String[list.size()]));
 							}

@@ -53,16 +53,24 @@
 						String userRole = "" ;
 						String userTitle = "";
 						for(user in listUser) {
+							String isBanned = false;
 							userTitle = user.getUserTitle();
+							
+							try {
+							
 							if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
 								userTitle = Utils.ADMIN;
 								user.setUserRole(0);
 							}
 							if(user.getUserRole() == 1 && userTitle.equals(Utils.USER)) userTitle = Utils.MODERATOR;
 							userRole = uicomponent.permissionUser[(int)user.getUserRole()];
-							String isBanned = false;
+							
 							if(user.getIsBanned()){
 								isBanned = uicomponent.getIsBanned(user);
+							}
+							
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
 					%>
 						<tr class="$classRowTable">

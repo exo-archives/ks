@@ -203,7 +203,7 @@ public class UIModeratorManagementForm extends BaseForumForm implements UIPopupC
 					else if(obj instanceof UserProfile)
 						this.userProfiles.add((UserProfile)obj);
 				}
-			} catch (Exception e) {
+			} catch (Exception e) { e.printStackTrace();
 				this.setListUserProfile();
 			}
 		}
