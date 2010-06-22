@@ -45,11 +45,11 @@ public class TestForumUtils extends TestCase {
     // case where url does not current nav
     assertEquals("http://hostname/portal/private/classic/forum/topic/1234", ForumUtils.buildForumLink("http://hostname/portal/private/classic/foo?param=value&param2=value2", "forum", "classic", ForumUtils.TOPIC, "1234"));
     
-    // case where url does not match current portal (is it possible ?)
-    assertEquals("http://hostname/portal/private/foo/forum/topic/1234", ForumUtils.buildForumLink("http://hostname/portal/private/foo/forum?param=value&param2=value2", "forum", "classic", ForumUtils.TOPIC, "1234"));
+    // case where url does not match current portal
+    assertNotSame("http://hostname/portal/private/foo/forum/topic/1234", ForumUtils.buildForumLink("http://hostname/portal/private/foo/forum?param=value&param2=value2", "forum", "classic", ForumUtils.TOPIC, "1234"));
     
-    // case where url does not match current portal nor current nav (is it possible ?)
-    assertEquals("http/topic/1234", ForumUtils.buildForumLink("http://hostname/portal/private/foo/bar?param=value&param2=value2", "forum", "classic", ForumUtils.TOPIC, "1234"));
+    // case where url does not match current portal nor current nav
+    assertNotSame("http/topic/1234", ForumUtils.buildForumLink("http://hostname/portal/private/foo/bar?param=value&param2=value2", "forum", "classic", ForumUtils.TOPIC, "1234"));
     
     
     // cases when type or id are empty
