@@ -82,7 +82,8 @@ public class ForumUtils {
         url = url.replaceFirst(portalName, portalName + "/" + selectedNode) ;
       }                 
     }
-    url = url.substring(0, url.indexOf(selectedNode)+selectedNode.length());
+    selectedNode = portalName + "/" + selectedNode;
+    url = url.substring(0, url.lastIndexOf(selectedNode)+selectedNode.length());
     StringBuilder link = new StringBuilder().append(url);
     if(!isEmpty(type) && !isEmpty(id)){
       if(link.lastIndexOf("/") == (link.length()-1)) link.append(type);

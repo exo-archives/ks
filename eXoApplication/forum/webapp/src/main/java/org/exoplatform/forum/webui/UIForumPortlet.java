@@ -165,15 +165,17 @@ public class UIForumPortlet extends UIPortletApplication {
 	    super.processRender(app, context) ;
 	 }
 	
-	 public void renderComponentByURL( WebuiRequestContext context) throws Exception {
+	public void renderComponentByURL( WebuiRequestContext context) throws Exception {
 		PortalRequestContext portalContext = Util.getPortalRequestContext();
 		String url = ((HttpServletRequest)portalContext.getRequest()).getRequestURL().toString();
+		String isAjax = portalContext.getRequestParameter("ajaxRequest");
+		if(url.indexOf("http") >= 0 || (isAjax != null && Boolean.parseBoolean(isAjax))) return;
+		String portalName = Util.getUIPortal().getName() ;
+		url = (url.contains(portalName))? url.substring(url.lastIndexOf(portalName)): url;
 		url = (url.contains(Utils.FORUM_SERVICE))? url.substring(url.lastIndexOf(Utils.FORUM_SERVICE)): (
 					(url.contains(Utils.CATEGORY))? url.substring(url.lastIndexOf(Utils.CATEGORY)): (
 					(url.contains(Utils.TOPIC))? url.substring(url.lastIndexOf(Utils.TOPIC)): (
 					(url.contains(Utils.FORUM) && ((url.lastIndexOf(Utils.FORUM)+5) < url.length()))? url.substring(url.lastIndexOf(Utils.FORUM)): url) ));
-		String isAjax = portalContext.getRequestParameter("ajaxRequest");
-		if(url.indexOf("http") >= 0 || (isAjax != null && Boolean.parseBoolean(isAjax))) return;
 		calculateRenderComponent(url, context);
 		context.addUIComponentToUpdateByAjax(this);
 	}
