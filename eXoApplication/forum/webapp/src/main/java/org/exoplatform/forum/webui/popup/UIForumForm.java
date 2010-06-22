@@ -486,12 +486,12 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			if(!ForumUtils.isEmpty(childId)) {
 				UIForumPortlet forumPortlet = forumForm.getAncestorOfType(UIForumPortlet.class);
 				UIPopupAction popupAction1 = forumPortlet.getChild(UIPopupAction.class);
-				org.exoplatform.webui.core.UIPopupContainer popupContainer1 = popupAction1.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
+				UIPopupContainer popupContainer1 = popupAction1.getChild(UIPopupContainer.class);
 				if(popupContainer1 != null){
 					UIPopupWindow popupWindow = popupContainer1.findFirstComponentOfType(UIPopupWindow.class);
 					popupWindow.setShow(false);
 					popupWindow.setUIComponent(null);
-					popupAction1.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
+					popupAction1.removeChild(UIPopupContainer.class);
 					event.getRequestContext().addUIComponentToUpdateByAjax(popupAction1) ;
 				}
 				UIPopupContainer popupContainer = forumForm.getAncestorOfType(UIPopupContainer.class) ;
@@ -606,7 +606,7 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			uiPoupPopupWindow.setShow(false);
 			UIForumPortlet forumPortlet = uiUserSelector.getAncestorOfType(UIForumPortlet.class) ;
   		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class) ;
-  		popupAction.removeChild(org.exoplatform.webui.core.UIPopupContainer.class);
+  		popupAction.removeChild(UIPopupContainer.class);
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
     }
   }
@@ -633,9 +633,8 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
   		UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class);
   		UIForumForm forumForm = popupAction.findFirstComponentOfType(UIForumForm.class);
   		UIPopupWindow uiPoupPopupWindow = uiUserSelector.getParent();
-  		org.exoplatform.webui.core.UIPopupContainer uiContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
+  		UIPopupContainer uiContainer = popupAction.getChild(UIPopupContainer.class);
   		String id = uiContainer.getId();
-  		
 			UIFormInputWithActions catDetail = forumForm.getChildById(FIELD_FORUMPERMISSION_FORM);
 			String []array = forumForm.getChildIds();
 			for (int i = 0; i < array.length; i++) {
@@ -656,9 +655,22 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 			String id = "PopupContainer"+event.getRequestContext().getRequestParameter(OBJECTID).replace("/0", "")	;
 			UIForumPortlet forumPortlet = forumForm.getAncestorOfType(UIForumPortlet.class) ;
 			UIPopupAction popupAction = forumPortlet.getChild(UIPopupAction.class).setRendered(true) ;
-			org.exoplatform.webui.core.UIPopupContainer uiPopupContainer = popupAction.getChild(org.exoplatform.webui.core.UIPopupContainer.class);
-			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(org.exoplatform.webui.core.UIPopupContainer.class, null, null);
+			
+			UIPopupContainer oldcontainer = forumForm.getAncestorOfType(UIPopupContainer.class);
+			if(oldcontainer != null){
+			  UIPopupWindow popupWindow = oldcontainer.findFirstComponentOfType(UIPopupWindow.class);
+			  if(popupWindow != null){
+			    popupWindow.setShow(false);
+			    popupWindow.setUIComponent(null);
+			    popupAction.removeChild(UIPopupContainer.class);
+			    event.getRequestContext().addUIComponentToUpdateByAjax(popupAction);
+			  }
+			}
+			
+			UIPopupContainer uiPopupContainer = popupAction.getChild(UIPopupContainer.class);
+			if(uiPopupContainer == null)uiPopupContainer = popupAction.addChild(UIPopupContainer.class, null, null);
 			uiPopupContainer.setId(id);
+			
 			UIPopupWindow uiPopupWindow = uiPopupContainer.getChildById("UIForumUserPopupWindow");
 			if(uiPopupWindow == null)uiPopupWindow = uiPopupContainer.addChild(UIPopupWindow.class, "UIForumUserPopupWindow", "UIForumUserPopupWindow") ;
 			UIUserSelector uiUserSelector = uiPopupContainer.createUIComponent(UIUserSelector.class, null, null);
