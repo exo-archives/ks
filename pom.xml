@@ -27,16 +27,15 @@
     <url>http://builder.exoplatform.org/hudson/job/ks-trunk-ci/</url>
   </ciManagement>
   <properties>
-    <org.exoplatform.kernel.version>2.2.0-GA</org.exoplatform.kernel.version>
-    <org.exoplatform.core.version>2.3.0-GA</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>2.1.0-GA</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.12.0-CP01</org.exoplatform.jcr.version>
-	<org.exoplatform.jcr-services.version>1.12.0-GA</org.exoplatform.jcr-services.version>
-    <org.exoplatform.portal.version>3.0.0-GA</org.exoplatform.portal.version>
-    <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
+    <org.exoplatform.kernel.version>2.2.2-GA</org.exoplatform.kernel.version>
+    <org.exoplatform.core.version>2.3.2-GA</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>2.1.2-GA</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.12.2-GA</org.exoplatform.jcr.version>
+    <org.exoplatform.portal.version>3.1.0-GA</org.exoplatform.portal.version>
     <org.exoplatform.platform.version>3.0.0-Alpha03</org.exoplatform.platform.version>
-	<org.exoplatform.exopackage.version>1.1.0-Beta09</org.exoplatform.exopackage.version>
-	<version.chromattic>1.0.0</version.chromattic>
+    <org.exoplatform.exopackage.version>1.1.0-Beta09</org.exoplatform.exopackage.version>
+    <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
+    <version.chromattic>1.0.3</version.chromattic>
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
