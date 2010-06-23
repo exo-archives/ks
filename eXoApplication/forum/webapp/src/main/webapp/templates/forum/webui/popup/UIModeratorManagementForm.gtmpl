@@ -55,9 +55,6 @@
 						for(user in listUser) {
 							String isBanned = false;
 							userTitle = user.getUserTitle();
-							
-							try {
-							
 							if(user.getUserRole() != 0 && uicomponent.isAdmin(user.getUserId())) {
 								userTitle = Utils.ADMIN;
 								user.setUserRole(0);
@@ -67,10 +64,6 @@
 							
 							if(user.getIsBanned()){
 								isBanned = uicomponent.getIsBanned(user);
-							}
-							
-							} catch (Exception e) {
-								e.printStackTrace();
 							}
 					%>
 						<tr class="$classRowTable">

@@ -4815,7 +4815,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 				userProfile = new UserProfile();
 				reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
 				userProfile.setUserId(userName) ;
-				userProfile.setUserRole(reader.l(EXO_USER_ROLE, 2));
+				userProfile.setUserRole((userName.contains(Utils.DELETED))?4:reader.l(EXO_USER_ROLE, 2));
 				userProfile.setUserTitle(reader.string(EXO_USER_TITLE, "")) ;
 				userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
 				
@@ -4844,7 +4844,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			userProfile = new UserProfile();
 			PropertyReader reader = new PropertyReader(getUserProfileNode(userProfileHome, userName));
 			userProfile.setUserId(userName) ;
-			userProfile.setUserRole(reader.l(EXO_USER_ROLE, 2));
+			userProfile.setUserRole((userName.contains(Utils.DELETED))?4:reader.l(EXO_USER_ROLE, 2));
 			userProfile.setUserTitle(reader.string(EXO_USER_TITLE, "")) ;
 			userProfile.setScreenName(reader.string(EXO_SCREEN_NAME, userName));
 			
@@ -7676,12 +7676,12 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			Node profileHome = getUserProfileHome(sProvider);
 			Node profileDeleted ;
 			Node profile = profileHome.getNode(userId);
+			Session session = profileHome.getSession();
 			profile.setProperty(EXO_USER_ROLE, UserProfile.USER_DELETED);
 			profile.setProperty(EXO_USER_TITLE, "User deleted");
 			profile.setProperty(EXO_MODERATE_CATEGORY, new String[]{});
 			profile.setProperty(EXO_MODERATE_FORUMS, new String[]{});
 			profile.save();
-			Session session = profileHome.getSession();
 			String id = userId+Utils.DELETED;
 			try {
 				profileDeleted = profileHome.getNode(Utils.USER_PROFILE_DELETED);

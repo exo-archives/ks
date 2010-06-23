@@ -24,6 +24,7 @@ import org.exoplatform.download.DownloadService;
 import org.exoplatform.download.InputStreamDownloadResource;
 import org.exoplatform.forum.service.ForumAttachment;
 import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.ks.common.user.CommonContact;
 import org.exoplatform.ks.common.user.ContactProvider;
 import org.exoplatform.portal.application.PortalRequestContext;
@@ -69,6 +70,7 @@ public class ForumSessionUtils {
 	
 	public static CommonContact getPersonalContact(String userId) throws Exception {
 		try {
+			if(userId.indexOf(Utils.DELETED) > 0) return new CommonContact();
 			ContactProvider provider = (ContactProvider) PortalContainer.getComponent(ContactProvider.class) ;
 			return provider.getCommonContact(userId);
 		}catch (Exception e) {

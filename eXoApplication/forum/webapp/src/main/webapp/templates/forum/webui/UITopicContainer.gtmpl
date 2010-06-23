@@ -3,6 +3,7 @@
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.Forum ;
 	import org.exoplatform.forum.service.UserProfile ;
+	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.webui.UICategory ;
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	import org.exoplatform.forum.webui.UITopicContainer ;	
@@ -626,7 +627,7 @@
 																			</div>
 																		</div>
 																	<%
-																	  if(userProfile.getUserRole() < 3){
+																	  if(userProfile.getUserRole() < 3 && linkURL.substring(linkURL.lastIndexOf("objectId=")).indexOf(Utils.DELETED) < 0){
 																			sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "PrivateMessage");
 																	%>
 																		<div class="MenuItem" onclick="$sendPrSms">
@@ -719,7 +720,7 @@
 																			</div>
 																		</div>
 																	<%
-																	  if(userProfile.getUserRole() < 3){
+																	  if(userProfile.getUserRole() < 3 && linkURL.substring(linkURL.lastIndexOf("objectId=")).indexOf(Utils.DELETED) < 0){
 																			sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenTopic", "PrivateMessage");
 																	%>
 																		<div class="MenuItem" onclick="$sendPrSms">

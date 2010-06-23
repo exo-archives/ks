@@ -4,6 +4,7 @@
 	import org.exoplatform.forum.service.Forum; 
 	import org.exoplatform.forum.service.Topic; 
 	import org.exoplatform.forum.service.ForumServiceUtils ;
+	import org.exoplatform.forum.service.Utils ;
 	import org.exoplatform.forum.ForumUtils;
 	import org.exoplatform.forum.ForumSessionUtils;
 	import org.exoplatform.forum.service.UserProfile ;
@@ -318,7 +319,7 @@
 																					</div>
 																				</div>
 																			<%
-																			  if(userProfile.getUserRole() < 3){
+																			  if(userProfile.getUserRole() < 3 && linkURL.substring(linkURL.lastIndexOf("objectId=")).indexOf(Utils.DELETED) < 0){
 																					String sendPrSms = ForumUtils.getActionViewInfoUser(linkURL, uicomponent.id, "OpenLastTopicLink", "PrivateMessage");
 																			%>
 																				<div class="MenuItem" onclick="$sendPrSms">

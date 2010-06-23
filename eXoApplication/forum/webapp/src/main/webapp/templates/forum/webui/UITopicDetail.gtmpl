@@ -731,7 +731,7 @@
 			<table class="TablePost" cellspacing="0" border="0" cellpadding="0">
 				<tbody>
 					<tr>
-<!-- Start MemberContainer -->
+	<!-- Start MemberContainer -->
 						<td class="MemberContainer">
 							<div class="MemberContent">
 							
@@ -761,7 +761,7 @@
 																	<%
 																		String[] menuViewInfos = ["ViewPublicUserInfo","PrivateMessage","ViewPostedByUser", "ViewThreadByUser"] ;
 																		for(viewAction in menuViewInfos) {
-																		  if(userProfile.getUserRole() >= 3 && userInfo.getUserRole() >= 3 && viewAction.equals("PrivateMessage")) continue;
+																		  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 																			String linkView = uicomponent.event(viewAction, owner) ;
 																			String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																			if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
@@ -814,7 +814,7 @@
 																	<div class="UIRightPopupMenuContainer">
 																		<%
 																			for(viewAction in menuViewInfos) {
-																			  if(userProfile.getUserRole() >= 3 && viewAction.equals("PrivateMessage")) continue;
+																			  if((userProfile.getUserRole() >= 3 || userInfo.getUserRole() >= 3) && viewAction.equals("PrivateMessage")) continue;
 																				String linkView = uicomponent.event(viewAction, owner) ;
 																				String itemLabelView = _ctx.appRes("UITopicDetail.action." + viewAction);
 																				if(!viewAction.equals("ViewPublicUserInfo") && !viewAction.equals("PrivateMessage")) itemLabelView = itemLabelView + " " + screenName ;
@@ -1051,9 +1051,10 @@
 									<%
 									if(isShowMenu) {
 										String[] actions = ["Edit", "Delete", "PrivatePost", "Quote"] ; 
-										boolean isShowAction = true;
+										boolean isShowAction = true, isShowPri = true ;
 										for(action in actions) {
 											isShowAction = true;
+											isShowPri = true ;
 											String title = _ctx.appRes("UITopicDetail.title." + action);
 											String label = _ctx.appRes("UITopicDetail.action." + action);
 											if(!(userLogin.equals(owner))) {
@@ -1071,6 +1072,10 @@
 											if(isShowAction && !isCanReply&&(action.equals("Edit")||action.equals("Quote")||action.equals("PrivatePost"))) {
 												isShowAction = false;
 											}
+											if(isShowAction && userInfo.getUserRole() >= 3 && action.equals("PrivatePost")) {
+												isShowAction = false;
+												isShowPri = false;
+											}
 											String actionLink = uicomponent.event(action,uiformId,postId);
 											if(isShowAction) {
 									%>
@@ -1087,7 +1092,7 @@
 												</div>
 											</div>
 										</div>
-										<%} else {%>
+										<%} else if(isShowPri) {%>
 										<div style="float:left; width:60px; height:1px;"><span></span></div>
 									<%	}
 										} 
