@@ -375,6 +375,7 @@ public class Utils {
 	  if(listOfBoundUsers == null || listOfCanviewrs == null) return false;
 	  List<String> tem = new ArrayList<String>();
     for(String str : listOfCanviewrs){
+      if (str == null) continue;
       if(listOfBoundUsers.contains(str)) return true;
       if(str.contains("*")){
         str = str.substring(str.indexOf("/"), str.length());
