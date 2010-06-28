@@ -34,6 +34,8 @@ import org.exoplatform.forum.service.UserProfile;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.service.Watch;
 import org.exoplatform.ks.rss.RSS;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -78,6 +80,8 @@ public class UICategories extends UIContainer	{
 	private UserProfile userProfile;
 	private List<String> collapCategories = null;
 	private List<Watch> listWatches = new ArrayList<Watch>();
+	
+	private Log log = ExoLogger.getLogger(this.getClass());
 	public UICategories() throws Exception {
 		forumService = (ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 		addChild(UIForumListSearch.class, null, null).setRendered(isRenderChild) ;
@@ -237,8 +241,9 @@ public class UICategories extends UIContainer	{
 	
 
 	
-	private Topic getLastTopic(String topicPath) throws Exception {
+	private Topic getLastTopic(Category cate, Forum forum) throws Exception {
 		Topic topic = null;
+		String topicPath = forum.getLastTopicPath();
 		if(!ForumUtils.isEmpty(topicPath)) {
 			String topicId = topicPath;
 			if(topicId.indexOf("/") >= 0) topicId = topicId.substring(topicPath.lastIndexOf("/")+1);
@@ -247,9 +252,16 @@ public class UICategories extends UIContainer	{
 				try {
 					topic = forumService.getTopicSummary(topicPath) ;
 			  } catch (Exception e) {
-					e.printStackTrace();
+					log.warn(e);
 				}
-				if(topic != null) maptopicLast.put(topic.getId(), topic) ;
+			}
+			if(topic != null){
+			  if(getAncestorOfType(UIForumPortlet.class).checkCanView(cate, forum, topic))
+			    maptopicLast.put(topic.getId(), topic) ;
+			  else {
+			    if(maptopicLast.containsKey(topicId)) maptopicLast.remove(topicId);
+			    return null;
+			  }
 			}
 		}
 		return topic ;
@@ -344,7 +356,7 @@ public class UICategories extends UIContainer	{
 			String path = context.getRequestParameter(OBJECTID)	;
 			String []id = path.trim().split("/");
 			Forum forum = categories.getForumById(id[0], id[1]);
-			Topic topic = categories.getLastTopic(id[2]) ;
+			Topic topic = categories.maptopicLast.get(id[2]) ;
 			UIForumPortlet forumPortlet = categories.getAncestorOfType(UIForumPortlet.class) ;
 			if(topic == null) {
 				Object[] args = { "" };
@@ -448,7 +460,7 @@ public class UICategories extends UIContainer	{
 					path = "CategoryNormalIcon//" + category.getCategoryName() + "//" + path;
 				} else {
 					path = path.substring(path.indexOf("//")+2) ;
-					Topic topic = uiContainer.getLastTopic(path) ;
+					Topic topic = uiContainer.maptopicLast.get(path) ;
 					path = "ThreadNoNewPost//" + topic.getTopicName() + "//" + topic.getId();
 				}
 				try {

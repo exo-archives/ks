@@ -321,8 +321,8 @@ public class ForumUtils {
 		if(array == null) return list;
 		if(list.isEmpty() && !isArrayEmpty(array)) list.addAll(Arrays.asList(array));
 		else {
-			for (int i = 0; i < array.length; i++) {
-	      if(!list.contains(array[i]) && array[i].trim().length() > 0) list.add(array[i]);
+			for (int i = 0; i < array.length; i++) {			  
+	      if(array[i] != null && !list.contains(array[i]) && array[i].trim().length() > 0) list.add(array[i]);
       }
 		}
 		return list;

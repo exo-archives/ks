@@ -152,7 +152,7 @@
 										if(postCount < 0) postCount = 0;
 										String openLinkLastPost = "javascript:void(0)";
 										String urlLastPost = "javascript:void(0)";
-				 						Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
+				 						Topic topicNewPost = uicomponent.getLastTopic(category, forum);
 										String classIconReadForum = "ThreadNoNewPost";
 										String titleNoNewPostForum = _ctx.appRes("UIForumIconState.label.ForumNoNewPost");
 										String fontWeight = "normal";

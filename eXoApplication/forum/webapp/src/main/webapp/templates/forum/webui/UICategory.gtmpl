@@ -301,7 +301,7 @@
 						 	String fontWeight = "normal";
 							List forumModerators = ForumServiceUtils.getUserPermission(forum.getModerators());
 							path = categoryId+"/"+forumId ;
-						 	Topic topicNewPost = uicomponent.getLastTopic(forum.getLastTopicPath());
+						 	Topic topicNewPost = uicomponent.getLastTopic(category, forum);
 						 	if(topicNewPost != null) {
 						 		topicId = topicNewPost.getId();
 								topicNewPostIcon = topicNewPost.getIcon();
