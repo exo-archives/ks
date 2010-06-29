@@ -77,8 +77,24 @@
       <name>forum.new.user.event.listener</name>
       <set-method>addListenerPlugin</set-method>
       <type>org.exoplatform.forum.service.conf.NewUserListener</type>
-      <description>creates a profile in forum for each new user
-      </description>
+      <description>creates a profile in forum for each new user</description>
+      
+      <init-params>
+        <properties-param>
+          <name>user.profile.setting</name>
+          <description>set default user profile</description>
+          <property name="timeZone" value="GMT"/>
+          <property name="shortDateFormat" value="MM/dd/yyyy"/>
+          <property name="longDateFormat" value="DDD,MMM dd,yyyy"/>
+          <property name="timeFormat" value="hh:mm a"/>
+          <property name="maxTopic" value="10"/>
+          <property name="maxPost" value="10"/>
+          <property name="isShowForumJump" value="true"/>
+          
+        </properties-param>
+      </init-params>
+      
+      
     </component-plugin>
   </external-component-plugins>
   

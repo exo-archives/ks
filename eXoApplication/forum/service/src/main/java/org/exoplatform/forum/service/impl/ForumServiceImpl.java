@@ -233,7 +233,7 @@ public class ForumServiceImpl implements ForumService, Startable {
 	 * @TODO : profileTemplate is currently ignored
 	 */
   public void addMember(User user, UserProfile profileTemplate) throws Exception {
-    boolean added = storage.populateUserProfile(user, true); 
+    boolean added = storage.populateUserProfile(user, profileTemplate, true); 
     if (added) {
       forumStatisticsService.addMember(user.getUserName());
     }
@@ -259,7 +259,7 @@ public class ForumServiceImpl implements ForumService, Startable {
    * {@inheritDoc}
    */
 	public void updateUserProfile (User user) throws Exception {
-	  storage.populateUserProfile(user, false);
+	  storage.populateUserProfile(user, null, false);
 	}
 	
 	/**

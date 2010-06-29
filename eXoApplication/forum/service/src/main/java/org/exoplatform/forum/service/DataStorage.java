@@ -386,7 +386,7 @@ public interface DataStorage {
    * @param isNew
    * @return true if the user profile was added
    */
-  public boolean populateUserProfile(User user, boolean isNew) throws Exception;;
+  public boolean populateUserProfile(User user, UserProfile profileTemplate, boolean isNew) throws Exception;;
   public boolean deleteUserProfile(String userId) throws Exception ;
 
   public void calculateDeletedUser(String userName) throws Exception ;

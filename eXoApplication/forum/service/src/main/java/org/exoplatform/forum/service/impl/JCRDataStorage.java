@@ -7583,9 +7583,10 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 	/**
 	* {@inheritDoc}
 	*/
-	public boolean populateUserProfile(User user, boolean isNew) throws Exception {
+	public boolean populateUserProfile(User user, UserProfile profileTemplate, boolean isNew) throws Exception {
 		boolean added = false;
 		sessionManager.openSession();
+		
 		try {
 			Node profile = null;
 			Node profileHome = getUserProfileHome();
@@ -7614,6 +7615,22 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			} else {
 				profile.setProperty(EXO_USER_ROLE, UserProfile.USER); // 
 			}
+			
+      if (profileTemplate != null) {
+        profile.setProperty(EXO_TIME_ZONE, profileTemplate.getTimeZone());
+        profile.setProperty(EXO_SHORT_DATEFORMAT, profileTemplate.getShortDateFormat());
+        profile.setProperty(EXO_LONG_DATEFORMAT, profileTemplate.getLongDateFormat());
+        profile.setProperty(EXO_TIME_FORMAT, profileTemplate.getTimeFormat());
+        profile.setProperty(EXO_MAX_TOPIC, profileTemplate.getMaxTopicInPage());
+        profile.setProperty(EXO_MAX_POST, profileTemplate.getMaxPostInPage());
+        profile.setProperty(EXO_IS_SHOW_FORUM_JUMP, profileTemplate.getIsShowForumJump());
+        
+      }
+			if (profileHome.isNew()) {
+			  profileHome.getSession().save();
+      } else {
+        profileHome.save();
+      }
 			return added ;
 		} catch (Exception e) {
 			log.error("Error while populating user profile: " + e.getMessage());
