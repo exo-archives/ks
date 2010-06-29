@@ -59,7 +59,7 @@ public class DeactiveJob implements Job{
 	    			calendar.setTimeInMillis(currentDay) ;
 	    			String path = forumService.getForumHomePath() ;
 	    			StringBuilder stringBuffer = new StringBuilder();
-	    			stringBuffer.append("/jcr:root").append(path).append("//element(*,exo:topic)[");
+	    			stringBuffer.append("/jcr:root/").append(path).append("//element(*,exo:topic)[");
 	    			stringBuffer.append("@exo:lastPostDate <= xs:dateTime('"+ISO8601.format(calendar)+"') and @exo:isActive = 'true']") ;
 	    			NodeIterator iter = forumService.search(stringBuffer.toString()) ;
 	    			while(iter.hasNext()) {
