@@ -226,8 +226,52 @@
 						questionContent = question.getQuestion();
 			%>
 						<div class="QuestionContainer" id="$qId" ctxMenuId="UIPopupQuestion$questionIndex" oncontextmenu="return false;">
+			
+<!---- Thanh new style for Questions ----->
+							<div class="NormalQuest ClearFix">
+								<div class="LeftCon ClearFix">
+									<a class="BoxNum">
+										<p>2</p>
+										<h4>score</h4>
+									</a>
+									<a class="BoxNum">
+										<p>3</p>
+										<h4>answers</h4>
+									</a>
+								</div>
+								<div class="RightCon">
+									<p class="Questions">What does eXo Knowledge Suite contain ?</p>
+									<div class="ClearFix">
+										<div class="WarningCon"><p class="Warning">this question is pending for approval</p></div>
+										<p class="Name">By <a>John Smith</a> | 2 minutes ago</p>
+									</div>
+								</div>
+							</div>
+							<div class="HighlightQuest ClearFix">
+								<div class="LeftCon ClearFix">
+									<a class="BoxNum">
+										<p>2</p>
+										<h4>score</h4>
+									</a>
+									<a class="BoxNum">
+										<p>3</p>
+										<h4>answers</h4>
+									</a>
+								</div>
+								<div class="RightCon">
+									<p class="Questions">What does eXo Knowledge Suite contain ?</p>
+									<div class="ClearFix">
+										<div class="WarningCon"><p class="Warning">this question is pending for approval</p></div>
+										<p class="Name">By <a>John Smith</a> | 2 minutes ago</p>
+									</div>
+								</div>
+							</div>
+<!---- End new style for Questions ----->	
+		 
+						
+
 							<div class="$questionIcon" style="float:left"><span></span></div>
-							<div style="width:85%; _width:80%; float:left;">
+							<div style="width:85%; _width:80%; float:left;"> 
 									<!-- question content -->
 										<%
 										String titleQuestion = "" ;
@@ -340,6 +384,8 @@
 									
 								</div>
 							<div style="clear:left;"><span></span></div>
+		
+						
 						</div>
 						
 						
