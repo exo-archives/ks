@@ -37,7 +37,46 @@
    -->
    
    
-
+  <component>
+    <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
+    <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
+    <description>Holds JCR storage location for KS data</description>
+    <init-params>
+      <value-param>
+        <name>repository</name>
+        <description>JCR repository for KS data</description>
+        <value>repository</value>
+      </value-param>
+      <value-param>
+        <name>workspace</name>
+        <description>workspace for KS data</description>
+        <value>knowledge</value>
+      </value-param>      
+    </init-params>
+  </component>
+  
+  <component>
+    <key>org.exoplatform.ks.rendering.MarkupRenderingService</key>
+    <type>org.exoplatform.ks.rendering.MarkupRenderingService</type>   
+  </component>
+  
+  
+    <component>
+    <type>org.exoplatform.ks.rss.FeedResolver</type>
+    <init-params>
+      <value-param>
+        <name>defaultProvider</name>
+        <description>the default provider used when no app type matches</description>
+        <value>org.exoplatform.ks.rss.ForumUserFeedProvider</value>
+      </value-param>
+      <properties-param>
+      <name>providers</name>
+      <description>feed providers indexed by appType</description>
+      <property name="faq" value="org.exoplatform.ks.rss.AnswersFeedGenerator"/>
+      <property name="forum" value="org.exoplatform.ks.rss.ForumFeedGenerator"/>
+      </properties-param>
+    </init-params>
+  </component>
 
   
   <!-- TODO : remove the following services when when they'll be provided by platform -->

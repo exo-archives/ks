@@ -38,12 +38,12 @@
     <value-param><name>maxCategories</name><value>3</value></value-param>
     <value-param><name>maxForums</name><value>4</value></value-param>
     <value-param><name>maxTopics</name><value>20</value></value-param>
-    <value-param><name>maxPosts</name><value>10</value></value-param>	
+    <value-param><name>maxPosts</name><value>10</value></value-param> 
     <value-param><name>randomize</name><value>true</value></value-param>
     </init-params>
   </component -->
 
 
 
-		
+    
 </configuration>

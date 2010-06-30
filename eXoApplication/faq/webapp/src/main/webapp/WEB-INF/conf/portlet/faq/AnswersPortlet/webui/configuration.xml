@@ -3,4 +3,8 @@
     <ui-component-root>org.exoplatform.faq.webui.UIAnswersPortlet</ui-component-root>
     <state-manager>org.exoplatform.webui.application.portlet.ParentAppStateManager</state-manager>
   </application>
+  <ui-component-config id="custom">
+   <type>org.exoplatform.faq.webui.popup.UIAdvancedSearchForm</type>
+   <template>jar:/templates/faq/CustomAdvancedSearchForm.gtmpl</template>
+  </ui-component-config>
 </webui-configuration>

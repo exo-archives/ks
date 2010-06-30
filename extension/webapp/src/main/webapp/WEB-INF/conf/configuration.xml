@@ -15,6 +15,9 @@
   
   <!-- main KS configuration  -->
   <import>war:/ks-extension/ks/ks-configuration.xml</import>
+
+  <!--forum core services  -->
+  <import>war:/ks-extension/ks/forum/forum-configuration.xml</import>
     
   <!-- builtin BBCodes  -->
   <import>war:/ks-extension/ks/forum/bbcodes-configuration.xml</import>
@@ -35,7 +38,8 @@
   <!-- Configure the FAQ templates -->
   <import>war:/ks-extension/ks/faq/templates-configuration.xml</import>  
   
-  
+  <!-- Answers and FAQ core services -->
+  <import>war:/ks-extension/ks/faq/faq-configuration.xml</import>
   
   
   

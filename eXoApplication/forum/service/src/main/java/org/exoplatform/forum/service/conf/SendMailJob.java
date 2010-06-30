@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.exoplatform.container.ExoContainer;
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.ks.common.Utils;
 import org.exoplatform.services.log.ExoLogger;
@@ -60,7 +59,9 @@ public class SendMailJob implements Job {
               }
             }	              
           }
-        }catch(Exception e) {}	          	          
+        } catch(Exception e) {
+          log_.error("Could not send email notification", e);  	
+        }	          	          
       }
       if (log_.isInfoEnabled() && countEmail > 0) {
         log_.info("\n\nEmail notifications has been sent to " + countEmail + " addresses");
