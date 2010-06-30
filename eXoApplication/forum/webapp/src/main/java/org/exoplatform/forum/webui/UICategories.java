@@ -542,4 +542,37 @@ public class UICategories extends UIContainer	{
 			event.getRequestContext().addUIComponentToUpdateByAjax(uiContainer) ;
 		}
 	}
+
+	public List<String> getCollapCategories() {
+		return collapCategories;
+	}
+	
+	public List<Forum> getForumListPublic(String categoryId) {
+		try {
+			return getForumList(categoryId);
+		} catch (Exception e) {
+			return new ArrayList<Forum>();
+		}
+	}
+	
+	public Category getCategoryPublic(String categoryId) {
+		try {
+			return getCategory(categoryId);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public Forum getForumByIdPublic(String categoryId, String forumId) {
+		try {
+			return getForumById(categoryId, forumId);
+		} catch (Exception e) {
+			return new Forum();
+		}
+	}
+	
+	public Map<String, Topic> getMaptopicLast() {
+		return maptopicLast;
+	}
+	
 }

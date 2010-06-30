@@ -29,6 +29,7 @@ import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIBreadcumbs;
 import org.exoplatform.forum.webui.UICategories;
 import org.exoplatform.forum.webui.UICategory;
+import org.exoplatform.forum.webui.UIForumContainer;
 import org.exoplatform.forum.webui.UIForumDescription;
 import org.exoplatform.forum.webui.UIForumLinks;
 import org.exoplatform.forum.webui.UIForumPortlet;
@@ -479,6 +480,17 @@ public class UIForumForm extends BaseForumForm implements UIPopupComponent, UISe
 				forumPortlet.findFirstComponentOfType(UITopicContainer.class).setForum(true);
 				context.addUIComponentToUpdateByAjax(forumPortlet) ;
 			}
+
+			UICategories uiCategories = forumPortlet.findFirstComponentOfType(UICategories.class) ;
+			forumPortlet.updateIsRendered(ForumUtils.FORUM);
+			UIForumContainer uiForumContainer = forumPortlet.getChild(UIForumContainer.class) ;
+			uiForumContainer.setIsRenderChild(true) ;
+			UITopicContainer uiTopicContainer = uiForumContainer.getChild(UITopicContainer.class) ;
+			uiForumContainer.getChild(UIForumDescription.class).setForum(newForum);
+			uiTopicContainer.updateByBreadcumbs(categoryId, newForum.getId(), false, 0) ;
+			forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId + "/" + newForum.getId());
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
+			uiCategories.getMaptopicLast().clear();
 		}
 	}
 	

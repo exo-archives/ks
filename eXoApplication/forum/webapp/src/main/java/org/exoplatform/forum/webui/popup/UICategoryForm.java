@@ -24,6 +24,7 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.UIBreadcumbs;
@@ -38,9 +39,11 @@ import org.exoplatform.ks.common.webui.BaseUIForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.ks.common.webui.UIUserSelect;
+import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.ComponentConfigs;
 import org.exoplatform.webui.config.annotation.EventConfig;
+import org.exoplatform.webui.core.UIApplication;
 import org.exoplatform.webui.core.UIPopupComponent;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
@@ -312,6 +315,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			cat.setViewer(setViewer);
 			
 			UIForumPortlet forumPortlet = uiForm.getAncestorOfType(UIForumPortlet.class) ;
+			UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
 			ForumService forumService =	(ForumService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ForumService.class) ;
 			try {
 				if(!ForumUtils.isEmpty(uiForm.categoryId)) {
@@ -333,7 +337,7 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 				warning("UIForumPortlet.msg.catagory-deleted") ;
 				
 				forumPortlet.updateIsRendered(ForumUtils.CATEGORIES);
-				UICategoryContainer categoryContainer = forumPortlet.getChild(UICategoryContainer.class) ;
+				
 				categoryContainer.updateIsRender(true) ;
 				categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
 				forumPortlet.getChild(UIBreadcumbs.class).setUpdataPath(Utils.FORUM_SERVICE);
@@ -341,8 +345,29 @@ public class UICategoryForm extends BaseUIForm implements UIPopupComponent, UISe
 			forumPortlet.getChild(UIForumLinks.class).setUpdateForumLinks() ;
 			forumPortlet.findFirstComponentOfType(UICategory.class).setIsEditForum(true) ;
 			forumPortlet.cancelAction() ;
-			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 			uiForm.isDoubleClickSubmit = true;
+			
+			
+			UICategories uiCategories = categoryContainer.getChild(UICategories.class);
+			String categoryId = cat.getId()	;
+			try {
+				UICategory uiCategory = categoryContainer.getChild(UICategory.class) ;
+				List<Forum> list = null;
+				if(!uiCategories.getCollapCategories().contains(categoryId)){
+					list = uiCategories.getForumListPublic(categoryId);
+				}
+				forumPortlet.setRenderForumLink();
+				uiCategory.update(uiCategories.getCategoryPublic(categoryId), list) ;
+				categoryContainer.updateIsRender(false) ;
+				forumPortlet.getChild(UIForumLinks.class).setValueOption(categoryId);
+				uiCategories.getMaptopicLast().clear();
+			} catch (Exception e) {
+				Object[] args = { "" };
+				UIApplication uiApp = uiCategories.getAncestorOfType(UIApplication.class) ;
+				uiApp.addMessage(new ApplicationMessage("UIForumPortlet.msg.catagory-deleted", args, ApplicationMessage.WARNING)) ;
+				event.getRequestContext().addUIComponentToUpdateByAjax(uiApp.getUIPopupMessages()) ;
+			}
+			event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 		}
 	}
 	
