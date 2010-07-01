@@ -551,6 +551,7 @@ public class UICategories extends UIContainer	{
 		try {
 			return getForumList(categoryId);
 		} catch (Exception e) {
+		  if(log.isDebugEnabled())log.debug("Select forum list problem " + e.getMessage());
 			return new ArrayList<Forum>();
 		}
 	}
@@ -559,6 +560,7 @@ public class UICategories extends UIContainer	{
 		try {
 			return getCategory(categoryId);
 		} catch (Exception e) {
+		  if(log.isDebugEnabled())log.debug("Select category problem " + e.getMessage());
 			return null;
 		}
 	}
@@ -567,6 +569,7 @@ public class UICategories extends UIContainer	{
 		try {
 			return getForumById(categoryId, forumId);
 		} catch (Exception e) {
+		  if(log.isDebugEnabled())log.debug("Select forum problem " + e.getMessage());
 			return new Forum();
 		}
 	}
