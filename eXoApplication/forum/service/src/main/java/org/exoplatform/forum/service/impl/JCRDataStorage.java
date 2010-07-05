@@ -859,11 +859,10 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 			catNode.setProperty(EXO_CREATE_TOPIC_ROLE, category.getCreateTopicRole());
 			catNode.setProperty(EXO_POSTER, category.getPoster());
 			
+			catNode.setProperty(EXO_VIEWER, category.getViewer());
 			/*boolean isUpdateLastTopic = false;
 			if (!isNew) {
 				String[] catViewers = new PropertyReader(catNode).strings(EXO_VIEWER, new String[] { "" });
-				String[] newViewers = category.getViewer();
-				if (Utils.arraysHaveDifferentContent(catViewers, newViewers)) { // if admin change viewers setting.
 					catNode.setProperty(EXO_VIEWER, newViewers);
 					if (newViewers.length > 0 && !Utils.isEmpty(newViewers[0])) { 
 						// if new viewers are limited, last topic of every forum in the category will be disappear.

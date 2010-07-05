@@ -458,10 +458,10 @@ public class UIForumPortlet extends UIPortletApplication {
 			list = ForumUtils.addArrayToList(list, forum.getViewer());
 			list = ForumUtils.addArrayToList(list, cate.getViewer());
 			
-			if (topic.getOwner() != null)
-			  list = ForumUtils.addArrayToList(list, new String[] {topic.getOwner()});
+//			if (topic.getOwner() != null)
+//			  list = ForumUtils.addArrayToList(list, new String[] {topic.getOwner()});
 			
-			//if(!list.isEmpty())	list.add(topic.getOwner());
+			if(!list.isEmpty() && topic.getOwner() != null)	list.add(topic.getOwner());
 			if(topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
 				 topic.getIsWaiting() || (!list.isEmpty() && !Utils.hasPermission(list, userBound))) return false;
 		}
