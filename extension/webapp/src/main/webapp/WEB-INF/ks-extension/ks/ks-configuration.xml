@@ -98,7 +98,17 @@
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>  
-
+  
+  
+   <external-component-plugins>
+    <target-component>org.exoplatform.social.space.SpaceService</target-component>
+    <component-plugin>
+      <name>ForumDataInitialize</name>
+      <set-method>addSpaceListener</set-method>
+      <type>org.exoplatform.forum.service.impl.ForumDataInitialize</type>
+    </component-plugin>
+  </external-component-plugins>
+ 
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
     <component-plugin>

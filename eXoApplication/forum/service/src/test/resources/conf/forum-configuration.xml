@@ -18,7 +18,6 @@
   	<type>org.exoplatform.forum.service.ws.ForumWebservice</type>
   </component>
   
-
   <external-component-plugins>
     <target-component>org.exoplatform.services.jcr.RepositoryService</target-component>
     <component-plugin>

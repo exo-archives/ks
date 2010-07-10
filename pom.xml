@@ -36,6 +36,9 @@
     <org.exoplatform.exopackage.version>1.1.0-Beta09</org.exoplatform.exopackage.version>
     <exo.tool.framework.junit.version>1.2.0</exo.tool.framework.junit.version>
     <version.chromattic>1.0.3</version.chromattic>
+	<!-- Extend service -->
+	<org.exoplatform.social.version>1.1.0-SNAPSHOT</org.exoplatform.social.version>
+	
     <!-- 3rd parties -->
     <commons-lang.version>2.3</commons-lang.version>
     <javax.servlet.servlet-api.version>2.5</javax.servlet.servlet-api.version>
@@ -274,7 +277,9 @@
         <groupId>org.exoplatform.platform</groupId>
         <artifactId>exo.platform.commons.testing</artifactId>
         <version>${org.exoplatform.platform.version}</version>
-      </dependency>      
+      </dependency>   
+	  
+		    
     </dependencies>
   </dependencyManagement>
   <profiles>
