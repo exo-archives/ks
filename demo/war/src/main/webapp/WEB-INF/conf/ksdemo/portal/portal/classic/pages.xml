@@ -59,22 +59,22 @@
     </portlet-application>
   </page>
   <page>
-    <name>faq</name>
-    <title>FAQ</title>
+    <name>poll</name>
+    <title>Poll</title>
     <access-permissions>Everyone</access-permissions>
     <edit-permission>*:/platform/administrators</edit-permission>
     <portlet-application>
       <portlet>
-        <application-ref>faq</application-ref>
-        <portlet-ref>FAQPortlet</portlet-ref>
+        <application-ref>poll</application-ref>
+        <portlet-ref>PollPortlet</portlet-ref>
       </portlet>
-      <title>FAQ Portlet</title>
+      <title>Poll Portlet</title>
       <access-permissions>Everyone</access-permissions>      
       <show-info-bar>false</show-info-bar>
       <show-application-state>false</show-application-state>
       <show-application-mode>false</show-application-mode>
     </portlet-application>
-  </page>  
+  </page>
   <page>
     <name>tour</name>
     <title>KS Tour</title>

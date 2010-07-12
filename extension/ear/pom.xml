@@ -49,6 +49,17 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.poll.service</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.poll.webapp</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.web.ksResources</artifactId>
       <version>${project.version}</version>
       <type>war</type>
@@ -189,6 +200,17 @@
               <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
               <contextRoot>forum</contextRoot>
               <bundleFileName>forum.war</bundleFileName>
+            </webModule>
+            <jarModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.poll.service</artifactId>
+              <includeInApplicationXml>true</includeInApplicationXml>
+            </jarModule>
+            <webModule>
+              <groupId>org.exoplatform.ks</groupId>
+              <artifactId>exo.ks.eXoApplication.poll.webapp</artifactId>
+              <contextRoot>poll</contextRoot>
+              <bundleFileName>poll.war</bundleFileName>
             </webModule>
             <webModule>
               <groupId>org.exoplatform.ks</groupId>

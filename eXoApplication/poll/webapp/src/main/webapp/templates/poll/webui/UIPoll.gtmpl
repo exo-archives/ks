@@ -1,0 +1,241 @@
+<%	
+	import org.exoplatform.ks.common.UserHelper; 
+	import org.exoplatform.poll.service.Poll ;
+	import org.exoplatform.poll.Utils ;
+%>
+	<% 
+		uiform.begin() ; 
+		Poll poll = uicomponent.getPoll() ;
+		if(poll != null) {
+		String question = poll.getQuestion() ;
+		question = question.trim();
+		if(question.lastIndexOf("?") != question.length() - 1) question = question + " ?";
+		long timeOut = poll.getTimeOut() ;
+		boolean isAnonim = UserHelper.isAnonim();
+		boolean isAgain = poll.getIsAgainVote() ;
+		boolean isTimeOut = false;
+		String timeOutDate = "";
+		if(timeOut > 0) {
+			Date dateOut = new Date() ;
+			Date today = new Date() ;
+			timeOut = timeOut*86400000 ;
+			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
+			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + Utils.getFormatDate("DDDD, dd MMMM, yyyy, HH:mm GMT+0");
+			if(dateOut.getTime() < today.getTime()) {
+				timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
+				isAgain = false ;
+				isTimeOut = true;
+			}
+		}
+	%>
+<div class="UITopicPoll">
+	<div class="ForumToolbar">
+		<div class="LeftBar">
+			<div class="RightBar">
+				<div class="CenterBar">
+					<div class="Lable Question">
+						<span><%=_ctx.appRes("UITopicPoll.label.Poll"); %>:</span>
+						<span>${question}</span>
+					</div>
+					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" onclick="eXo.poll.UIPollPortlet.expandCollapse(this) ;"><span></span></div>
+				<% if(!isAnonim && uicomponent.getCanViewEditMenu()) { %>	
+					<div class="ForumSeparatorLine"><span></span></div>
+					<div class="ContentAction">
+						<div class="DefaultStyle Forum" onmouseover="eXo.poll.UIPollPortlet.OverButton(this)" onmouseout="eXo.poll.UIPollPortlet.OverButton(this)">
+							<a href="<%=uicomponent.event("RemovePoll","UITopicPoll","poll");%>">
+								<div class="LeftOverButton">
+									<div class="RightOverButton">
+										<div class="CenterOverButton">
+											<div class="StatusIcon DeletePollIcon">
+												<%=_ctx.appRes("UITopicPoll.label.RemovePoll"); %>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="ForumSeparatorLine"><span></span></div>
+					<div class="ContentAction">
+						<div class="DefaultStyle Forum" onmouseover="eXo.poll.UIPollPortlet.OverButton(this)" onmouseout="eXo.poll.UIPollPortlet.OverButton(this)">
+							<div onclick="<%=uicomponent.event("ClosedPoll", ""+ isTimeOut);%>">
+								<div class="LeftOverButton">
+									<div class="RightOverButton">
+										<div class="CenterOverButton">
+										<% if(poll.getIsClosed() || isTimeOut){ %>
+											<div class="StatusIcon OpenPollIcon">
+												<%=_ctx.appRes("UITopicPoll.label.OpenPoll"); %>
+											</div>
+										<% } else { %>
+											<div class="StatusIcon ClosePollIcon">
+												<%=_ctx.appRes("UITopicPoll.label.ClosePoll"); %>
+											</div>
+										<% } %>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ForumSeparatorLine"><span></span></div>
+					<div class="ContentAction">
+						<div class="DefaultStyle Forum" onmouseover="eXo.poll.UIPollPortlet.OverButton(this)" onmouseout="eXo.poll.UIPollPortlet.OverButton(this)">
+							<div class="LeftOverButton">
+								<div class="RightOverButton">
+									<div class="CenterOverButton">
+										<div class="StatusIcon EditPollIcon">
+											<a href="<%=uicomponent.event("EditPoll")%>"><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% } %>
+					<div style="clear:both"><span></span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="TopicPollContainer">
+		<% 
+			if(timeOut > 0) {
+		%>
+		<div class="PollTime">$timeOutDate</div>
+		<%} %>
+		<div class="UIFormTabPane">
+			<div class="UITabPane">
+				<div class="TabPaneContent">
+					<div class="WorkingArea">
+					 	<div class="HorizontalLayout">
+							<div class="UITabContentContainer">
+							 <% if(uicomponent.isGuestPermission() == false) { %> 
+								<div class="UITabContent">
+									<div class="TopicPollContent">
+										<div class="PollQuestion">${question}</div>
+										<div class="UIForm">
+											<div class="HorizontalLayout">
+												<div class="FormContainer">
+													<table class="UIFormGrid">
+														<tr>
+															<td class="FieldComponent" style="white-space:normal;">
+															<%
+																uicomponent.renderChildren() ;	
+															%>
+															</td>
+														</tr>
+													</table>
+													<div class="UIAction">
+														<table class="ActionContainer">
+															<tr>
+																<td align="center">
+																	<div class="ActionButton LightBlueStyle">
+																		<div class="ButtonLeft">
+																			<div class="ButtonRight">
+																				<div class="ButtonMiddle">
+																					<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</div>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<% } else { %>
+								<div class="UITabContent">
+									<div class="ViewPollForm">
+										<table cellspacing="0" border="0" cellpadding="0" id="UIGrid" class="UIGrid">
+											<thead>
+												<tr>
+													<th><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>
+													<th style="width:35%"><%=_ctx.appRes("UITopicPoll.label.Percentage"); %></th>
+													<th style="width:100px;"><%=_ctx.appRes("UITopicPoll.label.Votes"); %></th>
+												</tr>
+											</thead>
+											<tbody>
+											<% 
+												 String classCss = "EvenRow" ;
+												 String[] colors = Utils.getColor();
+												 String[] infoVote = uicomponent.getInfoVote();
+												 String[] number;
+												 String vote, percent, color, sum;
+												 int i = 0;
+												 for(option in poll.getOption()) { 
+												 	 number = infoVote[i].split(":") ;
+												 	 color = colors[i] ;
+												 	 vote = number[1] ;
+												 	 percent = number[0] ;
+												 	 if(percent.length() >5) percent = percent.substring(0, 5) ;
+												 	 if(percent.indexOf("00.") >0) percent = percent.substring(0, 3) ;
+											%>
+									 				<tr class="$classCss">
+														<td class="text">$option</td>
+														<td >
+															<table class="Percen">
+																<tbody>
+																	<tr>
+																		<td class="BackgroudColor">
+																			<div class="Chart" style="background-color:$color; width:${percent}%;"><span></span></div>
+																		</td>
+																		<td class="Percentage">
+																			<div>${percent}%</div>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</td>
+														<td class="Number">$vote</td>
+													</tr>
+											<% 		i = i + 1;
+													 	if(i%2 == 0)classCss = "EvenRow" ;
+													 	else classCss = "OddRow" ;
+												 }
+												 sum = infoVote[i] ;
+											%>
+											</tbody>
+										</table>
+										<div class="TotalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
+										<% if(isAgain && !isAnonim && !poll.getIsClosed()) { %>
+					 						<div class="UIAction">
+												<table class="ActionContainer">
+													<tr>
+														<td align="center">
+															<div class="ActionButton LightBlueStyle">
+																<div class="ButtonLeft">
+																	<div class="ButtonRight">
+																		<div class="ButtonMiddle">
+																			<a href="<%=uicomponent.event("VoteAgainPoll")%>">
+																				<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
+																			</a>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</td>
+													</tr>				 
+												</table>
+											</div>
+									 <% } %>
+									</div>
+								</div>
+								<% } %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+	<%}
+	uiform.end() ;
+	%>

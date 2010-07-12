@@ -1,0 +1,83 @@
+<div class="UIAddPollForm">
+	<% uiform.begin() %>
+		<div class="HorizontalLayout">
+			<div class="UIFormInputSet">
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>
+							<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</td>
+							<td class="FieldComponent" style="width:400px;">
+								<div class="QuestionInput">
+								<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="Title"><%=_ctx.appRes("UIPollForm.label.LimitOption"); %>:</div>
+				<div class="Line"><span></span></div>
+					<div class="PollOptionConntent">
+						<table class="UIFormGrid">
+							<tbody>
+								<tr>
+									<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_OPTIONS)%>:</td>
+									<td class="FieldComponent">
+										<% uiform.renderChild(uicomponent.FIELD_OPTIONS) %>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<div class="Line"><span></span></div>
+				<table class="UIFormGrid">
+					<tbody>
+						<tr>
+							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
+							<td class="FieldComponent" style="width:60px;">
+								<div class="TimeOutInput">
+									<% uiform.renderChild(uicomponent.FIELD_TIMEOUT_INPUT) %>
+								</div>
+							</td>
+							<td class="Label"><%=_ctx.appRes("UIPollForm.label.DayAfter") + " " + uicomponent.getDateAfter();%></td>
+						</tr>
+						<tr>
+							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_AGAINVOTE_CHECKBOX)%>:</td>
+							<td class="FieldComponent">
+								<% uiform.renderChild(uicomponent.FIELD_AGAINVOTE_CHECKBOX) %>
+							</td>
+						</tr>
+						<tr>
+							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_MULTIVOTE_CHECKBOX)%>:</td>
+							<td class="FieldComponent">
+								<% uiform.renderChild(uicomponent.FIELD_MULTIVOTE_CHECKBOX) %>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	
+	<div class="UIAction"> 
+		<table class="ActionContainer">
+			<tr>
+				<td align="center">
+				<% for(action in uicomponent.getActions()) { 
+					 String actionLabel = _ctx.appRes(uicomponent.getName() + ".action." + action); 
+					 String link = uicomponent.event(action) ;
+				%>
+				<div onclick="$link" class="ActionButton LightBlueStyle">
+					<div class="ButtonLeft">
+						<div class="ButtonRight">
+							<div class="ButtonMiddle">
+								<a href="javascript:void(0);">$actionLabel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			<%}%>
+			</td>
+			</tr>
+ 		</table> 
+	</div>
+	<%uiform.end()%>
+</div>

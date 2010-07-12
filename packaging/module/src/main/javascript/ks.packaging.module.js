@@ -59,6 +59,14 @@ function getModule(params)
     
   module.eXoApplication.forum.deployName = "forum";
 
+
+  // POLL
+  module.eXoApplication.poll = 
+    new Project("org.exoplatform.ks", "exo.ks.eXoApplication.poll.webapp", "war", module.version) .
+	addDependency(new Project("org.exoplatform.ks", "exo.ks.eXoApplication.poll.service", "jar",  module.version));
+    
+  module.eXoApplication.poll.deployName = "poll";
+
   // KS we resources and services
   module.web = {}
   module.web.ksResources = 

@@ -53,18 +53,21 @@
 								  <string>wsrp-producer</string>
 								</value>	
                 -->
-                                <value>
-                                  <string>cometd</string>
-                                </value>                
-                                <value>
-                                  <string>ksResources</string>
-                                </value>   
-                                 <value>
-                                  <string>faq</string>
-                                </value> 
-                                <value>
-                                  <string>forum</string>
-                                </value>                                                                                                 					
+                <value>
+                  <string>cometd</string>
+                </value>                
+                <value>
+                  <string>ksResources</string>
+                </value>   
+                 <value>
+                  <string>faq</string>
+                </value> 
+                <value>
+                  <string>forum</string>
+                </value>                                                                                                 					
+                <value>
+                  <string>poll</string>
+                </value>                                                                                                 					
 								<value>
 								  <string>ks</string>
 								</value>                            

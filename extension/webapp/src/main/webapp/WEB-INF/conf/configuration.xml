@@ -41,6 +41,9 @@
   <!-- Answers and FAQ core services -->
   <import>war:/ks-extension/ks/faq/faq-configuration.xml</import>
   
+  <!-- Poll core services -->
+  <import>war:/ks-extension/ks/poll/poll-configuration.xml</import>
+  
   
   
 </configuration>

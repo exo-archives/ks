@@ -110,6 +110,15 @@
 		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
 		                </object>
 	                </value>
+	                <value>                 
+		                <object type="org.exoplatform.application.registry.Application">                     
+		                  <field  name="categoryName"><string>KnowledgeSuite</string></field>
+		                  <field name="applicationName"><string>PollPortlet</string></field>
+						          <field name="displayName"><string>Poll Portlet</string></field>
+		                  <field name="applicationType"><string>portlet</string></field>
+		                  <field name="applicationGroup"><string>KnowledgeSuite</string></field>                
+		                </object>
+	                </value>
 		            </collection>                               
 	            </field> 
 	          </object>        

@@ -27,7 +27,13 @@
       <name>faq</name>
       <label>FAQ</label>
       <page-reference>portal::classic::faq</page-reference>
-    </node>    
+    </node>
+    <node>
+      <uri>poll</uri>
+      <name>poll</name>
+      <label>Poll</label>
+      <page-reference>portal::classic::poll</page-reference>
+    </node>   
     <node>
       <uri>tour</uri>
       <name>tour</name>

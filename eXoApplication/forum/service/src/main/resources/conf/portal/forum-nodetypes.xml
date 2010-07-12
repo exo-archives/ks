@@ -42,6 +42,9 @@
 			<propertyDefinition name="exo:modifiedDate" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>
+			<propertyDefinition name="exo:lastVote" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
+				<valueConstraints/>
+			</propertyDefinition>
 			<propertyDefinition name="exo:question" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false">
 				<valueConstraints/>
 			</propertyDefinition>

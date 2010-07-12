@@ -13,5 +13,6 @@
     <module>common</module>
     <module>faq</module>
     <module>forum</module>
+    <module>poll</module>
   </modules>
 </project>
