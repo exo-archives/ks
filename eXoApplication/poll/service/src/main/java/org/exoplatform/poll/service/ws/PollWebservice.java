@@ -45,7 +45,6 @@ public class PollWebservice implements ResourceContainer {
     cacheControl.setNoStore(true);
     PollService pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
     if(!JCRDataStorage.isEmpty(pollId)) {
-    	System.out.println("\n\n ------->resourceid " + pollId);
 	    try {
 	    	Poll poll = pollService.getPoll(pollId);
 	    	if(poll != null) {
@@ -79,8 +78,8 @@ public class PollWebservice implements ResourceContainer {
   			Poll poll = pollService.getPoll(pollId.trim());
   			if(poll != null) {
   				poll = calculateVote(poll, getUserId(), indexVote) ;
-  				printAr(poll.getVote(), "getVote");
-  				printAr(poll.getUserVote(), "getUserVote");
+//  				printAr(poll.getVote(), "getVote");
+//  				printAr(poll.getUserVote(), "getUserVote");
   				pollService.savePoll(poll, false, true) ;
   				poll.setVotes();
 	    		poll.setInfoVote();
@@ -94,11 +93,11 @@ public class PollWebservice implements ResourceContainer {
   	return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
   }
   
-  private void printAr(String[] s, String comment){
-  	List<String> list = Arrays.asList(s);
-  	System.out.println("\n\n " + comment + ": " + list.toString());
-  }
-  
+//  private void printAr(String[] s, String comment){
+//  	List<String> list = Arrays.asList(s);
+//  	System.out.println("\n\n " + comment + ": " + list.toString());
+//  }
+//  
   private Poll calculateVote(Poll poll, String userVote, String optionVote) throws Exception {
   	String[] votes ;
 		String[] setUserVote ;

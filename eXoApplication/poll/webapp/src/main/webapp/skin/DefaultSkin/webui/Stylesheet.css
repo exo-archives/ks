@@ -187,10 +187,6 @@ body, html, div, table, tr, td, img, form {
 	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/DustBin.gif') no-repeat;
 }
 
-.UIPollPortlet .EditPollIcon {
-	background: url('/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/EditIcon.gif') no-repeat;
-}
-
 .UIPollPortlet .ForumToolbar {
 }
 
@@ -199,6 +195,7 @@ body, html, div, table, tr, td, img, form {
 	width:16px; height:16px; 
 	margin:5px 5px 0px 0px;
 	cursor:pointer;
+	background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/EditIcon.gif") no-repeat;
 }
 
 .UIPollPortlet .ForumToolbar .ExpandButton {
@@ -249,6 +246,54 @@ body, html, div, table, tr, td, img, form {
 	height:26px;
 }
 
+.UIPollPortlet .EditPoll .AddPollIdIcon {
+	float:left;
+	height:16px;
+	width:16px;
+	margin: 3px 0px 0px 14px;
+	background: url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/BlueCirclePlus.gif") no-repeat ;	
+}
+
+.UIPollPortlet .EditPoll {
+	margin:auto;
+	width:460px;
+	padding-bottom: 5px;
+}
+
+.UIPollPortlet .EditPoll .ActionBar{
+	margin:auto;
+	width:180px;
+}
+
+.UIPollPortlet #m_pollId{
+	width: 250px;
+}
+
+.UIPollPortlet .MenuPollId {
+	border:1px solid gray;
+	left:-4px;
+	position:absolute;
+	top:18px;
+	width:230px;
+}
+}
+
+.UIPollPortlet .MenuPollId .MenuItem {
+	background: #EEFFF0;
+	height:24px;
+	line-height:24px;
+	opacity:0.9;
+	padding:5px 0 5px 10px;
+	cursor:pointer;
+}
+
+.UIPollPortlet .MenuPollId .MenuItem a{
+	color:#3E3E3E; 
+}
+
+.UIPollPortlet .MenuPollId .MenuItem a:hover{
+	color:#058EE6; 
+}
 
 
 

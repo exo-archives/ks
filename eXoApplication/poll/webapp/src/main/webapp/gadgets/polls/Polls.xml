@@ -29,10 +29,10 @@
 							<div class="RightBar">
 								<div class="CenterBar">
 									<div class="Lable Question">
-										<span>Poll:</span>
+										<span>__MSG_poll__</span>
 										<span class="question"></span>
 									</div>
-									<div class="CollapseButton" collapse="Collapse" expand="Expand" title="Collapse" onclick="eXo.poll.UIPollPortlet.expandCollapse(this) ;"><span></span></div>
+									<div class="CollapseButton" title="Edit" onclick="editUserPrefs()"><span></span></div>
 								
 									<div style="clear:both"><span></span></div>
 								</div>
@@ -58,12 +58,14 @@
 															<div class="HorizontalLayout">
 																<div class="FormContainer">
 																	<table class="UIFormGrid">
-																		<tbody><tr>
-																			<td class="FieldComponent" style="white-space:normal;">
-																			<div id="options"></div>
-																			</td>
-																		</tr>
-																	</tbody></table>
+																		<tbody>
+																			<tr>
+																				<td class="FieldComponent" style="white-space:normal;">
+																					<div id="options"></div>
+																				</td>
+																			</tr>
+																		</tbody>
+																	</table>
 																	<div class="UIAction">
 																		<table class="ActionContainer">
 																			<tbody>
@@ -73,7 +75,7 @@
 																							<div class="ButtonLeft">
 																								<div class="ButtonRight">
 																									<div class="ButtonMiddle" style="display:block">
-																										<a onclick="voteNow();">Votenow</a>
+																										<a onclick="voteNow();">__MSG_voteNow__</a>
 																									</div>
 																								</div>
 																							</div>
@@ -89,25 +91,24 @@
 														</div>
 													</div>
 													
-													
-													
 													<div class="ViewPollForm" id="ViewPollForm" style="display:none;">
 														<table cellspacing="0" cellpadding="0" border="0" class="UIGrid" id="UIGrid">
 															<thead>
 																<tr>
-																	<th>Options</th>
-																	<th style="width: 35%;">Percentage</th>
-																	<th style="width: 100px;">Votes</th>
+																	<th>__MSG_options__</th>
+																	<th style="width: 35%">__MSG_percentage__</th>
+																	<th style="width: 100px;">__MSG_votes__</th>
 																</tr>
 															</thead>
 															<tbody id="dataTable">
 															
-															
 															</tbody>
 														</table>
-														<div class="TotalVotes">Total voters: <span id="sunVote"></span></div>
-														
+														<div class="TotalVotes">__MSG_totalVoters__ <span id="sunVote"></span></div>
 													</div>
+
+													<div style="display:none;" class="EditPoll" id="EditPoll"><span></span></div>
+													<div style="display:none;" id="comment">You must edit poll and use some pollId for config Poll gadget</div>
 												</div>
 												
 											</div>
@@ -119,8 +120,7 @@
 						
 					</div>
 				</div>
-				
-				<div style="display:none;" id="comment"> You can user some pollId for config Poll gadget: <span class="pollIds"></span></div>
+				<div style="display:none;" class="MenuPollId" id="MenuPollId"><span></span></div>
 			</div>
 			
 			<script type="text/javascript">
@@ -150,18 +150,16 @@
 					var comment = document.getElementById("comment");
 					if(data) {
 						if(data.id == "Empty") {
-							var ids = data.listId;
-							var str = "";
-							for(var i = 0; i < ids.length; ++ i) {
-								str = str + ids[i] + " <br/>";
-							}
-							innerData("span", "pollIds", str);
-							comment.style.display = "block";
+							var editPoll = document.getElementById("AddPollIdIcon");
+							if(editPoll) comment.style.display = "none";
+							else comment.style.display = "block";
+							buildMenu(data);
 						} else {
 							comment.style.display = "none";
 							if(data.showVote) {
 								tpPoll.style.display = "none";
 								viewPoll.style.display = "block";
+								innerData("span", "question", data.question);
 								innerTableData(data);
 							} else {
 								tpPoll.style.display = "block";
@@ -172,6 +170,16 @@
 							}
 						}
 					}
+				}
+				
+				function buildMenu(data) {
+					var ids = data.listId;
+					var str = "";
+					for(var i = 0; i < ids.length; ++ i) {
+						str = str + 
+						'<div class="MenuItem"><a onclick="selectedItem(this);">'+ids[i] + '</a></div>';
+					}
+					innerData("div", "MenuPollId", str);
 				}
 				
 				function innerData(type, clasElm, vl) {
@@ -250,6 +258,65 @@
 					}
 				}
 				
+				// save pollId
+				function editUserPrefs() {
+					document.getElementById("TopicPollContent").style.display = "none";
+					document.getElementById("ViewPollForm").style.display = "none";
+					var parent = document.getElementById("EditPoll");
+					parent.style.display = "block";
+					var str =
+					'<form>'+
+						'<div style="padding: 8px 0px;">'+
+							'<div style="float:left;"><span style="padding-right: 10px;">Poll Id: </span><input id="m_pollId" name="m_10_up_pollId"/></div>'+
+							'<div class="AddPollIdIcon" id="AddPollIdIcon" title="Add poll id." onclick="showMenu()"><span></span></div>'+
+							'<div style="float:left; position:relative;" id="MenuContent"><span></span></div>'+
+							'<div style="clear:left;"><span></span></div>'+
+						'</div>'+
+					'</form>'+
+					'<div class="ActionBar">'+
+						'<input value="Save" onclick="saveUserPrefs()" type="button"/>'+
+						'<input value="Cancel" onclick="cancelUserPrefs()" type="button"/>'+
+					'</div>';
+					parent.innerHTML = str;
+					var input = document.getElementById("m_pollId");
+					if(input) {
+						input.value = gadgets.Prefs().getString("pollId");
+					}
+					ajaxAsyncGetRequest("/portal/rest/private/ks/poll/viewpoll/pollId",render);
+				}
+				
+				function showMenu() {
+					var parent = document.getElementById("MenuContent");
+					var child = document.getElementById("MenuPollId");
+					parent.innerHTML = '<div class="MenuPollId">' + child.innerHTML + '</div>';
+				}
+				
+				function selectedItem(elm) {
+					var input = document.getElementById("m_pollId");
+					if(input) {
+						input.value = elm.innerHTML;
+						var parent = document.getElementById("MenuContent");
+						parent.innerHTML = "";
+					}
+					
+				}
+				
+				function saveUserPrefs() {
+					var input = document.getElementById("m_pollId");
+					if(input) {
+						var pollId = input.value;
+						if(pollId) {
+							var prefs = new gadgets.Prefs();
+							prefs.set("pollId", pollId);
+							document.getElementById("EditPoll").innerHTML = "";
+						}
+					}
+				}
+				
+				function cancelUserPrefs() {
+					document.getElementById("EditPoll").innerHTML = "";
+					getData();
+				}
 				
 				// load hander
 				function onLoadHander(){

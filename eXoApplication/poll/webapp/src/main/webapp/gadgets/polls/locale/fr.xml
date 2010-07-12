@@ -20,13 +20,10 @@
 -->
 
 <messagebundle>  
-  <msg name="showall">
-  	Show all
-  </msg>
-	<msg name="noevent">
-  	No event on today
-  </msg>
-	<msg name="back">
-  	Back
-  </msg>
+  <msg name="voteNow">Vote Now</msg>
+  <msg name="poll">Poll:</msg>
+  <msg name="options">Options</msg>
+  <msg name="percentage">Percentage</msg>
+  <msg name="votes">Votes</msg>
+  <msg name="totalVoters">Total voters:</msg>
 </messagebundle>
