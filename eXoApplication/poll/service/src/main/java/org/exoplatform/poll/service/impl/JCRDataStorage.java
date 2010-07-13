@@ -170,7 +170,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		QueryManager qm = getSession(sProvider).getWorkspace().getQueryManager();
 		StringBuffer queryString = new StringBuffer(JCR_ROOT);
 		queryString.append("//element(*,").append(EXO_POLL).append(")")
-		.append(" order by @").append(EXO_CREATED_DATE).append(" ascending");
+		.append(" order by @").append(EXO_CREATED_DATE).append(" descending");
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		return result.getNodes();

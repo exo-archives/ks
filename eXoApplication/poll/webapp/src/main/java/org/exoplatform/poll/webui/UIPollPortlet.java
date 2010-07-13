@@ -16,9 +16,14 @@
  ***************************************************************************/
 package org.exoplatform.poll.webui;
 
-import javax.portlet.PortletMode;
+import java.util.List;
 
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
+
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.poll.service.PollService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -54,8 +59,12 @@ public class UIPollPortlet extends UIPortletApplication {
 			 getChild(UIPollManagement.class).setRendered(false);
 		 }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
 			 getChild(UIPoll.class).setRendered(false);
-			 getChild(UIPollManagement.class).setRendered(true);
+			 UIPollManagement management = getChild(UIPollManagement.class).setRendered(true);
+			 management.updateGrid();
 		 }
+		 try {
+			 setDefaultPollId();
+		 } catch (Exception e) {}
     super.processRender(app, context) ;
   }  
   
@@ -79,7 +88,19 @@ public class UIPollPortlet extends UIPortletApplication {
 	}
 
 	
-	
+	private void setDefaultPollId() throws Exception {
+		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+    String pollId = portletPref.getValue("pollIdShow", "");
+    if(pollId == null || pollId.length() <= 0) {
+    	PollService pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class) ;
+    	List<String> list = pollService.getListPollId();
+    	if(!list.isEmpty()){
+    		portletPref.setValue("pollIdShow", list.get(0));
+    		portletPref.store();
+    	}
+    }
+	}
 	
 	
 	

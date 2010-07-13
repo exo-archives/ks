@@ -20,9 +20,9 @@
 			Date today = new Date() ;
 			timeOut = timeOut*86400000 ;
 			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
-			timeOutDate =_ctx.appRes("UITopicPoll.label.timeOutPoll") + Utils.getFormatDate("DDDD, dd MMMM, yyyy, HH:mm GMT+0");
+			timeOutDate =_ctx.appRes("UIPoll.label.timeOutPoll") + Utils.getFormatDate("DDDD, dd MMMM, yyyy, HH:mm GMT+0");
 			if(dateOut.getTime() < today.getTime()) {
-				timeOutDate = _ctx.appRes("UITopicPoll.label.PollClosed");
+				timeOutDate = _ctx.appRes("UIPoll.label.PollClosed");
 				isAgain = false ;
 				isTimeOut = true;
 			}
@@ -34,7 +34,7 @@
 			<div class="RightBar">
 				<div class="CenterBar">
 					<div class="Lable Question">
-						<span><%=_ctx.appRes("UITopicPoll.label.Poll"); %>:</span>
+						<span><%=_ctx.appRes("UIPoll.label.Poll"); %>:</span>
 						<span>${question}</span>
 					</div>
 					<div class="CollapseButton" collapse="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" expand="<%=_ctx.appRes("UIPollPortlet.label.Expand");%>" title="<%=_ctx.appRes("UIPollPortlet.label.Collapse");%>" onclick="eXo.poll.UIPollPortlet.expandCollapse(this) ;"><span></span></div>
@@ -47,7 +47,7 @@
 									<div class="RightOverButton">
 										<div class="CenterOverButton">
 											<div class="StatusIcon DeletePollIcon">
-												<%=_ctx.appRes("UITopicPoll.label.RemovePoll"); %>
+												<%=_ctx.appRes("UIPoll.label.RemovePoll"); %>
 											</div>
 										</div>
 									</div>
@@ -64,11 +64,11 @@
 										<div class="CenterOverButton">
 										<% if(poll.getIsClosed() || isTimeOut){ %>
 											<div class="StatusIcon OpenPollIcon">
-												<%=_ctx.appRes("UITopicPoll.label.OpenPoll"); %>
+												<%=_ctx.appRes("UIPoll.label.OpenPoll"); %>
 											</div>
 										<% } else { %>
 											<div class="StatusIcon ClosePollIcon">
-												<%=_ctx.appRes("UITopicPoll.label.ClosePoll"); %>
+												<%=_ctx.appRes("UIPoll.label.ClosePoll"); %>
 											</div>
 										<% } %>
 										</div>
@@ -84,7 +84,7 @@
 								<div class="RightOverButton">
 									<div class="CenterOverButton">
 										<div class="StatusIcon EditPollIcon">
-											<a href="<%=uicomponent.event("EditPoll")%>"><%=_ctx.appRes("UITopicPoll.label.EditPoll"); %></a>
+											<a href="<%=uicomponent.event("EditPoll")%>"><%=_ctx.appRes("UIPoll.label.EditPoll"); %></a>
 										</div>
 									</div>
 								</div>
@@ -134,7 +134,7 @@
 																		<div class="ButtonLeft">
 																			<div class="ButtonRight">
 																				<div class="ButtonMiddle">
-																					<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UITopicPoll.label.Votenow"); %></a>
+																					<a href="<%=uicomponent.event("Vote")%>"><%=_ctx.appRes("UIPoll.label.Votenow"); %></a>
 																				</div>
 																			</div>
 																		</div>
@@ -155,9 +155,9 @@
 										<table cellspacing="0" border="0" cellpadding="0" id="UIGrid" class="UIGrid">
 											<thead>
 												<tr>
-													<th><%=_ctx.appRes("UITopicPoll.label.PollOptions"); %></th>
-													<th style="width:35%"><%=_ctx.appRes("UITopicPoll.label.Percentage"); %></th>
-													<th style="width:100px;"><%=_ctx.appRes("UITopicPoll.label.Votes"); %></th>
+													<th><%=_ctx.appRes("UIPoll.label.PollOptions"); %></th>
+													<th style="width:35%"><%=_ctx.appRes("UIPoll.label.Percentage"); %></th>
+													<th style="width:100px;"><%=_ctx.appRes("UIPoll.label.Votes"); %></th>
 												</tr>
 											</thead>
 											<tbody>
@@ -202,7 +202,7 @@
 											%>
 											</tbody>
 										</table>
-										<div class="TotalVotes"><%=_ctx.appRes("UITopicPoll.label.TotalVoters"); %>: $sum</div>
+										<div class="TotalVotes"><%=_ctx.appRes("UIPoll.label.TotalVoters"); %>: $sum</div>
 										<% if(isAgain && !isAnonim && !poll.getIsClosed()) { %>
 					 						<div class="UIAction">
 												<table class="ActionContainer">
@@ -213,7 +213,7 @@
 																	<div class="ButtonRight">
 																		<div class="ButtonMiddle">
 																			<a href="<%=uicomponent.event("VoteAgainPoll")%>">
-																				<%=_ctx.appRes("UITopicPoll.label.VoteAgain"); %>
+																				<%=_ctx.appRes("UIPoll.label.VoteAgain"); %>
 																			</a>
 																		</div>
 																	</div>

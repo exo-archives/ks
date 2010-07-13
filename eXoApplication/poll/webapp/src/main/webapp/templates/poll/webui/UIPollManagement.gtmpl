@@ -1,14 +1,23 @@
 <div class="$uicomponent.id">
-	<%
+<%
+	import org.exoplatform.webui.core.UIGrid;
 	uiform.begin() ;
-		uicomponent.updateGrid();
-		List children = uicomponent.getChildren() ;
-		for(component in children) {
-			if(component.isRendered()){
-				uicomponent.renderChild(component.getClass()) ; 
-			}
+%>
+	<% uicomponent.renderChild(UIGrid.class) ; %>
+	<div class="Label"><%=_ctx.appRes(uicomponent.getName() + ".label.comment");%></div>
+	<div class="SelectBoxInput">
+		<span><%=_ctx.appRes(uicomponent.getName() + ".label.selectPoll");%>:  </span>
+		<span> <% uiform.renderField(uiform.FIELD_SELECT_POLL_SELECTBOX) ; %></span>
+	</div>
+	<script type="text/javascript">
+		var ths = document.getElementsByTagName('th');
+		if(ths) {
+			ths[1].style.width = '60px';
+			ths[2].style.width = '160px';
+			ths[3].style.width = '160px';
+			ths[4].style.width = '100px';
 		}
-	%>
+	</script>
 	<div class="UIAction"> 
 		<table class="ActionContainer">
 			<tr>

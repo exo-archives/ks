@@ -28,7 +28,11 @@
 		</portlet-info>
 	
 		<portlet-preferences>
-			
+			<preference>
+				<name>pollIdShow</name>
+				<value></value> <!-- PollId -->
+				<read-only>false</read-only>
+			</preference>
 		</portlet-preferences>
 		
 	</portlet>

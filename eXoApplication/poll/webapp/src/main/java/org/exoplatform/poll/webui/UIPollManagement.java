@@ -16,20 +16,27 @@
  ***************************************************************************/
 package org.exoplatform.poll.webui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.webui.popup.UIPollForm;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIGrid;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
+import org.exoplatform.webui.core.model.SelectItemOption;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
+import org.exoplatform.webui.form.UIFormSelectBox;
 
 /**
  * Created by The eXo Platform SAS
@@ -49,15 +56,19 @@ import org.exoplatform.webui.event.EventListener;
 		}
 )
 public class UIPollManagement extends BasePollForm {
+	public static final String FIELD_SELECT_POLL_SELECTBOX = "selectPoll" ;
   public static String[] BEAN_FIELD = {"question", "votes", "lastVote", "expire"};
-  private static String[] ACTION = {"EditPoll", "DeletePoll"} ;
-  Map<String, Poll> mapPoll = new HashMap<String, Poll>();
+  private static String[] ACTION = {"EditPoll", "DeletePoll", "RenderGadget"} ;
+  private Map<String, Poll> mapPoll = new HashMap<String, Poll>();
+  private UIFormSelectBox selectPoll;
   
 	public UIPollManagement() throws Exception {
 		 UIGrid categoryList = addChild(UIGrid.class, null , "PollManagementList") ;
 	   categoryList.configure("id", BEAN_FIELD, ACTION) ;
 	   categoryList.getUIPageIterator().setId("PollManagementIterator");
 	   setActions(new String[]{"AddPoll", "Save"});
+	   selectPoll = new UIFormSelectBox(FIELD_SELECT_POLL_SELECTBOX, FIELD_SELECT_POLL_SELECTBOX, new ArrayList<SelectItemOption<String>>()) ;
+	   addUIFormInput(selectPoll);
 	}
 	
 	public long getCurrentPage() {
@@ -70,22 +81,23 @@ public class UIPollManagement extends BasePollForm {
     getChild(UIGrid.class).getUIPageIterator().setCurrentPage(page) ;
   }
   
- /* public void processRender(WebuiRequestContext context) throws Exception {
-    Writer w =  context.getWriter() ;
-    updateGrid();
-    w.write("<div id=\"UIPollManagement\" class=\"UIPollManagement\">");
-    renderChildren();
-    w.write("</div>");
-  }*/
-  
   public void updateGrid() throws Exception {
 		List<Poll> polls = getPollService().getPagePoll();
+		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		mapPoll.clear();
 		for (Poll poll : polls) {
 			mapPoll.put(poll.getId(), poll);
+			list.add(new SelectItemOption<String>(poll.getQuestion(), poll.getId())) ;
+		}
+		selectPoll.setOptions(list);
+		if(!polls.isEmpty()){
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance();
+      PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+			selectPoll.setValue(portletPref.getValue("pollIdShow", polls.get(0).getId()));
 		}
 		UIGrid uiGrid = getChild(UIGrid.class) ; 
     ObjectPageList objPageList = new ObjectPageList(polls, 10) ;
-    uiGrid.getUIPageIterator().setPageList(objPageList) ;  
+    uiGrid.getUIPageIterator().setPageList(objPageList) ;
 	}
 
   static public class EditPollActionListener extends EventListener<UIPollManagement> {
@@ -130,11 +142,14 @@ public class UIPollManagement extends BasePollForm {
   static public class SaveActionListener extends EventListener<UIPollManagement> {
   	public void execute(Event<UIPollManagement> event) throws Exception {
   		UIPollManagement pollManagement = event.getSource();
-  		UIPollPortlet pollPortlet = pollManagement.getParent();
-  		UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
-  		UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-  		popupAction.activate(pollForm, 655, 455, true) ;
-  		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+  		PortletRequestContext pcontext = (PortletRequestContext)event.getRequestContext();
+      PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+      String pollId = pollManagement.getUIFormSelectBox(FIELD_SELECT_POLL_SELECTBOX).getValue() ;
+      portletPref.setValue("pollIdShow", pollId);
+      portletPref.store();
+      UIPollPortlet pollPortlet = ((UIPollPortlet)pollManagement.getParent());
+      pollPortlet.getChild(UIPoll.class).updatePollById(pollId);
+  		event.getRequestContext().addUIComponentToUpdateByAjax(pollPortlet) ;
   	}
   }
 	

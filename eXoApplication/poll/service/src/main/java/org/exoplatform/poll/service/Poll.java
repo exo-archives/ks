@@ -16,11 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.poll.service ;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -119,7 +117,8 @@ public class Poll {
 	public boolean getShowVote() {return showVote;}
 	
 	
-	public void setVotes() {
+	public void setVotes() {}
+	public String getVotes() { 
 		int size = 0;
 		try {
 			if(!isMultiCheck)	size = userVote.length	;
@@ -128,8 +127,8 @@ public class Poll {
 					size += userVote[i].split(":").length -1 ;
 		} catch (Exception e) {}
 		votes = String.valueOf(size) ; 
+		return votes;
 	}
-	public String getVotes() { return votes;}
 	
 	public void setInfoVote() {
 		String[] userVotes = userVote;

@@ -27,7 +27,6 @@ import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.poll.webui.BasePollForm;
-import org.exoplatform.poll.webui.UIPoll;
 import org.exoplatform.poll.webui.UIPollManagement;
 import org.exoplatform.poll.webui.UIPollPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -277,7 +276,7 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 				uiForm.isUpdate = false ;
       	UIPollPortlet pollPortlet = uiForm.getAncestorOfType(UIPollPortlet.class) ;
 				pollPortlet.cancelAction() ;
-				pollPortlet.getChild(UIPoll.class).updateFormPoll(poll) ;
+//				pollPortlet.getChild(UIPoll.class).updateFormPoll(poll) ;
 				pollPortlet.getChild(UIPollManagement.class).updateGrid() ;
 				pollPortlet.setRenderedChild(true);
       	event.getRequestContext().addUIComponentToUpdateByAjax(pollPortlet);

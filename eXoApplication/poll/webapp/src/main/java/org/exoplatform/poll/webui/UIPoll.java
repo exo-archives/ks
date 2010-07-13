@@ -20,12 +20,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.PortletPreferences;
+
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.webui.popup.UIPollForm;
+import org.exoplatform.webui.application.WebuiRequestContext;
+import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIComponent;
@@ -62,6 +66,12 @@ public class UIPoll extends BasePollForm	{
 	
 	public UIPoll() throws Exception {
 		userId = UserHelper.getCurrentUser() ;
+		try {
+			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+	    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+	    this.pollId = portletPref.getValue("pollIdShow", "");
+			this.isEditPoll = true ;
+		} catch (Exception e) {}
 	}
 
 	public void updateFormPoll(Poll poll) throws Exception {
@@ -102,7 +112,7 @@ public class UIPoll extends BasePollForm	{
 	}
 	
 	private Poll getPoll() throws Exception {
-		if(isEditPoll) {
+		if(isEditPoll && pollId != null && pollId.length() > 0) {
 			poll_ = getPollService().getPoll(pollId) ; 
 		}
 		this.init() ;
