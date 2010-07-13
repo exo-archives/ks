@@ -571,6 +571,8 @@ public class QuestionPageList extends JCRPageList {
     if(questionNode.hasProperty("exo:emailWatching")) question.setEmailsWatch(ValuesToStrings(questionNode.getProperty("exo:emailWatching").getValues())) ;
     if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(ValuesToStrings(questionNode.getProperty("exo:userWatching").getValues())) ;
     if(questionNode.hasProperty("exo:topicIdDiscuss")) question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString()) ;
+    if (questionNode.hasProperty("exo:lastActivity")) question.setLastActivity(questionNode.getProperty("exo:lastActivity").getString());
+    if (questionNode.hasProperty("exo:numberOfPublicAnswers")) question.setNumberOfPublicAnswers(questionNode.getProperty("exo:numberOfPublicAnswers").getLong());
     String path = questionNode.getPath() ;
 		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
 		

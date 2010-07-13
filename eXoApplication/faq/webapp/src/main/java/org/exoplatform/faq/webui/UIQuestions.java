@@ -19,6 +19,7 @@ package org.exoplatform.faq.webui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -476,6 +477,25 @@ public class UIQuestions extends UIContainer {
 		return "";
   }
 	
+  private String calculateTimeMessageOfLastActivity(long time) {
+    long current = GregorianCalendar.getInstance().getTimeInMillis();
+    long interval = current - time;
+    if (interval < 60 * 60 * 1000) { // if interval is less than one hour.
+      String msg = FAQUtils.getResourceBundle(this.getId() + ".label.last-act-time-minute");
+      int mins = (int) interval / (60 * 1000);
+      msg = msg.replace("{0}", String.valueOf(mins));
+      return msg;
+    } else if (interval < 24 * 60 * 60 * 1000) {
+      String msg = FAQUtils.getResourceBundle(this.getId() + ".label.last-act-time-hour");
+      int hours = (int) interval / (60 * 60 * 1000);
+      msg = msg.replace("{0}", String.valueOf(hours));
+      return msg;
+    } else {
+      return FAQUtils.getFormatDate(new Date(time));
+    }
+    
+  }
+  
 	static public class DownloadAttachActionListener extends EventListener<UIQuestions> {
 		public void execute(Event<UIQuestions> event) throws Exception {
 			UIQuestions question = event.getSource() ; 

@@ -200,6 +200,22 @@ public class Utils {
 		return list.toArray(new String[]{});
 	}
 	
-
+	public static long getTimeOfLastActivity(String info) {
+    if (info == null || info.isEmpty()) return -1;
+    int dashIndex = info.lastIndexOf("-");
+    if (dashIndex < 0) return -1;    
+    try {
+      return Long.parseLong(info.substring(dashIndex + 1));
+    } catch (NumberFormatException nfe) {
+      return -1;
+    }
+  }
+  
+  public static String getAuthorOfLastActivity(String info) {
+    if (info == null || info.isEmpty()) return null;
+    int dashIndex = info.lastIndexOf("-");
+    if (dashIndex < 0) return null;
+    return info.substring(0, dashIndex);
+  }
 
 }

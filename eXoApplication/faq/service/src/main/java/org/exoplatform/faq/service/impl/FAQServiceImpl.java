@@ -150,6 +150,13 @@ public class FAQServiceImpl implements FAQService, Startable {
       log.error("Error while initializing Management view: "+ e.getMessage());
     }
     
+    try {
+      log.info("initializing Question Node listeners...");
+      jcrData_.reInitQuestionNodeListeners();
+    } catch (Exception e) {
+      log.error("Error while initializing Question Node listeners", e);
+    }
+    
 	}
 
 	public void stop() {}
@@ -1316,6 +1323,10 @@ public class FAQServiceImpl implements FAQService, Startable {
   
   public InputStream createAnswerRSS(String cateId) throws Exception {
   	return jcrData_.createAnswerRSS(cateId);
+  }
+  
+  public void reCalculateLastActivityOfQuestion(String absPathOfProp) throws Exception {
+    jcrData_.reCalculateInfoOfQuestion(absPathOfProp);
   }
 }
 

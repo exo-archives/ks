@@ -40,12 +40,16 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Item;
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
 import javax.jcr.observation.Event;
@@ -73,6 +77,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionInfo;
 import org.exoplatform.faq.service.QuestionLanguage;
+import org.exoplatform.faq.service.QuestionNodeListener;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.SubCategoryInfo;
 import org.exoplatform.faq.service.Utils;
@@ -87,6 +92,7 @@ import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
 import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
+import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.MailService;
@@ -383,6 +389,15 @@ public class JCRDataStorage implements DataStorage {
 //		}		
 	}
 	
+	
+	public void reInitQuestionNodeListeners() throws Exception {
+	  NodeIterator iter = getQuestionsIterator();
+	  if (iter == null) return;
+	  while (iter.hasNext()) {
+	    Node quesNode = iter.nextNode();
+	    registerQuestionNodeListener(quesNode);
+	  }
+	}
 
 
   /* (non-Javadoc)
@@ -722,12 +737,17 @@ public class JCRDataStorage implements DataStorage {
     	if(!quesNode.isNodeType("mix:faqi18n")) {
     		quesNode.addMixin("mix:faqi18n") ;
     	}
+//    	String lastActivityInfo = null;
+//    	if (quesNode.hasProperty("exo:lastActivity")) 
+//    	  lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
+//    	long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
     	Node answerHome;
     	String qId = quesNode.getName() ;
   		String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
     	String defaultLang = quesNode.getProperty("exo:language").getString() ;
     	
     	for(Answer answer : answers){
+    	  
     		if(answer.getLanguage().equals(defaultLang)){
     			try{
         		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
@@ -743,7 +763,16 @@ public class JCRDataStorage implements DataStorage {
         	}        	
     		}
     		saveAnswer(answer, answerHome, qId, categoryId) ;
+//        if (answer.getApprovedAnswers() || answer.getActivateAnswers()) {
+//          long answerTime = answer.getDateResponse().getTime();
+//          if (answerTime > timeOfLastActivity) {
+//            timeOfLastActivity = answerTime;
+//            lastActivityInfo = answer.getResponseBy() + "-" + timeOfLastActivity;
+//          }
+//        }
     	}
+//      if (lastActivityInfo != null)
+//        quesNode.setProperty("exo:lastActivity", lastActivityInfo);
     	quesNode.save() ;
     }catch (Exception e) {
       log.error("fail to save answer: ", e);
@@ -796,6 +825,12 @@ public class JCRDataStorage implements DataStorage {
     	if(!quesNode.isNodeType("mix:faqi18n")) {
     		quesNode.addMixin("mix:faqi18n") ;
     	}
+    	
+//    	String lastActInfo = null;
+//    	if (quesNode.hasProperty("exo:lastActivity"))
+//    	  lastActInfo = quesNode.getProperty("exo:lastActivity").getString();
+//    	long timeOfLastAct = Utils.getTimeOfLastActivity(lastActInfo);
+    	
     	Node commentHome = null;
     	try{
     		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
@@ -821,6 +856,14 @@ public class JCRDataStorage implements DataStorage {
     	commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
     	commentNode.setProperty("exo:questionId", quesNode.getName());
     	commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());
+    	
+//    	long commentTime = comment.getDateComment().getTime();
+//    	if (commentTime > timeOfLastAct) {
+//    	  timeOfLastAct = commentTime;
+//    	  lastActInfo = comment.getCommentBy() + "-" + timeOfLastAct;
+//    	  quesNode.setProperty("exo:lastActivity", lastActInfo);
+//    	}
+    
     	if(commentNode.isNew()) quesNode.getSession().save();
     	else quesNode.save();
   	}catch(Exception e) {
@@ -1083,8 +1126,12 @@ public class JCRDataStorage implements DataStorage {
 			}	
 //			System.out.println("questionNode ==>" + questionNode.getPath());
 			saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
-			if (questionNode.isNew())	questionNode.getSession().save();
+			if (questionNode.isNew())	{
+			  questionNode.getSession().save();
+			  registerQuestionNodeListener(questionNode);
+			}
 			else questionNode.save();
+			
 			return questionNode;
 		}catch (Exception e) {
 		}finally {sProvider.close() ;}
@@ -1149,6 +1196,8 @@ public class JCRDataStorage implements DataStorage {
 		if(questionNode.hasProperty("exo:userWatching")) question.setUsersWatch(Utils.valuesToArray(questionNode.getProperty("exo:userWatching").getValues())) ;
 		if(questionNode.hasProperty("exo:topicIdDiscuss")) question.setTopicIdDiscuss(questionNode.getProperty("exo:topicIdDiscuss").getString()) ;
 		if(questionNode.hasProperty("exo:link")) question.setLink(questionNode.getProperty("exo:link").getString()) ;
+		if (questionNode.hasProperty("exo:lastActivity")) question.setLastActivity(questionNode.getProperty("exo:lastActivity").getString());
+		if (questionNode.hasProperty("exo:numberOfPublicAnswers")) question.setNumberOfPublicAnswers(questionNode.getProperty("exo:numberOfPublicAnswers").getLong());
 		String path = questionNode.getPath() ;
 		question.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
 		
@@ -3347,6 +3396,176 @@ public class JCRDataStorage implements DataStorage {
   		categoryInfo = new CategoryInfo() ;
   	}finally{ sProvider.close() ;}
   	return categoryInfo ;
+  }
+  
+  
+  private void registerQuestionNodeListener(Node questionNode) {
+    try {
+      ObservationManager observation = questionNode.getSession().getWorkspace().getObservationManager();
+      QuestionNodeListener listener = new QuestionNodeListener();
+      observation.addEventListener(listener,
+                                   Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED
+                                       | Event.PROPERTY_CHANGED,
+                                   questionNode.getPath(),
+                                   true,
+                                   null,
+                                   null,
+                                   false);
+    } catch (Exception e) {
+      log.error("can not add listener to question node", e);
+    } 
+    
+  }
+  
+  public void reCalculateInfoOfQuestion(String absPathOfProp) throws Exception {
+    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+    Item item = null;
+    Node quesNode = null;
+    Node serviceHomeNode = getFAQServiceHome(sProvider);
+    
+    // ----- get Question Node -------------
+    int quesNameIndex = absPathOfProp.lastIndexOf(Utils.QUESTION_HOME) + Utils.QUESTION_HOME.length() + 2;
+    String quesPath = absPathOfProp.substring(0, absPathOfProp.indexOf("/", quesNameIndex));
+    try {
+      quesNode = (Node) serviceHomeNode.getSession().getItem(quesPath);
+    } catch (PathNotFoundException pe) {
+      return;
+    }
+    String lastActivityInfo = null;
+    if (quesNode.hasProperty("exo:lastActivity")) 
+      lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
+    long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
+    long numberOfAnswers = 0;
+    if (quesNode.hasProperty("exo:numberOfPublicAnswers")) {
+      numberOfAnswers = quesNode.getProperty("exo:numberOfPublicAnswers").getLong();
+    }
+    // ------------- end   -----------------
+    
+    //-------------- get updated Item ----------------
+    try {
+      item = getFAQServiceHome(sProvider).getSession().getItem(absPathOfProp);
+    } catch (PathNotFoundException pnfe) {  
+      // item has been removed. Update last activity of question.
+      reUpdateLastActivityOfQuestion(quesNode);
+      reUpdateNumberOfPublicAnswers(quesNode);
+      return;
+    }
+    
+    if (item instanceof Property) {
+      Property prop = (Property) item;
+      if (prop.getName().equalsIgnoreCase("exo:activateResponses") || prop.getName().equalsIgnoreCase("exo:approveResponses")) {
+        // if activate or approve property has been changed.
+        boolean value = prop.getBoolean();
+        Node answerNode = prop.getParent();
+        boolean isActivated = false, isApproved = false;
+        if (answerNode.hasProperty("exo:activateResponses")) isActivated = answerNode.getProperty("exo:activateResponses").getBoolean();
+        if (answerNode.hasProperty("exo:approveResponses")) isApproved = answerNode.getProperty("exo:approveResponses").getBoolean();
+        long answerTime = 0;
+        if (answerNode.hasProperty("exo:dateResponse")) answerTime = answerNode.getProperty("exo:dateResponse").getDate().getTimeInMillis();
+        if (isActivated && isApproved) {
+          numberOfAnswers ++;
+          quesNode.setProperty("exo:numberOfPublicAnswers", numberOfAnswers);
+          // admin changed this answer to public ...
+          if (timeOfLastActivity < answerTime) {
+            String author = answerNode.getProperty("exo:responseBy").getString();
+            quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
+            quesNode.save() ;
+          }
+
+          return;
+        }  else {
+          // if admin change answer status from viewable to unapproved and inactivated
+          reUpdateNumberOfPublicAnswers(quesNode);
+//          reUpdateLastActivityOfQuestion(quesNode);
+          if (timeOfLastActivity == answerTime) {
+            //re-update last activity now
+            reUpdateLastActivityOfQuestion(quesNode);
+            return;
+          }
+        }
+       }
+      
+    }
+    
+    if (item instanceof Node) {
+      // case of adding new comment.
+       Node node = (Node) item;
+       if (node.getPrimaryNodeType().getName().equalsIgnoreCase("exo:comment")) {
+         long commentTime = node.getProperty("exo:dateComment").getDate().getTimeInMillis();
+         if (commentTime > timeOfLastActivity) {
+           String author = node.getProperty("exo:commentBy").getString();
+           quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(commentTime));
+           quesNode.save() ;
+         }
+       }
+    }
+  }
+  
+  private void reUpdateNumberOfPublicAnswers(Node questionNode) throws RepositoryException {
+    QueryManager qm = questionNode.getSession().getWorkspace().getQueryManager();
+    StringBuilder sb = new StringBuilder();
+    sb.append("/jcr:root").append(questionNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true']");
+    Query query =  qm.createQuery(sb.toString(), Query.XPATH);
+    QueryResult result = query.execute();
+    long size = result.getNodes().getSize();
+    size = size < 0 ? 0 : size;
+    questionNode.setProperty("exo:numberOfPublicAnswers", size);
+    questionNode.save();
+    
+  }
+  
+  private void reUpdateLastActivityOfQuestion(Node quesNode) throws RepositoryException {
+    QueryManager qm = quesNode.getSession().getWorkspace().getQueryManager();
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true'] order by @exo:dateResponse descending");
+    QueryImpl query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
+    query.setLimit(1);
+    QueryResult result = query.execute();
+    NodeIterator iter = result.getNodes();
+    
+    String author = null;
+    long lastTime = -1;
+    if (iter.hasNext()) {
+      Node node = iter.nextNode();
+      
+      if (node.hasProperty("exo:dateResponse")) {
+        lastTime = node.getProperty("exo:dateResponse").getDate().getTimeInMillis();
+      }
+      if (node.hasProperty("exo:responseBy")) {
+        author = node.getProperty("exo:responseBy").getString();
+      }
+       
+    }
+    
+//    
+    sb = new StringBuilder();
+    sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:comment) order by @exo:dateComment descending");
+    query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
+    query.setLimit(1);
+    result = query.execute();
+    iter = result.getNodes();
+    if (iter.hasNext()) {
+      Node commentNode = iter.nextNode();
+      if (commentNode.hasProperty("exo:dateComment") && commentNode.hasProperty("exo:commentBy")) {
+        long commentTime = commentNode.getProperty("exo:dateComment").getDate().getTimeInMillis();
+        if (lastTime < commentTime) {
+          lastTime = commentTime;
+          author = commentNode.getProperty("exo:commentBy").getString();
+        }
+      }
+    }
+    
+    
+    if (lastTime > 0) {
+      quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(lastTime));
+      quesNode.save() ;
+      
+    } else {
+      quesNode.setProperty("exo:lastActivity", (String) null);
+    }
+    
+    
   }
   
   private List<SubCategoryInfo> getSubCategoryInfo(Node category, List<String> categoryIdScoped) throws Exception {

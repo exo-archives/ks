@@ -662,6 +662,8 @@ public interface FAQService extends FAQServiceLegacy{
   public boolean isModerateQuestion(String id) throws Exception  ;
   
   public InputStream createAnswerRSS(String cateId) throws Exception ;
+  
+  public void reCalculateLastActivityOfQuestion(String absPathOfItem) throws Exception;
 
 }
 

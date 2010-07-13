@@ -332,6 +332,8 @@ public class MultiLanguages {
   public static void saveAnswer(Node questionNode, Answer answer, String language) throws Exception{
   	Node answerHome ;
   	Node answerNode ;
+  	
+  	
   	String defaultLang = questionNode.getProperty("exo:language").getString() ;
   	if(language != null && language.length() > 0 && !language.equals(defaultLang)) {
   		Node languageNode = getLanguageNodeByLanguage(questionNode, language);
@@ -362,21 +364,30 @@ public class MultiLanguages {
   	answerNode.setProperty("exo:fullName", answer.getFullName());
   	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
   	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
+  	
+  	Date answerDate = null;
     if(answer.isNew()){
     	java.util.Calendar calendar = null ;
     	calendar = GregorianCalendar.getInstance() ;
-    	calendar.setTime(new Date()) ;
+    	answerDate = new Date();
+    	calendar.setTime(answerDate) ;
     	answerNode.setProperty("exo:dateResponse", calendar) ;
     	answerNode.setProperty("exo:id", answer.getId());
     	answerNode.setProperty("exo:questionId", questionNode.getName()) ;
     	answerNode.setProperty("exo:responseLanguage", language) ;
     	answerNode.setProperty("exo:categoryId", questionNode.getProperty("exo:categoryId").getString() ) ;    	
+    } else {
+      if (answerNode.hasProperty("exo:dateResponse")) {
+        answerDate = answerNode.getProperty("exo:dateResponse").getDate().getTime();
+      }
     }
     answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers());
     answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers());
     if(answer.getPostId() != null && answer.getPostId().length() > 0) {
   		answerNode.setProperty("exo:postId", answer.getPostId());
   	}
+    
+    
     if(questionNode.isNew()){
     	questionNode.getSession().save();
     } else {
@@ -386,6 +397,7 @@ public class MultiLanguages {
   
   public static void saveAnswer(Node quesNode, QuestionLanguage questionLanguage) throws Exception{
   	Node quesLangNode ;
+    
   	try {
   		quesLangNode  = quesNode.getNode(Utils.LANGUAGE_HOME).getNode(questionLanguage.getId());
     } catch (Exception e) {
@@ -423,16 +435,22 @@ public class MultiLanguages {
   			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
   			answerNode.setProperty("exo:id", answer.getId());
   		}
+  		Date answerDate = null;
 	  	if(answerNode.isNew()){
 	  		java.util.Calendar calendar = null ;
 	  		calendar = null ;
 	  		calendar = GregorianCalendar.getInstance();
-	  		calendar.setTime(new Date());
+	  		answerDate = new Date();
+	  		calendar.setTime(answerDate);
 	  		answerNode.setProperty("exo:dateResponse", calendar);
 	  		//String path = answerNode.getPath() ;
 	  		//answerNode.setProperty("exo:answerPath", path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1));
 	    	answerNode.setProperty("exo:questionId", quesNode.getName() ) ;
 	    	answerNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString() ) ;
+	  	} else {
+	  	  if (answerNode.hasProperty("exo:dateResponse")) {
+	        answerDate = answerNode.getProperty("exo:dateResponse").getDate().getTime();
+	      }
 	  	}
 	  	String language = answer.getLanguage();
 	  	if(language == null || language.length() == 0) language = questionLanguage.getLanguage();
@@ -447,6 +465,7 @@ public class MultiLanguages {
 	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
 	  		answerNode.setProperty("exo:postId", answer.getPostId());
 	  	}
+      
 	  	if(answerNode.isNew()) quesNode.getSession().save();
 	  	else quesNode.save();
   	}
@@ -456,6 +475,7 @@ public class MultiLanguages {
   	String lang ;
   	Node commentHome ;
   	Node commentNode ;
+  	
   	if(language != null && language.length() > 0) {
   		Node languageNode = getLanguageNodeByLanguage(questionNode, language);
   		lang = language ;
@@ -490,13 +510,18 @@ public class MultiLanguages {
   	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
   		commentNode.setProperty("exo:postId", comment.getPostId());
   	}
+  	Date commentTime = null;
   	if(commentNode.isNew()) {
   		java.util.Calendar calendar = null ;
   		calendar = GregorianCalendar.getInstance() ;
-  		calendar.setTime(new Date()) ;
+  		commentTime = new Date();
+  		calendar.setTime(commentTime) ;
   		commentNode.setProperty("exo:dateComment", calendar) ;
   		//questionNode.getSession().save();
-  	}//else questionNode.save();
+  	} 
+  	
+  	
+  	
   	questionNode.save();
   }
   

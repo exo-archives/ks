@@ -101,6 +101,15 @@ public class Question {
   
   private String path;
   
+  /** author who make last activity of question */
+  private String authorOfLastActivity;
+  
+  /** the time when last activity appears */
+  private long timeOfLastActivity = -1;
+  
+  /** number of answers that are activated and approved */
+  private long numberOfPublicAnswers = 0;
+  
   /**
    * Class constructor specifying id of object is created.
    */
@@ -484,6 +493,47 @@ public class Question {
 	public QuestionLanguage[] getMultiLanguages() {
 		return multiLanguages;
 	}
+
+  public String getAuthorOfLastActivity() {
+    if (authorOfLastActivity == null || authorOfLastActivity.isEmpty()) {
+      return author;
+    }
+    return authorOfLastActivity;
+  }
+
+  public long getTimeOfLastActivity() {
+    if (timeOfLastActivity < 0 && createdDate != null) {
+      return createdDate.getTime();
+    }
+    return timeOfLastActivity;
+  }
+	
+  /**
+   * set information of last activity of question.
+   * @param info includes two parts separated by a dash. the first part is user name has last activity.
+   *  The second part is long value of time that appears last activity.
+   */
+	public void setLastActivity(String info) {	  
+	  authorOfLastActivity = Utils.getAuthorOfLastActivity(info);
+	  timeOfLastActivity = Utils.getTimeOfLastActivity(info);
+	}
+
+  /**
+   * @return the numberOfPublicAnswers
+   */
+  public long getNumberOfPublicAnswers() {
+    return numberOfPublicAnswers;
+  }
+
+  /**
+   * @param numberOfPublicAnswers the numberOfPublicAnswers to set
+   */
+  public void setNumberOfPublicAnswers(long numberOfPublicAnswers) {
+    this.numberOfPublicAnswers = numberOfPublicAnswers;
+  }
+	
+	
+	
 }
 
 
