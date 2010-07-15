@@ -38,39 +38,13 @@ public class PollServiceImpl implements Startable, PollService {
   }
 
   public void start() {
-  	try {
-			autodata();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+  	
   }
 
 	public void stop() {
 		
 	}
 
-	private void autodata() throws Exception {
-		String portalName = "ksdemo";
-		try {
-			portalName = ExoContainerContext.getCurrentContainer().getContext().getName() ;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Poll poll = new Poll();
-		poll.setId("Poll8d83228a7f000101009a0a9f03743278");
-		poll.setCreatedDate(new Date());
-		poll.setIsAgainVote(false);
-		poll.setIsClosed(false);
-		poll.setIsMultiCheck(false);
-		poll.setModifiedBy("root");
-		poll.setOwner("root");
-		poll.setVote(new String[]{"0","0","0"});
-		poll.setParentPath(portalName + "/Polls");
-		poll.setQuestion("Muon roi, muon roi phai khong em ?");
-		poll.setOption(new String[]{"Anh noi se dua em di xuat cuoc doi", "Ma sao ko dua duoc doan duong em di", "Anh noi se om em khi gio dong ve"});
-		storage_.savePoll(poll, true, false);
-	}
-	
 	public Poll getPoll(String pollId) throws Exception {
 		return storage_.getPoll(pollId);
 	}

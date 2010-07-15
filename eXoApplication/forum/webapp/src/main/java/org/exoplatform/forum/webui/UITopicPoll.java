@@ -23,14 +23,17 @@ import java.util.List;
 import javax.portlet.ActionResponse;
 import javax.xml.namespace.QName;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.ForumParameter;
 import org.exoplatform.forum.info.UIForumPollPortlet;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumServiceUtils;
-import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.UserProfile;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.popup.UIPollForm;
+import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollService;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
@@ -70,8 +73,10 @@ public class UITopicPoll extends BaseForumForm	{
 	private boolean userIsBanned = false;
 	private Forum forum ;
 	private UserProfile userProfile;
+	private PollService pollService ;
 	
 	public UITopicPoll() throws Exception {
+		pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
 	}
 
 	@SuppressWarnings("unused")
@@ -104,6 +109,7 @@ public class UITopicPoll extends BaseForumForm	{
 		this.forumId = forumId; 
 		this.topicId = topicId;
 		this.isEditPoll = true ;
+		this.isAgainVote = false;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -137,8 +143,9 @@ public class UITopicPoll extends BaseForumForm	{
 		if(!ForumUtils.isEmpty(categoryId)) {
 			if(userProfile.getUserRole() == 0 || ForumServiceUtils.hasPermission(this.forum.getModerators(), userProfile.getUserId())) this.canViewEditMenu = true ;
 			else this.canViewEditMenu = false ;
+			String pollId = forum.getPath()+"/"+topicId+"/"+topicId.replace(Utils.TOPIC, Utils.POLL);
 			try {
-				poll_ = getForumService().getPoll(categoryId, forumId, topicId) ; 
+				poll_ = pollService.getPoll(pollId) ; 
       } catch (Exception e) {
       }
 			this.init() ;
@@ -340,18 +347,23 @@ public class UITopicPoll extends BaseForumForm	{
 						setUserVote[i] = userVote ;
 					} else {
 						setUserVote = poll.getUserVote() ;
-						for( i = 0 ; i < setUserVote.length ; i ++) {
-							if(setUserVote[i].split(":")[0].equals(userVote)) {
-								pos = i ;
-								break ;
+						int l = setUserVote.length;
+						if(l == 0){
+							setUserVote = new String[]{userVote};
+						} else {
+							for( i = 0 ; i < l ; i ++) {
+								if(setUserVote[i].split(":")[0].equals(userVote)) {
+									pos = i ;
+									break ;
+								}
 							}
-						}
-						String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":") ;
-						setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":")) ;
-						for(String posVoted : posHaveVoted) {
-							if(!ForumUtils.isEmpty(posVoted)) {
-								doubleVote[Integer.parseInt(posVoted)] -= 1 ;
-								totalVote -= 1 ;
+							String[] posHaveVoted = (setUserVote[pos].substring(setUserVote[pos].indexOf(":"))).split(":") ;
+							setUserVote[pos] = setUserVote[pos].substring(0, setUserVote[pos].indexOf(":")) ;
+							for(String posVoted : posHaveVoted) {
+								if(!ForumUtils.isEmpty(posVoted)) {
+									doubleVote[Integer.parseInt(posVoted)] -= 1 ;
+									totalVote -= 1 ;
+								}
 							}
 						}
 					}
@@ -379,7 +391,7 @@ public class UITopicPoll extends BaseForumForm	{
 					topicPoll.warning("UITopicPoll.msg.notCheck") ;
 				}
 			}
-			topicPoll.getForumService().savePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, poll, false, true) ;
+			topicPoll.pollService.savePoll(poll, false, true) ;
 			topicPoll.isAgainVote = false ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(topicPoll.getParent()) ;
 		}
@@ -409,7 +421,7 @@ public class UITopicPoll extends BaseForumForm	{
 		public void execute(Event<UITopicPoll> event) throws Exception {
 			UITopicPoll topicPoll = event.getSource() ;
 			try {
-				topicPoll.getForumService().removePoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId) ;
+				topicPoll.pollService.removePoll(topicPoll.poll_.getParentPath()+"/"+topicPoll.poll_.getId()) ;
       } catch (Exception e) {
       }
 			if(topicPoll.poll_.getIsMultiCheck()) {
@@ -456,7 +468,7 @@ public class UITopicPoll extends BaseForumForm	{
 				topicPoll.poll_.setIsClosed(!topicPoll.poll_.getIsClosed()) ;
 			}
 			try {
-				topicPoll.getForumService().setClosedPoll(topicPoll.categoryId, topicPoll.forumId, topicPoll.topicId, topicPoll.poll_) ;
+				topicPoll.pollService.setClosedPoll(topicPoll.poll_) ;
       } catch (Exception e) {
       }
 			topicPoll.isAgainVote = false ;

@@ -1,7 +1,6 @@
 <%	
-	import org.exoplatform.forum.webui.UITopicPoll ;
-	import org.exoplatform.forum.service.Poll ;
 	import org.exoplatform.ks.common.UserHelper; 
+	import org.exoplatform.poll.service.Poll ;
 	import org.exoplatform.forum.ForumUtils ;
 	import org.exoplatform.forum.service.UserProfile 
 	import java.util.GregorianCalendar;

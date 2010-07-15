@@ -27,6 +27,7 @@ import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollService;
 import org.exoplatform.poll.webui.popup.UIPollForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
@@ -66,14 +67,23 @@ public class UIPoll extends BasePollForm	{
 	
 	public UIPoll() throws Exception {
 		userId = UserHelper.getCurrentUser() ;
-		try {
-			PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-	    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-	    this.pollId = portletPref.getValue("pollIdShow", "");
-			this.isEditPoll = true ;
-		} catch (Exception e) {}
 	}
 
+	public void setPollId() throws Exception {
+		if(Utils.isEmpty(pollId)) {
+				PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
+		    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
+		    pollId = portletPref.getValue("pollIdShow", "");
+		    if(Utils.isEmpty(pollId)) {
+		    	List<String> list = getPollService().getListPollId();
+		    	if(!list.isEmpty()){
+		    		pollId = list.get(0);
+		    	}
+		    }
+				this.isEditPoll = true ;
+		}
+	}
+	
 	public void updateFormPoll(Poll poll) throws Exception {
 		poll_ = poll;
 		this.isEditPoll = false ;
@@ -112,6 +122,7 @@ public class UIPoll extends BasePollForm	{
 	}
 	
 	private Poll getPoll() throws Exception {
+		setPollId();
 		if(isEditPoll && pollId != null && pollId.length() > 0) {
 			poll_ = getPollService().getPoll(pollId) ; 
 		}

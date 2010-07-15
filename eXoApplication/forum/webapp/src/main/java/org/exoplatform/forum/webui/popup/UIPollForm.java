@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.forum.ForumTransformHTML;
 import org.exoplatform.forum.ForumUtils;
 import org.exoplatform.forum.info.UIForumPollPortlet;
-import org.exoplatform.forum.service.Poll;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.forum.webui.BaseForumForm;
 import org.exoplatform.forum.webui.UIForumPortlet;
 import org.exoplatform.forum.webui.UITopicDetail;
@@ -31,6 +32,10 @@ import org.exoplatform.forum.webui.UITopicDetailContainer;
 import org.exoplatform.forum.webui.UITopicPoll;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
+import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollService;
+//import org.exoplatform.poll.service.Poll;
+//import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -41,6 +46,8 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
+
+import sun.nio.ch.PollSelectorProvider;
 
 /**
  * Created by The eXo Platform SARL
@@ -256,27 +263,26 @@ public class UIPollForm extends BaseForumForm implements UIPopupComponent {
 						vote[j] = "0";
 					}
 				}
-				Poll poll = new Poll() ;
-				poll.setOwner(userName) ;
-				poll.setQuestion(question) ;
-				poll.setCreatedDate(new Date());
-				poll.setModifiedBy(userName) ;
-				poll.setModifiedDate(new Date()) ;
-				poll.setIsAgainVote(isAgainVote) ;
-				poll.setIsMultiCheck(isMultiVote) ;
-				poll.setOption(options) ;
-				poll.setVote(vote) ;
-				poll.setTimeOut(timeOut) ;
-				poll.setUserVote(new String[] {}) ;
-				poll.setIsClosed(uiForm.poll.getIsClosed());
+				uiForm.poll.setOwner(userName) ;
+				uiForm.poll.setQuestion(question) ;
+				uiForm.poll.setModifiedBy(userName) ;
+				uiForm.poll.setIsAgainVote(isAgainVote) ;
+				uiForm.poll.setIsMultiCheck(isMultiVote) ;
+				uiForm.poll.setOption(options) ;
+				uiForm.poll.setVote(vote) ;
+				uiForm.poll.setTimeOut(timeOut) ;
+				uiForm.poll.setUserVote(new String[] {}) ;
+				uiForm.poll.setIsClosed(uiForm.poll.getIsClosed());
 				String[] id = uiForm.TopicPath.trim().split("/") ;
 				try {
+					PollService pollSv = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class);
 					if(uiForm.isUpdate) {
-						poll.setId(uiForm.getId()) ;
-						if(newUser.length > 0) poll.setUserVote(newUser) ;
-						uiForm.getForumService().savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, false, false) ;
+						if(newUser.length > 0)uiForm.poll.setUserVote(newUser) ;
+						pollSv.savePoll(uiForm.poll, false, false);
 					} else {
-						uiForm.getForumService().savePoll(id[id.length - 3], id[id.length - 2], id[id.length - 1], poll, true, false) ;
+						uiForm.poll.setId(id[id.length - 1].replace(Utils.TOPIC, Utils.POLL));
+						uiForm.poll.setParentPath(uiForm.TopicPath.trim());
+						pollSv.savePoll(uiForm.poll, true, false);
 					}
 				} catch (Exception e) {}
 				uiForm.isUpdate = false ;

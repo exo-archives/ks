@@ -46,7 +46,6 @@ import org.exoplatform.forum.service.ForumStatisticsService;
 import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
-import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.Tag;
@@ -562,32 +561,32 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   /**
    * {@inheritDoc}
-   */
+   *//*
   public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
     return storage.getPoll(categoryId, forumId, topicId) ;
   }
 
-  /**
+  *//**
    * {@inheritDoc}
-   */  
+   *//*  
   public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception {
     return storage.removePoll(categoryId, forumId, topicId);
   }
 
-  /**
+  *//**
    * {@inheritDoc}
-   */
+   *//*
   public void savePoll(String categoryId, String forumId, String topicId, Poll poll, boolean isNew, boolean isVote) throws Exception {
     storage.savePoll(categoryId, forumId, topicId, poll, isNew, isVote) ;
   }
   
-  /**
+  *//**
    * {@inheritDoc}
-   */
+   *//*
   public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception {
     storage.setClosedPoll(categoryId, forumId, topicId, poll) ;
   }
-  
+  */
   /**
    * {@inheritDoc}
    */

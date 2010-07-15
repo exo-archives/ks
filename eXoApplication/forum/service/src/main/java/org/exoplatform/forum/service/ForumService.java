@@ -435,9 +435,9 @@ public interface ForumService extends ForumServiceLegacy {
    * @return the poll
    * @throws Exception the exception
    */
-  Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
+ /* Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
 
-  /**
+  *//**
    * Save poll.
    * 
    * @param sProvider is the SessionProvider
@@ -448,7 +448,7 @@ public interface ForumService extends ForumServiceLegacy {
    * @param isNew is the new
    * @param isVote is the vote
    * @throws Exception the exception
-   */
+   *//*
   void savePoll(String categoryId,
                 String forumId,
                 String topicId,
@@ -456,7 +456,7 @@ public interface ForumService extends ForumServiceLegacy {
                 boolean isNew,
                 boolean isVote) throws Exception;
 
-  /**
+  *//**
    * Removes the poll.
    * 
    * @param sProvider is the SessionProvider
@@ -465,10 +465,10 @@ public interface ForumService extends ForumServiceLegacy {
    * @param topicId the topic id
    * @return the poll
    * @throws Exception the exception
-   */
+   *//*
   Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
 
-  /**
+  *//**
    * Sets the closed poll.
    * 
    * @param sProvider is the SessionProvider
@@ -477,8 +477,8 @@ public interface ForumService extends ForumServiceLegacy {
    * @param topicId the topic id
    * @param poll the poll
    * @throws Exception the exception
-   */
-  void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;
+   *//*
+  void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;*/
 
   /**
    * Gets the object name by path.

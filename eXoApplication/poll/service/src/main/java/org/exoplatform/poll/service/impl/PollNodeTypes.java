@@ -60,8 +60,9 @@ public interface PollNodeTypes {
   
   public static final String JCR_ROOT                       = "/jcr:root";
 
+  public static final String EXO_IS_POLL                    = "exo:isPoll";
   public static final String NT_UNSTRUCTURED                = "nt:unstructured";
-  public static final String POLL 													= "Poll".intern() ;
+  public static final String POLL 													= "poll".intern() ;
   public static final String APPLICATION_DATA 							= "ApplicationData".intern() ;
   public static final String EXO_POLLS 											= "eXoPolls".intern() ;
   public static final String POLLS 													= "Polls".intern() ;

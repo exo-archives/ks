@@ -16,14 +16,9 @@
  ***************************************************************************/
 package org.exoplatform.poll.webui;
 
-import java.util.List;
-
 import javax.portlet.PortletMode;
-import javax.portlet.PortletPreferences;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.webui.UIPopupAction;
-import org.exoplatform.poll.service.PollService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -53,25 +48,16 @@ public class UIPollPortlet extends UIPortletApplication {
   }
   
 	public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
-		 PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
-		 if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
-			 getChild(UIPoll.class).setRendered(true);
-			 getChild(UIPollManagement.class).setRendered(false);
-		 }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
-			 getChild(UIPoll.class).setRendered(false);
-			 UIPollManagement management = getChild(UIPollManagement.class).setRendered(true);
-			 management.updateGrid();
-		 }
-		 try {
-			 setDefaultPollId();
-		 } catch (Exception e) {}
+		PortletRequestContext portletReqContext = (PortletRequestContext) context;
+		if (portletReqContext.getApplicationMode() == PortletMode.VIEW) {
+			getChild(UIPoll.class).setRendered(true);
+			getChild(UIPollManagement.class).setRendered(false);
+		} else if (portletReqContext.getApplicationMode() == PortletMode.EDIT) {
+			getChild(UIPoll.class).setRendered(false);
+			((UIPollManagement) getChild(UIPollManagement.class).setRendered(true)).updateGrid();
+		}
     super.processRender(app, context) ;
   }  
-  
-  public void setRenderedChild(boolean isRenderedPoll) {
-		getChild(UIPoll.class).setRendered(isRenderedPoll);
-		getChild(UIPollManagement.class).setRendered(isRenderedPoll);
-	}
   
   public void renderPopupMessages() throws Exception {
 		UIPopupMessages popupMess = getUIPopupMessages();
@@ -87,29 +73,5 @@ public class UIPollPortlet extends UIPortletApplication {
 		context.addUIComponentToUpdateByAjax(popupAction) ;
 	}
 
-	
-	private void setDefaultPollId() throws Exception {
-		PortletRequestContext pcontext = (PortletRequestContext)WebuiRequestContext.getCurrentInstance() ;
-    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
-    String pollId = portletPref.getValue("pollIdShow", "");
-    if(pollId == null || pollId.length() <= 0) {
-    	PollService pollService = (PollService)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(PollService.class) ;
-    	List<String> list = pollService.getListPollId();
-    	if(!list.isEmpty()){
-    		portletPref.setValue("pollIdShow", list.get(0));
-    		portletPref.store();
-    	}
-    }
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 } 

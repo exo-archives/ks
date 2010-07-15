@@ -340,10 +340,6 @@ public class FakeForumService implements ForumService {
     return null;
   }
 
-  public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
-
-    return null;
-  }
 
   public Post getPost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 
@@ -559,10 +555,6 @@ public class FakeForumService implements ForumService {
   public void removeMember(User user) throws Exception {
   }
 
-  public Poll removePoll(String categoryId, String forumId, String topicId) throws Exception {
-
-    return null;
-  }
 
   public Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception {
 
@@ -621,14 +613,6 @@ public class FakeForumService implements ForumService {
   public void saveModerateOfForums(List<String> forumPaths, String userName, boolean isDelete) throws Exception {
   }
 
-  public void savePoll(String categoryId,
-                       String forumId,
-                       String topicId,
-                       Poll poll,
-                       boolean isNew,
-                       boolean isVote) throws Exception {
-  }
-
   public void savePost(String categoryId,
                        String forumId,
                        String topicId,
@@ -678,9 +662,6 @@ public class FakeForumService implements ForumService {
   public JCRPageList searchUserProfile(String userSearch) throws Exception {
 
     return null;
-  }
-
-  public void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception {
   }
 
   public void setDefaultAvatar(String userName) throws Exception {

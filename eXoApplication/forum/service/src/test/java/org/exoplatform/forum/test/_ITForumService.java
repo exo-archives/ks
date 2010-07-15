@@ -19,13 +19,10 @@ import org.apache.commons.io.FileUtils;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
-import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumPrivateMessage;
-import org.exoplatform.forum.service.ForumSearch;
 import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.ForumStatistic;
 import org.exoplatform.forum.service.JCRPageList;
-import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Tag;
 import org.exoplatform.forum.service.Topic;
@@ -449,7 +446,7 @@ public class _ITForumService extends ForumServiceTestCase{
   	//
   }
   
-  public void testPoll() throws Exception{
+  /*public void testPoll() throws Exception{
 		//set Data
 		setData();
   	Poll poll = createPoll("question to this poll1", new String[]{"option 1", "option 2", "option 3"});
@@ -468,7 +465,7 @@ public class _ITForumService extends ForumServiceTestCase{
   	forumService_.removePoll(categoryId, forumId, topicId);
   	assertNull(forumService_.getPoll(categoryId, forumId, topicId));
   }
-  
+  */
   public void testGetObject() throws Exception {
   	//  set Data
 		setData();
@@ -711,7 +708,7 @@ public class _ITForumService extends ForumServiceTestCase{
     return cat ;
   }
   
-  private Poll createPoll(String question, String[] options){
+/*  private Poll createPoll(String question, String[] options){
   	Poll poll = new Poll();
   	poll.setCreatedDate(new Date());
   	poll.setIsAgainVote(true);
@@ -726,7 +723,7 @@ public class _ITForumService extends ForumServiceTestCase{
   	poll.setVote(new String[]{});
   	
   	return poll;
-  }
+  }*/
   
   private Tag createTag(String name){
   	Tag tag = new Tag();

@@ -95,26 +95,35 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 	public Poll getPoll(String pollId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		try {
-			Node appNode = getParentNode(sProvider, pollId);
-			pollId = (pollId.indexOf("/") > 0)?pollId.substring(pollId.lastIndexOf("/")+1):pollId ;
+			String parentId = "";
+			if(pollId.lastIndexOf("/") > 0) {
+				parentId = pollId.substring(0, pollId.lastIndexOf("/")+1);
+				pollId = pollId.substring(pollId.lastIndexOf("/")+1);
+			}
+			Node appNode = getParentNode(sProvider, parentId);
 			Node pollNode = appNode.getNode(pollId);
 			return getPollNode(pollNode);	
 		} catch (Exception e) {
-			QueryManager qm = getSession(sProvider).getWorkspace().getQueryManager();
-			StringBuffer queryString = new StringBuffer(JCR_ROOT);
-			queryString.append("//element(*,").append(EXO_POLL).append(")")
-				.append("[fn:name() = '").append(pollId).append("']");
-			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-			QueryResult result = query.execute();
-			NodeIterator iter = result.getNodes();
-			if(iter.getSize() > 0) return getPollNode(iter.nextNode());
+			return getPollNode(getNodeById(sProvider, pollId));	
 		} finally {
 			sProvider.close();
 		}
-		return null;
 	}
 
+	private Node getNodeById(SessionProvider sProvider, String pollId) throws Exception {
+		QueryManager qm = getSession(sProvider).getWorkspace().getQueryManager();
+		StringBuffer queryString = new StringBuffer(JCR_ROOT);
+		queryString.append("//element(*,").append(EXO_POLL).append(")")
+		.append("[fn:name() = '").append(pollId).append("']");
+		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		if(iter.getSize() > 0) return iter.nextNode();
+		return null;
+	}
+	
 	private Poll getPollNode(Node pollNode) throws Exception {
+		if(pollNode == null) return null;
 		Poll pollNew = new Poll();
 		pollNew.setId(pollNode.getName());
 		pollNew.setParentPath(pollNode.getParent().getPath());
@@ -199,12 +208,20 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
 		Poll poll = null;
 		try {
-			Node appNode = getParentNode(sProvider, pollId);
-			Node pollNode = appNode.getNode((pollId.indexOf("/") > 0)?pollId.substring(pollId.lastIndexOf("/")+1):pollId);
+			Node pollNode = null;
+			if((pollId.lastIndexOf("/") > 0)) {
+				pollNode = getNodeByPath(pollId, sProvider);
+			} else {
+				pollNode = getNodeById(sProvider, pollId);
+			}
 			poll = getPollNode(pollNode);
+			Node parentNode = pollNode.getParent();
 			pollNode.remove();
-			if(appNode.isNew()) appNode.getSession().save();
-			else appNode.save();
+			if(parentNode.hasProperty(EXO_IS_POLL)) {
+				parentNode.setProperty(EXO_IS_POLL, false);
+			}
+			if(parentNode.isNew()) parentNode.getSession().save();
+			else parentNode.save();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -242,7 +259,10 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				pollNode = parentNode.getNode(pollId);
 				pollNode.setProperty(EXO_VOTE, poll.getVote());
 				pollNode.setProperty(EXO_USER_VOTE, poll.getUserVote());
-				pollNode.setProperty(EXO_LASTVOTE, getGreenwichMeanTime());
+				try {
+					pollNode.setProperty(EXO_LASTVOTE, getGreenwichMeanTime());// new property 2.0 to 2.1
+				} catch (RepositoryException e) {
+				}
 			} else {
 				if (isNew) {
 					if(parentNode.hasNode(pollId)) return;
@@ -252,6 +272,9 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 					pollNode.setProperty(EXO_USER_VOTE, new String[] {});
 					pollNode.setProperty(EXO_CREATED_DATE, getGreenwichMeanTime());
 					pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+					if(parentNode.hasProperty(EXO_IS_POLL)){
+						parentNode.setProperty(EXO_IS_POLL, true);
+					}
 				} else {
 					pollNode = parentNode.getNode(pollId);
 				}
@@ -290,6 +313,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
 				pollNode.setProperty(EXO_TIME_OUT, 0);
 			}
+			appNode.save();
 		} catch (Exception e) {
 		} finally {
 			sProvider.close();

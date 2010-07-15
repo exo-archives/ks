@@ -18,6 +18,12 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
+      <artifactId>exo.ks.eXoApplication.poll.service</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.component.rendering</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

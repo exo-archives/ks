@@ -278,7 +278,6 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 				pollPortlet.cancelAction() ;
 //				pollPortlet.getChild(UIPoll.class).updateFormPoll(poll) ;
 				pollPortlet.getChild(UIPollManagement.class).updateGrid() ;
-				pollPortlet.setRenderedChild(true);
       	event.getRequestContext().addUIComponentToUpdateByAjax(pollPortlet);
 			}
 			if(!Utils.isEmpty(sms)) {

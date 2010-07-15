@@ -84,7 +84,6 @@ import org.exoplatform.forum.service.ForumSubscription;
 import org.exoplatform.forum.service.JCRForumAttachment;
 import org.exoplatform.forum.service.JCRPageList;
 import org.exoplatform.forum.service.LazyPageList;
-import org.exoplatform.forum.service.Poll;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.PruneSetting;
 import org.exoplatform.forum.service.SortSettings;
@@ -3972,7 +3971,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		} finally { sProvider.close() ;}
 	}
 	
-	public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
+	/*public Poll getPoll(String categoryId, String forumId, String topicId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node CategoryNode = getCategoryHome(sProvider).getNode(categoryId);
@@ -4108,7 +4107,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 		} catch (Exception e) {
 			log.error(e);
 		} finally { sProvider.close() ;}
-	}
+	}*/
 
 	public void addTag(List<Tag> tags, String userName, String topicPath) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;

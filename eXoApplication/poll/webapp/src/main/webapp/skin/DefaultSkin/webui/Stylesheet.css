@@ -15,8 +15,12 @@ body, html, div, table, tr, td, img, form {
 	padding: 10px;
 }
 
+.UIPollPortlet .UIPollManagement .Label {
+	padding: 15px 0px 0px 10px;
+}
+
 .UIPollPortlet .UIPollManagement .SelectBoxInput {
-	padding: 15px;
+	padding: 5px 15px;
 }
 
 .UIPollPortlet .UIPollManagement .selectbox {

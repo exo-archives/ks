@@ -22,7 +22,7 @@
 		</propertyDefinitions>
 	</nodeType>
 		
-	<nodeType name="exo:poll" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
+	<!--<nodeType name="exo:poll" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 		<supertypes>
 			<supertype>nt:base</supertype>
 		</supertypes>
@@ -70,8 +70,8 @@
 				<valueConstraints/>
 			</propertyDefinition>
 		</propertyDefinitions>
-				</nodeType> 
-
+	</nodeType>-->
+	
 	<nodeType name="exo:forumAttachment" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
 			<supertypes>
 				<supertype>nt:file</supertype>

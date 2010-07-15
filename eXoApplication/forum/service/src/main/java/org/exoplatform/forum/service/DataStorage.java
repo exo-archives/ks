@@ -195,7 +195,7 @@ public interface DataStorage {
 
   Post removePost(String categoryId, String forumId, String topicId, String postId) throws Exception;
 
-  Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
+/*  Poll getPoll(String categoryId, String forumId, String topicId) throws Exception;
 
   Poll removePoll(String categoryId, String forumId, String topicId) throws Exception;
 
@@ -207,7 +207,7 @@ public interface DataStorage {
                 boolean isVote) throws Exception;
 
   void setClosedPoll(String categoryId, String forumId, String topicId, Poll poll) throws Exception;
-
+*/
   void addTag(List<Tag> tags, String userName, String topicPath) throws Exception;
 
   void unTag(String tagId, String userName, String topicPath) throws Exception;
