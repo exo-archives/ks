@@ -232,7 +232,7 @@
 							<div class="NormalQuest ClearFix">
 								<div class="LeftCon ClearFix">
 									<a class="BoxNum">
-										<p><%= question.getMarkVote(); %></p>
+										<p><%= uicomponent.getVoteScore(question); %></p>
 										<h4><%= _ctx.appRes("UIQuestions.label.score"); %></h4>
 									</a>
 									<a class="BoxNum">

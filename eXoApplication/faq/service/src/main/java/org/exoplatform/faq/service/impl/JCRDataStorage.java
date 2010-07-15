@@ -3418,86 +3418,96 @@ public class JCRDataStorage implements DataStorage {
   }
   
   public void reCalculateInfoOfQuestion(String absPathOfProp) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    Item item = null;
-    Node quesNode = null;
-    Node serviceHomeNode = getFAQServiceHome(sProvider);
-    
-    // ----- get Question Node -------------
-    int quesNameIndex = absPathOfProp.lastIndexOf(Utils.QUESTION_HOME) + Utils.QUESTION_HOME.length() + 2;
-    String quesPath = absPathOfProp.substring(0, absPathOfProp.indexOf("/", quesNameIndex));
+    SessionProvider sProvider = SessionProvider.createSystemProvider();
     try {
-      quesNode = (Node) serviceHomeNode.getSession().getItem(quesPath);
-    } catch (PathNotFoundException pe) {
-      return;
-    }
-    String lastActivityInfo = null;
-    if (quesNode.hasProperty("exo:lastActivity")) 
-      lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
-    long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
-    long numberOfAnswers = 0;
-    if (quesNode.hasProperty("exo:numberOfPublicAnswers")) {
-      numberOfAnswers = quesNode.getProperty("exo:numberOfPublicAnswers").getLong();
-    }
-    // ------------- end   -----------------
-    
-    //-------------- get updated Item ----------------
-    try {
-      item = getFAQServiceHome(sProvider).getSession().getItem(absPathOfProp);
-    } catch (PathNotFoundException pnfe) {  
-      // item has been removed. Update last activity of question.
-      reUpdateLastActivityOfQuestion(quesNode);
-      reUpdateNumberOfPublicAnswers(quesNode);
-      return;
-    }
-    
-    if (item instanceof Property) {
-      Property prop = (Property) item;
-      if (prop.getName().equalsIgnoreCase("exo:activateResponses") || prop.getName().equalsIgnoreCase("exo:approveResponses")) {
-        // if activate or approve property has been changed.
-        boolean value = prop.getBoolean();
-        Node answerNode = prop.getParent();
-        boolean isActivated = false, isApproved = false;
-        if (answerNode.hasProperty("exo:activateResponses")) isActivated = answerNode.getProperty("exo:activateResponses").getBoolean();
-        if (answerNode.hasProperty("exo:approveResponses")) isApproved = answerNode.getProperty("exo:approveResponses").getBoolean();
-        long answerTime = 0;
-        if (answerNode.hasProperty("exo:dateResponse")) answerTime = answerNode.getProperty("exo:dateResponse").getDate().getTimeInMillis();
-        if (isActivated && isApproved) {
-          numberOfAnswers ++;
-          quesNode.setProperty("exo:numberOfPublicAnswers", numberOfAnswers);
-          // admin changed this answer to public ...
-          if (timeOfLastActivity < answerTime) {
-            String author = answerNode.getProperty("exo:responseBy").getString();
-            quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
-            quesNode.save() ;
-          }
+      Item item = null;
+      Node quesNode = null;
+      Node serviceHomeNode = getFAQServiceHome(sProvider);
 
-          return;
-        }  else {
-          // if admin change answer status from viewable to unapproved and inactivated
-          reUpdateNumberOfPublicAnswers(quesNode);
-//          reUpdateLastActivityOfQuestion(quesNode);
-          if (timeOfLastActivity == answerTime) {
-            //re-update last activity now
-            reUpdateLastActivityOfQuestion(quesNode);
+      // ----- get Question Node -------------
+      int quesNameIndex = absPathOfProp.lastIndexOf(Utils.QUESTION_HOME)
+          + Utils.QUESTION_HOME.length() + 2;
+      String quesPath = absPathOfProp.substring(0, absPathOfProp.indexOf("/", quesNameIndex));
+      try {
+        quesNode = (Node) serviceHomeNode.getSession().getItem(quesPath);
+      } catch (PathNotFoundException pe) {
+        return;
+      }
+      String lastActivityInfo = null;
+      if (quesNode.hasProperty("exo:lastActivity"))
+        lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
+      long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
+      long numberOfAnswers = 0;
+      if (quesNode.hasProperty("exo:numberOfPublicAnswers")) {
+        numberOfAnswers = quesNode.getProperty("exo:numberOfPublicAnswers").getLong();
+      }
+      // ------------- end -----------------
+
+      // -------------- get updated Item ----------------
+      try {
+        item = getFAQServiceHome(sProvider).getSession().getItem(absPathOfProp);
+      } catch (PathNotFoundException pnfe) {
+        // item has been removed. Update last activity of question.
+        reUpdateLastActivityOfQuestion(quesNode);
+        reUpdateNumberOfPublicAnswers(quesNode);
+        return;
+      }
+
+      if (item instanceof Property) {
+        Property prop = (Property) item;
+        if (prop.getName().equalsIgnoreCase("exo:activateResponses")
+            || prop.getName().equalsIgnoreCase("exo:approveResponses")) {
+          // if activate or approve property has been changed.
+          boolean value = prop.getBoolean();
+          Node answerNode = prop.getParent();
+          boolean isActivated = false, isApproved = false;
+          if (answerNode.hasProperty("exo:activateResponses"))
+            isActivated = answerNode.getProperty("exo:activateResponses").getBoolean();
+          if (answerNode.hasProperty("exo:approveResponses"))
+            isApproved = answerNode.getProperty("exo:approveResponses").getBoolean();
+          long answerTime = 0;
+          if (answerNode.hasProperty("exo:dateResponse"))
+            answerTime = answerNode.getProperty("exo:dateResponse").getDate().getTimeInMillis();
+          if (isActivated && isApproved) {
+            numberOfAnswers++;
+            quesNode.setProperty("exo:numberOfPublicAnswers", numberOfAnswers);
+            // admin changed this answer to public ...
+            if (timeOfLastActivity < answerTime) {
+              String author = answerNode.getProperty("exo:responseBy").getString();
+              quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
+            }
+            quesNode.save();
+
             return;
+          } else {
+            // if admin change answer status from viewable to unapproved and
+            // inactivated
+            reUpdateNumberOfPublicAnswers(quesNode);
+            // reUpdateLastActivityOfQuestion(quesNode);
+            if (timeOfLastActivity == answerTime) {
+              // re-update last activity now
+              reUpdateLastActivityOfQuestion(quesNode);
+              return;
+            }
           }
         }
-       }
-      
-    }
-    
-    if (item instanceof Node) {
-      // case of adding new comment.
-       Node node = (Node) item;
-       if (node.getPrimaryNodeType().getName().equalsIgnoreCase("exo:comment")) {
-         long commentTime = node.getProperty("exo:dateComment").getDate().getTimeInMillis();
-         if (commentTime > timeOfLastActivity) {
-           String author = node.getProperty("exo:commentBy").getString();
-           quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(commentTime));
-           quesNode.save() ;
-         }
-       }
+
+      }
+
+      if (item instanceof Node) {
+        // case of adding new comment.
+        Node node = (Node) item;
+        if (node.getPrimaryNodeType().getName().equalsIgnoreCase("exo:comment")) {
+          long commentTime = node.getProperty("exo:dateComment").getDate().getTimeInMillis();
+          if (commentTime > timeOfLastActivity) {
+            String author = node.getProperty("exo:commentBy").getString();
+            quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(commentTime));
+            quesNode.save();
+          }
+        }
+      }
+    } finally {
+      sProvider.close();
     }
   }
   

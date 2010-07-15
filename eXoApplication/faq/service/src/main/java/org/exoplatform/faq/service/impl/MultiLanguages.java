@@ -652,14 +652,18 @@ public class MultiLanguages {
   		if(user.indexOf(userName + "/") == 0){
   			int number = Integer.parseInt(user.substring(user.indexOf("/") + 1)) ;
   			mark = questionNode.getProperty("exo:markVote").getDouble() ;
-  			mark = (mark * userList.size()) - number ;  			
+  			if (userList.size() > 1) {
+  			  mark = ((mark * userList.size()) - number) / (userList.size() - 1);
+  			} else {
+  			  mark = 0;
+  			}
   		}else{
   			newList.add(user) ;
   		}  		
   	}
   	//System.out.println("size ==>" + newList.size());
   	questionNode.setProperty("exo:markVote", mark) ;
-		questionNode.setProperty("exo:usersVote", newList.toArray(new String[]{})) ;
+		questionNode.setProperty("exo:usersVote", newList.toArray(new String[newList.size()])) ;
 		questionNode.save() ;		
   }
 }

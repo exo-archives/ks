@@ -16,6 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.faq.webui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -330,6 +331,13 @@ public class UIQuestions extends UIContainer {
 	private void setIsModerators() throws Exception{
 		if(faqSetting_.isAdmin() || faqService_.isCategoryModerator(categoryId_, currentUser_)) canEditQuestion = true ;
 		else canEditQuestion = false ;
+	}
+	
+	public String getVoteScore(Question question) {
+	  double vote = question.getMarkVote();
+	  vote = vote < 0 ? 0 : vote;
+	  DecimalFormat df = new DecimalFormat("0.00");
+	  return df.format(vote);
 	}
 	
 	//should be check canVote in Question object 
