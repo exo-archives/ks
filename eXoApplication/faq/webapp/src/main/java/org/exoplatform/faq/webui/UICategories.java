@@ -61,7 +61,6 @@ import org.exoplatform.webui.event.EventListener;
 		events = {
 				@EventConfig(listeners = UICategories.AddCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.AddNewQuestionActionListener.class),
-				@EventConfig(listeners = UICategories.OpenCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.EditSubCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.EditCategoryActionListener.class),
 				@EventConfig(listeners = UICategories.DeleteCategoryActionListener.class, confirm= "UIQuestions.msg.confirm-delete-category"),
