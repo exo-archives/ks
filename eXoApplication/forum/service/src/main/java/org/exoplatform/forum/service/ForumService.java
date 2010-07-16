@@ -26,6 +26,7 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.forum.service.impl.ForumEventListener;
 import org.exoplatform.services.organization.User;
 
 /**
@@ -979,4 +980,6 @@ public interface ForumService extends ForumServiceLegacy {
   
   public InputStream createForumRss(String objectId, String link) throws Exception ;
   public InputStream createUserRss(String userId, String link) throws Exception ;
+  
+  public void addListenerPlugin(ForumEventListener listener) throws Exception ;
 }

@@ -63,6 +63,7 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
       if(fServie.getCategory(category.getId()) ==null) fServie.saveCategory(category, true);
 
       if(fServie.getForum(category.getId(), forum.getId()) == null) fServie.saveForum(category.getId(), forum, true); 
+      
 
     }catch (Exception e) {
       log.debug(e.getMessage());

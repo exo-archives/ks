@@ -19,6 +19,7 @@ package org.exoplatform.forum.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -88,6 +89,8 @@ public class ForumServiceImpl implements ForumService, Startable {
 
 
   private JobSchedulerService jobSchedulerService;
+  
+  protected List<ForumEventListener> listeners_ = new ArrayList<ForumEventListener>(3);
   
   public ForumServiceImpl(InitParams params, ExoContainerContext context, DataStorage dataStorage, ForumStatisticsService forumStatisticsService, JobSchedulerService jobSchedulerService) {
       this.storage = dataStorage;
@@ -272,6 +275,9 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
 	public void saveCategory(Category category, boolean isNew) throws Exception {
     storage.saveCategory(category, isNew);
+    for(ForumEventLifeCycle f : listeners_) {
+      f.saveCategory(category);
+    }
   }
 	
   /**
@@ -328,6 +334,9 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveForum(String categoryId, Forum forum, boolean isNew) throws Exception {
     storage.saveForum(categoryId, forum, isNew);
+    for(ForumEventLifeCycle f : listeners_) {
+      f.saveForum(forum);
+    }
   }
   
   /**
@@ -384,6 +393,9 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void saveTopic(String categoryId, String forumId, Topic topic, boolean isNew, boolean isMove, String defaultEmailContent) throws Exception {
     storage.saveTopic(categoryId, forumId, topic, isNew, isMove, defaultEmailContent);
+    for(ForumEventLifeCycle f : listeners_) {
+      f.saveTopic(topic, forumId);
+    }
   }
 
   /**
@@ -489,6 +501,9 @@ public class ForumServiceImpl implements ForumService, Startable {
    */
   public void savePost(String categoryId, String forumId, String topicId, Post post, boolean isNew, String defaultEmailContent) throws Exception {
     storage.savePost(categoryId, forumId, topicId, post, isNew, defaultEmailContent);
+    for(ForumEventLifeCycle f : listeners_) {
+      f.savePost(post, forumId);
+    }
   }
   
   /**
@@ -1345,5 +1360,13 @@ public class ForumServiceImpl implements ForumService, Startable {
   public InputStream createUserRss(String userId, String link) throws Exception {
   	return storage.createUserRss(userId, link);
   }
+
+
+  @Override
+  public void addListenerPlugin(ForumEventListener listener) throws Exception {
+     listeners_.add(listener);
+  }
+  
+  
 	
 }

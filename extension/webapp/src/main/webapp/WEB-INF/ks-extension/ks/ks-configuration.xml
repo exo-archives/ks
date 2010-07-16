@@ -99,7 +99,7 @@
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
   </component>  
   
-  
+  <!-- Social integration -->
    <external-component-plugins>
     <target-component>org.exoplatform.social.space.SpaceService</target-component>
     <component-plugin>
@@ -108,6 +108,27 @@
       <type>org.exoplatform.forum.service.impl.ForumDataInitialize</type>
     </component-plugin>
   </external-component-plugins>
+  
+   <external-component-plugins>
+    <target-component>org.exoplatform.social.space.SpaceService</target-component>
+    <component-plugin>
+      <name>ForumDataInitialize</name>
+      <set-method>addSpaceListener</set-method>
+      <type>org.exoplatform.faq.service.impl.AnswerDataInitialize</type>
+    </component-plugin>
+  </external-component-plugins>
+  
+   <external-component-plugins>
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>ForumEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.forum.service.impl.ForumEventListener</type>
+    </component-plugin>
+  </external-component-plugins>
+  
+  <!-- End social intergration -->
+  
  
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>

@@ -30,6 +30,7 @@ import javax.jcr.NodeIterator;
 
 import org.exoplatform.container.component.ComponentPlugin;
 import org.exoplatform.forum.service.conf.SendMessageInfo;
+import org.exoplatform.forum.service.impl.ForumEventListener;
 import org.exoplatform.ks.bbcode.api.BBCode;
 import org.exoplatform.services.organization.User;
 
@@ -734,6 +735,12 @@ public class FakeForumService implements ForumService {
 
   @Override
   public void calculateDeletedUser(String userName) throws Exception {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void addListenerPlugin(ForumEventListener listener) throws Exception {
     // TODO Auto-generated method stub
     
   }
