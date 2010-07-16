@@ -23,9 +23,9 @@ import org.exoplatform.forum.service.ForumService;
 import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.social.space.Space;
-import org.exoplatform.social.space.lifecycle.SpaceListenerPlugin;
-import org.exoplatform.social.space.spi.SpaceLifeCycleEvent;
+import org.exoplatform.social.core.space.SpaceListenerPlugin;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceLifeCycleEvent;
 
 /**
  * Created by The eXo Platform SAS

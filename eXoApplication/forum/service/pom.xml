@@ -187,9 +187,10 @@
       <scope>test</scope>
     </dependency>
     
+    
     <dependency>
       <groupId>org.exoplatform.social</groupId>
-      <artifactId>exo.social.component.space</artifactId>
+      <artifactId>exo.social.component.core</artifactId>
       <version>${org.exoplatform.social.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -201,12 +202,7 @@
       <scope>provided</scope>
     </dependency>
     
-    <dependency>
-      <groupId>org.exoplatform.social</groupId>
-      <artifactId>exo.social.component.people</artifactId>
-      <version>${org.exoplatform.social.version}</version>
-      <scope>provided</scope>
-    </dependency>
+     
     
   </dependencies>
 </project>
