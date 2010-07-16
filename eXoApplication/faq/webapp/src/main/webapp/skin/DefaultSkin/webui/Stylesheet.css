@@ -2334,13 +2334,13 @@
 }
 
 .QuestionContainer .NormalQuest .LeftCon {
-	width: 115px;
+	width: 150px;
 	float: left;
 	font-family: arial;
 }
 
 .QuestionContainer .NormalQuest .LeftCon .BoxNum {
-	width: 50px;
+	width: 72px;
 	height: 50px;
 	float: left;
 	background: #eeeeee;
