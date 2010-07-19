@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Test_SNF_KS_42_defaultportal_BookMark</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_42_defaultportal_BookMark</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/portal/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>root</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div[@class='ButtonMiddle']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add category-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/portal/private/classic/forum</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>CategoryTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>CategoryTitle</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>Every one can see</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[3]/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>ForumTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ForumTitle</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>Description</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add topic-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Start topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Start topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>messageContent___Frame</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>ThreadTitle</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>ThreadTitle</td>
+	<td>Topic test</td>
+</tr>
+<tr>
+	<td>typeFCKEditor</td>
+	<td>messageContent___Frame</td>
+	<td>Topic test</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Bookmark Category by right click-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[2]/div/div/div/div[1]/a[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[2]/div/div/div/div[1]/a[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>componentExoContextMenu</td>
+	<td>link=Category 1</td>
+	<td>contextmenu</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Bookmark forum-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>componentExoContextMenu</td>
+	<td>link=For 1</td>
+	<td>contextmenu</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIPopupCategory2']/div/div/div[3]/div/div/div[1]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='UIPopupCategory2']/div/div/div[3]/div/div/div[1]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Bookmark Topic</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>componentExoContextMenu</td>
+	<td>link=Topic test</td>
+	<td>contextmenu</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@class='ItemIcon AddLinkToBookIcon']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Check bookmark links-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View Category in Boorkmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>UIShowBookMarkForm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[1]/td[2]/a</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[1]/td[2]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View Forum in Bookmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>UIShowBookMarkForm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[2]/td[2]/a</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[2]/td[2]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-View topic in Bookmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>UIShowBookMarkForm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[3]/td[2]/a</td>
+	<td>Topic test</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[3]/td[2]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>Topic test</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@class='Selected']</td>
+	<td>Topic topic test</td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete Bookmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[3]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>No links</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>No links</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[3]/table//div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Bookmark by bookmark button on the action bar-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Bookmark</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>UIShowBookMarkForm</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[1]/td[2]/a</td>
+	<td>Category 1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[2]/td[2]/a</td>
+	<td>For 1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[3]/td[2]/a</td>
+	<td>Topic test</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[3]/table//div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete Bookmark-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[3]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>No links</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>No links</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[3]/table//div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Delete Test Data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertConfirmation</td>
+	<td>Are you sure you want to delete this category?</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextNotPresent</td>
+	<td>Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
