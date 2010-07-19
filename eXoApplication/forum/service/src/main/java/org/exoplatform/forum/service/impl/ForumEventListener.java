@@ -69,6 +69,8 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
       Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
       activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
 
+    } catch (ClassNotFoundException e) {
+      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
     } catch (Exception e) {
       if(LOG.isDebugEnabled()) LOG.debug("Can not record Activity for space when post " +e.getMessage());
     }
@@ -88,6 +90,8 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
       Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
       activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
 
+    } catch (ClassNotFoundException e) {
+      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
     } catch (Exception e) {
       if(LOG.isDebugEnabled()) LOG.debug("Can not record Activity for space when add topic " +e.getMessage());
     }

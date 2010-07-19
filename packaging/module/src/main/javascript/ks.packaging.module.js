@@ -75,7 +75,8 @@ function getModule(params)
    // KS extension for tomcat 
    module.extension = {};
    module.extension.webapp = new Project("org.exoplatform.ks", "exo.ks.extension.webapp", "war", module.version).
-   addDependency(new Project("org.exoplatform.ks", "exo.ks.extension.config", "jar", module.version));
+	addDependency(new Project("org.exoplatform.ks", "exo.ks.extension.config", "jar", module.version)).
+    addDependency(new Project("org.exoplatform.ks", "exo.ks.ext.social-integration", "jar", module.version));
    module.extension.webapp.deployName = "ks-extension";
    
    module.server = {}

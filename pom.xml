@@ -321,5 +321,6 @@
     <module>server/tomcat/patch</module>
     <module>server/jboss/patch-ear</module>
     <module>packaging</module>
+	<module>ext</module>
   </modules>
 </project>

@@ -105,7 +105,7 @@
     <component-plugin>
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
-      <type>org.exoplatform.forum.service.impl.ForumDataInitialize</type>
+      <type>org.exoplatform.ks.ext.impl.ForumDataInitialize</type>
     </component-plugin>
   </external-component-plugins>
   
@@ -114,7 +114,7 @@
     <component-plugin>
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
-      <type>org.exoplatform.faq.service.impl.AnswerDataInitialize</type>
+      <type>org.exoplatform.ks.ext.impl.AnswerDataInitialize</type>
     </component-plugin>
   </external-component-plugins>
   

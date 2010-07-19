@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.faq.service.impl;
-
-import java.util.Date;
+package org.exoplatform.ks.ext.impl;
 
 import org.exoplatform.container.PortalContainer;
-import org.exoplatform.faq.service.Category;
-import org.exoplatform.faq.service.FAQService;
-import org.exoplatform.faq.service.Utils;
+import org.exoplatform.forum.service.Category;
+import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumService;
+import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.space.SpaceListenerPlugin;
@@ -34,9 +33,9 @@ import org.exoplatform.social.core.space.spi.SpaceLifeCycleEvent;
  *          exo@exoplatform.com
  * Jul 7, 2010  
  */
-public class AnswerDataInitialize extends SpaceListenerPlugin {
+public class ForumDataInitialize extends SpaceListenerPlugin {
 
-  private static final Log log = ExoLogger.getLogger(AnswerDataInitialize.class);
+  private static final Log log = ExoLogger.getLogger(ForumDataInitialize.class);
 
   @Override
   public void applicationActivated(SpaceLifeCycleEvent event) {
@@ -47,22 +46,25 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
   @Override
   public void applicationAdded(SpaceLifeCycleEvent event) {
     Space space = event.getSpace();
-     
-    FAQService fServie = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
+    Category category = new Category();
+    category.setId(Utils.CATEGORY + space.getId());
+    category.setCategoryName(space.getName());
+    category.setOwner(space.getId());
+    category.setUserPrivate(new String[] {space.getGroupId()});
+    category.setDescription("");
+
+    Forum forum = new Forum();
+    forum.setOwner(space.getId());
+    forum.setId(Utils.FORUM + space.getId());
+    forum.setForumName(space.getGroupId());
+    forum.setDescription("");
+    ForumService fServie = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
     try {
-     Category cat = new Category();
-     cat.setId(Utils.CATEGORY_PREFIX + space.getId());
-     cat.setCreatedDate(new Date()) ;
-     cat.setName(space.getName()) ;
-     cat.setUserPrivate(new String[]{space.getGroupId()});
-     cat.setDescription("") ;    
-     //cat.setModerateQuestions(moderatequestion) ;
-     //cat.setModerateAnswers(moderateAnswer);
-     //cat.setViewAuthorInfor(true);
-     cat.setIndex(1);
-     cat.setModerators(new String[]{space.getGroupId()}) ;
-     if(fServie.getCategoryById(cat.getId()) == null) fServie.saveCategory(Utils.CATEGORY_HOME, cat, true);
+      if(fServie.getCategory(category.getId()) ==null) fServie.saveCategory(category, true);
+
+      if(fServie.getForum(category.getId(), forum.getId()) == null) fServie.saveForum(category.getId(), forum, true); 
       
+
     }catch (Exception e) {
       log.debug(e.getMessage());
     }
