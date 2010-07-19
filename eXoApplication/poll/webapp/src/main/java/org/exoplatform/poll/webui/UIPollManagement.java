@@ -25,6 +25,8 @@ import javax.portlet.PortletPreferences;
 
 import org.exoplatform.commons.utils.ObjectPageList;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
+import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.webui.popup.UIPollForm;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -59,16 +61,21 @@ public class UIPollManagement extends BasePollForm {
 	public static final String FIELD_SELECT_POLL_SELECTBOX = "selectPoll" ;
   public static String[] BEAN_FIELD = {"question", "votes", "lastVote", "expire"};
   private static String[] ACTION = {"EditPoll", "DeletePoll", "RenderGadget"} ;
+  private String[] dateUnit = new String[]{"Never", "Closed", "day(s)", "hour(s)", "minutes"};
   private Map<String, Poll> mapPoll = new HashMap<String, Poll>();
   private UIFormSelectBox selectPoll;
   
 	public UIPollManagement() throws Exception {
-		 UIGrid categoryList = addChild(UIGrid.class, null , "PollManagementList") ;
-	   categoryList.configure("id", BEAN_FIELD, ACTION) ;
-	   categoryList.getUIPageIterator().setId("PollManagementIterator");
-	   setActions(new String[]{"AddPoll", "Save"});
-	   selectPoll = new UIFormSelectBox(FIELD_SELECT_POLL_SELECTBOX, FIELD_SELECT_POLL_SELECTBOX, new ArrayList<SelectItemOption<String>>()) ;
-	   addUIFormInput(selectPoll);
+		if(this.getId() == null) this.setId("UIPollManagement");
+		UIGrid categoryList = addChild(UIGrid.class, null, "PollManagementList");
+		categoryList.configure("id", BEAN_FIELD, ACTION);
+		categoryList.getUIPageIterator().setId("PollManagementIterator");
+		setActions(new String[] {"AddPoll", "Save" });
+		selectPoll = new UIFormSelectBox(FIELD_SELECT_POLL_SELECTBOX, FIELD_SELECT_POLL_SELECTBOX, new ArrayList<SelectItemOption<String>>());
+		addUIFormInput(selectPoll);
+		try {
+			dateUnit = new String[]{getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes")};
+		} catch (Exception e) {}
 	}
 	
 	public long getCurrentPage() {
@@ -84,8 +91,12 @@ public class UIPollManagement extends BasePollForm {
   public void updateGrid() throws Exception {
 		List<Poll> polls = getPollService().getPagePoll();
 		List<SelectItemOption<String>> list = new ArrayList<SelectItemOption<String>>() ;
+		
 		mapPoll.clear();
 		for (Poll poll : polls) {
+			if(poll.getIsClosed())
+				poll.setExpire(Utils.getExpire(-1, poll.getModifiedDate(), dateUnit));
+			else poll.setExpire(Utils.getExpire(poll.getTimeOut(), poll.getModifiedDate(), dateUnit));
 			mapPoll.put(poll.getId(), poll);
 			list.add(new SelectItemOption<String>(poll.getQuestion(), poll.getId())) ;
 		}
@@ -116,15 +127,10 @@ public class UIPollManagement extends BasePollForm {
 
   static public class DeletePollActionListener extends EventListener<UIPollManagement> {
   	public void execute(Event<UIPollManagement> event) throws Exception {
-  		String pollId = event.getRequestContext().getRequestParameter(OBJECTID) ;
   		UIPollManagement pollManagement = event.getSource();
-  		Poll poll = pollManagement.mapPoll.get(pollId); 
-  		UIPollPortlet pollPortlet = pollManagement.getParent();
-  		UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
-  		UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-  		pollForm.setUpdatePoll(poll, true);
-  		popupAction.activate(pollForm, 655, 455, true) ;
-  		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
+  		String pollId = event.getRequestContext().getRequestParameter(OBJECTID) ;
+  		pollManagement.getPollService().removePoll(pollManagement.mapPoll.get(pollId).getParentPath()+"/"+pollId);
+  		event.getRequestContext().addUIComponentToUpdateByAjax(pollManagement) ;
   	}
   }
 
@@ -133,8 +139,10 @@ public class UIPollManagement extends BasePollForm {
   		UIPollManagement pollManagement = event.getSource();
   		UIPollPortlet pollPortlet = pollManagement.getParent();
   		UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
-  		UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-  		popupAction.activate(pollForm, 655, 455, true) ;
+  		UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+  		popupContainer.addChild(UIPollForm.class, null, null);
+  		popupContainer.setId("UIAddPollForm") ;
+  		popupAction.activate(popupContainer, 655, 455, true) ;
   		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
   	}
   }

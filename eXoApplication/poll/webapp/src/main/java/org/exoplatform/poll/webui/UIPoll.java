@@ -22,13 +22,16 @@ import java.util.List;
 
 import javax.portlet.PortletPreferences;
 
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
-import org.exoplatform.poll.service.PollService;
+import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.poll.webui.popup.UIPollForm;
+import org.exoplatform.services.organization.Group;
+import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.webui.application.WebuiRequestContext;
 import org.exoplatform.webui.application.portlet.PortletRequestContext;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
@@ -64,9 +67,14 @@ public class UIPoll extends BasePollForm	{
 	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
 	private boolean canViewEditMenu = false ;
+	private boolean hasPermission = true ;
+	private String[] dateUnit = new String[]{"Never", "Closed", "day(s)", "hour(s)", "minutes"};
 	
 	public UIPoll() throws Exception {
 		userId = UserHelper.getCurrentUser() ;
+		try {
+			dateUnit = new String[]{getLabel("Never"), getLabel("Closed"), getLabel("day"), getLabel("hour"), getLabel("minutes")};
+		} catch (Exception e) {}
 	}
 
 	public void setPollId() throws Exception {
@@ -84,9 +92,34 @@ public class UIPoll extends BasePollForm	{
 		}
 	}
 	
+	public static boolean hasUserInGroup(String groupId, String userId) throws Exception {
+  	OrganizationService organizationService = (OrganizationService) PortalContainer.getComponent(OrganizationService.class);
+  	for (Object object : organizationService.getGroupHandler().findGroupsOfUser(userId)) {
+  		if(((Group)object).getId().equals(groupId)){
+				return true;
+			}
+		}
+  	return false ;
+  }
+	
+	private boolean checkPermission() throws Exception {
+		String path = poll_.getParentPath();
+		if(path.indexOf(PollNodeTypes.APPLICATION_DATA) > 0){
+			String group = path.substring(path.indexOf("/", 3), path.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
+			try {
+				hasPermission = hasUserInGroup(group, userId);
+			} catch (Exception e) {}
+		}
+		return hasPermission;
+	}
+	
 	public void updateFormPoll(Poll poll) throws Exception {
+		if(poll.getIsClosed())
+			poll.setExpire(Utils.getExpire(-1, poll.getModifiedDate(), dateUnit));
+		else poll.setExpire(Utils.getExpire(poll.getTimeOut(), poll.getModifiedDate(), dateUnit));
 		poll_ = poll;
 		this.isEditPoll = false ;
+		checkPermission();
 	}
 
 	public void updatePollById(String pollId) throws Exception {
@@ -125,6 +158,10 @@ public class UIPoll extends BasePollForm	{
 		setPollId();
 		if(isEditPoll && pollId != null && pollId.length() > 0) {
 			poll_ = getPollService().getPoll(pollId) ; 
+			checkPermission();
+			if(poll_.getIsClosed())
+				poll_.setExpire(Utils.getExpire(-1, poll_.getModifiedDate(), dateUnit));
+			else poll_.setExpire(Utils.getExpire(poll_.getTimeOut(), poll_.getModifiedDate(), dateUnit));
 		}
 		this.init() ;
 		return poll_ ;
@@ -368,7 +405,7 @@ public class UIPoll extends BasePollForm	{
       	UIPollPortlet forumPollPortlet = topicPoll.getAncestorOfType(UIPollPortlet.class) ;
       	popupAction = forumPollPortlet.getChild(UIPopupAction.class) ;
       }
-			UIPollForm	pollForm = popupAction.createUIComponent(UIPollForm.class, null, null) ;
+			UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null) ;
 			topicPoll.poll_ = topicPoll.getPoll();
 			pollForm.setUpdatePoll(topicPoll.poll_, true) ;
 			popupAction.activate(pollForm, 662, 466) ;

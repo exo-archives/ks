@@ -22,7 +22,10 @@ import java.util.List;
 
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ks.common.UserHelper;
+import org.exoplatform.ks.common.webui.BaseEventListener;
 import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
+import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.poll.Utils;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.impl.PollNodeTypes;
@@ -32,6 +35,7 @@ import org.exoplatform.poll.webui.UIPollPortlet;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
+import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.lifecycle.UIFormLifecycle;
 import org.exoplatform.webui.event.Event;
 import org.exoplatform.webui.event.EventListener;
@@ -52,15 +56,18 @@ import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
 		events = {
 			@EventConfig(listeners = UIPollForm.SaveActionListener.class), 
 			@EventConfig(listeners = UIPollForm.RefreshActionListener.class, phase = Phase.DECODE),
+			@EventConfig(listeners = UIPollForm.AddGroupActionListener.class, phase = Phase.DECODE),
 			@EventConfig(listeners = UIPollForm.CancelActionListener.class,phase = Phase.DECODE)
 		}
 )
-public class UIPollForm extends BasePollForm implements UIPopupComponent {
+public class UIPollForm extends BasePollForm implements UIPopupComponent, UISelector {
 	public static final String FIELD_QUESTION_INPUT = "Question" ;
 	final static public String FIELD_OPTIONS = "Option" ;
 	public static final String FIELD_TIMEOUT_INPUT = "TimeOut" ;
+	public static final String FIELD_GROUP_PRIVATE_INPUT = "GroupPrivate" ;
 	public static final String FIELD_AGAINVOTE_CHECKBOX = "VoteAgain" ;
 	public static final String FIELD_MULTIVOTE_CHECKBOX = "MultiVote" ;
+	public static final String FIELD_PUBLIC_DATA_CHECKBOX = "PublicData" ;
 	public static final int MAX_TITLE = 100 ;
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	private Poll poll = new Poll() ;
@@ -68,16 +75,22 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unchecked")
 	public UIPollForm() throws Exception {
-		UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, null);
-		UIFormStringInput timeOut = new UIFormStringInput(FIELD_TIMEOUT_INPUT, FIELD_TIMEOUT_INPUT, null);
+		UIFormStringInput question = new UIFormStringInput(FIELD_QUESTION_INPUT, FIELD_QUESTION_INPUT, "");
+		UIFormStringInput timeOut = new UIFormStringInput(FIELD_TIMEOUT_INPUT, FIELD_TIMEOUT_INPUT, "");
 		timeOut.addValidator(PositiveNumberFormatValidator.class) ;
 		UIFormCheckBoxInput VoteAgain = new UIFormCheckBoxInput<Boolean>(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false) ; 
 		UIFormCheckBoxInput MultiVote = new UIFormCheckBoxInput<Boolean>(FIELD_MULTIVOTE_CHECKBOX, FIELD_MULTIVOTE_CHECKBOX, false) ; 
+		UIFormCheckBoxInput PublicData = new UIFormCheckBoxInput<Boolean>(FIELD_PUBLIC_DATA_CHECKBOX, FIELD_PUBLIC_DATA_CHECKBOX, true) ; 
+		PublicData.setChecked(true);
+		UIFormStringInput GroupPrivate = new UIFormStringInput(FIELD_GROUP_PRIVATE_INPUT, FIELD_GROUP_PRIVATE_INPUT, "");
 		addUIFormInput(question) ;
 		addUIFormInput(timeOut) ;
 		addUIFormInput(VoteAgain);
 		addUIFormInput(MultiVote);
+		addUIFormInput(PublicData);
+		addUIFormInput(GroupPrivate);
 		setDefaulFall();
+		setActions(new String[]{"Save", "Refresh", "Cancel"});
 	}
 
 	private void initMultiValuesField(List<String> list) throws Exception {
@@ -130,6 +143,11 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 	
 	public void activate() throws Exception {}
 	public void deActivate() throws Exception {}
+
+	public void updateSelect(String selectField, String value) throws Exception {
+		UIFormStringInput GroupPrivate = getUIStringInput(selectField);
+		GroupPrivate.setValue(value);
+	}
 	
 	static	public class SaveActionListener extends EventListener<UIPollForm> {
 		@SuppressWarnings("unchecked")
@@ -263,12 +281,18 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 						poll.setCreatedDate(new Date());
 						poll.setUserVote(new String[] {}) ;
 						String parentPath = "";
+						Boolean isPublic = uiForm.getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).isChecked();
 						// if poll of topic : parentPath = topic.getPath();
 						// if poll of Group : parentPath = $GROUP/${PollNodeTypes.APPLICATION_DATA}/${PollNodeTypes.EXO_POLLS}
 						// if poll of public: parentPath = $PORTAL/${PollNodeTypes.POLLS}
-						
-						// test for public:
-						parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
+						if(isPublic) {
+							// test for public:
+							parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
+						} else {
+							parentPath = uiForm.getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).getValue();
+							if(parentPath.indexOf("/") == 0) parentPath = parentPath.substring(1);
+							parentPath = parentPath + "/" + PollNodeTypes.APPLICATION_DATA + "/" + PollNodeTypes.EXO_POLLS;
+						}
 						poll.setParentPath(parentPath);
 						uiForm.getPollService().savePoll(poll, true, false) ;
 					}
@@ -297,13 +321,28 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent {
 			uiForm.getUIStringInput(FIELD_TIMEOUT_INPUT).setValue("0") ;
 			uiForm.getUIFormCheckBoxInput(FIELD_AGAINVOTE_CHECKBOX).setChecked(false) ;
 			uiForm.getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX).setChecked(false) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(uiForm);
 		}
 	}
 	
+	static	public class AddGroupActionListener extends BaseEventListener<UIPollForm> {
+		public void onEvent(Event<UIPollForm> event, UIPollForm uiForm, String objctId) throws Exception {
+			UIPopupContainer popupContainer = uiForm.getAncestorOfType(UIPopupContainer.class);
+			UIPopupAction popupAction = popupContainer.getChild(UIPopupAction.class);
+			popupAction.getChild(UIPopupWindow.class).setId("UIPopupChildWindow");
+			UIGroupSelector uiGroupSelector = popupAction.activate(UIGroupSelector.class, 600);
+			uiGroupSelector.setId("UIGroupSelector");
+			uiGroupSelector.setType(UISelectComponent.TYPE_GROUP) ;
+			uiGroupSelector.setSelectedGroups(null) ;
+			uiGroupSelector.setComponent(uiForm, new String[]{FIELD_GROUP_PRIVATE_INPUT}) ;
+			event.getRequestContext().addUIComponentToUpdateByAjax(popupContainer);
+		}
+	}
+
 	static	public class CancelActionListener extends EventListener<UIPollForm> {
 		public void execute(Event<UIPollForm> event) throws Exception {
 			UIPollForm uiForm = event.getSource() ;
-    	UIPollPortlet pollPortlet = uiForm.getAncestorOfType(UIPollPortlet.class) ;
+			UIPollPortlet pollPortlet = uiForm.getAncestorOfType(UIPollPortlet.class) ;
 			pollPortlet.cancelAction() ;
 			uiForm.isUpdate = false ;
 		}

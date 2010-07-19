@@ -1,7 +1,33 @@
+if(!eXo.poll){
+	eXo.poll = {} ;
+}
+function UIPollPortlet() {};
+
 function UIPollPortlet() {
 	this.obj = null;
 	this.event = null;
 	this.wait = false;
+};
+
+UIPollPortlet.prototype.OpenPrivateField = function(elm) {
+	if(elm === "DivCheckBox") {
+		elm = document.getElementById(elm);
+	}
+	if(elm){
+		var DOMUtil = eXo.core.DOMUtil;
+		var parent = DOMUtil.findAncestorByClass(elm,"OptionField") ;
+		var childs = DOMUtil.findDescendantsByClass(parent, "div", "Display");
+		var input = DOMUtil.findFirstDescendantByClass(elm, "input", "checkbox");
+		if(input){
+			for(var i=0; i < childs.length; i++) {
+				if(input.checked) {
+					childs[i].style.display = "none";
+				} else {
+					childs[i].style.display = "block";
+				}
+			}
+		}
+	}
 };
 
 UIPollPortlet.prototype.OverButton = function(oject) {

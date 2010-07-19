@@ -3,7 +3,6 @@
  */
 package org.exoplatform.poll.service.ws;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 

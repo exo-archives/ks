@@ -1,3 +1,10 @@
+<% 
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.addJavascript("eXo.poll.UIPollPortlet.OpenPrivateField('DivCheckBox');") ;
+%>
+
 <div class="UIAddPollForm">
 	<% uiform.begin() %>
 		<div class="HorizontalLayout">
@@ -6,7 +13,7 @@
 					<tbody>
 						<tr>
 							<td class="FieldLabel"><%=uicomponent.getLabel(uicomponent.FIELD_QUESTION_INPUT)%>:</td>
-							<td class="FieldComponent" style="width:400px;">
+							<td class="FieldComponent" style="width:350px;">
 								<div class="QuestionInput">
 								<% uiform.renderChild(uicomponent.FIELD_QUESTION_INPUT) %>
 								</div>
@@ -29,8 +36,31 @@
 						</table>
 					</div>
 				<div class="Line"><span></span></div>
-				<table class="UIFormGrid">
+				<table class="UIFormGrid OptionField">
 					<tbody>
+					<!-- show public -->
+					<% if(!uiform.isUpdate){ %>
+						<tr>
+							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX)%>:</td>
+							<td class="FieldComponent">
+								<div id="DivCheckBox" onclick="eXo.poll.UIPollPortlet.OpenPrivateField(this)"><% uiform.renderChild(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX) %></div>
+							</td>
+						</tr>
+						<tr height="26px">
+							<td class="FieldLabel" style="width:auto;"><div class="Display" style="display:block;"><%=uicomponent.getLabel(uicomponent.FIELD_GROUP_PRIVATE_INPUT)%>:</div></td>
+							<td class="FieldComponent">
+								<div class="Display" style="display:block;">
+									<% uiform.renderChild(uicomponent.FIELD_GROUP_PRIVATE_INPUT) %>
+								</div>
+							</td>
+							<td class="Label">
+								<div class="Display" style="display:block;">
+									<img src="/eXoResources/skin/sharedImages/Blank.gif" class="MultiFieldAction AddNewNodeIcon" alt="Add" title="<%=_ctx.appRes("UIPollForm.label.AddGroup"); %>" onclick="<%=uicomponent.event("AddGroup")%>">
+								</div>
+							</td>
+							
+						</tr>
+					<% } %>
 						<tr>
 							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_TIMEOUT_INPUT)%>:</td>
 							<td class="FieldComponent" style="width:60px;">

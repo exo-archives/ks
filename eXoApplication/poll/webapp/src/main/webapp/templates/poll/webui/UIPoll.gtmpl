@@ -6,27 +6,18 @@
 	<% 
 		uiform.begin() ; 
 		Poll poll = uicomponent.getPoll() ;
-		if(poll != null) {
-		String question = poll.getQuestion() ;
-		question = question.trim();
-		if(question.lastIndexOf("?") != question.length() - 1) question = question + " ?";
-		long timeOut = poll.getTimeOut() ;
-		boolean isAnonim = UserHelper.isAnonim();
-		boolean isAgain = poll.getIsAgainVote() ;
-		boolean isTimeOut = false;
-		String timeOutDate = "";
-		if(timeOut > 0) {
-			Date dateOut = new Date() ;
-			Date today = new Date() ;
-			timeOut = timeOut*86400000 ;
-			dateOut.setTime(poll.getModifiedDate().getTime() + timeOut);
-			timeOutDate =_ctx.appRes("UIPoll.label.timeOutPoll") + Utils.getFormatDate("DDDD, dd MMMM, yyyy, HH:mm GMT+0");
-			if(dateOut.getTime() < today.getTime()) {
-				timeOutDate = _ctx.appRes("UIPoll.label.PollClosed");
+		if(poll != null && uicomponent.hasPermission) {
+			String question = poll.getQuestion() ;
+			question = question.trim();
+			if(question.lastIndexOf("?") != question.length() - 1) question = question + " ?";
+			boolean isAnonim = UserHelper.isAnonim();
+			boolean isAgain = poll.getIsAgainVote() ;
+			boolean isTimeOut = false;
+			String timeOutDate = poll.getExpire();
+			if(timeOutDate.equals(uicomponent.dateUnit[1])) {
 				isAgain = false ;
 				isTimeOut = true;
 			}
-		}
 	%>
 <div class="UITopicPoll">
 	<div class="ForumToolbar">
@@ -100,7 +91,8 @@
 	
 	<div class="TopicPollContainer">
 		<% 
-			if(timeOut > 0) {
+			if(poll.getTimeOut() > 0) {
+				if(!isTimeOut) timeOutDate = _ctx.appRes("UIPoll.label.timeOutPoll") + " " + timeOutDate;
 		%>
 		<div class="PollTime">$timeOutDate</div>
 		<%} %>
@@ -236,6 +228,7 @@
 		
 	</div>
 </div>
-	<%}
-	uiform.end() ;
-	%>
+	<%} else {%>
+		<%=_ctx.appRes("UIPoll.label.NotPermission"); %>
+	<%} %>
+	<%uiform.end() ;%>

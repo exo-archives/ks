@@ -1,4 +1,5 @@
 @import url('popup/Stylesheet.css') ;
+@import url('UIPoll/Stylesheet.css') ;
 
 body, html, div, table, tr, td, img, form {
 	font-family:Tahoma,Verdana,Arial,Helvetica,sans-serif;
@@ -38,92 +39,6 @@ body, html, div, table, tr, td, img, form {
 .UIPollPortlet .UIRightClickPopupMenu .FixHeight {
 	height:0px;
 	width:0px;
-}
-
-.UIPollPortlet .UITopicPoll {
-	margin: 0px;
-}
-
-.UIPollPortlet .UITopicPoll .UITabPane {
-	height: auto;
-}
-
-.UIPollPortlet .UITopicPoll .UITabContentContainer {
-	border-top: solid 1px #b7b7b7;
-}
-
-.UIPollPortlet .UITopicPoll .ForumToolbar .Lable {
-	float: left;
-	font-weight: bold;
-	font-size: 12px;
-	line-height: 26px;
-	padding-left: 10px;
-}
-
-.UIPollPortlet .UITopicPoll .ForumToolbar .Icon {
-	float: right;
-	padding-left: 23px;
-	line-height: 20px;
-	margin: 3px 10px 0px 10px;
-}
-
-.UIPollPortlet .UITopicPoll .ForumToolbar .DownArrow1Icon {
-	width: 16px;
-	height: 26px;
-	margin: 0px 14px 0px 3px;
-	padding: 0px;
-}
-
-.UIPollPortlet .UITopicPoll .ForumToolbar .ForumSeparatorLine {
-	float: right;
-	margin: 4px 4px 0px 4px;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer {
-	border: 1px solid #b7b7b7;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer .PollTime {
-	background: url('background/BgPollTitle1x20.gif') repeat-x;
-	height: 20px; line-height: 20px;
-	text-align: center;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer .UIFormTabPane {
-	margin: 0px 10px 10px 10px;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
-	border: 1px solid #d2d2d2;
-	padding: 10px 15px;
-	margin: 0px auto 10px auto;
-	background: white;
-}
-/* Fix only IE7 */
-.UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent {
-	*min-width: 300px;
-	*overflow-y: hidden;
-	*overflow-x: auto;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer .TopicPollContent .PollQuestion {
-	font-weight: bold;
-	line-height: 20px;
-}
-
-.UIPollPortlet .UITopicPoll .TopicPollContainer .UIForm .HorizontalLayout {
-	border: none;
-}
-
-.UIPollPortlet .UITopicPoll .UIForm .HorizontalLayout .UIFormGrid td.FieldLabel {
-	text-align: left;
-	line-height: 22px;
-	padding: 2px;
-}
-
-.UIPollPortlet .UITopicPoll .UIForm .HorizontalLayout .UIFormGrid td.FieldComponent {
-	padding: 4px 0px 0px 15px;
-	line-height: 20px;
 }
 
 /******************************** ViewPollForm *******************************/

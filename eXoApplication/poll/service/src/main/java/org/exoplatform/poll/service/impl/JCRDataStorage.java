@@ -77,7 +77,7 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 
   private Node getParentNode(SessionProvider sProvider, String parentId) throws Exception {
   	Node appNode = null;
-		try { // id = /exo:applications/${forumId}/${topicId}/
+		try { // id = /exo:applications/../../${forumId}/${topicId}/
 			appNode = getNodeByPath(parentId, sProvider);
 		} catch (Exception e) {
 			if (e instanceof PathNotFoundException || e instanceof RepositoryException) {
@@ -283,8 +283,10 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 				}
 				pollNode.setProperty(EXO_VOTE, poll.getVote());
 				pollNode.setProperty(EXO_MODIFIED_BY, poll.getModifiedBy());
-				if (poll.getTimeOut() == 0) {
-					pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
+				
+				if (!isNew) {
+					if(pollNode.getProperty(EXO_TIME_OUT).getLong() != poll.getTimeOut())
+						pollNode.setProperty(EXO_MODIFIED_DATE, getGreenwichMeanTime());
 				}
 				pollNode.setProperty(EXO_TIME_OUT, poll.getTimeOut());
 				pollNode.setProperty(EXO_QUESTION, poll.getQuestion());

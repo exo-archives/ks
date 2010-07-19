@@ -150,4 +150,32 @@ public class Utils {
 		}
 		return buffer.toString();
 	}
+	
+	public static String getExpire(long timeOut, Date modifiDate, String[]dateUnit ) {
+  	if(timeOut == 0) return dateUnit[0];
+  	else {
+  		Calendar calendar = getGreenwichMeanTime();
+  		long timeEnd = (timeOut < 1000)?(modifiDate.getTime() + timeOut*86400000):timeOut;
+  		long l = timeEnd - calendar.getTimeInMillis();
+  		if(l < 0) return dateUnit[1];
+  		int m = (int)l/60000;
+  		if(m > 60){
+  			int h = (int)m/60;
+  			if(h > 24){
+  				int d = (int)h/24;
+  				return d + " "+dateUnit[2]+", " + (h - d*24) + " "+dateUnit[3]+", " + (m - h*60) + " "+dateUnit[4];
+  			} else {
+  				return h + " "+dateUnit[3]+", " + (m - h*60) + dateUnit[4];
+  			}
+  		} return m + " "+dateUnit[4];
+  	}
+  }
+	
+	public static Calendar getGreenwichMeanTime() {
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setLenient(false);
+		int gmtoffset = calendar.get(Calendar.DST_OFFSET) + calendar.get(Calendar.ZONE_OFFSET);
+		calendar.setTimeInMillis(System.currentTimeMillis() - gmtoffset);
+		return calendar;
+	}
 }

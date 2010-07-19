@@ -16,9 +16,7 @@
  ***************************************************************************/
 package org.exoplatform.poll.service ;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.exoplatform.poll.service.impl.PollNodeTypes;
 import org.exoplatform.services.jcr.util.IdGenerator;
@@ -49,6 +47,7 @@ public class Poll {
 	private String votes;
 	private String[] infoVote;
 	private String[] listId = new String[]{};
+	private String expire;
 	public Poll() {
 		id = PollNodeTypes.POLL + IdGenerator.generate() ;
 		createdDate = new Date() ;
@@ -159,24 +158,8 @@ public class Poll {
 	}
 	public String[] getInfoVote() { return infoVote ;}
 	
-	
-	public String getExpire() {
-		Calendar calendar = GregorianCalendar.getInstance();
-		long l = timeOut - calendar.getTimeInMillis();
-		if(l <= 0) return "never";
-		else {
-			int m = (int)l/60000;
-			if(m > 60){
-				int h = (int)m/60;
-				if(h > 24){
-					int d = (int)h/24;
-					return d + "day(s)," + (h - d*24) + " hour," + (m - h*60) + " minutes";
-				} else {
-					return h + " hour," + (m - h*60) + "minutes";
-				}
-			} return m + " minutes";
-		}
-	}
+	public void setExpire(String expire) {this.expire = expire;}
+	public String getExpire() { return expire;}
 
 	public void setListId(String[] listId) {
 		this.listId = listId;
@@ -185,6 +168,7 @@ public class Poll {
 	public String[] getListId() {
 		return listId;
 	}
+
 }
 
 
