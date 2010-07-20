@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://localhost:8080/ksdemo/public/classic/" />
-<title>Test_SNF_KS_01_ManageCategory</title>
+<title>Test_SNF_KS_01_ksdemo_ManageCategory</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_01_ManageCategory</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_01_ksdemo_ManageCategory</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -22,7 +22,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -63,12 +63,17 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Add category</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Add category</td>
 	<td></td>
 </tr>
 <tr>
@@ -92,7 +97,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//img[@title='Select a user ']</td>
 	<td></td>
 </tr>
@@ -102,7 +107,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>demo</td>
 	<td></td>
 </tr>
@@ -112,22 +117,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UIUserSelector']/div[2]/div[2]/table/tbody/tr/td/a[1]/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>moderatequestions</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>ViewAuthorInfor</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>moderateAnswers</td>
 	<td></td>
 </tr>
@@ -137,7 +142,7 @@
 	<td>SNF_KS_01</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
@@ -157,13 +162,23 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=SNF_KS_01</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='FAQCategroManager']//div[@class='MenuItem']</td>
 	<td></td>
 </tr>
 <tr>
@@ -192,7 +207,12 @@
 	<td>SNF_KS_01 Desc</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UICategoryForm']/div[2]/div/div/table//div[1]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//form[@id='UICategoryForm']/div[2]/div/div/table//div[1]/div/div/div</td>
 	<td></td>
 </tr>
@@ -202,13 +222,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[@id='UIBreadcumbs']/div/table/tbody/tr/td/div/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_01 Update</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_01 Update</td>
 	<td></td>
 </tr>
 <tr>
@@ -227,8 +247,13 @@
 	<td>contextmenu</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIFAQPopupCategories1']/div/div/div/div/div[7]/a[@class='IconItem MoveCategory']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAt</td>
-	<td>//div[@id='UIFAQPopupCategories1']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']/div/div/div/div[7][@class='MenuItem']/a</td>
+	<td>//div[@id='UIFAQPopupCategories1']/div/div/div/div/div[7]/a[@class='IconItem MoveCategory']</td>
 	<td></td>
 </tr>
 <tr>
@@ -237,7 +262,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>doubleClickAt</td>
+	<td>doubleClick</td>
 	<td>//div[@id='FAQCate0']/a</td>
 	<td></td>
 </tr>
@@ -252,8 +277,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Technical FAQ</td>
+	<td>click</td>
+	<td>link=General Questions</td>
 	<td></td>
 </tr>
 <tr>
@@ -272,12 +297,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=SNF_KS_01 Update</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>

@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_05_WatchUnWatchCategory</title>
+<title>Test_SNF_KS_04_ksdemo_WatchUnWatchCategory</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_05_WatchUnWatchCategory</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_04_ksdemo_WatchUnWatchCategory</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -22,7 +22,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -77,6 +77,11 @@
 	<td>contextmenu</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[2][@class='MenuItem']/a</td>
+	<td></td>
+</tr>
+<tr>
 	<td>clickAt</td>
 	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[2][@class='MenuItem']/a</td>
 	<td></td>
@@ -92,8 +97,13 @@
 	<td>You are watching this category, you will be notified about all changes.</td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//div[@class='CloseButton']</td>
+	<td>waitForElementPresent</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -107,18 +117,13 @@
 	<td>contextmenu</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[2][@class='MenuItem']/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//div[@class='CloseButton']</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAt</td>
-	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//div[@class='CloseButton']</td>
+	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[2][@class='MenuItem']/a</td>
 	<td></td>
 </tr>
 <tr>
