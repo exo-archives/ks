@@ -318,9 +318,9 @@
     <module>eXoApplication</module>
     <module>extension</module>
     <module>demo</module>
-    <module>server/tomcat/patch</module>
+    <module>ext</module>
+	<module>server/tomcat/patch</module>
     <module>server/jboss/patch-ear</module>
-    <module>packaging</module>
-	<module>ext</module>
+    <module>packaging</module>	
   </modules>
 </project>

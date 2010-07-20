@@ -61,6 +61,19 @@
       <version>${project.version}</version>
       <type>js</type>
     </dependency>
+	
+	 <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>exo.social.component.core</artifactId>
+      <version>${org.exoplatform.social.version}</version>
+     </dependency>
+    
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>exo.social.component.common</artifactId>
+      <version>${org.exoplatform.social.version}</version>
+    </dependency>
+	
   </dependencies>
   <build>
     <plugins>
