@@ -49,7 +49,6 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
 import javax.jcr.observation.Event;
@@ -1889,11 +1888,13 @@ public class JCRDataStorage implements DataStorage {
    */
 	public List<Cate> listingCategoryTree() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node cateHome = getCategoryHome(sProvider, null) ;
-		int i = 1 ;
-		List<Cate> cateList = new ArrayList<Cate>() ;		
-    cateList.addAll(listingSubTree(cateHome, i)) ;
-		return cateList  ;
+		try {
+			Node cateHome = getCategoryHome(sProvider, null) ;
+			int i = 1 ;
+			List<Cate> cateList = new ArrayList<Cate>() ;		
+			cateList.addAll(listingSubTree(cateHome, i)) ;
+			return cateList  ;
+		}finally { sProvider.close() ;}	
 	}
 	
 	/* (non-Javadoc)
@@ -2394,7 +2395,7 @@ public class JCRDataStorage implements DataStorage {
 			}
 		}catch (Exception e) {
 		  log.error("Getting watched sub category fail: ", e);
-		}
+		}finally { sProvider.close() ;}
 		return watchedSub ;
 	}
 	
@@ -2458,8 +2459,7 @@ public class JCRDataStorage implements DataStorage {
 			category.setProperty("exo:emailWatching", emailMap.values().toArray(new String[]{})) ;
 			category.save() ;		
 		}catch(Exception e) {
-			sProvider.close() ;
-		}
+		}finally { sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
@@ -2480,8 +2480,7 @@ public class JCRDataStorage implements DataStorage {
 			category.setProperty("exo:userWatching", userMap.keySet().toArray(new String[]{})) ;
 			category.save() ;		
 		}catch(Exception e) {
-			sProvider.close() ;
-		}
+		}finally { sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
@@ -3006,22 +3005,25 @@ public class JCRDataStorage implements DataStorage {
    */
 	public void swapCategories(String cateId1, String cateId2) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-	  Node goingCategory = getFAQServiceHome(sProvider).getNode(cateId1);
-		Node mockCategory = getFAQServiceHome(sProvider).getNode(cateId2);
-		long index = mockCategory.getProperty("exo:index").getValue().getLong() ;
-		if(goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
-			goingCategory.setProperty("exo:index", index) ;
-			goingCategory.save();
-			resetIndex(goingCategory, index) ;
-		}else {
-			String id = goingCategory.getName() ;
-			mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id) ;
-			mockCategory.getSession().save() ;
-			Node destCat = mockCategory.getParent().getNode(id) ;
-			destCat.setProperty("exo:index", index) ;
-			destCat.save();
-			resetIndex(destCat, index) ;
-		}
+		try {
+			Node goingCategory = getFAQServiceHome(sProvider).getNode(cateId1);
+			Node mockCategory = getFAQServiceHome(sProvider).getNode(cateId2);
+			long index = mockCategory.getProperty("exo:index").getValue().getLong() ;
+			if(goingCategory.getParent().getPath().equals(mockCategory.getParent().getPath())) {
+				goingCategory.setProperty("exo:index", index) ;
+				goingCategory.save();
+				resetIndex(goingCategory, index) ;
+			}else {
+				String id = goingCategory.getName() ;
+				mockCategory.getSession().move(goingCategory.getPath(), mockCategory.getParent().getPath() + "/" + id) ;
+				mockCategory.getSession().save() ;
+				Node destCat = mockCategory.getParent().getNode(id) ;
+				destCat.setProperty("exo:index", index) ;
+				destCat.save();
+				resetIndex(destCat, index) ;
+			}
+		} catch (Exception e) {
+		} finally {sProvider.close();}
 	}
 	
 	/* (non-Javadoc)
