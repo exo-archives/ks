@@ -1,0 +1,14 @@
+SNF_KS_02 : The script is valid but this function has bug that causes the system work invidly.
+SNF_KS_03 : Because of pop up interation, Import/Export can not be recorded and verified result. 
+SNF_KS_06 : Because of pop up interation, RSS Feed can not be record and verified result.  
+SNF_KS_23 : Because of pop up interation, Import/Export can not be recorded and verified result.
+SNF_KS_31 : The script is valid but this function has bug that causes the system work invidly.
+SNF_KS_38 : Because of pop up intration, Permalink can not be recorded and verified result.
+SNF_KS_39 : Because of pop up intraction, RSS Feed can not be recorded and verified.
+
+Some function are recorded validly but can not verify its effects such as watch/unwatch, 
+send mail that the notification mails are sent or not.
+
+When you run KS Test Suites, you must remove the SNF_KS_02 script, 
+because the drag and drop function does not work well that cause many exception and make 
+the other scipts works incorrect
