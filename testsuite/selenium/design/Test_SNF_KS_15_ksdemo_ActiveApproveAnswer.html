@@ -133,13 +133,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>id=QuestionRespone___Frame</td>
+	<td>//iframe[@id='QuestionRespone___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>id=QuestionRespone___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='QuestionRespone___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Answer 1</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -169,6 +184,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Edit Page</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>30000</td>
 	<td></td>
 </tr>
 <tr>
