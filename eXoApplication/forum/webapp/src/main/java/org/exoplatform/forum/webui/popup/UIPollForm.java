@@ -34,8 +34,6 @@ import org.exoplatform.ks.common.UserHelper;
 import org.exoplatform.ks.common.webui.UIFormMultiValueInputSet;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
-//import org.exoplatform.poll.service.Poll;
-//import org.exoplatform.poll.service.PollService;
 import org.exoplatform.webui.config.annotation.ComponentConfig;
 import org.exoplatform.webui.config.annotation.EventConfig;
 import org.exoplatform.webui.core.UIPopupComponent;
@@ -46,8 +44,6 @@ import org.exoplatform.webui.event.Event.Phase;
 import org.exoplatform.webui.form.UIFormCheckBoxInput;
 import org.exoplatform.webui.form.UIFormStringInput;
 import org.exoplatform.webui.form.validator.PositiveNumberFormatValidator;
-
-import sun.nio.ch.PollSelectorProvider;
 
 /**
  * Created by The eXo Platform SARL
