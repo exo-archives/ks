@@ -58,6 +58,8 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
   @Override
   public void savePost(Post post, String forumId) {
     try {
+      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
+      
       String msg = post.getOwner() + "has been posted " + post.getName() ;
       String body = post.getLink() ;
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
@@ -80,6 +82,8 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
   @Override
   public void saveTopic(Topic topic, String forumId) {
     try {
+      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
+      
       String msg = topic.getOwner() + "has been posted " + topic.getTopicName() ;
       String body = topic.getLink() ;
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
