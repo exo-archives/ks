@@ -18,9 +18,14 @@ import javax.ws.rs.core.Response.Status;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
+import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.poll.service.impl.JCRDataStorage;
+import org.exoplatform.poll.service.impl.PollNodeTypes;
+import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.MembershipEntry;
 
 
 
@@ -47,6 +52,18 @@ public class PollWebservice implements ResourceContainer {
 	    try {
 	    	Poll poll = pollService.getPoll(pollId);
 	    	if(poll != null) {
+	    		poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
+	    		String group = poll.getParentPath();
+	    		if(group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0 && poll.getIsAdmin().equals("false")) {
+	    			group = group.substring(group.indexOf("/", 2)+1, group.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
+	    			System.out.println("\n\b======> gr: "  + group);
+	    			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+	    			if(userACL.isUserInGroup(group)) {
+	    				poll = new Poll();
+	    				poll.setId("DoNotPermission");
+	    				return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+	    			}
+	    		}
 	    		poll.setVotes();
 	    		poll.setInfoVote();
 	    		poll.setShowVote(isGuestPermission(poll));
@@ -56,12 +73,15 @@ public class PollWebservice implements ResourceContainer {
 	      e.printStackTrace();
 	    }
     }
-    Poll poll = new Poll();
-    poll.setId("Empty");
-    List<String> list = pollService.getListPollId();
-    if(list.isEmpty())poll.setListId(new String[]{"Has not poll !"});
-    else poll.setListId(list.toArray(new String[]{}));
-    return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
+    PollSummary pollSummary = new PollSummary();
+    if(hasGroupAdminOfGatein()) {
+    	pollSummary = pollService.getPollSummary();
+    	pollSummary.setIsAdmin("true");
+    } else {
+    	pollSummary.setId("DoNotPermission");
+    }
+    System.out.println("\n========> pollSummary" + pollSummary.getPollName().toString());
+    return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
 
   @GET
@@ -77,12 +97,11 @@ public class PollWebservice implements ResourceContainer {
   			Poll poll = pollService.getPoll(pollId.trim());
   			if(poll != null) {
   				poll = calculateVote(poll, getUserId(), indexVote) ;
-//  				printAr(poll.getVote(), "getVote");
-//  				printAr(poll.getUserVote(), "getUserVote");
   				pollService.savePoll(poll, false, true) ;
   				poll.setVotes();
 	    		poll.setInfoVote();
   				poll.setShowVote(isGuestPermission(poll));
+  				poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
   				return Response.ok(poll, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   			}
   		} catch (Exception e) {
@@ -92,11 +111,6 @@ public class PollWebservice implements ResourceContainer {
   	return Response.status(Status.INTERNAL_SERVER_ERROR).build() ;
   }
   
-//  private void printAr(String[] s, String comment){
-//  	List<String> list = Arrays.asList(s);
-//  	System.out.println("\n\n " + comment + ": " + list.toString());
-//  }
-//  
   private Poll calculateVote(Poll poll, String userVote, String optionVote) throws Exception {
   	String[] votes ;
 		String[] setUserVote ;
@@ -209,6 +223,22 @@ public class PollWebservice implements ResourceContainer {
 			if(string.equalsIgnoreCase(username)) return true ;
 		}
 		return false ;
+	}
+	
+	private boolean hasGroupAdminOfGatein() {
+		try {
+			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
+			List<String> list = new ArrayList<String>();
+			Identity identity = ConversationState.getCurrent().getIdentity();
+			list.add(identity.getUserId());
+			list.addAll(identity.getGroups());
+//			for (MembershipEntry membership : identity.getMemberships()) {}
+//			userACL.getAdminMSType();
+			for (String str : list) {
+				if(str.equals(userACL.getSuperUser()) || str.equals(userACL.getAdminGroups())) return true;
+			}
+		} catch (Exception e) {e.printStackTrace();}
+		return false;
 	}
 
   private String getUserId() {

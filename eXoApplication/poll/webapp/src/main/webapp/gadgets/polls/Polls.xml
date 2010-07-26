@@ -13,12 +13,13 @@
 		<Locale lang="vi" messages="/poll/gadgets/polls/locale/vi.xml" />
 		<Require feature="setprefs"/>
 	</ModulePrefs>
-	<UserPref name="pollId" display_name="pollId of poll you show." datatype="string" default_value="" required="true"/>
 	 
 	<Content type="html">
 		<![CDATA[
-			<script type="text/javascript">
-		 		document.write("<link rel='stylesheet' type='text/css' href='/poll/skin/DefaultSkin/webui/Stylesheet.css'/> <link rel='stylesheet' type='text/css' href='/eXoResources/skin/DefaultSkin/webui/component/Stylesheet.css'/> ");
+		    <link rel="stylesheet" type="text/css" href="skin/Stylesheet.css"/>
+			
+		    <script type="text/javascript">
+		 		document.write("<link rel='stylesheet' type='text/css' href='/eXoResources/skin/DefaultSkin/webui/component/Stylesheet.css'/> ");
 			</script>
 	
 			<div class="UIPollPortlet" style="padding:0px 5px 5px 5px; height:280px; overflow:auto;">
@@ -32,8 +33,7 @@
 										<span>__MSG_poll__</span>
 										<span class="question"></span>
 									</div>
-									<div class="CollapseButton" title="Edit" onclick="editUserPrefs()"><span></span></div>
-								
+									<div class="CollapseButton" id="EditPollIcon" title="__MSG_editPoll__"><span></span></div>
 									<div style="clear:both"><span></span></div>
 								</div>
 							</div>
@@ -107,8 +107,10 @@
 														<div class="TotalVotes">__MSG_totalVoters__ <span id="sunVote"></span></div>
 													</div>
 
-													<div style="display:none;" class="EditPoll" id="EditPoll"><span></span></div>
-													<div style="display:none;" id="comment">You must edit poll and use some pollId for config Poll gadget</div>
+													<div style="display:none;" class="EditPoll" id="EditPoll">
+														<div id="SelectContent"></div>
+													</div>
+													<div style="display:none;" id="comment">__MSG_doNotPermission__</div>
 												</div>
 												
 											</div>
@@ -120,7 +122,6 @@
 						
 					</div>
 				</div>
-				<div style="display:none;" class="MenuPollId" id="MenuPollId"><span></span></div>
 			</div>
 			
 			<script type="text/javascript">
@@ -145,16 +146,29 @@
 				
 				// render data.
 				function render(data){
+					var clickEditPoll = document.getElementById("EditPollIcon");
 					var tpPoll = document.getElementById("TopicPollContent");
 					var viewPoll = document.getElementById("ViewPollForm");
 					var comment = document.getElementById("comment");
+					var editPoll = document.getElementById("EditPoll");
 					if(data) {
-						if(data.id == "Empty") {
-							var editPoll = document.getElementById("AddPollIdIcon");
-							if(editPoll) comment.style.display = "none";
-							else comment.style.display = "block";
-							buildMenu(data);
+						if(data.isAdmin === "true") {
+							clickEditPoll.className = "CollapseButton EditPollIcon";
+							clickEditPoll.onclick = editUserPrefs;
 						} else {
+							clickEditPoll.className = "FloatRight";
+							clickEditPoll.onclick = function(){};
+						}
+						if(data.id === "Empty") {
+							editPoll.style.display = "block";
+							buildMenu(data);
+						} else if(data.id === "DoNotPermission") {
+							comment.style.display = "block";
+							tpPoll.style.display = "none";
+							viewPoll.style.display = "none";
+							editPoll.style.display = "none";
+						} else {
+							editPoll.style.display = "none";
 							comment.style.display = "none";
 							if(data.showVote) {
 								tpPoll.style.display = "none";
@@ -173,13 +187,54 @@
 				}
 				
 				function buildMenu(data) {
-					var ids = data.listId;
-					var str = "";
-					for(var i = 0; i < ids.length; ++ i) {
-						str = str + 
-						'<div class="MenuItem"><a onclick="selectedItem(this);">'+ids[i] + '</a></div>';
-					}
-					innerData("div", "MenuPollId", str);
+					var ids = data.pollId;
+					var pollNames = data.pollName;
+					var pollId = gadgets.Prefs().getString("pollId");
+					pollId = String(pollId);
+					
+					var str =
+						'<form>'+
+							'<div style="padding: 8px 0px;">'+
+								'<table class="UIFormGrid" style="width:100%">'+
+									'<tbody>'+
+										'<tr>'+
+											'<td colspan="3"><div>__MSG_cmSelectPoll__</div></td>'+
+										'</tr>'+
+										'<tr>'+
+											'<td class="FieldLabel"><div style="text-align:right;padding-right:8px">__MSG_selectPoll__</div></td>'+
+											'<td colspan="2" class="FieldComponent">'+
+												'<select id="selectbox" name="pollSelect" class="selectbox" style="width:250px">';
+											for(var i = 0; i < ids.length; ++ i) {
+												if(pollId === ids[i]){
+													ids[i] = ids[i] + '" selected="selected';
+												}
+												str = str + 
+												'<option value="'+ids[i]+'" class="SelectBox">'+pollNames[i]+'</option>';
+											}
+											str = str + 
+												'</select>'+
+											'</td>'+
+										'</tr>'+
+										'<tr>'+
+											'<td>&nbsp;</td>'+
+											'<td style="width:100px">'+
+												'<div style="padding:10px 3px;">'+
+													'<input value="Save" onclick="saveUserPrefs()" type="button" style="padding: 0px 5px;float: right;"/>'+
+													'<div style="clear:right;"><span></span></div>'+
+												'</div>'+
+											'</td>'+
+											'<td>'+
+												'<div style="padding:10px 3px;">'+
+													'<input value="Cancel" onclick="cancelUserPrefs()" type="button"/>'+
+												'</div>'+
+											'</td>'+
+										'</tr>'+
+									'</tbody>'+
+								'</table>'+
+							'</div>'+
+						'</form>';
+					
+					document.getElementById("SelectContent").innerHTML = str;
 				}
 				
 				function innerData(type, clasElm, vl) {
@@ -262,59 +317,26 @@
 				function editUserPrefs() {
 					document.getElementById("TopicPollContent").style.display = "none";
 					document.getElementById("ViewPollForm").style.display = "none";
-					var parent = document.getElementById("EditPoll");
-					parent.style.display = "block";
-					var str =
-					'<form>'+
-						'<div style="padding: 8px 0px;">'+
-							'<div style="float:left;"><span style="padding-right: 10px;">Poll Id: </span><input id="m_pollId" name="m_10_up_pollId"/></div>'+
-							'<div class="AddPollIdIcon" id="AddPollIdIcon" title="Add poll id." onclick="showMenu()"><span></span></div>'+
-							'<div style="float:left; position:relative;" id="MenuContent"><span></span></div>'+
-							'<div style="clear:left;"><span></span></div>'+
-						'</div>'+
-					'</form>'+
-					'<div class="ActionBar">'+
-						'<input value="Save" onclick="saveUserPrefs()" type="button"/>'+
-						'<input value="Cancel" onclick="cancelUserPrefs()" type="button"/>'+
-					'</div>';
-					parent.innerHTML = str;
-					var input = document.getElementById("m_pollId");
-					if(input) {
-						input.value = gadgets.Prefs().getString("pollId");
-					}
+					document.getElementById("EditPoll").style.display = "block";
 					ajaxAsyncGetRequest("/portal/rest/private/ks/poll/viewpoll/pollId",render);
-				}
-				
-				function showMenu() {
-					var parent = document.getElementById("MenuContent");
-					var child = document.getElementById("MenuPollId");
-					parent.innerHTML = '<div class="MenuPollId">' + child.innerHTML + '</div>';
-				}
-				
-				function selectedItem(elm) {
-					var input = document.getElementById("m_pollId");
-					if(input) {
-						input.value = elm.innerHTML;
-						var parent = document.getElementById("MenuContent");
-						parent.innerHTML = "";
-					}
-					
+					innerData("span", "question", "");
 				}
 				
 				function saveUserPrefs() {
-					var input = document.getElementById("m_pollId");
+					var input = document.getElementById("selectbox");
 					if(input) {
 						var pollId = input.value;
 						if(pollId) {
 							var prefs = new gadgets.Prefs();
 							prefs.set("pollId", pollId);
-							document.getElementById("EditPoll").innerHTML = "";
+							document.getElementById("SelectContent").innerHTML = "";
+							getData();
 						}
 					}
 				}
 				
 				function cancelUserPrefs() {
-					document.getElementById("EditPoll").innerHTML = "";
+					document.getElementById("SelectContent").innerHTML = "";
 					getData();
 				}
 				

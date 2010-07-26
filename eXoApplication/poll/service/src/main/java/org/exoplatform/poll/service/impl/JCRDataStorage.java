@@ -33,6 +33,7 @@ import javax.jcr.query.QueryResult;
 
 import org.exoplatform.poll.service.DataStorage;
 import org.exoplatform.poll.service.Poll;
+import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
@@ -185,21 +186,29 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 		return result.getNodes();
 	}
 	
-	public List<String>getListPollId() throws Exception {
+	public PollSummary getPollSummary() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider();
-		List<String> listPoll = new ArrayList<String>();
+		PollSummary poll = new PollSummary();
 		try {
 			NodeIterator iter = getIterNodePoll(sProvider);
+			List<String> pollId = new ArrayList<String>();
+			List<String> pollName = new ArrayList<String>();
+			List<String> groupPrivate = new ArrayList<String>();
 			while (iter.hasNext()) {
 				Node node = iter.nextNode();
-				listPoll.add(node.getName());
+				pollId.add(node.getName());
+				pollName.add(node.getProperty(EXO_QUESTION).getString());
+				groupPrivate.add(node.getPath());
 			}
+			poll.setPollId(pollId);
+			poll.setPollName(pollName);
+			poll.setGroupPrivate(groupPrivate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			sProvider.close();
 		}
-		return listPoll;
+		return poll;
 		
 	}
 	

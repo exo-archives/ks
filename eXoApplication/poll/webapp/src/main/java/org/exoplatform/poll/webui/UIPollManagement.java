@@ -60,7 +60,7 @@ import org.exoplatform.webui.form.UIFormSelectBox;
 public class UIPollManagement extends BasePollForm {
 	public static final String FIELD_SELECT_POLL_SELECTBOX = "selectPoll" ;
   public static String[] BEAN_FIELD = {"question", "votes", "lastVote", "expire"};
-  private static String[] ACTION = {"EditPoll", "DeletePoll", "RenderGadget"} ;
+  private static String[] ACTION = {"EditPoll", "DeletePoll"} ;
   private String[] dateUnit = new String[]{"Never", "Closed", "day(s)", "hour(s)", "minutes"};
   private Map<String, Poll> mapPoll = new HashMap<String, Poll>();
   private UIFormSelectBox selectPoll;

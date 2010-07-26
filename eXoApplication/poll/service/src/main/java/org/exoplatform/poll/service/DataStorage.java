@@ -14,5 +14,5 @@ public interface DataStorage {
   void setClosedPoll(Poll poll) throws Exception;
   
   List<Poll>getPagePoll() throws Exception;
-  List<String>getListPollId() throws Exception;
+  PollSummary getPollSummary() throws Exception;
 }

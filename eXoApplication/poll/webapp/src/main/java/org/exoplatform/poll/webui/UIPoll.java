@@ -83,10 +83,10 @@ public class UIPoll extends BasePollForm	{
 		    PortletPreferences portletPref = pcontext.getRequest().getPreferences() ;
 		    pollId = portletPref.getValue("pollIdShow", "");
 		    if(Utils.isEmpty(pollId)) {
-		    	List<String> list = getPollService().getListPollId();
-		    	if(!list.isEmpty()){
-		    		pollId = list.get(0);
-		    	}
+//		    	List<String> list = getPollService().getListPollId();
+//		    	if(!list.isEmpty()){
+//		    		pollId = list.get(0);
+//		    	}
 		    }
 				this.isEditPoll = true ;
 		}

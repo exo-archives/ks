@@ -20,10 +20,14 @@
 -->
 
 <messagebundle>  
+  <msg name="doNotPermission">You do not permission to show this gadget.</msg>
+  <msg name="editPoll">Edit poll gadget.</msg>
   <msg name="voteNow">Vote Now</msg>
   <msg name="poll">Poll:</msg>
   <msg name="options">Options</msg>
   <msg name="percentage">Percentage</msg>
   <msg name="votes">Votes</msg>
   <msg name="totalVoters">Total voters:</msg>
+  <msg name="cmSelectPoll">You can select the Poll to show poll in this gadget.</msg>
+  <msg name="selectPoll">Select Poll:</msg>
 </messagebundle>

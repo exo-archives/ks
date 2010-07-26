@@ -69,5 +69,5 @@ public interface PollService {
   
   public List<Poll>getPagePoll() throws Exception ;
   
-  public List<String>getListPollId() throws Exception;
+  public PollSummary getPollSummary() throws Exception ;
 }

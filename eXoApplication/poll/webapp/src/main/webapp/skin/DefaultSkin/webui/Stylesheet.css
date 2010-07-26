@@ -36,6 +36,10 @@ body, html, div, table, tr, td, img, form {
   float:left;
 }
 
+.UIPollPortlet .FloatRight{
+  float:right;
+}
+
 .UIPollPortlet .UIRightClickPopupMenu .FixHeight {
 	height:0px;
 	width:0px;

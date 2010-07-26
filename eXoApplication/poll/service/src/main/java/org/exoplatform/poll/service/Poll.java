@@ -46,8 +46,8 @@ public class Poll {
 
 	private String votes;
 	private String[] infoVote;
-	private String[] listId = new String[]{};
 	private String expire;
+	private String isAdmin = "false";
 	public Poll() {
 		id = PollNodeTypes.POLL + IdGenerator.generate() ;
 		createdDate = new Date() ;
@@ -59,6 +59,9 @@ public class Poll {
 	public String getId() { return id; }
 	public void setId(String id) { this.id = id; }
 
+	public void setIsAdmin(String isAdmin) { this.isAdmin = isAdmin;}
+	public String getIsAdmin() { return isAdmin;}
+	
 	public String getParentPath() { return parentPath; }
 	public void setParentPath(String path) { this.parentPath = path; }
 	
@@ -160,15 +163,6 @@ public class Poll {
 	
 	public void setExpire(String expire) {this.expire = expire;}
 	public String getExpire() { return expire;}
-
-	public void setListId(String[] listId) {
-		this.listId = listId;
-	}
-
-	public String[] getListId() {
-		return listId;
-	}
-
 }
 
 

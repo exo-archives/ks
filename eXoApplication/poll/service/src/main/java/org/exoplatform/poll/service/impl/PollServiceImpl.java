@@ -25,6 +25,7 @@ import org.exoplatform.management.jmx.annotations.NameTemplate;
 import org.exoplatform.management.jmx.annotations.Property;
 import org.exoplatform.poll.service.Poll;
 import org.exoplatform.poll.service.PollService;
+import org.exoplatform.poll.service.PollSummary;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 import org.picocontainer.Startable;
@@ -65,8 +66,8 @@ public class PollServiceImpl implements Startable, PollService {
 		return storage_.getPagePoll();
 	}
 
-	public List<String> getListPollId() throws Exception {
-		return storage_.getListPollId();
+	public PollSummary getPollSummary() throws Exception {
+		return storage_.getPollSummary();
 	}
 
   
