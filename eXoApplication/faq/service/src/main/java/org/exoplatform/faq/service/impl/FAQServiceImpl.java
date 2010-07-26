@@ -44,7 +44,7 @@ import org.exoplatform.faq.service.ObjectSearchResult;
 import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
-import org.exoplatform.faq.service.TemplatePlugin; 
+import org.exoplatform.faq.service.TemplatePlugin;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.bbcode.core.BBCodeServiceImpl;
 import org.exoplatform.ks.common.NotifyInfo;
@@ -55,6 +55,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.mail.Message;
 import org.picocontainer.Startable;
+
+import com.arjuna.ats.internal.jdbc.drivers.modifiers.list;
 
 /**
  * Created by The eXo Platform SARL
@@ -80,6 +82,8 @@ public class FAQServiceImpl implements FAQService, Startable {
 	FAQServiceManaged managed; // will be automatically set at @ManagedBy processing
 	
 	private static Log log = ExoLogger.getLogger(FAQServiceImpl.class);
+	
+	 protected List<AnswerEventListener> listeners_ = new ArrayList<AnswerEventListener>(3);
 	
 	public FAQServiceImpl(InitParams params, KSDataLocation locator, ConfigurationManager configManager) throws Exception {
 		configManager_ = configManager ;
@@ -538,6 +542,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 				MultiLanguages.removeLanguage(questionNode, lang) ;
 			}
 		}
+		for(AnswerEventListener ae : listeners_) {
+		  ae.saveQuestion(question);
+		}
 		return questionNode ;
 	}
   
@@ -979,6 +986,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 	
 	public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
 		jcrData_.saveAnswer(questionId, answer, isNew);
+		for(AnswerEventListener ae : listeners_) {
+      ae.saveAnswer(questionId, answer);
+    }
 	}
 	
 	public void saveComment(String questionId, Comment comment, boolean isNew, SessionProvider sProvider) throws Exception{
@@ -988,6 +998,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 	
 	public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
 		jcrData_.saveComment(questionId, comment, isNew);
+		for(AnswerEventListener ae : listeners_) {
+      ae.saveComment(questionId, comment);
+    }
 	}
 	
 	public Comment getCommentById(SessionProvider sProvider, String questionId, String commentId) throws Exception{
@@ -1007,7 +1020,7 @@ public class FAQServiceImpl implements FAQService, Startable {
 	public Answer getAnswerById(String questionId, String answerid) throws Exception{
 		return jcrData_.getAnswerById(questionId, answerid);
 	}
-	
+	//TODO it should be mark as duplicate 
 	public void saveAnswer(String questionId, Answer[] answers, SessionProvider sProvider) throws Exception{
 		sProvider.close() ;
 		saveAnswer(questionId, answers);
@@ -1015,6 +1028,9 @@ public class FAQServiceImpl implements FAQService, Startable {
 	
 	public void saveAnswer(String questionId, Answer[] answers) throws Exception{
 		jcrData_.saveAnswer(questionId, answers);
+		for(AnswerEventListener ae : listeners_) {
+      ae.saveAnswer(questionId, answers);
+    }
 	}
 
 	public JCRPageList getPageListAnswer(SessionProvider sProvider, String questionId, Boolean isSortByVote) throws Exception {
@@ -1224,6 +1240,9 @@ public class FAQServiceImpl implements FAQService, Startable {
     try {
       Node questionNode = jcrData_.getFAQServiceHome(sProvider).getNode(questionPath) ;
       MultiLanguages.saveComment(questionNode, comment, languge) ;
+      for(AnswerEventListener ae : listeners_) {
+        ae.saveComment(questionNode.getName(), comment);
+      }
     } catch (Exception e) {
       log.error("\nFail to save comment\n ", e);
     }finally {sProvider.close() ;}
@@ -1327,6 +1346,10 @@ public class FAQServiceImpl implements FAQService, Startable {
   
   public void reCalculateLastActivityOfQuestion(String absPathOfProp) throws Exception {
     jcrData_.reCalculateInfoOfQuestion(absPathOfProp);
+  }
+  
+  public void addListenerPlugin(AnswerEventListener listener) throws Exception{
+    listeners_.add(listener);
   }
 }
 

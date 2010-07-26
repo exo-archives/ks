@@ -20,6 +20,7 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
+import org.exoplatform.forum.service.ForumEventLifeCycle;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
 import org.exoplatform.forum.service.Utils;
@@ -59,14 +60,12 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
   public void savePost(Post post, String forumId) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      
-      String msg = post.getOwner() + "has been posted " + post.getName() ;
+      String msg = post.getOwner() + " has been posted: <a href=" +post.getLink()+ ">" + post.getName() +  "</a>" ;
       String body = post.getLink() ;
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentAdaptersOfType(SpaceService.class); 
-      String spaceId = forumId.split(Utils.FORUM)[0];
-      System.out.println("\n\n space ID " + spaceId);
+      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
+      String spaceId = forumId.split(Utils.FORUM)[1];
       Space space = spaceS.getSpaceById(spaceId) ;
       Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
       activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
@@ -74,7 +73,7 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
     } catch (ClassNotFoundException e) {
       if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
     } catch (Exception e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Can not record Activity for space when post " +e.getMessage());
+      LOG.error("Can not record Activity for space when post " +e.getMessage());
     }
 
   }
@@ -83,21 +82,19 @@ public class ForumEventListener extends BaseComponentPlugin implements ForumEven
   public void saveTopic(Topic topic, String forumId) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      
-      String msg = topic.getOwner() + "has been posted " + topic.getTopicName() ;
+      String msg = topic.getOwner() + " has been posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
       String body = topic.getLink() ;
       IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
       ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentAdaptersOfType(SpaceService.class); 
-      String spaceId = forumId.split(Utils.FORUM)[0];
+      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
+      String spaceId = forumId.split(Utils.FORUM)[1];
       Space space = spaceS.getSpaceById(spaceId) ;
       Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
       activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-
     } catch (ClassNotFoundException e) {
       if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
     } catch (Exception e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Can not record Activity for space when add topic " +e.getMessage());
+      LOG.error("Can not record Activity for space when add topic " +e.getMessage());
     }
   } 
 

@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-  <!-- 
+  <!--
   <component>
     <key>org.exoplatform.ks.common.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.DefaultContactProvider</type>
@@ -19,24 +19,24 @@
     <type>org.exoplatform.forum.provider.cs.CSContactProvider</type>
     </component>
   -->
-  
+
   <!-- Use this provider to display personal information from the profile  -->
-  <!-- 
+  <!--
   <component>
     <key>org.exoplatform.ks.common.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.PersonalProfileContactProvider</type>
   </component>
    -->
-   
+
    <!-- Use this provider to display business information from the profile  -->
-   <!-- 
+   <!--
     <component>
     <key>org.exoplatform.ks.common.user.ContactProvider</key>
     <type>org.exoplatform.ks.common.user.BusinessProfileContactProvider</type>
   </component>
    -->
-   
-   
+
+
   <component>
     <key>org.exoplatform.ks.common.jcr.KSDataLocation</key>
     <type>org.exoplatform.ks.common.jcr.KSDataLocation</type>
@@ -51,16 +51,16 @@
         <name>workspace</name>
         <description>workspace for KS data</description>
         <value>knowledge</value>
-      </value-param>      
+      </value-param>
     </init-params>
   </component>
-  
+
   <component>
     <key>org.exoplatform.ks.rendering.MarkupRenderingService</key>
-    <type>org.exoplatform.ks.rendering.MarkupRenderingService</type>   
+    <type>org.exoplatform.ks.rendering.MarkupRenderingService</type>
   </component>
-  
-  
+
+
     <component>
     <type>org.exoplatform.ks.rss.FeedResolver</type>
     <init-params>
@@ -78,46 +78,46 @@
     </init-params>
   </component>
 
-  
+
   <!-- TODO : remove the following services when when they'll be provided by platform -->
   <component>
     <key>org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator</key>
     <type>org.exoplatform.services.jcr.ext.hierarchy.impl.NodeHierarchyCreatorImpl</type>
-  </component>  
-  
-  
+  </component>
+
+
    <component>
      <type>org.exoplatform.services.scheduler.impl.QuartzSheduler</type>
    </component>
-   
+
    <component>
       <type>org.exoplatform.services.scheduler.QueueTasks</type>
    </component>
-   
+
   <component>
     <key>org.exoplatform.services.scheduler.JobSchedulerService</key>
     <type>org.exoplatform.services.scheduler.impl.JobSchedulerServiceImpl</type>
-  </component>  
-  
+  </component>
+
   <!-- Social integration -->
    <external-component-plugins>
-    <target-component>org.exoplatform.social.space.SpaceService</target-component>
+    <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
     <component-plugin>
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
       <type>org.exoplatform.ks.ext.impl.ForumDataInitialize</type>
     </component-plugin>
   </external-component-plugins>
-  
+
    <external-component-plugins>
-    <target-component>org.exoplatform.social.space.SpaceService</target-component>
+    <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
     <component-plugin>
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
       <type>org.exoplatform.ks.ext.impl.AnswerDataInitialize</type>
     </component-plugin>
   </external-component-plugins>
-  
+
    <external-component-plugins>
     <target-component>org.exoplatform.forum.service.ForumService</target-component>
     <component-plugin>
@@ -127,9 +127,18 @@
     </component-plugin>
   </external-component-plugins>
   
+  <external-component-plugins>
+    <target-component>org.exoplatform.faq.service.FAQService</target-component>
+    <component-plugin>
+      <name>AnswerEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.faq.service.impl.AnswerEventListener</type>
+    </component-plugin>
+  </external-component-plugins>
+
   <!-- End social intergration -->
-  
- 
+
+
   <external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
     <component-plugin>
@@ -140,7 +149,7 @@
       </description>
     </component-plugin>
   </external-component-plugins>
-	
+
 	<external-component-plugins>
     <target-component>org.exoplatform.services.organization.OrganizationService</target-component>
     <component-plugin>
@@ -148,7 +157,7 @@
       <set-method>addListenerPlugin</set-method>
       <type>org.exoplatform.forum.service.conf.NewUserListener</type>
       <description>creates a profile in forum for each new user</description>
-      
+
       <init-params>
         <properties-param>
           <name>user.profile.setting</name>
@@ -160,14 +169,14 @@
           <property name="maxTopic" value="10"/>
           <property name="maxPost" value="10"/>
           <property name="isShowForumJump" value="true"/>
-          
+
         </properties-param>
       </init-params>
-      
-      
+
+
     </component-plugin>
   </external-component-plugins>
-  
+
   <external-component-plugins>
    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
    <!--Forum send email notification configuration-->
@@ -184,13 +193,13 @@
           <property name="groupName" value="KnowlegedSuite"/>
           <property name="job" value="org.exoplatform.forum.service.conf.SendMailJob"/>
           <property name="repeatCount" value="0"/>
-          <property name="period" value="120000"/> <!-- 2 mins-->    
+          <property name="period" value="120000"/> <!-- 2 mins-->
           <property name="startTime" value="+0"/>
-          <property name="endTime" value=""/>               
-        </properties-param>        
+          <property name="endTime" value=""/>
+        </properties-param>
       </init-params>
     </component-plugin>
-    
+
     <!--FAQ send email notification configuration-->
     <component-plugin>
       <name>FAQSendNotificationJob</name>
@@ -205,13 +214,13 @@
           <property name="groupName" value="KnowlegedSuite"/>
           <property name="job" value="org.exoplatform.faq.service.notify.NotifyJob"/>
           <property name="repeatCount" value="0"/>
-          <property name="period" value="120000"/> <!-- 2 mins-->    
+          <property name="period" value="120000"/> <!-- 2 mins-->
           <property name="startTime" value="+0"/>
-          <property name="endTime" value=""/>               
-        </properties-param>        
+          <property name="endTime" value=""/>
+        </properties-param>
       </init-params>
     </component-plugin>
-  </external-component-plugins>  
+  </external-component-plugins>
 
 
 </configuration>

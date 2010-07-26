@@ -14,12 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.forum.service.impl;
+package org.exoplatform.forum.service;
 
-import org.exoplatform.forum.service.Category;
-import org.exoplatform.forum.service.Forum;
-import org.exoplatform.forum.service.Post;
-import org.exoplatform.forum.service.Topic;
 
 /**
  * Created by The eXo Platform SAS

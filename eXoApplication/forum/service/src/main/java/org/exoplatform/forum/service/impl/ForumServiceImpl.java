@@ -37,6 +37,7 @@ import org.exoplatform.forum.service.DataStorage;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumAdministration;
 import org.exoplatform.forum.service.ForumAttachment;
+import org.exoplatform.forum.service.ForumEventLifeCycle;
 import org.exoplatform.forum.service.ForumEventQuery;
 import org.exoplatform.forum.service.ForumLinkData;
 import org.exoplatform.forum.service.ForumPrivateMessage;
@@ -1362,7 +1363,6 @@ public class ForumServiceImpl implements ForumService, Startable {
   }
 
 
-  @Override
   public void addListenerPlugin(ForumEventListener listener) throws Exception {
      listeners_.add(listener);
   }

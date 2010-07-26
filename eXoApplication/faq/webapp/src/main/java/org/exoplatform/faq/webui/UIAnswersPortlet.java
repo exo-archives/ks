@@ -24,6 +24,8 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
 import org.exoplatform.webui.application.WebuiRequestContext;
@@ -33,8 +35,7 @@ import org.exoplatform.webui.core.UIPopupMessages;
 import org.exoplatform.webui.core.UIPopupWindow;
 import org.exoplatform.webui.core.UIPortletApplication;
 import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
-import org.exoplatform.social.space.Space;
-import org.exoplatform.social.space.SpaceService;
+
 
 
 /**
@@ -67,7 +68,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         Space space = sService.getSpaceByUrl(url) ;
         String categoryId = Utils.CATEGORY_PREFIX + space.getId();
         return categoryId ;
-      } 
+      }
       return null;
     } catch (Exception e) {
       return null;
@@ -75,7 +76,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
 
   }
 
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
       isFirstTime = true;
@@ -84,27 +85,30 @@ public class UIAnswersPortlet extends UIPortletApplication {
           removeChild(UISettingForm.class);
         }
         addChild(UIAnswersContainer.class, null, null) ;
-      } 
+      }
+      /*
       try {
         String paths = getSpaceCategoryId() ;
+        System.out.println("\n\n paths " + paths);
         if(paths != null && !paths.isEmpty() && context.getRequestParameter(OBJECTID) == null) {
           UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
           UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class) ;
           UICategories categories = findFirstComponentOfType(UICategories.class);
           uiQuestions.pageSelect = 0;
           uiQuestions.backPath_ = "" ;
-          uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());  
+          uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());
           uiQuestions.viewingQuestionId_ = "" ;
           uiQuestions.updateCurrentLanguage();
           categories.setPathCategory(paths);
           uiQuestions.setCategoryId(paths) ;
           uiQuestions.updateCurrentQuestionList() ;
-          
+
           uiBreadcums.setUpdataPath(paths);
         }
       } catch (Exception e) {
         System.out.println("can not render the selected category");
       }
+      */
 
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       try{
@@ -123,7 +127,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
           }
         }
       } catch (Exception e) {
-        log.error("\nFail to render a WebUIApplication\n", e); 
+        log.error("\nFail to render a WebUIApplication\n", e);
       }
     }
 
@@ -150,4 +154,4 @@ public class UIAnswersPortlet extends UIPortletApplication {
     String repository = portletPref.getValue("display", "") ;
     return repository ;
   }
-} 
+}

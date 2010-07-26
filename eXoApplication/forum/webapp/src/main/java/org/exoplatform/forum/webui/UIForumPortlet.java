@@ -53,8 +53,8 @@ import org.exoplatform.ks.common.webui.UIPopupAction;
 import org.exoplatform.ks.common.webui.UIPopupContainer;
 import org.exoplatform.portal.application.PortalRequestContext;
 import org.exoplatform.portal.webui.util.Util;
-import org.exoplatform.social.space.Space;
-import org.exoplatform.social.space.SpaceService;
+import org.exoplatform.social.core.space.model.Space;
+import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.ApplicationMessage;
 import org.exoplatform.web.application.RequestContext;
 import org.exoplatform.webui.application.WebuiApplication;
@@ -78,12 +78,12 @@ import org.exoplatform.webui.exception.MessageException;
  * Aug 01, 2007
  */
 @ComponentConfig(
-                 lifecycle = UIApplicationLifecycle.class, 
+                 lifecycle = UIApplicationLifecycle.class,
                  template = "app:/templates/forum/webui/UIForumPortlet.gtmpl",
                  events = {
                    @EventConfig(listeners = UIForumPortlet.ReLoadPortletEventActionListener.class),
                    @EventConfig(listeners = UIForumPortlet.ViewPublicUserInfoActionListener.class ) ,
-                   @EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ), 
+                   @EventConfig(listeners = UIForumPortlet.ViewPostedByUserActionListener.class ),
                    @EventConfig(listeners = UIForumPortlet.PrivateMessageActionListener.class ),
                    @EventConfig(listeners = UIForumPortlet.ViewThreadByUserActionListener.class ),
                    @EventConfig(listeners = UIForumPortlet.OpenLinkActionListener.class)
@@ -129,7 +129,7 @@ public class UIForumPortlet extends UIPortletApplication {
     } catch (Exception e) {}
   }
 
-  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {    
+  public void processRender(WebuiApplication app, WebuiRequestContext context) throws Exception {
     PortletRequestContext portletReqContext = (PortletRequestContext)  context ;
     if(portletReqContext.getApplicationMode() == PortletMode.VIEW) {
       if(getChild(UIBreadcumbs.class) ==  null) {
@@ -183,12 +183,12 @@ public class UIForumPortlet extends UIPortletApplication {
             (url.contains(Utils.TOPIC))? url.substring(url.lastIndexOf(Utils.TOPIC)): (
                 (url.contains(Utils.FORUM) && ((url.lastIndexOf(Utils.FORUM)+5) < url.length()))? url.substring(url.lastIndexOf(Utils.FORUM)): url) ));
     if(url.indexOf(portalName) >= 0) return ;
-    
+
     if(url.equals(old)) {
       if(getForumIdOfSpace() != null) url = getForumIdOfSpace();
       else return;
-    } 
-    
+    }
+
     calculateRenderComponent(url, context);
     context.addUIComponentToUpdateByAjax(this);
   }
@@ -204,7 +204,7 @@ public class UIForumPortlet extends UIPortletApplication {
         Space space = sService.getSpaceByUrl(url) ;
         String forumId = Utils.FORUM + space.getId();
         return forumId ;
-      } 
+      }
       return null;
     } catch (Exception e) {
       return null;
@@ -426,7 +426,7 @@ public class UIForumPortlet extends UIPortletApplication {
       }
       if(!ForumUtils.isEmpty(userId))
         userProfile.setEmail(UserHelper.getUserByUserId(userId).getEmail());
-    }catch (Exception e) {}			
+    }catch (Exception e) {}
   }
 
   private CommonContact getPersonalContact(String userId) throws Exception {
@@ -492,7 +492,7 @@ public class UIForumPortlet extends UIPortletApplication {
       //			  list = ForumUtils.addArrayToList(list, new String[] {topic.getOwner()});
 
       if(!list.isEmpty() && topic.getOwner() != null)	list.add(topic.getOwner());
-      if(topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() || 
+      if(topic.getIsClosed() || !topic.getIsActive() || !topic.getIsActiveByForum() || !topic.getIsApproved() ||
           topic.getIsWaiting() || (!list.isEmpty() && !Utils.hasPermission(list, userBound))) return false;
     }
     return true;
@@ -603,7 +603,7 @@ public class UIForumPortlet extends UIPortletApplication {
             categoryContainer.getChild(UICategories.class).setIsRenderChild(false) ;
             path = Utils.FORUM_SERVICE;
           }
-        }				
+        }
       }catch(Exception e) {
         e.printStackTrace();
         uiApp.addMessage(new ApplicationMessage("UIShowBookMarkForm.msg.link-not-found", null, ApplicationMessage.WARNING)) ;
@@ -667,7 +667,7 @@ public class UIForumPortlet extends UIPortletApplication {
           categoryContainer.getChild(UICategory.class).updateByLink(category) ;
           categoryContainer.updateIsRender(false) ;
           this.updateIsRendered(ForumUtils.CATEGORIES);
-        } else { 
+        } else {
           uiApp.addMessage(new ApplicationMessage("UIBreadcumbs.msg.do-not-permission", new String[]{category.getCategoryName(), res.getString("UIForumPortlet.label.category").toLowerCase()}, ApplicationMessage.WARNING)) ;
           this.updateIsRendered(ForumUtils.CATEGORIES);
           categoryContainer.updateIsRender(true) ;

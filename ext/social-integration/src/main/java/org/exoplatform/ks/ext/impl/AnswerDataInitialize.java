@@ -50,6 +50,8 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
      
     FAQService fServie = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
     try {
+     Category parent = fServie.getCategoryById(Utils.CATEGORY_HOME) ;
+     if (parent != null ) {
      Category cat = new Category();
      cat.setId(Utils.CATEGORY_PREFIX + space.getId());
      cat.setCreatedDate(new Date()) ;
@@ -61,10 +63,12 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
      //cat.setViewAuthorInfor(true);
      cat.setIndex(1);
      cat.setModerators(new String[]{space.getGroupId()}) ;
-     if(fServie.getCategoryById(cat.getId()) == null) fServie.saveCategory(Utils.CATEGORY_HOME, cat, true);
-      
+     if(fServie.getCategoryById(cat.getId()) == null) fServie.saveCategory(parent.getId(), cat, true);
+     } else {
+       log.error("\n\n Root category null please check to create one !") ;
+     }
     }catch (Exception e) {
-      log.debug(e.getMessage());
+      log.error("\n\n Initialize category false " + e.getMessage());
     }
   }
 
