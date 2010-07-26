@@ -4,6 +4,7 @@ SNF_KS_06 : Because of pop up interation, RSS Feed can not be record and verifie
 SNF_KS_14 : The script is valid but this function has bug that causes the system work invidly.
 SNF_KS_23 : Because of pop up interation, Import/Export can not be recorded and verified result.
 SNF_KS_24 : The script is valid but have error from selenium that cause the system work invidly
+SNF_KS_30 : The script is valid. Run OK in Selenium but NOT OK in Java because command [keyDown] was not translated.
 SNF_KS_31 : The script is valid but this function has bug that causes the system work invidly.
 SNF_KS_38 : Because of pop up intration, Permalink can not be recorded and verified result.
 SNF_KS_39 : Because of pop up intraction, RSS Feed can not be recorded and verified.

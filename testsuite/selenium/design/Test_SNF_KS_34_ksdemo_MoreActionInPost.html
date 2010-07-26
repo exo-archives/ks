@@ -17,12 +17,17 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -48,7 +53,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>-Create topic for post moderation test-</td>
+	<td>-Add Topic-</td>
 	<td></td>
 </tr>
 <tr>
@@ -62,7 +67,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -72,13 +77,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>ThreadTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -92,12 +92,37 @@
 	<td>Topic for&nbsp;&nbsp;post actions 01</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
-	<td>Topic for post actions test content</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Topic 1</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Submit</td>
 	<td></td>
 </tr>
@@ -107,7 +132,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
 	<td></td>
 </tr>
@@ -122,13 +147,43 @@
 	<td>Topic for&nbsp;&nbsp;post actions 02</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
-	<td>Topic for Actions Test Edit</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Topic 2</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Add Quick Reply-</td>
 	<td></td>
 </tr>
 <tr>
@@ -137,7 +192,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//a[contains(text(),'Topic for&nbsp;&nbsp;post actions 02')]</td>
 	<td></td>
 </tr>
@@ -152,7 +207,7 @@
 	<td>Post 1</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Quick reply</td>
 	<td></td>
 </tr>
@@ -167,7 +222,7 @@
 	<td>Post 2</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Quick reply</td>
 	<td></td>
 </tr>
@@ -182,7 +237,7 @@
 	<td>Post 3</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Quick reply</td>
 	<td></td>
 </tr>
@@ -212,28 +267,48 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Move</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Move</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='NodeLabel']</td>
+	<td>//form[@id='UIMovePostForm']/div[@class='UITree ScrollArea']/div/div/div[4]/div/div[4]/div[2]/div[@class='NodeLabel']/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//div[@class='NodeLabel']/a[@title='Topic for post actions test content']</td>
+	<td>click</td>
+	<td>//form[@id='UIMovePostForm']/div[@class='UITree ScrollArea']/div/div/div[4]/div/div[4]/div[2]/div[@class='NodeLabel']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>-Hide Post-</td>
 	<td></td>
 </tr>
 <tr>
@@ -242,12 +317,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
@@ -257,7 +332,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Hide</td>
 	<td></td>
 </tr>
@@ -282,7 +357,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -292,7 +367,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
 	<td></td>
 </tr>
@@ -307,12 +382,32 @@
 	<td>Topic for approve post</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
-	<td>Topic for Actions Test Edit</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td>Topic 3</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Options</td>
 	<td></td>
 </tr>
@@ -322,28 +417,33 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>ModeratePost</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Submit</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>click</td>
+	<td>link=Submit</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Add post to topic require moderation-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -357,7 +457,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -392,7 +492,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -402,7 +502,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Topic for approve post</td>
 	<td></td>
 </tr>
@@ -417,7 +517,7 @@
 	<td>Post to approve Topic</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Quick reply</td>
 	<td></td>
 </tr>
@@ -427,7 +527,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[@id='UIForumPortlet']//div[@class='ExoMessageDecorator']//div[@class='ActionButton LightBlueStyle']</td>
 	<td></td>
 </tr>
@@ -437,18 +537,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for post actions 01</td>
+	<td>//tr[3]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Topic for post actions 01</td>
+	<td>click</td>
+	<td>//tr[3]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -462,18 +562,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>echo</td>
+	<td>-Approve post-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>-Approve post-</td>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -487,7 +587,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -522,7 +622,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -532,7 +632,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Topic for approve post</td>
 	<td></td>
 </tr>
@@ -552,7 +652,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
 	<td></td>
 </tr>
@@ -562,7 +662,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
@@ -572,7 +672,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Approve</td>
 	<td></td>
 </tr>
@@ -597,18 +697,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for post actions 01</td>
+	<td>//tr[3]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Topic for post actions 01</td>
+	<td>click</td>
+	<td>//tr[3]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -617,12 +717,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
@@ -632,7 +737,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Show</td>
 	<td></td>
 </tr>
@@ -647,18 +752,13 @@
 	<td>hidden!</td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Check approved and show post-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -672,7 +772,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -707,7 +807,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -717,7 +817,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Topic for approve post</td>
 	<td></td>
 </tr>
@@ -737,18 +837,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for post actions 01</td>
+	<td>//tr[2]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Topic for post actions 01</td>
+	<td>click</td>
+	<td>//tr[2]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -759,21 +859,16 @@
 <tr>
 	<td>verifyTextPresent</td>
 	<td>Post 1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Delete Post-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -787,7 +882,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -822,7 +917,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
@@ -832,7 +927,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Topic for approve post</td>
 	<td></td>
 </tr>
@@ -852,18 +947,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Live demo</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Topic for post actions 01</td>
+	<td>//tr[2]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>link=Topic for post actions 01</td>
+	<td>click</td>
+	<td>//tr[2]/td[3]/div[1]/span[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -882,12 +977,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']//input[@class='checkbox']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[1]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
@@ -897,7 +992,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Delete</td>
 	<td></td>
 </tr>
@@ -917,42 +1012,57 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Live demo</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>link=Live demo</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Delete test data-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Live demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Live demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//td[9]/input</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//td[9]/input</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//tr[2]/td[9]/input</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//tr[3]/td[9]/input</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//form[@id='UITopicContainer']/div[4]/div/div[1]/div/div/div/div[2]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Delete</td>
 	<td></td>
 </tr>
