@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_36_WatchUnwatch</title>
+<title>Test_SNF_KS_43_ksdemo_WatchUnwatch</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_36_WatchUnwatch</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_43_ksdemo_WatchUnwatch</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -98,7 +103,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=UnWatch</td>
+	<td>//div[3]/div/div/div[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -233,13 +238,33 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic for Watch</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -337,6 +362,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
@@ -352,12 +382,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
+	<td>waitForTextPresent</td>
 	<td>Sign in</td>
 	<td></td>
 </tr>

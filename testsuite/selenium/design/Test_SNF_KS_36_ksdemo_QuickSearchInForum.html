@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_36_QuickSearchInForum</title>
+<title>Test_SNF_KS_36_ksdemo_QuickSearchInForum</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_36_QuickSearchInForum</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_36_ksdemo_QuickSearchInForum</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -57,7 +62,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
+	<td>verifyTextPresent</td>
 	<td>Live demo</td>
 	<td></td>
 </tr>
@@ -217,6 +222,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>Message</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>Message</td>
 	<td>post test</td>
@@ -254,6 +264,11 @@
 <tr>
 	<td>echo</td>
 	<td>--Delete test data</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Open topic</td>
 	<td></td>
 </tr>
 <tr>

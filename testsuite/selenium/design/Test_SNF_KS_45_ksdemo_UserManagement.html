@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -78,11 +83,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -92,9 +92,34 @@
 	<td>Demo Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic Test</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -337,8 +362,18 @@
 	<td>Re: Demo Topic</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Close</td>
 	<td></td>
 </tr>
 <tr>
@@ -617,13 +652,28 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>IsBanned</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>IsBanned</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Close</td>
 	<td></td>
 </tr>
 <tr>
@@ -827,6 +877,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
@@ -887,6 +942,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIModeratorManagementForm']/div[2]/div[5]//div[1]//div[2]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UIModeratorManagementForm']/div[2]/div[5]//div[1]//div[2]/div/div/div/div</td>
 	<td></td>
@@ -912,13 +972,28 @@
 	<td>label=10</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='ManageModerator']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='ManageModerator']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIModeratorManagementForm']/div[3]/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>

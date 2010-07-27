@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -82,13 +87,28 @@
 	<td>Forum for Forum Setting</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>Forum Setting</td>
 	<td></td>
 </tr>
 <tr>
@@ -122,13 +142,28 @@
 	<td>XSort Forum</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>XSort Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -162,8 +197,28 @@
 	<td>ASort Forum</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
+	<td>ASort Forum</td>
 	<td></td>
 </tr>
 <tr>
@@ -177,8 +232,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[1]/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -212,6 +277,11 @@
 	<td>label=Descending</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
@@ -219,11 +289,6 @@
 <tr>
 	<td>echo</td>
 	<td>-Check Sorting Forum-</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Knowledge Suite</td>
 	<td></td>
 </tr>
 <tr>
@@ -263,11 +328,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -277,9 +337,34 @@
 	<td>A Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>A Topic</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -308,11 +393,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -322,9 +402,34 @@
 	<td>H Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>H Topic</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -353,11 +458,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -367,9 +467,34 @@
 	<td>X Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
-	<td>X Topic</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
+	<td> Topic</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -462,8 +587,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[1]/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -495,6 +630,11 @@
 	<td>select</td>
 	<td>topicSortByType</td>
 	<td>label=Ascending</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>

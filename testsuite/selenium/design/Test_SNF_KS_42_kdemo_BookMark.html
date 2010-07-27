@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_42_BookMark</title>
+<title>Test_SNF_KS_42_kdemo_BookMark</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_42_BookMark</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_42_kdemo_BookMark</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -67,6 +72,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Knowledge Suite</td>
+	<td></td>
+</tr>
+<tr>
 	<td>componentExoContextMenu</td>
 	<td>link=Knowledge Suite</td>
 	<td>contextmenu</td>
@@ -103,7 +113,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Bookmark</td>
+	<td>//div[@class='ItemIcon AddLinkToBookIcon']/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -143,13 +153,33 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic for Bookmark</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -188,7 +218,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIShowBookMarkForm</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[1]/td[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -223,7 +253,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIShowBookMarkForm</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[2]/td[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -257,18 +287,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UIShowBookMarkForm</td>
+	<td>waitForTextPresent</td>
+	<td>Topic of Bookmark</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[3]/td[2]/a</td>
+	<td>verifyTextPresent</td>
 	<td>Topic of Bookmark</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[3]/td[2]/a</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[2]/td[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -287,8 +317,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[3]/td[3]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -297,8 +337,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//td[3]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -387,13 +437,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIShowBookMarkForm</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table/tbody/tr[1]/td[2]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -422,8 +477,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='OpenBookMark']/div/div/div/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[3]/td[3]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -432,8 +497,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//tr[2]/td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIShowBookMarkForm']/div[2]/table//td[3]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -462,8 +537,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[5]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']/div[4]/div[1]//div[5]/div[1]/div/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
 </tr>
 <tr>
@@ -482,7 +567,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

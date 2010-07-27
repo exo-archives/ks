@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_40_CensorKeyword</title>
+<title>Test_SNF_KS_47_ksdemo_CensorKeyword</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_40_CensorKeyword</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_47_ksdemo_CensorKeyword</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/ksdemo/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -47,13 +52,28 @@
 	<td></td>
 </tr>
 <tr>
+	<td>echo</td>
+	<td>-Add censor keyword-</td>
+	<td></td>
+</tr>
+<tr>
 	<td>open</td>
 	<td>/ksdemo/private/classic/forum</td>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,23 +92,23 @@
 	<td>censor</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Add topics and check topic and post censor-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -153,11 +173,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -167,9 +182,34 @@
 	<td>Censor Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Censor Topic Content</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -177,9 +217,19 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>verifyElementPresent</td>
 	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
 	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -203,11 +253,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>ThreadTitle</td>
 	<td></td>
 </tr>
@@ -217,9 +262,34 @@
 	<td>Topic for CTest</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic for CTest</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -257,9 +327,19 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
+	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
+</tr>
+<tr>
 	<td>verifyElementPresent</td>
 	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
 	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
 </tr>
 <tr>
 	<td>click</td>
@@ -267,18 +347,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
-	<td></td>
-</tr>
-<tr>
 	<td>echo</td>
 	<td>-Delete Test Data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -342,6 +417,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
@@ -372,6 +452,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='UITopicDetail']//div[@class='ToolbarActionsContainer']/div[5]//div[@class='UIContextMenuContainer']//div[2]//div[12]</td>
 	<td></td>
@@ -387,8 +472,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -407,12 +502,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
