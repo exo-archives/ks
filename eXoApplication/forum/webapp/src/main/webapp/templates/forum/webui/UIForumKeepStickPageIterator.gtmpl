@@ -2,8 +2,8 @@
 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
 	 
 	List totals = uicomponent.getInfoPage() ; 
-	long pageSelected = uicomponent.getPageSelect() ;
-	long max_page = totals.get(3) ;
+	int pageSelected = uicomponent.getPageSelect() ;
+	int max_page = totals.get(3) ;
 	String selected = "" + pageSelected ;
 %>
 <div class="UIForumPageIterator">

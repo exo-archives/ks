@@ -57,10 +57,11 @@ abstract public class JCRPageList<E> extends PageList{
 		return currentListPage_	;
 	}
 	
-	public List<E> getPage(long page) throws Exception	 {
-	  List<E> result = super.getPage((int)page);
-		this.pageSelected = (int) page;
-		return result;
+	public List<E> getPage(int page) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPage(currentPage_);
+		pageSelected = currentPage_;
+		return currentListPage_;
 	}
 
 	public List<E> getpage(String valueSearch) throws Exception {
@@ -68,30 +69,34 @@ abstract public class JCRPageList<E> extends PageList{
 		return currentListPage_ ;
 	}
 	
-	public List<E> getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, list, false, false) ;
+	public List<E> getPageSearch(int page, List<ForumSearch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(currentPage_, list, false, false) ;
 		return currentListPage_ ;
 	}
 
-	public List<E> getPageWatch(long page, List<Watch> list) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, list, true, false) ;
+	public List<E> getPageWatch(int page, List<Watch> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(currentPage_, list, true, false) ;
 		return currentListPage_ ;
 	}
 	
-	public List<E> getPageUser(long page) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageSearch((int) page, new CopyOnWriteArrayList<E>(), true, true) ;
+	public List<E> getPageUser(int page) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageSearch(currentPage_, new CopyOnWriteArrayList<E>(), true, true) ;
 		return currentListPage_ ;
 	}
 
-
-	public List<E> getPageList(long page, List<String> list) throws Exception	 {
-		checkAndSetPage((int) page) ;
-		populateCurrentPageList((int) page, list) ;
+	public List<E> getPageList(int page, List<String> list) throws Exception	 {
+		checkAndSetPage(page) ;
+		populateCurrentPageList(currentPage_, list) ;
 		return currentListPage_ ;
 	}
 
-
+	public void checkAndSetPage(int page) throws Exception {
+    if (page > availablePage_) page = availablePage_-1;
+    if (page < 1) page = 1;
+    currentPage_ = page;
+	}
+	
 }

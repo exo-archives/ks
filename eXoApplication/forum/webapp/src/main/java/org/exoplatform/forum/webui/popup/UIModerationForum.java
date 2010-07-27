@@ -110,7 +110,7 @@ public class UIModerationForum extends UIForm implements UIPopupComponent {
 		pageIterator.updatePageList(pageList);
 		isShowIter = true;
 		if(pageList.getAvailablePage() <= 1) isShowIter = false;
-		long pageSelect = pageIterator.getPageSelected();
+		int pageSelect = pageIterator.getPageSelected();
 		List<ForumSearch>list = new ArrayList<ForumSearch>();
 		try {
 			list.addAll(pageList.getPageSearch(pageSelect, list_)) ;

@@ -91,21 +91,19 @@ public class UIForumPageIterator extends UIContainer {
 		return temp ;
 	}
 
-	@SuppressWarnings("unused")
-	public List<Long> getInfoPage() throws	Exception {
-		List<Long> temp = new ArrayList<Long>() ;
-		temp.add((long)pageList.getPageSize()) ;//so item/trang
-		temp.add((long)pageList.getCurrentPage()) ;//trang hien tai
-		temp.add((long)pageList.getAvailable()) ;//tong so item
-		temp.add((long)pageList.getAvailablePage()) ;// so trang toi da
+	public List<Integer> getInfoPage() throws	Exception {
+		List<Integer> temp = new ArrayList<Integer>() ;
+		temp.add(pageList.getPageSize()) ;//so item/trang
+		temp.add(pageList.getCurrentPage()) ;//trang hien tai
+		temp.add(pageList.getAvailable()) ;//tong so item
+		temp.add(pageList.getAvailablePage()) ;// so trang toi da
 		return temp ;
 	} 
 	
-	public void setSelectPage(long page) {
-		this.page = (int) page;
+	public void setSelectPage(int page) {
+		this.page = page;
 	}
 	
-	@SuppressWarnings("unused")
 	public int getPageSelected() {
 		return this.page ;
 	}

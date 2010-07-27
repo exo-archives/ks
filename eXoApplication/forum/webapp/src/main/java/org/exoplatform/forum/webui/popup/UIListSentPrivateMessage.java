@@ -78,7 +78,7 @@ public class UIListSentPrivateMessage extends UIContainer {
 		forumPageIterator.updatePageList(pageList) ;
 		if(pageList != null){
 			pageList.setPageSize(10) ;
-			long page = forumPageIterator.getPageSelected() ;
+			int page = forumPageIterator.getPageSelected() ;
 			this.listSend = pageList.getPage(page) ;
 			if(pageList.getAvailable() > 10){
 				isRenderIterator = true;

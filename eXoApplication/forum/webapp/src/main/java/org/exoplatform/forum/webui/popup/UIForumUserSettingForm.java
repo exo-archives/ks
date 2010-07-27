@@ -361,7 +361,7 @@ public class UIForumUserSettingForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unchecked")
   public List<Watch> getListWatch() throws Exception {
-		long pageSelect = pageIterator.getPageSelected() ;
+		int pageSelect = pageIterator.getPageSelected() ;
 		List<Watch>list = new ArrayList<Watch>();
 		try {
 			list.addAll(this.pageList.getPageWatch(pageSelect, this.listWatches)) ;

@@ -93,7 +93,7 @@ public class UIWatchToolsForm extends UIForm implements UIPopupComponent {
 	
 	@SuppressWarnings("unchecked")
   public List<String> getListEmail() throws Exception {
-		long pageSelect = pageIterator.getPageSelected() ;
+		int pageSelect = pageIterator.getPageSelected() ;
 		List<String>list = new ArrayList<String>();
 		try {
 			list.addAll(this.pageList.getPageList(pageSelect, this.listEmail)) ;

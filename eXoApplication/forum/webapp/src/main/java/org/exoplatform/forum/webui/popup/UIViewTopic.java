@@ -67,7 +67,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 	private Topic topic ;
 	private JCRPageList pageList ;
 	private UserProfile userProfile ;
-	private long pageSelect ;
+	private int pageSelect ;
 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
 	public UIViewTopic() throws Exception {
@@ -170,7 +170,7 @@ public class UIViewTopic extends UIForm implements UIPopupComponent {
 		if(this.pageList == null) return null ;
 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
 		this.pageSelect = forumPageIterator.getPageSelected() ;
-		long availablePage = this.pageList.getAvailablePage() ;
+		int availablePage = this.pageList.getAvailablePage() ;
 		if(this.pageSelect > availablePage) {
 			this.pageSelect = availablePage ;
 			forumPageIterator.setSelectPage(availablePage);
