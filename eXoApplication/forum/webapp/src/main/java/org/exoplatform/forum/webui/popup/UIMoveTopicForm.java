@@ -175,7 +175,9 @@ public class UIMoveTopicForm extends UIForm implements UIPopupComponent {
 						String[] temp = forumPath.split("/") ;
 						UIForumDescription forumDescription = forumContainer.getChild(UIForumDescription.class);
 						forumDescription.setForumIds(temp[temp.length - 2], temp[temp.length - 1]);
-						topicDetailContainer.getChild(UITopicDetail.class).setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
+						UITopicDetail topicDetail = topicDetailContainer.getChild(UITopicDetail.class);
+						topicDetail.setUpdateForum(uiForm.forumService.getForum(temp[temp.length - 2], temp[temp.length - 1]));
+						topicDetail.setUpdateTopic(temp[temp.length - 2], temp[temp.length - 1], uiForm.topics.get(0).getId()) ;
 						event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
 					} else {
 						UITopicContainer topicContainer = forumPortlet.findFirstComponentOfType(UITopicContainer.class) ;
