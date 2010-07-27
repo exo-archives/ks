@@ -1,0 +1,313 @@
+Index: eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/JCRPageList.java
+===================================================================
+--- eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/JCRPageList.java	(revision 48522)
++++ eXoApplication/forum/service/src/main/java/org/exoplatform/forum/service/JCRPageList.java	(working copy)
+@@ -57,10 +57,11 @@
+ 		return currentListPage_	;
+ 	}
+ 	
+-	public List<E> getPage(long page) throws Exception	 {
+-	  List<E> result = super.getPage((int)page);
+-		this.pageSelected = (int) page;
+-		return result;
++	public List<E> getPage(int page) throws Exception	 {
++		checkAndSetPage(page) ;
++		populateCurrentPage(currentPage_);
++		pageSelected = currentPage_;
++		return currentListPage_;
+ 	}
+ 
+ 	public List<E> getpage(String valueSearch) throws Exception {
+@@ -68,30 +69,34 @@
+ 		return currentListPage_ ;
+ 	}
+ 	
+-	public List<E> getPageSearch(long page, List<ForumSearch> list) throws Exception	 {
+-		checkAndSetPage((int) page) ;
+-		populateCurrentPageSearch((int) page, list, false, false) ;
++	public List<E> getPageSearch(int page, List<ForumSearch> list) throws Exception	 {
++		checkAndSetPage(page) ;
++		populateCurrentPageSearch(currentPage_, list, false, false) ;
+ 		return currentListPage_ ;
+ 	}
+ 
+-	public List<E> getPageWatch(long page, List<Watch> list) throws Exception	 {
+-		checkAndSetPage((int) page) ;
+-		populateCurrentPageSearch((int) page, list, true, false) ;
++	public List<E> getPageWatch(int page, List<Watch> list) throws Exception	 {
++		checkAndSetPage(page) ;
++		populateCurrentPageSearch(currentPage_, list, true, false) ;
+ 		return currentListPage_ ;
+ 	}
+ 	
+-	public List<E> getPageUser(long page) throws Exception	 {
+-		checkAndSetPage((int) page) ;
+-		populateCurrentPageSearch((int) page, new CopyOnWriteArrayList<E>(), true, true) ;
++	public List<E> getPageUser(int page) throws Exception	 {
++		checkAndSetPage(page) ;
++		populateCurrentPageSearch(currentPage_, new CopyOnWriteArrayList<E>(), true, true) ;
+ 		return currentListPage_ ;
+ 	}
+ 
+-
+-	public List<E> getPageList(long page, List<String> list) throws Exception	 {
+-		checkAndSetPage((int) page) ;
+-		populateCurrentPageList((int) page, list) ;
++	public List<E> getPageList(int page, List<String> list) throws Exception	 {
++		checkAndSetPage(page) ;
++		populateCurrentPageList(currentPage_, list) ;
+ 		return currentListPage_ ;
+ 	}
+ 
+-
++	public void checkAndSetPage(int page) throws Exception {
++    if (page > availablePage_) page = availablePage_-1;
++    if (page < 1) page = 1;
++    currentPage_ = page;
++	}
++	
+ }
+\ No newline at end of file
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListTopicOld.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListTopicOld.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListTopicOld.java	(working copy)
+@@ -86,7 +86,7 @@
+ 				pageList.setPageSize(10) ;
+ 				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class) ;
+ 				pageIterator.updatePageList(pageList) ;
+-				long page = pageIterator.getPageSelected() ;
++				int page = pageIterator.getPageSelected() ;
+ 				List<Topic> topics = pageList.getPage(page) ;
+ 				pageIterator.setSelectPage(pageList.getCurrentPage());
+ 				if(topics == null)topics = new ArrayList<Topic>();
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIForumUserSettingForm.java	(working copy)
+@@ -361,7 +361,7 @@
+ 	
+ 	@SuppressWarnings("unchecked")
+   public List<Watch> getListWatch() throws Exception {
+-		long pageSelect = pageIterator.getPageSelected() ;
++		int pageSelect = pageIterator.getPageSelected() ;
+ 		List<Watch>list = new ArrayList<Watch>();
+ 		try {
+ 			list.addAll(this.pageList.getPageWatch(pageSelect, this.listWatches)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModerationForum.java	(working copy)
+@@ -110,7 +110,7 @@
+ 		pageIterator.updatePageList(pageList);
+ 		isShowIter = true;
+ 		if(pageList.getAvailablePage() <= 1) isShowIter = false;
+-		long pageSelect = pageIterator.getPageSelected();
++		int pageSelect = pageIterator.getPageSelected();
+ 		List<ForumSearch>list = new ArrayList<ForumSearch>();
+ 		try {
+ 			list.addAll(pageList.getPageSearch(pageSelect, list_)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewResultSearchUser.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewResultSearchUser.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewResultSearchUser.java	(working copy)
+@@ -59,7 +59,7 @@
+ 	@SuppressWarnings({ "unused", "unchecked" })
+   private List<UserProfile> getListUserProfile() throws Exception{
+ 		UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+-		long page = pageIterator.getPageSelected() ;
++		int page = pageIterator.getPageSelected() ;
+   	List<UserProfile> listUserProfile = pageList.getPage(page);
+   	pageIterator.setSelectPage(pageList.getCurrentPage());
+     if(listUserProfile == null)listUserProfile = new ArrayList<UserProfile>();
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListSentPrivateMessage.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListSentPrivateMessage.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListSentPrivateMessage.java	(working copy)
+@@ -78,7 +78,7 @@
+ 		forumPageIterator.updatePageList(pageList) ;
+ 		if(pageList != null){
+ 			pageList.setPageSize(10) ;
+-			long page = forumPageIterator.getPageSelected() ;
++			int page = forumPageIterator.getPageSelected() ;
+ 			this.listSend = pageList.getPage(page) ;
+ 			if(pageList.getAvailable() > 10){
+ 				isRenderIterator = true;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIViewTopic.java	(working copy)
+@@ -67,7 +67,7 @@
+ 	private Topic topic ;
+ 	private JCRPageList pageList ;
+ 	private UserProfile userProfile ;
+-	private long pageSelect ;
++	private int pageSelect ;
+ 	private Map<String, UserProfile> mapUserProfile = new HashMap<String, UserProfile>();
+ 	private List<BBCode> listBBCode = new ArrayList<BBCode>();
+ 	public UIViewTopic() throws Exception {
+@@ -170,7 +170,7 @@
+ 		if(this.pageList == null) return null ;
+ 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+ 		this.pageSelect = forumPageIterator.getPageSelected() ;
+-		long availablePage = this.pageList.getAvailablePage() ;
++		int availablePage = this.pageList.getAvailablePage() ;
+ 		if(this.pageSelect > availablePage) {
+ 			this.pageSelect = availablePage ;
+ 			forumPageIterator.setSelectPage(availablePage);
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListInBoxPrivateMessage.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListInBoxPrivateMessage.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIListInBoxPrivateMessage.java	(working copy)
+@@ -77,7 +77,7 @@
+ 		UIForumPageIterator forumPageIterator = this.getChild(UIForumPageIterator.class) ;
+ 		forumPageIterator.updatePageList(pageList) ;
+ 		pageList.setPageSize(10) ;
+-		long page = forumPageIterator.getPageSelected() ;
++		int page = forumPageIterator.getPageSelected() ;
+ 		this.listInbox = pageList.getPage(page) ;
+ 		if(pageList.getAvailable() > 10){
+ 			isRenderIterator = true;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIWatchToolsForm.java	(working copy)
+@@ -93,7 +93,7 @@
+ 	
+ 	@SuppressWarnings("unchecked")
+   public List<String> getListEmail() throws Exception {
+-		long pageSelect = pageIterator.getPageSelected() ;
++		int pageSelect = pageIterator.getPageSelected() ;
+ 		List<String>list = new ArrayList<String>();
+ 		try {
+ 			list.addAll(this.pageList.getPageList(pageSelect, this.listEmail)) ;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/popup/UIModeratorManagementForm.java	(working copy)
+@@ -137,10 +137,11 @@
+ 	private String userAvartarUrl = null;
+ 	private String keyWord = "";
+ 	private boolean isViewSearchUser = false;
++	private UIForumPageIterator pageIterator ;
+ 	
+ 	public UIModeratorManagementForm() throws Exception {
+ 		forumService = (ForumService)PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class) ;
+-		addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
++		pageIterator = addChild(UIForumPageIterator.class, null, "ForumUserPageIterator") ;
+ 		addChild(new UIFormStringInput(FIELD_SEARCH_USER, FIELD_SEARCH_USER, null));
+ 		WebuiRequestContext context = WebuiRequestContext.getCurrentInstance() ;
+ 		ResourceBundle res = context.getApplicationResourceBundle() ;
+@@ -161,7 +162,7 @@
+ 	public void setPageListUserProfile() throws Exception {
+ 		userPageList = this.forumService.getPageListUserProfile() ;
+ 		userPageList.setPageSize(5);
+-		this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;		
++		pageIterator.updatePageList(this.userPageList) ;		
+ 	}
+ 	
+ 	private boolean isAdmin(String userId) throws Exception {
+@@ -181,13 +182,12 @@
+ 	
+ 	private void setListUserProfile() throws Exception {
+ 		if(valueSearch == null || valueSearch.trim().length() < 1){
+-			UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+-			long page = pageIterator.getPageSelected() ;
++			int page = pageIterator.getPageSelected() ;
+ 			this.userProfiles = this.userPageList.getPage(page) ;
+ 			pageIterator.setSelectPage(userPageList.getCurrentPage());
+ 		} else {
+ 			this.userProfiles = this.userPageList.getpage(this.valueSearch);
+-			this.getChild(UIForumPageIterator.class).setSelectPage(this.userPageList.getCurrentPage());
++			pageIterator.setSelectPage(this.userPageList.getCurrentPage());
+ 			valueSearch = null;
+ 		}
+ 	}
+@@ -197,10 +197,10 @@
+ 			this.setListUserProfile();
+ 		} else {
+ 			try {
+-				UIForumPageIterator pageIterator = this.getChild(UIForumPageIterator.class);
+-				long page = pageIterator.getPageSelected() ;
++				int page = pageIterator.getPageSelected() ;
+ 				this.userProfiles = new ArrayList<UserProfile>();
+-				for(Object obj : this.userPageList.getPageUser(page)){
++				List list = this.userPageList.getPageUser(page);
++				for(Object obj : list){
+ 					if(obj instanceof User)
+ 						this.userProfiles.add(forumService.getUserProfileManagement(((User)obj).getUserName()));
+ 					else if(obj instanceof UserProfile)
+@@ -550,7 +550,8 @@
+ 			keyword = "*" + keyword + "*" ;
+ 			this.userPageList = this.forumService.searchUserProfile(keyword);
+ 			this.userPageList.setPageSize(5);
+-			this.getChild(UIForumPageIterator.class).updatePageList(this.userPageList) ;	
++			pageIterator.updatePageList(this.userPageList) ;
++			pageIterator.setSelectPage(1);
+ 			this.isViewSearchUser = true;
+ 		} catch (Exception e) {
+ 			this.isViewSearchUser = false;
+Index: eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPageIterator.java
+===================================================================
+--- eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPageIterator.java	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/java/org/exoplatform/forum/webui/UIForumPageIterator.java	(working copy)
+@@ -91,21 +91,19 @@
+ 		return temp ;
+ 	}
+ 
+-	@SuppressWarnings("unused")
+-	public List<Long> getInfoPage() throws	Exception {
+-		List<Long> temp = new ArrayList<Long>() ;
+-		temp.add((long)pageList.getPageSize()) ;//so item/trang
+-		temp.add((long)pageList.getCurrentPage()) ;//trang hien tai
+-		temp.add((long)pageList.getAvailable()) ;//tong so item
+-		temp.add((long)pageList.getAvailablePage()) ;// so trang toi da
++	public List<Integer> getInfoPage() throws	Exception {
++		List<Integer> temp = new ArrayList<Integer>() ;
++		temp.add(pageList.getPageSize()) ;//so item/trang
++		temp.add(pageList.getCurrentPage()) ;//trang hien tai
++		temp.add(pageList.getAvailable()) ;//tong so item
++		temp.add(pageList.getAvailablePage()) ;// so trang toi da
+ 		return temp ;
+ 	} 
+ 	
+-	public void setSelectPage(long page) {
+-		this.page = (int) page;
++	public void setSelectPage(int page) {
++		this.page = page;
+ 	}
+ 	
+-	@SuppressWarnings("unused")
+ 	public int getPageSelected() {
+ 		return this.page ;
+ 	}
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumPageIterator.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumPageIterator.gtmpl	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumPageIterator.gtmpl	(working copy)
+@@ -3,8 +3,8 @@
+ 	import org.exoplatform.forum.service.JCRPageList ;
+ 	 
+ 	List totals = uicomponent.getInfoPage() ; 
+-	long pageSelected = uicomponent.getPageSelected() ;
+-	long max_page = totals.get(3) ;
++	int pageSelected = uicomponent.getPageSelected() ;
++	int max_page = totals.get(3) ;
+ 	String selected = "" + pageSelected ;
+ %>
+ <div class="UIForumPageIterator" id="$uicomponent.id">
+Index: eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl
+===================================================================
+--- eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl	(revision 48522)
++++ eXoApplication/forum/webapp/src/main/webapp/templates/forum/webui/UIForumKeepStickPageIterator.gtmpl	(working copy)
+@@ -2,8 +2,8 @@
+ 	import org.exoplatform.forum.webui.UIForumKeepStickPageIterator ;
+ 	 
+ 	List totals = uicomponent.getInfoPage() ; 
+-	long pageSelected = uicomponent.getPageSelect() ;
+-	long max_page = totals.get(3) ;
++	int pageSelected = uicomponent.getPageSelect() ;
++	int max_page = totals.get(3) ;
+ 	String selected = "" + pageSelected ;
+ %>
+ <div class="UIForumPageIterator">
