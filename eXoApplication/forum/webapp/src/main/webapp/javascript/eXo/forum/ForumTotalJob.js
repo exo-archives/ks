@@ -1,10 +1,3 @@
-Array.prototype.each = function (iterator, context) {
-	iterator = iterator.bind(context);
-  	for (var i = 0; i < this.length; i++) {
-		iterator(this[i]) ;
-	}
-};
-
 function ForumTotalJob() {
   
 } ;
