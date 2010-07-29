@@ -16,86 +16,24 @@
  */
 package org.exoplatform.forum.service.impl;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumEventLifeCycle;
 import org.exoplatform.forum.service.Post;
 import org.exoplatform.forum.service.Topic;
-import org.exoplatform.forum.service.Utils;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
-import org.exoplatform.social.core.manager.ActivityManager;
-import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.social.core.space.model.Space;
-import org.exoplatform.social.core.space.spi.SpaceService;
 
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 15, 2010  
+ * Created by The eXo Platform SAS Author : eXoPlatform exo@exoplatform.com Jul
+ * 15, 2010
  */
-public class ForumEventListener extends BaseComponentPlugin implements ForumEventLifeCycle  {
+public abstract class ForumEventListener extends BaseComponentPlugin implements ForumEventLifeCycle {
 
-  private static Log      LOG = ExoLogger.getExoLogger(ForumEventListener.class);
+  public abstract void saveCategory(Category category);
 
-  @Override
-  public void saveCategory(Category category) {
-    // TODO Auto-generated method stub
+  public abstract void saveForum(Forum forum);
 
-  }
+  public abstract void savePost(Post post, String forumId);
 
-  @Override
-  public void saveForum(Forum forum) {
-    // TODO Auto-generated method stub
-
-  }
-
-
-  @Override
-  public void savePost(Post post, String forumId) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      String msg = post.getOwner() + " has been posted: <a href=" +post.getLink()+ ">" + post.getName() +  "</a>" ;
-      String body = post.getLink() ;
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-      String spaceId = forumId.split(Utils.FORUM)[1];
-      Space space = spaceS.getSpaceById(spaceId) ;
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-      activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when post " +e.getMessage());
-    }
-
-  }
-
-  @Override
-  public void saveTopic(Topic topic, String forumId) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      String msg = topic.getOwner() + " has been posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
-      String body = topic.getLink() ;
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-      String spaceId = forumId.split(Utils.FORUM)[1];
-      Space space = spaceS.getSpaceById(spaceId) ;
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, space.getId(), false);
-      activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when add topic " +e.getMessage());
-    }
-  } 
-
+  public abstract void saveTopic(Topic topic, String forumId);
 }

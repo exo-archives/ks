@@ -16,21 +16,11 @@
  */
 package org.exoplatform.faq.service.impl;
 
-import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.BaseComponentPlugin;
 import org.exoplatform.faq.service.Answer;
 import org.exoplatform.faq.service.AnswerEventLifeCycle;
-import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.Comment;
-import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Question;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.identity.provider.SpaceIdentityProvider;
-import org.exoplatform.social.core.manager.ActivityManager;
-import org.exoplatform.social.core.manager.IdentityManager;
-import org.exoplatform.social.core.space.spi.SpaceService;
 
 /**
  * Created by The eXo Platform SAS
@@ -38,106 +28,13 @@ import org.exoplatform.social.core.space.spi.SpaceService;
  *          exo@exoplatform.com
  * Jul 26, 2010  
  */
-public class AnswerEventListener extends BaseComponentPlugin implements AnswerEventLifeCycle {
+public abstract class AnswerEventListener extends BaseComponentPlugin implements AnswerEventLifeCycle {
 
-  private static Log      LOG = ExoLogger.getExoLogger(AnswerEventListener.class);
+  public abstract void saveAnswer(String questionId, Answer answer);
 
-  @Override
-  public void saveAnswer(String questionId, Answer answer) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      FAQService faqS = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-      Question q = faqS.getQuestionById(questionId);
-      String msg = answer.getResponseBy() + " has answered: <a href=" +q.getLink()+ ">" + q.getQuestion()+  "</a>" ;
-      String body = q.getLink() ;
-      Category cal = faqS.getCategoryById(q.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0] ;
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      //SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-      //Space space = spaceS.getSpaceById(spaceId) ;
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, spaceId, false);
-      activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
+  public abstract void saveComment(String questionId, Comment comment) ;
 
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when post answer " +e.getMessage());
-    }
+  public abstract void saveQuestion(Question question);
 
-  }
-
-  @Override
-  public void saveComment(String questionId, Comment comment) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      FAQService faqS = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-      Question q = faqS.getQuestionById(questionId);
-      String msg = comment.getCommentBy() + " has commented: <a href=" +q.getLink()+ ">" + q.getQuestion() +  "</a>" ;
-      String body = q.getLink() ;
-      Category cal = faqS.getCategoryById(q.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0] ;
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      //SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-      //Space space = spaceS.getSpaceById(spaceId) ;
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, spaceId, false);
-      activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when add comment " +e.getMessage());
-    }
-  }
-
-  @Override
-  public void saveQuestion(Question question) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      String msg = question.getAuthor() + " has been asked: <a href=" +question.getLink()+ ">" + question.getQuestion() +  "</a>" ;
-      String body = question.getLink() ;
-      FAQService faqS = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-      Category cal = faqS.getCategoryById(question.getCategoryId());
-      String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0] ;
-      IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-      ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-      //SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-      //Space space = spaceS.getSpaceById(spaceId) ;
-      Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, spaceId, false);
-      activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when add new questin " +e.getMessage());
-    }
-
-  }
-
-  @Override
-  public void saveAnswer(String questionId, Answer[] answers) {
-    try {
-      Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-      FAQService faqS = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
-      Question q = faqS.getQuestionById(questionId);
-      if(answers.length == 1) {
-        Answer answer = answers[0];
-        String msg = answer.getResponseBy() + " has answered: <a href=" +q.getLink()+ ">" + q.getQuestion()+  "</a>" ;
-        String body = q.getLink() ;
-        Category cal = faqS.getCategoryById(q.getCategoryId());
-        String spaceId = cal.getPath().split(org.exoplatform.faq.service.Utils.CATEGORY_PREFIX)[1].split("/")[0] ;
-        IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
-        ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
-        //SpaceService spaceS = (SpaceService) PortalContainer.getInstance().getComponentInstanceOfType(SpaceService.class); 
-        //Space space = spaceS.getSpaceById(spaceId) ;
-        Identity spaceIdentity = indentityM.getOrCreateIdentity(SpaceIdentityProvider.NAME, spaceId, false);
-        activityM.recordActivity(spaceIdentity, SpaceService.SPACES_APP_ID, msg , body);
-      } 
-    } catch (ClassNotFoundException e) {
-      if(LOG.isDebugEnabled()) LOG.debug("Please check the integrated project does the social deploy? " +e.getMessage());
-    } catch (Exception e) {
-      LOG.error("Can not record Activity for space when post answer " +e.getMessage());
-    }
-  }
-
+  public abstract void saveAnswer(String questionId, Answer[] answers);
 }

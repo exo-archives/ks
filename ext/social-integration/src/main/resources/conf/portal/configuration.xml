@@ -1,0 +1,42 @@
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_1.xsd http://www.exoplaform.org/xml/ns/kernel_1_1.xsd"
+  xmlns="http://www.exoplaform.org/xml/ns/kernel_1_1.xsd">
+
+ <!-- Social integration -->
+   <external-component-plugins>
+    <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
+    <component-plugin>
+      <name>ForumDataInitialize</name>
+      <set-method>addSpaceListener</set-method>
+      <type>org.exoplatform.ks.ext.impl.ForumDataInitialize</type>
+    </component-plugin>
+  </external-component-plugins>
+
+   <external-component-plugins>
+    <target-component>org.exoplatform.social.core.space.spi.SpaceService</target-component>
+    <component-plugin>
+      <name>ForumDataInitialize</name>
+      <set-method>addSpaceListener</set-method>
+      <type>org.exoplatform.ks.ext.impl.AnswerDataInitialize</type>
+    </component-plugin>
+  </external-component-plugins>
+
+   <external-component-plugins>
+    <target-component>org.exoplatform.forum.service.ForumService</target-component>
+    <component-plugin>
+      <name>ForumEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.ks.ext.impl.ForumSpaceActivityPublisher</type>
+    </component-plugin>
+  </external-component-plugins>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.faq.service.FAQService</target-component>
+    <component-plugin>
+      <name>AnswerEventListener</name>
+      <set-method>addListenerPlugin</set-method>
+      <type>org.exoplatform.ks.ext.impl.AnswersSpaceActivityPublisher</type>
+    </component-plugin>
+  </external-component-plugins>
+
+  <!-- End social intergration -->
+  </configuration>
