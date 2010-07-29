@@ -22,6 +22,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -47,13 +52,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Answers</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Answers</td>
+	<td>open</td>
+	<td>/ksdemo/private/classic/answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -64,6 +64,11 @@
 <tr>
 	<td>click</td>
 	<td>link=Submit question</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>QuestionTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -72,9 +77,29 @@
 	<td>Question in Root category</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
+	<td>waitForElementPresent</td>
 	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>description question</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -87,7 +112,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>//form[@id='UIQuestionForm']/div[3]/table[@class='ActionContainer']/tbody/tr/td/div[@class='ActionButton LightBlueStyle']/div/div/div</td>
 	<td></td>
 </tr>
@@ -132,9 +157,29 @@
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
+	<td>selectFrame</td>
 	<td>//iframe[@id='QuestionRespone___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Apache JMeter may be used to test performance both on static and dynamic resources (files, Servlets, Perl scripts, Java Objects, Data Bases and Queries, FTP Servers and more). It can be used to simulate a heavy load on a server, network or object to test its strength or to analyze overall performance under different load types. You can use it to make a graphical analysis of performance or to test your server/script/object behavior under heavy concurrent load.</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='QuestionRespone___Frame']</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -182,13 +227,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=Answers</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Answers</td>
+	<td>open</td>
+	<td>/ksdemo/private/classic/answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -217,13 +257,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=FAQ</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=FAQ</td>
+	<td>open</td>
+	<td>/ksdemo/private/classic/faq</td>
 	<td></td>
 </tr>
 <tr>
@@ -242,7 +277,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

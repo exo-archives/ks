@@ -4,20 +4,30 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_05_ManageWatchCategory</title>
+<title>Test_SNF_KS_05_defaultportal_ManageWatchCategory</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_05_ManageWatchCategory</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_05_defaultportal_ManageWatchCategory</td></tr>
 </thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/portal/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
 <tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -58,12 +68,27 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Add category</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAt</td>
 	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>eventCategoryName</td>
 	<td></td>
 </tr>
 <tr>
@@ -77,13 +102,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_05_Cate 1</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_05_Cate 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -122,7 +147,12 @@
 	<td>You are watching this category, you will be notified about all changes.</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//div[@class='CloseButton']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//div[@id='UIAnswersPortlet']//div[@class='ExoMessageDecorator']//div[@class='CloseButton']</td>
 	<td></td>
 </tr>
@@ -137,17 +167,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[@class='UICategories']//a[2]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>UIWatchManager</td>
+	<td>echo</td>
+	<td>-Edit email watch-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
 	<td></td>
 </tr>
@@ -162,7 +197,12 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
@@ -177,12 +217,27 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>echo</td>
+	<td>-Add email watch-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//img[@title='Add Item']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//img[@title='Add Item']</td>
 	<td></td>
 </tr>
@@ -197,7 +252,12 @@
 	<td>hello@yahoo.com</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
@@ -212,17 +272,32 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[2]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>//div[2]/img[1]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//div[2]/img[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
@@ -237,7 +312,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>echo</td>
+	<td>-Delete email watch-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[3]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//form[@id='UIWatchManager']/div[2]//td[3]/div[3]/div</td>
 	<td></td>
 </tr>
@@ -257,7 +342,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIWatchManager']/div[3]//a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//form[@id='UIWatchManager']/div[3]//a</td>
 	<td></td>
 </tr>
