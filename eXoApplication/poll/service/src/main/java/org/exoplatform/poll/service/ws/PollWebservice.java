@@ -55,8 +55,7 @@ public class PollWebservice implements ResourceContainer {
 	    		poll.setIsAdmin(String.valueOf(hasGroupAdminOfGatein()));
 	    		String group = poll.getParentPath();
 	    		if(group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0 && poll.getIsAdmin().equals("false")) {
-	    			group = group.substring(group.indexOf("/", 2)+1, group.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
-	    			System.out.println("\n\b======> gr: "  + group);
+	    			group = group.substring(group.indexOf("/", 2), group.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
 	    			UserACL userACL = (UserACL)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(UserACL.class);
 	    			if(userACL.isUserInGroup(group)) {
 	    				poll = new Poll();
@@ -80,7 +79,6 @@ public class PollWebservice implements ResourceContainer {
     } else {
     	pollSummary.setId("DoNotPermission");
     }
-    System.out.println("\n========> pollSummary" + pollSummary.getPollName().toString());
     return Response.ok(pollSummary, MediaType.APPLICATION_JSON).cacheControl(cacheControl).build();
   }
 
