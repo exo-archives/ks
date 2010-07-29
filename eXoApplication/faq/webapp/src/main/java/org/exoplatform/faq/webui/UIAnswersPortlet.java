@@ -24,6 +24,8 @@ import org.exoplatform.faq.service.FAQSetting;
 import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.webui.popup.UISettingForm;
 import org.exoplatform.ks.common.webui.UIPopupAction;
+import org.exoplatform.portal.application.PortalRequestContext;
+import org.exoplatform.portal.webui.util.Util;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceService;
 import org.exoplatform.web.application.RequestContext;
@@ -86,30 +88,7 @@ public class UIAnswersPortlet extends UIPortletApplication {
         }
         addChild(UIAnswersContainer.class, null, null) ;
       }
-      /*
-      try {
-        String paths = getSpaceCategoryId() ;
-        System.out.println("\n\n paths " + paths);
-        if(paths != null && !paths.isEmpty() && context.getRequestParameter(OBJECTID) == null) {
-          UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
-          UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class) ;
-          UICategories categories = findFirstComponentOfType(UICategories.class);
-          uiQuestions.pageSelect = 0;
-          uiQuestions.backPath_ = "" ;
-          uiQuestions.setLanguage(FAQUtils.getDefaultLanguage());
-          uiQuestions.viewingQuestionId_ = "" ;
-          uiQuestions.updateCurrentLanguage();
-          categories.setPathCategory(paths);
-          uiQuestions.setCategoryId(paths) ;
-          uiQuestions.updateCurrentQuestionList() ;
-
-          uiBreadcums.setUpdataPath(paths);
-        }
-      } catch (Exception e) {
-        System.out.println("can not render the selected category");
-      }
-      */
-
+      renderPortletById();
     }else if(portletReqContext.getApplicationMode() == PortletMode.EDIT) {
       try{
         if(isFirstTime){
@@ -134,6 +113,24 @@ public class UIAnswersPortlet extends UIPortletApplication {
     super.processRender(app, context) ;
   }
 
+  private void renderPortletById() throws Exception {
+  	try {
+      String cateId = getSpaceCategoryId() ;
+      PortalRequestContext context = Util.getPortalRequestContext();
+      if(!FAQUtils.isFieldEmpty(cateId) && context.getRequestParameter(OBJECTID) == null && 
+      		!("true".equals(""+context.getRequestParameter("ajaxRequest")))){
+        UIBreadcumbs uiBreadcums = findFirstComponentOfType(UIBreadcumbs.class);
+        UIQuestions uiQuestions = findFirstComponentOfType(UIQuestions.class) ;
+        UICategories categories = findFirstComponentOfType(UICategories.class);
+        uiBreadcums.setUpdataPath(Utils.CATEGORY_HOME+"/"+cateId) ;
+        uiBreadcums.setRenderSearch(true);
+      	uiQuestions.setCategoryId(Utils.CATEGORY_HOME+"/"+cateId);
+      	categories.setPathCategory(Utils.CATEGORY_HOME+"/"+cateId) ;
+      }
+    } catch (Exception e) {
+      System.out.println("can not render the selected category");
+    }
+  }
   public void renderPopupMessages() throws Exception {
     UIPopupMessages popupMess = getUIPopupMessages();
     if(popupMess == null)  return ;
