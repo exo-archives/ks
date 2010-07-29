@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2007 eXo Platform SAS.
+ * Copyright (C) 2003-2010 eXo Platform SAS.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -84,12 +84,10 @@ import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.common.EmailNotifyPlugin;
 import org.exoplatform.ks.common.NotifyInfo;
 import org.exoplatform.ks.common.UserHelper;
-import org.exoplatform.ks.common.conf.InitialRSSListener;
 import org.exoplatform.ks.common.conf.RoleRulesPlugin;
 import org.exoplatform.ks.common.jcr.KSDataLocation;
 import org.exoplatform.ks.common.jcr.PropertyReader;
 import org.exoplatform.ks.common.jcr.SessionManager;
-import org.exoplatform.ks.rss.FAQRSSEventListener;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.impl.core.query.QueryImpl;
 import org.exoplatform.services.log.ExoLogger;
@@ -110,63 +108,63 @@ import com.sun.syndication.io.SyndFeedOutput;
 /**
  * Created by The eXo Platform SARL
  * Author : Hung Nguyen Quang
- *          hung.nguyen@exoplatform.com
- * Jul 10, 2007  
+ *					hung.nguyen@exoplatform.com
+ * Jul 10, 2007	
  */
 public class JCRDataStorage implements DataStorage {
-  
-  private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
+	
+	private static final Log log = ExoLogger.getLogger(JCRDataStorage.class);
 
 	final private static String MIMETYPE_TEXTHTML = "text/html".intern() ;
 	@SuppressWarnings("unused")
 	private Map<String, String> serverConfig_ = new HashMap<String, String>();
 	private Map<String, NotifyInfo> messagesInfoMap_ = new HashMap<String, NotifyInfo>() ;
 	final Queue<NotifyInfo> pendingMessagesQueue = new ConcurrentLinkedQueue<NotifyInfo>();
-	private Map<String, FAQRSSEventListener> rssListenerMap_ = new HashMap<String, FAQRSSEventListener> () ;
+//	private Map<String, FAQRSSEventListener> rssListenerMap_ = new HashMap<String, FAQRSSEventListener> () ;
 	private final String ADMIN_="ADMIN".intern();
-	private final String FAQ_RSS = "ks.rss";
+//	private final String FAQ_RSS = "ks.rss";
 	private List<RoleRulesPlugin> rulesPlugins_ = new ArrayList<RoleRulesPlugin>() ;
-	private boolean isInitRssListener_ = true ;
-  private SessionManager sessionManager;
-  private KSDataLocation dataLocator;
+//	private boolean isInitRssListener_ = true ;
+	private SessionManager sessionManager;
+	private KSDataLocation dataLocator;
 	
-  public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
-    this.dataLocator = dataLocator;
-    sessionManager = dataLocator.getSessionManager();
-  }
+	public JCRDataStorage(KSDataLocation dataLocator) throws Exception {
+		this.dataLocator = dataLocator;
+		sessionManager = dataLocator.getSessionManager();
+	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#addPlugin(org.exoplatform.container.component.ComponentPlugin)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#addPlugin(org.exoplatform.container.component.ComponentPlugin)
+	 */
 	public void addPlugin(ComponentPlugin plugin) throws Exception {
 		try{
 			serverConfig_ = ((EmailNotifyPlugin)plugin).getServerConfiguration() ;
 		}catch(Exception e) {
-		  log.error("\nFailed to add plugin\n ", e);
+			log.error("\nFailed to add plugin\n ", e);
 		}
 		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#addRolePlugin(org.exoplatform.container.component.ComponentPlugin)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#addRolePlugin(org.exoplatform.container.component.ComponentPlugin)
+	 */
 	public void addRolePlugin(ComponentPlugin plugin) throws Exception {
 		try {
 			if(plugin instanceof RoleRulesPlugin){
 				rulesPlugins_.add((RoleRulesPlugin)plugin) ;
 			}
 		} catch (Exception e) {
-		  log.error("Failed to add role plugin\n", e);
+			log.error("Failed to add role plugin\n", e);
 		}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#addInitRssPlugin(org.exoplatform.container.component.ComponentPlugin)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#addInitRssPlugin(org.exoplatform.container.component.ComponentPlugin)
+	 */
 	public void addInitRssPlugin(ComponentPlugin plugin) throws Exception {
-		if(plugin instanceof InitialRSSListener) {
-			isInitRssListener_  = ((InitialRSSListener)plugin).isInitRssListener() ;
-		}		
+		/*if(plugin instanceof InitialRSSListener) {
+			isInitRssListener_	= ((InitialRSSListener)plugin).isInitRssListener() ;
+		}*/		
 	}
 	
 	private List<String> getAllGroupAndMembershipOfUser(String userId) throws Exception{
@@ -189,8 +187,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isAdminRole(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isAdminRole(java.lang.String)
+	 */
 	public boolean isAdminRole(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		
 		try {
@@ -204,14 +202,14 @@ public class JCRDataStorage implements DataStorage {
 				if(Utils.hasPermission(list, getAllGroupAndMembershipOfUser(userName))) return true;
 			}
 		} catch (Exception e) {
-		  log.debug("Check user whether is admin: ", e);
+			log.debug("Check user whether is admin: ", e);
 		} finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getAllFAQAdmin()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getAllFAQAdmin()
+	 */
 	public List<String> getAllFAQAdmin() throws Exception {
 		List<String> list = new ArrayList<String>();
 		try {
@@ -220,17 +218,14 @@ public class JCRDataStorage implements DataStorage {
 			}
 			list =	FAQServiceUtils.getUserPermission(list.toArray(new String[]{}));
 		} catch (Exception e) {
-		  log.error("Failed to get all FAQ admin: ", e);
+			log.error("Failed to get all FAQ admin: ", e);
 		}
 		return list;
 	}
 	
-	
-	
-	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getUserSetting(java.lang.String, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getUserSetting(java.lang.String, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public void getUserSetting(String userName, FAQSetting faqSetting) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -245,8 +240,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 																																																																																																																																																																																																																																																																																
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveFAQSetting(org.exoplatform.faq.service.FAQSetting, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveFAQSetting(org.exoplatform.faq.service.FAQSetting, java.lang.String)
+	 */
 	public void saveFAQSetting(FAQSetting faqSetting,String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{			
@@ -265,8 +260,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getUserAvatar(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getUserAvatar(java.lang.String)
+	 */
 	public FileAttachment getUserAvatar(String userName) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -285,13 +280,14 @@ public class JCRDataStorage implements DataStorage {
 				return attachment ;	
 			}			
 		}catch(Exception e){
+			log.error("Failed to get user avatar", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveUserAvatar(java.lang.String, org.exoplatform.faq.service.FileAttachment)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveUserAvatar(java.lang.String, org.exoplatform.faq.service.FileAttachment)
+	 */
 	public void saveUserAvatar(String userId, FileAttachment fileAttachment) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -309,13 +305,13 @@ public class JCRDataStorage implements DataStorage {
 			if(avatarNode.isNew()) ksAvatarHomeNode.getSession().save();
 			else ksAvatarHomeNode.save();
 		}catch (Exception e) {
-		  log.error("Failed to save user avatar: ", e);
+			log.error("Failed to save user avatar: ", e);
 		}finally {sProvider.close() ;}		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#setDefaultAvatar(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#setDefaultAvatar(java.lang.String)
+	 */
 	public void setDefaultAvatar(String userName)throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -328,15 +324,15 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		}catch (Exception e) {
-		  log.error("Failed to set default avatar: ", e);
+			log.error("Failed to set default avatar: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
  
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsIterator()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsIterator()
+	 */
 	public NodeIterator getQuestionsIterator() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -347,7 +343,7 @@ public class JCRDataStorage implements DataStorage {
 			QueryResult result = query.execute();
 			return result.getNodes() ;
 		}catch(Exception e) {
-		  log.error("Failed to get question iterator: ", e);
+			log.error("Failed to get question iterator: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}	
@@ -362,16 +358,16 @@ public class JCRDataStorage implements DataStorage {
 //			FAQRSSEventListener questionRSS = new FAQRSSEventListener(dataLocator) ;
 //			questionRSS.setPath(path) ;
 //			observation.addEventListener(questionRSS, Event.NODE_ADDED & Event.PROPERTY_CHANGED & Event.NODE_REMOVED,
-//					                         path, true, null, null, false) ;
+//																	 path, true, null, null, false) ;
 //			rssListenerMap_.put(path, questionRSS) ;
 //		}catch(Exception e) {
-//		  log.error("Fail to listen when add RSS: ", e);
+//			log.error("Fail to listen when add RSS: ", e);
 //		}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#reInitRSSEvenListener()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#reInitRSSEvenListener()
+	 */
 //	remove
 	public void reInitRSSEvenListener() throws Exception{
 //		if(!isInitRssListener_)return;
@@ -390,45 +386,45 @@ public class JCRDataStorage implements DataStorage {
 	
 	
 	public void reInitQuestionNodeListeners() throws Exception {
-	  NodeIterator iter = getQuestionsIterator();
-	  if (iter == null) return;
-	  while (iter.hasNext()) {
-	    Node quesNode = iter.nextNode();
-	    registerQuestionNodeListener(quesNode);
-	  }
+		NodeIterator iter = getQuestionsIterator();
+		if (iter == null) return;
+		while (iter.hasNext()) {
+			Node quesNode = iter.nextNode();
+			registerQuestionNodeListener(quesNode);
+		}
 	}
 
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#initRootCategory()
-   */
-  public boolean initRootCategory() throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    try {
-      Node faqServiceHome = getFAQServiceHome(sProvider) ;
-      if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
-        log.error("root category is already created");
-        return false;
-      }      
-      Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
-      categoryHome.addMixin("mix:faqSubCategory") ;
-      categoryHome.setProperty("exo:name", "Answers") ;
-      categoryHome.setProperty("exo:isView", true);
-      faqServiceHome.save() ;  
-      log.info("Initialized root category : " + categoryHome.getPath());
-      return true;
-    }catch (Exception e) {
-      log.error("Could not initialize root category", e);
-      return false;
-    }finally {sProvider.close() ; }
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#initRootCategory()
+	 */
+	public boolean initRootCategory() throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node faqServiceHome = getFAQServiceHome(sProvider) ;
+			if (faqServiceHome.hasNode(Utils.CATEGORY_HOME)) {
+				log.error("root category is already created");
+				return false;
+			}			
+			Node categoryHome = faqServiceHome.addNode(Utils.CATEGORY_HOME, "exo:faqCategory") ;
+			categoryHome.addMixin("mix:faqSubCategory") ;
+			categoryHome.setProperty("exo:name", "Answers") ;
+			categoryHome.setProperty("exo:isView", true);
+			faqServiceHome.save() ;	
+			log.info("Initialized root category : " + categoryHome.getPath());
+			return true;
+		}catch (Exception e) {
+			log.error("Could not initialize root category", e);
+			return false;
+		}finally {sProvider.close() ; }
 
-  }
+	}
 	
 
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getTemplate()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getTemplate()
+	 */
 	public byte[] getTemplate() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -442,35 +438,36 @@ public class JCRDataStorage implements DataStorage {
 				inputStream.close();
 				return data;
 			}
-    } catch (Exception e) {
-    } finally {
-    	sProvider.close();
-    }
-	  return null;
-  }
+		} catch (Exception e) {
+			log.error("Failed to get template", e);
+		} finally {
+			sProvider.close();
+		}
+		return null;
+	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveTemplate(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveTemplate(java.lang.String)
+	 */
 	public void saveTemplate(String str) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node templateHome = getTemplateHome(sProvider);
 			Node fileNode ;
 			try {
-	      fileNode = templateHome.getNode("UIFAQViewer");
-      } catch (Exception e) {
-	      fileNode = templateHome.addNode("UIFAQViewer","nt:file");
-      }
+				fileNode = templateHome.getNode("UIFAQViewer");
+			} catch (Exception e) {
+				fileNode = templateHome.addNode("UIFAQViewer","nt:file");
+			}
 			Node nodeContent = null;
 			InputStream inputStream = null;
 			byte []byte_ = str.getBytes();
 			inputStream = new ByteArrayInputStream(byte_);
 			try {
 				nodeContent = fileNode.addNode("jcr:content", "nt:resource");
-      } catch (Exception e) {
-      	nodeContent = fileNode.getNode("jcr:content");
-      }
+			} catch (Exception e) {
+				nodeContent = fileNode.getNode("jcr:content");
+			}
 			nodeContent.setProperty("jcr:mimeType", "gtmpl");
 			nodeContent.setProperty("jcr:data", inputStream);
 			nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
@@ -479,12 +476,12 @@ public class JCRDataStorage implements DataStorage {
 			} else {
 				templateHome.save();
 			}
-    } catch (Exception e) {
-      log.error("Failed to save template: ", e);
-    } finally {
-    	sProvider.close();
-    }
-  }
+		} catch (Exception e) {
+			log.error("Failed to save template: ", e);
+		} finally {
+			sProvider.close();
+		}
+	}
 	
 	protected Value[] booleanToValues(Node node, Boolean[] bools) throws Exception{
 		if(bools == null) return new Value[]{node.getSession().getValueFactory().createValue(true)};
@@ -531,7 +528,7 @@ public class JCRDataStorage implements DataStorage {
 				sendEmailNotification(emailsList, message) ;
 			}
 		} catch(Exception e) {
-		  log.error("Failed to send a notify for question watcher: ", e);
+			log.error("Failed to send a notify for question watcher: ", e);
 		}
 	}
 	private void sendNotifyForCategoryWatcher (Question question, FAQSetting faqSetting, boolean isNew) {
@@ -569,66 +566,66 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		} catch(Exception e) {
-		  log.error("Failed to send a nofify for category watcher: ",e);
+			log.error("Failed to send a nofify for category watcher: ",e);
 		}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#sendMessage(org.exoplatform.services.mail.Message)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#sendMessage(org.exoplatform.services.mail.Message)
+	 */
 	public void sendMessage(Message message) throws Exception {
 		try{
-	  	MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
-	  	mService.sendMessage(message) ;		
-	  }catch(NullPointerException e) {
-	  	MailService mService = (MailService)StandaloneContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
-	  	mService.sendMessage(message) ;		
-	  }
-  }
-  
+			MailService mService = (MailService)PortalContainer.getComponent(MailService.class) ;
+			mService.sendMessage(message) ;		
+		}catch(NullPointerException e) {
+			MailService mService = (MailService)StandaloneContainer.getInstance().getComponentInstanceOfType(MailService.class) ;
+			mService.sendMessage(message) ;		
+		}
+	}
+	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionLanguages(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionLanguages(java.lang.String)
+	 */
 	public List<QuestionLanguage> getQuestionLanguages(String questionId) throws Exception {
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
-    try {
-    	Node questionNode = getFAQServiceHome(sProvider).getNode(questionId) ;
-    	try {
-    		listQuestionLanguage.add(getQuestionLanguage(questionNode)) ;
-      }catch (Exception e){log.debug("Adding a question node fail: ", e);}
-      if(questionNode.hasNode(Utils.LANGUAGE_HOME)) {
-        Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
-        NodeIterator nodeIterator = languageNode.getNodes() ;
-        while(nodeIterator.hasNext()) {
-          try {
-          	listQuestionLanguage.add(getQuestionLanguage(nodeIterator.nextNode())) ;
-          }catch (Exception e){}          
-        }
-      }
-    }catch (Exception e){
-      log.error("Failed to get question language: ", e);
-    } finally { sProvider.close() ;}    
-    return listQuestionLanguage ;
-  }
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		List<QuestionLanguage> listQuestionLanguage = new ArrayList<QuestionLanguage>() ;
+		try {
+			Node questionNode = getFAQServiceHome(sProvider).getNode(questionId) ;
+			try {
+				listQuestionLanguage.add(getQuestionLanguage(questionNode)) ;
+			}catch (Exception e){log.debug("Adding a question node failed: ", e);}
+			if(questionNode.hasNode(Utils.LANGUAGE_HOME)) {
+				Node languageNode = questionNode.getNode(Utils.LANGUAGE_HOME) ;
+				NodeIterator nodeIterator = languageNode.getNodes() ;
+				while(nodeIterator.hasNext()) {
+					try {
+						listQuestionLanguage.add(getQuestionLanguage(nodeIterator.nextNode())) ;
+					}catch (Exception e){}					
+				}
+			}
+		}catch (Exception e){
+			log.error("Failed to get question language: ", e);
+		} finally { sProvider.close() ;}		
+		return listQuestionLanguage ;
+	}
 	
-  private QuestionLanguage getQuestionLanguage(Node questionNode) throws Exception{
-  	QuestionLanguage questionLanguage = new QuestionLanguage() ;
-  	questionLanguage.setState(QuestionLanguage.VIEW) ;
-    questionLanguage.setId(questionNode.getName()) ;
-    questionLanguage.setLanguage(questionNode.getProperty("exo:language").getValue().getString());
-    questionLanguage.setQuestion(questionNode.getProperty("exo:title").getValue().getString());
-    if(questionNode.hasProperty("exo:name")) questionLanguage.setDetail(questionNode.getProperty("exo:name").getValue().getString());
-    Comment[] comments = getComment(questionNode);
-    Answer[] answers = getAnswers(questionNode);
-    questionLanguage.setComments(comments);
-    questionLanguage.setAnswers(answers);
-    return questionLanguage ;
-  }
+	private QuestionLanguage getQuestionLanguage(Node questionNode) throws Exception{
+		QuestionLanguage questionLanguage = new QuestionLanguage() ;
+		questionLanguage.setState(QuestionLanguage.VIEW) ;
+		questionLanguage.setId(questionNode.getName()) ;
+		questionLanguage.setLanguage(questionNode.getProperty("exo:language").getValue().getString());
+		questionLanguage.setQuestion(questionNode.getProperty("exo:title").getValue().getString());
+		if(questionNode.hasProperty("exo:name")) questionLanguage.setDetail(questionNode.getProperty("exo:name").getValue().getString());
+		Comment[] comments = getComment(questionNode);
+		Answer[] answers = getAnswers(questionNode);
+		questionLanguage.setComments(comments);
+		questionLanguage.setAnswers(answers);
+		return questionLanguage ;
+	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#deleteAnswer(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#deleteAnswer(java.lang.String, java.lang.String)
+	 */
 	public void deleteAnswer(String questionId, String answerId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -637,13 +634,13 @@ public class JCRDataStorage implements DataStorage {
 			answerNode.remove();
 			questionNode.save();
 		}catch (Exception e) {
-		  log.error("Failed to delete a answer: ", e);
+			log.error("Failed to delete a answer: ", e);
 		}finally {sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#deleteComment(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#deleteComment(java.lang.String, java.lang.String)
+	 */
 	public void deleteComment(String questionId, String commentId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -652,7 +649,7 @@ public class JCRDataStorage implements DataStorage {
 			commnetNode.remove();
 			questionNode.save();
 		}catch (Exception e) {
-		  log.error("fail to delete a commnent: ", e);
+			log.error("Failed to delete a commnent: ", e);
 		}finally { sProvider.close() ;}
 	}
 	
@@ -669,11 +666,13 @@ public class JCRDataStorage implements DataStorage {
 					ans = getAnswerByNode(node);
 					ans.setLanguage(language) ;
 					answers.add(ans);
-				}catch(Exception e){}				
+				}catch (Exception e) {
+					log.error("Failed to get anwser", e);
+				}				
 			}
 			return answers.toArray(new Answer[]{});
 		} catch (Exception e){
-		  log.error("Failed to get answer: ", e);
+			log.error("Failed to get answer: ", e);
 		}
 		return new Answer[]{};
 	}
@@ -696,8 +695,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getPageListAnswer(java.lang.String, java.lang.Boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getPageListAnswer(java.lang.String, java.lang.Boolean)
+	 */
 	public JCRPageList getPageListAnswer(String questionId, Boolean isSortByVote) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -713,74 +712,75 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList;
 		} catch (Exception e) {
+			log.error("Failed to get page list answers", e);
 			return null;
 		} finally { sProvider.close() ;}
 	}
 
 
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswer(java.lang.String, org.exoplatform.faq.service.Answer, boolean)
-   */
-  public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
-  	Answer[] answers = {answer} ;
-  	saveAnswer(questionId, answers) ;  	
-  }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswer(java.lang.String, org.exoplatform.faq.service.Answer[])
-   */
-  public void saveAnswer(String questionId, Answer[] answers) throws Exception{
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-    try {
-    	Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
-    	if(!quesNode.isNodeType("mix:faqi18n")) {
-    		quesNode.addMixin("mix:faqi18n") ;
-    	}
-//    	String lastActivityInfo = null;
-//    	if (quesNode.hasProperty("exo:lastActivity")) 
-//    	  lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
-//    	long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
-    	Node answerHome;
-    	String qId = quesNode.getName() ;
-  		String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
-    	String defaultLang = quesNode.getProperty("exo:language").getString() ;
-    	
-    	for(Answer answer : answers){
-    	  
-    		if(answer.getLanguage().equals(defaultLang)){
-    			try{
-        		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-        	} catch (Exception e){
-        		answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
-        	}
-    		}else { //answer for other languages
-    			Node langNode = getLanguageNodeByLanguage(quesNode, answer.getLanguage()) ;
-    			try{
-        		answerHome = langNode.getNode(Utils.ANSWER_HOME);
-        	} catch (Exception e){
-        		answerHome = langNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
-        	}        	
-    		}
-    		saveAnswer(answer, answerHome, qId, categoryId) ;
-//        if (answer.getApprovedAnswers() || answer.getActivateAnswers()) {
-//          long answerTime = answer.getDateResponse().getTime();
-//          if (answerTime > timeOfLastActivity) {
-//            timeOfLastActivity = answerTime;
-//            lastActivityInfo = answer.getResponseBy() + "-" + timeOfLastActivity;
-//          }
-//        }
-    	}
-//      if (lastActivityInfo != null)
-//        quesNode.setProperty("exo:lastActivity", lastActivityInfo);
-    	quesNode.save() ;
-    }catch (Exception e) {
-      log.error("fail to save answer: ", e);
-    }finally { sProvider.close() ;}
-  }
-  
-  private void saveAnswer(Answer answer, Node answerHome, String questionId, String categoryId) throws Exception {
-  	Node answerNode;
-  	try{
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswer(java.lang.String, org.exoplatform.faq.service.Answer, boolean)
+	 */
+	public void saveAnswer(String questionId, Answer answer, boolean isNew) throws Exception{
+		Answer[] answers = {answer} ;
+		saveAnswer(questionId, answers) ;		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswer(java.lang.String, org.exoplatform.faq.service.Answer[])
+	 */
+	public void saveAnswer(String questionId, Answer[] answers) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
+			if(!quesNode.isNodeType("mix:faqi18n")) {
+				quesNode.addMixin("mix:faqi18n") ;
+			}
+//			String lastActivityInfo = null;
+//			if (quesNode.hasProperty("exo:lastActivity")) 
+//				lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
+//			long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
+			Node answerHome;
+			String qId = quesNode.getName() ;
+			String categoryId = quesNode.getProperty("exo:categoryId").getString() ;
+			String defaultLang = quesNode.getProperty("exo:language").getString() ;
+			
+			for(Answer answer : answers){
+				
+				if(answer.getLanguage().equals(defaultLang)){
+					try{
+						answerHome = quesNode.getNode(Utils.ANSWER_HOME);
+					} catch (Exception e){
+						answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
+					}
+				}else { //answer for other languages
+					Node langNode = getLanguageNodeByLanguage(quesNode, answer.getLanguage()) ;
+					try{
+						answerHome = langNode.getNode(Utils.ANSWER_HOME);
+					} catch (Exception e){
+						answerHome = langNode.addNode(Utils.ANSWER_HOME, "exo:answerHome") ;
+					}					
+				}
+				saveAnswer(answer, answerHome, qId, categoryId) ;
+//				if (answer.getApprovedAnswers() || answer.getActivateAnswers()) {
+//					long answerTime = answer.getDateResponse().getTime();
+//					if (answerTime > timeOfLastActivity) {
+//						timeOfLastActivity = answerTime;
+//						lastActivityInfo = answer.getResponseBy() + "-" + timeOfLastActivity;
+//					}
+//				}
+			}
+//			if (lastActivityInfo != null)
+//				quesNode.setProperty("exo:lastActivity", lastActivityInfo);
+			quesNode.save() ;
+		}catch (Exception e) {
+			log.error("Failed to save answer: ", e);
+		}finally { sProvider.close() ;}
+	}
+	
+	private void saveAnswer(Answer answer, Node answerHome, String questionId, String categoryId) throws Exception {
+		Node answerNode;
+		try{
 			answerNode = answerHome.getNode(answer.getId());
 		} catch(PathNotFoundException e) {
 			answerNode = answerHome.addNode(answer.getId(), "exo:answer");
@@ -789,160 +789,161 @@ public class JCRDataStorage implements DataStorage {
 			answerNode.remove() ;
 			return ;
 		}
-  	try {
-  		if(answerNode.isNew()){
-	  		java.util.Calendar calendar = GregorianCalendar.getInstance();  	  		
-	  		if(answer.getDateResponse() != null) calendar.setTime(answer.getDateResponse());
-	  		answerNode.setProperty("exo:dateResponse", calendar) ;
-	  		answerNode.setProperty("exo:id", answer.getId());
-	  	}
-	  	if(answer.getPostId() != null && answer.getPostId().length() > 0) {
-	  		answerNode.setProperty("exo:postId", answer.getPostId());
-	  	}
-	  	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-	  	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-	  	answerNode.setProperty("exo:fullName", answer.getFullName());
-	  	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-	  	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-	  	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-	  	answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
-	  	answerNode.setProperty("exo:responseLanguage", answer.getLanguage()) ;
-	  	answerNode.setProperty("exo:questionId", questionId) ;
-	  	answerNode.setProperty("exo:categoryId", categoryId) ;	  	    	  	
-  	}catch (Exception e) {
-  	  log.error("Failed to save Answer: ", e);
-  	}
-  }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveComment(java.lang.String, org.exoplatform.faq.service.Comment, boolean)
-   */
-  public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-  	try {
-  		Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
-    	if(!quesNode.isNodeType("mix:faqi18n")) {
-    		quesNode.addMixin("mix:faqi18n") ;
-    	}
-    	
-//    	String lastActInfo = null;
-//    	if (quesNode.hasProperty("exo:lastActivity"))
-//    	  lastActInfo = quesNode.getProperty("exo:lastActivity").getString();
-//    	long timeOfLastAct = Utils.getTimeOfLastActivity(lastActInfo);
-    	
-    	Node commentHome = null;
-    	try{
-    		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
-    	} catch (PathNotFoundException e){
-    		commentHome = quesNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
-    	}
-    	Node commentNode;
-    	if(isNew){
-    		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
-    		java.util.Calendar calendar = GregorianCalendar.getInstance();
-    		commentNode.setProperty("exo:dateComment", calendar);
-    		commentNode.setProperty("exo:id", comment.getId());    		
-    	} else {
-    		commentNode = commentHome.getNode(comment.getId());
-    	}
-    	
-    	if(comment.getPostId() != null && comment.getPostId().length() > 0) {
-    		commentNode.setProperty("exo:postId", comment.getPostId());
-    	}
-    	commentNode.setProperty("exo:comments", comment.getComments()) ;
-    	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
-    	commentNode.setProperty("exo:fullName", comment.getFullName());
-    	commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
-    	commentNode.setProperty("exo:questionId", quesNode.getName());
-    	commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());
-    	
-//    	long commentTime = comment.getDateComment().getTime();
-//    	if (commentTime > timeOfLastAct) {
-//    	  timeOfLastAct = commentTime;
-//    	  lastActInfo = comment.getCommentBy() + "-" + timeOfLastAct;
-//    	  quesNode.setProperty("exo:lastActivity", lastActInfo);
-//    	}
-    
-    	if(commentNode.isNew()) quesNode.getSession().save();
-    	else quesNode.save();
-  	}catch(Exception e) {
-  	  log.error("Failed to save comment: ", e);
-  	}finally { sProvider.close() ;}
-  }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswerQuestionLang(java.lang.String, org.exoplatform.faq.service.Answer, java.lang.String, boolean)
-   */
-  public void saveAnswerQuestionLang(String questionId, Answer answer, String language, boolean isNew) throws Exception{
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-  	try {
-  		Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
-    	Node answerHome = null;
-    	try{
-    		answerHome = quesNode.getNode(Utils.ANSWER_HOME);
-    	} catch (PathNotFoundException e){
-    		answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome");
-    	}
-    	Node answerNode;
-    	if(isNew){
-    		answerNode = answerHome.addNode(answer.getId(), "exo:answer");
-    		java.util.Calendar calendar = GregorianCalendar.getInstance();
-    		//calendar.setTime(answer.getDateResponse());
-    		answerNode.setProperty("exo:dateResponses", calendar);
-    	} else {
-    		answerNode = answerHome.getNode(answer.getId());
-    	}
-    	answerNode.setProperty("exo:responses", answer.getResponses()) ;
-    	answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
-    	answerNode.setProperty("exo:fullName", answer.getFullName());
-    	answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
-    	answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
-    	answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
-  	}catch (Exception e) {
-  	  log.error("Failed to save answer question language: ", e);
-  	}finally { sProvider.close() ;}  	
-  }
-  
-  /*public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew) throws Exception{
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-  	try {
-  		Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
-    	Node commentHome = null;
-    	try{
-    		commentHome = quesNode.getNode(Utils.COMMENT_HOME);
-    	} catch (PathNotFoundException e){
-    		commentHome = quesNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
-    	}
-    	Node commentNode;
-    	if(isNew){
-    		commentNode = commentHome.addNode(comment.getId(), "exo:comment");
-    		java.util.Calendar calendar = GregorianCalendar.getInstance();
-    		//calendar.setTime(comment.getDateComment());
-    		commentNode.setProperty("exo:dateComment", calendar);
-    	} else {
-    		commentNode = commentHome.getNode(comment.getId());
-    	}
-    	commentNode.setProperty("exo:comments", comment.getComments()) ;
-    	commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
-    	commentNode.setProperty("exo:fullName", comment.getFullName());
-    	commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
-    	commentNode.setProperty("exo:questionId", quesNode.getName());
-    	if(commentNode.isNew()) quesNode.getSession().save();
-    	else quesNode.save();
-  	}catch (Exception e) {
-  	}finally { sProvider.close() ;}
-  	
-  }*/
-  
+		try {
+			if(answerNode.isNew()){
+				java.util.Calendar calendar = GregorianCalendar.getInstance();					
+				if(answer.getDateResponse() != null) calendar.setTime(answer.getDateResponse());
+				answerNode.setProperty("exo:dateResponse", calendar) ;
+				answerNode.setProperty("exo:id", answer.getId());
+			}
+			if(answer.getPostId() != null && answer.getPostId().length() > 0) {
+				answerNode.setProperty("exo:postId", answer.getPostId());
+			}
+			answerNode.setProperty("exo:responses", answer.getResponses()) ;
+			answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+			answerNode.setProperty("exo:fullName", answer.getFullName());
+			answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+			answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+			answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+			answerNode.setProperty("exo:MarkVotes", answer.getMarkVotes()) ;
+			answerNode.setProperty("exo:responseLanguage", answer.getLanguage()) ;
+			answerNode.setProperty("exo:questionId", questionId) ;
+			answerNode.setProperty("exo:categoryId", categoryId) ;								
+		}catch (Exception e) {
+			log.error("Failed to save Answer: ", e);
+		}
+	}
+	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getAnswerById(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveComment(java.lang.String, org.exoplatform.faq.service.Comment, boolean)
+	 */
+	public void saveComment(String questionId, Comment comment, boolean isNew) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
+			if(!quesNode.isNodeType("mix:faqi18n")) {
+				quesNode.addMixin("mix:faqi18n") ;
+			}
+			
+//			String lastActInfo = null;
+//			if (quesNode.hasProperty("exo:lastActivity"))
+//				lastActInfo = quesNode.getProperty("exo:lastActivity").getString();
+//			long timeOfLastAct = Utils.getTimeOfLastActivity(lastActInfo);
+			
+			Node commentHome = null;
+			try{
+				commentHome = quesNode.getNode(Utils.COMMENT_HOME);
+			} catch (PathNotFoundException e){
+				commentHome = quesNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
+			}
+			Node commentNode;
+			if(isNew){
+				commentNode = commentHome.addNode(comment.getId(), "exo:comment");
+				java.util.Calendar calendar = GregorianCalendar.getInstance();
+				commentNode.setProperty("exo:dateComment", calendar);
+				commentNode.setProperty("exo:id", comment.getId());				
+			} else {
+				commentNode = commentHome.getNode(comment.getId());
+			}
+			
+			if(comment.getPostId() != null && comment.getPostId().length() > 0) {
+				commentNode.setProperty("exo:postId", comment.getPostId());
+			}
+			commentNode.setProperty("exo:comments", comment.getComments()) ;
+			commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
+			commentNode.setProperty("exo:fullName", comment.getFullName());
+			commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
+			commentNode.setProperty("exo:questionId", quesNode.getName());
+			commentNode.setProperty("exo:commentLanguage", quesNode.getProperty("exo:language").getString());
+			
+//			long commentTime = comment.getDateComment().getTime();
+//			if (commentTime > timeOfLastAct) {
+//				timeOfLastAct = commentTime;
+//				lastActInfo = comment.getCommentBy() + "-" + timeOfLastAct;
+//				quesNode.setProperty("exo:lastActivity", lastActInfo);
+//			}
+		
+			if(commentNode.isNew()) quesNode.getSession().save();
+			else quesNode.save();
+		}catch(Exception e) {
+			log.error("Failed to save comment: ", e);
+		}finally { sProvider.close() ;}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveAnswerQuestionLang(java.lang.String, org.exoplatform.faq.service.Answer, java.lang.String, boolean)
+	 */
+	public void saveAnswerQuestionLang(String questionId, Answer answer, String language, boolean isNew) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
+			Node answerHome = null;
+			try{
+				answerHome = quesNode.getNode(Utils.ANSWER_HOME);
+			} catch (PathNotFoundException e){
+				answerHome = quesNode.addNode(Utils.ANSWER_HOME, "exo:answerHome");
+			}
+			Node answerNode;
+			if(isNew){
+				answerNode = answerHome.addNode(answer.getId(), "exo:answer");
+				java.util.Calendar calendar = GregorianCalendar.getInstance();
+				//calendar.setTime(answer.getDateResponse());
+				answerNode.setProperty("exo:dateResponses", calendar);
+			} else {
+				answerNode = answerHome.getNode(answer.getId());
+			}
+			answerNode.setProperty("exo:responses", answer.getResponses()) ;
+			answerNode.setProperty("exo:responseBy", answer.getResponseBy()) ;
+			answerNode.setProperty("exo:fullName", answer.getFullName());
+			answerNode.setProperty("exo:approveResponses", answer.getApprovedAnswers()) ;
+			answerNode.setProperty("exo:activateResponses", answer.getActivateAnswers()) ;
+			answerNode.setProperty("exo:usersVoteAnswer", answer.getUsersVoteAnswer()) ;
+		}catch (Exception e) {
+			log.error("Failed to save answer question language: ", e);
+		}finally { sProvider.close() ;}		
+	}
+	
+	/*public void saveCommentQuestionLang(String questionId, Comment comment, String language, boolean isNew) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		try {
+			Node quesNode = getFAQServiceHome(sProvider).getNode(questionId);
+			Node commentHome = null;
+			try{
+				commentHome = quesNode.getNode(Utils.COMMENT_HOME);
+			} catch (PathNotFoundException e){
+				commentHome = quesNode.addNode(Utils.COMMENT_HOME, "exo:commentHome");
+			}
+			Node commentNode;
+			if(isNew){
+				commentNode = commentHome.addNode(comment.getId(), "exo:comment");
+				java.util.Calendar calendar = GregorianCalendar.getInstance();
+				//calendar.setTime(comment.getDateComment());
+				commentNode.setProperty("exo:dateComment", calendar);
+			} else {
+				commentNode = commentHome.getNode(comment.getId());
+			}
+			commentNode.setProperty("exo:comments", comment.getComments()) ;
+			commentNode.setProperty("exo:commentBy", comment.getCommentBy()) ;
+			commentNode.setProperty("exo:fullName", comment.getFullName());
+			commentNode.setProperty("exo:categoryId", quesNode.getProperty("exo:categoryId").getString());
+			commentNode.setProperty("exo:questionId", quesNode.getName());
+			if(commentNode.isNew()) quesNode.getSession().save();
+			else quesNode.save();
+		}catch (Exception e) {
+		}finally { sProvider.close() ;}
+		
+	}*/
+	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getAnswerById(java.lang.String, java.lang.String)
+	 */
 	public Answer getAnswerById(String questionId, String answerid) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node answerNode = getFAQServiceHome(sProvider).getNode(questionId).getNode(Utils.ANSWER_HOME).getNode(answerid);
 			return getAnswerByNode(answerNode);
 		} catch (Exception e){
+			log.error("Failed to get answer by id.", e);
 		}finally { sProvider.close() ;}
 		return null;	
 	}
@@ -961,14 +962,14 @@ public class JCRDataStorage implements DataStorage {
 			}
 			return comments;
 		} catch (Exception e){
-		  log.error("Failed to get comment: ", e);
+			log.error("Failed to get comment: ", e);
 		 return new Comment[]{};
 		}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getPageListComment(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getPageListComment(java.lang.String)
+	 */
 	public JCRPageList getPageListComment(String questionId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -981,6 +982,7 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList;
 		} catch (Exception e) {
+			log.error("Failed to get page list comments", e);
 			return null;
 		} finally { sProvider.close() ; }
 	}
@@ -997,27 +999,28 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCommentById(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCommentById(java.lang.String, java.lang.String)
+	 */
 	public Comment getCommentById(String questionId, String commentId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
-			Node commentNode =  getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME + "/" + commentId);
+			Node commentNode =	getFAQServiceHome(sProvider).getNode(questionId + "/" + Utils.COMMENT_HOME + "/" + commentId);
 			return getCommentByNode(commentNode);
 		} catch (Exception e){
+			log.error("Failed to get comment by id: "+commentId, e);
 			return null;
 		} finally { sProvider.close() ;}
 	}
 	
 	private Node getLanguageNodeByLanguage(Node questionNode, String languge) throws Exception{
-  	NodeIterator nodeIterator = questionNode.getNode(Utils.LANGUAGE_HOME).getNodes();
-  	Node languageNode = null;
-  	while(nodeIterator.hasNext()){
-  		languageNode = nodeIterator.nextNode();
-  		if(languageNode.getProperty("exo:language").getString().equals(languge)) return languageNode;
-  	}
-  	return null;
-  }
+		NodeIterator nodeIterator = questionNode.getNode(Utils.LANGUAGE_HOME).getNodes();
+		Node languageNode = null;
+		while(nodeIterator.hasNext()){
+			languageNode = nodeIterator.nextNode();
+			if(languageNode.getProperty("exo:language").getString().equals(languge)) return languageNode;
+		}
+		return null;
+	}
 
 	
 	@SuppressWarnings("static-access")
@@ -1067,7 +1070,7 @@ public class JCRDataStorage implements DataStorage {
 						nodeContent.setProperty("jcr:data", att.getInputStream());
 						nodeContent.setProperty("jcr:lastModified", Calendar.getInstance().getTimeInMillis());
 					} catch (Exception e) {
-					  log.error("Failed to save question: ", e);
+						log.error("Failed to save question: ", e);
 					}
 				}
 			}
@@ -1098,10 +1101,10 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveQuestion(org.exoplatform.faq.service.Question, boolean, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveQuestion(org.exoplatform.faq.service.Question, boolean, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public Node saveQuestion(Question question, boolean isAddNew, FAQSetting faqSetting) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider() ;     
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;		 
 		try {
 			Node questionNode;
 			Node questionHome ;
@@ -1126,21 +1129,22 @@ public class JCRDataStorage implements DataStorage {
 //			System.out.println("questionNode ==>" + questionNode.getPath());
 			saveQuestion(questionNode, question, isAddNew, sProvider, faqSetting);
 			if (questionNode.isNew())	{
-			  questionNode.getSession().save();
-			  registerQuestionNodeListener(questionNode);
+				questionNode.getSession().save();
+				registerQuestionNodeListener(questionNode);
 			}
 			else questionNode.save();
 			
 			return questionNode;
 		}catch (Exception e) {
+			log.error("Failed to save question ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
 	
 
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#removeQuestion(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#removeQuestion(java.lang.String)
+	 */
 	public void removeQuestion(String questionId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1149,13 +1153,13 @@ public class JCRDataStorage implements DataStorage {
 			questionNode.remove();
 			questionHome.save();
 		}catch (Exception e) {
-		  log.error("Fail ro remove question: ",e);
+			log.error("Fail ro remove question: ",e);
 		} finally { sProvider.close() ;}
 	}
 		
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCommentById(javax.jcr.Node, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCommentById(javax.jcr.Node, java.lang.String)
+	 */
 	public Comment getCommentById(Node questionNode, String commentId) throws Exception{
 		try{
 			Comment comment = new Comment();
@@ -1167,8 +1171,8 @@ public class JCRDataStorage implements DataStorage {
 			if(commentNode.hasProperty("exo:postId")) comment.setPostId(commentNode.getProperty("exo:postId").getString()) ;
 			return comment;
 		} catch (Exception e){
-		  log.error("Failed to get comment through id: ", e);
-	   return null;
+			log.error("Failed to get comment through id: ", e);
+		 return null;
 		}
 	}
 
@@ -1234,8 +1238,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionById(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionById(java.lang.String)
+	 */
 	public Question getQuestionById(String questionId) throws Exception {
 		return getQuestion(getQuestionNodeById(questionId));
 	}
@@ -1284,20 +1288,22 @@ public class JCRDataStorage implements DataStorage {
 							if(isAudience) break ;
 						}
 						if(!isAudience) categoryList.add(cat.getName()) ;							
-					}catch(Exception e) {}					
+					}catch (Exception e) {
+						log.error("Failed to check audience ", e);
+					}					
 				}else {
 					categoryList.add(iter.nextNode().getName());
 				}				
 			}
 		}catch(Exception e) {
-		  log.error("Failed to get restricte category: ", e);
+			log.error("Failed to get restricte category: ", e);
 		}finally{ sessionProvider.close() ;}		
 		return categoryList;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestions()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestions()
+	 */
 	public QuestionPageList getAllQuestions() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1316,15 +1322,15 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-		  log.error("Failed to get all questions: ", e);
+			log.error("Failed to get all questions: ", e);
 		} finally { sProvider.close() ;}
 		return null ;
 	}
 	
 
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsNotYetAnswer(java.lang.String, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsNotYetAnswer(java.lang.String, boolean)
+	 */
 	public QuestionPageList getQuestionsNotYetAnswer(String categoryId, boolean isApproved) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1346,7 +1352,7 @@ public class JCRDataStorage implements DataStorage {
 				queryString.append("((@exo:categoryId='").append(categoryId).append("')").
 					append((categoryId.indexOf("/") > 0)?(" or (@exo:categoryId='"+categoryId.substring(categoryId.lastIndexOf("/") + 1)+"'))"):")");
 			}			
-			if(isApproved)  queryString.append(" and (@exo:isApproved='true')");
+			if(isApproved)	queryString.append(" and (@exo:isApproved='true')");
 			if(qr.length() > 0) queryString.append(" and ((@exo:isApproved='true') or ").append(qr).append(")");
 			queryString.append("] order by @exo:createdDate ascending");
 			
@@ -1356,13 +1362,13 @@ public class JCRDataStorage implements DataStorage {
 			pageList.setNotYetAnswered(true);
 			return pageList ;
 		}catch (Exception e) {
-		  log.error("Get question not yet answer fail: ", e);
+			log.error("Get question not yet answer failed: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getPendingQuestionsByCategory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getPendingQuestionsByCategory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public QuestionPageList getPendingQuestionsByCategory(String categoryId, FAQSetting faqSetting) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1395,14 +1401,14 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-		  log.error("Get pedding question through category fail: ", e);
+			log.error("Get pedding question through category failed: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public QuestionPageList getQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
 		SessionProvider sProvider =	SessionProvider.createSystemProvider() ;
 		try {
@@ -1453,14 +1459,14 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-		  log.debug("Getting question through category fail: ", e);
+			log.debug("Getting question through category failed: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getAllQuestionsByCatetory(java.lang.String, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public QuestionPageList getAllQuestionsByCatetory(String categoryId, FAQSetting faqSetting) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1497,14 +1503,14 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;		
 			return pageList ;
 		}catch (Exception e) {
-		  log.debug("getting all question through category fail: ", e);
+			log.debug("Failed to get all question through category: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByListCatetory(java.util.List, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionsByListCatetory(java.util.List, boolean)
+	 */
 	public QuestionPageList getQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1529,14 +1535,14 @@ public class JCRDataStorage implements DataStorage {
 			pageList.setNotYetAnswered(isNotYetAnswer);
 			return pageList ;
 		} catch ( Exception e) {
-		  log.debug("Getting questions through list of category fail: ", e);
+			log.debug("Failed get questions through list of category: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuickQuestionsByListCatetory(java.util.List, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuickQuestionsByListCatetory(java.util.List, boolean)
+	 */
 	public List<Question> getQuickQuestionsByListCatetory(List<String> listCategoryId, boolean isNotYetAnswer) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Question> questions = new ArrayList<Question> () ;
@@ -1559,7 +1565,7 @@ public class JCRDataStorage implements DataStorage {
 				questions.add(getQuickQuestion(iter.nextNode())) ;
 			}
 		} catch ( Exception e) {
-		  log.debug("Getting quick questions through list of category: ", e);
+			log.debug("Getting quick questions through list of category failed: ", e);
 		}finally { sProvider.close() ;}
 		return questions ;
 	}
@@ -1575,8 +1581,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOfQuestion(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOfQuestion(java.lang.String)
+	 */
 	public String getCategoryPathOfQuestion(String questionPath) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		String path = "";
@@ -1596,14 +1602,14 @@ public class JCRDataStorage implements DataStorage {
 				pathName = "home" + pathName ;
 			}
 		}catch( Exception e) {
-		  log.debug("Getting category path of the question: ", e);
+			log.debug("Getting category path of the question failed: ", e);
 		}finally { sProvider.close() ;}		
 		return path;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#moveQuestions(java.util.List, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#moveQuestions(java.util.List, java.lang.String)
+	 */
 	public void moveQuestions(List<String> questions, String destCategoryId, String questionLink, FAQSetting faqSetting) throws Exception {
 
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1613,13 +1619,13 @@ public class JCRDataStorage implements DataStorage {
 			Node destQuestionHome;
 			try {
 				destQuestionHome = (Node)faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME);
-      } catch (Exception e) {
-      	destQuestionHome = faqHome.getNode(destCategoryId).addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
-      	faqHome.getSession().save();
-      }
+			} catch (Exception e) {
+				destQuestionHome = faqHome.getNode(destCategoryId).addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome");
+				faqHome.getSession().save();
+			}
 			for(String id : questions) {
 				try{
-					Node destCateNode =  faqHome.getNode(id).getParent();
+					Node destCateNode =	faqHome.getNode(id).getParent();
 					faqHome.getSession().move(homePath+ "/" + id, destQuestionHome.getPath() + id.substring(id.lastIndexOf("/"))) ;
 					faqHome.getSession().save() ;
 					Node questionNode = faqHome.getNode(destCategoryId + "/" + Utils.QUESTION_HOME + id.substring(id.lastIndexOf("/"))) ;
@@ -1639,14 +1645,14 @@ public class JCRDataStorage implements DataStorage {
 //				send email notify to author question. by Duy Tu	
 					try {
 						sendNotifyMoveQuestion(destCateNode, questionNode, catId, questionLink, faqSetting);
-          } catch (Exception e) {}
+					} catch (Exception e) {}
 					
 
 				}catch(ItemNotFoundException ex){
 				}
 			}			
 		}catch (Exception e) {
-		  log.error("Failed to remove question: ", e);
+			log.error("Failed to remove question: ", e);
 		}finally { sProvider.close() ;}
 		
 	} 
@@ -1655,9 +1661,9 @@ public class JCRDataStorage implements DataStorage {
 		String contentMail = faqSetting.getEmailMoveQuestion();
 		String categoryName = null;
 		try {
-		  categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
+			categoryName = questionNode.getParent().getParent().getProperty("exo:name").getString();
 		} catch (Exception e){
-		  categoryName = "Root";
+			categoryName = "Root";
 		}
 		Message message = new Message();
 		message.setMimeType(MIMETYPE_TEXTHTML) ;
@@ -1682,11 +1688,11 @@ public class JCRDataStorage implements DataStorage {
 	private Set<String> calculateMoveEmail(Node node) throws Exception {
 		Set<String> set = new HashSet<String>();
 		while(!node.getName().equals(Utils.CATEGORY_HOME)) {
-	    if(node.isNodeType("exo:faqWatching")){
-	    	set.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
-	    }
+			if(node.isNodeType("exo:faqWatching")){
+				set.addAll(Utils.valuesToList(node.getProperty("exo:emailWatching").getValues()));
+			}
 			node = node.getParent();
-    }
+		}
 		return set;
 	}
 	
@@ -1701,7 +1707,7 @@ public class JCRDataStorage implements DataStorage {
 				iter.nextNode().setProperty("exo:categoryId", catId) ;
 			}			
 		}catch (Exception e) {
-		  log.error("updating comments fail: ", e);
+			log.error("Updating comments failed: ", e);
 		}
 	}
 	
@@ -1716,13 +1722,13 @@ public class JCRDataStorage implements DataStorage {
 				iter.nextNode().setProperty("exo:categoryId", catId) ;
 			}			
 		}catch (Exception e) {
-		  log.error("Updating answers fail: ", e);
+			log.error("Updating answers failed: ", e);
 		}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#changeStatusCategoryView(java.util.List)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#changeStatusCategoryView(java.util.List)
+	 */
 	public void changeStatusCategoryView(List<String> listCateIds) throws Exception{
 		if(listCateIds == null || listCateIds.size() < 1) return;
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
@@ -1735,24 +1741,25 @@ public class JCRDataStorage implements DataStorage {
 			}
 			faqHome.save();
 		}catch (Exception e) {
-		  log.error("Changing status category view fail: ", e);
+			log.error("Changing status category view failed: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getMaxindexCategory(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getMaxindexCategory(java.lang.String)
+	 */
 	public long getMaxindexCategory(String parentId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		long max = 0 ;
 		try {
-			NodeIterator iter = getFAQServiceHome(sProvider).getNode(parentId).getNodes();
+			NodeIterator iter = getFAQServiceHome(sProvider).getNode((parentId == null)?Utils.CATEGORY_HOME:parentId).getNodes();
 			while (iter.hasNext()) {
-	      Node node = iter.nextNode();
-	      if(node.isNodeType("exo:faqCategory")) max = max + 1;
-      }
+				Node node = iter.nextNode();
+				if(node.isNodeType("exo:faqCategory")) max = max + 1;
+			}
 		}catch (Exception e) {
+			log.error("Failed to get max index category", e);
 		}finally { sProvider.close() ;}
 		return max ;
 	}
@@ -1788,7 +1795,7 @@ public class JCRDataStorage implements DataStorage {
 			try {
 				updateModeratorForChildCategories (categoryNode, moderators) ;
 			}catch (Exception e){
-				log.debug("Updating moderator for child category fail: ", e);
+				log.debug("Updating moderator for child category failed: ", e);
 			}
 		}
 		if(categoryNode.isNew()) categoryNode.getSession().save() ;
@@ -1837,26 +1844,26 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveCategory(java.lang.String, org.exoplatform.faq.service.Category, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveCategory(java.lang.String, org.exoplatform.faq.service.Category, boolean)
+	 */
 	public void saveCategory(String parentId, Category cat, boolean isAddNew) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node newCategory ;
 			if(isAddNew) {
 				Node parentNode = getFAQServiceHome(sProvider).getNode(parentId) ;
-			  newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
-			  newCategory.addMixin("mix:faqSubCategory") ;
-//			  TODO: JUnit test is fall
-			  Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
-			  addRSSListener(questionHome) ;
+				newCategory = parentNode.addNode(cat.getId(), "exo:faqCategory") ;
+				newCategory.addMixin("mix:faqSubCategory") ;
+//				TODO: JUnit test is fall
+				Node questionHome = newCategory.addNode(Utils.QUESTION_HOME, "exo:faqQuestionHome") ;
+				addRSSListener(questionHome) ;
 			} else {
 				newCategory = getFAQServiceHome(sProvider).getNode(cat.getPath()) ;
 			}	
 			saveCategory(newCategory, cat, isAddNew, sProvider) ;
 			resetIndex(newCategory, cat.getIndex()) ;			
 		}catch (Exception e) {
-		  log.error("Failed to save category: ", e);
+			log.error("Failed to save category: ", e);
 		}finally { sProvider.close() ;}
 		
 	}
@@ -1866,7 +1873,7 @@ public class JCRDataStorage implements DataStorage {
 		int j = i;
 		j = j + 1 ;
 		List<Cate> cateList = new ArrayList<Cate>() ;
-		Cate cate;    
+		Cate cate;		
 		NodeIterator iter = currentCategory.getNodes() ;
 		while(iter.hasNext()) {
 			cat = iter.nextNode() ;
@@ -1874,7 +1881,7 @@ public class JCRDataStorage implements DataStorage {
 				cate = new Cate() ;
 				cate.setCategory(getCategory(cat)) ;
 				cate.setDeft(i) ;
-		    cateList.add(cate) ;
+				cateList.add(cate) ;
 				if(cat.hasNodes()) {
 					cateList.addAll(listingSubTree(cat, j)) ; ;
 				}
@@ -1884,8 +1891,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#listingCategoryTree()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#listingCategoryTree()
+	 */
 	public List<Cate> listingCategoryTree() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1893,13 +1900,13 @@ public class JCRDataStorage implements DataStorage {
 			int i = 1 ;
 			List<Cate> cateList = new ArrayList<Cate>() ;		
 			cateList.addAll(listingSubTree(cateHome, i)) ;
-			return cateList  ;
+			return cateList	;
 		}finally { sProvider.close() ;}	
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#removeCategory(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#removeCategory(java.lang.String)
+	 */
 	public void removeCategory(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1930,8 +1937,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryById(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryById(java.lang.String)
+	 */
 	public Category getCategoryById(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -1943,34 +1950,34 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	 /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#findCategoriesByName(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#findCategoriesByName(java.lang.String)
+	 */
 	public List<Category> findCategoriesByName(String categoryName) throws Exception {
-	    SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-	    try {
-	      Node categoryHome = getCategoryHome(sProvider, null) ;
-	      QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
-	      StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
-	                                     append("//element(*,exo:faqCategory)[@exo:name='").
-	                                     append(categoryName).append("']") ;
-	      Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-	      QueryResult queryResult = query.execute();
-	      NodeIterator iter = queryResult.getNodes() ;
-	      List<Category> result = new ArrayList<Category>() ;
-	      while(iter.hasNext()) {
-	        result.add(getCategory(iter.nextNode())) ;
-	      }
-	      return result ;
-	    }catch(Exception e) {
-	      log.error("could not retrieve categories by name " + categoryName, e);
-	    }finally { sProvider.close() ;}
-	    return null ;   
-	  }
+			SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+			try {
+				Node categoryHome = getCategoryHome(sProvider, null) ;
+				QueryManager qm = categoryHome.getSession().getWorkspace().getQueryManager();
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(categoryHome.getPath()). 
+																			 append("//element(*,exo:faqCategory)[@exo:name='").
+																			 append(categoryName).append("']") ;
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult queryResult = query.execute();
+				NodeIterator iter = queryResult.getNodes() ;
+				List<Category> result = new ArrayList<Category>() ;
+				while(iter.hasNext()) {
+					result.add(getCategory(iter.nextNode())) ;
+				}
+				return result ;
+			}catch(Exception e) {
+				log.error("Could not retrieve categories by name " + categoryName, e);
+			}finally { sProvider.close() ;}
+			return null ;	 
+		}
 	
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getListCateIdByModerator(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getListCateIdByModerator(java.lang.String)
+	 */
 	public List<String> getListCateIdByModerator(String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -1988,19 +1995,19 @@ public class JCRDataStorage implements DataStorage {
 				try{
 					listCateId.add(cate.getName() + cate.getProperty("exo:name").getString()) ;
 				}catch(Exception e) {
-				    log.debug("Getting property of " + cate + " node fail: ", e);
+						log.debug("Getting property of " + cate + " node failed: ", e);
 				}				
 			}
 			return listCateId ;
 		}catch(Exception e) {
-		  log.error("Failed to get list of CateID through Moderator: ", e);
+			log.error("Failed to get list of CateID through Moderator: ", e);
 		}finally { sProvider.close() ;}
 		return null ;		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getAllCategories()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getAllCategories()
+	 */
 	public List<Category> getAllCategories() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2016,15 +2023,15 @@ public class JCRDataStorage implements DataStorage {
 			}
 			return catList ;
 		}catch (Exception e) {
-		  log.error("Getting all category fail: ", e);
+			log.error("Getting all category failed: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#existingCategories()
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#existingCategories()
+	 */
 	public long existingCategories() throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2035,19 +2042,20 @@ public class JCRDataStorage implements DataStorage {
 			QueryResult result = query.execute();
 			result.getNodes().getSize() ;			
 		}catch (Exception e) {
+			log.error("Failed to check existing categories", e);
 		}finally { sProvider.close() ;}
 		return 0 ;		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNodeById(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNodeById(java.lang.String)
+	 */
 	public Node getCategoryNodeById(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			return getCategoryNodeById(sProvider, categoryId);
 		}catch (Exception e) {
-		  log.error("Getting node fail: ", e);
+			log.error("Getting node failed: ", e);
 		} finally {sProvider.close() ;} 
 		return null ;
 	}
@@ -2068,8 +2076,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getSubCategories(java.lang.String, org.exoplatform.faq.service.FAQSetting, boolean, java.util.List)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getSubCategories(java.lang.String, org.exoplatform.faq.service.FAQSetting, boolean, java.util.List)
+	 */
 	public List<Category> getSubCategories(String categoryId, FAQSetting faqSetting, boolean isGetAll, List<String> limitedUsers) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Category> catList = new ArrayList<Category>() ;
@@ -2106,14 +2114,14 @@ public class JCRDataStorage implements DataStorage {
 				catList.add(getCategory(iter.nextNode())) ;
 			} 
 		}catch (Exception e) {
-		  throw e;
+			throw e;
 		}finally {sProvider.close();}		
 		return catList ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, org.exoplatform.faq.service.FAQSetting)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, org.exoplatform.faq.service.FAQSetting)
+	 */
 	public long[] getCategoryInfo( String categoryId, FAQSetting faqSetting) throws Exception	{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		long[] cateInfo = new long[]{0, 0, 0, 0};// categories, all, open, pending
@@ -2125,7 +2133,7 @@ public class JCRDataStorage implements DataStorage {
 			else id = categoryId ;
 			NodeIterator iter = parentCategory.getNodes() ;
 			cateInfo[0] = iter.getSize() ;
-			if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;			
+//			if(parentCategory.hasNode(FAQ_RSS)) cateInfo[0]--;	
 			QueryManager qm = parentCategory.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(parentCategory.getPath()). 
 																		append("//element(*,exo:faqQuestion)[(@exo:categoryId='").append(id).
@@ -2154,14 +2162,14 @@ public class JCRDataStorage implements DataStorage {
 				}
 			}
 		}catch(Exception e) {
-		  log.error("Failed to get category info: ", e);
+			log.error("Failed to get category info: ", e);
 		}finally {sProvider.close() ;}
 		return cateInfo ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#moveCategory(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#moveCategory(java.lang.String, java.lang.String)
+	 */
 	public void moveCategory(String categoryId, String destCategoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2179,19 +2187,19 @@ public class JCRDataStorage implements DataStorage {
 		}catch (ItemExistsException e){ 
 			throw e ;
 		} catch (Exception e) {
-      if(log.isDebugEnabled()) log.debug(e.getMessage());
-    }
+			if(log.isDebugEnabled()) log.debug(e.getMessage());
+		}
 		finally { sProvider.close() ;}		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#addWatchCategory(java.lang.String, org.exoplatform.faq.service.Watch)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#addWatchCategory(java.lang.String, org.exoplatform.faq.service.Watch)
+	 */
 	public void addWatchCategory(String id, Watch watch)throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node faqHome = getFAQServiceHome (sProvider) ;
-		  Map<String, String> watchs = new HashMap<String, String> () ;
+			Map<String, String> watchs = new HashMap<String, String> () ;
 			Node watchingNode = faqHome.getNode(id) ; ;
 			if(watchingNode.isNodeType("exo:faqWatching")) {
 				Value[] emails = watchingNode.getProperty("exo:emailWatching").getValues() ;
@@ -2211,14 +2219,14 @@ public class JCRDataStorage implements DataStorage {
 			}
 			watchingNode.save() ;
 		}catch (Exception e) {
-		  log.error("Failed to add watch category: " , e);
+			log.error("Failed to add watch category: " , e);
 		} finally {sProvider.close() ;} 
 	}
 	
 	//TODO Going to remove
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getListMailInWatch(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getListMailInWatch(java.lang.String)
+	 */
 	public QuestionPageList getListMailInWatch(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2231,55 +2239,56 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 5, queryString.toString(), true) ;
 			return pageList;
 		}catch(Exception e) {
-		  log.error("Failed to get list of mail watch: ", e);
+			log.error("Failed to get list of mail watch: ", e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByCategory(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByCategory(java.lang.String)
+	 */
 	public List<Watch> getWatchByCategory(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Watch> listWatches = new ArrayList<Watch>();
 		try {
 			Node category = getFAQServiceHome(sProvider).getNode(categoryId) ;
-	  	String[] userWatch = null;
+			String[] userWatch = null;
 			String[] emails = null;
-	  	if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
-	  	if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
-	  	if(userWatch != null && userWatch.length > 0) {
-	  		Watch watch = new Watch();
-		  	for(int i = 0; i < userWatch.length; i ++){
-		  		watch = new Watch();
-		  		watch.setEmails(emails[i]);
-		  		watch.setUser(userWatch[i]);
-		  		listWatches.add(watch);
-		  	}
-	  	}
-	  	return listWatches;
+			if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
+			if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
+			if(userWatch != null && userWatch.length > 0) {
+				Watch watch = new Watch();
+				for(int i = 0; i < userWatch.length; i ++){
+					watch = new Watch();
+					watch.setEmails(emails[i]);
+					watch.setUser(userWatch[i]);
+					listWatches.add(watch);
+				}
+			}
+			return listWatches;
 		}catch(Exception e) {
-		  log.error("Failed to get watch through category: ",e);
+			log.error("Failed to get watch through category: ",e);
 		}finally {sProvider.close() ;}
 		return listWatches ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#hasWatch(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#hasWatch(java.lang.String)
+	 */
 	public boolean hasWatch(String categoryPath) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node cat = getFAQServiceHome(sProvider).getNode(categoryPath) ;
-			if( cat.getProperty("exo:userWatching").getValues().length > 0) return true ;
-		}catch(Exception e) {
+			if(new PropertyReader(cat).strings("exo:userWatching", new String[]{}).length > 0) return true ;
+		}catch (Exception e) {
+			log.error("Failed to check has watch", e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#addWatchQuestion(java.lang.String, org.exoplatform.faq.service.Watch, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#addWatchQuestion(java.lang.String, org.exoplatform.faq.service.Watch, boolean)
+	 */
 	public void addWatchQuestion(String questionId, Watch watch, boolean isNew) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		Map<String, String> watchMap = new HashMap<String, String>() ;
@@ -2304,42 +2313,43 @@ public class JCRDataStorage implements DataStorage {
 			}			
 			//questionHome.save();
 		}catch (Exception e) {
-		  log.error("Failed to add a watch question: ", e );
+			log.error("Failed to add a watch question: ", e );
 		}finally { sProvider.close () ;} 
 		
 	}
 
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByQuestion(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getWatchByQuestion(java.lang.String)
+	 */
 	public List<Watch> getWatchByQuestion(String questionId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<Watch> listWatches = new ArrayList<Watch>();
 		try {
 			Node category = getFAQServiceHome(sProvider).getNode(questionId) ;
-	  	String[] userWatch = null;
-			String[] emails = null;
-	  	if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
-	  	if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
-	  	if(userWatch != null && userWatch.length > 0) {
-	  		Watch watch = new Watch();
-		  	for(int i = 0; i < userWatch.length; i ++){
-		  		watch = new Watch();
-		  		watch.setEmails(emails[i]);
-		  		watch.setUser(userWatch[i]);
-		  		listWatches.add(watch);
-		  	}
-	  	}
-	  	return listWatches;
+			if(category.isNodeType("exo:faqWatching")) {
+				String[] userWatch = null;
+				String[] emails = null;
+				if(category.hasProperty("exo:emailWatching")) emails = Utils.valuesToArray(category.getProperty("exo:emailWatching").getValues());
+				if(category.hasProperty("exo:userWatching")) userWatch = Utils.valuesToArray(category.getProperty("exo:userWatching").getValues());
+				if(userWatch != null && userWatch.length > 0) {
+					Watch watch = new Watch();
+					for(int i = 0; i < userWatch.length; i ++){
+						watch = new Watch();
+						watch.setEmails(emails[i]);
+						watch.setUser(userWatch[i]);
+						listWatches.add(watch);
+					}
+				}
+			}
 		}catch(Exception e) {
-		  log.error("Failed to get watch through question: ", e);
+			log.error("Failed to get watch through question: ", e);
 		}finally {sProvider.close() ;}
 		return listWatches ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedCategoryByUser(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedCategoryByUser(java.lang.String)
+	 */
 	public QuestionPageList getWatchedCategoryByUser(String userId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2353,31 +2363,32 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch ( Exception e) {
-		  log.error("Failed to get watched category through user: ", e);
+			log.error("Failed to get watched category through user: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isUserWatched(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isUserWatched(java.lang.String, java.lang.String)
+	 */
 	public boolean isUserWatched(String userId, String cateId) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node faqHome = getFAQServiceHome(sProvider);
 			Node cate = faqHome.getNode(cateId) ;
-			Value[] values = cate.getProperty("exo:userWatching").getValues() ;
-			for(Value vl : values) {
-				if (vl.getString().equals(userId)) return true ;
+			List<String> list = new PropertyReader(cate).list("exo:userWatching", new ArrayList<String>());
+			for(String vl : list) {
+				if (vl.equals(userId)) return true ;
 			}
-		}catch(Exception e) {
+		}catch (Exception e) {
+			log.error("Failed to check user watched", e);
 		}finally { sProvider.close() ;}
 		return false;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedSubCategory(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getWatchedSubCategory(java.lang.String, java.lang.String)
+	 */
 	public List<String> getWatchedSubCategory(String userId, String cateId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> watchedSub = new ArrayList<String> () ;
@@ -2394,14 +2405,14 @@ public class JCRDataStorage implements DataStorage {
 				watchedSub.add(iter.nextNode().getName()) ;
 			}
 		}catch (Exception e) {
-		  log.error("Getting watched sub category fail: ", e);
+			log.error("Getting watched sub category failed: ", e);
 		}finally { sProvider.close() ;}
 		return watchedSub ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getListQuestionsWatch(org.exoplatform.faq.service.FAQSetting, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getListQuestionsWatch(org.exoplatform.faq.service.FAQSetting, java.lang.String)
+	 */
 	public QuestionPageList getListQuestionsWatch(FAQSetting faqSetting, String currentUser) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2435,15 +2446,15 @@ public class JCRDataStorage implements DataStorage {
 			QuestionPageList pageList = new QuestionPageList(result.getNodes(), 10, queryString.toString(), true) ;
 			return pageList ;
 		}catch (Exception e) {
-		  log.error("Failed to get list of question watch: ", e);
+			log.error("Failed to get list of question watch: ", e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	// Going to remove
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#deleteCategoryWatch(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#deleteCategoryWatch(java.lang.String, java.lang.String)
+	 */
 	public void deleteCategoryWatch(String categoryId, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -2458,13 +2469,14 @@ public class JCRDataStorage implements DataStorage {
 			category.setProperty("exo:userWatching", emailMap.keySet().toArray(new String[]{})) ;
 			category.setProperty("exo:emailWatching", emailMap.values().toArray(new String[]{})) ;
 			category.save() ;		
-		}catch(Exception e) {
+		}catch (Exception e) {
+			log.error("Failed to deleted category watch", e);
 		}finally { sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#unWatchCategory(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#unWatchCategory(java.lang.String, java.lang.String)
+	 */
 	public void unWatchCategory(String categoryId, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -2479,13 +2491,14 @@ public class JCRDataStorage implements DataStorage {
 			category.setProperty("exo:emailWatching", userMap.values().toArray(new String[]{})) ;
 			category.setProperty("exo:userWatching", userMap.keySet().toArray(new String[]{})) ;
 			category.save() ;		
-		}catch(Exception e) {
+		}catch (Exception e) {
+			log.error("Failed to unWatch category", e);
 		}finally { sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#unWatchQuestion(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#unWatchQuestion(java.lang.String, java.lang.String)
+	 */
 	public void unWatchQuestion(String questionId, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -2501,13 +2514,13 @@ public class JCRDataStorage implements DataStorage {
 			question.setProperty("exo:userWatching", userMap.keySet().toArray(new String[]{})) ;
 			question.save() ;
 		}catch (Exception e) {
-		  log.error("Unwatching question fail: ", e);
+			log.error("Unwatching question failed: ", e);
 		}finally { sProvider.close() ;}		
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getSearchResults(org.exoplatform.faq.service.FAQEventQuery)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getSearchResults(org.exoplatform.faq.service.FAQEventQuery)
+	 */
 	public List<ObjectSearchResult> getSearchResults(FAQEventQuery eventQuery) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		
@@ -2675,7 +2688,9 @@ public class JCRDataStorage implements DataStorage {
 								}
 																
 							}							
-						} catch(Exception e){}
+						} catch (Exception e) {
+							log.error("Failed to add item in list search", e);
+						}
 						
 					}else {
 						if(nodeObj.isNodeType("exo:faqQuestion")) listQuestion.add(nodeObj) ;
@@ -2686,9 +2701,9 @@ public class JCRDataStorage implements DataStorage {
 					}					
 				}
 				
-				//System.out.println("eventQuery.isQuestionLevelSearch() ==>" +  eventQuery.isQuestionLevelSearch() + " - " + listQuestion.size());
-				//System.out.println("eventQuery.isAnswerCommentLevelSearch() ==>" +  eventQuery.isAnswerCommentLevelSearch() + " - " + listAnswerandComment.size());
-				//System.out.println("eventQuery.isLanguageLevelSearch() ==>" +  eventQuery.isLanguageLevelSearch() + " - " + listLanguage.size());
+				//System.out.println("eventQuery.isQuestionLevelSearch() ==>" +	eventQuery.isQuestionLevelSearch() + " - " + listQuestion.size());
+				//System.out.println("eventQuery.isAnswerCommentLevelSearch() ==>" +	eventQuery.isAnswerCommentLevelSearch() + " - " + listAnswerandComment.size());
+				//System.out.println("eventQuery.isLanguageLevelSearch() ==>" +	eventQuery.isLanguageLevelSearch() + " - " + listLanguage.size());
 				//if(eventQuery.isQuestionLevelSearch() && listQuestion.isEmpty()) return results ;
 				//if(eventQuery.isAnswerCommentLevelSearch() && listAnswerandComment.isEmpty()) return results ;
 				//if(eventQuery.isLanguageLevelSearch() && listLanguage.isEmpty()) return results ;
@@ -2825,8 +2840,8 @@ public class JCRDataStorage implements DataStorage {
 									isResult = false ;
 								}								
 							}catch(Exception e) { 
-							  log.debug(nodeObj + " node must exist: ", e);
-							  isResult = false ;
+								log.debug(nodeObj + " node must exist: ", e);
+								isResult = false ;
 							}
 						}						
 					} else if(nodeObj.isNodeType("exo:faqCategory")){
@@ -2920,8 +2935,7 @@ public class JCRDataStorage implements DataStorage {
 						Question question = getQuestion(nodeObj) ;
 						newMap.put(question.getId(), question);
 					}
-				}catch(Exception e) {}
-			}
+				}catch (Exception e) {}
 		} catch (Exception e) {
 		}
 		questionList.addAll(Arrays.asList(newMap.values().toArray(new Question[]{})));
@@ -2929,8 +2943,8 @@ public class JCRDataStorage implements DataStorage {
 	}*/
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPath(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPath(java.lang.String)
+	 */
 	public List<String> getCategoryPath(String categoryId) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		List<String> breadcums = new ArrayList<String>() ;
@@ -2941,14 +2955,14 @@ public class JCRDataStorage implements DataStorage {
 				category = category.getParent() ;
 			}
 		}catch(Exception e) {
-		  log.error("Failed to get category: ", e);
+			log.error("Failed to get category: ", e);
 		}finally { sProvider.close() ;}		
 		return breadcums;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getParentCategoriesName(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getParentCategoriesName(java.lang.String)
+	 */
 	public String getParentCategoriesName(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		StringBuilder names = new StringBuilder();
@@ -2966,8 +2980,9 @@ public class JCRDataStorage implements DataStorage {
 			for (int i = list.size()-1; i >= 0; i--) {
 				if(i != list.size()-1)names.append(" > ");
 				names.append(list.get(i));
-      }
-		}catch(Exception e) {
+			}
+		}catch (Exception e) {
+			log.error("Failed to get parent categories name", e);
 		}finally { sProvider.close() ;}		
 		return names.toString();
 	}
@@ -2982,18 +2997,18 @@ public class JCRDataStorage implements DataStorage {
 			(JobSchedulerService) container.getComponentInstanceOfType(JobSchedulerService.class);
 		messagesInfoMap_.put(name, new NotifyInfo(addresses, message)) ;
 		schedulerService.addPeriodJob(info, periodInfo);*/
-	  pendingMessagesQueue.add(new NotifyInfo(addresses, message)) ;
+		pendingMessagesQueue.add(new NotifyInfo(addresses, message)) ;
 	}
 	
 	public Iterator<NotifyInfo> getPendingMessages() throws Exception {
 		Iterator<NotifyInfo>pending = new ArrayList<NotifyInfo>(pendingMessagesQueue).iterator();
-    pendingMessagesQueue.clear() ;
-    return pending;
-  } 
+		pendingMessagesQueue.clear() ;
+		return pending;
+	} 
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getMessageInfo(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getMessageInfo(java.lang.String)
+	 */
 	public NotifyInfo getMessageInfo(String name) throws Exception {
 		NotifyInfo messageInfo = messagesInfoMap_.get(name) ;
 		messagesInfoMap_.remove(name) ;
@@ -3001,8 +3016,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#swapCategories(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#swapCategories(java.lang.String, java.lang.String)
+	 */
 	public void swapCategories(String cateId1, String cateId2) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3023,12 +3038,13 @@ public class JCRDataStorage implements DataStorage {
 				resetIndex(destCat, index) ;
 			}
 		} catch (Exception e) {
+			log.error("Failed to swap category", e);
 		} finally {sProvider.close();}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#saveTopicIdDiscussQuestion(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#saveTopicIdDiscussQuestion(java.lang.String, java.lang.String)
+	 */
 	public void saveTopicIdDiscussQuestion(String questionId, String topicId) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3036,52 +3052,52 @@ public class JCRDataStorage implements DataStorage {
 			questionNode.setProperty("exo:topicIdDiscuss", topicId);
 			questionNode.save() ;
 		} catch (Exception e) {
-		  log.error("Failed to save topic discuss question: ", e);
+			log.error("Failed to save topic discuss question: ", e);
 		}finally { sProvider.close() ;}
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#exportData(java.lang.String, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#exportData(java.lang.String, boolean)
+	 */
 	public InputStream exportData(String categoryId, boolean createZipFile) throws Exception{
 		Node categoryNode = getCategoryNodeById(categoryId);
 		Session session = categoryNode.getSession();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream() ;
-    File file = null;
-    List<File> listFiles = new ArrayList<File>();
-    Calendar date = GregorianCalendar.getInstance() ;
-    session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
-  	listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
-    ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-    try {
-      int byteReads;
-      byte[] buffer = new byte[4096]; // Create a buffer for copying
-      FileInputStream inputStream = null;
-      ZipEntry zipEntry = null;
-      for(File f : listFiles){
-        try {
-      	inputStream = new FileInputStream(f);
-      	zipEntry = new ZipEntry(f.getPath());
-      	zipOutputStream.putNextEntry(zipEntry);
-      	while((byteReads = inputStream.read(buffer)) != -1)
-      		zipOutputStream.write(buffer, 0, byteReads);
-        } finally {
-      	  inputStream.close();
-        }
-      }
-    } finally {
-      zipOutputStream.close();
-    }
-   
-    file = new File("exportCategory.zip");
-    InputStream fileInputStream = new FileInputStream(file);
-    return fileInputStream;
+		File file = null;
+		List<File> listFiles = new ArrayList<File>();
+		Calendar date = GregorianCalendar.getInstance() ;
+		session.exportSystemView(categoryNode.getPath(), bos, false, false ) ;
+		listFiles.add(org.exoplatform.ks.common.Utils.getXMLFile(bos, "eXo Knowledge Suite - Answers", "Category", date.getTime(), categoryNode.getName()));
+		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+		try {
+			int byteReads;
+			byte[] buffer = new byte[4096]; // Create a buffer for copying
+			FileInputStream inputStream = null;
+			ZipEntry zipEntry = null;
+			for(File f : listFiles){
+				try {
+				inputStream = new FileInputStream(f);
+				zipEntry = new ZipEntry(f.getPath());
+				zipOutputStream.putNextEntry(zipEntry);
+				while((byteReads = inputStream.read(buffer)) != -1)
+					zipOutputStream.write(buffer, 0, byteReads);
+				} finally {
+					inputStream.close();
+				}
+			}
+		} finally {
+			zipOutputStream.close();
+		}
+	 
+		file = new File("exportCategory.zip");
+		InputStream fileInputStream = new FileInputStream(file);
+		return fileInputStream;
 	}
 
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#importData(java.lang.String, java.io.InputStream, boolean)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#importData(java.lang.String, java.io.InputStream, boolean)
+	 */
 	public boolean importData(String parentId, InputStream inputStream, boolean isZip) throws Exception{
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
@@ -3158,82 +3174,87 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isExisting(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isExisting(java.lang.String)
+	 */
 	public boolean isExisting(String path) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			getFAQServiceHome(sProvider).getNode(path) ;
 			return true ;
-		}catch(Exception e) {			
+		}catch (Exception e) {			
+			log.error("Failed to check is existing. path:"+path, e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOf(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryPathOf(java.lang.String)
+	 */
 	public String getCategoryPathOf(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(id) ;
-			String path;  
+			String path;	
 			if(node.isNodeType("exo:faqQuestion"))path = node.getParent().getParent().getPath() ;
-			else if(node.isNodeType("exo:faqCategory")) path =  node.getPath() ;
+			else if(node.isNodeType("exo:faqCategory")) path =	node.getPath() ;
 			else return null ;
 			return path.substring(path.indexOf(Utils.CATEGORY_HOME)) ;
-		}catch(Exception e) {			
+		}catch (Exception e) {			
+			log.error("Failed to get category of path: "+id, e);
 		}finally { sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isModerateAnswer(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isModerateAnswer(java.lang.String)
+	 */
 	public boolean isModerateAnswer(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(id) ;
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
 			return node.getProperty("exo:isModerateAnswers").getBoolean() ;
-		}catch(Exception e) {
+		}catch (Exception e) {
+			log.error("Failed to check moderate answer", e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isModerateQuestion(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isModerateQuestion(java.lang.String)
+	 */
 	public boolean isModerateQuestion(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(id) ;
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
 			return node.getProperty("exo:isModerateQuestions").getBoolean() ;
-		}catch(Exception e) {
+		}catch (Exception e) {
+			log.error("Failed to moderate question", e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isViewAuthorInfo(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isViewAuthorInfo(java.lang.String)
+	 */
 	public boolean isViewAuthorInfo(String id) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node node ;
 			if(id == null) node = getCategoryHome(sProvider, null) ;
-			else node = getFAQServiceHome(sProvider).getNode(id) ;
+			else node = getCategoryNodeById(sProvider, id); ;
 			if(node.isNodeType("exo:faqQuestion")) node = node.getParent().getParent() ;
-			return node.getProperty("exo:viewAuthorInfor").getValue().getBoolean() ;
-		}catch(Exception e) {
+			return new PropertyReader(node).bool("exo:viewAuthorInfor", false);
+		}catch (Exception e) {
+			log.error("Failed to check view author infor", e);
 		}finally { sProvider.close() ;}
 		return false ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryModerator(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryModerator(java.lang.String, java.lang.String)
+	 */
 	public boolean isCategoryModerator(String categoryId, String user) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		boolean isCalMod = false;
@@ -3244,17 +3265,17 @@ public class JCRDataStorage implements DataStorage {
 			PropertyReader reader = new PropertyReader(node);
 			List<String> values = reader.list("exo:moderators", new ArrayList<String>()) ;
 			if(!values.isEmpty())
-			  isCalMod =  Utils.hasPermission(userGroups, values);
+				isCalMod =	Utils.hasPermission(userGroups, values);
 		}catch(Exception e) {
-		  log.error("Cheking whether category moderator fail: ", e); 
+			log.error("Cheking whether category moderator failed: ", e); 
 		}finally { sProvider.close() ;}
 		
 		return isCalMod ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryExist(java.lang.String, java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#isCategoryExist(java.lang.String, java.lang.String)
+	 */
 	public boolean isCategoryExist(String name, String path) {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -3264,10 +3285,12 @@ public class JCRDataStorage implements DataStorage {
 				Node cat = iter.nextNode();
 				try{
 					if(name.equals(cat.getProperty("exo:name").getString())) return true ;
-				}catch(Exception e){}
+				}catch (Exception e) {
+					log.debug("Failed to check exist category by name", e);
+				}
 			}			
 		}catch(Exception e) {
-		  log.error("Cheking whether catagory is exist: ", e);
+			log.error("Cheking whether catagory is exist: ", e);
 		}finally{
 			sProvider.close() ;
 		}
@@ -3275,8 +3298,8 @@ public class JCRDataStorage implements DataStorage {
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionContents(java.util.List)
+	 */
 	public List<String> getQuestionContents(List<String> paths) throws Exception {
 		List<String> contents = new ArrayList<String>() ;
 		for(String path : paths) {
@@ -3289,32 +3312,33 @@ public class JCRDataStorage implements DataStorage {
 	
 	//will be remove
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionNodeById(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getQuestionNodeById(java.lang.String)
+	 */
 	public Node getQuestionNodeById(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node serviceHome = getFAQServiceHome(sProvider) ;
 			try {
 				return serviceHome.getNode(path) ;
-      } catch (PathNotFoundException e) {
-      	StringBuffer queryString = new StringBuffer("/jcr:root").append(serviceHome.getPath()). 
-      	append("//element(*,exo:faqQuestion)[fn:name()='").append(path).append("']");
-      	QueryManager qm = serviceHome.getSession().getWorkspace().getQueryManager();
-      	Query query = qm.createQuery(queryString.toString(), Query.XPATH);
-      	QueryResult result = query.execute();		
-      	NodeIterator iter = result.getNodes() ;
-      	if(iter.getSize() > 0)
-      		return iter.nextNode();
-      }
+			} catch (PathNotFoundException e) {
+				StringBuffer queryString = new StringBuffer("/jcr:root").append(serviceHome.getPath()). 
+				append("//element(*,exo:faqQuestion)[fn:name()='").append(path).append("']");
+				QueryManager qm = serviceHome.getSession().getWorkspace().getQueryManager();
+				Query query = qm.createQuery(queryString.toString(), Query.XPATH);
+				QueryResult result = query.execute();		
+				NodeIterator iter = result.getNodes() ;
+				if(iter.getSize() > 0)
+					return iter.nextNode();
+			}
 		}catch (Exception e) {
+			log.error("Failed to get question node by path:"+path, e);
 		}finally {sProvider.close() ;}
 		return null ;
 	}
 	
 	/* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getModeratorsOf(java.lang.String)
-   */
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getModeratorsOf(java.lang.String)
+	 */
 	public String[] getModeratorsOf(String path) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
@@ -3324,292 +3348,291 @@ public class JCRDataStorage implements DataStorage {
 			}else if(node.isNodeType("exo:faqCategory")){
 				return Utils.valuesToArray(node.getProperty("exo:moderators").getValues()) ;
 			}
-		}catch(Exception e) {			
+		}catch (Exception e) {			
+			log.error("Failed to get moderators of path: " + path, e);
 		}finally { sProvider.close() ;}
 		return new String[]{} ;
 	}
 	
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNameOf(java.lang.String)
-   */
-  public String getCategoryNameOf(String categoryPath) throws Exception {
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryNameOf(java.lang.String)
+	 */
+	public String getCategoryNameOf(String categoryPath) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node node = getFAQServiceHome(sProvider).getNode(categoryPath) ;
 			if(node.hasProperty("exo:name")) return node.getProperty("exo:name").getString() ;
 			return node.getName() ;
-		}catch(Exception e) {			
+		}catch (Exception e) {			
+			log.error("Failed to get category name of path: " + categoryPath, e);
 		}finally { sProvider.close() ;}
 		return null ;
-  }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, java.util.List)
-   */
-  public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception {
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-  	CategoryInfo categoryInfo = new CategoryInfo() ;
-  	try {
-  		Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryPath) ;
-  		categoryInfo.setId(categoryNode.getName()) ;
-  		String path = categoryNode.getPath() ;
-  		categoryInfo.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-  		if(categoryNode.hasProperty("exo:name"))
-  			categoryInfo.setName(categoryNode.getProperty("exo:name").getString()) ;
-  		else categoryInfo.setName(categoryNode.getName());
-  		// set Path Name
-  		Node node = categoryNode;
-  		List<String> pathName = new ArrayList<String>();
-  		String categoryName ;
-  		while (node.isNodeType("exo:faqCategory")) {
-  			if(node.hasProperty("exo:name"))
-  				categoryName = node.getProperty("exo:name").getString();
-  			else categoryName = node.getName();
-  			pathName.add(categoryName);
-  			node = node.getParent();
-      }
-  		categoryInfo.setPathName(pathName);
-  		//declare question info  		
-  		categoryInfo.setQuestionInfos(getQuestionInfo(categoryNode)) ;
-  		
-  		//declare category info
-  		if(categoryNode.hasNodes()) {
-  			List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>() ;
-  			NodeIterator subIter = categoryNode.getNodes() ;
-  			Node sub ;
-  			SubCategoryInfo subCat ;
-  			while (subIter.hasNext()){
-  				sub = subIter.nextNode() ;
-  				if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
-  					if(sub.isNodeType("exo:faqCategory")) {
-	  					subCat = new SubCategoryInfo() ;
-	  					subCat.setId(sub.getName());
-	  					subCat.setName(sub.getProperty("exo:name").getString()) ;  					
-	  					subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
-	  					subCat.setSubCateInfos(getSubCategoryInfo(sub, categoryIdScoped)) ;
-	  					subCat.setQuestionInfos(getQuestionInfo(sub)) ;
-	  					subList.add(subCat) ;
-  					}
-  				}
-  			}
-  			categoryInfo.setSubCateInfos(subList) ;
-  		}
-  	}catch(Exception e) {
-  		categoryInfo = new CategoryInfo() ;
-  	}finally{ sProvider.close() ;}
-  	return categoryInfo ;
-  }
-  
-  
-  private void registerQuestionNodeListener(Node questionNode) {
-    try {
-      ObservationManager observation = questionNode.getSession().getWorkspace().getObservationManager();
-      QuestionNodeListener listener = new QuestionNodeListener();
-      observation.addEventListener(listener,
-                                   Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED
-                                       | Event.PROPERTY_CHANGED,
-                                   questionNode.getPath(),
-                                   true,
-                                   null,
-                                   null,
-                                   false);
-    } catch (Exception e) {
-      log.error("can not add listener to question node", e);
-    } 
-    
-  }
-  
-  public void reCalculateInfoOfQuestion(String absPathOfProp) throws Exception {
-    SessionProvider sProvider = SessionProvider.createSystemProvider();
-    try {
-      Item item = null;
-      Node quesNode = null;
-      Node serviceHomeNode = getFAQServiceHome(sProvider);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#getCategoryInfo(java.lang.String, java.util.List)
+	 */
+	public CategoryInfo getCategoryInfo(String categoryPath, List<String> categoryIdScoped) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		CategoryInfo categoryInfo = new CategoryInfo() ;
+		try {
+			Node categoryNode = getFAQServiceHome(sProvider).getNode(categoryPath) ;
+			categoryInfo.setId(categoryNode.getName()) ;
+			String path = categoryNode.getPath() ;
+			categoryInfo.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+			if(categoryNode.hasProperty("exo:name"))
+				categoryInfo.setName(categoryNode.getProperty("exo:name").getString()) ;
+			else categoryInfo.setName(categoryNode.getName());
+			// set Path Name
+			Node node = categoryNode;
+			List<String> pathName = new ArrayList<String>();
+			String categoryName ;
+			while (node.isNodeType("exo:faqCategory")) {
+				if(node.hasProperty("exo:name"))
+					categoryName = node.getProperty("exo:name").getString();
+				else categoryName = node.getName();
+				pathName.add(categoryName);
+				node = node.getParent();
+			}
+			categoryInfo.setPathName(pathName);
+			//declare question info			
+			categoryInfo.setQuestionInfos(getQuestionInfo(categoryNode)) ;
+			
+			//declare category info
+			if(categoryNode.hasNodes()) {
+				List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>() ;
+				NodeIterator subIter = categoryNode.getNodes() ;
+				Node sub ;
+				SubCategoryInfo subCat ;
+				while (subIter.hasNext()){
+					sub = subIter.nextNode() ;
+					if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
+						if(sub.isNodeType("exo:faqCategory")) {
+							subCat = new SubCategoryInfo() ;
+							subCat.setId(sub.getName());
+							subCat.setName(sub.getProperty("exo:name").getString()) ;						
+							subCat.setPath(categoryInfo.getPath()+ "/" + sub.getName()) ;
+							subCat.setSubCateInfos(getSubCategoryInfo(sub, categoryIdScoped)) ;
+							subCat.setQuestionInfos(getQuestionInfo(sub)) ;
+							subList.add(subCat) ;
+						}
+					}
+				}
+				categoryInfo.setSubCateInfos(subList) ;
+			}
+		}catch(Exception e) {
+			log.error("Failed to get categoryInfo ", e);
+			categoryInfo = new CategoryInfo() ;
+		}finally{ sProvider.close() ;}
+		return categoryInfo ;
+	}
+	
+	
+	private void registerQuestionNodeListener(Node questionNode) {
+		try {
+			ObservationManager observation = questionNode.getSession().getWorkspace().getObservationManager();
+			QuestionNodeListener listener = new QuestionNodeListener();
+			observation.addEventListener(listener,
+																	 Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_ADDED
+																			 | Event.PROPERTY_CHANGED,
+																	 questionNode.getPath(),
+																	 true,
+																	 null,
+																	 null,
+																	 false);
+		} catch (Exception e) {
+			log.error("can not add listener to question node", e);
+		} 
+		
+	}
+	
+	public void reCalculateInfoOfQuestion(String absPathOfProp) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider();
+		try {
+			Item item = null;
+			Node quesNode = null;
+			Node serviceHomeNode = getFAQServiceHome(sProvider);
 
-      // ----- get Question Node -------------
-      int quesNameIndex = absPathOfProp.lastIndexOf(Utils.QUESTION_HOME)
-          + Utils.QUESTION_HOME.length() + 2;
-      String quesPath = absPathOfProp.substring(0, absPathOfProp.indexOf("/", quesNameIndex));
-      try {
-        quesNode = (Node) serviceHomeNode.getSession().getItem(quesPath);
-      } catch (PathNotFoundException pe) {
-        return;
-      }
-      String lastActivityInfo = null;
-      if (quesNode.hasProperty("exo:lastActivity"))
-        lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
-      long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
-      long numberOfAnswers = 0;
-      if (quesNode.hasProperty("exo:numberOfPublicAnswers")) {
-        numberOfAnswers = quesNode.getProperty("exo:numberOfPublicAnswers").getLong();
-      }
-      // ------------- end -----------------
+			// ----- get Question Node -------------
+			int quesNameIndex = absPathOfProp.lastIndexOf(Utils.QUESTION_HOME)
+					+ Utils.QUESTION_HOME.length() + 2;
+			String quesPath = absPathOfProp.substring(0, absPathOfProp.indexOf("/", quesNameIndex));
+			try {
+				quesNode = (Node) serviceHomeNode.getSession().getItem(quesPath);
+			} catch (PathNotFoundException pe) {
+				return;
+			}
+			String lastActivityInfo = null;
+			if (quesNode.hasProperty("exo:lastActivity"))
+				lastActivityInfo = quesNode.getProperty("exo:lastActivity").getString();
+			long timeOfLastActivity = Utils.getTimeOfLastActivity(lastActivityInfo);
+			long numberOfAnswers = 0;
+			if (quesNode.hasProperty("exo:numberOfPublicAnswers")) {
+				numberOfAnswers = quesNode.getProperty("exo:numberOfPublicAnswers").getLong();
+			}
+			// ------------- end -----------------
 
-      // -------------- get updated Item ----------------
-      try {
-        item = getFAQServiceHome(sProvider).getSession().getItem(absPathOfProp);
-      } catch (PathNotFoundException pnfe) {
-        // item has been removed. Update last activity of question.
-        reUpdateLastActivityOfQuestion(quesNode);
-        reUpdateNumberOfPublicAnswers(quesNode);
-        return;
-      }
+			// -------------- get updated Item ----------------
+			try {
+				item = getFAQServiceHome(sProvider).getSession().getItem(absPathOfProp);
+			} catch (PathNotFoundException pnfe) {
+				// item has been removed. Update last activity of question.
+				reUpdateLastActivityOfQuestion(quesNode);
+				reUpdateNumberOfPublicAnswers(quesNode);
+				return;
+			}
 
-      if (item instanceof Property) {
-        Property prop = (Property) item;
-        if (prop.getName().equalsIgnoreCase("exo:activateResponses")
-            || prop.getName().equalsIgnoreCase("exo:approveResponses")) {
-          // if activate or approve property has been changed.
-          boolean value = prop.getBoolean();
-          Node answerNode = prop.getParent();
-          boolean isActivated = false, isApproved = false;
-          if (answerNode.hasProperty("exo:activateResponses"))
-            isActivated = answerNode.getProperty("exo:activateResponses").getBoolean();
-          if (answerNode.hasProperty("exo:approveResponses"))
-            isApproved = answerNode.getProperty("exo:approveResponses").getBoolean();
-          long answerTime = 0;
-          if (answerNode.hasProperty("exo:dateResponse"))
-            answerTime = answerNode.getProperty("exo:dateResponse").getDate().getTimeInMillis();
-          if (isActivated && isApproved) {
-            numberOfAnswers++;
-            quesNode.setProperty("exo:numberOfPublicAnswers", numberOfAnswers);
-            // admin changed this answer to public ...
-            if (timeOfLastActivity < answerTime) {
-              String author = answerNode.getProperty("exo:responseBy").getString();
-              quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
-            }
-            quesNode.save();
+			if (item instanceof Property) {
+				Property prop = (Property) item;
+				if (prop.getName().equalsIgnoreCase("exo:activateResponses")
+						|| prop.getName().equalsIgnoreCase("exo:approveResponses")) {
+					// if activate or approve property has been changed.
+					boolean value = prop.getBoolean();
+					Node answerNode = prop.getParent();
+					boolean isActivated = false, isApproved = false;
+					if (answerNode.hasProperty("exo:activateResponses"))
+						isActivated = answerNode.getProperty("exo:activateResponses").getBoolean();
+					if (answerNode.hasProperty("exo:approveResponses"))
+						isApproved = answerNode.getProperty("exo:approveResponses").getBoolean();
+					long answerTime = 0;
+					if (answerNode.hasProperty("exo:dateResponse"))
+						answerTime = answerNode.getProperty("exo:dateResponse").getDate().getTimeInMillis();
+					if (isActivated && isApproved) {
+						numberOfAnswers++;
+						quesNode.setProperty("exo:numberOfPublicAnswers", numberOfAnswers);
+						// admin changed this answer to public ...
+						if (timeOfLastActivity < answerTime) {
+							String author = answerNode.getProperty("exo:responseBy").getString();
+							quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(answerTime));
+						}
+						quesNode.save();
 
-            return;
-          } else {
-            // if admin change answer status from viewable to unapproved and
-            // inactivated
-            reUpdateNumberOfPublicAnswers(quesNode);
-            // reUpdateLastActivityOfQuestion(quesNode);
-            if (timeOfLastActivity == answerTime) {
-              // re-update last activity now
-              reUpdateLastActivityOfQuestion(quesNode);
-              return;
-            }
-          }
-        }
+						return;
+					} else {
+						// if admin change answer status from viewable to unapproved and
+						// inactivated
+						reUpdateNumberOfPublicAnswers(quesNode);
+						// reUpdateLastActivityOfQuestion(quesNode);
+						if (timeOfLastActivity == answerTime) {
+							// re-update last activity now
+							reUpdateLastActivityOfQuestion(quesNode);
+							return;
+						}
+					}
+				}
 
-      }
+			}
 
-      if (item instanceof Node) {
-        // case of adding new comment.
-        Node node = (Node) item;
-        if (node.getPrimaryNodeType().getName().equalsIgnoreCase("exo:comment")) {
-          long commentTime = node.getProperty("exo:dateComment").getDate().getTimeInMillis();
-          if (commentTime > timeOfLastActivity) {
-            String author = node.getProperty("exo:commentBy").getString();
-            quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(commentTime));
-            quesNode.save();
-          }
-        }
-      }
-    } finally {
-      sProvider.close();
-    }
-  }
-  
-  private void reUpdateNumberOfPublicAnswers(Node questionNode) throws RepositoryException {
-    QueryManager qm = questionNode.getSession().getWorkspace().getQueryManager();
-    StringBuilder sb = new StringBuilder();
-    sb.append("/jcr:root").append(questionNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true']");
-    Query query =  qm.createQuery(sb.toString(), Query.XPATH);
-    QueryResult result = query.execute();
-    long size = result.getNodes().getSize();
-    size = size < 0 ? 0 : size;
-    questionNode.setProperty("exo:numberOfPublicAnswers", size);
-    questionNode.save();
-    
-  }
-  
-  private void reUpdateLastActivityOfQuestion(Node quesNode) throws RepositoryException {
-    QueryManager qm = quesNode.getSession().getWorkspace().getQueryManager();
-    
-    StringBuilder sb = new StringBuilder();
-    sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true'] order by @exo:dateResponse descending");
-    QueryImpl query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
-    query.setLimit(1);
-    QueryResult result = query.execute();
-    NodeIterator iter = result.getNodes();
-    
-    String author = null;
-    long lastTime = -1;
-    if (iter.hasNext()) {
-      Node node = iter.nextNode();
-      
-      if (node.hasProperty("exo:dateResponse")) {
-        lastTime = node.getProperty("exo:dateResponse").getDate().getTimeInMillis();
-      }
-      if (node.hasProperty("exo:responseBy")) {
-        author = node.getProperty("exo:responseBy").getString();
-      }
-       
-    }
-    
-//    
-    sb = new StringBuilder();
-    sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:comment) order by @exo:dateComment descending");
-    query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
-    query.setLimit(1);
-    result = query.execute();
-    iter = result.getNodes();
-    if (iter.hasNext()) {
-      Node commentNode = iter.nextNode();
-      if (commentNode.hasProperty("exo:dateComment") && commentNode.hasProperty("exo:commentBy")) {
-        long commentTime = commentNode.getProperty("exo:dateComment").getDate().getTimeInMillis();
-        if (lastTime < commentTime) {
-          lastTime = commentTime;
-          author = commentNode.getProperty("exo:commentBy").getString();
-        }
-      }
-    }
-    
-    
-    if (lastTime > 0) {
-      quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(lastTime));
-      quesNode.save() ;
-      
-    } else {
-      quesNode.setProperty("exo:lastActivity", (String) null);
-    }
-    
-    
-  }
-  
-  private List<SubCategoryInfo> getSubCategoryInfo(Node category, List<String> categoryIdScoped) throws Exception {
-  	List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>() ;
+			if (item instanceof Node) {
+				// case of adding new comment.
+				Node node = (Node) item;
+				if (node.getPrimaryNodeType().getName().equalsIgnoreCase("exo:comment")) {
+					long commentTime = node.getProperty("exo:dateComment").getDate().getTimeInMillis();
+					if (commentTime > timeOfLastActivity) {
+						String author = node.getProperty("exo:commentBy").getString();
+						quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(commentTime));
+						quesNode.save();
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.error("Failed to re calculateInfo of question", e);
+		} finally {
+			sProvider.close();
+		}
+	}
+	
+	private void reUpdateNumberOfPublicAnswers(Node questionNode) throws RepositoryException {
+		QueryManager qm = questionNode.getSession().getWorkspace().getQueryManager();
+		StringBuilder sb = new StringBuilder();
+		sb.append("/jcr:root").append(questionNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true']");
+		Query query =	qm.createQuery(sb.toString(), Query.XPATH);
+		QueryResult result = query.execute();
+		long size = result.getNodes().getSize();
+		size = size < 0 ? 0 : size;
+		questionNode.setProperty("exo:numberOfPublicAnswers", size);
+		questionNode.save();
+		
+	}
+	
+	private void reUpdateLastActivityOfQuestion(Node quesNode) throws RepositoryException {
+		QueryManager qm = quesNode.getSession().getWorkspace().getQueryManager();
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:answer)[@exo:activateResponses='true' and @exo:approveResponses='true'] order by @exo:dateResponse descending");
+		QueryImpl query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
+		query.setLimit(1);
+		QueryResult result = query.execute();
+		NodeIterator iter = result.getNodes();
+		
+		String author = null;
+		long lastTime = -1;
+		if (iter.hasNext()) {
+			Node node = iter.nextNode();
+			
+			if (node.hasProperty("exo:dateResponse")) {
+				lastTime = node.getProperty("exo:dateResponse").getDate().getTimeInMillis();
+			}
+			if (node.hasProperty("exo:responseBy")) {
+				author = node.getProperty("exo:responseBy").getString();
+			}
+			 
+		}
+		
+		sb = new StringBuilder();
+		sb.append("/jcr:root").append(quesNode.getPath()).append("//element(*, exo:comment) order by @exo:dateComment descending");
+		query = (QueryImpl) qm.createQuery(sb.toString(), Query.XPATH);
+		query.setLimit(1);
+		result = query.execute();
+		iter = result.getNodes();
+		if (iter.hasNext()) {
+			Node commentNode = iter.nextNode();
+			if (commentNode.hasProperty("exo:dateComment") && commentNode.hasProperty("exo:commentBy")) {
+				long commentTime = commentNode.getProperty("exo:dateComment").getDate().getTimeInMillis();
+				if (lastTime < commentTime) {
+					lastTime = commentTime;
+					author = commentNode.getProperty("exo:commentBy").getString();
+				}
+			}
+		}
+		if (lastTime > 0) {
+			quesNode.setProperty("exo:lastActivity", author + "-" + String.valueOf(lastTime));
+			quesNode.save() ;
+		} else {
+			quesNode.setProperty("exo:lastActivity", (String) null);
+		}
+	}
+	
+	private List<SubCategoryInfo> getSubCategoryInfo(Node category, List<String> categoryIdScoped) throws Exception {
+		List<SubCategoryInfo> subList = new ArrayList<SubCategoryInfo>() ;
 		if(category.hasNodes()) {
-  		NodeIterator iter = category.getNodes() ;
-  		Node sub ;
-  		SubCategoryInfo cat ; 
-  		while(iter.hasNext()) {
-  			try{
-    			sub = iter.nextNode() ;
-    			if(sub.isNodeType("exo:faqCategory")) {
-    				if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
-	    				cat = new SubCategoryInfo() ;
-	    				cat.setName(sub.getProperty("exo:name").getString()) ;
-	    				String path = sub.getPath() ;
-	    	  		cat.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
-	    				cat.setId(sub.getName()) ;
-	    				subList.add(cat) ;
-    				}
-    			}
-  			}catch(Exception e) {
-  			  log.error("Failed to get sub category info: ", e);
-  			}
-  		}
-  	}
-  	return subList ;
-  }
-  
-  private List<QuestionInfo> getQuestionInfo(Node categoryNode) throws Exception {
-  	List<QuestionInfo> questionInfoList = new ArrayList<QuestionInfo>() ;
-  	if(categoryNode.hasNode(Utils.QUESTION_HOME)) {			
+			NodeIterator iter = category.getNodes() ;
+			Node sub ;
+			SubCategoryInfo cat ; 
+			while(iter.hasNext()) {
+				try{
+					sub = iter.nextNode() ;
+					if(sub.isNodeType("exo:faqCategory")) {
+						if(categoryIdScoped.isEmpty() || categoryIdScoped.contains(sub.getName())){
+							cat = new SubCategoryInfo() ;
+							cat.setName(sub.getProperty("exo:name").getString()) ;
+							String path = sub.getPath() ;
+							cat.setPath(path.substring(path.indexOf(Utils.FAQ_APP) + Utils.FAQ_APP.length() + 1)) ;
+							cat.setId(sub.getName()) ;
+							subList.add(cat) ;
+						}
+					}
+				}catch(Exception e) {
+					log.error("Failed to get sub category info: ", e);
+				}
+			}
+		}
+		return subList ;
+	}
+	
+	private List<QuestionInfo> getQuestionInfo(Node categoryNode) throws Exception {
+		List<QuestionInfo> questionInfoList = new ArrayList<QuestionInfo>() ;
+		if(categoryNode.hasNode(Utils.QUESTION_HOME)) {			
 			QuestionInfo questionInfo ;
 			NodeIterator iter = categoryNode.getNode(Utils.QUESTION_HOME).getNodes() ;
 			Node question ;
@@ -3629,38 +3652,37 @@ public class JCRDataStorage implements DataStorage {
 						questionInfo.setAnswers(answers) ;
 					}
 					questionInfoList.add(questionInfo) ;
-				}catch(Exception e) {}
+				}catch(Exception e) {
+					log.error("Failed to add answer by question node: " + question.getName(), e);
+				}
 			}
 		}
-  	return questionInfoList ;
-  }
-  
-  /* (non-Javadoc)
-   * @see org.exoplatform.faq.service.impl.DataStorage#updateQuestionRelatives(java.lang.String, java.lang.String[])
-   */
-  public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception{
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+		return questionInfoList ;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.exoplatform.faq.service.impl.DataStorage#updateQuestionRelatives(java.lang.String, java.lang.String[])
+	 */
+	public void updateQuestionRelatives( String questionPath, String[] relatives) throws Exception{
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node question = getFAQServiceHome(sProvider).getNode(questionPath) ;
 			question.setProperty("exo:relatives", relatives) ;
 			question.save() ;
 		}catch (Exception e) {
-		  log.error("Failed to update question relatives: ", e);
+			log.error("Failed to update question relatives: ", e);
 		}finally {sProvider.close() ;}
-  }
-  
-  
-  
-  
-  public InputStream createAnswerRSS(String cateId) throws Exception {
-  	SessionProvider sProvider = SessionProvider.createSystemProvider() ;
+	}
+	
+
+	public InputStream createAnswerRSS(String cateId) throws Exception {
+		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try{
 			Node cateNode = getCategoryNodeById(sProvider, cateId);
 			List<SyndEntry> entries = new ArrayList<SyndEntry>();
 			StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
 			append("//element(*,exo:faqQuestion)");
 			List<String> list = getListCategoryIdPublic(sProvider, cateNode);
-			//TODO KS-2532
 			if (!list.isEmpty()) queryString.append("[");
 			PropertyReader reader = new PropertyReader(cateNode);
 			if(reader.list("exo:userPrivate", new ArrayList<String>()).isEmpty()){
@@ -3675,8 +3697,7 @@ public class JCRDataStorage implements DataStorage {
 					isOr = true;
 				}
 			}
-			//TODO KS-2532
-      if (!list.isEmpty()) queryString.append("]");
+			if (!list.isEmpty()) queryString.append("]");
 			
 			QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
@@ -3684,18 +3705,17 @@ public class JCRDataStorage implements DataStorage {
 			NodeIterator iter = result.getNodes() ;
 			Node nodeQs;
 			
-	  	while (iter.hasNext()) {
-	  		nodeQs = iter.nextNode();
-	  		if(nodeQs.getParent().getParent().isNodeType("exo:faqCategory")) {
-	  			entries.add(createQuestionEntry(sProvider, nodeQs));
-	  		}
+			while (iter.hasNext()) {
+				nodeQs = iter.nextNode();
+				if(nodeQs.getParent().getParent().isNodeType("exo:faqCategory")) {
+					entries.add(createQuestionEntry(sProvider, nodeQs));
+				}
 			}
-	  	
-	  	SyndFeed feed = createNewFeed(cateNode, "http://www.exoplatform.com");
-  		feed.setEntries(entries);
-  		
-  		
-  		SyndFeedOutput output = new SyndFeedOutput();
+			
+			SyndFeed feed = createNewFeed(cateNode, "http://www.exoplatform.com");
+			feed.setEntries(entries);
+			
+			SyndFeedOutput output = new SyndFeedOutput();
 			String s = output.outputString(feed);
 			s = StringUtils.replace(s,"&amp;","&");
 			s = s.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
@@ -3704,92 +3724,92 @@ public class JCRDataStorage implements DataStorage {
 			
 			return new ByteArrayInputStream(s.getBytes());
 		}catch (Exception e) {
-		  log.error(" fall: ", e);
+			log.error("Failed to create answer RSS ", e);
 		}finally {sProvider.close() ;}
 		return null;
 	}
-  
-  private List<String> getListCategoryIdPublic(SessionProvider sProvider, Node cateNode) throws Exception {
-  	List<String> list = new ArrayList<String>();
-  	
-  	StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
+	
+	private List<String> getListCategoryIdPublic(SessionProvider sProvider, Node cateNode) throws Exception {
+		List<String> list = new ArrayList<String>();
+		
+		StringBuilder queryString = new StringBuilder("/jcr:root").append(cateNode.getPath()). 
 		append("//element(*,exo:faqCategory)[@exo:isView='true' and ( not(@exo:userPrivate) or @exo:userPrivate='')]") ;
-  	
-  	QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
+		
+		QueryManager qm = cateNode.getSession().getWorkspace().getQueryManager();
 		Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 		QueryResult result = query.execute();
 		NodeIterator iter = result.getNodes() ;
-  	while (iter.hasNext()) {
-  		list.add(iter.nextNode().getName());
+		while (iter.hasNext()) {
+			list.add(iter.nextNode().getName());
 		}
-  	return list;
-  }
-  
-  private SyndEntry createQuestionEntry(SessionProvider sProvider, Node questionNode) throws Exception  {
-    // Create new entry
-    List<String> listContent = new ArrayList<String>();
-    StringBuffer content = new StringBuffer();
-      for (String answer : getStrAnswers(questionNode))
-        content.append(answer);
-      for (String comment : getComments(questionNode))
-        content.append(comment);
-      
-    listContent.add(content.toString());
-    SyndEntry entry = createNewEntry(questionNode, listContent);
-    return entry;
-  }
-  
-  private List<String> getStrAnswers(Node questionNode) throws Exception{
-    List<String> listAnswers = new ArrayList<String>();
-    try{
-    	Node answerHome = questionNode.getNode(Utils.ANSWER_HOME);
+		return list;
+	}
+	
+	private SyndEntry createQuestionEntry(SessionProvider sProvider, Node questionNode) throws Exception	{
+		// Create new entry
+		List<String> listContent = new ArrayList<String>();
+		StringBuffer content = new StringBuffer();
+			for (String answer : getStrAnswers(questionNode))
+				content.append(answer);
+			for (String comment : getComments(questionNode))
+				content.append(comment);
+			
+		listContent.add(content.toString());
+		SyndEntry entry = createNewEntry(questionNode, listContent);
+		return entry;
+	}
+	
+	private List<String> getStrAnswers(Node questionNode) throws Exception{
+		List<String> listAnswers = new ArrayList<String>();
+		try{
+			Node answerHome = questionNode.getNode(Utils.ANSWER_HOME);
 			QueryManager qm = answerHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(answerHome.getPath()). 
 						append("//element(*,exo:answer)[(@exo:approveResponses='true') and (@exo:activateResponses='true')]").append("order by @exo:dateResponse ascending");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-      NodeIterator nodeIterator = result.getNodes();
-      Node answerNode = null;
-      while(nodeIterator.hasNext()){
-        answerNode = nodeIterator.nextNode();
-        if(answerNode.hasProperty("exo:responses"))
-        	listAnswers.add("<b><u>Answer:</u></b> "+(answerNode.getProperty("exo:responses").getValue().getString())+"<br/>") ;
-      }
-    } catch (Exception e){
-      log.error("Failed to get answers for " + questionNode.getName());
-    }
-    return listAnswers;
-  }
+			NodeIterator nodeIterator = result.getNodes();
+			Node answerNode = null;
+			while(nodeIterator.hasNext()){
+				answerNode = nodeIterator.nextNode();
+				if(answerNode.hasProperty("exo:responses"))
+					listAnswers.add("<b><u>Answer:</u></b> "+(answerNode.getProperty("exo:responses").getValue().getString())+"<br/>") ;
+			}
+		} catch (Exception e){
+			log.error("Failed to get answers for " + questionNode.getName());
+		}
+		return listAnswers;
+	}
 
-  private List<String> getComments(Node questionNode) throws Exception{
-    List<String> listComment = new ArrayList<String>();
-    try{
-    	Node commentHome = questionNode.getNode(Utils.COMMENT_HOME);
+	private List<String> getComments(Node questionNode) throws Exception{
+		List<String> listComment = new ArrayList<String>();
+		try{
+			Node commentHome = questionNode.getNode(Utils.COMMENT_HOME);
 			QueryManager qm = commentHome.getSession().getWorkspace().getQueryManager();
 			StringBuffer queryString = new StringBuffer("/jcr:root").append(commentHome.getPath()). 
 						append("//element(*,exo:comment)").append(" order by @exo:dateComment ascending");
 			Query query = qm.createQuery(queryString.toString(), Query.XPATH);
 			QueryResult result = query.execute();
-      NodeIterator nodeIterator = result.getNodes();
-      Node commentNode = null;
-      while(nodeIterator.hasNext()){
-        commentNode = nodeIterator.nextNode();
-        if(commentNode.hasProperty("exo:comments")) 
-          listComment.add("<b><u>Comment:</u></b>"+(commentNode.getProperty("exo:comments").getValue().getString())+"<br/>") ;
-      }
-    } catch (Exception e){
-      log.error("Failed to get comments for " + questionNode.getName());
-    }
-    return listComment;
-  }
-  
-  private SyndFeed createNewFeed(Node node, String link) throws Exception {
+			NodeIterator nodeIterator = result.getNodes();
+			Node commentNode = null;
+			while(nodeIterator.hasNext()){
+				commentNode = nodeIterator.nextNode();
+				if(commentNode.hasProperty("exo:comments")) 
+					listComment.add("<b><u>Comment:</u></b>"+(commentNode.getProperty("exo:comments").getValue().getString())+"<br/>") ;
+			}
+		} catch (Exception e){
+			log.error("Failed to get comments for " + questionNode.getName());
+		}
+		return listComment;
+	}
+	
+	private SyndFeed createNewFeed(Node node, String link) throws Exception {
 		PropertyReader reader = new PropertyReader(node);
 		String desc = reader.string("exo:description", " ");
 		SyndFeed feed = new SyndFeedImpl();
 		feed.setFeedType("rss_2.0");
-    feed.setTitle(reader.string("exo:name", "Root"));
-    feed.setPublishedDate(reader.date("exo:createdDate", new Date()));
+		feed.setTitle("ST[CDATA["+reader.string("exo:name", "Root")+"END]]");
+		feed.setPublishedDate(reader.date("exo:createdDate", new Date()));
 		feed.setLink("ST[CDATA["+link+"END]]");					
 		feed.setDescription("ST[CDATA["+desc+"END]]");	
 		feed.setEncoding("UTF-8");
@@ -3798,45 +3818,43 @@ public class JCRDataStorage implements DataStorage {
 	
 	private SyndEntry createNewEntry(Node questionNode, List<String> listContent) throws Exception{
 		PropertyReader question = new PropertyReader(questionNode);
-    SyndContent description = new SyndContentImpl();
-    description.setType("text/plain");
-    description.setValue("ST[CDATA["+question.string("exo:title", "") + "<br/>" + (listContent.isEmpty()?"":listContent.get(0)) +"END]]"); 
+		SyndContent description = new SyndContentImpl();
+		description.setType("text/plain");
+		description.setValue("ST[CDATA["+question.string("exo:title", "") + "<br/>" + (listContent.isEmpty()?"":listContent.get(0)) +"END]]"); 
 		SyndEntry entry = new SyndEntryImpl();
-    entry.setUri(questionNode.getName());
-    entry.setTitle(question.string("exo:title"));
-    entry.setLink("ST[CDATA["+question.string("exo:link", "http://www.exoplatform.com")+"END]]");
-    entry.setContributors(listContent);
-    entry.setDescription(description);
-    entry.setPublishedDate(question.date("exo:createdDate", new Date()));
-    entry.setAuthor(question.string("exo:author"));
-    return entry;
+		entry.setUri("ST[CDATA["+questionNode.getName()+"END]]");
+		entry.setTitle("ST[CDATA["+question.string("exo:title")+"END]]");
+		entry.setLink("ST[CDATA["+question.string("exo:link", "http://www.exoplatform.com")+"END]]");
+		entry.setContributors(listContent);
+		entry.setDescription(description);
+		entry.setPublishedDate(question.date("exo:createdDate", new Date()));
+		entry.setAuthor("ST[CDATA["+question.string("exo:author")+"END]]");
+		return entry;
 	}
-  
-  protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getFaqHomeLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);      
-  }
-  
-  private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getAvatarsLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
-  }
-  
-  private Node getUserSettingHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getFaqUserSettingsLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);   
-  }  
-  
-  private Node getCategoryHome(SessionProvider sProvider, String username) throws Exception {
-    String path = dataLocator.getFaqCategoriesLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
-  }
-  
-  private Node getTemplateHome(SessionProvider sProvider) throws Exception {
-    String path = dataLocator.getFaqTemplatesLocation();
-    return sessionManager.getSession(sProvider).getRootNode().getNode(path);
-  }   
-  
-  
+	
+	protected Node getFAQServiceHome(SessionProvider sProvider) throws Exception {
+		String path = dataLocator.getFaqHomeLocation();
+		return sessionManager.getSession(sProvider).getRootNode().getNode(path);			
+	}
+	
+	private Node getKSUserAvatarHomeNode(SessionProvider sProvider) throws Exception {
+		String path = dataLocator.getAvatarsLocation();
+		return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	}
+	
+	private Node getUserSettingHome(SessionProvider sProvider) throws Exception {
+		String path = dataLocator.getFaqUserSettingsLocation();
+		return sessionManager.getSession(sProvider).getRootNode().getNode(path);	 
+	}	
+	
+	private Node getCategoryHome(SessionProvider sProvider, String username) throws Exception {
+		String path = dataLocator.getFaqCategoriesLocation();
+		return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	}
+	
+	private Node getTemplateHome(SessionProvider sProvider) throws Exception {
+		String path = dataLocator.getFaqTemplatesLocation();
+		return sessionManager.getSession(sProvider).getRootNode().getNode(path);
+	}	 
 }
 
