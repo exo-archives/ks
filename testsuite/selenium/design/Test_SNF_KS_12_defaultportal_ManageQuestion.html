@@ -1,4 +1,4 @@
-chi<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
@@ -14,6 +14,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 <tr>
 	<td>open</td>
 	<td>/portal/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -58,12 +63,27 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Add category</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>eventCategoryName</td>
 	<td></td>
 </tr>
 <tr>
@@ -82,8 +102,8 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_12_Category 1</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_12_Category 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -118,13 +138,28 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>SNF_KS_12_Question 1 Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -132,7 +167,12 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -144,6 +184,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 <tr>
 	<td>click</td>
 	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_12_Category 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -173,13 +218,28 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>SNF_KS_12_Question 2 Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -187,7 +247,12 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -218,7 +283,7 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@class='UIFormInput']//div[@class='TrueIcon']/div</td>
+	<td>//td[3]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -237,6 +302,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//td[3]/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//td[3]/div/div</td>
 	<td></td>
@@ -249,6 +319,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>No</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//td[4]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -267,6 +342,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//td[4]/div/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//td[4]/div/div</td>
 	<td></td>
@@ -279,6 +359,11 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 <tr>
 	<td>verifyTextNotPresent</td>
 	<td>No</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UITabContent']//table/tbody/tr[2]/td[5]/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -297,7 +382,12 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td>Edit Question</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIQuestionForm']//table[@class='ActionContainer']//div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//form[@id='UIQuestionForm']//table[@class='ActionContainer']//div</td>
 	<td></td>
 </tr>
@@ -322,8 +412,8 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td>label=SNF_KS_12_Category 1</td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_12_Question 2</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_12_Question 2</td>
 	<td></td>
 </tr>
 <tr>
@@ -348,7 +438,7 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UITabContent</td>
+	<td>//div[@id='UITabContent']//table//tr[2]/td[5]/div[2]/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -378,7 +468,7 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>QuestionInfo</td>
+	<td>//form[@id='QuestionInfo']/div[2]//div[1]//div[1]//div[2]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -388,7 +478,7 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIQuestionManagerForm</td>
+	<td>//form[@id='UIQuestionManagerForm']/div[2]//div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -397,13 +487,13 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td>echo</td>
+	<td>-Delete Test data-</td>
 	<td></td>
 </tr>
 <tr>
-	<td>echo</td>
-	<td>-Delete Test data-</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -417,7 +507,7 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>link=Delete</td>
 	<td></td>
 </tr>
@@ -437,7 +527,12 @@ chi<?xml version="1.0" encoding="UTF-8"?>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

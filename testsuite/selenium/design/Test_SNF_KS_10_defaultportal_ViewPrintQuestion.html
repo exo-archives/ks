@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -52,8 +57,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Answers</td>
+	<td>open</td>
+	<td>/portal/private/classic/answers</td>
 	<td></td>
 </tr>
 <tr>
@@ -78,13 +83,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>English Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -92,7 +112,12 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -147,6 +172,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@class='UIAction']//div[@class='PrintAction']/div[2]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@class='UIAction']//div[@class='PrintAction']/div[2]</td>
 	<td></td>
@@ -157,8 +187,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//div[@id='AnswersViewContent']/div/div/div[2]/div/div/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td/div/div/div/div[@class='ButtonMiddle']</td>
 	<td></td>
 </tr>
 <tr>
@@ -177,7 +217,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

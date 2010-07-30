@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_18_UserSettingInAnswers</title>
+<title>Test_SNF_KS_20_defaultportal_UserSettingInAnswers</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_18_UserSettingInAnswers</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_20_defaultportal_UserSettingInAnswers</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/portal/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -67,7 +72,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
+	<td>waitForElementPresent</td>
 	<td>QuestionTitle</td>
 	<td></td>
 </tr>
@@ -78,13 +83,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>English Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -97,8 +117,18 @@
 	<td>label=French</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//option[@value='French']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//option[@value='French']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>QuestionTitle</td>
 	<td></td>
 </tr>
 <tr>
@@ -108,16 +138,36 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>French Description</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -167,13 +217,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
+	<td>verifyTextPresent</td>
 	<td>French Description</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>French Description</td>
+	<td>waitForElementPresent</td>
+	<td>link=English</td>
 	<td></td>
 </tr>
 <tr>
@@ -192,11 +242,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForTextPresent</td>
-	<td>English Description</td>
-	<td></td>
-</tr>
-<tr>
 	<td>verifyTextPresent</td>
 	<td>English Description</td>
 	<td></td>
@@ -208,18 +253,33 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Add category</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>//div[@onclick=&quot;eXo.faq.UIAnswersPortlet.viewTitle('FAQCategroManager');&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>link=Add category</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>eventCategoryName</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>eventCategoryName</td>
-	<td>SNF_KS_18_Category 1</td>
+	<td>SNF_KS_20_Category 1</td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -232,13 +292,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_18_Category 1</td>
+	<td>waitForTextPresent</td>
+	<td>SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>SNF_KS_18_Category 1</td>
+	<td>SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -248,16 +308,21 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=SNF_KS_18_Category 1</td>
+	<td>link=SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
 	<td>componentExoContextMenu</td>
-	<td>link=SNF_KS_18_Category 1</td>
+	<td>link=SNF_KS_20_Category 1</td>
 	<td>contextmenu</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[8][@class='MenuItem']/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id='UIFAQPopupCategories0']//div[@class='UIRightClickPopupMenu UIContextMenuContainer']//div[8][@class='MenuItem']/a</td>
 	<td></td>
 </tr>
@@ -317,13 +382,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//tr[4]/td[2]/div</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//tr[4]/td[2]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>UIUserWatchManager</td>
+	<td>//form[@id='UIUserWatchManager']/div[2]//div[1]//td[2]/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -337,8 +407,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Cancel</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Cancel</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
@@ -373,13 +453,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>English Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -387,7 +482,12 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -402,13 +502,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>link=XQuestion for sort</td>
+	<td>waitForTextPresent</td>
+	<td>XQuestion for sort</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='UIQuestions']//div[@class='FAQContent']/div/div[2]/a</td>
+	<td>//div[3]/div/div[1]/div[1]/div[2]/a</td>
 	<td>XQuestion for sort</td>
 </tr>
 <tr>
@@ -417,6 +517,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=XQuestion for sort</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=XQuestion for sort</td>
 	<td></td>
@@ -439,6 +544,11 @@
 <tr>
 	<td>click</td>
 	<td>//form[@id='UIDeleteQuestion']//table[@class='ActionContainer']//div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question in English</td>
 	<td></td>
 </tr>
 <tr>
@@ -472,8 +582,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=SNF_KS_20_Category 1</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>link=SNF_KS_18_Category 1</td>
+	<td>link=SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -492,7 +607,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>//div[@id='FAQCategroManager']//div[@class='UIRightPopupMenuContainer']/div[3]</td>
 	<td></td>
 </tr>
@@ -502,17 +617,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>link=SNF_KS_18_Category 1</td>
+	<td>waitForTextNotPresent</td>
+	<td>SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>SNF_KS_18_Category 1</td>
+	<td>SNF_KS_20_Category 1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

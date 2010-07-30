@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
@@ -78,13 +83,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>English for Send Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -92,7 +112,12 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -157,12 +182,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>//div[@id='UIAnswersPortlet']/div[3]/div/div[2]//div[3]/div/table/tbody/tr/td//div[@class='ButtonMiddle']</td>
+	<td>pause</td>
+	<td>5000</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>clickAt</td>
 	<td>//div[@id='UIAnswersPortlet']/div[3]/div/div[2]//div[3]/div/table/tbody/tr/td//div[@class='ButtonMiddle']</td>
 	<td></td>
 </tr>
@@ -192,17 +217,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>link=Question for Send</td>
+	<td>waitForTextNotPresent</td>
+	<td>Question for Send</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementNotPresent</td>
-	<td>link=Question for Send</td>
+	<td>verifyTextNotPresent</td>
+	<td>Question for Send</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

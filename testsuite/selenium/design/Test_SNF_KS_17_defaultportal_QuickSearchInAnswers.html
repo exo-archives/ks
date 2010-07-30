@@ -4,16 +4,21 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_SNF_KS_15_SimpleSearchInAnswers</title>
+<title>Test_SNF_KS_17_defaultportal_QuickSearchInAnswers</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_SNF_KS_15_SimpleSearchInAnswers</td></tr>
+<tr><td rowspan="1" colspan="3">Test_SNF_KS_17_defaultportal_QuickSearchInAnswers</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
 	<td>/portal/public/classic/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>windowMaximize</td>
+	<td></td>
 	<td></td>
 </tr>
 <tr>
@@ -78,13 +83,28 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>Question___Frame</td>
+	<td>//iframe[@id='Question___Frame']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>Question___Frame</td>
+	<td>selectFrame</td>
+	<td>//iframe[@id='Question___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>English for Search Description</td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
@@ -92,7 +112,12 @@
 	<td>root@localhost.vn</td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
+	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
 	<td>//div[@id=&quot;AddQuestion&quot;]//div[@class=&quot;UIAction&quot;]//div[@class=&quot;ButtonMiddle&quot;]</td>
 	<td></td>
 </tr>
@@ -122,6 +147,11 @@
 	<td>root</td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='QuickSearch']/div[2]/a[1]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>//form[@id='QuickSearch']/div[2]/a[1]</td>
 	<td></td>
@@ -137,8 +167,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>link=Question for Search</td>
+	<td>verifyTextPresent</td>
+	<td>Question for Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//form[@id='ResultQuickSearch']/div[3]/table//a</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,8 +187,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Question for Search</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Question for Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='AnswersViewContent']/div/div/div[2]//table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td[4]/a/div[@class='Delete']</td>
 	<td></td>
 </tr>
 <tr>
@@ -162,12 +207,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td//div[@class='ButtonMiddle']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
+	<td>//form[@id='UIDeleteQuestion']/div[3]/table/tbody/tr/td//div[@class='ButtonMiddle']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
