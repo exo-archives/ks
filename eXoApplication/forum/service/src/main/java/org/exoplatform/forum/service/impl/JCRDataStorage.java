@@ -860,7 +860,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 					catNode.setProperty(EXO_MODERATORS, category.getModerators());
 					catNode.save();
 				}
-			} catch (Exception e) {}
+			} catch (Exception e) {e.printStackTrace();}
 		}catch(Exception e) {
 			log.error("Failed to save category",e);
 			throw e;
@@ -906,7 +906,7 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						}
 					}
 				} catch (Exception e) {
-					log.error("Failed to save moderater of categoryId: " + cateId,e);
+					log.debug("Failed to save moderater of categoryId: " + cateId,e);
 				}
 			}
 			cateHome.save();
@@ -1008,13 +1008,21 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 						userProfileNode.setProperty(EXO_MODERATE_CATEGORY, Utils.getStringsInList(moderateCategory));
 					}
 				} catch (Exception e) {
-					log.error("Failed to get user profile ",e);
+					log.debug("Failed to get user profile ",e);
 				}
 			}
 		}
 		if(!isNew && oldcategoryMod != null && oldcategoryMod.length > 0 && !Utils.isEmpty(oldcategoryMod[0])){
 			if(Utils.arraysHaveDifferentContent(oldcategoryMod, category.getModerators())) {
-				List<String> oldmoderators = ForumServiceUtils.getUserPermission(oldcategoryMod);
+				// calculate moderator of category removed
+				List<String> olds = new ArrayList<String>(Arrays.asList(oldcategoryMod));
+				String[] mods = category.getModerators();
+				for (int i = 0; i < mods.length; i++) {
+					if (olds.contains(mods[i])) {
+						olds.remove(mods[i]);
+					}
+				}
+				List<String> oldmoderators = ForumServiceUtils.getUserPermission(olds.toArray(new String[olds.size()]));
 				for(String oldUserId : oldmoderators) {
 					if(moderators.contains(oldUserId)) continue ;
 					//edit profile of old user.
@@ -1042,9 +1050,9 @@ public class JCRDataStorage implements	DataStorage, ForumNodeTypes {
 							List<String>forumMode = Utils.valuesToList(node.getProperty(EXO_MODERATORS).getValues());
 							List<String>forumModeTemp = new ArrayList<String>();
 							forumModeTemp.addAll(forumMode);
-							for (int i = 0; i < oldcategoryMod.length; i++) {
-								if(forumMode.contains(oldcategoryMod[i])) {
-									forumMode.remove(oldcategoryMod[i]);
+							for (String old : olds) {
+								if(forumMode.contains(old)) {
+									forumMode.remove(old);
 								}
 							}
 							node.setProperty(EXO_MODERATORS, Utils.getStringsInList(forumMode));
