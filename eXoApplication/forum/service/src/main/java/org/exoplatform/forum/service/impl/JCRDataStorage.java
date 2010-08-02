@@ -197,7 +197,7 @@ public class JCRDataStorage {
 				serverConfig_ = ((EmailNotifyPlugin) plugin).getServerConfiguration();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to add plugin ",e);
 		}
 	}
 
@@ -235,8 +235,9 @@ public class JCRDataStorage {
 			observation.addEventListener(addNodeListener, Event.NODE_ADDED ,categoryHome.getPath(), true, null, null, false) ;
 			ForumRSSEventListener removeNodeListener = new ForumRSSEventListener(nodeHierarchyCreator_, wsName, repoName) ;
 			observation.addEventListener(removeNodeListener, Event.NODE_REMOVED ,categoryHome.getPath(), true, null, null, false) ;*/
-		}catch(Exception e){ e.printStackTrace() ;} 
-		finally{ sProvider.close() ;}
+		}catch(Exception e){
+			log.error("Failed to add rss event listenner ", e) ;
+		}finally{ sProvider.close() ;}
 	}
 	
 	public void addCalculateModeratorEventListenner() throws Exception{
@@ -258,7 +259,9 @@ public class JCRDataStorage {
           }
 	      }
       }
-		}catch(Exception e){ e.printStackTrace() ;} 
+		}catch(Exception e){ 
+			log.error("Failed to add calculate moderator event listenner ", e) ;
+		} 
 		finally{ sProvider.close() ;}
 	}
 	
@@ -1024,7 +1027,6 @@ public class JCRDataStorage {
 		try {
 			userProfileHomeNode.save();
     } catch (Exception e) {
-    	e.printStackTrace();
     	userProfileHomeNode.getSession().save();
     }
 	}
@@ -1171,7 +1173,7 @@ public class JCRDataStorage {
 					  forums.add(getForumSummary(forumNode));
 					}
 				}catch (Exception e) {
-					log.error("Failed to load forum node " + forumNode.getPath(),e);
+					log.debug("Failed to load forum node " + forumNode.getPath(),e);
 				}				
 			}
 			return forums;
@@ -2680,7 +2682,7 @@ public class JCRDataStorage {
 				return size;
 			}
     } catch (Exception e) {
-    }
+    } finally {sProvider.close(); }
 	  return 0;
   }
 	
@@ -6359,7 +6361,7 @@ public class JCRDataStorage {
 			QueryResult result = query.execute();
 			return result.getNodes();
 		}catch(Exception e) {
-			e.printStackTrace() ;
+			log.error("Failed to search by query.", e);
 		} finally {sProvider.close() ;}
 		return null ;
 	}
@@ -6387,7 +6389,8 @@ public class JCRDataStorage {
 				forumStatistic.setActiveUsers(iter.getSize()) ;
 				saveForumStatistic(forumStatistic) ;
 			}
-		}catch (Exception e) {
+		}catch (Exception e){
+			log.error("Failed to evaluate active users");
 		}finally { sProvider.close() ;}		
 	}
 	
@@ -6483,44 +6486,48 @@ public class JCRDataStorage {
 	public Object exportXML(String categoryId, String forumId, List<String> objectIds, String nodePath, 
 													ByteArrayOutputStream bos, boolean isExportAll) throws Exception{
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-		List<File> listFiles = new ArrayList<File>();
-		
-		if(!isExportAll){
-			if(categoryId != null){
-				if(forumId == null || forumId.trim().length() < 1){
-					listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
-				} else {
-					Node categoryHome = getCategoryHome(sessionProvider);
-					categoryHome.getSession().exportSystemView(nodePath, bos, false, false ) ;
-					categoryHome.getSession().logout();
-					return null;
+		try {
+			List<File> listFiles = new ArrayList<File>();
+			if(!isExportAll){
+				if(categoryId != null){
+					if(forumId == null || forumId.trim().length() < 1){
+						listFiles.addAll(createForumFiles(categoryId, objectIds, sessionProvider));
+					} else {
+						Node categoryHome = getCategoryHome(sessionProvider);
+						categoryHome.getSession().exportSystemView(nodePath, bos, false, false ) ;
+						categoryHome.getSession().logout();
+						return null;
+					}
+				}else{
+					listFiles.addAll(createCategoryFiles(objectIds, sessionProvider));
 				}
 			}else{
-				listFiles.addAll(createCategoryFiles(objectIds, sessionProvider));
+				listFiles.addAll(createAllForumFiles(sessionProvider));
 			}
-		}else{
-			listFiles.addAll(createAllForumFiles(sessionProvider));
-		}
-		
-		// tao file zip:
-		ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
-		int byteReads;
-		byte[] buffer = new byte[4096]; // Create a buffer for copying
-		FileInputStream inputStream = null;
-		ZipEntry zipEntry = null;
-		for(File f : listFiles){
-			inputStream = new FileInputStream(f);
-			zipEntry = new ZipEntry(f.getPath());
-			zipOutputStream.putNextEntry(zipEntry);
-			while((byteReads = inputStream.read(buffer)) != -1)
-				zipOutputStream.write(buffer, 0, byteReads);
-			inputStream.close();
-		}
-		zipOutputStream.close();
-		File file = null;
-		file = new File("exportCategory.zip");
-		for(File f : listFiles) f.deleteOnExit();
-		return file;
+			
+			// tao file zip:
+			ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("exportCategory.zip"));
+			int byteReads;
+			byte[] buffer = new byte[4096]; // Create a buffer for copying
+			FileInputStream inputStream = null;
+			ZipEntry zipEntry = null;
+			for(File f : listFiles){
+				inputStream = new FileInputStream(f);
+				zipEntry = new ZipEntry(f.getPath());
+				zipOutputStream.putNextEntry(zipEntry);
+				while((byteReads = inputStream.read(buffer)) != -1)
+					zipOutputStream.write(buffer, 0, byteReads);
+				inputStream.close();
+			}
+			zipOutputStream.close();
+			File file = null;
+			file = new File("exportCategory.zip");
+			for(File f : listFiles) f.deleteOnExit();
+			return file;
+		} catch (Exception e) {
+			log.error("Failed to export data in forum ", e);
+		} finally { sessionProvider.close();}
+		return null;
 	}
 	
 	public void importXML(String nodePath, InputStream is, String mimeType) throws Exception {
@@ -6614,62 +6621,66 @@ public class JCRDataStorage {
 		doc.getDocumentElement ().normalize ();
 		String typeNodeExport = doc.getFirstChild().getChildNodes().item(0).getChildNodes().item(0).getTextContent();
 		SessionProvider sessionProvider = SessionProvider.createSystemProvider() ;
-		is = new ByteArrayInputStream(bdata);
+		try {
+			is = new ByteArrayInputStream(bdata);
+			String nodeName = "";
+			if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
+				// All nodes when import need reset childnode
+				if(typeNodeExport.equals("exo:categoryHome")){
+					nodePath = getCategoryHome(sessionProvider).getPath();
+					Node categoryHome = getCategoryHome(sessionProvider);
+					nodeName = "CategoryHome";
+					addDataFromXML(categoryHome,nodePath,sessionProvider,is,nodeName);
+				}else if(typeNodeExport.equals("exo:userProfileHome")){
+					Node userProfile = getUserProfileHome(sessionProvider);
+					nodeName = "UserProfileHome";
+					nodePath = getUserProfileHome(sessionProvider).getPath();
+					addDataFromXML(userProfile,nodePath,sessionProvider,is,nodeName);
+				}else if(typeNodeExport.equals("exo:tagHome")){
+					Node tagHome = getTagHome(sessionProvider);
+					nodePath = getTagHome(sessionProvider).getPath();
+					nodeName = "TagHome";
+					addDataFromXML(tagHome,nodePath,sessionProvider,is,nodeName);
+				}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
+					BBCodeOperator bbcodeObject  = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
+					nodePath = bbcodeObject.getBBcodeHome(sessionProvider).getPath();
+					Node bbcodeNode = bbcodeObject.getBBcodeHome(sessionProvider);
+					nodeName = "forumBBCode";
+					addDataFromXML(bbcodeNode,nodePath,sessionProvider,is,nodeName);
+					bbcodeObject = null ;
+				}
+				// Node import but don't need reset childnodes
+				else if(typeNodeExport.equals("exo:administrationHome")){
+					nodePath = getForumSystemHome(sessionProvider).getPath();
+					Node node = getAdminHome(sessionProvider);
+					node.remove();
+					getForumSystemHome(sessionProvider).save();
+					typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+				}else if(typeNodeExport.equals("exo:banIPHome")){
+					nodePath = getForumSystemHome(sessionProvider).getPath();
+					Node node = getBanIPHome(sessionProvider);
+					node.remove();
+					getForumSystemHome(sessionProvider).save();
+					typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+				}
+			}else{
+				String updatePath = nodePath ;
+				if(typeNodeExport.equals("exo:forumCategory")){
+					nodePath = getCategoryHome(sessionProvider).getPath() ;
+					updatePath = nodePath + "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
+				}/*else if (typeNodeExport.equals("exo:forum")) {
+					updatePath = nodePath+ "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
+				} */
+				//is = new ByteArrayInputStream(bdata) ;
+				Session session = getForumHomeNode(sessionProvider).getSession();
+				session.importXML(nodePath, is, typeImport);
+				session.save();			
+				if(typeNodeExport.equals("exo:forumCategory"))updateImportedData(updatePath) ;	
+			}
+		} catch (Exception e) {
+			log.error("Failed to import data. " + e.getMessage(), e);
+		} finally {sessionProvider.close();}
 		
-		String nodeName = "";
-		if(!typeNodeExport.equals("exo:forumCategory") && !typeNodeExport.equals("exo:forum")){
-			// All nodes when import need reset childnode
-			if(typeNodeExport.equals("exo:categoryHome")){
-				nodePath = getCategoryHome(sessionProvider).getPath();
-				Node categoryHome = getCategoryHome(sessionProvider);
-				nodeName = "CategoryHome";
-				addDataFromXML(categoryHome,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:userProfileHome")){
-				Node userProfile = getUserProfileHome(sessionProvider);
-				nodeName = "UserProfileHome";
-				nodePath = getUserProfileHome(sessionProvider).getPath();
-				addDataFromXML(userProfile,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:tagHome")){
-				Node tagHome = getTagHome(sessionProvider);
-				nodePath = getTagHome(sessionProvider).getPath();
-				nodeName = "TagHome";
-				addDataFromXML(tagHome,nodePath,sessionProvider,is,nodeName);
-			}else if(typeNodeExport.equals("exo:forumBBCodeHome")){
-				BBCodeOperator bbcodeObject  = new BBCodeOperator(nodeHierarchyCreator_, rService_) ;
-				nodePath = bbcodeObject.getBBcodeHome(sessionProvider).getPath();
-				Node bbcodeNode = bbcodeObject.getBBcodeHome(sessionProvider);
-				nodeName = "forumBBCode";
-				addDataFromXML(bbcodeNode,nodePath,sessionProvider,is,nodeName);
-				bbcodeObject = null ;
-			}
-			// Node import but don't need reset childnodes
-			else if(typeNodeExport.equals("exo:administrationHome")){
-				nodePath = getForumSystemHome(sessionProvider).getPath();
-				Node node = getAdminHome(sessionProvider);
-				node.remove();
-				getForumSystemHome(sessionProvider).save();
-				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
-			}else if(typeNodeExport.equals("exo:banIPHome")){
-				nodePath = getForumSystemHome(sessionProvider).getPath();
-				Node node = getBanIPHome(sessionProvider);
-				node.remove();
-				getForumSystemHome(sessionProvider).save();
-				typeImport = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
-			}
-		}else{
-			String updatePath = nodePath ;
-			if(typeNodeExport.equals("exo:forumCategory")){
-				nodePath = getCategoryHome(sessionProvider).getPath() ;
-				updatePath = nodePath + "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
-			}/*else if (typeNodeExport.equals("exo:forum")) {
-				updatePath = nodePath+ "/" + doc.getFirstChild().getAttributes().getNamedItem("sv:name").getTextContent();				
-			} */
-			//is = new ByteArrayInputStream(bdata) ;
-			Session session = getForumHomeNode(sessionProvider).getSession();
-			session.importXML(nodePath, is, typeImport);
-			session.save();			
-			if(typeNodeExport.equals("exo:forumCategory"))updateImportedData(updatePath) ;	
-		}
 	}
 
 	public void updateTopicAccess (String userId, String topicId) throws Exception {
@@ -6697,6 +6708,7 @@ public class JCRDataStorage {
 			profile.setProperty("exo:readTopic", values.toArray(new String[]{})) ;
 			profile.save() ;
 		} catch (Exception e) {
+			log.error("Failed to update topic access: "+e.getMessage(), e);
 		}finally{
 			sysSession.close() ;
 		}
@@ -6734,10 +6746,15 @@ public class JCRDataStorage {
 	
 	public List<String> getBookmarks(String userName) throws Exception {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
-		Node profile = getUserProfileHome(sProvider).getNode(userName) ;
-		sProvider.close() ;
-		if(profile.hasProperty("exo:bookmark")) {
-			return ValuesToList(profile.getProperty("exo:bookmark").getValues()) ;
+		try {
+			Node profile = getUserProfileHome(sProvider).getNode(userName) ;
+			if(profile.hasProperty("exo:bookmark")) {
+				return ValuesToList(profile.getProperty("exo:bookmark").getValues()) ;
+			}
+		} catch (Exception e) {
+			log.error("Failed to get bookmark ",e);
+		} finally {
+			sProvider.close() ;
 		}
 		return new ArrayList<String>() ;
 	}
@@ -7127,9 +7144,10 @@ public class JCRDataStorage {
 			NodeIterator iter = result.getNodes();
 			JCRPageList pagelist = new ForumPageList(iter, 10, pathQuery, true);
 			return pagelist;
-		}catch (Exception e) {
-		}
-	  return null;
+		} catch (Exception e) {
+			log.error("Failed to get page topic by type",e);
+			return null;
+		}finally {sProvider.close();}
   }	
 	
 	

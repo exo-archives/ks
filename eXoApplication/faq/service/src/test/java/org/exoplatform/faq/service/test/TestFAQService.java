@@ -202,10 +202,19 @@ public class TestFAQService extends FAQServiceTestCase{
 		return attachment;
 	}
 
+	private void revoveDate() throws Exception {
+		faqService_.getAllCategories();
+		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("TRUE");
+		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
+		for (Category category : categories) {
+	    faqService_.removeCategory(category.getPath());
+    }
+	}
 
 	private void defaultData() throws Exception {
-	//Create category Home.
-		faqService_.getAllCategories();
+		//removed old data
+		revoveDate();
+		
 		//Create some category default
 		Category cate = createCategory("Category to test question") ;
 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
@@ -262,9 +271,8 @@ public class TestFAQService extends FAQServiceTestCase{
 	
 	public void testCategory() throws Exception {
 	// remove Data before testing category.
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
-//		add category Id	
-		faqService_.getAllCategories();
+		revoveDate();
+		
 		Category cate1 = createCategory("Cate 1") ;
 		cate1.setIndex(1);
 		faqService_.saveCategory(Utils.CATEGORY_HOME, cate1, true) ;
@@ -301,6 +309,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		cate2 = faqService_.getCategoryById(Utils.CATEGORY_HOME+"/"+cate2.getId());
 		assertEquals("Index of category 1 before swap is't 2", cate1.getIndex(), 1);
 		assertEquals("Index of category 2 before swap is't 1", cate2.getIndex(), 2);
+		
 		faqService_.swapCategories(cate1.getPath(), cate2.getPath());
 		cate1 =  faqService_.getCategoryById(cate1.getPath());
 		cate2 =  faqService_.getCategoryById(cate2.getPath());
@@ -350,8 +359,6 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get list category by moderator
 		List<String> listCateByModerator = faqService_.getListCateIdByModerator(USER_ROOT);
 		assertEquals("User Root is't moderator of category Home and cate1", listCateByModerator.size(), 2);
-		// remove Data when tested category
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 // FAQPortlet
 	public void testCategoryInfo() throws Exception {
@@ -364,9 +371,8 @@ public class TestFAQService extends FAQServiceTestCase{
 //		get QuestionInfo
 		categoryIdScoped = new ArrayList<String>();
 		categoryInfo = faqService_.getCategoryInfo(categoryId1, categoryIdScoped);
+		
 		assertEquals("Can not questionInfo  of category.", categoryInfo.getQuestionInfos().size(), 5);
-//	 remove Data when tested category
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
   }
 	
 	public void testQuestion() throws Exception {
@@ -409,8 +415,8 @@ public class TestFAQService extends FAQServiceTestCase{
 //		assertEquals("Can't move question 2 to category 2", pageList.getPage(1, "root").size(), 4);
 //		get list all question
 		List<Question> listAllQuestion = faqService_.getAllQuestions().getAll();
+		
 		assertEquals("the number of categories in FAQ is not 5", listAllQuestion.size(), 5) ;
-
 //		get list question by category of question 1
 		List<Question> listQuestionByCategory = faqService_.getQuestionsByCatetory(categoryId1, faqSetting_).getAll() ;
 		assertEquals("the number of question in category which contain question 1 is not 4", listQuestionByCategory.size(), 4) ;
@@ -426,8 +432,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		faqService_.removeQuestion(categoryId1 + "/" + Utils.QUESTION_HOME + "/" + questionId5);
 		List<Question> listAllQuestionAfterRemove = faqService_.getAllQuestions().getAll();
 		assertEquals("Question 5 have not been removed, in system have 5 questions", listAllQuestionAfterRemove.size(), 4) ;
-	// remove Data when tested question
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testSearch() throws Exception {
@@ -471,8 +475,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		//assertEquals("the number of questions which have \"nguyenvantruong\" in question content is not 2", 
 									//listSearchAdvanceQuestion.size(), 2) ;
 		
-	// remove Data when tested search
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testAnswer() throws Exception{
@@ -508,8 +510,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		pageList.setPageSize(10);
 		assertEquals("Answer 1 have not been removed, question only have one answer", pageList.getPageItem(0).size(), 1);
 
-		// remove Data when tested answer
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 	
 	public void testComment() throws Exception{
@@ -536,9 +536,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		pageList = faqService_.getPageListComment(questionId);
 		pageList.setPageSize(10);
 		assertEquals("Comment 1 is not removed", pageList.getPageItem(0).size(), 1);
-		
-	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testImportData() throws Exception{
@@ -556,8 +553,6 @@ public class TestFAQService extends FAQServiceTestCase{
 		}
 //		After imported data, number questions is 5
 		assertEquals("Before import data, number question is not 5", faqService_.getAllQuestions().getAvailable(), 5);
-	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
 	public void testWatchCategory() throws Exception {
@@ -582,8 +577,6 @@ public class TestFAQService extends FAQServiceTestCase{
 //		Check unWatch Category by user
 		faqService_.unWatchCategory(categoryId1, USER_ROOT);		
 		assertEquals("User root has watching this category", faqService_.isUserWatched(USER_ROOT, categoryId1), false);
-	// remove Data when tested comment
-		faqService_.removeCategory(Utils.CATEGORY_HOME);
 	}
 
   public void testQuestionMultilanguage() throws Exception{
