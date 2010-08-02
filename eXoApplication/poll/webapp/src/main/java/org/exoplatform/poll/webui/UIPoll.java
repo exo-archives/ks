@@ -61,12 +61,12 @@ import org.exoplatform.webui.form.UIFormRadioBoxInput;
 			@EventConfig(listeners = UIPoll.VoteAgainPollActionListener.class)
 		}
 )
+@SuppressWarnings("unused")
 public class UIPoll extends BasePollForm	{
 	private Poll poll_ ;
 	private String pollId , userId;
 	private boolean isAgainVote = false ;
 	private boolean isEditPoll = false ;
-	private boolean canViewEditMenu = false ;
 	private boolean hasPermission = true ;
 	private String[] dateUnit = new String[]{"Never", "Closed", "day(s)", "hour(s)", "minutes"};
 	
@@ -167,7 +167,6 @@ public class UIPoll extends BasePollForm	{
 		return poll_ ;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean getIsEditPoll() {
 		return isEditPoll ;
 	}
@@ -176,12 +175,10 @@ public class UIPoll extends BasePollForm	{
 	  this.isEditPoll = isEditPoll;
   }
 	
-	@SuppressWarnings("unused")
 	private boolean getCanViewEditMenu(){
-		return this.canViewEditMenu ;
+		return getAncestorOfType(UIPollPortlet.class).isAdmin() ;
 	}
 	
-	@SuppressWarnings("unused")
 	private boolean isGuestPermission() throws Exception {
 		if(poll_.getIsClosed()) return true ;
 		if(Utils.isEmpty(userId)) return true ;
@@ -200,7 +197,6 @@ public class UIPoll extends BasePollForm	{
 		return false ;
 	}
 	
-	@SuppressWarnings("unused")
 	private String[] getInfoVote() throws Exception {
 		Poll poll = poll_ ;
 		String[] voteNumber = poll.getVote() ;

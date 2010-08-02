@@ -41,6 +41,8 @@ import org.exoplatform.webui.core.lifecycle.UIApplicationLifecycle;
 )
 
 public class UIPollPortlet extends UIPortletApplication {
+	private boolean isAdmin = false;
+
 	public UIPollPortlet() throws Exception {
   	addChild(UIPoll.class, null, null).setRendered(false) ;
   	addChild(UIPollManagement.class, null, null).setRendered(true) ;
@@ -66,6 +68,10 @@ public class UIPollPortlet extends UIPortletApplication {
 		popupMess.processRender(context);
 	}
 
+  public boolean isAdmin() {
+  	return isAdmin;
+  }
+  
 	public void cancelAction() throws Exception {
 		WebuiRequestContext context = RequestContext.getCurrentInstance() ;
 		UIPopupAction popupAction = getChild(UIPopupAction.class) ;

@@ -39,7 +39,7 @@
 				<table class="UIFormGrid OptionField">
 					<tbody>
 					<!-- show public -->
-					<% if(!uiform.isUpdate){ %>
+					<% if(uiform.isEditPath){ %>
 						<tr>
 							<td class="FieldLabel" style="width:auto;"><%=uicomponent.getLabel(uicomponent.FIELD_PUBLIC_DATA_CHECKBOX)%>:</td>
 							<td class="FieldComponent">

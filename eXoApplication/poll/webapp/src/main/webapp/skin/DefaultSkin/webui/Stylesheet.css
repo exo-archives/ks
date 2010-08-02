@@ -118,21 +118,22 @@ body, html, div, table, tr, td, img, form {
 }
 
 .UIPollPortlet .ForumToolbar .CollapseButton {
-	float:right;
-	width:16px; height:16px; 
-	margin:5px 5px 0px 0px;
-	cursor:pointer;
+	background: url('background/Collapser.gif') no-repeat ;
 }
 
 .UIPollPortlet .EditPollIcon {
 	background:url("/eXoResources/skin/DefaultSkin/skinIcons/16x16/icons/EditIcon.gif") no-repeat;
 }
 
-.UIPollPortlet .ForumToolbar .ExpandButton {
+.UIPollPortlet .ForumToolbar .IconRight {
 	float:right;
 	width:16px; height:16px; 
 	margin:5px 5px 0px 0px;
 	cursor:pointer;
+}
+
+.UIPollPortlet .ForumToolbar .ExpandButton {
+	background: url('background/Expand.gif') no-repeat ;
 }
 
 .UIPollPortlet a {

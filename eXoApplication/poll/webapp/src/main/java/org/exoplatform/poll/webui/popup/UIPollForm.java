@@ -72,6 +72,8 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 	private UIFormMultiValueInputSet uiFormMultiValue = new UIFormMultiValueInputSet(FIELD_OPTIONS,FIELD_OPTIONS) ;
 	private Poll poll = new Poll() ;
 	private boolean isUpdate = false ;
+	private boolean isEditPath = true;
+	private boolean isPublic = true;
 	
 	@SuppressWarnings("unchecked")
 	public UIPollForm() throws Exception {
@@ -81,8 +83,9 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 		UIFormCheckBoxInput VoteAgain = new UIFormCheckBoxInput<Boolean>(FIELD_AGAINVOTE_CHECKBOX, FIELD_AGAINVOTE_CHECKBOX, false) ; 
 		UIFormCheckBoxInput MultiVote = new UIFormCheckBoxInput<Boolean>(FIELD_MULTIVOTE_CHECKBOX, FIELD_MULTIVOTE_CHECKBOX, false) ; 
 		UIFormCheckBoxInput PublicData = new UIFormCheckBoxInput<Boolean>(FIELD_PUBLIC_DATA_CHECKBOX, FIELD_PUBLIC_DATA_CHECKBOX, true) ; 
-		PublicData.setChecked(true);
+		PublicData.setChecked(isPublic);
 		UIFormStringInput GroupPrivate = new UIFormStringInput(FIELD_GROUP_PRIVATE_INPUT, FIELD_GROUP_PRIVATE_INPUT, "");
+		GroupPrivate.setEditable(false);
 		addUIFormInput(question) ;
 		addUIFormInput(timeOut) ;
 		addUIFormInput(VoteAgain);
@@ -123,6 +126,16 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 			UIFormCheckBoxInput multiVoteCheckInput = getUIFormCheckBoxInput(FIELD_MULTIVOTE_CHECKBOX) ;
 			multiVoteCheckInput.setChecked(poll.getIsMultiCheck());
 			multiVoteCheckInput.setEnable(false);
+			String group = poll.getParentPath() ;
+			poll.setOldParentPath(group);
+			if(group.indexOf(PollNodeTypes.APPLICATION_DATA) > 0) {
+				isPublic = false;
+				getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).setChecked(isPublic);
+				group = group.substring(group.indexOf("/", 2), group.indexOf(PollNodeTypes.APPLICATION_DATA)-1);
+				getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).setValue(group);
+			} else if(group.indexOf(PollNodeTypes.POLLS) < 0){
+				isEditPath = false;
+			}
 			this.isUpdate = isUpdate ;
 			setDefaulFall();
 		}
@@ -273,6 +286,20 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 				poll.setTimeOut(timeOut) ;
 				poll.setIsClosed(uiForm.poll.getIsClosed());
 				try {
+					boolean isPublic = uiForm.getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).isChecked();
+					String parentPath = "";
+					// if poll of topic : parentPath = topic.getPath();
+					// if poll of Group : parentPath = $GROUP/${PollNodeTypes.APPLICATION_DATA}/${PollNodeTypes.EXO_POLLS}
+					// if poll of public: parentPath = $PORTAL/${PollNodeTypes.POLLS}
+					if(isPublic) {
+						// test for public:
+						parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
+					} else {
+						parentPath = uiForm.getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).getValue();
+						if(parentPath.indexOf("/") == 0) parentPath = parentPath.substring(1);
+						parentPath = parentPath + "/" + PollNodeTypes.APPLICATION_DATA + "/" + PollNodeTypes.EXO_POLLS;
+					}
+					poll.setParentPath(parentPath);
 					if(uiForm.isUpdate) {
 						if(newUser.length > 0) poll.setUserVote(newUser) ;
 						uiForm.getPollService().savePoll(poll, false, false) ;
@@ -280,20 +307,6 @@ public class UIPollForm extends BasePollForm implements UIPopupComponent, UISele
 						poll.setOwner(userName) ;
 						poll.setCreatedDate(new Date());
 						poll.setUserVote(new String[] {}) ;
-						String parentPath = "";
-						Boolean isPublic = uiForm.getUIFormCheckBoxInput(FIELD_PUBLIC_DATA_CHECKBOX).isChecked();
-						// if poll of topic : parentPath = topic.getPath();
-						// if poll of Group : parentPath = $GROUP/${PollNodeTypes.APPLICATION_DATA}/${PollNodeTypes.EXO_POLLS}
-						// if poll of public: parentPath = $PORTAL/${PollNodeTypes.POLLS}
-						if(isPublic) {
-							// test for public:
-							parentPath = ExoContainerContext.getCurrentContainer().getContext().getName() + "/" + PollNodeTypes.POLLS;
-						} else {
-							parentPath = uiForm.getUIStringInput(FIELD_GROUP_PRIVATE_INPUT).getValue();
-							if(parentPath.indexOf("/") == 0) parentPath = parentPath.substring(1);
-							parentPath = parentPath + "/" + PollNodeTypes.APPLICATION_DATA + "/" + PollNodeTypes.EXO_POLLS;
-						}
-						poll.setParentPath(parentPath);
 						uiForm.getPollService().savePoll(poll, true, false) ;
 					}
 				} catch (Exception e) {}

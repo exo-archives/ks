@@ -117,10 +117,14 @@ public class UIPollManagement extends BasePollForm {
 			UIPollManagement pollManagement = event.getSource();
 			Poll poll = pollManagement.mapPoll.get(pollId); 
 			UIPollPortlet pollPortlet = pollManagement.getParent();
-			UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
-			UIPollForm pollForm = popupAction.createUIComponent(UIPollForm.class, null, null);
-			pollForm.setUpdatePoll(poll, true);
-			popupAction.activate(pollForm, 655, 455, true) ;
+  		UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
+  		UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
+  		UIPollForm pollForm = popupContainer.getChild(UIPollForm.class);
+  		if(pollForm == null)
+  			pollForm = popupContainer.addChild(UIPollForm.class, null, null);
+  		popupContainer.setId("UIEditPollForm") ;
+  		pollForm.setUpdatePoll(poll, true);
+  		popupAction.activate(popupContainer, 655, 455, true) ;
 			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
 		}
 	}
@@ -140,7 +144,9 @@ public class UIPollManagement extends BasePollForm {
   		UIPollPortlet pollPortlet = pollManagement.getParent();
   		UIPopupAction popupAction = pollPortlet.getChild(UIPopupAction.class);
   		UIPopupContainer popupContainer = popupAction.createUIComponent(UIPopupContainer.class, null, null) ;
-  		popupContainer.addChild(UIPollForm.class, null, null);
+  		UIPollForm pollForm = popupContainer.getChild(UIPollForm.class);
+  		if(pollForm == null)
+  			pollForm = popupContainer.addChild(UIPollForm.class, null, null);
   		popupContainer.setId("UIAddPollForm") ;
   		popupAction.activate(popupContainer, 655, 455, true) ;
   		event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;

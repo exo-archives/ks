@@ -33,7 +33,7 @@
 										<span>__MSG_poll__</span>
 										<span class="question"></span>
 									</div>
-									<div class="CollapseButton" id="EditPollIcon" title="__MSG_editPoll__"><span></span></div>
+									<div class="IconRight" id="EditPollIcon" title="__MSG_editPoll__"><span></span></div>
 									<div style="clear:both"><span></span></div>
 								</div>
 							</div>
@@ -153,7 +153,7 @@
 					var editPoll = document.getElementById("EditPoll");
 					if(data) {
 						if(data.isAdmin === "true") {
-							clickEditPoll.className = "CollapseButton EditPollIcon";
+							clickEditPoll.className = "IconRight EditPollIcon";
 							clickEditPoll.onclick = editUserPrefs;
 						} else {
 							clickEditPoll.className = "FloatRight";

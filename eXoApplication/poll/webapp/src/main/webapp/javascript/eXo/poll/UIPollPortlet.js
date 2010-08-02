@@ -45,12 +45,12 @@ UIPollPortlet.prototype.expandCollapse = function(obj) {
 	var contentContainer = eXo.core.DOMUtil.findNextElementByTagName(forumToolbar,"div") ;
 	if(contentContainer.style.display != "none") {
 		contentContainer.style.display = "none" ;
-		obj.className = "ExpandButton" ;
+		obj.className = "IconRight ExpandButton" ;
 		obj.setAttribute("title",obj.getAttribute("expand")) ;
 		forumToolbar.style.borderBottom = "solid 1px #b7b7b7";
 	} else {
 		contentContainer.style.display = "block" ;
-		obj.className = "CollapseButton" ;
+		obj.className = "IconRight CollapseButton" ;
 		obj.setAttribute("title", obj.getAttribute("collapse")) ;
 		forumToolbar.style.borderBottom = "none";
 	}

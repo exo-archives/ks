@@ -29,6 +29,7 @@ import org.exoplatform.services.jcr.util.IdGenerator;
 public class Poll { 
 	private String id;
 	private String parentPath;
+	private String oldParentPath;
 	private String owner;
 	private Date createdDate;
 	private String modifiedBy;
@@ -65,6 +66,9 @@ public class Poll {
 	public String getParentPath() { return parentPath; }
 	public void setParentPath(String path) { this.parentPath = path; }
 	
+	public void setOldParentPath(String oldParentPath) { this.oldParentPath = oldParentPath;}
+	public String getOldParentPath() { return oldParentPath; }
+
 	/**
 	 * This method should calculate the id of the topic base on the id of the post
 	 * @return

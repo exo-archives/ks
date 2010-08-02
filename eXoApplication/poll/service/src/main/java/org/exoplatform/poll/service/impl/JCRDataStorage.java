@@ -39,6 +39,8 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.hierarchy.NodeHierarchyCreator;
 
+import com.lowagie.text.pdf.PRAcroForm;
+
 public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 	
 	private NodeHierarchyCreator nodeHierarchyCreator_;
@@ -285,6 +287,12 @@ public class JCRDataStorage implements	DataStorage, PollNodeTypes {
 						parentNode.setProperty(EXO_IS_POLL, true);
 					}
 				} else {
+					if(!parentNode.getPath().equals(poll.getOldParentPath())) {
+						Session session = getSession(sProvider);
+						session.move(poll.getOldParentPath()+"/"+pollId, parentNode.getPath()+"/"+pollId);
+						session.save();
+						pollNode = parentNode.getNode(pollId);
+					}
 					pollNode = parentNode.getNode(pollId);
 				}
 				if (poll.getUserVote().length > 0) {
