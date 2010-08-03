@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>echo</td>
 	<td>-Add the Category/Forum/Topic by admin-</td>
 	<td></td>
@@ -27,7 +32,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -62,7 +67,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//a/span</td>
 	<td></td>
 </tr>
@@ -82,8 +92,23 @@
 	<td>Every one can see</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[2]/div/div/div/div[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -107,7 +132,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//div[3]/div/div/div/div/a/span</td>
 	<td></td>
 </tr>
@@ -132,12 +157,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UIForumForm']/div[4]/table//div[1]/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForTextPresent</td>
 	<td>For 1</td>
 	<td></td>
 </tr>
@@ -152,18 +187,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Start topic</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
 	<td></td>
 </tr>
 <tr>
@@ -177,12 +212,37 @@
 	<td>Topic test</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic test</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Submit</td>
 	<td></td>
 </tr>
@@ -207,7 +267,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Category 1</td>
 	<td></td>
 </tr>
@@ -232,8 +292,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
 	<td></td>
 </tr>
 <tr>
@@ -257,18 +327,38 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Category 1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=For 1</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>link=For 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Topic test</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -277,8 +367,18 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
 	<td></td>
 </tr>
 <tr>
@@ -307,7 +407,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Category 1</td>
 	<td></td>
 </tr>
@@ -317,12 +422,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UICategory']//div[@class='ManageCategoryButton']</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Delete</td>
 	<td></td>
 </tr>
@@ -342,7 +452,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>
