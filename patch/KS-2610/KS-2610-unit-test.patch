@@ -1,0 +1,12 @@
+Index: eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java
+===================================================================
+--- eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(revision 50211)
++++ eXoApplication/faq/service/src/test/java/org/exoplatform/faq/service/test/TestFAQService.java	(working copy)
+@@ -539,6 +539,7 @@
+ 	}
+ 
+ 	public void testImportData() throws Exception{
++	  revoveDate();
+ 		faqService_.getAllCategories();
+ //		Before import data, number question is 0
+ 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);

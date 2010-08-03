@@ -539,6 +539,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	}
 
 	public void testImportData() throws Exception{
+	  revoveDate();
 		faqService_.getAllCategories();
 //		Before import data, number question is 0
 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
