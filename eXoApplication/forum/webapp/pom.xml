@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks-parent</artifactId>
-    <version>1.2.5-SNAPSHOT</version>
+    <version>1.2.5</version>
   </parent>
   <artifactId>exo.ks.eXoApplication.forum.webapp</artifactId>
   <packaging>war</packaging>
@@ -43,13 +43,13 @@
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.forum.service</artifactId>
-      <version>1.2.5-SNAPSHOT</version>
+      <version>1.2.5</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.exoplatform.ks</groupId>
       <artifactId>exo.ks.eXoApplication.common</artifactId>
-      <version>1.2.5-SNAPSHOT</version>
+      <version>1.2.5</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
