@@ -7,10 +7,10 @@
 		description="Poll list."
 		thumbnail="/poll/gadgets/polls/skin/thumb.png"
 		height="300">
-		<Locale messages="/poll/gadgets/polls/locale/default.xml" />
-		<Locale lang="ar" messages="/poll/gadgets/polls/locale/ar.xml" language_direction="rtl"/>
-		<Locale lang="fr" messages="/poll/gadgets/polls/locale/fr.xml" />
-		<Locale lang="vi" messages="/poll/gadgets/polls/locale/vi.xml" />
+		<Locale messages="locale/default.xml" />
+		<Locale lang="ar" messages="locale/ar.xml" language_direction="rtl"/>
+		<Locale lang="fr" messages="locale/fr.xml" />
+		<Locale lang="vi" messages="locale/vi.xml" />
 		<Require feature="setprefs"/>
 	</ModulePrefs>
 	 
