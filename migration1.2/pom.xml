@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.exoplatform.ks</groupId>
     <artifactId>ks-parent</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6-SNAPSHOT</version>
   </parent>
   <artifactId>exo.ks.datamigration</artifactId>
   <name>eXo KS Migration 1.1 to 1.2</name>
