@@ -43,7 +43,6 @@ public class UpdateDataJob implements Job {
 			String name = context.getJobDetail().getName();
 	    JobDataMap jdatamap = context.getJobDetail().getJobDataMap() ;
 	    String path = jdatamap.getString("path") ;
-	    if(path == null) path = "";
 	    forumService.updateForum(path) ;
 	    JobSchedulerService schedulerService = (JobSchedulerService)exoContainer.getComponentInstanceOfType(JobSchedulerService.class) ;
 		  JobInfo info = new JobInfo(name, "KnowledgeSuite-forum", context.getJobDetail().getJobClass());

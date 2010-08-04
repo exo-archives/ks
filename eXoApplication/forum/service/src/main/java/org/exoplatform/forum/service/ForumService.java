@@ -860,8 +860,8 @@ public interface ForumService extends ForumServiceLegacy {
                    boolean isExportAll) throws Exception;
 
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
-
-  void updateDataImported() throws Exception;
+// TODO: used updateForum(String path) for update data after imported.
+//  void updateDataImported() throws Exception;
 
   List<UserProfile> getQuickProfiles(List<String> userList) throws Exception;
 

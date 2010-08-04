@@ -1,6 +1,7 @@
 package org.exoplatform.forum.bench;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -71,6 +72,10 @@ public class RandomForumDataProvider implements ForumDataProvider {
 
 	}
 	
+	private String randomUser() {
+		users = Arrays.asList(new String[]{"root", "demo", "mary", "john"});
+		return users.get(rand.nextInt(4));
+	}
 
 	private String randomParagraphs(int i) {
 		int paragraphCount = rand.nextInt(i + 1) + 1;
@@ -113,7 +118,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		forum.setDescription(randomWords(10));
 		forum.setForumName(randomWords(5));
 		forum.setForumOrder(previous.getForumOrder() + 1);
-		forum.setOwner("root");
+		forum.setOwner(randomUser());
 		return forum;
 	}
 
@@ -126,9 +131,9 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		category.setCategoryOrder(previous.getCategoryOrder() + 1);
 		category.setCreatedDate(new Date());
 		category.setDescription(randomWords(10));
-		category.setModifiedBy("root");
+		category.setModifiedBy(randomUser());
 		category.setModifiedDate(new Date());
-		category.setOwner("root");
+		category.setOwner(randomUser());
 		return category;
 	}
 
@@ -192,7 +197,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		Topic topic = new Topic();
 		topic.setCreatedDate(new Date());
 		topic.setDescription(randomWords(10));
-		topic.setOwner("root"); // todo use random user
+		topic.setOwner(randomUser()); // todo use random user
 		topic.setTopicName(randomWords(5));
 		topic.setIcon("Shield");
 		return topic;
@@ -228,7 +233,7 @@ public class RandomForumDataProvider implements ForumDataProvider {
 		String content = randomParagraphs(5);
 		
 		post.setMessage(content);
-		post.setOwner("root");
+		post.setOwner(randomUser());
 		post.setIcon("Shield");
 		return post;
 	}

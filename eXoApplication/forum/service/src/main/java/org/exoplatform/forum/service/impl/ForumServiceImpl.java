@@ -1120,10 +1120,10 @@ public class ForumServiceImpl implements ForumService, Startable {
   
   /**
    * {@inheritDoc}
-   */
   public void updateDataImported() throws Exception{
   	storage.updateDataImported();
   }
+   */
   
   /**
    * {@inheritDoc}

@@ -56,18 +56,18 @@ public class StatisticEventListener implements EventListener{
 				Event ev = evIter.nextEvent() ;
 				if(ev.getType() == Event.NODE_ADDED){
 					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;
-					if(id.indexOf(Utils.TOPIC) > 0) {
-						topicCount = topicCount + 1 ;
-					}else if(id.indexOf(Utils.POST) > 0){
+					if(id.indexOf(Utils.POST) > 0){
 						postCount = postCount + 1 ;
+					}else if(id.indexOf(Utils.TOPIC) > 0) {
+						topicCount = topicCount + 1 ;
 					}					
 				}else if(ev.getType() == Event.NODE_REMOVED) {
 					String id = ev.getPath().substring(ev.getPath().lastIndexOf("/")) ;					
-					if(id.indexOf(Utils.TOPIC) > 0) {						
-					  topicCount = topicCount - 1 ;
-					}else if(id.indexOf(Utils.POST) > 0){
+					if(id.indexOf(Utils.POST) > 0){
 						postCount = postCount - 1 ;
-					}			
+					}else if(id.indexOf(Utils.TOPIC) > 0) {
+						topicCount = topicCount - 1 ;
+					}					
 				}				
 			}
 			if(topicCount != 0 || postCount != 0) {

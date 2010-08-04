@@ -58,35 +58,32 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 		this.categoryPath = categoryPath;
 	}
 
-	private boolean extractFromZipFile(ZipInputStream zipStream, String nodePath, ForumService service) throws Exception {
-		int numberOfFile= 0 ;
-		int numberExportFalse = 0;
-		ByteArrayOutputStream out= new ByteArrayOutputStream();
-		byte[] data  = new byte[5120];   
-		ZipEntry entry = zipStream.getNextEntry();
-		ByteArrayInputStream inputStream = null;
-		while(entry != null) {
-			numberOfFile ++;
-			out= new ByteArrayOutputStream();
-			int available = -1;
-			while ((available = zipStream.read(data, 0, 1024)) > -1) {
-				out.write(data, 0, available); 
-			}                         
-			zipStream.closeEntry();
-			out.close();
-			
-			inputStream = new ByteArrayInputStream(out.toByteArray());
-			service.importXML(nodePath, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
-			numberExportFalse ++;
-			entry = zipStream.getNextEntry();
+	private void extractFromZipFile(ZipInputStream zipStream, String nodePath, ForumService service) throws Exception {
+		try {
+			ByteArrayOutputStream out= new ByteArrayOutputStream();
+			byte[] data  = new byte[5120];   
+			ZipEntry entry = zipStream.getNextEntry();
+			ByteArrayInputStream inputStream = null;
+			while(entry != null) {
+				out= new ByteArrayOutputStream();
+				int available = -1;
+				while ((available = zipStream.read(data, 0, 1024)) > -1) {
+					out.write(data, 0, available); 
+				}                         
+				zipStream.closeEntry();
+				inputStream = new ByteArrayInputStream(out.toByteArray());
+				out.close();
+				service.importXML(nodePath, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+				entry = zipStream.getNextEntry();
+			}
+		} finally {
+			if(zipStream != null)zipStream.close();
 		}
-		zipStream.close();
-		if(numberOfFile == numberExportFalse) return false;
-		else return true;
 	}
+	
 	@SuppressWarnings({"deprecation"})
 	static public class SaveActionListener extends EventListener<UIImportForm> {
-  public void execute(Event<UIImportForm> event) throws Exception {
+		public void execute(Event<UIImportForm> event) throws Exception {
 			UIImportForm importForm = event.getSource() ;
 			
 			UIForumPortlet forumPortlet = importForm.getAncestorOfType(UIForumPortlet.class) ;
@@ -112,17 +109,19 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
 			boolean isUdateForm = false;
 			boolean isErr = false;
 			try{
-				boolean importSuccess = true;
 				if ("text/xml".equals(mimeType)) {
 					xmlInputStream = new ByteArrayInputStream(uploadInput.getUploadData());
 					service.importXML(nodePath, xmlInputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
 				} else if ("application/zip".equals(mimeType)) {
 					ZipInputStream zipInputStream = new ZipInputStream(uploadInput.getUploadDataAsStream());
-					importSuccess = importForm.extractFromZipFile(zipInputStream, nodePath, service);
+					importForm.extractFromZipFile(zipInputStream, nodePath, service);
 				} else {
 					importForm.warning("UIImportForm.msg.mimetype-invalid");
 					return;
 				}
+				service.updateForum(nodePath);
+				importForm.info("UIImportForm.msg.import-successful");
+  			isUdateForm = true;
   			popupAction.deActivate() ;
   			event.getRequestContext().addUIComponentToUpdateByAjax(popupAction) ;
   			if(!ForumUtils.isEmpty(importForm.categoryPath)){
@@ -132,11 +131,6 @@ public class UIImportForm extends BaseUIForm implements UIPopupComponent{
   			}else{
   				event.getRequestContext().addUIComponentToUpdateByAjax(forumPortlet) ;
   			}
-  			if(importSuccess){
-  				service.updateDataImported();
-  				importForm.info("UIImportForm.msg.import-successful");
-  			}
-  			isUdateForm = true;
 			} catch(PathNotFoundException pnf){
 				importForm.warning("UIImportForm.msg.CategoryNoLongerExist");
 				isErr = true;

@@ -336,7 +336,7 @@ public interface DataStorage {
 
   void importXML(String nodePath, ByteArrayInputStream bis, int typeImport) throws Exception;
 
-  void updateDataImported() throws Exception;
+//  void updateDataImported() throws Exception;
 
   void updateTopicAccess(String userId, String topicId) throws Exception;
 
