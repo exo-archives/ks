@@ -45,6 +45,7 @@ import org.exoplatform.faq.service.Question;
 import org.exoplatform.faq.service.QuestionLanguage;
 import org.exoplatform.faq.service.QuestionPageList;
 import org.exoplatform.faq.service.TemplatePlugin;
+import org.exoplatform.faq.service.Utils;
 import org.exoplatform.faq.service.Watch;
 import org.exoplatform.ks.bbcode.core.BBCodeServiceImpl;
 import org.exoplatform.ks.common.NotifyInfo;
@@ -165,16 +166,22 @@ public class FAQServiceImpl implements FAQService, Startable {
 
 	public void stop() {}
 	
+	@SuppressWarnings("deprecation")
 	private void initViewerTemplate() throws Exception {
 	  if (template_ == null) {
 	    log.warn("No default template was configured for FAQ.");
 	    return;
 	  }
-		if(getTemplate() == null) {
-			InputStream in = configManager_.getInputStream(template_.getPath()) ;
-			byte[] data = new byte[in.available()] ;
-			in.read(data) ;
-			saveTemplate(new String(data)) ;
+	  SessionProvider provider = SessionProvider.createSystemProvider();
+	  try {
+	  	if(!locator.getSessionManager().getSession(provider).getRootNode().hasNode(locator.getFaqTemplatesLocation()+"/"+Utils.UI_FAQ_VIEWER)) {
+	  		InputStream in = configManager_.getInputStream(template_.getPath()) ;
+	  		byte[] data = new byte[in.available()] ;
+	  		in.read(data) ;
+	  		saveTemplate(new String(data)) ;
+	  	}
+		} finally {
+			provider.close();
 		}
 		configManager_ = null ;
 		template_ = null ;

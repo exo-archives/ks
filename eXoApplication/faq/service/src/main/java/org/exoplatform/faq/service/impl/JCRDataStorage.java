@@ -429,7 +429,7 @@ public class JCRDataStorage implements DataStorage {
 		SessionProvider sProvider = SessionProvider.createSystemProvider() ;
 		try {
 			Node templateHome = getTemplateHome(sProvider);
-			Node fileNode = templateHome.getNode("UIFAQViewer");
+			Node fileNode = templateHome.getNode(Utils.UI_FAQ_VIEWER);
 			if (fileNode.isNodeType("nt:file")) {
 				Node contentNode = fileNode.getNode("jcr:content");
 				InputStream inputStream = contentNode.getProperty("jcr:data").getStream();
@@ -455,9 +455,9 @@ public class JCRDataStorage implements DataStorage {
 			Node templateHome = getTemplateHome(sProvider);
 			Node fileNode ;
 			try {
-				fileNode = templateHome.getNode("UIFAQViewer");
+				fileNode = templateHome.getNode(Utils.UI_FAQ_VIEWER);
 			} catch (Exception e) {
-				fileNode = templateHome.addNode("UIFAQViewer","nt:file");
+				fileNode = templateHome.addNode(Utils.UI_FAQ_VIEWER,"nt:file");
 			}
 			Node nodeContent = null;
 			InputStream inputStream = null;
