@@ -17,12 +17,17 @@
 	<td></td>
 </tr>
 <tr>
+	<td>windowMaximize</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -57,7 +62,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//a/span</td>
 	<td></td>
 </tr>
@@ -77,8 +87,23 @@
 	<td>Every one can see</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[2]/div/div/div/div[1]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[2]/div/div/div/div[1]/a</td>
 	<td></td>
 </tr>
 <tr>
@@ -97,12 +122,17 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
 	<td>link=Add forum</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Add forum</td>
 	<td></td>
 </tr>
@@ -122,8 +152,23 @@
 	<td>Forum for test censor</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Category 1</td>
 	<td></td>
 </tr>
 <tr>
@@ -142,12 +187,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
 	<td></td>
 </tr>
@@ -162,23 +217,28 @@
 	<td>censor</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>click</td>
+	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Add topics and check censor-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -192,7 +252,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -227,7 +287,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=For 1</td>
 	<td></td>
 </tr>
@@ -237,13 +297,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
 	<td></td>
 </tr>
 <tr>
@@ -257,14 +312,44 @@
 	<td>Censor Topic</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Censor Topic Content</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
 	<td>link=Submit</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
+	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
@@ -272,7 +357,12 @@
 	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
@@ -287,13 +377,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Start topic</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>messageContent___Frame</td>
 	<td></td>
 </tr>
 <tr>
@@ -307,12 +392,37 @@
 	<td>Topic for CTest</td>
 </tr>
 <tr>
-	<td>typeFCKEditor</td>
-	<td>messageContent___Frame</td>
+	<td>waitForElementPresent</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//iframe[@id='messageContent___Frame']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectFrame</td>
+	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//html/body</td>
 	<td>Topic for CTest</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>selectFrame</td>
+	<td>relative=top</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Submit</td>
 	<td></td>
 </tr>
@@ -327,7 +437,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Topic for CTest</td>
 	<td></td>
 </tr>
@@ -342,9 +452,19 @@
 	<td>censor post</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//form[@id='UITopicDetail']/div[6]/table//div[2]/div[2]/div[2]/div/div/div</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//form[@id='UITopicDetail']/div[6]/table//div[2]/div[2]/div[2]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='UIForumPortlet']/div[6]/div/div[2]//div[@class='UIPopupMessages']/div[2]/div[@class='UITabContent']//div[@class='PopupMessage']</td>
+	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
@@ -352,23 +472,23 @@
 	<td>The content of this post may contain offending content. It will be displayed after moderation.</td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>Sign in</td>
+	<td>click</td>
+	<td>//div[6]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
 	<td></td>
 </tr>
 <tr>
 	<td>echo</td>
 	<td>-Delete Test Data-</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
 	<td></td>
 </tr>
 <tr>
@@ -382,7 +502,7 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>link=Sign in</td>
 	<td></td>
 </tr>
@@ -412,7 +532,12 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Category 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Category 1</td>
 	<td></td>
 </tr>
@@ -422,12 +547,17 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
 	<td>//form[@id='UICategory']/div[3]/div/div/div/div[4]/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>link=Delete</td>
 	<td></td>
 </tr>
@@ -452,12 +582,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>//div[@id='Administrations']/div/div[1]/div/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//div[@id='Administrations']/div/div[2]/div/div/div/div[2]/div/div/div[2]/a/span</td>
 	<td></td>
 </tr>
@@ -472,12 +612,22 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
+	<td>click</td>
+	<td>link=Save</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
 	<td>link=Sign out</td>
 	<td></td>
 </tr>

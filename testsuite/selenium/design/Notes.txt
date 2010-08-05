@@ -8,7 +8,7 @@ SNF_KS_32 : The script is valid but this function has bug that causes the system
 SNF_KS_31 : The script is valid but this function has bug that causes the system work invidly(KS-2575)
 SNF_KS_38 : Because of pop up intration, Permalink can not be recorded and verified result.
 SNF_KS_39 : Because of pop up intraction, RSS Feed can not be recorded and verified.
-SNF_KS_54 : The script is valid but this function has bug that causes the system work invidly (KS-2582)
+SNF_KS_54 : The script is valid but this function has bug that causes the system work invidly. Only happen in /ksdemo,OK in /defaultportal(KS-2582)
 
 Some function are recorded validly but can not verify its effects such as watch/unwatch, 
 send mail that the notification mails are sent or not.
