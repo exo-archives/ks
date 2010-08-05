@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test_ANS_20_001</title>
+<title>Test_ANS_11_01_004</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test_ANS_20_001</td></tr>
+<tr><td rowspan="1" colspan="3">Test_ANS_11_01_004</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -94,12 +94,22 @@
 <tr>
 	<td>type</td>
 	<td>eventCategoryName</td>
-	<td>Test_ANS_20_001</td>
+	<td>Test_ANS_11_01_004</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>moderatequestions</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>moderatequestions</td>
+	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>description</td>
-	<td>Check all existing question list</td>
+	<td>Disapprove question while answering </td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -113,7 +123,7 @@
 </tr>
 <tr>
 	<td>echo</td>
-	<td>Submit question English</td>
+	<td>Submit question</td>
 	<td></td>
 </tr>
 <tr>
@@ -144,7 +154,7 @@
 <tr>
 	<td>type</td>
 	<td>QuestionTitle</td>
-	<td>Question Test_ANS_20_001</td>
+	<td>Question Test_ANS_11_01_004</td>
 </tr>
 <!--//========================-->
 <tr>
@@ -180,7 +190,17 @@
 <tr>
 	<td>type</td>
 	<td>EmailAddress</td>
-	<td>root@localhost.com</td>
+	<td>demo@localhost.com</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>IsApproved</td>
+	<td></td>
+</tr>
+<tr>
+	<td>check</td>
+	<td>IsApproved</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -214,12 +234,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Question Test_ANS_20_001</td>
+	<td>link=Question Test_ANS_11_01_004</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Question Test_ANS_20_001</td>
+	<td>link=Question Test_ANS_11_01_004</td>
 	<td></td>
 </tr>
 <tr>
@@ -244,12 +264,22 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[2]/div/div/div/table/tbody/tr[2]/td[3]/div[1]/div</td>
+	<td>//div[@id='UITabContent']/div/div/div/table/tbody/tr[2]/td[4]/div/div[1]/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[2]/div/div/div/table/tbody/tr[2]/td[3]/div[1]/div</td>
+	<td>//div[@id='UITabContent']/div/div/div/table/tbody/tr[2]/td[4]/div/div[1]/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>IsApproved</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>IsApproved</td>
 	<td></td>
 </tr>
 <tr>
@@ -289,16 +319,6 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>IsApproved</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>IsApproved</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
 	<td>link=Save</td>
 	<td></td>
 </tr>
@@ -309,128 +329,12 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//form[@id='UIQuestionManagerForm']/div[2]/table/tbody/tr/td/div/div/div/div</td>
+	<td>//form[@id='QuestionInfo']/div[2]/div/div[1]/div/div[1]/div/div/div/div/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//form[@id='UIQuestionManagerForm']/div[2]/table/tbody/tr/td/div/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Question Test_ANS_20_001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Question Test_ANS_20_001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Question Test_ANS_20_001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Question Test_ANS_20_001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>Submit Question Vietnamese</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Submit question</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Submit question</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>QuestionTitle</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>QuestionTitle</td>
-	<td>Câu hỏi Test_ANS_20_001</td>
-</tr>
-<!--//========================-->
-<tr>
-	<td>selectFrame</td>
-	<td>//*[@id=&quot;Question___Frame&quot;]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
-	<td></td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>//html/body/table/tbody/tr[2]/td/iframe</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//html/body</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>//html/body</td>
-	<td>Hôm nay đi bơi - ăn chơi và ca hát</td>
-</tr>
-<tr>
-	<td>selectFrame</td>
-	<td>relative=top</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>EmailAddress</td>
-	<td>root@localhost.com</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Save</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>link=Save</td>
-	<td>1,1</td>
-</tr>
-<tr>
-	<td>echo</td>
-	<td>confirm OK</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[3]/div/div[2]/div/div/div/div/div/div[3]/div/table/tbody/tr/td/div/div/div/div/a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Manage questions</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Manage questions</td>
+	<td>//form[@id='QuestionInfo']/div[2]/div/div[1]/div/div[1]/div/div/div/div/div[1]/div/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -445,18 +349,18 @@
 </tr>
 <tr>
 	<td>waitForText</td>
-	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[1]</td>
-	<td>Question Test_ANS_20_001</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[3]/div/div</td>
+	<td>No</td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[1]</td>
-	<td>Question Test_ANS_20_001</td>
+	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[2]/td[3]/div/div</td>
+	<td>No</td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>//div[@id='UITabContent']/div/div[1]/div/table/tbody/tr[3]/td[1]</td>
-	<td>Câu hỏi Test_ANS_20_001</td>
+	<td>echo</td>
+	<td>--close form--</td>
+	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
@@ -466,6 +370,81 @@
 <tr>
 	<td>click</td>
 	<td>//form[@id='UIQuestionManagerForm']/div[2]/table/tbody/tr/td/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>echo</td>
+	<td>==Login Demo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Sign out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Sign in</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>username</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>username</td>
+	<td>demo</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>gtn</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='UIPortalLoginFormAction']/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//div[@id='PortalNavigationTopContainer']/div[4]/div/div/div/div/div/div/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[6]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>link=Question Test_ANS_11_01_004</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>link=Question Test_ANS_11_01_004</td>
 	<td></td>
 </tr>
 <tr>
@@ -560,22 +539,12 @@
 </tr>
 <tr>
 	<td>waitForTextNotPresent</td>
-	<td>Test_ANS_20_001</td>
+	<td>Test_ANS_11_01_004</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextNotPresent</td>
-	<td>Test_ANS_20_001</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Sign out</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>link=Sign out</td>
+	<td>Test_ANS_11_01_004</td>
 	<td></td>
 </tr>
 
