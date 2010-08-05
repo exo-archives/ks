@@ -69,13 +69,13 @@
     <commons-lang.version>2.3</commons-lang.version>
     <junit.version>3.8.1</junit.version>
     <com.lowagie.version>2.1.0</com.lowagie.version>
-    <org.exoplatform.kernel.version>2.0.12</org.exoplatform.kernel.version>
+    <org.exoplatform.kernel.version>2.0.13-SNAPSHOT</org.exoplatform.kernel.version>
     <org.exoplatform.tool.version>1.0.0</org.exoplatform.tool.version>
-    <org.exoplatform.core.version>2.1.10</org.exoplatform.core.version>
-    <org.exoplatform.ws.version>1.3.8</org.exoplatform.ws.version>
-    <org.exoplatform.jcr.version>1.10.9</org.exoplatform.jcr.version>
-    <org.exoplatform.portletcontainer.version>2.0.11</org.exoplatform.portletcontainer.version>
-    <org.exoplatform.portal.version>2.5.10</org.exoplatform.portal.version>
+    <org.exoplatform.core.version>2.1.11-SNAPSHOT</org.exoplatform.core.version>
+    <org.exoplatform.ws.version>1.3.9-SNAPSHOT</org.exoplatform.ws.version>
+    <org.exoplatform.jcr.version>1.10.10-SNAPSHOT</org.exoplatform.jcr.version>
+    <org.exoplatform.portletcontainer.version>2.0.12-SNAPSHOT</org.exoplatform.portletcontainer.version>
+    <org.exoplatform.portal.version>2.5.11-SNAPSHOT</org.exoplatform.portal.version>
     <org.exoplatform.exopackage.version>1.2.3</org.exoplatform.exopackage.version>
     <version.exobuild.plugin>1.2.2</version.exobuild.plugin>
   </properties>
