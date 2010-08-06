@@ -34,9 +34,7 @@
     <org.exoplatform.jcr-services.version>1.12.2-GA-SNAPSHOT</org.exoplatform.jcr-services.version>
     <org.exoplatform.portal.version>3.1.0-GA</org.exoplatform.portal.version>
 	
-    <!--platform dependencies-->
-	<org.exoplatform.platform.version>3.0.0-Beta02-SNAPSHOT</org.exoplatform.platform.version>
-	
+   
 	<!--commons dependencies-->
 	<org.exoplatform.commons.version>1.0.0-CR01-SNAPSHOT</org.exoplatform.commons.version>
 
