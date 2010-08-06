@@ -24,6 +24,7 @@ import org.exoplatform.forum.service.Utils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.social.core.space.SpaceListenerPlugin;
+import org.exoplatform.social.core.space.impl.SpaceServiceImpl;
 import org.exoplatform.social.core.space.model.Space;
 import org.exoplatform.social.core.space.spi.SpaceLifeCycleEvent;
 
@@ -48,7 +49,7 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     Space space = event.getSpace();
     Category category = new Category();
     category.setId(Utils.CATEGORY + space.getId());
-    category.setCategoryName(space.getName());
+    category.setCategoryName(SpaceServiceImpl.SPACE_PARENT.split("/")[1]);
     category.setOwner(space.getId());
     category.setUserPrivate(new String[] {space.getGroupId()});
     category.setDescription("");
@@ -56,14 +57,16 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
     Forum forum = new Forum();
     forum.setOwner(space.getId());
     forum.setId(Utils.FORUM + space.getId());
-    forum.setForumName(space.getGroupId());
-    forum.setDescription("");
+    forum.setForumName(space.getName());
+    forum.setDescription(space.getDescription());
+    //TODO hard text manager should check with portal team
+    forum.setModerators(new String[]{SpaceServiceImpl.MANAGER +":"+ space.getGroupId()});
     ForumService fServie = (ForumService) PortalContainer.getInstance().getComponentInstanceOfType(ForumService.class);
     try {
-      if(fServie.getCategory(category.getId()) ==null) fServie.saveCategory(category, true);
+      if(fServie.getCategory(category.getId()) == null) fServie.saveCategory(category, true);
 
       if(fServie.getForum(category.getId(), forum.getId()) == null) fServie.saveForum(category.getId(), forum, true); 
-      
+
 
     }catch (Exception e) {
       log.debug(e.getMessage());

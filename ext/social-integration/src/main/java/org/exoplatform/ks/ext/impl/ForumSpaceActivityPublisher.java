@@ -60,7 +60,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     public void savePost(Post post, String forumId) {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        String msg = post.getOwner() + " has added a new post <a href=" +post.getLink()+ ">" + post.getName() +  "</a>" ;
+        String msg = "@"+post.getOwner() + " has added a new post <a href=" +post.getLink()+ ">" + post.getName() +  "</a>" ;
         String body = post.getLink() ;
         IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);
@@ -82,7 +82,7 @@ public class ForumSpaceActivityPublisher extends ForumEventListener {
     public void saveTopic(Topic topic, String forumId) {
       try {
         Class.forName("org.exoplatform.social.core.manager.IdentityManager") ;
-        String msg = topic.getOwner() + " has been posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
+        String msg = "@"+topic.getOwner() + " has been posted: <a href=" +topic.getLink()+ ">" + topic.getTopicName() +  "</a>" ;
         String body = topic.getLink() ;
         IdentityManager indentityM = (IdentityManager) PortalContainer.getInstance().getComponentInstanceOfType(IdentityManager.class); 
         ActivityManager activityM = (ActivityManager) PortalContainer.getInstance().getComponentInstanceOfType(ActivityManager.class);

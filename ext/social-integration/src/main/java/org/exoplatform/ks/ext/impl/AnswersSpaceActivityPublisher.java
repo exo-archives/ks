@@ -47,7 +47,8 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
-      String msg = answer.getResponseBy() + " has answered: <a href=" + q.getLink() + ">"
+      //TODO resource bundle needed 
+      String msg = "@"+answer.getResponseBy() + " has answered: <a href=" + q.getLink() + ">"
           + q.getQuestion() + "</a>";
       String body = q.getLink();
       Category cal = faqS.getCategoryById(q.getCategoryId());
@@ -80,7 +81,8 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       FAQService faqS = (FAQService) PortalContainer.getInstance()
                                                     .getComponentInstanceOfType(FAQService.class);
       Question q = faqS.getQuestionById(questionId);
-      String msg = comment.getCommentBy() + " has commented: <a href=" + q.getLink() + ">"
+      //TODO resource bundle needed 
+      String msg = "@"+comment.getCommentBy() + " has commented: <a href=" + q.getLink() + ">"
           + q.getQuestion() + "</a>";
       String body = q.getLink();
       Category cal = faqS.getCategoryById(q.getCategoryId());
@@ -109,7 +111,8 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
   public void saveQuestion(Question question) {
     try {
       Class.forName("org.exoplatform.social.core.manager.IdentityManager");
-      String msg = question.getAuthor() + " has been asked: <a href=" + question.getLink() + ">"
+    //TODO resource bundle needed 
+      String msg = "@"+question.getAuthor() + " has been asked: <a href=" + question.getLink() + ">"
           + question.getQuestion() + "</a>";
       String body = question.getLink();
       FAQService faqS = (FAQService) PortalContainer.getInstance()
@@ -145,7 +148,8 @@ public class AnswersSpaceActivityPublisher extends AnswerEventListener {
       Question q = faqS.getQuestionById(questionId);
       if (answers.length == 1) {
         Answer answer = answers[0];
-        String msg = answer.getResponseBy() + " has answered: <a href=" + q.getLink() + ">"
+      //TODO resource bundle needed 
+        String msg = "@"+answer.getResponseBy() + " has answered: <a href=" + q.getLink() + ">"
             + q.getQuestion() + "</a>";
         String body = q.getLink();
         Category cal = faqS.getCategoryById(q.getCategoryId());
