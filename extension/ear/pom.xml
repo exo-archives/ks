@@ -80,9 +80,9 @@
 -->
     <!-- HACK : cometd packaging should be provided by platform -->
     <dependency>
-      <groupId>org.exoplatform.platform</groupId>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.comet.webapp</artifactId>
-      <version>${org.exoplatform.platform.version}</version>
+      <version>${org.exoplatform.commons.version}</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -101,8 +101,9 @@
       <version>6.1.11</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.platform</groupId>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.comet.service</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.exoplatform.kernel</groupId>
@@ -138,13 +139,13 @@
           <defaultLibBundleDir>lib</defaultLibBundleDir>
           <modules>
             <webModule>
-              <groupId>org.exoplatform.platform</groupId>
+              <groupId>org.exoplatform.commons</groupId>
               <artifactId>exo.platform.commons.comet.webapp</artifactId>
               <contextRoot>cometd</contextRoot>
               <bundleFileName>cometd.war</bundleFileName>
             </webModule>
             <jarModule>
-              <groupId>org.exoplatform.platform</groupId>
+              <groupId>org.exoplatform.commons</groupId>
               <artifactId>exo.platform.commons.comet.service</artifactId>
               <includeInApplicationXml>true</includeInApplicationXml>
             </jarModule>

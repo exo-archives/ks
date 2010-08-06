@@ -30,8 +30,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.platform</groupId>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.testing</artifactId>
+      <version>${org.exoplatform.commons.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

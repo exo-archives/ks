@@ -25,15 +25,15 @@
     </dependency>
     <!-- cometd -->
     <dependency>
-      <groupId>org.exoplatform.platform</groupId>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.comet.service</artifactId>
-      <version>${org.exoplatform.platform.version}</version>
+      <version>${org.exoplatform.commons.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.exoplatform.platform</groupId>
+      <groupId>org.exoplatform.commons</groupId>
       <artifactId>exo.platform.commons.comet.webapp</artifactId>
-      <version>${org.exoplatform.platform.version}</version>
+      <version>${org.exoplatform.commons.version}</version>
       <type>war</type>
     </dependency>
     <!-- dependencies for cometd -->
