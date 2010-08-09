@@ -8,6 +8,12 @@
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
       <type>org.exoplatform.ks.ext.impl.ForumDataInitialize</type>
+      <init-params>
+				<value-param>
+					<name>portletName</name>
+					<value>ForumPortlet</value>
+				</value-param>
+			</init-params>
     </component-plugin>
   </external-component-plugins>
 
@@ -17,6 +23,12 @@
       <name>ForumDataInitialize</name>
       <set-method>addSpaceListener</set-method>
       <type>org.exoplatform.ks.ext.impl.AnswerDataInitialize</type>
+      <init-params>
+				<value-param>
+					<name>portletName</name>
+					<value>AnswersPortlet</value>
+				</value-param>
+			</init-params>
     </component-plugin>
   </external-component-plugins>
 

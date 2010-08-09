@@ -19,6 +19,7 @@ package org.exoplatform.ks.ext.impl;
 import java.util.Date;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.faq.service.Category;
 import org.exoplatform.faq.service.FAQService;
 import org.exoplatform.faq.service.Utils;
@@ -39,6 +40,12 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
 
   private static final Log log = ExoLogger.getLogger(AnswerDataInitialize.class);
 
+  private final InitParams params;
+
+  public AnswerDataInitialize(InitParams params) {
+    this.params = params;
+  }
+  
   @Override
   public void applicationActivated(SpaceLifeCycleEvent event) {
     // TODO Auto-generated method stub
@@ -47,6 +54,21 @@ public class AnswerDataInitialize extends SpaceListenerPlugin {
 
   @Override
   public void applicationAdded(SpaceLifeCycleEvent event) {
+    String portletName = "";
+    try {
+      portletName = params.getValueParam("portletName").getValue();
+    } catch (Exception e) {
+      // do nothing here. It means that initparam is not configured.
+    }
+    
+    if (!portletName.equals(event.getSource())) {
+      /*
+       * this function is called only if Answers Portlet is added to Social Space.
+       * Hence, if the application added to space do not have the name as configured, we will be out now.
+       */
+      return;
+    }
+    
     Space space = event.getSpace();
     FAQService fServie = (FAQService) PortalContainer.getInstance().getComponentInstanceOfType(FAQService.class);
     try {
