@@ -17,6 +17,7 @@
 package org.exoplatform.ks.ext.impl;
 
 import org.exoplatform.container.PortalContainer;
+import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.service.Category;
 import org.exoplatform.forum.service.Forum;
 import org.exoplatform.forum.service.ForumService;
@@ -38,6 +39,12 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
   private static final Log log = ExoLogger.getLogger(ForumDataInitialize.class);
 
+  private final InitParams params;
+  
+  public ForumDataInitialize(InitParams params) {
+    this.params = params;
+  }
+  
   @Override
   public void applicationActivated(SpaceLifeCycleEvent event) {
     // TODO Auto-generated method stub
@@ -46,6 +53,20 @@ public class ForumDataInitialize extends SpaceListenerPlugin {
 
   @Override
   public void applicationAdded(SpaceLifeCycleEvent event) {
+    String portletName = "";
+    try {
+      portletName = params.getValueParam("portletName").getValue();
+    } catch (Exception e) {
+      // do nothing here. It means that initparam is not configured.
+    }
+    
+    if (!portletName.equals(event.getSource())) {
+      /*
+       * this function is called only if Forum Portlet is added to Social Space.
+       * Hence, if the application added to space do not have the name as configured, we will be out now.
+       */
+      return;
+    }
     Space space = event.getSpace();
     Category category = new Category();
     category.setId(Utils.CATEGORY + space.getId());
