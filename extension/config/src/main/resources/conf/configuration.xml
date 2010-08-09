@@ -48,29 +48,27 @@
 								<value>
 								  <string>web</string>
 								</value>
-                <!-- 
-								<value>
-								  <string>wsrp-producer</string>
-								</value>	
-                -->
-                <value>
-                  <string>cometd</string>
-                </value>                
-                <value>
-                  <string>ksResources</string>
-                </value>   
-                 <value>
-                  <string>faq</string>
-                </value> 
-                <value>
-                  <string>forum</string>
-                </value>                                                                                                 					
-                <value>
-                  <string>poll</string>
-                </value>                                                                                                 					
+                                <value>
+				                  <string>cometd</string>
+				                </value>                
+				                <value>
+				                  <string>ksResources</string>
+				                </value>   
+				                 <value>
+				                  <string>faq</string>
+				                </value> 
+				                <value>
+				                  <string>forum</string>
+				                </value>                                                                                                 					
+				                <value>
+				                  <string>poll</string>
+				                </value>                                                                                                 					
 								<value>
 								  <string>ks</string>
-								</value>                            
+								</value>   
+								<value>
+                					<string>fck</string>
+              					</value>                         
 							</collection>
 						</field>
 					</object>
