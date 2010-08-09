@@ -279,6 +279,8 @@ public class JCRDataStorage implements DataStorage {
         attachment.setSize(nodeFile.getProperty("jcr:data").getStream().available());
         return attachment ;	
       }			
+    }catch (PathNotFoundException e) {
+      return null;
     }catch(Exception e){
       log.error("Failed to get user avatar", e);
     }finally { sProvider.close() ;}
