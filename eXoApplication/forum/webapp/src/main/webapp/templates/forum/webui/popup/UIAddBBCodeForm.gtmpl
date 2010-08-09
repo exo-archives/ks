@@ -312,4 +312,10 @@
 	 		</table> 
 		</div>
 	<%uiform.end()%>
+<%
+	import org.exoplatform.web.application.JavascriptManager;
+	def rcontext = _ctx.getRequestContext() ;
+	JavascriptManager jsmanager = rcontext.getJavascriptManager();
+	jsmanager.importJavascript('Scripts.shLoadConfig', '/ksResources/syntaxhighlighter/');
+%>
 </div>

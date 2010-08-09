@@ -312,6 +312,12 @@ public class UIForumPortlet extends UIPortletApplication {
     return list;
   }
 
+  public String[] getImportJSTagCode() {
+  	return new String[]{"shCore", "shBrushBash", "shBrushCpp", "shBrushCSharp", "shBrushCss", 
+								  			"shBrushDelphi", "shBrushGroovy", "shBrushJava", "shBrushJScript", "shBrushPhp", 
+								  			"shBrushPython", "shBrushRuby", "shBrushScala", "shBrushSql", "shBrushVb", "shBrushXml"};
+  }
+  
   public List<String> getInvisibleForums() {
     return invisibleForums;
   }

@@ -98,11 +98,6 @@ public class BBCodeRenderer implements Renderer {
       lastIndex = tagIndex + 1;
       try {
         clsIndex = s.indexOf(end, tagIndex);
-        str = bbcode.getReplacement();
-        /*
-        if(str == null || str.trim().length() == 0 || str.equals("null")) {
-          bbcode.setReplacement(forumService.getBBcode(bbcode.getId()).getReplacement());
-        }*/
         str = s.substring(tagIndex + start.length(), clsIndex);
         param = StringUtils.replace(bbcode.getReplacement(), "{param}", str);
         s = StringUtils.replace(s, start + str + end, param);
@@ -121,7 +116,6 @@ public class BBCodeRenderer implements Renderer {
     String str;
     String param;
     String option;
-    //System.out.println(bbcode + " > " + bbcode.isOption());
     int lastIndex = 0, tagIndex = 0;
     start = "[" + bbc + "=";
     end = "[/" + bbc + "]";
@@ -131,18 +125,19 @@ public class BBCodeRenderer implements Renderer {
       lastIndex = tagIndex + 1;
       try {
         clsIndex = markup.indexOf(end, tagIndex);
-        str = bbcode.getReplacement();
-        /*
-        if(str == null || str.trim().length() == 0 || str.equals("null")) {
-          bbcode.setReplacement(forumService.getBBcode(bbcode.getId()).getReplacement());
-        }
-        */
         str = markup.substring(tagIndex + start.length(), clsIndex);
         option = str.substring(0, str.indexOf("]"));
         if(option.indexOf("+")==0)option = option.replaceFirst("\\+", "");
         if(option.indexOf("\"")==0)option = option.replaceAll("\"", "");
         if(option.indexOf("&quot;")==0)option = option.replaceAll("&quot;", "");
         param = str.substring(str.indexOf("]")+1);
+        while(bbc.equals("CODE") && (param.indexOf("<br") >= 0)) {
+        	param = param.replaceAll("<br\\s*\\/?>", "\n");
+        }
+        while(bbc.equals("CODE") && param.indexOf("<p>") >= 0 && param.indexOf("</p>") >= 0) {
+        	param = StringUtils.replace(param, "<p>", "");
+        	param = StringUtils.replace(param, "</p>", "\n");
+        }
         param = StringUtils.replace(bbcode.getReplacement(), "{param}", param);
         param = StringUtils.replace(param, "{option}", option.trim());
         markup = StringUtils.replace(markup, start + str + end, param);

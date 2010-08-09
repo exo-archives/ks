@@ -605,6 +605,44 @@
         </object-param>
 
         <object-param>
+          <name>CODE-OPT</name>
+          <description></description>
+          <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">
+            <field name="tagName">
+              <string>CODE</string>
+            </field>
+            <field name="replacement">
+              <string><![CDATA[<div style="background:#ededed; border:1px inset #7b7b7b; margin:5px; overflow:auto;"><pre name="code" class="{option}" style="margin: 0px; padding: 0px; overflow: auto; text-align: left;" dir="ltr">{param}</pre></div>]]></string>
+            </field>
+            <field name="description">
+              <string>The [code=option] tag allows you to view source code by type.</string>
+            </field>
+            <field name="example">
+              <string>
+              	<![CDATA[
+[code=java]
+package main.test.utils;
+import java.io.File;
+
+public class MainTest {
+	public void testClass() {
+		System.out.println("Run function test");
+	}
+}
+[/code]
+								]]>
+							</string>
+            </field>
+            <field name="isOption">
+              <string>true</string>
+            </field>
+            <field name="isActive">
+              <string>true</string>
+            </field>
+          </object>
+        </object-param>
+
+        <object-param>
           <name>CSS</name>
           <description></description>
           <object type="org.exoplatform.ks.bbcode.spi.BBCodeData">

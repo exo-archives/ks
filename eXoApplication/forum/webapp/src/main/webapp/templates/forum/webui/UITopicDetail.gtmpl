@@ -18,6 +18,7 @@
 	def rcontext = _ctx.getRequestContext() ;
 	JavascriptManager jsmanager = rcontext.getJavascriptManager();
 	jsmanager.importJavascript('eXo.forum.webservice.SearchTagName', '/forum/javascript/') ;
+	jsmanager.importJavascript('Scripts.shLoadConfig', '/ksResources/syntaxhighlighter/');
 	jsmanager.addJavascript('eXo.forum.webservice.SearchTagName.init();') ;
 	
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImages');

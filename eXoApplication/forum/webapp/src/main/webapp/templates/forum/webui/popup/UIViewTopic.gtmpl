@@ -13,6 +13,7 @@
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.ReloadImage');
 	jsmanager.addOnResizeJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
 	jsmanager.addOnLoadJavascript('eXo.forum.UIForumPortlet.reSizeImgViewTopic');
+	jsmanager.importJavascript('Scripts.shLoadConfig', '/ksResources/syntaxhighlighter/');
 %>
 <div class="UIViewTopic UITopicDetail" id="SizeImage">
 	<% uiform.begin() %>

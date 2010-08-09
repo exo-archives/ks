@@ -203,7 +203,7 @@ public class TestFAQService extends FAQServiceTestCase{
 		return attachment;
 	}
 
-	private void revoveDate() throws Exception {
+	private void removeData() throws Exception {
 		FAQSetting  faqSetting = new FAQSetting(); faqSetting.setIsAdmin("TRUE");
 		List<Category> categories = faqService_.getSubCategories(Utils.CATEGORY_HOME, faqSetting, false, null);
 		for (Category category : categories) {
@@ -213,7 +213,7 @@ public class TestFAQService extends FAQServiceTestCase{
 
 	private void defaultData() throws Exception {
 	// remove old data. 
-		revoveDate();
+		removeData();
 	//Create some category default
 		Category cate = createCategory("Category to test question") ;
 		categoryId1 =  Utils.CATEGORY_HOME + "/" + cate.getId();
@@ -273,7 +273,7 @@ public class TestFAQService extends FAQServiceTestCase{
 	
 	public void testCategory() throws Exception {
 	// remove Data before testing category.
-		revoveDate();
+		removeData();
 //		add category Id	
 		faqService_.getAllCategories();
 		Category cate1 = createCategory("Cate 1") ;
@@ -571,7 +571,7 @@ public class TestFAQService extends FAQServiceTestCase{
 
 	public void _testImportData() throws Exception{
 //		remove old data;
-		revoveDate();
+		removeData();
 //		Before import data, number question is 0
 		assertEquals("Before import data, number question is not 0", faqService_.getAllQuestions().getAvailable(), 0);
 		try {

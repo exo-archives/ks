@@ -9,6 +9,14 @@
 	jsmanager.addOnResizeJavascript('function(){eXo.ks.KSUtils.setMaskLayer("'+uicomponent.id+'");}');
 %>
 
+<% 
+	String []importJsTagCode = uicomponent.getImportJSTagCode();
+	String url = "Scripts.";
+	for (int i = 0; i < importJsTagCode.length; i++) {
+		jsmanager.importJavascript(url+importJsTagCode[i], '/ksResources/syntaxhighlighter/');
+	}
+%>
+
 <div class="UIForumPortlet" id="$uicomponent.id">
 	<div class="ParentMaskLayer">
 		<div id="KSMaskLayer" class="KSMaskLayer"><span></span></div>
