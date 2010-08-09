@@ -17,7 +17,7 @@
  **/
 
 =================================================
-    Release Notes eXo Knowledge Suite Version 2.0.0
+    Release Notes eXo Knowledge Suite Version 2.2.0
 =================================================
 
 ===============
@@ -37,12 +37,7 @@ forum, frequency answer and question
 
 
     * General
-        o Fix bug list here: http://wiki.exoplatform.org/xwiki/bin/view/KS/KS+2-0-0+Release+Notes#HVersion200
-		o Some improvement for admin tool bar, information message
-		o Update jcr 1.12.0-CP01 to fix concurrent save data problem 
-		o Improve UI form FAQ
-		o Authenticated user now can post answers
-		o Root category can add restricted user
+        o 
           
     * Find the latest release notes here : http://wiki.exoplatform.org/xwiki/bin/view/KS/Release+Notes           
           
@@ -100,14 +95,12 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 ==============
 4 Known issues 
 ==============
-  * http://jira.exoplatform.org/browse/KS-2259 
- (this depends on https://jira.jboss.org/jira/browse/GTNPORTAL-1020, update to next version of GateIn)
-
+  *  
 ===========================  
 5 Other resources and links
 ===========================
 * [Community JIRA>http://jira.exoplatform.org/browse/KS]
-* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.0.0]
+* [Subversion>http://svn.exoplatform.org/projects/ks/tags/2.2.0]
 * [Download>http://download.forge.objectweb.org/exoplatform/]
 * [Live demo>http://ks.demo.exoplatform.org]
 * [Announces>http://blog.exoplatform.org/tags/ks/]
@@ -116,6 +109,9 @@ gatein.email.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
 ====================
 6 Detailed Changelog 
 ====================
+- Version 2.2.0
+- Version 2.1.0
+
 - Version 2.0.0
 
 ** Bug
